@@ -326,8 +326,11 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
     }
 
     // ─── Branch capturada (PJE) ────────────────────────────
-    // Audiências capturadas só permitem editar responsável e observações.
-    // Toda alteração estrutural deve passar pelo fluxo de captura/sincronização.
+    // Audiências capturadas têm identidade (processo, datas, tipo, sala) vinda
+    // do tribunal e não é editável aqui. Campos editáveis (modalidade, URL,
+    // endereço, presença híbrida) ficam no detail-dialog com edição inline;
+    // este form só permite ajustar responsável e observações quando usado
+    // para capturadas.
     if (isCapturada) {
       setIsLoading(true);
       try {
@@ -485,7 +488,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
           <DialogTitle>Editar Audiência</DialogTitle>
           <DialogDescription>
             {isCapturada
-              ? 'Esta audiência foi capturada do PJE — apenas responsável e observações podem ser editados manualmente.'
+              ? 'Audiência capturada do PJE — ajuste responsável e observações aqui. Para alterar modalidade, link, endereço ou presença híbrida, use o painel de detalhes.'
               : 'Altere os dados da audiência.'}
           </DialogDescription>
         </DialogHeader>
@@ -499,9 +502,9 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
 
           {isCapturada && (
             <div className="bg-info/10 text-info p-3 rounded-md text-xs leading-relaxed">
-              <strong>Origem PJE:</strong> os campos estruturais (processo, datas, tipo,
-              sala, modalidade e endereço) são mantidos pela sincronização com o tribunal.
-              Para alterá-los, atualize a captura no PJE.
+              <strong>Origem PJE:</strong> processo, datas, tipo e sala vêm do tribunal
+              e continuam sincronizados. Modalidade, link, endereço e presença híbrida
+              podem ser editados (edições manuais prevalecem sobre sincronizações futuras).
             </div>
           )}
 

@@ -23,17 +23,18 @@ const mockedUseWizardProgress = useWizardProgress as jest.MockedFunction<
 >
 
 describe('FormStepLayout — public context (default)', () => {
-  it('renderiza título e descrição via Heading/Text do DS', () => {
+  it('renderiza título via Heading do DS; description é aceita mas ignorada (design atual)', () => {
     render(
       <FormStepLayout title="Informe seu CPF" description="Digite seu CPF para iniciar">
         <div>conteúdo</div>
       </FormStepLayout>,
     )
     expect(screen.getByRole('heading', { name: /informe seu cpf/i, level: 1 })).toBeInTheDocument()
-    expect(screen.getByText(/digite seu cpf/i)).toBeInTheDocument()
+    // Subtítulos foram removidos do wizard público — chip + título comunicam contexto.
+    expect(screen.queryByText(/digite seu cpf/i)).not.toBeInTheDocument()
   })
 
-  it('botões primário e secundário têm altura mínima de 48px (h-12)', () => {
+  it('botões primário e secundário têm altura mínima de 44px (h-11) — target touch WCAG AAA', () => {
     render(
       <FormStepLayout title="Passo" description="" onPrevious={() => {}} onNext={() => {}}>
         <div />
@@ -41,8 +42,8 @@ describe('FormStepLayout — public context (default)', () => {
     )
     const next = screen.getByRole('button', { name: /continuar/i })
     const prev = screen.getByRole('button', { name: /voltar/i })
-    expect(next.className).toMatch(/h-12/)
-    expect(prev.className).toMatch(/h-12/)
+    expect(next.className).toMatch(/h-11/)
+    expect(prev.className).toMatch(/h-11/)
   })
 
   it('aplica active:scale em ambos os botões (feedback tátil mobile)', () => {
@@ -153,7 +154,7 @@ describe('FormStepLayout — chip de etapa derivado do useWizardProgress', () =>
     mockedUseWizardProgress.mockReset()
   })
 
-  it('renderiza chip "Etapa X de N" quando o hook retorna posição válida', () => {
+  it('renderiza progressbar + contador "N/M" quando o hook retorna posição válida', () => {
     mockedUseWizardProgress.mockReturnValue({
       currentStep: 5,
       totalSteps: 9,
@@ -168,15 +169,16 @@ describe('FormStepLayout — chip de etapa derivado do useWizardProgress', () =>
       </FormStepLayout>,
     )
 
-    // Chip aparece como role=status com aria-label estendido
-    expect(
-      screen.getByRole('status', { name: /etapa 5 de 9/i }),
-    ).toBeInTheDocument()
-    // Texto visível também
-    expect(screen.getByText(/etapa 5 de 9/i)).toBeInTheDocument()
+    // Barra de progresso com aria-valuenow reflete currentStep.
+    const progressbar = screen.getByRole('progressbar', { name: /progresso do formul/i })
+    expect(progressbar).toHaveAttribute('aria-valuenow', '5')
+    expect(progressbar).toHaveAttribute('aria-valuemax', '9')
+
+    // Contador textual "5/9" no canto superior direito.
+    expect(screen.getByText('5/9')).toBeInTheDocument()
   })
 
-  it('omite chip quando hook retorna currentStep=0 (step não visível na barra)', () => {
+  it('omite barra e contador quando hook retorna isVisibleInProgress=false', () => {
     mockedUseWizardProgress.mockReturnValue({
       currentStep: 0,
       totalSteps: 9,
@@ -191,31 +193,7 @@ describe('FormStepLayout — chip de etapa derivado do useWizardProgress', () =>
       </FormStepLayout>,
     )
 
-    expect(screen.queryByRole('status', { name: /etapa/i })).not.toBeInTheDocument()
-  })
-
-  it('props explícitas currentStep/totalSteps sobrescrevem o hook', () => {
-    mockedUseWizardProgress.mockReturnValue({
-      currentStep: 5,
-      totalSteps: 9,
-      currentLabel: 'Ação',
-      chipLabel: 'Etapa 5 de 9',
-      isVisibleInProgress: true,
-    })
-
-    render(
-      <FormStepLayout
-        title="Override"
-        description=""
-        currentStep={2}
-        totalSteps={4}
-      >
-        <div />
-      </FormStepLayout>,
-    )
-
-    expect(screen.getByText(/etapa 2 de 4/i)).toBeInTheDocument()
-    expect(screen.queryByText(/etapa 5 de 9/i)).not.toBeInTheDocument()
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
   })
 })
 
@@ -243,16 +221,15 @@ describe('FormStepLayout — acessibilidade do PublicStepCard', () => {
     expect(section?.getAttribute('aria-labelledby')).toBe(heading.id)
   })
 
-  it('section tem aria-describedby apontando pra description quando presente', () => {
+  it('não aplica aria-describedby (description foi deprecada no design atual)', () => {
+    // Mesmo passando description, a prop é ignorada e o atributo não é emitido.
     const { container } = render(
       <FormStepLayout title="Identifique-se" description="Digite seu CPF">
         <div />
       </FormStepLayout>,
     )
-
-    const description = screen.getByText(/digite seu cpf/i)
     const section = container.querySelector('section')
-    expect(section?.getAttribute('aria-describedby')).toBe(description.id)
+    expect(section?.hasAttribute('aria-describedby')).toBe(false)
   })
 
   it('omite aria-describedby quando description ausente', () => {

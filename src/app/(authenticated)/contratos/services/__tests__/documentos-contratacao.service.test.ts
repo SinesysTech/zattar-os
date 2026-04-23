@@ -1,6 +1,10 @@
 import { gerarZipPdfsContratacao } from '../documentos-contratacao.service';
 import type { TemplateBasico } from '@/shared/assinatura-digital/services/data.service';
 import type { DadosContratoParaMapping } from '../mapeamento-contrato-input-data';
+import type {
+  FormularioComTemplates,
+  PacoteTemplatesContratacao,
+} from '../documentos-contratacao.service';
 
 jest.mock('@/shared/assinatura-digital/services/template-pdf.service', () => ({
   generatePdfFromTemplate: jest.fn(async (template: TemplateBasico) =>
@@ -27,7 +31,7 @@ const mockDados: DadosContratoParaMapping = {
     },
   },
   partes: [
-    { papel_contratual: 'parte_contraria', nome_snapshot: 'Acme', ordem: 1 },
+    { tipo_entidade: 'parte_contraria', papel_contratual: 're', nome_snapshot: 'Acme', ordem: 1 },
   ],
 };
 
@@ -36,9 +40,19 @@ const mockTemplates: TemplateBasico[] = [
   { id: 2, template_uuid: 'u2', nome: 'Procuração', ativo: true, arquivo_original: 'b', campos: '[]' },
 ];
 
-const mockFormulario = {
+const segmentoMock = { id: 1, nome: 'Trabalhista', slug: 'trabalhista', ativo: true };
+
+const formularioMock: FormularioComTemplates = {
   id: 3, formulario_uuid: 'f-uuid', nome: 'Contratação', slug: 'contratacao',
-  segmento_id: 1, ativo: true, template_ids: ['u1', 'u2'],
+  segmento_id: 1, ativo: true, ordem: 0, template_ids: ['u1', 'u2'],
+  segmento: segmentoMock,
+};
+
+const pacoteMock: PacoteTemplatesContratacao = {
+  segmento: segmentoMock,
+  formularios: [formularioMock],
+  formularioPrincipal: formularioMock,
+  templateUuidsUnificados: ['u1', 'u2'],
 };
 
 describe('gerarZipPdfsContratacao', () => {
@@ -46,7 +60,7 @@ describe('gerarZipPdfsContratacao', () => {
     const zipBuffer = await gerarZipPdfsContratacao({
       dados: mockDados,
       templates: mockTemplates,
-      formulario: mockFormulario,
+      pacote: pacoteMock,
     });
 
     expect(Buffer.isBuffer(zipBuffer)).toBe(true);
@@ -69,8 +83,37 @@ describe('gerarZipPdfsContratacao', () => {
       gerarZipPdfsContratacao({
         dados: mockDados,
         templates: mockTemplates,
-        formulario: mockFormulario,
+        pacote: pacoteMock,
       }),
     ).rejects.toThrow('pdf merge failed');
+  });
+
+  it('when pacote has two formularios, ctx uses formularioPrincipal and templates are merged deduplicated', async () => {
+    const extra: FormularioComTemplates = {
+      ...formularioMock,
+      id: 4, formulario_uuid: 'f-uuid-2', nome: 'Complementar', slug: 'complementar',
+      ordem: 1, template_ids: ['u2', 'u3'], // u2 duplicado com o principal
+    };
+    const u3: TemplateBasico = {
+      id: 3, template_uuid: 'u3', nome: 'Anexo', ativo: true, arquivo_original: 'c', campos: '[]',
+    };
+
+    const pacoteMulti: PacoteTemplatesContratacao = {
+      segmento: segmentoMock,
+      formularios: [formularioMock, extra],
+      formularioPrincipal: formularioMock, // primeiro por ordem
+      templateUuidsUnificados: ['u1', 'u2', 'u3'], // dedup preservando ordem
+    };
+
+    const zipBuffer = await gerarZipPdfsContratacao({
+      dados: mockDados,
+      templates: [...mockTemplates, u3],
+      pacote: pacoteMulti,
+    });
+
+    const JSZip = (await import('jszip')).default;
+    const zip = await JSZip.loadAsync(zipBuffer);
+    const filenames = Object.keys(zip.files).sort();
+    expect(filenames).toEqual(['Anexo.pdf', 'Contrato.pdf', 'Procuração.pdf']);
   });
 });

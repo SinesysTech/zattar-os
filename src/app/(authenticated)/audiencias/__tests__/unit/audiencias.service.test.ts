@@ -320,7 +320,7 @@ describe("Audiencias Service", () => {
     });
   });
 
-  describe("atualizarAudiencia — whitelist PJe (idPje > 0)", () => {
+  describe("atualizarAudiencia — override manual em capturadas do PJe", () => {
     const audienciaPje = {
       id: 20,
       processoId: 1,
@@ -354,81 +354,103 @@ describe("Audiencias Service", () => {
       expect(result.success).toBe(true);
     });
 
-    it("deve rejeitar edição de modalidade em audiência capturada", async () => {
+    it("deve permitir editar modalidade em capturada e setar modalidadeEditadaManualmente", async () => {
       (repo.findAudienciaById as jest.Mock).mockResolvedValue(ok(audienciaPje));
+      (repo.updateAudiencia as jest.Mock).mockResolvedValue(
+        ok({ ...audienciaPje, modalidade: ModalidadeAudiencia.Presencial })
+      );
 
       const result = await atualizarAudiencia(20, {
         modalidade: ModalidadeAudiencia.Presencial,
       } as UpdateAudienciaInput);
 
-      expect(result.success).toBe(false);
-      if (!result.success) {
-        expect(result.error.code).toBe("VALIDATION_ERROR");
-        expect(result.error.message).toMatch(/capturada do PJE/i);
-      }
-      expect(repo.updateAudiencia).not.toHaveBeenCalled();
+      expect(result.success).toBe(true);
+      const callArgs = (repo.updateAudiencia as jest.Mock).mock.calls[0];
+      expect(callArgs[1]).toMatchObject({
+        modalidade: ModalidadeAudiencia.Presencial,
+        modalidadeEditadaManualmente: true,
+      });
     });
 
-    it("deve rejeitar edição de urlAudienciaVirtual em audiência capturada", async () => {
+    it("deve permitir editar urlAudienciaVirtual em capturada e setar urlEditadaManualmente", async () => {
       (repo.findAudienciaById as jest.Mock).mockResolvedValue(ok(audienciaPje));
+      (repo.updateAudiencia as jest.Mock).mockResolvedValue(
+        ok({ ...audienciaPje, urlAudienciaVirtual: "https://sala.exemplo.com/nova" })
+      );
 
       const result = await atualizarAudiencia(20, {
         urlAudienciaVirtual: "https://sala.exemplo.com/nova",
       } as UpdateAudienciaInput);
 
-      expect(result.success).toBe(false);
-      if (!result.success) {
-        expect(result.error.code).toBe("VALIDATION_ERROR");
-      }
-      expect(repo.updateAudiencia).not.toHaveBeenCalled();
+      expect(result.success).toBe(true);
+      const callArgs = (repo.updateAudiencia as jest.Mock).mock.calls[0];
+      expect(callArgs[1]).toMatchObject({
+        urlAudienciaVirtual: "https://sala.exemplo.com/nova",
+        urlEditadaManualmente: true,
+      });
     });
 
-    it("deve rejeitar edição de enderecoPresencial em audiência capturada", async () => {
+    it("deve permitir editar enderecoPresencial em capturada e setar enderecoEditadoManualmente", async () => {
       (repo.findAudienciaById as jest.Mock).mockResolvedValue(ok(audienciaPje));
+      (repo.updateAudiencia as jest.Mock).mockResolvedValue(ok(audienciaPje));
+
+      const endereco = {
+        logradouro: "Rua A",
+        numero: "10",
+        bairro: "B",
+        cidade: "SP",
+        uf: "SP",
+        cep: "01000-000",
+      };
 
       const result = await atualizarAudiencia(20, {
-        enderecoPresencial: {
-          logradouro: "Rua A",
-          numero: "10",
-          bairro: "B",
-          cidade: "SP",
-          uf: "SP",
-          cep: "01000-000",
-        },
+        enderecoPresencial: endereco,
       } as UpdateAudienciaInput);
 
-      expect(result.success).toBe(false);
-      if (!result.success) {
-        expect(result.error.code).toBe("VALIDATION_ERROR");
-      }
+      expect(result.success).toBe(true);
+      const callArgs = (repo.updateAudiencia as jest.Mock).mock.calls[0];
+      expect(callArgs[1]).toMatchObject({
+        enderecoPresencial: endereco,
+        enderecoEditadoManualmente: true,
+      });
     });
 
-    it("deve rejeitar edição de presencaHibrida em audiência capturada", async () => {
+    it("deve permitir editar presencaHibrida em capturada (PJe não sincroniza esse campo)", async () => {
       (repo.findAudienciaById as jest.Mock).mockResolvedValue(ok(audienciaPje));
+      (repo.updateAudiencia as jest.Mock).mockResolvedValue(
+        ok({ ...audienciaPje, presencaHibrida: PresencaHibrida.Cliente })
+      );
 
       const result = await atualizarAudiencia(20, {
         presencaHibrida: PresencaHibrida.Cliente,
       } as UpdateAudienciaInput);
 
-      expect(result.success).toBe(false);
-      if (!result.success) {
-        expect(result.error.code).toBe("VALIDATION_ERROR");
-      }
+      expect(result.success).toBe(true);
+      // Sem flag de override para presencaHibrida — PJe nunca escreve nesse campo.
+      const callArgs = (repo.updateAudiencia as jest.Mock).mock.calls[0];
+      expect(callArgs[1]).not.toHaveProperty("modalidadeEditadaManualmente");
+      expect(callArgs[1]).not.toHaveProperty("urlEditadaManualmente");
+      expect(callArgs[1]).not.toHaveProperty("enderecoEditadoManualmente");
     });
 
-    it("deve rejeitar payload misto (whitelist + forbidden) em audiência capturada", async () => {
+    it("deve aceitar payload misto e setar apenas as flags dos campos de override tocados", async () => {
       (repo.findAudienciaById as jest.Mock).mockResolvedValue(ok(audienciaPje));
+      (repo.updateAudiencia as jest.Mock).mockResolvedValue(ok(audienciaPje));
 
       const result = await atualizarAudiencia(20, {
         observacoes: "ok",
         modalidade: ModalidadeAudiencia.Presencial,
       } as UpdateAudienciaInput);
 
-      expect(result.success).toBe(false);
-      if (!result.success) {
-        expect(result.error.message).toMatch(/modalidade/);
-      }
-      expect(repo.updateAudiencia).not.toHaveBeenCalled();
+      expect(result.success).toBe(true);
+      const callArgs = (repo.updateAudiencia as jest.Mock).mock.calls[0];
+      expect(callArgs[1]).toMatchObject({
+        observacoes: "ok",
+        modalidade: ModalidadeAudiencia.Presencial,
+        modalidadeEditadaManualmente: true,
+      });
+      expect(callArgs[1]).not.toHaveProperty("urlEditadaManualmente");
+      expect(callArgs[1]).not.toHaveProperty("enderecoEditadoManualmente");
     });
   });
 

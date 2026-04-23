@@ -412,14 +412,31 @@ export async function salvarAudiencias(
       } else {
         // Preservar campos que não devem ser sobrescritos se a captura vier vazia
         // Se o registro existente tem URL/endereço preenchido e a captura não traz, manter o existente
-        const dadosParaAtualizar = { ...dadosNovos };
+        const dadosParaAtualizar: Record<string, unknown> = { ...dadosNovos };
 
-        // Preservar url_audiencia_virtual se existente tem valor e captura não
+        // Override manual: se o usuário editou url/endereço manualmente, a flag
+        // correspondente está `true` e o sync NÃO sobrescreve. Modalidade tem
+        // proteção equivalente via trigger populate_modalidade_audiencia, que
+        // respeita modalidade_editada_manualmente.
+        const urlOverride =
+          registroExistente.url_editada_manualmente === true;
+        const enderecoOverride =
+          registroExistente.endereco_editado_manualmente === true;
+
         const urlExistente = registroExistente.url_audiencia_virtual as
           | string
           | null;
-        if (urlExistente && !dadosNovos.url_audiencia_virtual) {
+        if (urlOverride) {
           dadosParaAtualizar.url_audiencia_virtual = urlExistente;
+        } else if (urlExistente && !dadosNovos.url_audiencia_virtual) {
+          // Heurística legada: se o PJe não trouxe URL mas havia uma, mantém
+          // (captura parcial / scraping incompleto).
+          dadosParaAtualizar.url_audiencia_virtual = urlExistente;
+        }
+
+        if (enderecoOverride) {
+          dadosParaAtualizar.endereco_presencial =
+            registroExistente.endereco_presencial;
         }
 
         // Comparar antes de atualizar (usando dados já com preservação)

@@ -419,7 +419,7 @@ describe('AudienciaDetailDialog', () => {
       modalidade: ModalidadeAudiencia.Virtual,
     });
 
-    it('exibe banner "Sincronizada do PJe"', () => {
+    it('não exibe banner "Sincronizada do PJe" (edição manual habilitada)', () => {
       render(
         <AudienciaDetailDialog
           audiencia={pjeAudiencia}
@@ -427,29 +427,28 @@ describe('AudienciaDetailDialog', () => {
           onOpenChange={() => {}}
         />
       );
-      expect(screen.getByText(/Sincronizada do PJe/i)).toBeInTheDocument();
+      // Banner foi removido: capturadas agora permitem edição manual; a flag
+      // *_editada_manualmente protege contra sobrescrita em sincronizações.
+      expect(screen.queryByText(/Sincronizada do PJe/i)).not.toBeInTheDocument();
     });
 
-    it('esconde botão Editar do link virtual', () => {
+    it('exibe botão de editar link virtual em audiência capturada', () => {
       render(
         <AudienciaDetailDialog
-          audiencia={pjeAudiencia}
+          audiencia={audienciaFixture({
+            idPje: 9999,
+            modalidade: ModalidadeAudiencia.Virtual,
+            urlAudienciaVirtual: 'https://sala.exemplo.com/x',
+          })}
           open
           onOpenChange={() => {}}
         />
       );
-      // Há vários "Editar" no fluxo manual — em PJe apenas Observações permanece editável.
-      // Verificamos via escopo da seção Link da sala virtual: não deve ter Editar/Adicionar.
-      const linkSection = screen
-        .getByText('Link da sala virtual')
-        .closest('div');
-      expect(linkSection).not.toBeNull();
-      if (linkSection) {
-        expect(linkSection.querySelector('button')).toBeNull();
-      }
+      // Link virtual agora é editável também em capturadas: botão "Editar" aparece.
+      expect(screen.getAllByText('Editar').length).toBeGreaterThan(0);
     });
 
-    it('não exibe badge Obrigatório mesmo com URL vazia (fonte de verdade é PJe)', () => {
+    it('exibe badge Obrigatório quando URL vazia, mesmo sendo capturada (agora editável)', () => {
       render(
         <AudienciaDetailDialog
           audiencia={audienciaFixture({
@@ -461,10 +460,11 @@ describe('AudienciaDetailDialog', () => {
           onOpenChange={() => {}}
         />
       );
-      expect(screen.queryByText('Obrigatório')).not.toBeInTheDocument();
+      // Agora que capturadas são editáveis, faz sentido sinalizar campos faltando.
+      expect(screen.getByText('Obrigatório')).toBeInTheDocument();
     });
 
-    it('edição de observações continua permitida em PJe (whitelist)', async () => {
+    it('edição de observações continua permitida em PJe', async () => {
       const user = userEvent.setup();
       mockAtualizarObservacoes.mockResolvedValue({
         success: true,

@@ -521,7 +521,10 @@ export async function atualizarUrlVirtual(id: number, urlAudienciaVirtual: strin
     const db = createDbClient();
     const { data, error } = await db
       .from('audiencias')
-      .update({ url_audiencia_virtual: urlAudienciaVirtual })
+      .update({
+        url_audiencia_virtual: urlAudienciaVirtual,
+        url_editada_manualmente: true,
+      })
       .eq('id', id)
       .select()
       .single();
@@ -548,7 +551,10 @@ export async function atualizarEnderecoPresencial(id: number, enderecoPresencial
     const endereco = enderecoPresencial ? fromCamelToSnake(enderecoPresencial) : null;
     const { data, error } = await db
       .from('audiencias')
-      .update({ endereco_presencial: endereco })
+      .update({
+        endereco_presencial: endereco,
+        endereco_editado_manualmente: true,
+      })
       .eq('id', id)
       .select()
       .single();

@@ -342,12 +342,12 @@ export function AudienciaDetailDialog({
       audiencia?.enderecoPresencial?.uf
   );
   const urlObrigatoriaFaltando =
-    !isPje && (isVirtual || isHibrida) && !audiencia?.urlAudienciaVirtual;
+    (isVirtual || isHibrida) && !audiencia?.urlAudienciaVirtual;
   const enderecoObrigatorioFaltando =
-    !isPje && (isPresencial || isHibrida) && !enderecoCompleto;
+    (isPresencial || isHibrida) && !enderecoCompleto;
 
-  const modalidadePopoverDisabled = savingModalidade || isPje || !canEditGeneral;
-  const presencaDisabled = savingPresenca || isPje || !canEditGeneral;
+  const modalidadePopoverDisabled = savingModalidade || !canEditGeneral;
+  const presencaDisabled = savingPresenca || !canEditGeneral;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -457,9 +457,7 @@ export function AudienciaDetailDialog({
                         type="button"
                         disabled={modalidadePopoverDisabled}
                         title={
-                          isPje
-                            ? 'Sincronizado do PJe — não é possível alterar manualmente'
-                            : !canEditGeneral
+                          !canEditGeneral
                             ? 'Você não tem permissão para editar audiências'
                             : undefined
                         }
@@ -536,18 +534,6 @@ export function AudienciaDetailDialog({
                   </AudienciaResponsavelPopover>
                 </div>
               </div>
-
-              {/* Aviso · Audiência capturada do PJe */}
-              {isPje && (
-                <div className="flex items-start gap-2 mb-3 px-2.5 py-2 rounded-lg bg-info/8 border border-info/20 text-[11.5px] leading-snug text-info">
-                  <AlertCircle className="size-3.5 shrink-0 mt-0.5" />
-                  <span>
-                    <strong className="font-semibold">Sincronizada do PJe.</strong>{' '}
-                    Modalidade, link virtual, endereço e presença híbrida são atualizados
-                    pela captura — apenas <strong>responsável</strong> e <strong>observações</strong> podem ser alterados aqui.
-                  </span>
-                </div>
-              )}
 
               {/* Ações */}
               <div className="flex flex-wrap gap-1.5">
@@ -657,7 +643,7 @@ export function AudienciaDetailDialog({
                               </span>
                             )}
                           </div>
-                          {!editingUrl && !isPje && canEditUrl && (
+                          {!editingUrl && canEditUrl && (
                             <button
                               type="button"
                               onClick={handleStartEditUrl}
@@ -750,7 +736,7 @@ export function AudienciaDetailDialog({
                               </span>
                             )}
                           </div>
-                          {!editingEndereco && !isPje && canEditGeneral && (
+                          {!editingEndereco && canEditGeneral && (
                             <button
                               type="button"
                               onClick={handleStartEditEndereco}
@@ -894,9 +880,7 @@ export function AudienciaDetailDialog({
                               disabled={presencaDisabled}
                               onClick={() => handleChangePresencaHibrida(v)}
                               title={
-                                isPje
-                                  ? 'Sincronizado do PJe — não é possível alterar manualmente'
-                                  : !canEditGeneral
+                                !canEditGeneral
                                   ? 'Você não tem permissão para editar audiências'
                                   : undefined
                               }

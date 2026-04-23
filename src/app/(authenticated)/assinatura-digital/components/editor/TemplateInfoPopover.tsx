@@ -22,6 +22,8 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
+import { listarFormulariosQueUsamTemplateAction } from '@/shared/assinatura-digital/actions';
+import { AlertTriangle } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -77,6 +79,20 @@ export default function TemplateInfoPopover({
   const [previewContent, setPreviewContent] = useState('');
   const [showMarkdownEditor, setShowMarkdownEditor] = useState(false);
 
+  // Aviso: formulários que dependem deste template (quando o usuário tenta inativar).
+  const [desativacaoCheck, setDesativacaoCheck] = useState<{
+    open: boolean;
+    isChecking: boolean;
+    formularios: Array<{
+      id: number;
+      nome: string;
+      slug: string;
+      ativo: boolean;
+      segmento_nome: string | null;
+      tipo_formulario: string | null;
+    }>;
+  }>({ open: false, isChecking: false, formularios: [] });
+
   const handleOpenPreview = () => {
     if (!formData.conteudo_markdown.trim()) {
       toast.error('Adicione conteúdo Markdown para visualizar');
@@ -95,7 +111,9 @@ export default function TemplateInfoPopover({
     formData.nome.trim() !== ''
   );
 
-  const handleSave = async () => {
+  // Dispara o salvamento, inserindo a checagem de "template em uso" como gate
+  // quando o admin está transicionando o status para 'inativo'.
+  const handleRequestSave = async () => {
     if (!formData.nome.trim()) {
       toast.error('Nome do template é obrigatório');
       return;
@@ -107,6 +125,49 @@ export default function TemplateInfoPopover({
       return;
     }
 
+    // Pré-check só faz sentido quando: editando (não criação) + transicionando
+    // PARA inativo + template tem UUID (é um template persistido).
+    const estaInativando =
+      !isCreating &&
+      formData.status === 'inativo' &&
+      template?.status !== 'inativo' &&
+      template?.template_uuid;
+
+    if (estaInativando && template?.template_uuid) {
+      setDesativacaoCheck((prev) => ({ ...prev, isChecking: true }));
+      try {
+        const resp = await listarFormulariosQueUsamTemplateAction(
+          template.template_uuid,
+        );
+        if (!resp.success) {
+          toast.error(resp.error ?? 'Erro ao verificar uso em formulários.');
+          setDesativacaoCheck((prev) => ({ ...prev, isChecking: false }));
+          return;
+        }
+        if (resp.data.length > 0) {
+          setDesativacaoCheck({
+            open: true,
+            isChecking: false,
+            formularios: resp.data,
+          });
+          return;
+        }
+      } catch (err) {
+        toast.error(
+          err instanceof Error
+            ? err.message
+            : 'Erro ao verificar uso em formulários.',
+        );
+        setDesativacaoCheck((prev) => ({ ...prev, isChecking: false }));
+        return;
+      }
+      setDesativacaoCheck((prev) => ({ ...prev, isChecking: false }));
+    }
+
+    await performSave();
+  };
+
+  const performSave = async () => {
     setIsSaving(true);
     try {
       if (isCreating) {
@@ -363,13 +424,18 @@ export default function TemplateInfoPopover({
               <Button
                 size="sm"
                 className="flex-1 gap-2 text-xs"
-                onClick={handleSave}
-                disabled={!hasChanges || isSaving}
+                onClick={handleRequestSave}
+                disabled={!hasChanges || isSaving || desativacaoCheck.isChecking}
               >
                 {isSaving ? (
                   <>
                     <LoadingSpinner size="sm" />
                     {isCreating ? 'Criando...' : 'Salvando...'}
+                  </>
+                ) : desativacaoCheck.isChecking ? (
+                  <>
+                    <LoadingSpinner size="sm" />
+                    Verificando uso...
                   </>
                 ) : (
                   isCreating ? 'Criar Template' : 'Salvar Alterações'
@@ -389,6 +455,87 @@ export default function TemplateInfoPopover({
         title="Editar Conteúdo Markdown do Template"
         onSaveToBackend={handleSaveMarkdownDirectly}
       />
+
+      <Dialog
+        open={desativacaoCheck.open}
+        onOpenChange={(open) =>
+          setDesativacaoCheck((prev) => ({ ...prev, open }))
+        }
+      >
+        <DialogContent className="glass-dialog max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="size-5 text-warning" />
+              Template em uso em {desativacaoCheck.formularios.length} formulário
+              {desativacaoCheck.formularios.length > 1 ? 's' : ''}
+            </DialogTitle>
+            <DialogDescription>
+              Desativar este template vai interromper a geração automática dos
+              documentos nos segmentos abaixo. Contratos novos que dependem
+              deste template deixarão de ser gerados até que você revise o
+              formulário ou reative o template.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="max-h-64 overflow-y-auto space-y-2 py-2">
+            {desativacaoCheck.formularios.map((f) => (
+              <div
+                key={f.id}
+                className="flex items-start justify-between gap-3 rounded-lg border border-border/40 bg-muted/30 px-3 py-2"
+              >
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <p className="text-xs font-medium text-foreground truncate">
+                      {f.nome}
+                    </p>
+                    <Badge
+                      variant={f.ativo ? 'default' : 'secondary'}
+                      className="text-[10px] shrink-0"
+                    >
+                      {f.ativo ? 'Ativo' : 'Inativo'}
+                    </Badge>
+                    {f.tipo_formulario && (
+                      <Badge
+                        variant="secondary"
+                        className="text-[10px] shrink-0"
+                      >
+                        {f.tipo_formulario}
+                      </Badge>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">
+                    Segmento: {f.segmento_nome ?? '—'}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                setDesativacaoCheck((prev) => ({ ...prev, open: false }))
+              }
+              disabled={isSaving}
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={async () => {
+                setDesativacaoCheck((prev) => ({ ...prev, open: false }));
+                await performSave();
+              }}
+              disabled={isSaving}
+            >
+              {isSaving ? 'Salvando…' : 'Desativar mesmo assim'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={showPreview} onOpenChange={setShowPreview}>
         <DialogContent className="max-w-4xl max-h-[85vh] overflow-auto">

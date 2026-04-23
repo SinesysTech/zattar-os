@@ -24,7 +24,7 @@ describe('contratoParaInputData', () => {
       },
     },
     partes: [
-      { papel_contratual: 'parte_contraria', nome_snapshot: 'Acme Ltda', ordem: 1 },
+      { tipo_entidade: 'parte_contraria', papel_contratual: 're', nome_snapshot: 'Acme Ltda', ordem: 1 },
     ],
   };
 
@@ -72,14 +72,20 @@ describe('contratoParaInputData - edge cases', () => {
     ).toThrow('Contrato sem cliente vinculado');
   });
 
-  it('throws when cliente is PJ', () => {
-    expect(() =>
-      contratoParaInputData({
-        contrato: { id: 1, segmento_id: 1, cliente_id: 10 },
-        cliente: { ...baseCliente, tipo_pessoa: 'pj' },
-        partes: [],
-      }),
-    ).toThrow('Templates trabalhistas exigem cliente Pessoa Física');
+  it('supports PJ client (cnpj preserved; CPF dialog falls to missing-field flow if template needs it)', () => {
+    const result = contratoParaInputData({
+      contrato: { id: 1, segmento_id: 5, cliente_id: 10 },
+      cliente: {
+        ...baseCliente,
+        tipo_pessoa: 'pj',
+        cpf: null,
+        cnpj: '12345678000190',
+      },
+      partes: [],
+    });
+    expect(result.cliente.tipo_pessoa).toBe('pj');
+    expect(result.cliente.cnpj).toBe('12345678000190');
+    expect(result.cliente.cpf).toBeNull();
   });
 
   it('concatenates 3 partes contrárias with "A, B e C"', () => {
@@ -87,9 +93,9 @@ describe('contratoParaInputData - edge cases', () => {
       contrato: { id: 1, segmento_id: 1, cliente_id: 10 },
       cliente: baseCliente,
       partes: [
-        { papel_contratual: 'parte_contraria', nome_snapshot: 'Acme', ordem: 1 },
-        { papel_contratual: 'parte_contraria', nome_snapshot: 'Beta', ordem: 2 },
-        { papel_contratual: 'parte_contraria', nome_snapshot: 'Gama', ordem: 3 },
+        { tipo_entidade: 'parte_contraria', papel_contratual: 're', nome_snapshot: 'Acme', ordem: 1 },
+        { tipo_entidade: 'parte_contraria', papel_contratual: 're', nome_snapshot: 'Beta', ordem: 2 },
+        { tipo_entidade: 'parte_contraria', papel_contratual: 're', nome_snapshot: 'Gama', ordem: 3 },
       ],
     });
     expect(result.parteContrariaNome).toBe('Acme, Beta e Gama');
@@ -100,11 +106,24 @@ describe('contratoParaInputData - edge cases', () => {
       contrato: { id: 1, segmento_id: 1, cliente_id: 10 },
       cliente: baseCliente,
       partes: [
-        { papel_contratual: 'cliente', nome_snapshot: 'Some Client', ordem: 1 },
-        { papel_contratual: 'parte_contraria', nome_snapshot: 'Acme', ordem: 2 },
+        { tipo_entidade: 'cliente', papel_contratual: 'autora', nome_snapshot: 'Some Client', ordem: 0 },
+        { tipo_entidade: 'parte_contraria', papel_contratual: 're', nome_snapshot: 'Acme', ordem: 1 },
       ],
     });
     expect(result.parteContrariaNome).toBe('Acme');
+  });
+
+  it('includes parte_contraria_transitoria alongside parte_contraria (cadastro pendente)', () => {
+    const result = contratoParaInputData({
+      contrato: { id: 1, segmento_id: 1, cliente_id: 10 },
+      cliente: baseCliente,
+      partes: [
+        { tipo_entidade: 'cliente', papel_contratual: 'autora', nome_snapshot: 'Cliente', ordem: 0 },
+        { tipo_entidade: 'parte_contraria_transitoria', papel_contratual: 're', nome_snapshot: 'Uber do Brasil', ordem: 1 },
+      ],
+    });
+    expect(result.parteContrariaNome).toBe('Uber do Brasil');
+    expect(result.ctxExtras['acao.nome_empresa_pessoa']).toBe('Uber do Brasil');
   });
 
   it('returns empty string when no partes contrárias exist', () => {

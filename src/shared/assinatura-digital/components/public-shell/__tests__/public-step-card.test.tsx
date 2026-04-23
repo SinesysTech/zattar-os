@@ -21,12 +21,13 @@ describe('PublicStepCard', () => {
     expect(screen.getByText('Última etapa')).toBeInTheDocument()
   })
 
-  it('renders description when provided', () => {
+  it('ignores the deprecated description prop (design dropped subtitles below heading)', () => {
     render(
       <PublicStepCard title="X" description="Texto de apoio">
         <div />
       </PublicStepCard>,
     )
-    expect(screen.getByText('Texto de apoio')).toBeInTheDocument()
+    // A prop é aceita por compat, mas não deve ser renderizada no novo design.
+    expect(screen.queryByText('Texto de apoio')).not.toBeInTheDocument()
   })
 })

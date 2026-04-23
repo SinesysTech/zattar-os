@@ -15,8 +15,6 @@ interface DocumentosContratacaoCardProps {
   segmentoId: number | null;
 }
 
-const SEGMENTO_TRABALHISTA = 1;
-
 async function baixarZip(
   contratoId: number,
   overrides: Record<string, string> = {},
@@ -62,7 +60,10 @@ export function DocumentosContratacaoCard({
   } | null>(null);
   const [modoOverride, setModoOverride] = React.useState<'baixar' | 'enviar'>('baixar');
 
-  if (segmentoId !== SEGMENTO_TRABALHISTA) return null;
+  // Sem segmento não há como descobrir qual formulário aplicar.
+  // Para contratos com segmento, mostramos o card e deixamos o servidor
+  // responder se existe ou não formulário de contratação configurado.
+  if (segmentoId == null) return null;
 
   const handleEnviar = async () => {
     setLoading(true);
@@ -172,8 +173,9 @@ export function DocumentosContratacaoCard({
             Documentos de contratação
           </h4>
           <p className="text-caption text-muted-foreground mt-0.5 leading-relaxed">
-            Gera os 4 PDFs trabalhistas preenchidos com os dados deste
-            contrato. Se faltar informação, complete antes do download.
+            Gera os documentos do formulário de contratação deste segmento
+            preenchidos com os dados do contrato. Se faltar informação,
+            complete antes do download ou envio.
           </p>
         </div>
         <div className="flex items-center gap-1.5 shrink-0">

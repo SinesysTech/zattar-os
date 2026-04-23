@@ -73,4 +73,5 @@ export {
 // =============================================================================
 export {
   listarFormulariosAction,
+  listarFormulariosQueUsamTemplateAction,
 } from "./formularios-actions";

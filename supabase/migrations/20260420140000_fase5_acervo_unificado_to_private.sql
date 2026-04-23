@@ -10,9 +10,24 @@
 CREATE SCHEMA IF NOT EXISTS private;
 GRANT USAGE ON SCHEMA private TO authenticated, service_role;
 
-ALTER MATERIALIZED VIEW public.acervo_unificado SET SCHEMA private;
+-- Mover MV apenas se ainda estiver em public (idempotente: aceita banco virgem,
+-- já migrado, ou em estado parcial por aplicação manual anterior).
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM pg_matviews
+    WHERE schemaname = 'public' AND matviewname = 'acervo_unificado'
+  ) THEN
+    ALTER MATERIALIZED VIEW public.acervo_unificado SET SCHEMA private;
+  END IF;
+END $$;
 
 GRANT SELECT ON private.acervo_unificado TO authenticated, service_role;
+
+-- Recriar view wrapper em public de forma idempotente.
+-- DROP VIEW IF EXISTS é seguro aqui: o DO block acima já moveu a MV se ainda
+-- estivesse em public, então o objeto remanescente (se houver) é uma view.
+DROP VIEW IF EXISTS public.acervo_unificado;
 
 CREATE VIEW public.acervo_unificado
 WITH (security_invoker = true)

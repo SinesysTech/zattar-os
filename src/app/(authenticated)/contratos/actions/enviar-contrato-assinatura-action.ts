@@ -5,7 +5,7 @@ import { authenticatedAction } from '@/lib/safe-action';
 import {
   validarGeracaoPdfs,
   carregarDadosContrato,
-  carregarFormularioContratacao,
+  carregarPacoteContratacaoPorSegmento,
   carregarTemplatesPorUuids,
 } from '../services/documentos-contratacao.service';
 import { contratoParaInputData } from '../services/mapeamento-contrato-input-data';
@@ -28,29 +28,39 @@ export const actionEnviarContratoParaAssinatura = authenticatedAction(
 
     // 2. Load context (same 3 loaders the caminho A service uses)
     const dados = await carregarDadosContrato(input.contratoId);
-    const formulario = await carregarFormularioContratacao();
-    if (!dados || !dados.cliente || !formulario) {
-      return { status: 'erro' as const, mensagem: 'Dados insuficientes' };
+    if (!dados || !dados.cliente) {
+      return { status: 'erro' as const, mensagem: 'Contrato sem cliente vinculado' };
     }
-    const templates = await carregarTemplatesPorUuids(formulario.template_ids);
+    if (!dados.contrato.segmento_id) {
+      return {
+        status: 'erro' as const,
+        mensagem:
+          'Contrato sem segmento definido. Edite o contrato e escolha um segmento antes de enviar para assinatura.',
+      };
+    }
+    const pacote = await carregarPacoteContratacaoPorSegmento(dados.contrato.segmento_id);
+    if (!pacote || pacote.templateUuidsUnificados.length === 0) {
+      return {
+        status: 'erro' as const,
+        mensagem:
+          'Nenhum formulário de contratação ativo está cadastrado para este segmento. Configure um em Assinatura Digital › Formulários com tipo "Contrato" e pelo menos um template.',
+      };
+    }
+    const templates = await carregarTemplatesPorUuids(pacote.templateUuidsUnificados);
 
     // 3. Merge PDFs in parallel
     const mapeado = contratoParaInputData(dados);
+    const principal = pacote.formularioPrincipal;
     const ctx = {
       cliente: mapeado.cliente,
-      segmento: {
-        id: formulario.segmento_id,
-        nome: 'Trabalhista',
-        slug: 'trabalhista',
-        ativo: true,
-      },
+      segmento: pacote.segmento,
       formulario: {
-        id: formulario.id,
-        formulario_uuid: formulario.formulario_uuid,
-        nome: formulario.nome,
-        slug: formulario.slug,
-        segmento_id: formulario.segmento_id,
-        ativo: formulario.ativo,
+        id: principal.id,
+        formulario_uuid: principal.formulario_uuid,
+        nome: principal.nome,
+        slug: principal.slug,
+        segmento_id: principal.segmento_id,
+        ativo: principal.ativo,
       },
       protocolo: `CTR-${dados.contrato.id}-${Date.now()}`,
       parte_contraria: mapeado.parteContrariaNome
@@ -80,7 +90,7 @@ export const actionEnviarContratoParaAssinatura = authenticatedAction(
 
     const result = await criarPacote({
       contratoId: input.contratoId,
-      formularioId: formulario.id,
+      formularioId: principal.id,
       templatesComPdfs,
       clienteDadosSnapshot,
       userId: user.id,

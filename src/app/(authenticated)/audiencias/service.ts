@@ -7,8 +7,6 @@ import {
   updateAudienciaSchema,
   ListarAudienciasParams,
   StatusAudiencia,
-  isAudienciaCapturada,
-  ALLOWED_UPDATE_FIELDS_CAPTURADA,
 } from "./domain";
 import * as repo from "./repository";
 
@@ -109,34 +107,25 @@ export async function atualizarAudiencia(
       return err(appError("NOT_FOUND", "Audiência não encontrada."));
     }
 
-    // Política de fonte da verdade: audiências capturadas do PJE (idPje > 0) só
-    // podem ter o whitelist local alterado. Qualquer outro campo deve ser
-    // sincronizado pela captura, não por edição manual.
-    if (isAudienciaCapturada(audienciaExistenteResult.data)) {
-      const providedFields = Object.entries(validation.data)
-        .filter(([, value]) => value !== undefined)
-        .map(([key]) => key);
-      const forbiddenFields = providedFields.filter(
-        (field) => !ALLOWED_UPDATE_FIELDS_CAPTURADA.includes(field as never)
-      );
-      if (forbiddenFields.length > 0) {
-        return err(
-          appError(
-            "VALIDATION_ERROR",
-            `Audiência capturada do PJE — apenas ${ALLOWED_UPDATE_FIELDS_CAPTURADA.join(
-              ", "
-            )} podem ser editados manualmente. Campos não permitidos: ${forbiddenFields.join(", ")}.`,
-            { capturada: true, allowed: ALLOWED_UPDATE_FIELDS_CAPTURADA, forbidden: forbiddenFields }
-          )
-        );
-      }
+    // Override manual: quando o payload altera modalidade / URL / endereço,
+    // marca a flag correspondente para que o próximo sync do PJe não
+    // sobrescreva a edição humana.
+    const dadosComFlags: Partial<Audiencia> = { ...validation.data };
+    if (validation.data.modalidade !== undefined) {
+      dadosComFlags.modalidadeEditadaManualmente = true;
+    }
+    if (validation.data.urlAudienciaVirtual !== undefined) {
+      dadosComFlags.urlEditadaManualmente = true;
+    }
+    if (validation.data.enderecoPresencial !== undefined) {
+      dadosComFlags.enderecoEditadoManualmente = true;
     }
 
     // FK constraints do Postgres validam processoId e tipoAudienciaId —
     // queries de pré-validação removidas para eliminar N+1.
     const result = await repo.updateAudiencia(
       id,
-      validation.data,
+      dadosComFlags,
       audienciaExistenteResult.data
     );
     return result;

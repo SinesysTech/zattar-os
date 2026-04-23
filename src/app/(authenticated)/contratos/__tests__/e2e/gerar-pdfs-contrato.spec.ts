@@ -1,15 +1,15 @@
 /**
- * E2E: Gerar PDFs de Contratação Trabalhista
+ * E2E: Gerar PDFs de Contratação (roteamento dinâmico por segmento)
  *
  * Cenários:
- * 1. Contrato trabalhista completo → clica no botão → ZIP é baixado
- * 2. Contrato trabalhista com campos faltantes → modal aparece → preenche → ZIP é baixado
- * 3. Contrato não-trabalhista → botão não está visível
+ * 1. Contrato com segmento + dados completos → clica no botão → ZIP é baixado
+ * 2. Contrato com campos faltantes → modal aparece → preenche → ZIP é baixado
+ * 3. Contrato SEM segmento definido → card não aparece (não há como resolver o formulário)
  *
  * Nota: os IDs abaixo são fallbacks; sobrescreva via variáveis de ambiente no CI.
- *   E2E_CONTRATO_TRABALHISTA_COMPLETO  — segmento trabalhista com todos os campos preenchidos
- *   E2E_CONTRATO_TRABALHISTA_SEM_DADOS — segmento trabalhista com campo(s) faltante(s)
- *   E2E_CONTRATO_NAO_TRABALHISTA       — segmento diferente de trabalhista (ex.: cível)
+ *   E2E_CONTRATO_TRABALHISTA_COMPLETO  — contrato com segmento configurado e todos os campos preenchidos
+ *   E2E_CONTRATO_TRABALHISTA_SEM_DADOS — contrato com segmento configurado e campo(s) faltante(s)
+ *   E2E_CONTRATO_SEM_SEGMENTO          — contrato sem segmento definido (segmentoId = null)
  */
 import { test, expect } from '@/testing/e2e/fixtures';
 
@@ -19,8 +19,8 @@ const CONTRATO_TRABALHISTA_COMPLETO = Number(
 const CONTRATO_TRABALHISTA_SEM_DADOS = Number(
   process.env.E2E_CONTRATO_TRABALHISTA_SEM_DADOS ?? 2,
 );
-const CONTRATO_NAO_TRABALHISTA = Number(
-  process.env.E2E_CONTRATO_NAO_TRABALHISTA ?? 3,
+const CONTRATO_SEM_SEGMENTO = Number(
+  process.env.E2E_CONTRATO_SEM_SEGMENTO ?? 3,
 );
 
 // ---------------------------------------------------------------------------
@@ -246,13 +246,13 @@ test.describe('Contrato: gerar PDFs de contratação trabalhista', () => {
   });
 
   // -------------------------------------------------------------------------
-  // Cenário 3 — contrato não-trabalhista → botão ausente
+  // Cenário 3 — contrato sem segmento → card ausente
   // -------------------------------------------------------------------------
-  test('não exibe o botão quando o contrato não é trabalhista', async ({
+  test('não exibe o card quando o contrato não tem segmento definido', async ({
     authenticatedPage: page,
   }) => {
     await page.route(
-      `**/api/contratos/${CONTRATO_NAO_TRABALHISTA}`,
+      `**/api/contratos/${CONTRATO_SEM_SEGMENTO}`,
       (route) =>
         route.fulfill({
           status: 200,
@@ -260,8 +260,8 @@ test.describe('Contrato: gerar PDFs de contratação trabalhista', () => {
           body: JSON.stringify({
             success: true,
             data: {
-              id: CONTRATO_NAO_TRABALHISTA,
-              segmentoId: 2, // diferente de 1 → não-trabalhista
+              id: CONTRATO_SEM_SEGMENTO,
+              segmentoId: null, // sem segmento → sem roteamento de formulário
               statusHistorico: [],
               processos: [],
               observacoes: null,
@@ -273,10 +273,11 @@ test.describe('Contrato: gerar PDFs de contratação trabalhista', () => {
         }),
     );
 
-    await goToDocumentosTab(page, CONTRATO_NAO_TRABALHISTA);
+    await goToDocumentosTab(page, CONTRATO_SEM_SEGMENTO);
 
+    // Sem segmento, o título do card também some — asserto por texto ancorável.
     await expect(
-      page.getByRole('button', { name: /Baixar PDFs preenchidos/i }),
+      page.getByRole('heading', { name: /Documentos de contratação/i }),
     ).toHaveCount(0);
   });
 });

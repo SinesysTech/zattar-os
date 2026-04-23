@@ -1,11 +1,12 @@
 import type { ClienteBasico } from '@/shared/assinatura-digital/services/data.service';
+import { isTipoParteContraria, type PapelContratual, type TipoEntidadeContrato } from '../domain';
 
 export interface DadosContratoParaMapping {
   contrato: { id: number; segmento_id: number | null; cliente_id: number };
   cliente: {
     id: number;
     nome: string;
-    tipo_pessoa?: string | null;
+    tipo_pessoa?: 'pf' | 'pj' | string | null;
     cpf?: string | null;
     cnpj?: string | null;
     rg?: string | null;
@@ -25,7 +26,8 @@ export interface DadosContratoParaMapping {
     } | null;
   } | null;
   partes: Array<{
-    papel_contratual: string;
+    tipo_entidade: TipoEntidadeContrato;
+    papel_contratual: PapelContratual;
     nome_snapshot: string | null;
     ordem: number;
   }>;
@@ -69,7 +71,7 @@ function concatenarPartesContrarias(
   partes: DadosContratoParaMapping['partes'],
 ): string {
   const nomes = partes
-    .filter(p => p.papel_contratual === 'parte_contraria')
+    .filter(p => isTipoParteContraria(p.tipo_entidade))
     .sort((a, b) => a.ordem - b.ordem)
     .map(p => (p.nome_snapshot ?? '').trim())
     .filter(n => n.length > 0);
@@ -85,18 +87,12 @@ export function contratoParaInputData(dados: DadosContratoParaMapping): InputDat
     throw new Error('Contrato sem cliente vinculado');
   }
 
-  if (cliente.tipo_pessoa && cliente.tipo_pessoa !== 'pf') {
-    throw new Error(
-      'Templates trabalhistas exigem cliente Pessoa Física. Altere o cadastro do cliente ou use outro tipo de contrato.',
-    );
-  }
-
   const clienteMapeado: ClienteBasico = {
     id: cliente.id,
     nome: (cliente.nome ?? '').trim(),
     tipo_pessoa: cliente.tipo_pessoa ?? null,
     cpf: cliente.cpf ? formatarCpf(cliente.cpf) : null,
-    cnpj: null,
+    cnpj: cliente.cnpj ?? null,
     rg: cliente.rg ?? null,
     emails: cliente.emails ?? null,
     ddd_celular: cliente.ddd_celular ?? null,

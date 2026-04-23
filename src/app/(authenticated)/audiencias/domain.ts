@@ -77,6 +77,9 @@ export interface Audiencia {
   enderecoPresencial: EnderecoPresencial | null;
   responsavelId: number | null;
   observacoes: string | null;
+  modalidadeEditadaManualmente: boolean;
+  urlEditadaManualmente: boolean;
+  enderecoEditadoManualmente: boolean;
   dadosAnteriores: Record<string, unknown> | null;
   ataAudienciaId: number | null;
   urlAtaAudiencia: string | null;
@@ -167,19 +170,15 @@ export const updateAudienciaSchema = baseAudienciaSchema.partial();
 // =============================================================================
 
 /**
- * Conjunto de campos que podem ser editados em audiências capturadas do PJE.
- * Audiências capturadas (idPje > 0) têm o PJE como fonte da verdade, então
- * apenas metadados locais podem ser alterados via edição manual.
+ * Identifica se uma audiência foi capturada do PJE (origem PJE). Usado pela UI
+ * para oferecer ações específicas (ex: "Abrir no PJe") e pelo sync do scraper.
  *
- * Qualquer outra alteração deve ocorrer através do fluxo de captura/sincronização.
- */
-export const ALLOWED_UPDATE_FIELDS_CAPTURADA = ['responsavelId', 'observacoes'] as const;
-export type AllowedUpdateFieldCapturada = typeof ALLOWED_UPDATE_FIELDS_CAPTURADA[number];
-
-/**
- * Identifica se uma audiência foi capturada do PJE (origem PJE) ou criada
- * manualmente no ZattarOS. Usado para impor que registros capturados não
- * podem ser editados localmente fora do whitelist permitido.
+ * Campos estruturais (data, hora, sala, tipo, grau) continuam sendo
+ * sincronizados do PJe e não são editáveis no painel. Os campos
+ * `modalidade`, `url_audiencia_virtual`, `endereco_presencial` e
+ * `presenca_hibrida` passaram a ser editáveis também em audiências capturadas;
+ * o sync do PJe respeita as flags `*_editada_manualmente` para não sobrescrever
+ * edições humanas.
  */
 export function isAudienciaCapturada(
   audiencia: Pick<Audiencia, 'idPje'> | { idPje?: number | null }
@@ -666,6 +665,9 @@ export function getAudienciaColumnsFull(): string {
     endereco_presencial,
     responsavel_id,
     observacoes,
+    modalidade_editada_manualmente,
+    url_editada_manualmente,
+    endereco_editado_manualmente,
     dados_anteriores,
     ata_audiencia_id,
     url_ata_audiencia,

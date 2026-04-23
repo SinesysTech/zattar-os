@@ -164,6 +164,60 @@ export async function listFormularios(
   };
 }
 
+/**
+ * Resumo mínimo de um formulário que referencia um template específico.
+ * Usado para avisar o admin quando ele tenta desativar/excluir um template que
+ * está em uso — a lista permite navegar direto para o formulário afetado.
+ */
+export interface FormularioQueUsaTemplate {
+  id: number;
+  nome: string;
+  slug: string;
+  tipo_formulario: string | null;
+  ativo: boolean;
+  segmento_id: number;
+  segmento_nome: string | null;
+}
+
+/**
+ * Retorna todos os formulários cujo array `template_ids` contém o UUID informado.
+ * Independente de `ativo` — o admin precisa ver até os inativos para tomar
+ * decisão informada (ex: reativar um formulário esperando que o template
+ * continue disponível).
+ */
+export async function findFormulariosUsandoTemplate(
+  templateUuid: string,
+): Promise<FormularioQueUsaTemplate[]> {
+  if (!templateUuid) return [];
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from(TABLE_FORMULARIOS)
+    .select(`
+      id, nome, slug, tipo_formulario, ativo, segmento_id,
+      segmento:segmentos!segmento_id ( nome )
+    `)
+    .contains('template_ids', [templateUuid])
+    .order('nome', { ascending: true });
+
+  if (error) {
+    throw new Error(`Erro ao buscar formulários que usam o template: ${error.message}`);
+  }
+
+  return (data ?? []).map((row) => {
+    const segmento = Array.isArray(row.segmento) ? row.segmento[0] : row.segmento;
+    return {
+      id: row.id as number,
+      nome: row.nome as string,
+      slug: row.slug as string,
+      tipo_formulario: (row.tipo_formulario as string | null) ?? null,
+      ativo: (row.ativo as boolean | null) ?? false,
+      segmento_id: row.segmento_id as number,
+      segmento_nome: (segmento?.nome as string | undefined) ?? null,
+    };
+  });
+}
+
 export async function getFormulario(id: string): Promise<AssinaturaDigitalFormulario | null> {
   const supabase = createServiceClient();
   const parsed = parseFormularioId(id);

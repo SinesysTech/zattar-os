@@ -3,6 +3,7 @@
 
 -- 1) rls_policy_always_true: blog_posts_authenticated_all
 DROP POLICY IF EXISTS "blog_posts_authenticated_all" ON public.blog_posts;
+DROP POLICY IF EXISTS "blog_posts_authenticated_read" ON public.blog_posts;
 
 CREATE POLICY "blog_posts_authenticated_read"
 ON public.blog_posts
@@ -14,6 +15,9 @@ USING (true);
 DROP POLICY IF EXISTS "Usuarios autenticados podem atualizar resumos" ON public.comunica_cnj_resumos;
 DROP POLICY IF EXISTS "Usuarios autenticados podem criar resumos" ON public.comunica_cnj_resumos;
 DROP POLICY IF EXISTS "Usuarios autenticados podem ver resumos" ON public.comunica_cnj_resumos;
+DROP POLICY IF EXISTS "comunica_cnj_resumos_authenticated_select" ON public.comunica_cnj_resumos;
+DROP POLICY IF EXISTS "comunica_cnj_resumos_authenticated_insert" ON public.comunica_cnj_resumos;
+DROP POLICY IF EXISTS "comunica_cnj_resumos_authenticated_update" ON public.comunica_cnj_resumos;
 
 CREATE POLICY "comunica_cnj_resumos_authenticated_select"
 ON public.comunica_cnj_resumos
