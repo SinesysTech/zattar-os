@@ -47,6 +47,7 @@ import {
   ContratoTimeline,
 } from './components';
 import { DocumentosContratacaoCard } from './components/documentos-contratacao-card';
+import { ContratoTransitoriasAlert } from './components/contrato-transitorias-alert';
 import { ContratoDocumentosAssinaturaCard } from './components/contrato-documentos-assinatura-card';
 import type {
   DocumentoAssinaturaDoContrato,
@@ -294,6 +295,11 @@ export function ContratoDetalhesClient({
         onEdit={handleEdit}
         onGerarPeca={handleGerarPeca}
         onEnviarAssinatura={handleEnviarAssinatura}
+      />
+
+      <ContratoTransitoriasAlert
+        contratoId={contrato.id}
+        onTransitoriaPromoted={() => router.refresh()}
       />
 
       <Tabs
