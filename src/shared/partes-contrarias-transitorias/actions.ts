@@ -21,8 +21,11 @@ import {
 /**
  * Promove uma parte contrária transitória para uma parte_contraria definitiva.
  *
- * Permissão: exige `partes_contrarias.criar` (quem já pode criar parte
- * contrária, pode promover — atos semanticamente equivalentes).
+ * Permissão: exige operação granular `partes_contrarias.promover`. Backfill
+ * automático de seed (migration 20260423140000) concede esse bit para todos
+ * os usuários que já tinham `partes_contrarias.criar`, mantendo backwards
+ * compatibility. Firmas que queiram restringir promoção separadamente agora
+ * podem revogar o bit `promover` sem revogar `criar`.
  *
  * Retorno inclui contratos_atualizados (quantos contratos foram re-apontados).
  */
@@ -35,7 +38,7 @@ export const actionPromoverTransitoria = authenticatedAction(
     const allowed = await checkPermission(
       user.id,
       "partes_contrarias",
-      "criar"
+      "promover"
     );
     if (!allowed) {
       throw new Error(

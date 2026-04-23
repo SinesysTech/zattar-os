@@ -78,6 +78,8 @@ export type Operacao =
   // Operações específicas de processo_partes
   | 'vincular_parte'
   | 'desvincular_parte'
+  // Operações específicas de partes_contrarias
+  | 'promover'
   // Operações específicas de acordos/condenações
   | 'gerenciar_parcelas'
   | 'receber_pagamento'
@@ -197,8 +199,8 @@ export const MATRIZ_PERMISSOES: Record<Recurso, Operacao[]> = {
   // Clientes (5 permissões)
   clientes: ['listar', 'visualizar', 'criar', 'editar', 'deletar'],
 
-  // Partes Contrárias (5 permissões)
-  partes_contrarias: ['listar', 'visualizar', 'criar', 'editar', 'deletar'],
+  // Partes Contrárias (6 permissões)
+  partes_contrarias: ['listar', 'visualizar', 'criar', 'editar', 'deletar', 'promover'],
 
   // Terceiros (5 permissões)
   terceiros: ['listar', 'visualizar', 'criar', 'editar', 'deletar'],
