@@ -27,6 +27,7 @@ import {
   updateContrato as updateContratoRepo,
   clienteExists,
   parteContrariaExists,
+  parteContrariaTransitoriaExists,
   countContratosPorStatus,
   countContratos,
   countContratosAteData,
@@ -114,6 +115,15 @@ export async function criarContrato(
 
     if (parte.tipoEntidade === "parte_contraria") {
       const existsResult = await parteContrariaExists(parte.entidadeId);
+      if (!existsResult.success) return err(existsResult.error);
+      if (!existsResult.data)
+        return err(parteContrariaNotFoundError(parte.entidadeId));
+    }
+
+    if (parte.tipoEntidade === "parte_contraria_transitoria") {
+      const existsResult = await parteContrariaTransitoriaExists(
+        parte.entidadeId,
+      );
       if (!existsResult.success) return err(existsResult.error);
       if (!existsResult.data)
         return err(parteContrariaNotFoundError(parte.entidadeId));
@@ -292,6 +302,15 @@ export async function atualizarContrato(
 
       if (parte.tipoEntidade === "parte_contraria") {
         const existsResult = await parteContrariaExists(parte.entidadeId);
+        if (!existsResult.success) return err(existsResult.error);
+        if (!existsResult.data)
+          return err(parteContrariaNotFoundError(parte.entidadeId));
+      }
+
+      if (parte.tipoEntidade === "parte_contraria_transitoria") {
+        const existsResult = await parteContrariaTransitoriaExists(
+          parte.entidadeId,
+        );
         if (!existsResult.success) return err(existsResult.error);
         if (!existsResult.data)
           return err(parteContrariaNotFoundError(parte.entidadeId));

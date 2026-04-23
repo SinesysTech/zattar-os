@@ -702,17 +702,18 @@ export const Z_INDEX = {
 
 /**
  * Presets de tema disponíveis via body[data-theme-preset].
- * Cada preset sobrescreve apenas --primary e --primary-foreground.
+ * Valores OKLCH vivem em globals.css (fonte única); aqui só os rótulos
+ * humanos usados na UI de customização.
  */
 export const THEME_PRESETS = {
-  default: { primary: 'oklch(0.48 0.26 281)', name: 'Zattar Purple' },
-  blue: { primary: 'oklch(0.53 0.24 250)', name: 'Blue' },
-  green: { primary: 'oklch(0.52 0.19 150)', name: 'Green' },
-  orange: { primary: 'oklch(0.65 0.21 45)', name: 'Orange' },
-  red: { primary: 'oklch(0.55 0.22 25)', name: 'Red' },
-  violet: { primary: 'oklch(0.6 0.24 290)', name: 'Violet' },
-  yellow: { primary: 'oklch(0.75 0.18 90)', name: 'Yellow' },
-  slate: { primary: 'oklch(0.4 0.03 240)', name: 'Slate' },
+  default: { name: 'Zattar Purple' },
+  blue: { name: 'Blue' },
+  green: { name: 'Green' },
+  orange: { name: 'Orange' },
+  red: { name: 'Red' },
+  violet: { name: 'Violet' },
+  yellow: { name: 'Yellow' },
+  slate: { name: 'Slate' },
 } as const;
 
 export type ThemePreset = keyof typeof THEME_PRESETS;

@@ -20,7 +20,6 @@ import {
 import {
   criarClienteDbMock,
   criarClienteDbLegacyMock,
-  criarEnderecoDbMock,
 } from '../fixtures';
 import {
   createMockSupabaseClient,

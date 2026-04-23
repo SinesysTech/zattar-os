@@ -8,6 +8,7 @@
 import "server-only";
 
 import { createDbClient } from "@/lib/supabase";
+import { resolveAvatarUrl } from "@/lib/avatar-url";
 import { appError, err, ok, Result } from "@/types";
 import { QUADRO_CUSTOM_UNAVAILABLE_MESSAGE } from "./errors";
 import type {
@@ -99,7 +100,7 @@ function rowToAssignee(row: AssigneeJoinRow["usuarios"][0] | undefined): TaskAss
     id: row.id,
     name,
     email: row.email_corporativo || row.email_pessoal || undefined,
-    avatarUrl: row.avatar_url,
+    avatarUrl: resolveAvatarUrl(row.avatar_url),
   };
 }
 

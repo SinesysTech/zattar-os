@@ -1,4 +1,5 @@
 import { createServiceClient } from "@/lib/supabase/service-client";
+import { resolveAvatarUrl } from "@/lib/avatar-url";
 import {
   getCached,
   setCached,
@@ -113,7 +114,7 @@ function converterParaUsuario(data: Record<string, unknown>): Usuario {
         descricao: (cargos.descricao as string | null) ?? null,
       }
       : undefined,
-    avatarUrl: (data.avatar_url as string | null) ?? null,
+    avatarUrl: resolveAvatarUrl(data.avatar_url as string | null),
     coverUrl: (data.cover_url as string | null) ?? null,
     isSuperAdmin: (data.is_super_admin as boolean) ?? false,
     ativo: data.ativo as boolean,

@@ -73,7 +73,10 @@ export function AcordoDetalhesV2Client({
     parcela: Parcela | null;
   }>({ open: false, parcela: null });
 
-  const parcelas = acordo.parcelas ?? [];
+  const parcelas = React.useMemo(
+    () => acordo.parcelas ?? [],
+    [acordo.parcelas],
+  );
   const repassesRelevantes = parcelas.filter(
     (p) =>
       p.statusRepasse === 'pendente_declaracao' ||

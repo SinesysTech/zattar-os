@@ -1,4 +1,5 @@
 import { createDbClient } from "@/lib/supabase";
+import { resolveAvatarUrl } from "@/lib/avatar-url";
 import { toDateString } from "@/lib/date-utils";
 import { ok, err, appError, type Result } from "@/types/result";
 import type {
@@ -275,7 +276,7 @@ export async function getMembrosAtivos(limite: number = 6): Promise<Result<Membr
       } else {
         countMap.set(uid, {
           nome: (row.responsavel as unknown as Record<string, unknown>)?.nome_completo as string,
-          avatar: (row.responsavel as unknown as Record<string, unknown>)?.avatar_url as string | null,
+          avatar: resolveAvatarUrl((row.responsavel as unknown as Record<string, unknown>)?.avatar_url as string | null),
           count: 1,
         });
       }

@@ -14,7 +14,6 @@ import {
   Copy,
   Download,
   Edit3,
-  FileText,
   Flag,
   Lock,
   Monitor,
@@ -205,7 +204,6 @@ export function ExpedienteDetalhesClient({
         <HeroBlock
           expediente={expediente}
           partyNames={partyNames}
-          urgency={urgency}
           style={style}
           tipoLabel={tipoAtual?.tipo_expediente ?? null}
           onCopyProcesso={handleCopyProcesso}
@@ -244,14 +242,12 @@ export function ExpedienteDetalhesClient({
 function HeroBlock({
   expediente,
   partyNames,
-  urgency,
   style,
   tipoLabel,
   onCopyProcesso,
 }: {
   expediente: Expediente;
   partyNames: { autora: string | null; re: string | null };
-  urgency: keyof typeof URGENCY_STYLE;
   style: (typeof URGENCY_STYLE)[keyof typeof URGENCY_STYLE];
   tipoLabel: string | null;
   onCopyProcesso: () => void;

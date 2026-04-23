@@ -197,7 +197,8 @@ function extractPartes(formData: FormData): Array<{
       .filter(
         (p) =>
           (p.tipoEntidade === "cliente" ||
-            p.tipoEntidade === "parte_contraria") &&
+            p.tipoEntidade === "parte_contraria" ||
+            p.tipoEntidade === "parte_contraria_transitoria") &&
           Number.isFinite(p.entidadeId) &&
           p.entidadeId > 0 &&
           (p.papelContratual === "autora" || p.papelContratual === "re"),

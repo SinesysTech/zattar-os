@@ -11,6 +11,8 @@
  * exiba nome + avatar corretamente independente da origem.
  */
 
+import { resolveAvatarUrl } from "@/lib/avatar-url";
+
 export interface CriadorRaw {
   id?: number | null;
   // camelCase (shape "oficial" do tipo DocumentoComUsuario / ArquivoComUsuario)
@@ -37,7 +39,7 @@ export function normalizeCriador(criador: CriadorRaw | null | undefined): Criado
 
   const nomeExibicao = criador.nomeExibicao ?? criador.nome_exibicao ?? null;
   const nomeCompleto = criador.nomeCompleto ?? criador.nome_completo ?? null;
-  const avatarUrl = criador.avatarUrl ?? criador.avatar_url ?? null;
+  const avatarUrl = resolveAvatarUrl(criador.avatarUrl ?? criador.avatar_url);
 
   const nome = nomeExibicao || nomeCompleto || 'Desconhecido';
 

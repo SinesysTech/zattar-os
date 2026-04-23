@@ -63,16 +63,6 @@ type UrgencyLevel = 'critico' | 'alto' | 'medio' | 'baixo' | 'ok';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function getUsuarioNome(usuario: UsuarioData): string {
-  return (
-    usuario.nomeExibicao ||
-    usuario.nome_exibicao ||
-    usuario.nomeCompleto ||
-    usuario.nome ||
-    `Usuario ${usuario.id}`
-  );
-}
-
 function normalizarData(dataISO: string | null | undefined): Date | null {
   if (!dataISO) return null;
   const data = new Date(dataISO);

@@ -11,6 +11,7 @@
  */
 
 import { createServiceClient } from "@/lib/supabase/service-client";
+import { resolveAvatarUrl } from "@/lib/avatar-url";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type {
   Documento,
@@ -844,7 +845,7 @@ export async function listarPastasComContadores(
         criador: {
           id: pasta.criado_por,
           nomeCompleto: pasta.criador?.nome_completo ?? '',
-          avatarUrl: pasta.criador?.avatar_url ?? null,
+          avatarUrl: resolveAvatarUrl(pasta.criador?.avatar_url),
         },
       };
     })

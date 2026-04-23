@@ -13,6 +13,7 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Result, ok, err } from "neverthrow";
 import { fromCamelToSnake, fromSnakeToCamel } from "@/lib/utils";
+import { resolveAvatarUrl } from "@/lib/avatar-url";
 import type {
   SalaChat,
   MensagemChat,
@@ -71,7 +72,7 @@ export function converterParaMensagemComUsuario(
 
   // Mapear avatar_url para avatar
   if (usuarioRow.avatar_url) {
-    usuario.avatar = usuarioRow.avatar_url;
+    usuario.avatar = resolveAvatarUrl(usuarioRow.avatar_url) ?? undefined;
   }
 
   // Converter mensagem usando fromSnakeToCamel

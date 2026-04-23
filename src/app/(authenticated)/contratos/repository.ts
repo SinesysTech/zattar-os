@@ -33,6 +33,7 @@ import type {
 const TABLE_CONTRATOS = "contratos";
 const TABLE_CLIENTES = "clientes";
 const TABLE_PARTES_CONTRARIAS = "partes_contrarias";
+const TABLE_PARTES_CONTRARIAS_TRANSITORIAS = "partes_contrarias_transitorias";
 const TABLE_CONTRATO_PARTES = "contrato_partes";
 const TABLE_CONTRATO_STATUS_HISTORICO = "contrato_status_historico";
 
@@ -83,6 +84,42 @@ export async function parteContrariaExists(
       appError(
         "DATABASE_ERROR",
         "Erro ao verificar parte contrária",
+        undefined,
+        error instanceof Error ? error : undefined,
+      ),
+    );
+  }
+}
+
+/**
+ * Verifica se uma parte contrária transitória existe e ainda está pendente.
+ * Retorna false se a transitória já foi promovida (status='promovido') — nesse
+ * caso o caller deve usar parte_contraria (não transitória) no contrato.
+ */
+export async function parteContrariaTransitoriaExists(
+  transitoriaId: number,
+): Promise<Result<boolean>> {
+  try {
+    const db = createDbClient();
+
+    const { data, error } = await db
+      .from(TABLE_PARTES_CONTRARIAS_TRANSITORIAS)
+      .select("id, status")
+      .eq("id", transitoriaId)
+      .maybeSingle();
+
+    if (error) {
+      return err(
+        appError("DATABASE_ERROR", error.message, { code: error.code }),
+      );
+    }
+
+    return ok(!!data && data.status === "pendente");
+  } catch (error) {
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao verificar parte contrária transitória",
         undefined,
         error instanceof Error ? error : undefined,
       ),

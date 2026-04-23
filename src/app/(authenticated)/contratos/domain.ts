@@ -59,9 +59,28 @@ export type StatusContrato =
 export type PapelContratual = 'autora' | 're';
 
 /**
- * Tipo de entidade na relação de partes do contrato
+ * Tipo de entidade na relação de partes do contrato.
+ *
+ * - `cliente`: FK para clientes.id
+ * - `parte_contraria`: FK para partes_contrarias.id (cadastro completo)
+ * - `parte_contraria_transitoria`: FK para partes_contrarias_transitorias.id
+ *   (cadastro pendente — será promovido a parte_contraria depois)
  */
-export type TipoEntidadeContrato = 'cliente' | 'parte_contraria';
+export type TipoEntidadeContrato =
+  | 'cliente'
+  | 'parte_contraria'
+  | 'parte_contraria_transitoria';
+
+/**
+ * Helper: retorna true se o tipo representa uma parte contrária, seja ela
+ * com cadastro completo ou transitório (pendente). Use em filtros que
+ * devam exibir ambos lados adversos.
+ */
+export function isTipoParteContraria(
+  tipo: TipoEntidadeContrato
+): tipo is 'parte_contraria' | 'parte_contraria_transitoria' {
+  return tipo === 'parte_contraria' || tipo === 'parte_contraria_transitoria';
+}
 
 // =============================================================================
 // INTERFACES AUXILIARES
@@ -180,7 +199,11 @@ export const statusContratoSchema = z.enum([
 
 export const papelContratualSchema = z.enum(['autora', 're']);
 
-export const tipoEntidadeContratoSchema = z.enum(['cliente', 'parte_contraria']);
+export const tipoEntidadeContratoSchema = z.enum([
+  'cliente',
+  'parte_contraria',
+  'parte_contraria_transitoria',
+]);
 
 export const contratoParteInputSchema = z.object({
   tipoEntidade: tipoEntidadeContratoSchema,

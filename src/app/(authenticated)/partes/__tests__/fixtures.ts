@@ -8,10 +8,8 @@
  *   para validar normalização pelos converters.
  */
 import type {
-  Cliente,
   ClientePessoaFisica,
   ClientePessoaJuridica,
-  ParteContraria,
   ParteContrariaPessoaFisica,
   ParteContrariaPessoaJuridica,
   Terceiro,

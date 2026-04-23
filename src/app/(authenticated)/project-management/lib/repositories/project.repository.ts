@@ -1,4 +1,5 @@
 import { createDbClient } from "@/lib/supabase";
+import { resolveAvatarUrl } from "@/lib/avatar-url";
 import { ok, err, appError, type Result, type PaginatedResponse } from "@/types/result";
 import {
   type Projeto,
@@ -70,7 +71,7 @@ export async function listProjetos(
       const flat = {
         ...row,
         responsavel_nome: row.responsavel?.nome_completo,
-        responsavel_avatar: row.responsavel?.avatar_url,
+        responsavel_avatar: resolveAvatarUrl(row.responsavel?.avatar_url),
         cliente_nome: row.cliente?.nome,
       };
       return converterParaProjeto(flat as Record<string, unknown>);
@@ -114,7 +115,7 @@ export async function findProjetoById(id: string): Promise<Result<Projeto>> {
     const flat = {
       ...data,
       responsavel_nome: data.responsavel?.nome_completo,
-      responsavel_avatar: data.responsavel?.avatar_url,
+      responsavel_avatar: resolveAvatarUrl(data.responsavel?.avatar_url),
       cliente_nome: data.cliente?.nome,
     };
 

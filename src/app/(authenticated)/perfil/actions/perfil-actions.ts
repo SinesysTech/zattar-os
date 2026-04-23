@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { resolveAvatarUrl } from "@/lib/avatar-url";
 // FSD: server-only action — intentional deep import to avoid bundling Redis/Node.js deps in client barrel
 import { service as usuariosService } from "@/app/(authenticated)/usuarios/service";
 import { revalidatePath } from "next/cache";
@@ -66,7 +67,7 @@ export async function actionObterPerfil(): Promise<
             descricao: usuarioDb.cargos.descricao,
           }
         : null,
-      avatarUrl: (usuarioDb.avatar_url as string | null) ?? null,
+      avatarUrl: resolveAvatarUrl(usuarioDb.avatar_url as string | null),
       coverUrl: (usuarioDb.cover_url as string | null) ?? null,
       isSuperAdmin: usuarioDb.is_super_admin,
       ativo: usuarioDb.ativo,

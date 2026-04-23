@@ -1,4 +1,5 @@
 import { createDbClient } from "@/lib/supabase";
+import { resolveAvatarUrl } from "@/lib/avatar-url";
 import { ok, err, appError, type Result, type PaginatedResponse } from "@/types/result";
 import {
   type Tarefa,
@@ -22,7 +23,7 @@ function mapRow(row: Record<string, unknown>): Tarefa {
   const flat = {
     ...row,
     responsavel_nome: (row.responsavel as Record<string, unknown>)?.nome_completo,
-    responsavel_avatar: (row.responsavel as Record<string, unknown>)?.avatar_url,
+    responsavel_avatar: resolveAvatarUrl((row.responsavel as Record<string, unknown>)?.avatar_url as string | null | undefined),
     projeto_nome: (row.projeto as Record<string, unknown>)?.nome,
   };
   return converterParaTarefa(flat as Record<string, unknown>);
