@@ -361,7 +361,9 @@ export function ParteContrariaFormDialog({
         if (isPF) {
           const cpfLimpo = formData.cpf.replace(/\D/g, '');
           if (!cpfLimpo) {
-            errors.push('CPF é obrigatório');
+            if (!isEditMode) {
+              errors.push('CPF é obrigatório');
+            }
           } else if (cpfLimpo.length !== 11 || !/^\d{11}$/.test(cpfLimpo)) {
             errors.push('CPF deve ter 11 dígitos');
           }
@@ -369,7 +371,9 @@ export function ParteContrariaFormDialog({
         if (isPJ) {
           const cnpjLimpo = formData.cnpj.replace(/\D/g, '');
           if (!cnpjLimpo) {
-            errors.push('CNPJ é obrigatório');
+            if (!isEditMode) {
+              errors.push('CNPJ é obrigatório');
+            }
           } else if (cnpjLimpo.length !== 14 || !/^\d{14}$/.test(cnpjLimpo)) {
             errors.push('CNPJ deve ter 14 dígitos');
           }
@@ -515,7 +519,7 @@ export function ParteContrariaFormDialog({
         <>
           <div className="grid gap-2">
             <Label htmlFor="cpf">
-              CPF <span className="text-destructive">*</span>
+              CPF {!isEditMode && <span className="text-destructive">*</span>}
             </Label>
             <Input
               id="cpf"
@@ -627,7 +631,7 @@ export function ParteContrariaFormDialog({
         <>
           <div className="grid gap-2">
             <Label htmlFor="cnpj">
-              CNPJ <span className="text-destructive">*</span>
+              CNPJ {!isEditMode && <span className="text-destructive">*</span>}
             </Label>
             <Input
               id="cnpj"

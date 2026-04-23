@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Heading, Text } from '@/components/ui/typography';
-import { Building2, User, CheckCircle2, Link2, UserPlus } from 'lucide-react';
+import { Building2, User, CheckCircle2, Link2, UserPlus, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import { LoadingSpinner } from '@/components/ui/loading-state';
 import { cn } from '@/lib/utils';
@@ -33,6 +33,7 @@ import {
   actionBuscarTransitoriaPorId,
   actionBuscarSugestoesMerge,
   actionPromoverTransitoria,
+  actionAtualizarTransitoria,
   type ParteContrariaTransitoria,
   type SugestaoMerge,
   type PromoverResult,
@@ -44,7 +45,7 @@ interface PromoverTransitoriaDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   transitoriaId: number | null;
-  onSuccess: (result: PromoverResult) => void;
+  onSuccess: (result?: PromoverResult) => void;
 }
 
 export function PromoverTransitoriaDialog({
@@ -67,6 +68,7 @@ export function PromoverTransitoriaDialog({
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [isPending, setIsPending] = React.useState(false);
+  const [isSaving, setIsSaving] = React.useState(false);
 
   const resetState = React.useCallback(() => {
     setTransitoria(null);
@@ -139,6 +141,43 @@ export function PromoverTransitoriaDialog({
     setSugestaoSelecionada(null);
   };
 
+  const handleSaveOnly = async () => {
+    if (!transitoriaId) return;
+    if (nome.trim().length < 2) {
+      toast.error('Nome deve ter ao menos 2 caracteres');
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const cpfCnpjLimpo = cpfCnpj.replace(/\D/g, '');
+      const telefoneLimpo = telefone.replace(/\D/g, '');
+
+      const result = await actionAtualizarTransitoria({
+        id: transitoriaId,
+        input: {
+          nome: nome.trim(),
+          tipo_pessoa: tipoPessoa,
+          cpf_ou_cnpj: cpfCnpjLimpo || null,
+          email: email.trim() || null,
+          telefone: telefoneLimpo || null,
+        },
+      });
+
+      if (result.success && result.data) {
+        toast.success('Cadastro atualizado. Permanece pendente para completar depois.');
+        onSuccess();
+        onOpenChange(false);
+      } else {
+        toast.error(result.message || 'Erro ao salvar alterações');
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Erro ao salvar');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   const handleSubmit = async () => {
     if (!transitoriaId) return;
 
@@ -179,11 +218,13 @@ export function PromoverTransitoriaDialog({
     }
   };
 
+  const isBusy = isPending || isSaving;
   const canSubmit =
-    !isPending &&
+    !isBusy &&
     (mode === 'merge'
       ? sugestaoSelecionada !== null
       : nome.trim().length >= 2);
+  const canSaveOnly = !isBusy && mode === 'criar' && nome.trim().length >= 2;
 
   return (
     <DialogFormShell
@@ -194,8 +235,24 @@ export function PromoverTransitoriaDialog({
       footer={
         <div className="flex items-center gap-2">
           {mode === 'merge' && (
-            <Button variant="ghost" onClick={handleSwitchToCriar} disabled={isPending}>
+            <Button variant="ghost" onClick={handleSwitchToCriar} disabled={isBusy}>
               Criar nova em vez disso
+            </Button>
+          )}
+          {mode === 'criar' && (
+            <Button
+              onClick={handleSaveOnly}
+              disabled={!canSaveOnly}
+              size="sm"
+              variant="outline"
+              className="rounded-xl"
+            >
+              {isSaving ? (
+                <LoadingSpinner className="mr-2 size-3.5" />
+              ) : (
+                <Save className="mr-2 size-3.5" strokeWidth={2.25} />
+              )}
+              Salvar sem promover
             </Button>
           )}
           <Button
@@ -258,7 +315,7 @@ export function PromoverTransitoriaDialog({
                         role="option"
                         aria-selected={isSelected}
                         onClick={() => handleSelectSugestao(sug)}
-                        disabled={!isOficial || isPending}
+                        disabled={!isOficial || isBusy}
                         className={cn(
                           'flex w-full items-start gap-3 rounded-xl px-3 py-2.5 text-left ring-1 transition-colors',
                           isSelected
@@ -324,7 +381,7 @@ export function PromoverTransitoriaDialog({
                   variant="glass"
                   value={nome}
                   onChange={(e) => setNome(e.target.value)}
-                  disabled={isPending}
+                  disabled={isBusy}
                   required
                 />
               </div>
@@ -335,7 +392,7 @@ export function PromoverTransitoriaDialog({
                   <Select
                     value={tipoPessoa}
                     onValueChange={(v) => setTipoPessoa(v as 'pf' | 'pj')}
-                    disabled={isPending}
+                    disabled={isBusy}
                   >
                     <SelectTrigger id="promover-tipo-pessoa">
                       <SelectValue />
@@ -353,7 +410,7 @@ export function PromoverTransitoriaDialog({
                     variant="glass"
                     value={cpfCnpj}
                     onChange={(e) => setCpfCnpj(e.target.value)}
-                    disabled={isPending}
+                    disabled={isBusy}
                     placeholder={tipoPessoa === 'pf' ? '000.000.000-00' : '00.000.000/0000-00'}
                   />
                 </div>
@@ -368,7 +425,7 @@ export function PromoverTransitoriaDialog({
                     variant="glass"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    disabled={isPending}
+                    disabled={isBusy}
                   />
                 </div>
                 <div className="space-y-2">
@@ -378,7 +435,7 @@ export function PromoverTransitoriaDialog({
                     variant="glass"
                     value={telefone}
                     onChange={(e) => setTelefone(e.target.value)}
-                    disabled={isPending}
+                    disabled={isBusy}
                     placeholder="(00) 00000-0000"
                   />
                 </div>

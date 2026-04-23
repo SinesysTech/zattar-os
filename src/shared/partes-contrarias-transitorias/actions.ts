@@ -10,10 +10,12 @@ import {
   sugerirMerge,
   findTransitoriaById,
   listTransitoriasPendentesByContrato,
+  atualizarTransitoria,
   type PromoverResult,
 } from "./service";
 import {
   promoverTransitoriaSchema,
+  updateTransitoriaSchema,
   type ParteContrariaTransitoria,
   type SugestaoMerge,
 } from "./domain";
@@ -138,6 +140,37 @@ export const actionBuscarTransitoriaPorId = authenticatedAction(
       throw new Error("Você não tem permissão para visualizar esta entidade");
     }
     return findTransitoriaById(data.id);
+  }
+);
+
+/**
+ * Atualiza os dados editáveis de uma transitória ainda pendente (nome,
+ * tipo_pessoa, cpf_ou_cnpj, email, telefone, observacoes). Não promove —
+ * o registro permanece com `status = 'pendente'`.
+ *
+ * Permissão: `partes_contrarias.editar`.
+ * Restrição de banco: o repository só atualiza linhas com `status = 'pendente'`.
+ * Transitórias já promovidas devem ser corrigidas via edição da parte_contraria
+ * oficial que as recebeu.
+ */
+export const actionAtualizarTransitoria = authenticatedAction(
+  z.object({
+    id: z.number().int().positive(),
+    input: updateTransitoriaSchema,
+  }),
+  async (data, { user }): Promise<ParteContrariaTransitoria> => {
+    const allowed = await checkPermission(
+      user.id,
+      "partes_contrarias",
+      "editar"
+    );
+    if (!allowed) {
+      throw new Error(
+        "Você não tem permissão para editar partes contrárias transitórias"
+      );
+    }
+
+    return atualizarTransitoria(data.id, data.input);
   }
 );
 

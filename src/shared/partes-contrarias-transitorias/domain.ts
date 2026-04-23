@@ -61,6 +61,38 @@ export const createTransitoriaSchema = z.object({
 export type CreateTransitoriaInput = z.infer<typeof createTransitoriaSchema>;
 
 /**
+ * Schema de atualização: permite editar os dados de uma transitória que ainda
+ * está no estado `pendente`, sem promovê-la para `partes_contrarias`.
+ *
+ * Campos de origem (criado_via, criado_em_contrato_id, criado_por, sessao_formulario_uuid)
+ * são intencionalmente omitidos — são metadados imutáveis de auditoria.
+ *
+ * Todos os campos editáveis são opcionais (patch parcial). Se `nome` vier,
+ * precisa passar a mesma validação de mínimo/máximo do create.
+ */
+export const updateTransitoriaSchema = z.object({
+  nome: z
+    .string()
+    .trim()
+    .min(2, "Nome deve ter ao menos 2 caracteres")
+    .max(200, "Nome deve ter no máximo 200 caracteres")
+    .optional(),
+  tipo_pessoa: z.enum(["pf", "pj"]).nullable().optional(),
+  cpf_ou_cnpj: z.string().trim().nullable().optional(),
+  email: z
+    .string()
+    .trim()
+    .email("Email inválido")
+    .nullable()
+    .optional()
+    .or(z.literal("")),
+  telefone: z.string().trim().nullable().optional(),
+  observacoes: z.string().trim().max(2000).nullable().optional(),
+});
+
+export type UpdateTransitoriaInput = z.infer<typeof updateTransitoriaSchema>;
+
+/**
  * Input de promoção: dados completos que o usuário preenche para criar
  * (ou vincular a) uma parte_contraria definitiva.
  *

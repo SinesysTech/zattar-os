@@ -3,10 +3,12 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import {
   createTransitoriaSchema,
   promoverTransitoriaSchema,
+  updateTransitoriaSchema,
   type CreateTransitoriaInput,
   type ParteContrariaTransitoria,
   type PromoverTransitoriaInput,
   type SugestaoMerge,
+  type UpdateTransitoriaInput,
 } from "./domain";
 import {
   insertTransitoria,
@@ -16,6 +18,7 @@ import {
   countPendentes,
   findSimilarPartes,
   updateStatusPromovido,
+  updateTransitoriaData,
 } from "./repository";
 
 /**
@@ -96,6 +99,24 @@ export async function marcarTransitoriaComoPromovida(input: {
     parteContrariaId: input.parteContrariaId,
     promovidoPor: input.promovidoPor,
   });
+}
+
+/**
+ * Atualiza os dados editáveis de uma transitória que ainda está pendente.
+ * Valida o input com Zod e delega para o repository. Retorna a entidade
+ * completa após o update.
+ *
+ * Regra de negócio: só pendentes são editáveis. Se o registro já foi
+ * promovido, o repository devolve erro (nenhuma linha afetada).
+ */
+export async function atualizarTransitoria(
+  id: number,
+  input: UpdateTransitoriaInput,
+  options: { supabase?: SupabaseClient } = {}
+): Promise<ParteContrariaTransitoria> {
+  const parsed = updateTransitoriaSchema.parse(input);
+  const supabase = options.supabase ?? createServiceClient();
+  return updateTransitoriaData(supabase, id, parsed);
 }
 
 export interface PromoverResult {

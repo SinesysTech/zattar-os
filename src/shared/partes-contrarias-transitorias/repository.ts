@@ -3,6 +3,7 @@ import type {
   ParteContrariaTransitoria,
   CreateTransitoriaInput,
   SugestaoMerge,
+  UpdateTransitoriaInput,
 } from "./domain";
 
 const TABLE = "partes_contrarias_transitorias";
@@ -198,6 +199,62 @@ function computeScore(a: string, b: string): number {
     if (nb.includes(ch)) matches++;
   }
   return matches / Math.max(na.length, nb.length);
+}
+
+/**
+ * Atualiza os campos editáveis de uma transitória mantendo-a no estado `pendente`.
+ *
+ * Só atualiza se o registro ainda estiver `status = 'pendente'` — transitórias
+ * já promovidas são imutáveis (quem quiser corrigir dados deve editar a
+ * `partes_contrarias` oficial que recebeu a promoção).
+ *
+ * Usa sintaxe de patch parcial: só manda ao banco os campos que vieram
+ * explicitamente no input (undefined → ignora; null → salva null).
+ */
+export async function updateTransitoriaData(
+  supabase: SupabaseClient,
+  id: number,
+  input: UpdateTransitoriaInput
+): Promise<ParteContrariaTransitoria> {
+  const patch: Record<string, unknown> = {};
+  if (input.nome !== undefined) patch.nome = input.nome.trim();
+  if (input.tipo_pessoa !== undefined) patch.tipo_pessoa = input.tipo_pessoa;
+  if (input.cpf_ou_cnpj !== undefined) {
+    const cleaned =
+      input.cpf_ou_cnpj === null ? null : input.cpf_ou_cnpj.trim() || null;
+    patch.cpf_ou_cnpj = cleaned;
+  }
+  if (input.email !== undefined) {
+    patch.email =
+      input.email && typeof input.email === "string" && input.email.length > 0
+        ? input.email
+        : null;
+  }
+  if (input.telefone !== undefined) patch.telefone = input.telefone;
+  if (input.observacoes !== undefined) patch.observacoes = input.observacoes;
+
+  if (Object.keys(patch).length === 0) {
+    const existing = await getTransitoriaById(supabase, id);
+    if (!existing) {
+      throw new Error(`Transitória ${id} não encontrada`);
+    }
+    return existing;
+  }
+
+  const { data, error } = await supabase
+    .from(TABLE)
+    .update(patch)
+    .eq("id", id)
+    .eq("status", "pendente")
+    .select("*")
+    .single();
+
+  if (error) {
+    throw new Error(
+      `Erro ao atualizar transitória ${id}: ${error.message}`
+    );
+  }
+  return data as ParteContrariaTransitoria;
 }
 
 export async function updateStatusPromovido(
