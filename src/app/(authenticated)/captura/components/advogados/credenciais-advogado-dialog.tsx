@@ -54,6 +54,7 @@ import { GRAU_LABELS } from '@/lib/design-system';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Heading } from '@/components/ui/typography';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
 type Props = {
@@ -340,7 +341,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
             {!showForm && (
               <>
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="text-sm font-medium">Credenciais Cadastradas</h4>
+                  <Heading level="subsection">Credenciais Cadastradas</Heading>
                   <Button size="sm" onClick={handleAddNew}>
                     <Plus className="mr-2 h-4 w-4" />
                     Adicionar
@@ -412,9 +413,9 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
             {showForm && (
               <>
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="text-sm font-medium">
+                  <Heading level="subsection">
                     {editingCredencial ? 'Editar Credencial' : 'Nova Credencial'}
-                  </h4>
+                  </Heading>
                   <Button variant="ghost" size="sm" onClick={resetForm}>
                     Voltar
                   </Button>

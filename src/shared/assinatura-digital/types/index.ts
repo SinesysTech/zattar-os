@@ -15,8 +15,6 @@ export type {
   CreateTemplateInput,
   UpdateTemplateInput,
   Template,
-  CreateFormularioInput,
-  UpdateFormularioInput,
   Formulario,
   ValidationRule,
   FormFieldOption,
@@ -62,8 +60,6 @@ export {
   updateSegmentoSchema,
   createTemplateSchema,
   updateTemplateSchema,
-  createFormularioSchema,
-  updateFormularioSchema,
   createAssinaturaDigitalSchema,
   updateAssinaturaDigitalSchema,
   fieldRequiresOptions,
@@ -72,6 +68,19 @@ export {
   uploadPdfSchema,
   templateFormSchema,
 } from "./domain";
+
+// Formulário schemas: fonte canônica é ../domain (raiz), NÃO ./domain.
+// O createFormularioSchema daqui deriva updateFormularioSchema via .partial(),
+// eliminando drift entre POST/PUT.
+export {
+  createFormularioSchema,
+  updateFormularioSchema,
+  contratoConfigSchema,
+} from "../domain";
+export type {
+  CreateFormularioInput,
+  UpdateFormularioInput,
+} from "../domain";
 
 // PDF preview/editor (zoom/canvas) - usados por `components/pdf/*` e `components/editor/*`
 export type {

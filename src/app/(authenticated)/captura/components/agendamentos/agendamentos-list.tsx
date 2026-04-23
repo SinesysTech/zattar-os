@@ -33,7 +33,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
-import { getSemanticBadgeVariant } from '@/lib/design-system';
+import { StatusSemanticBadge } from '@/components/ui/semantic-badge';
 
 import type { Agendamento } from '@/app/(authenticated)/captura';
 
@@ -204,9 +204,9 @@ export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
         accessorKey: 'ativo',
         header: 'Status',
         cell: ({ row }) => (
-          <Badge variant={getSemanticBadgeVariant('status', row.original.ativo ? 'ATIVO' : 'INATIVO')}>
+          <StatusSemanticBadge value={row.original.ativo ? 'ATIVO' : 'INATIVO'}>
             {row.original.ativo ? 'Ativo' : 'Inativo'}
-          </Badge>
+          </StatusSemanticBadge>
         ),
         meta: { headerLabel: 'Status' },
       },

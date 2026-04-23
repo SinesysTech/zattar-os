@@ -75,7 +75,7 @@ export function DateRangePicker({ value, onChange, placeholder, allowSingle = tr
       </PopoverTrigger>
       <PopoverContent
         align="start"
-        className="w-auto p-0"
+        className="rounded-2xl glass-dropdown overflow-hidden w-auto p-0"
         style={{ minWidth: popoverWidth > 0 ? popoverWidth : 'auto' }}
       >
         <Calendar

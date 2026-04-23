@@ -112,7 +112,10 @@ export function DatePicker({ value, onChange, placeholder }: DatePickerProps) {
             <CalendarIcon className="h-4 w-4 text-muted-foreground" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent align="end" className="p-0 w-auto">
+        <PopoverContent
+          align="end"
+          className="rounded-2xl glass-dropdown overflow-hidden p-0 w-auto"
+        >
           <Calendar selected={selected} onSelect={handleSelect} mode="single" initialFocus />
         </PopoverContent>
       </Popover>

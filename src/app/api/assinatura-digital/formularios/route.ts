@@ -5,32 +5,10 @@ import {
   createFormulario,
   listFormularios,
 } from '@/shared/assinatura-digital/services/formularios.service';
-import type { UpsertFormularioInput } from '@/shared/assinatura-digital';
-
-const contratoConfigSchema = z.object({
-  tipo_contrato_id: z.number().int().positive(),
-  tipo_cobranca_id: z.number().int().positive(),
-  papel_cliente: z.enum(['autora', 're']),
-  pipeline_id: z.number().int().positive(),
-});
-
-const upsertFormularioSchema = z.object({
-  nome: z.string().min(1),
-  slug: z.string().min(1),
-  segmento_id: z.coerce.number(),
-  descricao: z.string().optional().nullable(),
-  form_schema: z.any().optional(),
-  schema_version: z.string().optional(),
-  template_ids: z.array(z.string()).optional(),
-  ativo: z.boolean().optional(),
-  ordem: z.number().nullable().optional(),
-  foto_necessaria: z.boolean().optional(),
-  geolocation_necessaria: z.boolean().optional(),
-  metadados_seguranca: z.string().optional(),
-  criado_por: z.string().optional().nullable(),
-  tipo_formulario: z.enum(['contrato', 'documento', 'cadastro']).nullable().optional(),
-  contrato_config: contratoConfigSchema.nullable().optional(),
-});
+import {
+  createFormularioSchema as upsertFormularioSchema,
+  type UpsertFormularioInput,
+} from '@/shared/assinatura-digital';
 
 export async function GET(request: NextRequest) {
   const authOrError = await requirePermission(request, 'assinatura_digital', 'listar');

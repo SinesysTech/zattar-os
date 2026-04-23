@@ -106,55 +106,6 @@ export interface Template {
 // FORMULÁRIO
 // =============================================================================
 
-export const createFormularioSchema = z.object({
-  nome: z
-    .string()
-    .min(1, 'Nome é obrigatório')
-    .max(100, 'Nome deve ter no máximo 100 caracteres'),
-  slug: z
-    .string()
-    .regex(/^[a-z0-9-]+$/, 'Slug deve conter apenas letras minúsculas, números e hífens')
-    .max(50, 'Slug deve ter no máximo 50 caracteres'),
-  descricao: z.string().optional(),
-  segmento_id: z.number().int().positive('Selecione um segmento'),
-  form_schema: z.object({
-    id: z.string().min(1, 'Schema deve ter um ID'),
-    version: z.string().min(1, 'Schema deve ter uma versão'),
-    sections: z.array(
-      z.object({
-        id: z.string(),
-        title: z.string(),
-        description: z.string().optional(),
-        fields: z.array(z.record(z.string(), z.unknown())),
-        collapsible: z.boolean().optional(),
-        defaultCollapsed: z.boolean().optional(),
-      })
-    ).min(0),
-    globalValidations: z.array(
-      z.object({
-        id: z.string(),
-        fields: z.array(z.string()),
-        validator: z.string(),
-        message: z.string(),
-        params: z.record(z.string(), z.unknown()).optional(),
-      })
-    ).optional(),
-  }),
-  schema_version: z.string().optional(),
-  template_ids: z.array(z.string()).min(1, 'Deve haver ao menos um template associado'),
-  ativo: z.boolean().default(true),
-  arquivado: z.boolean().optional(),
-  ordem: z.number().optional(),
-  foto_necessaria: z.boolean().optional(),
-  geolocation_necessaria: z.boolean().optional(),
-  metadados_seguranca: z.array(z.enum(['ip', 'user_agent', 'device_info', 'geolocation'])).optional(),
-});
-
-export const updateFormularioSchema = createFormularioSchema.partial();
-
-export type CreateFormularioInput = z.infer<typeof createFormularioSchema>;
-export type UpdateFormularioInput = z.infer<typeof updateFormularioSchema>;
-
 export interface Formulario {
   id: number;
   formulario_uuid: string;

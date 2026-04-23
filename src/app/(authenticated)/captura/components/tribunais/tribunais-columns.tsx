@@ -4,15 +4,15 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { Pencil } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { TribunalBadge } from '@/components/ui/tribunal-badge';
+import { GrauSemanticBadge } from '@/components/ui/semantic-badge';
+import { Text } from '@/components/ui/typography';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { getSemanticBadgeVariant } from '@/lib/design-system';
 import type { TribunalConfigDb } from '@/app/(authenticated)/captura';
 
 type Params = {
@@ -45,9 +45,9 @@ export function criarColunasTribunais({ onEdit }: Params): ColumnDef<TribunalCon
       accessorKey: 'tipo_acesso',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Acesso" />,
       cell: ({ row }) => (
-        <Badge variant={getSemanticBadgeVariant('grau', row.original.tipo_acesso)}>
+        <GrauSemanticBadge value={row.original.tipo_acesso}>
           {TIPO_ACESSO_LABELS[row.original.tipo_acesso] ?? row.original.tipo_acesso}
-        </Badge>
+        </GrauSemanticBadge>
       ),
       meta: { headerLabel: 'Acesso' },
     },
@@ -63,7 +63,7 @@ export function criarColunasTribunais({ onEdit }: Params): ColumnDef<TribunalCon
     },
     {
       id: 'acoes',
-      header: () => <span className="text-sm font-medium text-muted-foreground">Ações</span>,
+      header: () => <Text variant="label" className="text-muted-foreground">Ações</Text>,
       enableSorting: false,
       enableHiding: false,
       size: 80,

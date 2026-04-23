@@ -2,11 +2,11 @@ import { notFound } from 'next/navigation';
 
 import { CapturaResult, type CapturaResultData, CapturaErrosFormatados, CapturaRawLogs } from '@/app/(authenticated)/captura';
 import { buscarCapturaLog, buscarLogsBrutoPorCapturaId } from '@/app/(authenticated)/captura/server';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { getSemanticBadgeVariant } from '@/lib/design-system';
+import { CapturaStatusSemanticBadge } from '@/components/ui/semantic-badge';
 import {
   ArrowLeft,
   Clock,
@@ -37,9 +37,9 @@ function StatusBadge({ status }: { status: string }) {
 
   const Icon = config.icon;
   return (
-    <Badge variant={getSemanticBadgeVariant('captura_status', status)}>
+    <CapturaStatusSemanticBadge value={status}>
       <Icon className={`mr-1 h-3 w-3 ${config.className ?? ''}`} /> {config.label}
-    </Badge>
+    </CapturaStatusSemanticBadge>
   );
 }
 
@@ -99,22 +99,22 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
         <CardContent>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             <div className="space-y-1">
-              <span className="text-sm font-medium text-muted-foreground">Status</span>
+              <Text variant="label" className="text-muted-foreground">Status</Text>
               <div><StatusBadge status={captura.status} /></div>
             </div>
             <div className="space-y-1">
-              <span className="text-sm font-medium text-muted-foreground">Iniciado em</span>
+              <Text variant="label" className="text-muted-foreground">Iniciado em</Text>
               <p className="text-sm">{new Date(captura.iniciado_em).toLocaleString('pt-BR')}</p>
             </div>
             <div className="space-y-1">
-              <span className="text-sm font-medium text-muted-foreground">Concluido em</span>
+              <Text variant="label" className="text-muted-foreground">Concluido em</Text>
               <p className="text-sm">
                 {captura.concluido_em ? new Date(captura.concluido_em).toLocaleString('pt-BR') : '-'}
               </p>
             </div>
             {duracao && (
               <div className="space-y-1">
-                <span className="text-sm font-medium text-muted-foreground">Duracao</span>
+                <Text variant="label" className="text-muted-foreground">Duracao</Text>
                 <p className="text-sm flex items-center gap-1">
                   <Timer className="h-3.5 w-3.5 text-muted-foreground" />
                   {duracao}

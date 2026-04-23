@@ -2,7 +2,7 @@
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
-import { getSemanticBadgeVariant } from '@/lib/design-system';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { XCircle, AlertTriangle, Clock, Wifi } from 'lucide-react';
 
 interface ErroCaptura {
@@ -131,19 +131,19 @@ export function CapturaErrosFormatados({ erro }: CapturaErrosFormatadosProps) {
           <div className="flex flex-wrap gap-2">
             <Badge variant="destructive">{errosParsed.length} erro{errosParsed.length !== 1 ? 's' : ''}</Badge>
             {contagemPorTipo.timeout && (
-              <Badge variant={getSemanticBadgeVariant('error_type', 'timeout')}>
+              <SemanticBadge category="error_type" value="timeout">
                 <Clock className="mr-1 h-3 w-3" /> {contagemPorTipo.timeout} timeout{contagemPorTipo.timeout !== 1 ? 's' : ''}
-              </Badge>
+              </SemanticBadge>
             )}
             {contagemPorTipo.auth && (
-              <Badge variant={getSemanticBadgeVariant('error_type', 'auth')}>
+              <SemanticBadge category="error_type" value="auth">
                 <AlertTriangle className="mr-1 h-3 w-3" /> {contagemPorTipo.auth} autenticacao
-              </Badge>
+              </SemanticBadge>
             )}
             {contagemPorTipo.network && (
-              <Badge variant={getSemanticBadgeVariant('error_type', 'network')}>
+              <SemanticBadge category="error_type" value="network">
                 <Wifi className="mr-1 h-3 w-3" /> {contagemPorTipo.network} rede
-              </Badge>
+              </SemanticBadge>
             )}
           </div>
 

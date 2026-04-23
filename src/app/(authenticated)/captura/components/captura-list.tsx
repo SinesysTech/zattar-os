@@ -17,7 +17,8 @@ import type { ColumnDef, RowSelectionState, Table as TanstackTable } from '@tans
 import type { CapturaLog, TipoCaptura, StatusCaptura } from '@/app/(authenticated)/captura/types';
 import type { CodigoTRT } from '@/app/(authenticated)/captura';
 import { Eye, Settings, Trash2 } from 'lucide-react';
-import { getSemanticBadgeVariant, CAPTURA_STATUS_LABELS } from '@/lib/design-system';
+import { CAPTURA_STATUS_LABELS } from '@/lib/design-system';
+import { TribunalSemanticBadge, CapturaStatusSemanticBadge } from '@/components/ui/semantic-badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -82,16 +83,9 @@ const formatarTipoCaptura = (tipo: TipoCaptura): string => {
   return tipos[tipo] || tipo;
 };
 
-/**
- * Retorna badge de status com cor apropriada usando o sistema semântico.
- *
- * @ai-context Este componente usa getSemanticBadgeVariant() do design system.
- */
 const StatusBadge = ({ status }: { status: StatusCaptura }) => {
-  const variant = getSemanticBadgeVariant('captura_status', status);
   const label = CAPTURA_STATUS_LABELS[status] || status;
-
-  return <Badge variant={variant}>{label}</Badge>;
+  return <CapturaStatusSemanticBadge value={status}>{label}</CapturaStatusSemanticBadge>;
 };
 
 /**
@@ -299,13 +293,13 @@ function criarColunas(
             {tribunaisUnicos.slice(0, 3).map((info, idx) => {
               const grau = info.grau || 'primeiro_grau';
               return (
-                <Badge
+                <TribunalSemanticBadge
                   key={`${info.tribunal}-${grau}-${idx}`}
-                  variant={getSemanticBadgeVariant('tribunal', info.tribunal)}
+                  value={info.tribunal}
                   className="text-xs"
                 >
                   {info.tribunal} {formatarGrauCurto(grau)}
-                </Badge>
+                </TribunalSemanticBadge>
               );
             })}
             {tribunaisUnicos.length > 3 && (

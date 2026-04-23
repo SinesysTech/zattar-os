@@ -218,7 +218,7 @@ export default function CalendarDateRangePicker({
             </Button>
           )}
         </PopoverTrigger>
-        <PopoverContent className="w-auto" align="end">
+        <PopoverContent className="rounded-2xl glass-dropdown w-auto" align="end">
           <div className="flex flex-col lg:flex-row">
             <div className="me-0 lg:me-4">
               <ToggleGroup

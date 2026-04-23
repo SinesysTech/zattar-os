@@ -136,20 +136,29 @@ export const listTemplatesSchema = z.object({
 // SCHEMAS ZOD - FORMULÁRIOS
 // =============================================================================
 
+export const contratoConfigSchema = z.object({
+  tipo_contrato_id: z.number().int().positive(),
+  tipo_cobranca_id: z.number().int().positive(),
+  papel_cliente: z.enum(['autora', 're']),
+  pipeline_id: z.number().int().positive(),
+});
+
 export const createFormularioSchema = z.object({
   nome: z.string().min(1).max(200),
   slug: z.string().min(1).max(100),
-  segmento_id: z.number().int().positive(),
+  segmento_id: z.coerce.number().int().positive(),
   descricao: z.string().max(1000).optional().nullable(),
   form_schema: z.unknown().optional(),
   schema_version: z.string().optional(),
   template_ids: z.array(z.string()).optional(),
   ativo: z.boolean().optional(),
-  ordem: z.number().int().optional().nullable(),
+  ordem: z.coerce.number().int().optional().nullable(),
   foto_necessaria: z.boolean().optional(),
   geolocation_necessaria: z.boolean().optional(),
   metadados_seguranca: z.string().optional(),
   criado_por: z.string().optional().nullable(),
+  tipo_formulario: z.enum(['contrato', 'documento', 'cadastro']).nullable().optional(),
+  contrato_config: contratoConfigSchema.nullable().optional(),
 });
 
 export const updateFormularioSchema = createFormularioSchema.partial();
@@ -548,6 +557,8 @@ export type UpsertTemplateInput = z.infer<typeof createTemplateSchema>;
 export type ListTemplatesParams = z.infer<typeof listTemplatesSchema>;
 
 export type UpsertFormularioInput = z.infer<typeof createFormularioSchema>;
+export type CreateFormularioInput = z.infer<typeof createFormularioSchema>;
+export type UpdateFormularioInput = z.infer<typeof updateFormularioSchema>;
 export type ListFormulariosParams = z.infer<typeof listFormulariosSchema>;
 
 export type UpsertSegmentoInput = z.infer<typeof createSegmentoSchema>;

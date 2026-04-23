@@ -82,7 +82,7 @@ export function DateTimePicker({ form, field }: DatePickerProps) {
 						</Button>
 					</FormControl>
 				</PopoverTrigger>
-				<PopoverContent className="w-auto p-0">
+				<PopoverContent className="rounded-2xl glass-dropdown overflow-hidden w-auto p-0">
 					<div className="sm:flex">
 						<Calendar
 							mode="single"

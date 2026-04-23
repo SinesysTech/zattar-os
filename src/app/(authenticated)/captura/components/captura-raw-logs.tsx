@@ -7,7 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { getSemanticBadgeVariant } from '@/lib/design-system';
+import { CapturaStatusSemanticBadge } from '@/components/ui/semantic-badge';
 import {
   CheckCircle2,
   XCircle,
@@ -171,9 +171,9 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
       <div className="flex flex-wrap gap-2">
         <Badge variant="outline">{rawLogs.length} registro{rawLogs.length !== 1 ? 's' : ''}</Badge>
         {totalSucesso > 0 && (
-          <Badge variant={getSemanticBadgeVariant('captura_status', 'completed')}>
+          <CapturaStatusSemanticBadge value="completed">
             <CheckCircle2 className="mr-1 h-3 w-3" /> {totalSucesso} sucesso
-          </Badge>
+          </CapturaStatusSemanticBadge>
         )}
         {totalErro > 0 && (
           <Badge variant="destructive">

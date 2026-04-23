@@ -317,15 +317,45 @@ export async function updateFormulario(
     payload.contrato_config = null;
   }
 
+  if (Object.keys(payload).length === 0) {
+    const { data: current, error: readError } = await supabase
+      .from(TABLE_FORMULARIOS)
+      .select(FORMULARIO_SELECT)
+      .eq(parsed.column, parsed.value)
+      .maybeSingle();
+
+    if (readError) {
+      console.error('[updateFormulario] readback error', readError);
+      throw new Error(`Erro ao ler formulário: ${readError.message}`);
+    }
+    if (!current) {
+      throw new Error(`Formulário não encontrado (${parsed.column}=${parsed.value})`);
+    }
+    return current as AssinaturaDigitalFormulario;
+  }
+
   const { data, error } = await supabase
     .from(TABLE_FORMULARIOS)
     .update(payload)
     .eq(parsed.column, parsed.value)
     .select(FORMULARIO_SELECT)
-    .single();
+    .maybeSingle();
 
   if (error) {
+    console.error('[updateFormulario] supabase error', {
+      code: error.code,
+      message: error.message,
+      details: error.details,
+      hint: error.hint,
+      payloadKeys: Object.keys(payload),
+      filter: parsed,
+    });
     throw new Error(`Erro ao atualizar formulário: ${error.message}`);
+  }
+  if (!data) {
+    throw new Error(
+      `Formulário não encontrado para atualização (${parsed.column}=${parsed.value})`
+    );
   }
 
   return data as AssinaturaDigitalFormulario;

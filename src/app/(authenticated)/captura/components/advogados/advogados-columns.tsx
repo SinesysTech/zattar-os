@@ -6,6 +6,7 @@ import { Pencil, Key, Trash2 } from 'lucide-react';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { Button } from '@/components/ui/button';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
+import { Text } from '@/components/ui/typography';
 import {
   Tooltip,
   TooltipContent,
@@ -84,7 +85,7 @@ export function criarColunasAdvogados({
     },
     {
       id: 'acoes',
-      header: () => <span className="text-sm font-medium text-muted-foreground">Ações</span>,
+      header: () => <Text variant="label" className="text-muted-foreground">Ações</Text>,
       enableSorting: false,
       enableHiding: false,
       size: 120,

@@ -59,7 +59,7 @@ export function DateTimePicker({ date, setDate }: Props) {
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0">
+      <PopoverContent className="rounded-2xl glass-dropdown overflow-hidden w-auto p-0">
         <div className="sm:flex">
           <Calendar mode="single" selected={date} onSelect={handleDateSelect} initialFocus />
           <div className="flex h-75 flex-col divide-y border-s sm:flex-row sm:divide-x sm:divide-y-0">

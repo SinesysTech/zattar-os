@@ -3,15 +3,16 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { Eye, Pencil, Power } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { TribunalBadge } from '@/components/ui/tribunal-badge';
+import { GrauSemanticBadge, StatusSemanticBadge } from '@/components/ui/semantic-badge';
+import { Text } from '@/components/ui/typography';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { getSemanticBadgeVariant, GRAU_LABELS } from '@/lib/design-system';
+import { GRAU_LABELS } from '@/lib/design-system';
 import type { Credencial } from '@/app/(authenticated)/captura/types';
 import { formatOabs } from '@/app/(authenticated)/advogados';
 
@@ -46,9 +47,9 @@ export function criarColunasCredenciais({ onViewAdvogado, onEdit, onToggleStatus
       accessorKey: 'grau',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Grau" />,
       cell: ({ row }) => (
-        <Badge variant={getSemanticBadgeVariant('grau', row.original.grau)}>
+        <GrauSemanticBadge value={row.original.grau}>
           {GRAU_LABELS[row.original.grau] ?? row.original.grau}
-        </Badge>
+        </GrauSemanticBadge>
       ),
       meta: { headerLabel: 'Grau' },
     },
@@ -56,15 +57,15 @@ export function criarColunasCredenciais({ onViewAdvogado, onEdit, onToggleStatus
       accessorKey: 'active',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
       cell: ({ row }) => (
-        <Badge variant={getSemanticBadgeVariant('status', row.original.active ? 'ATIVO' : 'INATIVO')}>
+        <StatusSemanticBadge value={row.original.active ? 'ATIVO' : 'INATIVO'}>
           {row.original.active ? 'Ativa' : 'Inativa'}
-        </Badge>
+        </StatusSemanticBadge>
       ),
       meta: { headerLabel: 'Status' },
     },
     {
       id: 'acoes',
-      header: () => <span className="text-sm font-medium text-muted-foreground">Ações</span>,
+      header: () => <Text variant="label" className="text-muted-foreground">Ações</Text>,
       enableSorting: false,
       enableHiding: false,
       size: 120,

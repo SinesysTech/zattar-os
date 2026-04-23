@@ -6,23 +6,10 @@ import {
   getFormulario,
   updateFormulario,
 } from '@/shared/assinatura-digital/services/formularios.service';
-import type { UpsertFormularioInput } from '@/shared/assinatura-digital';
-
-const updateFormularioSchema = z.object({
-  nome: z.string().min(1).optional(),
-  slug: z.string().min(1).optional(),
-  segmento_id: z.coerce.number().optional(),
-  descricao: z.string().optional().nullable(),
-  form_schema: z.any().optional(),
-  schema_version: z.string().optional(),
-  template_ids: z.array(z.string()).optional(),
-  ativo: z.boolean().optional(),
-  ordem: z.coerce.number().optional(),
-  foto_necessaria: z.boolean().optional(),
-  geolocation_necessaria: z.boolean().optional(),
-  metadados_seguranca: z.string().optional(),
-  criado_por: z.string().optional().nullable(),
-});
+import {
+  updateFormularioSchema,
+  type UpsertFormularioInput,
+} from '@/shared/assinatura-digital';
 
 export async function GET(
   request: NextRequest,

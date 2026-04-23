@@ -1,6 +1,7 @@
 import { createDbClient } from '@/lib/supabase';
 import { AssistentesTiposConfig } from '@/app/(authenticated)/assistentes';
 import { Button } from '@/components/ui/button';
+import { Heading } from '@/components/ui/typography';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
@@ -50,7 +51,7 @@ export default async function ConfiguracoesAssistentesTiposPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-semibold tracking-tight">Geração Automática de Peças</h1>
+        <Heading level="page">Geração Automática de Peças</Heading>
         <Button variant="outline" size="sm" asChild>
           <Link href="/app/configuracoes?tab=integracoes">
             <ArrowLeft className="mr-2 h-4 w-4" />
