@@ -57,9 +57,10 @@ export type TokenCategory =
   | 'radius'
   | 'breakpoint'
   | 'reference'
-  | 'shadow';
+  | 'shadow'
+  | 'density';
 
-export type TokenMode = 'light' | 'dark' | 'portal' | 'website' | 'video-always';
+export type TokenMode = 'light' | 'dark' | 'portal' | 'website' | 'video-always' | 'compact';
 
 // =============================================================================
 // TOKENS — por categoria
@@ -364,6 +365,25 @@ export const REFERENCE_REGISTRY: TokenEntry[] = [
 ];
 
 /**
+ * Density tokens — eixo ortogonal de densidade para superfícies de formulário.
+ * Declarados em :root (comfortable — idêntico ao shadcn default) e
+ * sobrescritos em [data-density="compact"] (dialogs de cadastro longos).
+ *
+ * Consumidos via CSS cascade pelos controles shadcn dentro do escopo
+ * [data-density]. Ver globals.css §"DENSITY AXIS".
+ */
+export const DENSITY_REGISTRY: TokenEntry[] = [
+  { name: '--density-control-h', category: 'density', layer: 'component', modes: ['light', 'dark', 'compact'], purpose: 'Altura de Input/Select/Combobox' },
+  { name: '--density-control-px', category: 'density', layer: 'component', modes: ['light', 'dark', 'compact'], purpose: 'Padding horizontal de controles' },
+  { name: '--density-control-font-size', category: 'density', layer: 'component', modes: ['light', 'dark', 'compact'], purpose: 'Font-size do conteúdo de controles (desktop)' },
+  { name: '--density-label-font-size', category: 'density', layer: 'component', modes: ['light', 'dark', 'compact'], purpose: 'Font-size de Label dentro do escopo' },
+  { name: '--density-field-gap', category: 'density', layer: 'component', modes: ['light', 'dark', 'compact'], purpose: 'Gap vertical entre campos do formulário' },
+  { name: '--density-dialog-padding-x', category: 'density', layer: 'component', modes: ['light', 'dark', 'compact'], purpose: 'Padding horizontal de header/body/footer do dialog' },
+  { name: '--density-dialog-padding-y', category: 'density', layer: 'component', modes: ['light', 'dark', 'compact'], purpose: 'Padding vertical de header/body/footer do dialog' },
+  { name: '--density-section-gap', category: 'density', layer: 'component', modes: ['light', 'dark', 'compact'], purpose: 'Gap entre DialogSection consecutivas' },
+];
+
+/**
  * Shadow tokens — RGBA literais para box-shadow (OKLCH em box-shadow ainda
  * é frágil em alguns browsers).
  */
@@ -400,6 +420,7 @@ export const TOKEN_REGISTRY: readonly TokenEntry[] = [
   ...COMPONENT_REGISTRY,
   ...TYPOGRAPHY_REGISTRY,
   ...BREAKPOINT_REGISTRY,
+  ...DENSITY_REGISTRY,
 ];
 
 /** Mapeamento rápido por nome para lookup. */

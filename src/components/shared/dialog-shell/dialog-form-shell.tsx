@@ -67,6 +67,18 @@ interface DialogFormShellProps {
    * Ocultar o rodapé padrão do shell (útil quando o formulário tem seu próprio rodapé)
    */
   hideFooter?: boolean;
+  /**
+   * Eixo de densidade do formulário.
+   * - `comfortable` (padrão): altura h-9, text-sm, gap-4, padding px-6 py-4.
+   * - `compact`: altura 36px, font 13px, gap ~13,5px, padding ~22,5×13,5px.
+   *
+   * Use `compact` em cadastros longos (8+ campos) para paridade com SaaS
+   * denso (Linear/Notion/Stripe). Propagado via `data-density` e consumido
+   * pelos controles shadcn via CSS scoped em globals.css §"DENSITY AXIS".
+   *
+   * @default "comfortable"
+   */
+  density?: "comfortable" | "compact";
 }
 
 export function DialogFormShell({
@@ -81,6 +93,7 @@ export function DialogFormShell({
   className,
   bodyClassName,
   hideFooter,
+  density = "comfortable",
 }: DialogFormShellProps) {
   // Calcular largura máxima
   const maxWidthClass = {
@@ -105,6 +118,7 @@ export function DialogFormShell({
     <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
       <ResponsiveDialogContent
         showCloseButton={false} // Removemos o botão X padrão
+        data-density={density}
         className={cn(
           maxWidthClass,
           "glass-dialog overflow-hidden",

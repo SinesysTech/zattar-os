@@ -113,6 +113,8 @@
     "mcp:docs": "tsx scripts/mcp/generate-docs.ts",
     "ai:reindex": "tsx scripts/ai/reindex-all.ts",
     "db:check-bloat": "tsx scripts/db/check-bloat.ts",
+    "db:types": "bash scripts/dev-tools/update-types.sh --write",
+    "db:types:check": "bash scripts/dev-tools/update-types.sh --check",
     "seed:prestacao-contas": "tsx scripts/database/seed-prestacao-contas-template.ts",
     "integrations:migrate": "node scripts/migrate-integrations-simple.js",
     "integrations:test": "node scripts/test-integration-config-simple.js",

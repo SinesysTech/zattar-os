@@ -89,12 +89,18 @@ interface ResponsiveDialogContentProps {
     children: React.ReactNode
     className?: string
     showCloseButton?: boolean
+    /**
+     * Forward de atributos `data-*` para o elemento raiz (Dialog/Sheet content).
+     * Usado por `DialogFormShell` para propagar `data-density` ao escopo.
+     */
+    [dataAttr: `data-${string}`]: unknown
 }
 
 function ResponsiveDialogContent({
     children,
     className,
     showCloseButton = true,
+    ...rest
 }: ResponsiveDialogContentProps) {
     const isMobile = useBreakpointBelow("sm")
 
@@ -112,6 +118,7 @@ function ResponsiveDialogContent({
                     "overflow-y-auto",
                     className
                 )}
+                {...rest}
             >
                 {children}
             </SheetContent>
@@ -128,6 +135,7 @@ function ResponsiveDialogContent({
                 "overflow-x-hidden",
                 className
             )}
+            {...rest}
         >
             {children}
         </DialogContent>
@@ -251,10 +259,12 @@ function ResponsiveDialogBody({
 }: ResponsiveDialogBodyProps) {
     return (
         <div
+            data-slot="dialog-body"
             className={cn(
                 // Permitir scroll vertical
                 "flex-1 overflow-y-auto overflow-x-hidden",
-                // Espaçamento adequado
+                // Espaçamento adequado — override em [data-density="compact"]
+                // via globals.css §"DENSITY AXIS".
                 "px-4 py-4 sm:px-6",
                 className
             )}

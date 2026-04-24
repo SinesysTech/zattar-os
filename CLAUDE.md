@@ -7,6 +7,28 @@ Este documento provê diretivas diretas e definitivas para ferramentas baseadas 
 **ZattarOS** (desenvolvido pela Synthropic) — Sistema corporativo para firmas legais. A base inteira usa linguagem de negócios em PT-BR.
 **Stack**: Next.js 16 (App Router + Turbopack), React 19, TypeScript 5, Supabase (RLS + pgvector), Redis, Tailwind CSS 4, shadcn/ui.
 
+## Estilo de Comunicação
+
+**Código é implementação, conversa é negócio.** O usuário fala em linguagem natural de alto nível (o que quer que o sistema faça); você responde em linguagem natural sobre o que foi implementado. O código vive no diff — a conversa não precisa repetí-lo.
+
+**Regra absoluta — sem blocos de código em explicações, relatórios, resumos e conclusões**:
+
+- Ao **explicar** o que um módulo faz, o que foi alterado, como um fluxo funciona ou por que uma decisão foi tomada: descreva em prosa, citando **diretório, arquivo e papel** (ex: "a validação passou para `src/app/(authenticated)/expedientes/service.ts`, que agora delega ao repository em vez de montar o payload direto").
+- Ao **reportar** o fim de uma tarefa ou resumir o que foi feito: enumere as mudanças em prosa ou bullets conceituais — o que mudou, onde mudou, qual o efeito no comportamento. Nunca colar o trecho modificado como "prova".
+- Ao **concluir** (diagnóstico de bug, resultado de auditoria, veredito de revisão): descrever causa, efeito e remediação em linguagem de negócio/arquitetura, sem trechos literais.
+
+**O que continua permitido em blocos de código**:
+- Comandos de terminal que o usuário precisa executar (`npm run …`, `gh …`, `psql …`).
+- Literais curtos e isolados quando o valor importa mais que o contexto (um hash, um nome de env var, um UUID, um seletor CSS específico).
+- Diffs/trechos somente quando o usuário pedir explicitamente para revisar código.
+
+**O que é proibido em explicações**:
+- Reproduzir funções, componentes, SQL, JSX, JSON de configuração inteiros para "mostrar o que foi feito".
+- Blocos de código como substituto de prosa ("ficou assim:" seguido de 40 linhas).
+- Colar o conteúdo do diff no chat — o usuário já lê o diff no editor.
+
+O objetivo é leitura rápida: o usuário deve terminar a resposta sabendo **o que mudou, onde mora e qual o impacto** sem precisar processar sintaxe.
+
 ## Comandos Chave
 
 ```bash

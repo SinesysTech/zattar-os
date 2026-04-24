@@ -1,1 +1,2 @@
 node scripts/lint/check-rls-initplan.mjs
+bash scripts/dev-tools/update-types.sh --check

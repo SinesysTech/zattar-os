@@ -82,6 +82,7 @@ export function DialogSection({
     <section
       data-slot="dialog-section"
       data-state={stepState}
+      data-tone={tone}
       className={cn("flex flex-col gap-3", TONE_CLASSES[tone], className)}
     >
       {hasHeader && (

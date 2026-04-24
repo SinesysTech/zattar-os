@@ -12,31 +12,6 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "13.0.5"
   }
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
   public: {
     Tables: {
       acervo: {
@@ -8904,6 +8879,23 @@ export type Database = {
         }
         Returns: Json
       }
+      bulk_atribuir_responsavel_expedientes: {
+        Args: {
+          p_expediente_ids: number[]
+          p_responsavel_id: number
+          p_usuario_id: number
+        }
+        Returns: Json
+      }
+      bulk_baixar_expedientes: {
+        Args: {
+          p_baixado_em: string
+          p_expediente_ids: number[]
+          p_justificativa: string
+          p_usuario_id: number
+        }
+        Returns: Json
+      }
       cleanup_expired_locks: { Args: never; Returns: number }
       cleanup_old_mcp_audit_logs: { Args: never; Returns: number }
       count_processos_unicos: {
@@ -9477,9 +9469,6 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {
       codigo_tribunal: [
@@ -9718,3 +9707,4 @@ export const Constants = {
     },
   },
 } as const
+

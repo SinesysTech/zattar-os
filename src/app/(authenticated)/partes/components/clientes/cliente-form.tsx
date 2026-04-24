@@ -479,7 +479,7 @@ export function ClienteFormDialog({
 
   // Renderizar Step 2 - Identificacao
   const renderStep2 = () => (
-    <div className="grid gap-4 py-4">
+    <div className="grid gap-(--density-field-gap)">
       <div className="grid gap-2">
         <Label htmlFor="nome">
           {isPF ? 'Nome Completo' : 'Razão Social'} <span className="text-destructive">*</span>
@@ -659,7 +659,7 @@ export function ClienteFormDialog({
 
   // Renderizar Step 3 - Contato
   const renderStep3 = () => (
-    <div className="grid gap-4 py-4">
+    <div className="grid gap-(--density-field-gap)">
       <div className="grid gap-2">
         <Label htmlFor="novo-email-cliente">E-mails</Label>
         <div className="flex gap-2">
@@ -771,7 +771,7 @@ export function ClienteFormDialog({
 
   // Renderizar Step 4 - Endereco
   const renderStep4 = () => (
-    <div className="grid gap-4 py-4">
+    <div className="grid gap-(--density-field-gap)">
       <div className="grid gap-2">
         <Label>CEP</Label>
         <InputCEP
@@ -868,7 +868,7 @@ export function ClienteFormDialog({
     };
 
     return (
-      <div className="grid gap-4 py-4">
+      <div className="grid gap-(--density-field-gap)">
         <div className="grid gap-2">
           <Label htmlFor="observacoes">Observações</Label>
           <Textarea
@@ -1090,6 +1090,7 @@ export function ClienteFormDialog({
       onOpenChange={onOpenChange}
       title={isEditMode ? 'Editar Cliente' : stepInfo.title}
       maxWidth={isEditMode ? '3xl' : 'lg'}
+      density="compact"
       multiStep={
         isEditMode
           ? undefined

@@ -461,7 +461,7 @@ export function ParteContrariaFormDialog({
 
   // Renderizar Step 1 - Tipo de Pessoa
   const renderStep1 = () => (
-    <div className="grid gap-6 py-4">
+    <div className="grid gap-(--density-field-gap)">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <button
           type="button"
@@ -532,7 +532,7 @@ export function ParteContrariaFormDialog({
 
   // Renderizar Step 2 - Identificação
   const renderStep2 = () => (
-    <div className="grid gap-4 py-4">
+    <div className="grid gap-(--density-field-gap)">
       <div className="grid gap-2">
         <Label htmlFor="nome">
           {isPF ? 'Nome Completo' : 'Razão Social'} <span className="text-destructive">*</span>
@@ -716,7 +716,7 @@ export function ParteContrariaFormDialog({
 
   // Renderizar Step 3 - Contato
   const renderStep3 = () => (
-    <div className="grid gap-4 py-4">
+    <div className="grid gap-(--density-field-gap)">
       <div className="grid gap-2">
         <Label htmlFor="novo-email-parte-contraria">E-mails</Label>
         <div className="flex gap-2">
@@ -828,7 +828,7 @@ export function ParteContrariaFormDialog({
 
   // Renderizar Step 4 - Endereço
   const renderStep4 = () => (
-    <div className="grid gap-4 py-4">
+    <div className="grid gap-(--density-field-gap)">
       <div className="grid gap-2">
         <Label>CEP</Label>
         <InputCEP
@@ -918,7 +918,7 @@ export function ParteContrariaFormDialog({
 
   // Renderizar Step 5 - Informações Adicionais
   const renderStep5 = () => (
-    <div className="grid gap-4 py-4">
+    <div className="grid gap-(--density-field-gap)">
       <div className="grid gap-2">
         <Label htmlFor="observacoes">Observações</Label>
         <Textarea
@@ -991,6 +991,7 @@ export function ParteContrariaFormDialog({
       onOpenChange={onOpenChange}
       title={isEditMode ? 'Editar Parte Contrária' : stepInfo.title}
       description={stepInfo.description}
+      density="compact"
       multiStep={{
         current: isEditMode ? currentStep - 1 : currentStep,
         total: isEditMode ? TOTAL_STEPS - 1 : TOTAL_STEPS,

@@ -1061,6 +1061,111 @@
   -webkit-backdrop-filter: blur(4px);
 }
 
+/* =============================================================================
+ * DENSITY AXIS — eixo ortogonal de densidade para superfícies de formulário
+ * =============================================================================
+ *
+ * Motivação: html { font-size: 18px } infla todos os valores em rem. Isso
+ * serve ao conforto de leitura em páginas, mas em dialogs de cadastro com
+ * 8+ campos produz sensação de escala "soprada" comparada ao padrão SaaS.
+ *
+ * Em vez de refatorar cada dialog (drift) ou baixar o root (blast radius),
+ * introduzimos um eixo de densidade declarado por `data-density` no shell
+ * do dialog. Controles shadcn lêem via overrides CSS escopados — zero
+ * mudança nos componentes individuais, zero risco fora do dialog.
+ *
+ * Uso: <DialogFormShell density="compact"> para cadastros longos.
+ * Default permanece "comfortable" (idêntico ao atual).
+ *
+ * Consumidores automáticos (dentro do escopo):
+ *   - Input[data-variant="default"]
+ *   - SelectTrigger[data-variant="default"]
+ *   - Textarea[data-variant="default"]
+ *   - Label
+ *   - Button com role="combobox" (ServerCombobox, DatePicker popover)
+ *   - DialogSection[data-tone="default"] (achata tone em compact)
+ *   - ResponsiveDialogBody, DialogHeader, DialogFooter (padding)
+ */
+
+:root {
+  /* Comfortable — byte-identical aos hardcodes shadcn atuais (h-9/gap-4/px-6). */
+  --density-control-h: 2.25rem;             /* = h-9 (40,5px @ root 18px) */
+  --density-control-px: 0.75rem;            /* = px-3 */
+  --density-control-font-size: 0.875rem;    /* = text-sm (15,75px @ root 18px) */
+  --density-label-font-size: 0.875rem;      /* = text-sm */
+  --density-field-gap: 1rem;                /* = gap-4 (18px) */
+  --density-dialog-padding-x: 1.5rem;       /* = px-6 (27px) */
+  --density-dialog-padding-y: 1rem;         /* = py-4 (18px) */
+  --density-section-gap: 1rem;
+}
+
+/* Compact — px fixos escapam a inflação do root 18px e entregam a mesma
+   densidade percebida em Linear/Notion/Stripe (~36px de altura de controle). */
+[data-density="compact"] {
+  --density-control-h: 2rem;                /* = 36px @ root 18px */
+  --density-control-px: 0.625rem;           /* ~11,25px */
+  --density-control-font-size: 13px;        /* fixo — escapa o root */
+  --density-label-font-size: 12px;
+  --density-field-gap: 0.75rem;             /* ~13,5px */
+  --density-dialog-padding-x: 1.25rem;      /* ~22,5px */
+  --density-dialog-padding-y: 0.75rem;      /* ~13,5px */
+  --density-section-gap: 0.75rem;
+}
+
+/* Controles: altura + padding horizontal. Atributo selector `[data-variant]`
+   evita tocar na variante `glass` (deliberadamente maior, uso pontual). */
+[data-density="compact"] [data-slot="input"][data-variant="default"],
+[data-density="compact"] [data-slot="select-trigger"][data-variant="default"][data-size="default"] {
+  height: var(--density-control-h);
+  padding-inline: var(--density-control-px);
+}
+
+/* Font-size de controles só no viewport md+ — mobile mantém text-base (16px+)
+   para evitar auto-zoom do iOS em focus de input. */
+@media (min-width: 768px) {
+  [data-density="compact"] [data-slot="input"][data-variant="default"],
+  [data-density="compact"] [data-slot="textarea"][data-variant="default"],
+  [data-density="compact"] [data-slot="select-trigger"][data-variant="default"] {
+    font-size: var(--density-control-font-size);
+  }
+}
+
+/* Textarea: sem height (field-sizing-content), só padding + font. */
+[data-density="compact"] [data-slot="textarea"][data-variant="default"] {
+  padding-inline: var(--density-control-px);
+  padding-block: var(--density-control-px);
+}
+
+/* Label — reduz para 12px em compact, preservando leitura em dialogs densos. */
+[data-density="compact"] [data-slot="label"] {
+  font-size: var(--density-label-font-size);
+}
+
+/* Combobox/DatePicker: Button com role="combobox" ou data-slot-date dispara
+   mesmo ajuste. Especificidade do atributo vence as classes Tailwind. */
+[data-density="compact"] [data-slot="button"][role="combobox"] {
+  height: var(--density-control-h);
+  padding-inline: var(--density-control-px);
+}
+
+/* Padding scoped do shell — afeta apenas dialogs compactos, nunca vaza.
+   Importante: usamos padding-inline/padding-block para não resetar o
+   padding shorthand herdado em outros breakpoints. */
+[data-density="compact"] [data-slot="dialog-header"],
+[data-density="compact"] [data-slot="dialog-footer"],
+[data-density="compact"] [data-slot="dialog-body"] {
+  padding-inline: var(--density-dialog-padding-x);
+  padding-block: var(--density-dialog-padding-y);
+}
+
+/* DialogSection em compact: suprime o "card-in-card" (bg + border + padding
+   extra) que consumia outra camada visual dentro do dialog já compactado. */
+[data-density="compact"] [data-slot="dialog-section"][data-tone="default"] {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
 /* --- ESTILOS BASE --- */
 @layer base {
 

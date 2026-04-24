@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useCallback, useEffect } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import {
   CalendarDays,
   CalendarRange,
@@ -26,7 +26,11 @@ import { getExpedientePartyNames } from '../domain';
 import { ExpedientesPulseStrip } from './expedientes-pulse-strip';
 import { ExpedientesControlView } from './expedientes-control-view';
 import { ExpedientesListWrapper } from './expedientes-list-wrapper';
-import { ExpedientesFilterBar, type ExpedientesFilterBarFilters } from './expedientes-filter-bar';
+import {
+  ExpedientesFilterBar,
+  type ExpedientesFilterBarFilters,
+  type ExpedientesStatus,
+} from './expedientes-filter-bar';
 import { ExpedientesMonthWrapper } from './expedientes-month-wrapper';
 import { ExpedientesYearWrapper } from './expedientes-year-wrapper';
 import { ExpedientesSemanaView } from './expedientes-semana-view';
@@ -82,20 +86,63 @@ function calcularDiasRestantes(expediente: Expediente): number | null {
   return Math.round((prazo.getTime() - hojeZerado.getTime()) / 86400000);
 }
 
+// ─── URL sync helpers ─────────────────────────────────────────────────────────
+
+const STATUS_VALIDOS: ReadonlyArray<ExpedientesStatus> = ['pendentes', 'baixados', 'todos'];
+
+function parseStatusFromUrl(raw: string | null): ExpedientesStatus {
+  if (raw && (STATUS_VALIDOS as ReadonlyArray<string>).includes(raw)) {
+    return raw as ExpedientesStatus;
+  }
+  return 'pendentes';
+}
+
+function filtersFromSearchParams(
+  params: URLSearchParams
+): ExpedientesFilterBarFilters {
+  return {
+    status: parseStatusFromUrl(params.get('status')),
+    trt: params.get('trt'),
+    grau: params.get('grau'),
+    origem: params.get('origem'),
+    responsavel: params.get('responsavel'),
+    tipo: params.get('tipo'),
+  };
+}
+
+function filtersToSearchString(
+  filters: ExpedientesFilterBarFilters,
+  search: string
+): string {
+  const params = new URLSearchParams();
+  if (search.trim()) params.set('q', search.trim());
+  if (filters.status !== 'pendentes') params.set('status', filters.status);
+  if (filters.trt) params.set('trt', filters.trt);
+  if (filters.grau) params.set('grau', filters.grau);
+  if (filters.origem) params.set('origem', filters.origem);
+  if (filters.responsavel) params.set('responsavel', filters.responsavel);
+  if (filters.tipo) params.set('tipo', filters.tipo);
+  return params.toString();
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { visualizacao?: ViewType }) {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const viewFromUrl = ROUTE_TO_VIEW[pathname] ?? initialView;
   const [viewMode, setViewMode] = useState<ViewType>(viewFromUrl);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [search, setSearch] = useState('');
+
+  // Filtros e busca hidratados da URL no primeiro render, para deep-link e
+  // preservação entre trocas de view.
+  const [search, setSearch] = useState(() => searchParams.get('q') ?? '');
   const [refreshCounter, setRefreshCounter] = useState(0);
-  const [filters, setFilters] = useState<ExpedientesFilterBarFilters>({
-    status: 'pendentes', trt: null, grau: null, origem: null, responsavel: null, tipo: null,
-  });
+  const [filters, setFilters] = useState<ExpedientesFilterBarFilters>(() =>
+    filtersFromSearchParams(new URLSearchParams(searchParams.toString()))
+  );
 
   // Detail/baixa dialog state
   const [selectedExpediente, setSelectedExpediente] = useState<Expediente | null>(null);
@@ -107,6 +154,20 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
     const newView = ROUTE_TO_VIEW[pathname];
     if (newView) setViewMode(newView);
   }, [pathname]);
+
+  // Sync filters + search → URL (debounced para não floodar history com cada keystroke)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const nextQuery = filtersToSearchString(filters, search);
+      const currentQuery = searchParams.toString();
+      if (nextQuery === currentQuery) return;
+      const target = nextQuery ? `${pathname}?${nextQuery}` : pathname;
+      // replace (não push) — filtros não geram entradas de histórico; trocar
+      // view ainda usa push (handleViewChange abaixo).
+      router.replace(target, { scroll: false });
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [filters, search, pathname, router, searchParams]);
 
   // Data fetching
   const { usuarios } = useUsuarios();
@@ -217,8 +278,12 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
   // ─── Navigation ──────────────────────────────────────────────────────────────
 
   const handleViewChange = useCallback((view: string) => {
-    router.push(VIEW_ROUTES[view as ViewType]);
-  }, [router]);
+    // Preserva filtros e busca ao trocar de view, garantindo continuidade
+    // da seleção do usuário entre quadro/semana/mês/ano/lista.
+    const target = VIEW_ROUTES[view as ViewType];
+    const query = filtersToSearchString(filters, search);
+    router.push(query ? `${target}?${query}` : target);
+  }, [router, filters, search]);
 
   // ─── Dynamic subtitle ─────────────────────────────────────────────────────────
 

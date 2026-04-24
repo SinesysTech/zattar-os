@@ -232,6 +232,7 @@ export function ContratoForm({
       onOpenChange={onOpenChange}
       title={isEditMode ? 'Editar Contrato' : 'Novo Contrato'}
       maxWidth="lg"
+      density="compact"
       footer={
         <Button
           type="button"
@@ -253,7 +254,7 @@ export function ContratoForm({
         </Button>
       }
     >
-      <form ref={formRef} action={formAction} className="space-y-4">
+      <form ref={formRef} action={formAction} className="space-y-(--density-field-gap)">
         {/* Linha 1: Tipo de Contrato + Tipo de Cobrança */}
         <div className="grid grid-cols-2 gap-4">
           <div className="grid gap-2">

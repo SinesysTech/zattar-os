@@ -1,6 +1,6 @@
--- Migration: Pacotes de documentos para assinatura digital
--- Permite agrupar múltiplos documentos em um único token de assinatura compartilhado.
--- Importada do banco remoto em 2026-04-16 (sincronização de drift de migrations).
+-- Pacote de assinatura: agrupa N documentos do mesmo contrato sob 1 link público
+-- compartilhado. Permite que um clique no botão do admin gere todos os documentos
+-- (PDFs já preenchidos com os dados do contrato) e devolva um único link pro cliente.
 
 CREATE TABLE assinatura_digital_pacotes (
   id                       BIGSERIAL PRIMARY KEY,
