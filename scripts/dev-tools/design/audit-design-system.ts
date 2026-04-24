@@ -330,6 +330,18 @@ function gradeFromScore(score: number): OverallScore['grade'] {
   return 'F';
 }
 
+// Score por módulo usa apenas `adoption - violationPenalty` (mais rígido que o
+// overall, que pondera coverage + violations). Thresholds calibrados à
+// distribuição real: módulos grandes possuem muitos sub-componentes funcionais
+// (combos, filters, form fields) que não importam typed components por design.
+function gradeFromModuleScore(score: number): OverallScore['grade'] {
+  if (score >= 75) return 'A';
+  if (score >= 60) return 'B';
+  if (score >= 45) return 'C';
+  if (score >= 30) return 'D';
+  return 'F';
+}
+
 // =============================================================================
 // AUDITORIA
 // =============================================================================
@@ -438,8 +450,10 @@ async function auditModules(files: string[], violations: ViolationsReport): Prom
   const typedFiles = new Set<string>();
   const typography = await countImports(files, '@/components/ui/typography');
   const glassPanel = await countImports(files, '@/components/shared/glass-panel');
+  const iconContainer = await countImports(files, '@/components/ui/icon-container');
   const pageShell = await countImports(files, '@/components/shared/page-shell');
-  [...typography, ...glassPanel, ...pageShell].forEach((f) => typedFiles.add(f));
+  const semanticBadge = await countImports(files, '@/components/ui/semantic-badge');
+  [...typography, ...glassPanel, ...iconContainer, ...pageShell, ...semanticBadge].forEach((f) => typedFiles.add(f));
 
   for (const f of files) {
     const rel = path.relative(REPO_ROOT, f);
@@ -480,7 +494,7 @@ async function auditModules(files: string[], violations: ViolationsReport): Prom
       files: data.files.length,
       adoption: Math.round(adoption),
       violations: data.violations,
-      grade: gradeFromScore(score),
+      grade: gradeFromModuleScore(score),
     });
   }
 

@@ -16,6 +16,7 @@ import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/comp
 import { Checkbox } from "@/components/ui/checkbox";
 
 import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/typography";
 import { ComposeMailDialog } from "./compose-mail-dialog";
 import { ComposeMailPanel } from "./compose-mail-panel";
 import { MailDisplay } from "./mail-display";
@@ -267,7 +268,7 @@ export function Mail({
                 <>
                   {isMobile && <NavMobile />}
 
-                  <span className="text-sm font-semibold">{folderDisplay}</span>
+                  <Text variant="label">{folderDisplay}</Text>
 
                   {isMobile && (
                     <ComposeMailDialog>

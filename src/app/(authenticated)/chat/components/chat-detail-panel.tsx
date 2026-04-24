@@ -10,28 +10,15 @@ import { UsuarioChat } from "../domain";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage, AvatarIndicator } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { getSemanticBadgeVariant, type BadgeVisualVariant } from "@/lib/design-system";
+import { Text } from "@/components/ui/typography";
+const ONLINE_STATUS_COLOR: Record<string, string> = {
+  online: "text-success",
+  away: "text-warning",
+  offline: "text-muted-foreground",
+};
 
-/**
- * Maps online status to semantic text color classes.
- * Duplicated locally from user-detail-sheet.tsx to avoid cross-component deep imports.
- */
 function getOnlineStatusColor(status: string): string {
-  const variant = getSemanticBadgeVariant("online_status", status);
-
-  const colorMap: Record<BadgeVisualVariant, string> = {
-    success: "text-success",
-    warning: "text-warning",
-    neutral: "text-muted-foreground",
-    destructive: "text-destructive",
-    info: "text-info",
-    default: "text-muted-foreground",
-    secondary: "text-muted-foreground",
-    outline: "text-muted-foreground",
-    accent: "text-primary",
-  };
-
-  return colorMap[variant] || "text-muted-foreground";
+  return ONLINE_STATUS_COLOR[status.toLowerCase()] ?? "text-muted-foreground";
 }
 
 interface ChatDetailPanelProps {
@@ -89,9 +76,9 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
 
         {/* Informacoes section — icon + label + value per mock */}
         <div className="px-5 py-3.5 border-t border-border/40 dark:border-white/[0.06]">
-          <h5 className="text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-muted-foreground/35 mb-3">
+          <Text variant="overline" as="h5" className="text-muted-foreground/35 mb-3">
             Informacoes
-          </h5>
+          </Text>
           <div className="space-y-0">
             {/* Email */}
             <div className="flex items-center gap-2.5 py-2">
@@ -135,9 +122,9 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
         {/* Media section — 3-column grid per mock */}
         {user.medias && user.medias.length > 0 && (
           <div className="px-5 py-3.5 border-t border-border/40 dark:border-white/[0.06]">
-            <h5 className="text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-muted-foreground/35 mb-3">
+            <Text variant="overline" as="h5" className="text-muted-foreground/35 mb-3">
               Midia Compartilhada
-            </h5>
+            </Text>
             <div className="grid grid-cols-3 gap-1.5">
               {user.medias.map(
                 (item, i) =>
@@ -161,9 +148,9 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
         {/* Website */}
         {user.website && (
           <div className="px-5 py-3.5 border-t border-border/40 dark:border-white/[0.06]">
-            <h5 className="text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-muted-foreground/35 mb-3">
+            <Text variant="overline" as="h5" className="text-muted-foreground/35 mb-3">
               Website
-            </h5>
+            </Text>
             <a
               href={user.website}
               target="_blank"

@@ -469,7 +469,7 @@ export default function CredenciaisPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {isLoading ? (
               Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="h-40 rounded-2xl border border-border/20 bg-muted-foreground/5 animate-pulse" />
+                <GlassPanel key={i} depth={1} className="h-40 animate-pulse" />
               ))
             ) : credenciaisFiltradas.length === 0 ? (
               <div className="col-span-full">

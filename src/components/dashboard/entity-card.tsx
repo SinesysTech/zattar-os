@@ -13,7 +13,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Building2, Mail, Phone, MapPin, Scale, Clock, Copy, Check, FileText } from 'lucide-react';
+import { Building2, Mail, Phone, MapPin, Scale, Clock, Copy, Check, FileText, Pencil, Trash2 } from 'lucide-react';
 import { type LucideIcon } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
 
@@ -32,11 +32,23 @@ export interface ProcessoResumo {
   status?: string | null;
 }
 
+/**
+ * Identifica o domínio da entidade no módulo Partes. Usado pelo orquestrador
+ * para rotear ações (editar/excluir) para a action correta quando a listagem
+ * contém vários tipos misturados (tab "Todos").
+ */
+export type EntityCardKind =
+  | 'cliente'
+  | 'parte_contraria'
+  | 'terceiro'
+  | 'representante';
+
 export interface EntityCardData {
   id: number | string;
   nome: string;
   nomeSocial?: string;
   tipo: 'pf' | 'pj';
+  tipoEntidade?: EntityCardKind;
   config: EntityCardConfig;
   documentoMasked: string;
   documentoRaw?: string;
@@ -54,6 +66,16 @@ export interface EntityCardData {
 interface EntityCardProps {
   data: EntityCardData;
   onClick?: (data: EntityCardData) => void;
+  /**
+   * Quando fornecida, renderiza botão "Editar" no rodapé (visível no hover).
+   * Propagação do clique no botão é isolada — não dispara `onClick` do card.
+   */
+  onEdit?: (data: EntityCardData) => void;
+  /**
+   * Quando fornecida, renderiza botão "Excluir" no rodapé (visível no hover).
+   * Propagação do clique no botão é isolada.
+   */
+  onDelete?: (data: EntityCardData) => void;
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -138,12 +160,32 @@ function InfoLine({
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
-export function EntityCard({ data, onClick }: EntityCardProps) {
+export function EntityCard({ data, onClick, onEdit, onDelete }: EntityCardProps) {
   const { config } = data;
+  const hasActions = Boolean(onEdit || onDelete);
+  const hasTags = Boolean(data.tags && data.tags.length > 0);
+
+  const handleEdit = React.useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onEdit?.(data);
+    },
+    [onEdit, data]
+  );
+
+  const handleDelete = React.useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onDelete?.(data);
+    },
+    [onDelete, data]
+  );
 
   return (
-    <GlassPanel className="p-4 cursor-pointer group hover:border-border/40 transition-colors">
-      <div onClick={() => onClick?.(data)}>
+    <GlassPanel className="p-4 cursor-pointer group hover:border-border/40 transition-colors flex flex-col h-full">
+      <div onClick={() => onClick?.(data)} className="flex flex-col flex-1">
         {/* Header: Avatar + Nome + Badge */}
         <div className="flex items-start gap-3">
           <div className={`size-10 rounded-xl ${config.bg} flex items-center justify-center shrink-0`}>
@@ -201,8 +243,8 @@ export function EntityCard({ data, onClick }: EntityCardProps) {
           )}
         </div>
 
-        {/* Processos */}
-        <div className="mt-3 pt-3 border-t border-border/10">
+        {/* Processos — empurra o rodapé para o fundo do card */}
+        <div className="mt-3 pt-3 border-t border-border/10 flex-1">
           <div className="flex items-center gap-1.5 mb-1.5">
             <Scale className="size-3 text-muted-foreground/40" />
             <span className="text-[10px] font-medium text-muted-foreground/60">
@@ -231,22 +273,58 @@ export function EntityCard({ data, onClick }: EntityCardProps) {
           )}
         </div>
 
-        {/* Rodapé: Tempo + Tags */}
-        <div className="flex items-center justify-between mt-2 pt-2 border-t border-border/10">
+        {/* Rodapé fixo: relógio à esquerda (sempre), tags OU ações à direita */}
+        <div className="relative flex items-center justify-between mt-2 pt-2 border-t border-border/10 min-h-7">
           <span className="text-[9px] text-muted-foreground/50 flex items-center gap-1">
             <Clock className="size-2.5" />
             {timeAgo(data.ultimaAtualizacao)}
           </span>
-          {data.tags && data.tags.length > 0 && (
-            <div className="flex gap-1">
-              {data.tags.map((tag) => (
+
+          {hasTags && (
+            <div
+              className={`flex gap-1 transition-opacity duration-150 ${
+                hasActions ? 'group-hover:opacity-0' : ''
+              }`}
+            >
+              {data.tags!.map((tag) => (
                 <span
                   key={tag}
                   className="text-[9px] px-1.5 py-0.5 rounded bg-primary/5 text-primary/50"
                 >
                   {tag}
                 </span>
-            ))}
+              ))}
+            </div>
+          )}
+
+          {hasActions && (
+            <div
+              className={`${
+                hasTags ? 'absolute right-0 top-1/2 -translate-y-1/2 mt-1' : ''
+              } flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150`}
+            >
+              {onEdit && (
+                <button
+                  type="button"
+                  onClick={handleEdit}
+                  aria-label="Editar"
+                  title="Editar"
+                  className="inline-flex items-center justify-center size-6 rounded-md text-muted-foreground/60 hover:bg-primary/10 hover:text-primary transition-colors cursor-pointer"
+                >
+                  <Pencil className="size-3" strokeWidth={2.25} />
+                </button>
+              )}
+              {onDelete && (
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  aria-label="Excluir"
+                  title="Excluir"
+                  className="inline-flex items-center justify-center size-6 rounded-md text-muted-foreground/60 hover:bg-destructive/10 hover:text-destructive transition-colors cursor-pointer"
+                >
+                  <Trash2 className="size-3" strokeWidth={2.25} />
+                </button>
+              )}
             </div>
           )}
         </div>

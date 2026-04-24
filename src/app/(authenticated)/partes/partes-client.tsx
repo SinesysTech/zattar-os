@@ -33,8 +33,31 @@ import {
   Clock,
   Building2,
 } from 'lucide-react';
+import { toast } from 'sonner';
 import { usePartes, type TipoEntidade } from '@/app/(authenticated)/partes';
-import { EntityCard, getInitials, timeAgo, type EntityCardData } from '@/components/dashboard/entity-card';
+import { EntityCard, getInitials, timeAgo, type EntityCardData, type EntityCardKind } from '@/components/dashboard/entity-card';
+import type { Cliente, ParteContraria, Terceiro } from './domain';
+import type { Representante } from './types/representantes';
+import {
+  actionBuscarCliente,
+  actionBuscarParteContraria,
+  actionBuscarTerceiro,
+  actionBuscarRepresentantePorId,
+  actionDesativarCliente,
+  actionDesativarPartesContrariasEmMassa,
+  actionDesativarTerceirosEmMassa,
+  actionDeletarRepresentante,
+} from './actions/index';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { EntityListRow } from '@/components/dashboard/entity-list-row';
 import { PulseStrip, type PulseItem } from '@/components/dashboard/pulse-strip';
 import { TabPills, type TabPillOption } from '@/components/dashboard/tab-pills';
@@ -276,6 +299,20 @@ export function PartesClient({ initialStats }: PartesClientProps) {
   const [createType, setCreateType] = useState<CreateType | null>(null);
   const [showTypeMenu, setShowTypeMenu] = useState(false);
 
+  // Edição — guarda entidade carregada + tipo para renderizar o FormDialog certo
+  type EditTarget =
+    | { kind: 'cliente'; entity: Cliente }
+    | { kind: 'parte_contraria'; entity: ParteContraria }
+    | { kind: 'terceiro'; entity: Terceiro }
+    | { kind: 'representante'; entity: Representante };
+  const [editTarget, setEditTarget] = useState<EditTarget | null>(null);
+
+  // Exclusão — guarda identificação da entidade pendente de confirmação
+  const [deleteTarget, setDeleteTarget] = useState<
+    { kind: EntityCardKind; id: number; nome: string } | null
+  >(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const { partes, isLoading, error, total, refetch } = usePartes({
     tipoEntidade: activeTab,
     busca: search,
@@ -306,6 +343,112 @@ export function PartesClient({ initialStats }: PartesClientProps) {
 
   const handleCreateSuccess = useCallback(() => {
     setCreateType(null);
+    refetch();
+  }, [refetch]);
+
+  // Infere tipo da entidade quando o card não carrega tipoEntidade (fallback).
+  // A tab 'todos' depende do campo vindo do adapter; as outras tabs já apontam o tipo.
+  const resolveKind = useCallback(
+    (data: EntityCardData): EntityCardKind | null => {
+      if (data.tipoEntidade) return data.tipoEntidade;
+      if (activeTab === 'clientes') return 'cliente';
+      if (activeTab === 'partes_contrarias') return 'parte_contraria';
+      if (activeTab === 'terceiros') return 'terceiro';
+      if (activeTab === 'representantes') return 'representante';
+      return null;
+    },
+    [activeTab]
+  );
+
+  const handleEdit = useCallback(
+    async (data: EntityCardData) => {
+      const kind = resolveKind(data);
+      if (!kind) {
+        toast.error('Não foi possível determinar o tipo do registro');
+        return;
+      }
+      const id = Number(data.id);
+      if (!Number.isFinite(id)) return;
+
+      try {
+        if (kind === 'cliente') {
+          const res = await actionBuscarCliente(id);
+          if (!res.success || !res.data) throw new Error(res.error ?? 'Cliente não encontrado');
+          setEditTarget({ kind, entity: res.data as Cliente });
+        } else if (kind === 'parte_contraria') {
+          const res = await actionBuscarParteContraria(id);
+          if (!res.success || !res.data) throw new Error(res.error ?? 'Parte contrária não encontrada');
+          setEditTarget({ kind, entity: res.data as ParteContraria });
+        } else if (kind === 'terceiro') {
+          const res = await actionBuscarTerceiro(id);
+          if (!res.success || !res.data) throw new Error(res.error ?? 'Terceiro não encontrado');
+          setEditTarget({ kind, entity: res.data as Terceiro });
+        } else if (kind === 'representante') {
+          const res = await actionBuscarRepresentantePorId(id);
+          if (!res.success || !res.data) throw new Error(res.error ?? 'Representante não encontrado');
+          setEditTarget({ kind, entity: res.data as Representante });
+        }
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : 'Erro ao carregar registro');
+      }
+    },
+    [resolveKind]
+  );
+
+  const handleDelete = useCallback(
+    (data: EntityCardData) => {
+      const kind = resolveKind(data);
+      if (!kind) return;
+      const id = Number(data.id);
+      if (!Number.isFinite(id)) return;
+      setDeleteTarget({ kind, id, nome: data.nome });
+    },
+    [resolveKind]
+  );
+
+  const handleConfirmDelete = useCallback(async () => {
+    if (!deleteTarget) return;
+    setIsDeleting(true);
+    try {
+      const { kind, id, nome } = deleteTarget;
+      let success = false;
+      let message: string | undefined;
+
+      if (kind === 'cliente') {
+        const r = await actionDesativarCliente(id);
+        success = r.success;
+        message = r.success ? undefined : r.error;
+      } else if (kind === 'parte_contraria') {
+        const r = await actionDesativarPartesContrariasEmMassa([id]);
+        success = r.success;
+        message = r.message;
+      } else if (kind === 'terceiro') {
+        const r = await actionDesativarTerceirosEmMassa([id]);
+        success = r.success;
+        message = r.message;
+      } else if (kind === 'representante') {
+        const r = await actionDeletarRepresentante(id);
+        success = r.success;
+        message = r.error;
+      }
+
+      if (success) {
+        toast.success(`"${nome}" excluído com sucesso.`);
+        if (selectedParte && Number(selectedParte.id) === id) setSelectedParte(null);
+        setDeleteTarget(null);
+        refetch();
+      } else {
+        toast.error(message ?? 'Erro ao excluir registro');
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Erro ao excluir');
+    } finally {
+      setIsDeleting(false);
+    }
+  }, [deleteTarget, selectedParte, refetch]);
+
+  const handleEditSuccess = useCallback(() => {
+    setEditTarget(null);
     refetch();
   }, [refetch]);
 
@@ -464,7 +607,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
         <div
           className={
             viewMode === 'cards'
-              ? `grid grid-cols-1 sm:grid-cols-2 ${selectedParte ? '' : 'lg:grid-cols-3'} gap-3`
+              ? `grid grid-cols-1 sm:grid-cols-2 ${selectedParte ? '' : 'lg:grid-cols-3'} auto-rows-fr gap-3`
               : 'flex flex-col gap-1.5'
           }
         >
@@ -482,6 +625,8 @@ export function PartesClient({ initialStats }: PartesClientProps) {
                     key={parte.id}
                     data={parte}
                     onClick={handleSelect}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
                   />
                 ) : (
                   <EntityListRow
@@ -567,6 +712,81 @@ export function PartesClient({ initialStats }: PartesClientProps) {
         onSuccess={handleCreateSuccess}
         mode="create"
       />
+
+      {/* ── Dialogs de edição ───────────────────────────────────── */}
+      {editTarget?.kind === 'cliente' && (
+        <ClienteFormDialog
+          open
+          onOpenChange={(open) => { if (!open) setEditTarget(null); }}
+          onSuccess={handleEditSuccess}
+          mode="edit"
+          cliente={editTarget.entity}
+        />
+      )}
+      {editTarget?.kind === 'parte_contraria' && (
+        <ParteContrariaFormDialog
+          open
+          onOpenChange={(open) => { if (!open) setEditTarget(null); }}
+          onSuccess={handleEditSuccess}
+          mode="edit"
+          parteContraria={editTarget.entity}
+        />
+      )}
+      {editTarget?.kind === 'terceiro' && (
+        <TerceiroFormDialog
+          open
+          onOpenChange={(open) => { if (!open) setEditTarget(null); }}
+          onSuccess={handleEditSuccess}
+          mode="edit"
+          terceiro={editTarget.entity}
+        />
+      )}
+      {editTarget?.kind === 'representante' && (
+        <RepresentanteFormDialog
+          open
+          onOpenChange={(open) => { if (!open) setEditTarget(null); }}
+          onSuccess={handleEditSuccess}
+          mode="edit"
+          representante={editTarget.entity}
+        />
+      )}
+
+      {/* ── Confirmação de exclusão ─────────────────────────────── */}
+      <AlertDialog
+        open={deleteTarget !== null}
+        onOpenChange={(open) => { if (!open && !isDeleting) setDeleteTarget(null); }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir registro?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {deleteTarget ? (
+                <>
+                  O registro <span className="font-medium text-foreground">&quot;{deleteTarget.nome}&quot;</span>{' '}
+                  {deleteTarget.kind === 'representante'
+                    ? 'será removido permanentemente.'
+                    : 'será desativado e deixará de aparecer nas listagens ativas. Você pode reativá-lo depois.'}
+                </>
+              ) : (
+                'Confirme a exclusão do registro.'
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                handleConfirmDelete();
+              }}
+              disabled={isDeleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {isDeleting ? 'Excluindo…' : 'Excluir'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

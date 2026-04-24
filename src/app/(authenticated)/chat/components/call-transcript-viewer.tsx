@@ -55,7 +55,7 @@ export function CallTranscriptViewer({ chamada }: CallTranscriptViewerProps) {
 
   if (!chamada.transcricao) {
     return (
-      <div className="flex flex-col items-center justify-center p-8 text-gray-500 border border-dashed rounded-lg">
+      <div className="flex flex-col items-center justify-center p-8 text-muted-foreground border border-dashed rounded-lg">
         <FileText className="w-8 h-8 mb-2 opacity-50" />
         <p className="text-sm">Nenhuma transcrição disponível para esta chamada.</p>
       </div>
@@ -87,7 +87,7 @@ export function CallTranscriptViewer({ chamada }: CallTranscriptViewerProps) {
                     <ReactMarkdown>{resumo}</ReactMarkdown>
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center justify-center h-40 text-gray-500">
+                  <div className="flex flex-col items-center justify-center h-40 text-muted-foreground">
                     <p className="mb-4">Nenhum resumo gerado ainda.</p>
                   </div>
                 )}

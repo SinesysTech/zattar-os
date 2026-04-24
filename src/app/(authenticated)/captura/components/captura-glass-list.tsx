@@ -22,6 +22,7 @@ import { cn } from '@/lib/utils';
 import { CapturaStatusSemanticBadge } from '@/components/ui/semantic-badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/shared/empty-state';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import type { CapturaLog, TipoCaptura, StatusCaptura } from '../types';
 import type { CapturaKpiData } from './captura-kpi-strip';
 import { useCapturasLog } from '../hooks/use-capturas-log';
@@ -325,7 +326,7 @@ function ListSkeleton() {
   return (
     <div className="flex flex-col gap-2">
       {Array.from({ length: 5 }, (_, i) => (
-        <div key={i} className="rounded-2xl border border-border/40 bg-card p-4">
+        <GlassPanel key={i} depth={1} className="p-4">
           <div className="grid grid-cols-[10px_1fr_80px_70px_120px_80px_80px_56px] gap-3 items-center">
             <Skeleton className="w-2 h-2 rounded-full" />
             <div className="flex items-center gap-3">
@@ -342,7 +343,7 @@ function ListSkeleton() {
             <Skeleton className="h-3 w-12 ml-auto" />
             <div />
           </div>
-        </div>
+        </GlassPanel>
       ))}
     </div>
   );

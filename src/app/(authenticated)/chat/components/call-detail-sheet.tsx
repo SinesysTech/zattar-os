@@ -25,6 +25,7 @@ import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { GlassPanel } from '@/components/shared/glass-panel';
+import { Heading } from '@/components/ui/typography';
 
 import {
   ChamadaComParticipantes,
@@ -207,7 +208,7 @@ export function CallDetailSheet({
               {/* Integração Dyte */}
               <GlassPanel depth={1} className="p-4 space-y-3 bg-muted/30">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-semibold text-sm">Status no Dyte</h4>
+                  <Heading level="widget" as="h4">Status no Dyte</Heading>
                   <Button
                     variant="ghost"
                     size="icon"

@@ -3,6 +3,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { X, MessageSquareText } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Heading } from "@/components/ui/typography";
 import { TranscriptSegment } from "../hooks/use-transcription";
 
 interface LiveTranscriptPanelProps {
@@ -29,7 +30,7 @@ export function LiveTranscriptPanel({ transcripts, isVisible, onClose }: LiveTra
       <div className="flex items-center justify-between p-3 border-b border-video-surface-hover">
         <div className="flex items-center gap-2 text-video-text">
           <MessageSquareText className="w-4 h-4" />
-          <h3 className="font-semibold text-sm">Transcrição em Tempo Real</h3>
+          <Heading level="widget">Transcrição em Tempo Real</Heading>
         </div>
         <Button
           variant="ghost"

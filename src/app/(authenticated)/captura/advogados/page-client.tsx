@@ -11,7 +11,7 @@ import { PulseStrip } from '@/components/dashboard/pulse-strip';
 import type { PulseItem } from '@/components/dashboard/pulse-strip';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { EmptyState } from '@/components/shared/empty-state';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { useDebounce } from '@/hooks/use-debounce';
 import {
@@ -200,9 +200,9 @@ export default function AdvogadosPage() {
         <div className="flex items-end justify-between gap-4">
           <div>
             <Heading level="page">Advogados</Heading>
-            <p className="text-sm text-muted-foreground/50 mt-0.5">
+            <Text variant="caption" className="text-muted-foreground/50 mt-0.5">
               Gestão de advogados com acesso aos sistemas judiciais
-            </p>
+            </Text>
           </div>
           <Button
             size="sm"
@@ -244,7 +244,7 @@ export default function AdvogadosPage() {
         {isLoading && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="h-48 rounded-2xl border border-border/20 bg-muted-foreground/5 animate-pulse" />
+              <GlassPanel key={i} depth={1} className="h-48 animate-pulse" />
             ))}
           </div>
         )}

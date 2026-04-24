@@ -30,16 +30,35 @@ import {
   GRAU_TRIBUNAL_LABELS,
   type UrgencyLevel,
 } from '../domain';
+import {
+  ExpedienteResponsavelPopover,
+  ResponsavelTriggerContent,
+} from './expediente-responsavel-popover';
+import {
+  ExpedienteTipoPopover,
+  TipoTriggerContent,
+} from './expediente-tipo-popover';
+import { ExpedienteTextEditor } from './expediente-text-editor';
 
 // ─── Types ────────────────────────────────────────────────────────────────
+
+type UsuarioOption = {
+  id: number;
+  nomeExibicao?: string;
+  nomeCompleto?: string;
+  avatarUrl?: string | null;
+};
+
+type TipoExpedienteOption = { id: number; tipoExpediente?: string };
 
 export interface ExpedientesSemanaViewProps {
   expedientes: Expediente[];
   currentDate: Date;
   onDateChange: (date: Date) => void;
   onViewDetail: (expediente: Expediente) => void;
-  usuariosData?: { id: number; nomeExibicao?: string; nomeCompleto?: string }[];
-  tiposExpedientesData?: { id: number; tipoExpediente?: string }[];
+  usuariosData?: UsuarioOption[];
+  tiposExpedientesData?: TipoExpedienteOption[];
+  onSuccess?: () => void;
 }
 
 // ─── Urgency visual mappings ─────────────────────────────────────────────
@@ -86,6 +105,7 @@ export function ExpedientesSemanaView({
   onViewDetail,
   usuariosData,
   tiposExpedientesData,
+  onSuccess,
 }: ExpedientesSemanaViewProps) {
   const weekStart = useMemo(
     () => startOfWeek(currentDate, { locale: ptBR, weekStartsOn: 1 }),
@@ -102,24 +122,6 @@ export function ExpedientesSemanaView({
       ),
     [weekStart, weekEnd],
   );
-
-  // ─── Lookup maps ────────────────────────────────────────────────────────
-
-  const usuariosMap = useMemo(() => {
-    const m = new Map<number, string>();
-    (usuariosData ?? []).forEach((u) =>
-      m.set(u.id, u.nomeExibicao || u.nomeCompleto || `User ${u.id}`),
-    );
-    return m;
-  }, [usuariosData]);
-
-  const tiposMap = useMemo(() => {
-    const m = new Map<number, string>();
-    (tiposExpedientesData ?? []).forEach((t) =>
-      m.set(t.id, t.tipoExpediente || `Tipo ${t.id}`),
-    );
-    return m;
-  }, [tiposExpedientesData]);
 
   // ─── Group expedientes by day ───────────────────────────────────────────
 
@@ -261,8 +263,9 @@ export function ExpedientesSemanaView({
                       key={exp.id}
                       expediente={exp}
                       onClick={() => onViewDetail(exp)}
-                      usuariosMap={usuariosMap}
-                      tiposMap={tiposMap}
+                      usuariosData={usuariosData ?? []}
+                      tiposExpedientesData={tiposExpedientesData ?? []}
+                      onSuccess={onSuccess}
                     />
                   ))}
                 </div>
@@ -280,26 +283,20 @@ export function ExpedientesSemanaView({
 function WeekDayCard({
   expediente,
   onClick,
-  usuariosMap,
-  tiposMap,
+  usuariosData,
+  tiposExpedientesData,
+  onSuccess,
 }: {
   expediente: Expediente;
   onClick: () => void;
-  usuariosMap: Map<number, string>;
-  tiposMap: Map<number, string>;
+  usuariosData: UsuarioOption[];
+  tiposExpedientesData: TipoExpedienteOption[];
+  onSuccess?: () => void;
 }) {
   const urgency = getExpedienteUrgencyLevel(expediente);
   const partes = getExpedientePartyNames(expediente);
   const isBaixado = !!expediente.baixadoEm;
   const countdownLabel = getCountdownLabel(expediente);
-
-  const tipoName = expediente.tipoExpedienteId
-    ? tiposMap.get(expediente.tipoExpedienteId) ?? 'Sem tipo'
-    : 'Sem tipo';
-
-  const responsavelName = expediente.responsavelId
-    ? usuariosMap.get(expediente.responsavelId) ?? null
-    : null;
 
   const prazoLabel = expediente.dataPrazoLegalParte
     ? format(parseISO(expediente.dataPrazoLegalParte), 'dd/MM')
@@ -346,16 +343,20 @@ function WeekDayCard({
         </div>
       </div>
 
-      {/* Row 2: Tipo expediente */}
-      <div className="flex items-center gap-1.5 mt-1.5">
-        <p
-          className={cn(
-            'text-xs font-medium text-foreground truncate',
-            isBaixado && 'line-through',
-          )}
+      {/* Row 2: Tipo expediente — popover inline */}
+      <div className={cn('mt-1.5', isBaixado && 'line-through')}>
+        <ExpedienteTipoPopover
+          expedienteId={expediente.id}
+          tipoExpedienteId={expediente.tipoExpedienteId}
+          tiposExpedientes={tiposExpedientesData}
+          onSuccess={onSuccess}
         >
-          {tipoName}
-        </p>
+          <TipoTriggerContent
+            tipoExpedienteId={expediente.tipoExpedienteId}
+            tiposExpedientes={tiposExpedientesData}
+            size="sm"
+          />
+        </ExpedienteTipoPopover>
       </div>
 
       {/* Row 3: Partes */}
@@ -394,25 +395,55 @@ function WeekDayCard({
         </p>
       )}
 
-      {/* Row 6: Descricao arquivos */}
-      {expediente.descricaoArquivos && (
-        <p
-          className="mt-1 whitespace-pre-wrap wrap-break-word text-[9px] italic text-muted-foreground/40"
-          title={expediente.descricaoArquivos}
-        >
-          {expediente.descricaoArquivos}
-        </p>
-      )}
+      {/* Row 6: Descrição + Observações editáveis */}
+      <div
+        className="mt-2 space-y-1.5"
+        onClick={(e) => e.stopPropagation()}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
+        <div>
+          <p className="text-[8px] font-medium text-muted-foreground/40 uppercase tracking-wider mb-0.5">
+            Descrição
+          </p>
+          <ExpedienteTextEditor
+            expedienteId={expediente.id}
+            field="descricaoArquivos"
+            value={expediente.descricaoArquivos}
+            emptyPlaceholder="Clique para adicionar"
+            onSuccess={onSuccess}
+            className="text-[10px]"
+          />
+        </div>
+        <div>
+          <p className="text-[8px] font-medium text-muted-foreground/40 uppercase tracking-wider mb-0.5">
+            Observações
+          </p>
+          <ExpedienteTextEditor
+            expedienteId={expediente.id}
+            field="observacoes"
+            value={expediente.observacoes}
+            emptyPlaceholder="Clique para adicionar"
+            onSuccess={onSuccess}
+            className="text-[10px]"
+          />
+        </div>
+      </div>
 
-      {/* Row 7: Responsavel footer */}
+      {/* Row 7: Responsavel footer — popover inline */}
       <div className="flex justify-end mt-2">
-        {responsavelName ? (
-          <span className="text-[9px] text-muted-foreground/55">
-            {responsavelName}
-          </span>
-        ) : (
-          <span className="text-[9px] italic text-warning/60">Sem resp.</span>
-        )}
+        <ExpedienteResponsavelPopover
+          expedienteId={expediente.id}
+          responsavelId={expediente.responsavelId}
+          usuarios={usuariosData}
+          onSuccess={onSuccess}
+          align="end"
+        >
+          <ResponsavelTriggerContent
+            responsavelId={expediente.responsavelId}
+            usuarios={usuariosData}
+            size="sm"
+          />
+        </ExpedienteResponsavelPopover>
       </div>
     </div>
   );

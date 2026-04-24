@@ -37,7 +37,7 @@ import {
 import { FilterPopover } from '@/app/(authenticated)/partes';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
-import { getSemanticBadgeVariant } from '@/lib/design-system';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 import {
   MoreHorizontal,
   CreditCard,
@@ -305,9 +305,9 @@ function criarColunas(
         const label = STATUS_LABELS[status];
         return (
           <div className="min-h-10 flex items-center justify-center">
-            <Badge variant={getSemanticBadgeVariant('payment_status', status)}>
+            <SemanticBadge category="payment_status" value={status}>
               {label}
-            </Badge>
+            </SemanticBadge>
           </div>
         );
       },

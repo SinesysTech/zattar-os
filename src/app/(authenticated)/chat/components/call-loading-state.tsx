@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Progress } from "@/components/ui/progress";
+import { Heading } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
@@ -57,7 +58,7 @@ export function CallLoadingState({
   };
 
   return (
-    <div className={cn("flex flex-col items-center justify-center h-full w-full bg-[var(--video-bg)] text-[var(--video-text)] p-6", className)}>
+    <div className={cn("flex flex-col items-center justify-center h-full w-full bg-video-bg text-video-text p-6", className)}>
       <div className="w-full max-w-sm flex flex-col items-center gap-6">
         <div className="relative">
           <div className="absolute inset-0 bg-info/20 blur-xl rounded-full" />
@@ -65,23 +66,23 @@ export function CallLoadingState({
         </div>
 
         <div className="text-center space-y-2 w-full">
-          <h3 className="text-xl font-semibold tracking-tight">
+          <Heading level="card">
             {message || defaultMessages[stage]}
-          </h3>
-          <p className="text-sm text-[var(--video-muted)]">
+          </Heading>
+          <p className="text-sm text-video-muted">
             Aguarde um momento...
           </p>
         </div>
 
         <div className="w-full space-y-2">
           <Progress value={progress} className="h-2" />
-          <p className="text-xs text-right text-[var(--video-muted)]">{Math.round(progress)}%</p>
+          <p className="text-xs text-right text-video-muted">{Math.round(progress)}%</p>
         </div>
 
         {onCancel && (
           <button
             onClick={onCancel}
-            className="mt-4 text-sm text-[var(--video-muted)] hover:text-[var(--video-text)] transition-colors underline decoration-dotted"
+            className="mt-4 text-sm text-video-muted hover:text-video-text transition-colors underline decoration-dotted"
           >
             Cancelar
           </button>

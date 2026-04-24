@@ -27,33 +27,18 @@ import {
   AvatarIndicator,
 } from '@/components/ui/avatar';
 import { generateAvatarFallback } from '@/lib/utils';
-import {
-  getSemanticBadgeVariant,
-  type BadgeVisualVariant,
-} from '@/lib/design-system';
-
+import { Heading, Text } from '@/components/ui/typography';
 import useChatStore from '../hooks/use-chat-store';
 import { UsuarioChat } from '../domain';
 
-/**
- * Maps online status to semantic text color classes.
- */
+const ONLINE_STATUS_COLOR: Record<string, string> = {
+  online: 'text-success',
+  away: 'text-warning',
+  offline: 'text-muted-foreground',
+};
+
 function getOnlineStatusColor(status: string): string {
-  const variant = getSemanticBadgeVariant('online_status', status);
-
-  const colorMap: Record<BadgeVisualVariant, string> = {
-    success: 'text-success',
-    warning: 'text-warning',
-    neutral: 'text-muted-foreground',
-    destructive: 'text-destructive',
-    info: 'text-info',
-    default: 'text-muted-foreground',
-    secondary: 'text-muted-foreground',
-    outline: 'text-muted-foreground',
-    accent: 'text-primary',
-  };
-
-  return colorMap[variant] || 'text-muted-foreground';
+  return ONLINE_STATUS_COLOR[status.toLowerCase()] ?? 'text-muted-foreground';
 }
 
 export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
@@ -80,7 +65,7 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
                 {generateAvatarFallback(user.nomeCompleto)}
               </AvatarFallback>
             </Avatar>
-            <h4 className="mb-2 text-xl font-semibold">{user.nomeCompleto}</h4>
+            <Heading level="card" as="h4" className="mb-2">{user.nomeCompleto}</Heading>
             <div className="text-xs">
               Último acesso:{' '}
               {user.onlineStatus === 'online' ? (
@@ -98,25 +83,25 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
           <div className="space-y-2 divide-y divide-border/20">
             {user.about && (
               <div className="space-y-3 py-4">
-                <h5 className="text-xs font-semibold uppercase">Sobre</h5>
+                <Text variant="overline" as="h5">Sobre</Text>
                 <div className="text-muted-foreground">{user.about}</div>
               </div>
             )}
             {user.phone && (
               <div className="space-y-3 py-4">
-                <h5 className="text-xs font-semibold uppercase">Telefone</h5>
+                <Text variant="overline" as="h5">Telefone</Text>
                 <div className="text-muted-foreground">{user.phone}</div>
               </div>
             )}
             {user.country && (
               <div className="space-y-3 py-4">
-                <h5 className="text-xs font-semibold uppercase">País</h5>
+                <Text variant="overline" as="h5">País</Text>
                 <div className="text-muted-foreground">{user.country}</div>
               </div>
             )}
             {user.medias?.length && (
               <div className="space-y-3 py-4">
-                <h5 className="text-xs font-semibold uppercase">Mídia</h5>
+                <Text variant="overline" as="h5">Mídia</Text>
                 <div>
                   <ScrollArea className="w-full">
                     <div className="flex gap-4 *:shrink-0">
@@ -144,7 +129,7 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
             )}
             {user.website && (
               <div className="space-y-3 py-4">
-                <h5 className="text-xs font-semibold uppercase">Website</h5>
+                <Text variant="overline" as="h5">Website</Text>
                 <div>
                   <a
                     href={user.website}
@@ -159,9 +144,9 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
             )}
             {user.socialLinks?.length && (
               <div className="space-y-3 py-4">
-                <h5 className="text-xs font-semibold uppercase">
+                <Text variant="overline" as="h5">
                   Redes Sociais
-                </h5>
+                </Text>
                 <div className="flex flex-wrap items-center gap-2 *:shrink-0">
                   {user.socialLinks.map(
                     (item: { icon: string; link: string }, key) => (

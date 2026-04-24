@@ -34,14 +34,14 @@ export function LayoutSwitcher({ currentLayout, onLayoutChange }: LayoutSwitcher
   };
 
   return (
-    <div className="absolute top-4 left-4 z-50 flex gap-1 bg-[var(--video-surface)]/80 backdrop-blur-md rounded-lg p-1 border border-[var(--video-border)]">
+    <div className="absolute top-4 left-4 z-50 flex gap-1 bg-video-surface/80 backdrop-blur-md rounded-lg p-1 border border-video-border">
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
               variant="ghost"
               size="icon"
-              className={cn("h-8 w-8 hover:bg-[var(--video-surface-hover)]", currentLayout === 'grid' && "bg-info text-white hover:bg-info")}
+              className={cn("h-8 w-8 hover:bg-video-surface-hover", currentLayout === 'grid' && "bg-info text-white hover:bg-info")}
               onClick={() => handleLayoutChange('grid')}
             >
               <Grid3x3 className="h-4 w-4" />
@@ -55,7 +55,7 @@ export function LayoutSwitcher({ currentLayout, onLayoutChange }: LayoutSwitcher
             <Button
               variant="ghost"
               size="icon"
-              className={cn("h-8 w-8 hover:bg-[var(--video-surface-hover)]", currentLayout === 'spotlight' && "bg-info text-white hover:bg-info")}
+              className={cn("h-8 w-8 hover:bg-video-surface-hover", currentLayout === 'spotlight' && "bg-info text-white hover:bg-info")}
               onClick={() => handleLayoutChange('spotlight')}
             >
               <Focus className="h-4 w-4" />
@@ -69,7 +69,7 @@ export function LayoutSwitcher({ currentLayout, onLayoutChange }: LayoutSwitcher
             <Button
               variant="ghost"
               size="icon"
-              className={cn("h-8 w-8 hover:bg-[var(--video-surface-hover)]", currentLayout === 'sidebar' && "bg-info text-white hover:bg-info")}
+              className={cn("h-8 w-8 hover:bg-video-surface-hover", currentLayout === 'sidebar' && "bg-info text-white hover:bg-info")}
               onClick={() => handleLayoutChange('sidebar')}
             >
               <PanelRight className="h-4 w-4" />

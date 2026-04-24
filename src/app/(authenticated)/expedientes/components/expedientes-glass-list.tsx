@@ -25,6 +25,15 @@ import {
   URGENCY_DOT,
   URGENCY_COUNTDOWN,
 } from './urgency-helpers';
+import {
+  ExpedienteResponsavelPopover,
+  ResponsavelTriggerContent,
+} from './expediente-responsavel-popover';
+import {
+  ExpedienteTipoPopover,
+  TipoTriggerContent,
+} from './expediente-tipo-popover';
+import { ExpedienteTextEditor } from './expediente-text-editor';
 
 // =============================================================================
 // TYPES
@@ -37,6 +46,7 @@ interface ExpedientesGlassListProps {
   onBaixar?: (expediente: Expediente) => void;
   usuariosData?: Usuario[];
   tiposExpedientesData?: { id: number; tipoExpediente?: string }[];
+  onSuccess?: () => void;
 }
 
 // =============================================================================
@@ -63,12 +73,14 @@ function GlassRow({
   onBaixar,
   usuariosData,
   tiposExpedientesData,
+  onSuccess,
 }: {
   expediente: Expediente;
   onViewDetail: () => void;
   onBaixar?: (expediente: Expediente) => void;
   usuariosData?: Usuario[];
   tiposExpedientesData?: { id: number; tipoExpediente?: string }[];
+  onSuccess?: () => void;
 }) {
   const urgency = getExpedienteUrgencyLevel(expediente);
   const dias = getExpedienteDiasRestantes(expediente);
@@ -76,8 +88,6 @@ function GlassRow({
   const grauLabel = GRAU_TRIBUNAL_LABELS[expediente.grau] ?? expediente.grau;
   const origemLabel = ORIGEM_EXPEDIENTE_LABELS[expediente.origem] ?? expediente.origem;
 
-  const responsavel = usuariosData?.find((u) => u.id === expediente.responsavelId);
-  const tipoLabel = tiposExpedientesData?.find((t) => t.id === expediente.tipoExpedienteId)?.tipoExpediente;
   const orgaoJulgador = expediente.descricaoOrgaoJulgador || expediente.orgaoJulgadorOrigem;
 
   return (
@@ -107,17 +117,24 @@ function GlassRow({
 
         {/* 2. Main cell — stacked info */}
         <div className="min-w-0">
-          {/* Title row: processo number + tipo badge + indicator badges */}
+          {/* Title row: processo number + tipo popover + indicator badges */}
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-xs font-medium tabular-nums truncate">
               {expediente.numeroProcesso}
             </span>
-            {/* Tipo expediente badge */}
-            {tipoLabel && (
-              <span className="inline-flex items-center bg-primary/10 border border-primary/20 text-primary rounded px-1.5 py-0.5 text-[9px] font-semibold shrink-0">
-                {tipoLabel}
-              </span>
-            )}
+            {/* Tipo expediente — popover inline */}
+            <ExpedienteTipoPopover
+              expedienteId={expediente.id}
+              tipoExpedienteId={expediente.tipoExpedienteId}
+              tiposExpedientes={tiposExpedientesData ?? []}
+              onSuccess={onSuccess}
+            >
+              <TipoTriggerContent
+                tipoExpedienteId={expediente.tipoExpedienteId}
+                tiposExpedientes={tiposExpedientesData ?? []}
+                size="sm"
+              />
+            </ExpedienteTipoPopover>
             {urgency === 'critico' && !expediente.baixadoEm && (
               <span className="inline-flex items-center bg-destructive/10 border border-destructive/20 text-destructive rounded px-1.5 py-0.5 text-[9px] font-semibold shrink-0">
                 Vencido
@@ -195,20 +212,20 @@ function GlassRow({
           </SemanticBadge>
         </div>
 
-        {/* 5. Responsavel */}
-        <div className="flex items-center gap-2 min-w-0">
-          {responsavel ? (
-            <>
-              <div className="w-5.5 h-5.5 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                <span className="text-[9px] font-semibold text-primary">
-                  {(responsavel.nomeExibicao || responsavel.nomeCompleto).charAt(0).toUpperCase()}
-                </span>
-              </div>
-              <span className="text-[11px] truncate">{responsavel.nomeExibicao || responsavel.nomeCompleto}</span>
-            </>
-          ) : (
-            <span className="text-[11px] text-destructive/70 italic">Sem responsavel</span>
-          )}
+        {/* 5. Responsavel — popover inline */}
+        <div className="min-w-0">
+          <ExpedienteResponsavelPopover
+            expedienteId={expediente.id}
+            responsavelId={expediente.responsavelId}
+            usuarios={usuariosData ?? []}
+            onSuccess={onSuccess}
+          >
+            <ResponsavelTriggerContent
+              responsavelId={expediente.responsavelId}
+              usuarios={usuariosData ?? []}
+              size="md"
+            />
+          </ExpedienteResponsavelPopover>
         </div>
 
         {/* 6. Origem badge */}
@@ -245,6 +262,38 @@ function GlassRow({
             </button>
           )}
           <ChevronRight className="w-4 h-4 text-muted-foreground/40 opacity-0 group-hover:opacity-100 transition-opacity" />
+        </div>
+      </div>
+
+      {/* Expansion — descrição + observações editáveis (aparece no hover) */}
+      <div
+        className="hidden group-hover:grid grid-cols-1 md:grid-cols-2 gap-4 mt-3 pt-3 pl-8 border-t border-border/20"
+        onClick={(e) => e.stopPropagation()}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
+        <div className="min-w-0">
+          <p className="text-[9px] font-medium text-muted-foreground/50 uppercase tracking-wider mb-1.5">
+            Descrição
+          </p>
+          <ExpedienteTextEditor
+            expedienteId={expediente.id}
+            field="descricaoArquivos"
+            value={expediente.descricaoArquivos}
+            emptyPlaceholder="Sem descrição — clique para adicionar"
+            onSuccess={onSuccess}
+          />
+        </div>
+        <div className="min-w-0">
+          <p className="text-[9px] font-medium text-muted-foreground/50 uppercase tracking-wider mb-1.5">
+            Observações
+          </p>
+          <ExpedienteTextEditor
+            expedienteId={expediente.id}
+            field="observacoes"
+            value={expediente.observacoes}
+            emptyPlaceholder="Sem observações — clique para adicionar"
+            onSuccess={onSuccess}
+          />
         </div>
       </div>
     </div>
@@ -313,6 +362,7 @@ export function ExpedientesGlassList({
   onBaixar,
   usuariosData,
   tiposExpedientesData,
+  onSuccess,
 }: ExpedientesGlassListProps) {
   if (isLoading) return <ListSkeleton />;
   if (expedientes.length === 0) return <GlassEmptyState />;
@@ -327,6 +377,7 @@ export function ExpedientesGlassList({
           onBaixar={onBaixar}
           usuariosData={usuariosData}
           tiposExpedientesData={tiposExpedientesData}
+          onSuccess={onSuccess}
         />
       ))}
     </div>

@@ -39,7 +39,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { formatarDuracao, getStatusBadgeVariant, getStatusLabel, getTipoChamadaIcon } from '../utils';
-import { getSemanticBadgeVariant } from '@/lib/design-system';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { CallDetailSheet } from './call-detail-sheet';
@@ -248,7 +248,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
         const status = row.original.status as StatusChamada;
 
         if (status === StatusChamada.EmAndamento) {
-          return <Badge variant={getSemanticBadgeVariant('call_status', 'em_andamento')} className="animate-pulse">Em andamento</Badge>;
+          return <SemanticBadge category="call_status" value="em_andamento" className="animate-pulse">Em andamento</SemanticBadge>;
         }
 
         return duracao ? formatarDuracao(duracao) : '-';

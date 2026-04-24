@@ -32,6 +32,7 @@ import {
   ExpedientePrazoPopover,
   PrazoTriggerContent,
 } from './expediente-prazo-popover';
+import { ExpedienteTextEditor } from './expediente-text-editor';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -291,21 +292,37 @@ function QueueCard({
         )}
       </div>
 
-      {/* Corpo: Resumo e Observações (Seção 3) */}
-      {(expediente.descricaoArquivos || expediente.observacoes) && (
-        <div className="mt-3 space-y-1.5">
-          {expediente.descricaoArquivos && (
-            <p className="text-[11px] leading-relaxed text-muted-foreground/70 whitespace-pre-wrap">
-              {expediente.descricaoArquivos}
-            </p>
-          )}
-          {expediente.observacoes && (
-            <p className="text-[11px] leading-relaxed text-muted-foreground/55 whitespace-pre-wrap">
-              {expediente.observacoes}
-            </p>
-          )}
+      {/* Corpo: Resumo e Observações editáveis (Seção 3) */}
+      <div
+        className="mt-3 space-y-2"
+        onClick={(e) => e.stopPropagation()}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
+        <div>
+          <p className="text-[9px] font-medium text-muted-foreground/50 uppercase tracking-wider mb-1">
+            Descrição
+          </p>
+          <ExpedienteTextEditor
+            expedienteId={expediente.id}
+            field="descricaoArquivos"
+            value={expediente.descricaoArquivos}
+            emptyPlaceholder="Sem descrição — clique para adicionar"
+            onSuccess={onSuccess}
+          />
         </div>
-      )}
+        <div>
+          <p className="text-[9px] font-medium text-muted-foreground/50 uppercase tracking-wider mb-1">
+            Observações
+          </p>
+          <ExpedienteTextEditor
+            expedienteId={expediente.id}
+            field="observacoes"
+            value={expediente.observacoes}
+            emptyPlaceholder="Sem observações — clique para adicionar"
+            onSuccess={onSuccess}
+          />
+        </div>
+      </div>
 
       {/* Badges + responsavel (Seção 4) */}
       <div className="mt-3 pt-3 border-t border-border/10 flex items-center gap-1.5">

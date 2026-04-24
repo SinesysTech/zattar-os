@@ -92,6 +92,7 @@ export function ExpedientesListWrapper({
         onBaixar={onBaixar}
         usuariosData={usuarios}
         tiposExpedientesData={tiposExpedientes}
+        onSuccess={refetch}
       />
       <DataPagination
         pageIndex={pageIndex}

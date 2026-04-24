@@ -21,7 +21,7 @@ import {
 } from '@/app/(authenticated)/financeiro';
 import { Button } from '@/components/ui/button';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
-import { getSemanticBadgeVariant } from '@/lib/design-system';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 import {
   Card,
   CardContent,
@@ -239,9 +239,9 @@ export default function ContaPagarDetalhesPage() {
           <Button variant="ghost" size="icon" aria-label="Voltar" onClick={handleVoltar}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <Badge variant={getSemanticBadgeVariant('payment_status', contaPagar.status)}>
+          <SemanticBadge category="payment_status" value={contaPagar.status}>
             {statusLabel}
-          </Badge>
+          </SemanticBadge>
           {contaPagar.recorrente && (
             <Badge variant="outline">
               <Repeat className="mr-1 h-3 w-3" />

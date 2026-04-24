@@ -37,7 +37,7 @@ export function CustomAudioGrid({ className }: CustomAudioGridProps) {
         icon={Users}
         title="Sem participantes"
         description="Aguardando participantes entrarem na chamada."
-        className="h-full [&_h3]:text-[var(--video-text)] [&_p]:text-[var(--video-muted)] [&>div:first-child]:bg-[var(--video-surface-hover)]"
+        className="h-full [&_h3]:text-video-text [&_p]:text-video-muted [&>div:first-child]:bg-video-surface-hover"
       />
     );
   }
@@ -55,7 +55,7 @@ export function CustomAudioGrid({ className }: CustomAudioGridProps) {
       {allParticipants.map((p: DyteParticipant) => (
         <div key={p.id} className="flex flex-col items-center gap-4 group">
           <div className={cn(
-            "relative w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-[var(--video-text)] shadow-lg transition-transform",
+            "relative w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-video-text shadow-lg transition-transform",
             "bg-linear-to-br from-info to-primary",
             p.audioEnabled && "animate-pulse ring-4 ring-success/30",
             "group-hover:scale-105"
@@ -75,8 +75,8 @@ export function CustomAudioGrid({ className }: CustomAudioGridProps) {
           </div>
 
           <div className="text-center">
-            <p className="font-semibold text-[var(--video-text)] text-lg">{p.name} {p.id === self?.id && "(Você)"}</p>
-            <p className="text-sm text-[var(--video-muted)]">{p.audioEnabled ? "Falando..." : "Mudo"}</p>
+            <p className="font-semibold text-video-text text-lg">{p.name} {p.id === self?.id && "(Você)"}</p>
+            <p className="text-sm text-video-muted">{p.audioEnabled ? "Falando..." : "Mudo"}</p>
           </div>
         </div>
       ))}

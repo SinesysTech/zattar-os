@@ -259,9 +259,6 @@ export async function proxy(request: NextRequest) {
     supabaseUrl,
     supabaseKey,
     {
-      auth: {
-        suppressGetSessionWarning: true,
-      },
       cookies: {
         getAll() {
           return request.cookies.getAll();

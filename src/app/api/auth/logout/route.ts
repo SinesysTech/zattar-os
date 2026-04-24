@@ -67,9 +67,6 @@ export async function POST(request: NextRequest) {
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY!,
       {
-        auth: {
-          suppressGetSessionWarning: true,
-        },
         cookies: {
           getAll() {
             return request.cookies.getAll();

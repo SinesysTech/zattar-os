@@ -60,7 +60,7 @@ export const CustomVideoGrid = memo(function CustomVideoGrid({
     return (
       <div className={cn("flex h-full gap-4 p-4", className)}>
         {/* Main Stage */}
-        <div className="flex-1 rounded-lg overflow-hidden bg-[var(--video-surface)]/50 relative">
+        <div className="flex-1 rounded-lg overflow-hidden bg-video-surface/50 relative">
           {spotlightParticipant ? (
             <DyteParticipantTile participant={spotlightParticipant} meeting={meeting} className="w-full h-full object-cover" />
           ) : (
@@ -68,7 +68,7 @@ export const CustomVideoGrid = memo(function CustomVideoGrid({
               icon={Users}
               title="Aguardando participantes"
               description="Nenhum participante na chamada ainda."
-              className="h-full [&_h3]:text-[var(--video-text)] [&_p]:text-[var(--video-muted)] [&>div:first-child]:bg-[var(--video-surface-hover)]"
+              className="h-full [&_h3]:text-video-text [&_p]:text-video-muted [&>div:first-child]:bg-video-surface-hover"
             />
           )}
         </div>
@@ -76,7 +76,7 @@ export const CustomVideoGrid = memo(function CustomVideoGrid({
         {/* Sidebar */}
         <div className="w-64 flex flex-col gap-2 overflow-y-auto">
           {sidebarParticipants.map(p => (
-            <div key={p.id} className="aspect-video rounded-lg overflow-hidden bg-[var(--video-surface-hover)]">
+            <div key={p.id} className="aspect-video rounded-lg overflow-hidden bg-video-surface-hover">
               <DyteParticipantTile participant={p} meeting={meeting} />
             </div>
           ))}
@@ -101,10 +101,10 @@ export const CustomVideoGrid = memo(function CustomVideoGrid({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.3, delay: index * 0.05 }}
-            className="rounded-lg overflow-hidden bg-[var(--video-surface)] shadow-lg relative aspect-video"
+            className="rounded-lg overflow-hidden bg-video-surface shadow-lg relative aspect-video"
           >
             <DyteParticipantTile participant={participant} meeting={meeting} className="w-full h-full" />
-            <div className="absolute bottom-2 left-2 bg-black/50 px-2 py-1 rounded text-xs text-[var(--video-text)] backdrop-blur-sm">
+            <div className="absolute bottom-2 left-2 bg-black/50 px-2 py-1 rounded text-xs text-video-text backdrop-blur-sm">
               {participant.name}
             </div>
           </motion.div>
@@ -117,7 +117,7 @@ export const CustomVideoGrid = memo(function CustomVideoGrid({
             icon={Users}
             title="Você é o único na chamada"
             description="Aguardando outros participantes entrarem..."
-            className="[&_h3]:text-[var(--video-text)] [&_p]:text-[var(--video-muted)] [&>div:first-child]:bg-[var(--video-surface-hover)]"
+            className="[&_h3]:text-video-text [&_p]:text-video-muted [&>div:first-child]:bg-video-surface-hover"
           />
         </div>
       )}

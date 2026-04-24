@@ -27,7 +27,7 @@ import { Heading } from '@/components/ui/typography';
 
 export interface GlassPanelProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   /**
    * Nível de profundidade visual:
    * - 1: glass-widget — container padrão, mais transparente (widgets, cards)

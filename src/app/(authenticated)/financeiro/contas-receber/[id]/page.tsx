@@ -28,7 +28,7 @@ import { useClientes } from '@/app/(authenticated)/partes';
 import { useContratos } from '@/app/(authenticated)/contratos';
 import { Button } from '@/components/ui/button';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
-import { getSemanticBadgeVariant } from '@/lib/design-system';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 import {
   Card,
   CardContent,
@@ -256,9 +256,9 @@ export default function ContaReceberDetalhesPage() {
           <Button variant="ghost" size="icon" aria-label="Voltar" onClick={handleVoltar}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <Badge variant={getSemanticBadgeVariant('payment_status', contaReceber.status)}>
+          <SemanticBadge category="payment_status" value={contaReceber.status}>
             {statusLabel}
-          </Badge>
+          </SemanticBadge>
           {contaReceber.recorrente && (
             <Badge variant="outline">
               <Repeat className="mr-1 h-3 w-3" />

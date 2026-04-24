@@ -10,6 +10,7 @@ import { useScreenshare, useTranscription, useRecording, useAdaptiveQuality } fr
 import { handleCallError } from "../utils";
 import { CallLoadingState, LoadingStage } from "./call-loading-state";
 import { Button } from "@/components/ui/button";
+import { Heading } from "@/components/ui/typography";
 import { RotateCcw } from "lucide-react";
 import { MeetingSkeleton } from "./meeting-skeleton";
 
@@ -264,7 +265,7 @@ export function VideoCallDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[calc(100vw-1rem)] sm:max-w-3xl md:max-w-5xl lg:max-w-7xl h-[calc(100dvh-4rem)] sm:h-[90vh] p-0 overflow-hidden bg-black border-none text-[var(--video-text)] relative">
+      <DialogContent className="w-[calc(100vw-1rem)] sm:max-w-3xl md:max-w-5xl lg:max-w-7xl h-[calc(100dvh-4rem)] sm:h-[90vh] p-0 overflow-hidden bg-black border-none text-video-text relative">
         <VisuallyHidden>
           <DialogTitle>Video Call: {salaNome}</DialogTitle>
         </VisuallyHidden>
@@ -277,14 +278,14 @@ export function VideoCallDialog({
         )}
 
         {error && (
-          <div className="flex flex-col items-center justify-center h-full gap-4 p-8 text-center bg-[var(--video-surface)]">
+          <div className="flex flex-col items-center justify-center h-full gap-4 p-8 text-center bg-video-surface">
             <div className="bg-destructive/10 p-4 rounded-full">
               <RotateCcw className="w-12 h-12 text-destructive" />
             </div>
-            <h3 className="text-xl font-semibold text-[var(--video-text)]">Erro na Chamada</h3>
-            <p className="text-[var(--video-muted)] max-w-sm">{error}</p>
+            <Heading level="card" className="text-video-text">Erro na Chamada</Heading>
+            <p className="text-video-muted max-w-sm">{error}</p>
             <div className="flex gap-4 mt-4">
-              <Button variant="outline" onClick={() => onOpenChange(false)} className="border-[var(--video-surface-hover)] hover:bg-[var(--video-surface-hover)]">
+              <Button variant="outline" onClick={() => onOpenChange(false)} className="border-video-surface-hover hover:bg-video-surface-hover">
                 Cancelar
               </Button>
               <Button onClick={() => { setError(null); startCall(); }} className="bg-info hover:bg-info">

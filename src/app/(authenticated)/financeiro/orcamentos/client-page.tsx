@@ -37,7 +37,7 @@ import {
 import { FilterPopover } from '@/app/(authenticated)/partes';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
-import { getSemanticBadgeVariant } from '@/lib/design-system';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 import {
   MoreHorizontal,
   Eye,
@@ -340,9 +340,9 @@ function criarColunas(
         const label = STATUS_LABELS[status];
         return (
           <div className="flex items-center">
-            <Badge variant={getSemanticBadgeVariant('orcamento_status', status)}>
+            <SemanticBadge category="orcamento_status" value={status}>
               {label}
-            </Badge>
+            </SemanticBadge>
           </div>
         );
       },

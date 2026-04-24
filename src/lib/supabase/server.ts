@@ -8,9 +8,6 @@ export async function createClient() {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY!,
     {
-      auth: {
-        suppressGetSessionWarning: true,
-      },
       cookies: {
         getAll() {
           return cookieStore.getAll();

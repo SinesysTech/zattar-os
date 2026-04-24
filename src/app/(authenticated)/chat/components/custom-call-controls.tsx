@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { NetworkQualityIndicator } from "./network-quality-indicator";
+import { Heading } from "@/components/ui/typography";
 import type DyteClient from "@dytesdk/web-core";
 
 interface CustomCallControlsProps {
@@ -99,7 +100,7 @@ export function CustomCallControls({
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 bg-[var(--video-surface)]/95 backdrop-blur-md border-t border-[var(--video-border)] p-4 md:p-6">
+    <div className="fixed bottom-0 left-0 right-0 z-40 bg-video-surface/95 backdrop-blur-md border-t border-video-border p-4 md:p-6">
       <div className="relative flex items-center justify-center gap-2 md:gap-4 max-w-7xl mx-auto">
 
         {/* Network Indicator (Absolute Left) */}
@@ -116,7 +117,7 @@ export function CustomCallControls({
                 size="icon" aria-label="Microfone"
                 className={cn(
                   "rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg transition-all",
-                  audioEnabled ? "bg-[var(--video-surface-hover)] hover:bg-[var(--video-surface-hover)]" : "bg-destructive hover:bg-destructive"
+                  audioEnabled ? "bg-video-surface-hover hover:bg-video-surface-hover" : "bg-destructive hover:bg-destructive"
                 )}
                 onClick={toggleAudio}
               >
@@ -134,7 +135,7 @@ export function CustomCallControls({
                 size="icon" aria-label="Câmera"
                 className={cn(
                   "rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg transition-all",
-                  videoEnabled ? "bg-[var(--video-surface-hover)] hover:bg-[var(--video-surface-hover)]" : "bg-destructive hover:bg-destructive"
+                  videoEnabled ? "bg-video-surface-hover hover:bg-video-surface-hover" : "bg-destructive hover:bg-destructive"
                 )}
                 onClick={toggleVideo}
               >
@@ -144,7 +145,7 @@ export function CustomCallControls({
             <TooltipContent><p>{videoEnabled ? "Desativar câmera" : "Ativar câmera"}</p></TooltipContent>
           </Tooltip>
 
-          <div className="w-px h-8 bg-[var(--video-surface-hover)] mx-2" />
+          <div className="w-px h-8 bg-video-surface-hover mx-2" />
 
           {/* Screenshare */}
           <Tooltip>
@@ -154,7 +155,7 @@ export function CustomCallControls({
                 size="icon" aria-label="Favoritar"
                 className={cn(
                   "rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg transition-all",
-                  isScreensharing ? "bg-info hover:bg-info text-white" : "bg-[var(--video-surface-hover)] hover:bg-[var(--video-surface-hover)] text-[var(--video-muted)]"
+                  isScreensharing ? "bg-info hover:bg-info text-white" : "bg-video-surface-hover hover:bg-video-surface-hover text-video-muted"
                 )}
                 onClick={isScreensharing ? onStopScreenshare : onStartScreenshare}
               >
@@ -174,7 +175,7 @@ export function CustomCallControls({
                     size="icon" aria-label="IA"
                     className={cn(
                       "rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg transition-all",
-                      activeEffect !== 'none' ? "bg-primary hover:bg-primary text-white" : "bg-[var(--video-surface-hover)] hover:bg-[var(--video-surface-hover)] text-[var(--video-muted)]"
+                      activeEffect !== 'none' ? "bg-primary hover:bg-primary text-white" : "bg-video-surface-hover hover:bg-video-surface-hover text-video-muted"
                     )}
                   >
                     <Wand2 className="h-5 w-5" />
@@ -183,10 +184,10 @@ export function CustomCallControls({
               </TooltipTrigger>
               <TooltipContent><p>Efeitos de Vídeo</p></TooltipContent>
             </Tooltip>
-            <PopoverContent className="w-72 bg-[var(--video-surface)] border-[var(--video-border)] text-[var(--video-text)]" side="top">
+            <PopoverContent className="w-72 bg-video-surface border-video-border text-video-text" side="top">
               <div className="grid gap-4">
                 <div className="space-y-2">
-                  <h4 className="font-medium leading-none">Efeitos de Vídeo</h4>
+                  <Heading level="subsection" className="leading-none">Efeitos de Vídeo</Heading>
                   <p className="text-xs text-muted-foreground">
                     Escolha um efeito para sua câmera
                   </p>
@@ -196,32 +197,32 @@ export function CustomCallControls({
                   onValueChange={(val) => onApplyEffect?.(val as 'none' | 'blur' | 'image')}
                   className="grid grid-cols-1 gap-3"
                 >
-                  <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--video-surface-hover)]/50 transition-colors cursor-pointer" onClick={() => onApplyEffect?.('none')}>
-                    <RadioGroupItem value="none" id="effect-none" className="border-[var(--video-muted)] text-info" />
+                  <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-video-surface-hover/50 transition-colors cursor-pointer" onClick={() => onApplyEffect?.('none')}>
+                    <RadioGroupItem value="none" id="effect-none" className="border-video-muted text-info" />
                     <Label htmlFor="effect-none" className="cursor-pointer flex-1">Normal</Label>
-                    <div className="w-12 h-8 rounded bg-[var(--video-surface-hover)] border border-[var(--video-muted)] flex items-center justify-center text-xs">
-                      <span className="text-[var(--video-muted)]">OFF</span>
+                    <div className="w-12 h-8 rounded bg-video-surface-hover border border-video-muted flex items-center justify-center text-xs">
+                      <span className="text-video-muted">OFF</span>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--video-surface-hover)]/50 transition-colors cursor-pointer" onClick={() => onApplyEffect?.('blur')}>
-                    <RadioGroupItem value="blur" id="effect-blur" className="border-[var(--video-muted)] text-info" />
+                  <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-video-surface-hover/50 transition-colors cursor-pointer" onClick={() => onApplyEffect?.('blur')}>
+                    <RadioGroupItem value="blur" id="effect-blur" className="border-video-muted text-info" />
                     <Label htmlFor="effect-blur" className="cursor-pointer flex-1">Desfoque (Blur)</Label>
-                    <div className="w-12 h-8 rounded bg-linear-to-br from-[var(--video-muted)] to-[var(--video-surface-hover)] border border-[var(--video-muted)] flex items-center justify-center text-xs blur-sm">
-                      <span className="text-[var(--video-text)] text-[10px]">BLUR</span>
+                    <div className="w-12 h-8 rounded bg-linear-to-br from-video-muted to-video-surface-hover border border-video-muted flex items-center justify-center text-xs blur-sm">
+                      <span className="text-video-text text-[10px]">BLUR</span>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--video-surface-hover)]/50 transition-colors" onClick={() => onApplyEffect?.('image')}>
-                    <RadioGroupItem value="image" id="effect-image" className="border-[var(--video-muted)] text-info" />
+                  <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-video-surface-hover/50 transition-colors" onClick={() => onApplyEffect?.('image')}>
+                    <RadioGroupItem value="image" id="effect-image" className="border-video-muted text-info" />
                     <Label htmlFor="effect-image" className="flex-1 cursor-pointer">Imagem Virtual</Label>
-                    <div className="w-12 h-8 rounded bg-linear-to-br from-info to-primary border border-[var(--video-muted)] flex items-center justify-center text-xs">
-                      <span className="text-[var(--video-text)] text-[10px]">IMG</span>
+                    <div className="w-12 h-8 rounded bg-linear-to-br from-info to-primary border border-video-muted flex items-center justify-center text-xs">
+                      <span className="text-video-text text-[10px]">IMG</span>
                     </div>
                   </div>
                 </RadioGroup>
                 {activeEffect !== 'none' && (
-                  <div className="pt-2 border-t border-[var(--video-border)]">
+                  <div className="pt-2 border-t border-video-border">
                     <p className="text-xs text-muted-foreground">
-                      Efeito ativo: <span className="text-[var(--video-text)] font-medium capitalize">{activeEffect === 'blur' ? 'Desfoque' : 'Imagem Virtual'}</span>
+                      Efeito ativo: <span className="text-video-text font-medium capitalize">{activeEffect === 'blur' ? 'Desfoque' : 'Imagem Virtual'}</span>
                     </p>
                   </div>
                 )}
@@ -237,7 +238,7 @@ export function CustomCallControls({
                 size="icon" aria-label="Favoritar"
                 className={cn(
                   "rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg transition-all",
-                  isRecording ? "bg-destructive hover:bg-destructive animate-pulse" : "bg-[var(--video-surface-hover)] hover:bg-[var(--video-surface-hover)] text-[var(--video-muted)]",
+                  isRecording ? "bg-destructive hover:bg-destructive animate-pulse" : "bg-video-surface-hover hover:bg-video-surface-hover text-video-muted",
                   !canRecord && !isRecording && "opacity-50 cursor-not-allowed"
                 )}
                 onClick={isRecording ? onStopRecording : onStartRecording}
@@ -265,7 +266,7 @@ export function CustomCallControls({
                 size="icon" aria-label="Transcrição"
                 className={cn(
                   "rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg transition-all",
-                  showTranscript ? "bg-info hover:bg-info text-white" : "bg-[var(--video-surface-hover)] hover:bg-[var(--video-surface-hover)] text-[var(--video-muted)]"
+                  showTranscript ? "bg-info hover:bg-info text-white" : "bg-video-surface-hover hover:bg-video-surface-hover text-video-muted"
                 )}
                 onClick={onToggleTranscript}
               >
@@ -284,7 +285,7 @@ export function CustomCallControls({
                   size="icon" aria-label="Usuário"
                   className={cn(
                     "rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg transition-all lg:hidden",
-                    showParticipants ? "bg-info hover:bg-info text-white" : "bg-[var(--video-surface-hover)] hover:bg-[var(--video-surface-hover)] text-[var(--video-muted)]"
+                    showParticipants ? "bg-info hover:bg-info text-white" : "bg-video-surface-hover hover:bg-video-surface-hover text-video-muted"
                   )}
                   onClick={onToggleParticipants}
                 >
@@ -295,7 +296,7 @@ export function CustomCallControls({
             </Tooltip>
           )}
 
-          <div className="w-px h-8 bg-[var(--video-surface-hover)] mx-2" />
+          <div className="w-px h-8 bg-video-surface-hover mx-2" />
 
           {/* Leave */}
           <Tooltip>

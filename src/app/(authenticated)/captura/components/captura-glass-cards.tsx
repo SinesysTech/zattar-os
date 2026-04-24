@@ -295,7 +295,7 @@ function CardsSkeleton() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
       {Array.from({ length: 6 }, (_, i) => (
-        <div key={i} className="h-52 rounded-2xl border border-border/20 bg-muted-foreground/5 animate-pulse" />
+        <GlassPanel key={i} depth={1} className="h-52 animate-pulse" />
       ))}
     </div>
   );

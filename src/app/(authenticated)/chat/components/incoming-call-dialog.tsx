@@ -11,6 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Heading } from '@/components/ui/typography';
 import { IncomingCallData } from '../hooks/use-call-notifications';
 import { TipoChamada } from '../domain';
 
@@ -167,9 +168,9 @@ export function IncomingCallDialog({
           </div>
 
           <div className="text-center space-y-1">
-            <h3 className="font-semibold text-xl tracking-tight">
+            <Heading level="card">
               {callData.iniciadorNome}
-            </h3>
+            </Heading>
             <p className="text-sm text-muted-foreground animate-pulse">
               Chamada de {isVideo ? 'vídeo' : 'áudio'} recebida...
             </p>

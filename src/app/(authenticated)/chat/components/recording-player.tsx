@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Heading } from "@/components/ui/typography";
 import { Download, AlertCircle } from "lucide-react";
 
 interface RecordingPlayerProps {
@@ -20,9 +21,9 @@ export function RecordingPlayer({ recordingUrl, chamadaId, titulo }: RecordingPl
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">
+        <Heading level="card">
           {titulo || `Gravação da Chamada #${chamadaId}`}
-        </h3>
+        </Heading>
         <Button
           variant="outline"
           size="sm"

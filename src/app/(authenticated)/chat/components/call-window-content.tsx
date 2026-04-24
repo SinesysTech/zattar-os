@@ -7,6 +7,7 @@ import { useScreenshare, useTranscription, useRecording, useAdaptiveQuality } fr
 import { handleCallError } from "../utils";
 import { CallLoadingState, LoadingStage } from "./call-loading-state";
 import { Button } from "@/components/ui/button";
+import { Heading } from "@/components/ui/typography";
 import { RotateCcw } from "lucide-react";
 import { MeetingSkeleton } from "./meeting-skeleton";
 import type { SelectedDevices } from "../domain";
@@ -414,7 +415,7 @@ export function CallWindowContent({
 
   if (!authToken && !error) {
     return (
-      <div className="h-screen w-screen bg-black text-[var(--video-text)] relative">
+      <div className="h-screen w-screen bg-black text-video-text relative">
         <CallLoadingState
           stage="connecting"
           message="Aguardando conexão..."
@@ -425,7 +426,7 @@ export function CallWindowContent({
   }
 
   return (
-    <div className="h-screen w-screen bg-black text-[var(--video-text)] relative">
+    <div className="h-screen w-screen bg-black text-video-text relative">
       {loading && (
         <CallLoadingState
           stage={loadingStage}
@@ -435,17 +436,17 @@ export function CallWindowContent({
       )}
 
       {error && (
-        <div className="flex flex-col items-center justify-center h-full gap-4 p-8 text-center bg-[var(--video-surface)]">
+        <div className="flex flex-col items-center justify-center h-full gap-4 p-8 text-center bg-video-surface">
           <div className="bg-destructive/10 p-4 rounded-full">
             <RotateCcw className="w-12 h-12 text-destructive" />
           </div>
-          <h3 className="text-xl font-semibold text-[var(--video-text)]">Erro na Chamada</h3>
-          <p className="text-[var(--video-muted)] max-w-sm">{error}</p>
+          <Heading level="card" className="text-video-text">Erro na Chamada</Heading>
+          <p className="text-video-muted max-w-sm">{error}</p>
           <div className="flex gap-4 mt-4">
             <Button
               variant="outline"
               onClick={() => window.close()}
-              className="border-[var(--video-surface-hover)] hover:bg-[var(--video-surface-hover)]"
+              className="border-video-surface-hover hover:bg-video-surface-hover"
             >
               Fechar
             </Button>
