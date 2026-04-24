@@ -964,8 +964,15 @@ export interface ListarPartesContrariasParams {
   pagina?: number;
   limite?: number;
   tipo_pessoa?: TipoPessoa;
-  /** Situacao: A=Ativo, I=Inativo, E=Excluido, H=Historico */
+  /** Situacao PJE (diferente de `ativo` do soft-delete): A=Ativo, I=Inativo, E=Excluido, H=Historico */
   situacao?: 'A' | 'I' | 'E' | 'H';
+  /**
+   * Flag de soft-delete (`partes_contrarias.ativo`).
+   * - `true`  → retorna apenas registros ativos (default recomendado pela UI)
+   * - `false` → retorna apenas registros inativos (soft-deleted)
+   * - `undefined` → retorna todos (apenas para telas administrativas/auditoria)
+   */
+  ativo?: boolean;
   trt?: string;
   grau?: GrauProcesso;
   busca?: string;
@@ -1003,8 +1010,10 @@ export interface ListarTerceirosParams {
   tipo_pessoa?: TipoPessoa;
   tipo_parte?: TipoParteTerceiro;
   polo?: PoloTerceiro;
-  /** Situacao: A=Ativo, I=Inativo */
+  /** Situacao PJE (diferente de `ativo` do soft-delete): A=Ativo, I=Inativo */
   situacao?: 'A' | 'I';
+  /** Flag de soft-delete (`terceiros.ativo`). Mesmo contrato de `ListarPartesContrariasParams.ativo`. */
+  ativo?: boolean;
   busca?: string;
   nome?: string;
   cpf?: string;

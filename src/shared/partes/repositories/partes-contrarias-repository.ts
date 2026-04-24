@@ -184,6 +184,7 @@ export async function findAllPartesContrarias(
       tipo_pessoa,
       tipoPessoa,
       situacao,
+      ativo,
       busca,
       nome,
       cpf,
@@ -210,6 +211,7 @@ export async function findAllPartesContrarias(
       query = query.in('tipo_pessoa', [tipoPessoaResolved, tipoPessoaResolved.toLowerCase()]);
     }
     if (situacao) query = query.eq('situacao', situacao);
+    if (ativo !== undefined) query = query.eq('ativo', ativo);
     if (nome) query = query.ilike('nome_completo', `%${nome}%`);
     if (cpf) query = query.eq('cpf', cpf);
     if (cnpj) query = query.eq('cnpj', cnpj);
@@ -332,6 +334,7 @@ export async function findAllPartesContrariasComEnderecoEProcessos(
       limite = 50,
       tipo_pessoa,
       situacao,
+      ativo,
       busca,
       nome,
       cpf,
@@ -353,6 +356,7 @@ export async function findAllPartesContrariasComEnderecoEProcessos(
 
     if (tipo_pessoa) query = query.eq('tipo_pessoa', tipo_pessoa);
     if (situacao) query = query.eq('situacao', situacao);
+    if (ativo !== undefined) query = query.eq('ativo', ativo);
     if (nome) query = query.ilike('nome', `%${nome}%`);
     if (cpf) query = query.eq('cpf', normalizarDocumento(cpf));
     if (cnpj) query = query.eq('cnpj', normalizarDocumento(cnpj));
@@ -578,11 +582,11 @@ export async function updateParteContraria(
   try {
     const db = createDbClient();
 
-    // Compatibilidade com fixtures/tests: aceitar updates em camelCase (nomeCompleto, observacoes...)
-    if (
-      typeof (input as unknown as Record<string, unknown>)?.nomeCompleto === 'string' ||
-      (input as unknown as Record<string, unknown>)?.observacoes !== undefined
-    ) {
+    // Compatibilidade com fixtures/tests: aceitar updates em camelCase (nomeCompleto).
+    // IMPORTANTE: não disparar esse branch pela presença de `observacoes` — o form real
+    // sempre envia essa chave (mesmo null), e cair aqui faz o update perder ~30 campos
+    // porque `toDbUpdateFromCompat` só mapeia um subset legado.
+    if (typeof (input as unknown as Record<string, unknown>)?.nomeCompleto === 'string') {
       const payload = toDbUpdateFromCompat(input);
       const { data, error } = await db.from(TABLE_PARTES_CONTRARIAS).update(payload).eq('id', id).select().single();
 

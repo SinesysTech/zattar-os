@@ -60,7 +60,10 @@ export interface BuscarPartesContrariasParams {
   limite?: number;
   busca?: string;
   tipo_pessoa?: "pf" | "pj";
+  /** Situação PJE (distinta de `ativo` do soft-delete). */
   situacao?: "A" | "I" | "E" | "H";
+  /** Filtro de soft-delete: true=ativos (default UI), false=inativos, undefined=todos. */
+  ativo?: boolean;
   incluirEndereco?: boolean;
   incluirProcessos?: boolean;
 }
@@ -72,7 +75,10 @@ export interface BuscarTerceirosParams {
   tipo_pessoa?: "pf" | "pj";
   tipo_parte?: string;
   polo?: string;
+  /** Situação PJE (distinta de `ativo` do soft-delete). */
   situacao?: "A" | "I";
+  /** Filtro de soft-delete: true=ativos (default UI), false=inativos, undefined=todos. */
+  ativo?: boolean;
   incluirEndereco?: boolean;
   incluirProcessos?: boolean;
 }
