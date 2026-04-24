@@ -1,6 +1,7 @@
 'use client';
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Text } from '@/components/ui/typography';
 
 interface RolePresetSelectProps {
   value: string;
@@ -19,7 +20,7 @@ export const ROLE_PRESETS: Record<string, { label: string; description: string }
 export function RolePresetSelect({ value, onValueChange, disabled }: RolePresetSelectProps) {
   return (
     <div className="flex items-center gap-2.5">
-      <span className="text-[11px] text-muted-foreground/40 shrink-0">Template de cargo:</span>
+      <Text variant="caption" as="span" className="text-muted-foreground/40 shrink-0">Template de cargo:</Text>
       <Select value={value} onValueChange={onValueChange} disabled={disabled}>
         <SelectTrigger className="h-8 w-56 text-xs bg-transparent">
           <SelectValue placeholder="Selecionar preset..." />

@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { ShieldAlert } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import { getAvatarUrl, formatarOab } from '../../utils';
 import { RoleBanner } from './role-banner';
@@ -159,9 +160,9 @@ export function UsuarioCard({
         </div>
 
         {/* Email */}
-        <span className="text-[11px] text-muted-foreground/40 truncate leading-tight">
+        <Text variant="caption" as="span" className="text-muted-foreground/40 truncate leading-tight">
           {usuario.emailCorporativo}
-        </span>
+        </Text>
 
         {/* Role + OAB badges */}
         <div className="flex flex-row gap-1.5 mt-2 flex-wrap">

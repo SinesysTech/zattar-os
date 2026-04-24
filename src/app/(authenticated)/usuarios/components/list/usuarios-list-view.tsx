@@ -7,6 +7,7 @@ import { DataShell } from '@/components/shared/data-shell/data-shell';
 import { DataTable } from '@/components/shared/data-shell/data-table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import { getAvatarUrl, formatarOab } from '../../utils';
 import { UserStatusDot, getStatusFromLastLogin } from '../shared/user-status-dot';
@@ -72,9 +73,9 @@ export function UsuariosListView({
                     <ShieldAlert className="size-3 text-destructive shrink-0" />
                   )}
                 </div>
-                <span className="text-[11px] text-muted-foreground/50 truncate">
+                <Text variant="caption" as="span" className="text-muted-foreground/50 truncate">
                   {usuario.emailCorporativo}
-                </span>
+                </Text>
               </div>
             </div>
           );

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Label } from '@/components/ui/label';
+import { Text } from '@/components/ui/typography';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   Select,
@@ -264,7 +265,7 @@ export function UsuarioCreateDialog({
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="nomeCompleto">
-                      Nome Completo <span className="text-destructive">*</span>
+                      Nome Completo <Text variant="caption" as="span" className="text-destructive">*</Text>
                     </Label>
                     <Input
                       id="nomeCompleto"
@@ -277,7 +278,7 @@ export function UsuarioCreateDialog({
 
                   <div className="space-y-2">
                     <Label htmlFor="nomeExibicao">
-                      Nome de Exibição <span className="text-destructive">*</span>
+                      Nome de Exibição <Text variant="caption" as="span" className="text-destructive">*</Text>
                     </Label>
                     <Input
                       id="nomeExibicao"
@@ -292,7 +293,7 @@ export function UsuarioCreateDialog({
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="cpf">
-                      CPF <span className="text-destructive">*</span>
+                      CPF <Text variant="caption" as="span" className="text-destructive">*</Text>
                     </Label>
                     <Input
                       id="cpf"
@@ -353,7 +354,7 @@ export function UsuarioCreateDialog({
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="senha">
-                      Senha <span className="text-destructive">*</span>
+                      Senha <Text variant="caption" as="span" className="text-destructive">*</Text>
                     </Label>
                     <Input
                       id="senha"
@@ -376,7 +377,7 @@ export function UsuarioCreateDialog({
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="emailCorporativo">
-                      E-mail Corporativo <span className="text-destructive">*</span>
+                      E-mail Corporativo <Text variant="caption" as="span" className="text-destructive">*</Text>
                     </Label>
                     <Input
                       id="emailCorporativo"

@@ -1,6 +1,7 @@
 'use client';
 
 import { Switch } from '@/components/ui/switch';
+import { Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 
 interface PermissionToggleProps {
@@ -25,9 +26,9 @@ export function PermissionToggle({ operacao: _operacao, label, checked, disabled
         disabled={disabled}
         aria-label={`Permitir ${label}`}
       />
-      <span className={cn('text-sm', !checked && 'text-muted-foreground/40')}>
+      <Text variant="label" as="span" className={cn(!checked && 'text-muted-foreground/40')}>
         {label}
-      </span>
+      </Text>
       {changed && (
         <span className="absolute top-1 right-1 size-1.5 rounded-full bg-warning" />
       )}

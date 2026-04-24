@@ -3,6 +3,7 @@
 // Dialog para edição de capa/banner do perfil do usuário
 
 import * as React from 'react';
+import { Text } from '@/components/ui/typography';
 import {
   Dialog,
   DialogContent,
@@ -176,7 +177,7 @@ export function CoverEditDialog({
             ) : (
               <div className="flex flex-col items-center justify-center h-full">
                 <Camera className="h-12 w-12 text-muted-foreground mb-2" />
-                <p className="text-sm text-muted-foreground">Nenhuma imagem de capa</p>
+                <Text variant="caption" className="text-muted-foreground">Nenhuma imagem de capa</Text>
               </div>
             )}
           </div>

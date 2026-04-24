@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from '@/components/ui/empty';
+import { Text } from '@/components/ui/typography';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';
@@ -173,9 +174,9 @@ export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
       </CardHeader>
       <CardContent>
         {error && (
-          <div className="text-sm text-destructive p-4 bg-destructive/10 rounded-lg">
+          <Text variant="caption" as="div" className="text-destructive p-4 bg-destructive/10 rounded-lg">
             {error}
-          </div>
+          </Text>
         )}
 
         {!error && atividades.length === 0 && (
