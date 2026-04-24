@@ -101,6 +101,77 @@ function installLockNoiseFilter() {
 // antes do filtro ser instalado pelo primeiro `createClient()`.
 installLockNoiseFilter();
 
+/**
+ * getAll/setAll implementados manualmente via `document.cookie` para que
+ * possamos passar `encode: 'tokens-only'` no objeto `cookies`. Sem isso,
+ * o SDK lança erro exigindo as implementações quando um `cookies` custom
+ * é fornecido ([@supabase/ssr cookies.js:79]).
+ *
+ * Replica o default do SDK para browser ([@supabase/ssr cookies.js:87-102]).
+ */
+const browserCookieMethods = {
+  encode: 'tokens-only' as const,
+  getAll() {
+    if (typeof document === 'undefined') return [];
+    return document.cookie
+      .split(';')
+      .map((pair) => pair.trim())
+      .filter((pair) => pair.length > 0)
+      .map((pair) => {
+        const idx = pair.indexOf('=');
+        const name = idx < 0 ? pair : pair.substring(0, idx);
+        const value = idx < 0 ? '' : decodeURIComponent(pair.substring(idx + 1));
+        return { name, value };
+      });
+  },
+  setAll(
+    cookiesToSet: Array<{
+      name: string;
+      value: string;
+      options?: {
+        domain?: string;
+        path?: string;
+        expires?: Date | number | string;
+        maxAge?: number;
+        httpOnly?: boolean;
+        secure?: boolean;
+        sameSite?: boolean | 'lax' | 'strict' | 'none';
+        priority?: 'low' | 'medium' | 'high';
+        partitioned?: boolean;
+      };
+    }>,
+  ) {
+    if (typeof document === 'undefined') return;
+    cookiesToSet.forEach(({ name, value, options = {} }) => {
+      let cookieStr = `${name}=${encodeURIComponent(value)}`;
+      if (options.maxAge !== undefined) cookieStr += `; Max-Age=${options.maxAge}`;
+      if (options.expires) {
+        const exp =
+          options.expires instanceof Date
+            ? options.expires
+            : new Date(options.expires);
+        cookieStr += `; Expires=${exp.toUTCString()}`;
+      }
+      if (options.path) cookieStr += `; Path=${options.path}`;
+      if (options.domain) cookieStr += `; Domain=${options.domain}`;
+      if (options.secure) cookieStr += `; Secure`;
+      if (options.httpOnly) cookieStr += `; HttpOnly`;
+      if (options.sameSite) {
+        const val =
+          options.sameSite === true
+            ? 'Strict'
+            : options.sameSite.charAt(0).toUpperCase() + options.sameSite.slice(1);
+        cookieStr += `; SameSite=${val}`;
+      }
+      if (options.priority) {
+        cookieStr += `; Priority=${options.priority.charAt(0).toUpperCase() + options.priority.slice(1)}`;
+      }
+      if (options.partitioned) cookieStr += `; Partitioned`;
+      document.cookie = cookieStr;
+    });
+  },
+};
+
 export function createClient() {
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -117,8 +188,17 @@ export function createClient() {
   // (GoTrueClient.ts: settings.lockAcquireTimeout) mas não está exposto
   // no tipo público do @supabase/ssr. Aumentar o default de 5s para 10s
   // reduz steals espúrios em conexões lentas de dev e StrictMode.
+  //
+  // `cookies.encode: 'tokens-only'` mantém apenas access/refresh tokens nos
+  // cookies; o user object vai para `window.localStorage` via `userStorage`
+  // (ativado automaticamente pelo @supabase/ssr). Isto elimina o warning
+  // "Using the user object as returned from supabase.auth.getSession()..."
+  // que o SDK emite ao envolver `session.user` em Proxy no server-side.
+  // Precisa estar sincronizado com os clients de server (server.ts,
+  // api-auth.ts, proxy.ts).
   const options = {
     auth: { lockAcquireTimeout: LOCK_ACQUIRE_TIMEOUT_MS },
+    cookies: browserCookieMethods,
   } as unknown as Parameters<typeof createBrowserClient>[2];
 
   return createBrowserClient<Database>(url, anonKey, options);

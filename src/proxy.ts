@@ -260,6 +260,9 @@ export async function proxy(request: NextRequest) {
     supabaseKey,
     {
       cookies: {
+        // `encode: 'tokens-only'` — sincronizado com client.ts, server.ts
+        // e api-auth.ts. Ver docstring completa em src/lib/supabase/server.ts.
+        encode: 'tokens-only',
         getAll() {
           return request.cookies.getAll();
         },

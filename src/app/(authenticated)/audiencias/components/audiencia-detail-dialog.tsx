@@ -64,8 +64,8 @@ function SectionHeader({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center gap-2 mb-2.5">
-      <Icon className="size-3.5 text-primary" />
+    <div className="mb-2 flex items-center gap-2">
+      <Icon className="size-3 text-primary/80" />
       <Text variant="overline" as="h4" className="text-muted-foreground">
         {label}
       </Text>
@@ -78,7 +78,7 @@ function SectionCard({ children, className }: { children: React.ReactNode; class
   return (
     <div
       className={cn(
-        'rounded-[14px] bg-muted/40 border border-border/30 p-[14px_16px]',
+        'rounded-xl border border-border/30 bg-muted/40 px-3.5 py-3',
         className
       )}
     >
@@ -352,9 +352,10 @@ export function AudienciaDetailDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
+        showCloseButton={false}
         className={cn(
-          'max-h-[92vh] flex flex-col md:flex-row p-0 gap-0 overflow-hidden [scrollbar-width:thin] transition-[max-width] duration-300 ease-out w-[95vw]',
-          ataOpen ? 'sm:max-w-xl md:max-w-275' : 'sm:max-w-xl md:max-w-2xl'
+          'flex max-h-[90vh] w-[95vw] flex-col overflow-hidden p-0 gap-0 [scrollbar-width:thin] transition-[max-width] duration-300 ease-out md:flex-row',
+          ataOpen ? 'sm:max-w-xl md:max-w-275' : 'sm:max-w-lg md:max-w-xl'
         )}
       >
         <DialogDescription className="sr-only">Detalhes da audiência</DialogDescription>
@@ -362,17 +363,17 @@ export function AudienciaDetailDialog({
         {/* ═══ COLUNA PRINCIPAL ═══ */}
         <div
           className={cn(
-            'flex-1 flex flex-col min-w-0',
-            ataOpen && 'md:border-r border-border/50'
+            'flex min-w-0 flex-1 flex-col',
+            ataOpen && 'border-border/50 md:border-r'
           )}
         >
           {/* HEADER · Capa do processo */}
-          <div className="shrink-0 px-6 pt-5 pb-4 border-b border-border/50">
-            <div className="flex items-center justify-between gap-4 mb-1.5">
+          <div className="shrink-0 border-b border-border/40 px-5 pt-4 pb-3">
+            <div className="mb-1 flex items-center justify-between gap-3">
               <DialogTitle asChild>
                 <Heading
                   level="card"
-                  className="flex-1 min-w-0 text-foreground leading-[1.3] -tracking-[0.01em] truncate"
+                  className="min-w-0 flex-1 truncate leading-snug text-foreground -tracking-[0.01em]"
                 >
                   {poloAtivo}
                   <span className="mx-1.5 font-medium text-muted-foreground/70">×</span>
@@ -383,15 +384,19 @@ export function AudienciaDetailDialog({
               <button
                 type="button"
                 onClick={() => onOpenChange(false)}
-                className="shrink-0 inline-flex items-center justify-center size-7 rounded-lg text-muted-foreground/60 hover:text-foreground hover:bg-muted/60 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                className="inline-flex size-7 shrink-0 items-center justify-center rounded-md text-muted-foreground/60 transition-colors hover:bg-muted/60 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 aria-label="Fechar"
               >
-                <X className="size-4" />
+                <X className="size-3.5" />
               </button>
             </div>
 
             {audiencia && (
-              <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] font-medium text-muted-foreground">
+              <Text
+                variant="micro-caption"
+                as="div"
+                className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-muted-foreground"
+              >
                 <span>{audiencia.numeroProcesso}</span>
                 {audiencia.classeJudicialDescricao && (
                   <>
@@ -414,37 +419,35 @@ export function AudienciaDetailDialog({
                     <MetaDot />
                     <span>
                       Autuado em{' '}
-                      {format(parseISO(audiencia.dataAutuacao), "dd MMM yyyy", { locale: ptBR })}
+                      {format(parseISO(audiencia.dataAutuacao), 'dd MMM yyyy', { locale: ptBR })}
                     </span>
                   </>
                 )}
-              </div>
+              </Text>
             )}
           </div>
 
           {/* BLOCO DA AUDIÊNCIA · meio */}
           {audiencia && !isLoading && !error && (
-            <div className="shrink-0 mx-6 mt-4 p-4 rounded-xl bg-primary/5 border border-primary/15">
-              <div className="flex items-center gap-3 mb-3.5">
-                <div className="flex-1 min-w-0">
-                  <Heading level="subsection" className="text-foreground leading-tight">
-                    {audiencia.tipoDescricao || 'Audiência'}
-                  </Heading>
-                  {dataInicio && dataFim && (
-                    <Text variant="caption" className="text-muted-foreground mt-0.5 capitalize">
-                      {format(dataInicio, "EEE, dd MMM yyyy", { locale: ptBR })}
-                      {' · '}
-                      <span className="tabular-nums">
-                        {format(dataInicio, 'HH:mm')} – {format(dataFim, 'HH:mm')}
-                      </span>
-                    </Text>
-                  )}
-                </div>
+            <div className="mx-5 mt-3 shrink-0 rounded-xl border border-primary/15 bg-primary/5 px-4 py-3">
+              <div className="mb-3 min-w-0">
+                <Heading level="widget" className="leading-tight text-foreground">
+                  {audiencia.tipoDescricao || 'Audiência'}
+                </Heading>
+                {dataInicio && dataFim && (
+                  <Text variant="caption" as="p" className="mt-0.5 capitalize text-muted-foreground">
+                    {format(dataInicio, 'EEE, dd MMM yyyy', { locale: ptBR })}
+                    {' · '}
+                    <span className="tabular-nums">
+                      {format(dataInicio, 'HH:mm')} – {format(dataFim, 'HH:mm')}
+                    </span>
+                  </Text>
+                )}
               </div>
 
-              <div className="flex flex-wrap gap-5 pb-3.5 mb-3.5 border-b border-border/40">
+              <div className="mb-3 flex flex-wrap gap-x-5 gap-y-2.5 border-b border-border/40 pb-3">
                 {/* Modalidade */}
-                <div className="flex flex-col gap-1.5">
+                <div className="flex flex-col gap-1">
                   <Text variant="overline" className="text-muted-foreground/75">
                     Modalidade
                   </Text>
@@ -462,8 +465,8 @@ export function AudienciaDetailDialog({
                             : undefined
                         }
                         className={cn(
-                          'inline-flex items-center gap-1.5 pl-2 pr-2.5 py-1 rounded-full bg-card border border-border/60 text-[12.5px] font-medium text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60',
-                          !modalidadePopoverDisabled && 'hover:bg-muted/60 hover:border-border cursor-pointer',
+                          'inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card pl-2 pr-2 py-0.5 text-[12px] font-medium text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60',
+                          !modalidadePopoverDisabled && 'cursor-pointer hover:border-border hover:bg-muted/60',
                           modalidadePopoverDisabled && 'cursor-not-allowed'
                         )}
                       >
@@ -473,7 +476,7 @@ export function AudienciaDetailDialog({
                           <>
                             {audiencia.modalidade &&
                               React.createElement(MODALIDADE_ICONS[audiencia.modalidade], {
-                                className: 'size-3.5 text-primary',
+                                className: 'size-3 text-primary',
                               })}
                             <span>
                               {audiencia.modalidade
@@ -481,16 +484,20 @@ export function AudienciaDetailDialog({
                                 : 'Definir'}
                             </span>
                             {!modalidadePopoverDisabled && (
-                              <ChevronDown className="size-3 text-muted-foreground opacity-60" />
+                              <ChevronDown className="size-3 text-muted-foreground/60" />
                             )}
                           </>
                         )}
                       </button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-44 p-1.5 rounded-xl glass-dropdown" align="start">
-                      <p className="text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider px-2 pt-1 pb-1.5">
+                    <PopoverContent className="w-44 rounded-xl p-1.5 glass-dropdown" align="start">
+                      <Text
+                        variant="overline"
+                        as="p"
+                        className="px-2 pt-1 pb-1.5 text-muted-foreground/60"
+                      >
                         Modalidade
-                      </p>
+                      </Text>
                       {(Object.values(ModalidadeAudiencia) as ModalidadeAudiencia[]).map((m) => {
                         const Icon = MODALIDADE_ICONS[m];
                         return (
@@ -498,12 +505,12 @@ export function AudienciaDetailDialog({
                             key={m}
                             type="button"
                             onClick={() => handleChangeModalidade(m)}
-                            className="flex items-center gap-2 w-full rounded-lg px-2 py-1.5 text-[12px] hover:bg-muted/60 transition-colors cursor-pointer"
+                            className="flex w-full cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-[12px] transition-colors hover:bg-muted/60"
                           >
                             <Icon className="size-3.5 text-muted-foreground" />
                             <span>{MODALIDADE_LABELS[m]}</span>
                             {audiencia.modalidade === m && (
-                              <Check className="size-3 ml-auto text-primary" />
+                              <Check className="ml-auto size-3 text-primary" />
                             )}
                           </button>
                         );
@@ -513,7 +520,7 @@ export function AudienciaDetailDialog({
                 </div>
 
                 {/* Responsável */}
-                <div className="flex flex-col gap-1.5">
+                <div className="flex flex-col gap-1">
                   <Text variant="overline" className="text-muted-foreground/75">
                     Responsável
                   </Text>
@@ -543,13 +550,13 @@ export function AudienciaDetailDialog({
                       href={audiencia.urlAudienciaVirtual}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary text-primary-foreground text-[11.5px] font-medium hover:bg-primary/90 transition-colors"
+                      className="inline-flex items-center gap-1.5 rounded-md bg-primary px-2.5 py-1 text-[11px] font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                     >
                       <Video className="size-3" />
                       Entrar na sala virtual
                     </a>
                   ) : (
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary/50 text-primary-foreground/60 text-[11.5px] font-medium cursor-not-allowed">
+                    <span className="inline-flex cursor-not-allowed items-center gap-1.5 rounded-md bg-primary/50 px-2.5 py-1 text-[11px] font-medium text-primary-foreground/60">
                       <Video className="size-3" />
                       Entrar na sala virtual
                     </span>
@@ -560,13 +567,13 @@ export function AudienciaDetailDialog({
                     href={pjeUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-card border border-border/60 text-[11.5px] font-medium text-foreground hover:bg-muted/60 hover:border-border transition-colors"
+                    className="inline-flex items-center gap-1.5 rounded-md border border-border/60 bg-card px-2.5 py-1 text-[11px] font-medium text-foreground transition-colors hover:border-border hover:bg-muted/60"
                   >
                     <ExternalLink className="size-3" />
                     Abrir no PJe
                   </a>
                 ) : (
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-card border border-border/40 text-[11.5px] font-medium text-muted-foreground/40 cursor-not-allowed">
+                  <span className="inline-flex cursor-not-allowed items-center gap-1.5 rounded-md border border-border/40 bg-card px-2.5 py-1 text-[11px] font-medium text-muted-foreground/40">
                     <ExternalLink className="size-3" />
                     Abrir no PJe
                   </span>
@@ -576,21 +583,21 @@ export function AudienciaDetailDialog({
           )}
 
           {/* BODY scrollável */}
-          <div className="flex-1 overflow-y-auto px-6 py-4 [scrollbar-width:thin]">
+          <div className="flex-1 overflow-y-auto px-5 py-3.5 [scrollbar-width:thin]">
             {isLoading && (
-              <div className="flex items-center justify-center py-12">
+              <div className="flex items-center justify-center py-10">
                 <LoadingSpinner className="size-6 text-muted-foreground" />
               </div>
             )}
             {error && !isLoading && (
-              <div className="flex flex-col items-center justify-center py-12 gap-2 text-center">
+              <div className="flex flex-col items-center justify-center gap-2 py-10 text-center">
                 <AlertCircle className="size-6 text-destructive" />
                 <Text variant="caption" className="text-destructive">{error}</Text>
               </div>
             )}
 
             {audiencia && !isLoading && !error && (
-              <div className="space-y-4">
+              <div className="space-y-3.5">
                 {/* ATA · só quando existe */}
                 {hasAta && (
                   <div>
@@ -598,18 +605,18 @@ export function AudienciaDetailDialog({
                     <button
                       type="button"
                       onClick={() => setAtaOpen((v) => !v)}
-                      className="w-full flex items-center gap-3 p-3 rounded-xl bg-success/8 hover:bg-success/12 border border-success/25 text-left transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      className="flex w-full cursor-pointer items-center gap-3 rounded-xl border border-success/25 bg-success/8 p-2.5 text-left transition-colors hover:bg-success/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
-                      <span className="w-8 h-8 rounded-lg bg-success/18 text-success inline-flex items-center justify-center shrink-0">
-                        <FileText className="size-4" />
+                      <span className="inline-flex size-7 shrink-0 items-center justify-center rounded-lg bg-success/18 text-success">
+                        <FileText className="size-3.5" />
                       </span>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-[13px] font-semibold text-foreground">
+                      <div className="min-w-0 flex-1">
+                        <Text variant="label" as="div" className="text-foreground">
                           Ata assinada · PDF
-                        </div>
-                        <div className="text-[11.5px] text-muted-foreground">
+                        </Text>
+                        <Text variant="micro-caption" as="div" className="text-muted-foreground">
                           Clique para {ataOpen ? 'fechar' : 'ler ao lado'}
-                        </div>
+                        </Text>
                       </div>
                       <ChevronRight
                         className={cn(
@@ -647,7 +654,7 @@ export function AudienciaDetailDialog({
                             <button
                               type="button"
                               onClick={handleStartEditUrl}
-                              className="text-[10px] font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center gap-1"
+                              className="flex cursor-pointer items-center gap-1 text-micro-caption font-semibold uppercase tracking-wider text-primary/70 transition-colors hover:text-primary"
                             >
                               <Pencil className="size-2.5" />
                               {audiencia.urlAudienciaVirtual ? 'Editar' : 'Adicionar'}
@@ -740,7 +747,7 @@ export function AudienciaDetailDialog({
                             <button
                               type="button"
                               onClick={handleStartEditEndereco}
-                              className="text-[10px] font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center gap-1"
+                              className="flex cursor-pointer items-center gap-1 text-micro-caption font-semibold uppercase tracking-wider text-primary/70 transition-colors hover:text-primary"
                             >
                               <Pencil className="size-2.5" />
                               {audiencia.enderecoPresencial ? 'Editar' : 'Adicionar'}
@@ -885,7 +892,7 @@ export function AudienciaDetailDialog({
                                   : undefined
                               }
                               className={cn(
-                                'px-3 py-1 rounded-md text-[11.5px] font-medium transition-colors',
+                                'rounded-md px-3 py-1 text-[11px] font-medium transition-colors',
                                 audiencia.presencaHibrida === v
                                   ? 'bg-card text-foreground shadow-sm'
                                   : 'text-muted-foreground hover:text-foreground',
@@ -988,7 +995,7 @@ export function AudienciaDetailDialog({
           </div>
 
           {/* FOOTER */}
-          <div className="shrink-0 px-6 py-3 border-t border-border/50 flex items-center justify-end bg-card/40">
+          <div className="flex shrink-0 items-center justify-end border-t border-border/40 bg-card/40 px-5 py-2.5">
             <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
               Fechar
             </Button>
@@ -999,13 +1006,13 @@ export function AudienciaDetailDialog({
         {ataOpen && audiencia?.urlAtaAudiencia && (
           <aside className="w-full md:w-1/2 shrink-0 flex flex-col bg-muted/30 overflow-hidden border-t md:border-t-0 border-border/50 max-h-[50vh] md:max-h-none">
             <div className="flex items-center justify-between px-4 py-3 border-b border-border/40 bg-card">
-              <div className="flex items-center gap-2 text-[12.5px] font-semibold">
+              <div className="flex items-center gap-2 text-label font-semibold">
                 <FileText className="size-3.5 text-success" />
                 Ata{' '}
                 {dataInicio && (
-                  <span className="text-muted-foreground font-medium">
+                  <Text variant="caption" as="span" className="font-medium">
                     · {format(dataInicio, 'dd MMM yyyy', { locale: ptBR })}
-                  </span>
+                  </Text>
                 )}
               </div>
               <div className="flex items-center gap-1">
