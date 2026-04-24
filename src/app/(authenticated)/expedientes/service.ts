@@ -102,34 +102,20 @@ export async function realizarBaixa(id: number, input: z.infer<typeof baixaExped
   if (expediente.baixadoEm) return err(appError('BAD_REQUEST', 'Expediente já está baixado.'));
 
   const { protocoloId, justificativaBaixa, dataBaixa, resultadoDecisao } = validation.data;
-  const baixaResult = await repository.baixarExpediente(id, {
-    protocoloId: protocoloId,
-    justificativaBaixa: justificativaBaixa,
-    baixadoEm: dataBaixa,
-    resultadoDecisao: resultadoDecisao,
-  });
 
-  if (baixaResult.success) {
-    const db = createDbClient();
-    const { error: rpcError } = await db.rpc('registrar_baixa_expediente', {
-      p_expediente_id: id,
-      p_usuario_id: userId,
-      p_protocolo_id: protocoloId || null,
-      p_justificativa: justificativaBaixa || null,
-    });
-
-    if (rpcError) {
-      // O log de auditoria falhou, mas a baixa já foi feita.
-      // Por questões de auditoria, isso é crítico. Logamos o erro mas não falhamos a operação.
-      console.error('[CRITICAL] Falha ao registrar log de auditoria de baixa de expediente:', {
-        expedienteId: id,
-        userId: userId,
-        rpcError: rpcError,
-      });
-    }
-  }
-
-  return baixaResult;
+  // RPC atômica: UPDATE + log numa única transação. Auditoria não pode mais
+  // divergir silenciosamente do estado da tabela — ambos são commitados
+  // juntos ou nenhum é.
+  return repository.baixarExpediente(
+    id,
+    {
+      protocoloId: protocoloId,
+      justificativaBaixa: justificativaBaixa,
+      baixadoEm: dataBaixa,
+      resultadoDecisao: resultadoDecisao,
+    },
+    userId
+  );
 }
 
 export async function reverterBaixa(id: number, userId: number): Promise<Result<Expediente>> {
@@ -137,30 +123,10 @@ export async function reverterBaixa(id: number, userId: number): Promise<Result<
     return err(appError('VALIDATION_ERROR', 'ID do expediente inválido.'));
   }
 
-  const expedienteResult = await repository.findExpedienteById(id);
-  if (!expedienteResult.success) return expedienteResult as Result<Expediente>;
-  const expediente = expedienteResult.data;
-  if (!expediente) return err(appError('NOT_FOUND', 'Expediente não encontrado.'));
-  if (!expediente.baixadoEm) return err(appError('BAD_REQUEST', 'Expediente não está baixado.'));
-
-  const { protocoloId, justificativaBaixa } = expediente;
-
-  const reversaoResult = await repository.reverterBaixaExpediente(id);
-
-  if (reversaoResult.success) {
-    const db = createDbClient();
-    const { error: rpcError } = await db.rpc('registrar_reversao_baixa_expediente', {
-      p_expediente_id: id,
-      p_usuario_id: userId,
-      p_protocolo_id_anterior: protocoloId,
-      p_justificativa_anterior: justificativaBaixa,
-    });
-    if (rpcError) {
-      console.error('Falha ao registrar log de reversão de baixa:', rpcError);
-    }
-  }
-
-  return reversaoResult;
+  // RPC atômica: UPDATE + log numa única transação. A validação "expediente
+  // está baixado?" é feita dentro da RPC (WHERE baixado_em IS NOT NULL),
+  // dispensando a consulta prévia que antes ficava fora da transação.
+  return repository.reverterBaixaExpediente(id, userId);
 }
 
 export async function atribuirResponsavel(

@@ -175,11 +175,12 @@ describe('Expedientes Integration - Baixa', () => {
     (createDbClient as jest.Mock).mockReturnValue(mockDb);
   });
 
-  it('deve realizar baixa e registrar auditoria via RPC', async () => {
-    // Arrange: Mock findExpedienteById, baixarExpediente, db.rpc
+  it('deve realizar baixa atomicamente via RPC (UPDATE + log numa transação)', async () => {
+    // Arrange: service delega tudo a baixarExpediente, que por sua vez
+    // chama a RPC atômica baixar_expediente_atomic (log embutido na transação).
     const expediente = mockExpediente({
       id: 1,
-      baixadoEm: null, // Não baixado
+      baixadoEm: null,
     });
 
     const baixaInput = {
@@ -198,24 +199,26 @@ describe('Expedientes Integration - Baixa', () => {
     (findExpedienteById as jest.Mock).mockResolvedValue(ok(expediente));
     (baixarExpediente as jest.Mock).mockResolvedValue(ok(expedienteBaixado));
 
-    // Act: Chamar realizarBaixa
     const result = await realizarBaixa(1, baixaInput, 1);
 
-    // Assert: Verificar chamada a registrar_baixa_expediente
     expect(result.success).toBe(true);
     expect(findExpedienteById).toHaveBeenCalledWith(1);
-    expect(baixarExpediente).toHaveBeenCalledWith(1, {
-      protocoloId: 'PROT-12345',
-      justificativaBaixa: 'Protocolo realizado',
-      baixadoEm: undefined,
-      resultadoDecisao: undefined,
-    });
-    expect(mockDb.rpc).toHaveBeenCalledWith('registrar_baixa_expediente', {
-      p_expediente_id: 1,
-      p_usuario_id: 1,
-      p_protocolo_id: 'PROT-12345',
-      p_justificativa: 'Protocolo realizado',
-    });
+    // Nova assinatura: baixarExpediente(id, dados, userId).
+    // O userId vai como 3º arg para a RPC atômica registrar o log de auditoria
+    // dentro da mesma transação do UPDATE.
+    expect(baixarExpediente).toHaveBeenCalledWith(
+      1,
+      {
+        protocoloId: 'PROT-12345',
+        justificativaBaixa: 'Protocolo realizado',
+        baixadoEm: undefined,
+        resultadoDecisao: undefined,
+      },
+      1
+    );
+    // Não há mais RPC separada registrar_baixa_expediente no service —
+    // tudo acontece em baixar_expediente_atomic dentro do repository.
+    expect(mockDb.rpc).not.toHaveBeenCalled();
 
     if (result.success) {
       expect(result.data.baixadoEm).not.toBeNull();
@@ -250,40 +253,32 @@ describe('Expedientes Integration - Baixa', () => {
     expect(mockDb.rpc).not.toHaveBeenCalled();
   });
 
-  it('deve continuar se RPC de auditoria falhar (log crítico)', async () => {
-    // Arrange: Mock RPC retornando erro
+  it('deve propagar erro e não persistir nada se RPC atômica falhar (rollback)', async () => {
+    // Semântica nova: log e UPDATE são uma única transação. Se o INSERT em
+    // logs_alteracao falhar, o UPDATE da tabela expedientes também é revertido.
+    // O service recebe erro e repassa — não há mais "log crítico" silencioso.
     const expediente = mockExpediente({ id: 1, baixadoEm: null });
-    const expedienteBaixado = mockExpediente({ ...expediente, baixadoEm: new Date().toISOString() });
 
     (findExpedienteById as jest.Mock).mockResolvedValue(ok(expediente));
-    (baixarExpediente as jest.Mock).mockResolvedValue(ok(expedienteBaixado));
-
-    const rpcError = { message: 'RPC falhou', code: 'RPC_ERROR' };
-    mockDb.rpc.mockResolvedValue({ data: null, error: rpcError });
-
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+    (baixarExpediente as jest.Mock).mockResolvedValue({
+      success: false as const,
+      error: {
+        code: 'DATABASE_ERROR' as const,
+        message: 'logs_alteracao violated constraint',
+      },
+    });
 
     const baixaInput = {
       expedienteId: 1,
       protocoloId: 'PROT-12345',
     };
 
-    // Act: Realizar baixa
     const result = await realizarBaixa(1, baixaInput, 1);
 
-    // Assert: Verificar baixa concluída + log de erro
-    expect(result.success).toBe(true);
-    expect(baixarExpediente).toHaveBeenCalled();
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      expect.stringContaining('[CRITICAL]'),
-      expect.objectContaining({
-        expedienteId: 1,
-        userId: 1,
-        rpcError,
-      })
-    );
-
-    consoleErrorSpy.mockRestore();
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.code).toBe('DATABASE_ERROR');
+    }
   });
 
   it('deve validar dados de entrada antes de baixar', async () => {
@@ -325,8 +320,11 @@ describe('Expedientes Integration - Reversão', () => {
     (createDbClient as jest.Mock).mockReturnValue(mockDb);
   });
 
-  it('deve reverter baixa e registrar auditoria', async () => {
-    // Arrange: Mock expediente baixado + reverterBaixaExpediente
+  it('deve reverter baixa atomicamente via RPC (UPDATE + log numa transação)', async () => {
+    // Semântica nova: service delega tudo a reverterBaixaExpediente, que chama
+    // reverter_baixa_expediente_atomic. A RPC faz o UPDATE e o INSERT em
+    // logs_alteracao na mesma transação. Invariantes (existe? está baixado?)
+    // são checadas pela RPC, não mais pelo service.
     const expediente = mockExpediente({
       id: 1,
       baixadoEm: '2024-01-15T10:00:00Z',
@@ -341,92 +339,70 @@ describe('Expedientes Integration - Reversão', () => {
       justificativaBaixa: null,
     });
 
-    (findExpedienteById as jest.Mock).mockResolvedValue(ok(expediente));
     (reverterBaixaExpediente as jest.Mock).mockResolvedValue(ok(expedienteRevertido));
 
-    // Act: Chamar reverterBaixa
     const result = await reverterBaixa(1, 1);
 
-    // Assert: Verificar chamada a registrar_reversao_baixa_expediente
     expect(result.success).toBe(true);
-    expect(findExpedienteById).toHaveBeenCalledWith(1);
-    expect(reverterBaixaExpediente).toHaveBeenCalledWith(1);
-    expect(mockDb.rpc).toHaveBeenCalledWith('registrar_reversao_baixa_expediente', {
-      p_expediente_id: 1,
-      p_usuario_id: 1,
-      p_protocolo_id_anterior: 'PROT-12345',
-      p_justificativa_anterior: 'Protocolo realizado',
-    });
+    expect(reverterBaixaExpediente).toHaveBeenCalledWith(1, 1);
+    // Não há mais RPC separada para log — tudo acontece atomicamente no repository.
+    expect(mockDb.rpc).not.toHaveBeenCalled();
 
     if (result.success) {
       expect(result.data.baixadoEm).toBeNull();
     }
   });
 
-  it('deve falhar se expediente não estiver baixado', async () => {
-    // Arrange: Mock expediente sem baixadoEm
-    const expediente = mockExpediente({
-      id: 1,
-      baixadoEm: null,
+  it('deve propagar erro da RPC quando expediente não está baixado', async () => {
+    // A RPC reverter_baixa_expediente_atomic faz o check via WHERE baixado_em
+    // IS NOT NULL e dá RAISE EXCEPTION se o expediente não estiver baixado.
+    (reverterBaixaExpediente as jest.Mock).mockResolvedValue({
+      success: false as const,
+      error: {
+        code: 'DATABASE_ERROR' as const,
+        message: 'Expediente 1 não está baixado ou não foi encontrado.',
+      },
     });
 
-    (findExpedienteById as jest.Mock).mockResolvedValue(ok(expediente));
-
-    // Act: Tentar reverter
     const result = await reverterBaixa(1, 1);
 
-    // Assert: Verificar erro BAD_REQUEST
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.code).toBe('BAD_REQUEST');
       expect(result.error.message).toContain('não está baixado');
     }
-    expect(reverterBaixaExpediente).not.toHaveBeenCalled();
-    expect(mockDb.rpc).not.toHaveBeenCalled();
   });
 
-  it('deve continuar se RPC de reversão falhar (com log)', async () => {
-    // Arrange
-    const expediente = mockExpediente({
-      id: 1,
-      baixadoEm: '2024-01-15T10:00:00Z',
-      protocoloId: 'PROT-12345',
+  it('deve propagar erro e não persistir nada se RPC atômica falhar (rollback)', async () => {
+    (reverterBaixaExpediente as jest.Mock).mockResolvedValue({
+      success: false as const,
+      error: {
+        code: 'DATABASE_ERROR' as const,
+        message: 'logs_alteracao constraint violated',
+      },
     });
 
-    const expedienteRevertido = mockExpediente({ ...expediente, baixadoEm: null });
-
-    (findExpedienteById as jest.Mock).mockResolvedValue(ok(expediente));
-    (reverterBaixaExpediente as jest.Mock).mockResolvedValue(ok(expedienteRevertido));
-
-    const rpcError = { message: 'RPC falhou', code: 'RPC_ERROR' };
-    mockDb.rpc.mockResolvedValue({ data: null, error: rpcError });
-
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
-
-    // Act
     const result = await reverterBaixa(1, 1);
 
-    // Assert
-    expect(result.success).toBe(true);
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      expect.stringContaining('Falha ao registrar log de reversão'),
-      rpcError
-    );
-
-    consoleErrorSpy.mockRestore();
-  });
-
-  it('deve falhar se expediente não encontrado', async () => {
-    // Arrange
-    (findExpedienteById as jest.Mock).mockResolvedValue(ok(null));
-
-    // Act
-    const result = await reverterBaixa(999, 1);
-
-    // Assert
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.code).toBe('NOT_FOUND');
+      expect(result.error.code).toBe('DATABASE_ERROR');
+    }
+  });
+
+  it('deve propagar erro da RPC quando expediente não encontrado', async () => {
+    (reverterBaixaExpediente as jest.Mock).mockResolvedValue({
+      success: false as const,
+      error: {
+        code: 'DATABASE_ERROR' as const,
+        message: 'Expediente 999 não encontrado.',
+      },
+    });
+
+    const result = await reverterBaixa(999, 1);
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.message).toContain('não encontrado');
     }
   });
 });

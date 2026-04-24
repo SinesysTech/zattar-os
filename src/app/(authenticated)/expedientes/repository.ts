@@ -476,22 +476,21 @@ export async function baixarExpediente(
     justificativaBaixa?: string;
     baixadoEm?: string;
     resultadoDecisao?: ResultadoDecisao | null;
-  }
+  },
+  usuarioId: number
 ): Promise<Result<Expediente>> {
   try {
     const db = createDbClient();
-    const dadosUpdate = {
-      baixado_em: dados.baixadoEm || new Date().toISOString(),
-      protocolo_id: dados.protocoloId,
-      justificativa_baixa: dados.justificativaBaixa,
-      resultado_decisao: dados.resultadoDecisao,
-    };
-    const { data, error } = await db
-      .from(TABLE_EXPEDIENTES)
-      .update(dadosUpdate)
-      .eq("id", id)
-      .select()
-      .single();
+    // RPC atômica: UPDATE da tabela + INSERT em logs_alteracao numa só
+    // transação. Nunca deixa expediente baixado sem auditoria.
+    const { data, error } = await db.rpc("baixar_expediente_atomic", {
+      p_expediente_id: id,
+      p_usuario_id: usuarioId,
+      p_protocolo_id: dados.protocoloId ?? null,
+      p_justificativa: dados.justificativaBaixa ?? null,
+      p_baixado_em: dados.baixadoEm ?? null,
+      p_resultado_decisao: dados.resultadoDecisao ?? null,
+    });
     if (error) {
       return err(
         appError(
@@ -501,7 +500,7 @@ export async function baixarExpediente(
         )
       );
     }
-    return ok(converterParaExpediente(data));
+    return ok(converterParaExpediente(data as ExpedienteRow));
   } catch (error) {
     return err(
       appError(
@@ -515,22 +514,16 @@ export async function baixarExpediente(
 }
 
 export async function reverterBaixaExpediente(
-  id: number
+  id: number,
+  usuarioId: number
 ): Promise<Result<Expediente>> {
   try {
     const db = createDbClient();
-    const dadosUpdate = {
-      baixado_em: null,
-      protocolo_id: null,
-      justificativa_baixa: null,
-      resultado_decisao: null,
-    };
-    const { data, error } = await db
-      .from(TABLE_EXPEDIENTES)
-      .update(dadosUpdate)
-      .eq("id", id)
-      .select()
-      .single();
+    // RPC atômica: UPDATE + INSERT em logs_alteracao numa única transação.
+    const { data, error } = await db.rpc("reverter_baixa_expediente_atomic", {
+      p_expediente_id: id,
+      p_usuario_id: usuarioId,
+    });
     if (error) {
       return err(
         appError("DATABASE_ERROR", `Erro ao reverter baixa: ${error.message}`, {
@@ -538,7 +531,7 @@ export async function reverterBaixaExpediente(
         })
       );
     }
-    return ok(converterParaExpediente(data));
+    return ok(converterParaExpediente(data as ExpedienteRow));
   } catch (error) {
     return err(
       appError(

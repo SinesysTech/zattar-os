@@ -97,13 +97,14 @@ describe('Expedientes Service', () => {
   describe('reverterBaixa', () => {
     it('deve reverter baixa com sucesso', async () => {
        const existing = { id: 1, baixadoEm: '2023-01-01' };
-       (findExpedienteById as jest.Mock).mockResolvedValue(ok(existing));
        (reverterBaixaExpediente as jest.Mock).mockResolvedValue(ok({ ...existing, baixadoEm: null }));
 
        const result = await reverterBaixa(1, 123);
-       
+
        expect(result.success).toBe(true);
-       expect(reverterBaixaExpediente).toHaveBeenCalledWith(1);
+       // Semântica nova: service delega à RPC atômica passando userId.
+       // Invariantes (existe? está baixado?) são verificadas dentro da RPC.
+       expect(reverterBaixaExpediente).toHaveBeenCalledWith(1, 123);
     });
   });
 });
