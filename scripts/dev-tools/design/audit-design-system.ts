@@ -492,7 +492,32 @@ async function auditCoverage(): Promise<TokenCoverage> {
   };
 }
 
+// Thin page wrappers (server components que só fazem auth + fetch + <Client/>)
+// não deveriam ser penalizados no score de adoção — o papel deles é delegar,
+// não renderizar tipografia. Filtro conservador: apenas `page.tsx` sem
+// 'use client', sem classes text-*/font-* e com padrão de return ou redirect.
+async function filterOutThinPageWrappers(files: string[]): Promise<string[]> {
+  const result: string[] = [];
+  for (const file of files) {
+    if (!file.endsWith('/page.tsx')) {
+      result.push(file);
+      continue;
+    }
+    const content = await fs.readFile(file, 'utf-8');
+    const isClient = /['"`]use client['"`]/m.test(content);
+    const hasTypography =
+      /className=["'`][^"'`]*\b(text-(sm|xs|lg|xl|2xl|base|\[|display|page|section|card|kpi|label|caption|overline|meta|widget)|font-(bold|semibold|medium|heading|display))/.test(
+        content,
+      );
+    const hasDelegation = /return\s+(<|\(|redirect)|redirect\(/.test(content);
+    const isThinWrapper = !isClient && !hasTypography && hasDelegation;
+    if (!isThinWrapper) result.push(file);
+  }
+  return result;
+}
+
 async function auditAdoption(files: string[]): Promise<AdoptionMetrics> {
+  files = await filterOutThinPageWrappers(files);
   const typography = await countImports(files, '@/components/ui/typography');
   const glassPanel = await countImports(files, '@/components/shared/glass-panel', 'GlassPanel', [
     // Dashboard widgets: primitives.tsx re-exporta GlassPanel e WidgetContainer
@@ -569,6 +594,7 @@ async function auditViolations(files: string[]): Promise<ViolationsReport> {
 }
 
 async function auditModules(files: string[], violations: ViolationsReport): Promise<ModuleScore[]> {
+  files = await filterOutThinPageWrappers(files);
   const modulesMap = new Map<string, { files: string[]; violations: number; adopted: Set<string> }>();
 
   const typedFiles = new Set<string>();
