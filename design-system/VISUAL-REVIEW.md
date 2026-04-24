@@ -23,7 +23,7 @@ URL do mock: <http://localhost:3000/dashboard/mock>
 Widgets que afetam visualização de dados financeiros ou status crítico — qualquer problema de contraste aqui é visível imediatamente.
 
 #### `[ ]` WidgetStatusContratos
-- **Path:** [src/app/(authenticated)/dashboard/widgets/contratos/status-contratos.tsx](../../src/app/(authenticated)/dashboard/widgets/contratos/status-contratos.tsx)
+- **Path:** [src/app/(authenticated)/dashboard/widgets/contratos/status-contratos.tsx](../src/app/(authenticated)/dashboard/widgets/contratos/status-contratos.tsx)
 - **Mudou:** `s.color` (OKLCH literal do repository) → `tokenForTone(s.tone)`
 - **Tons usados:** `info`, `primary`, `success`, `destructive`, `neutral`
 - **O que verificar:**
@@ -34,7 +34,7 @@ Widgets que afetam visualização de dados financeiros ou status crítico — qu
 - **Risco:** Baixo — tons diretos, sem heurística
 
 #### `[ ]` WidgetParcelasStatus
-- **Path:** [src/app/(authenticated)/dashboard/widgets/contratos/parcelas-status.tsx](../../src/app/(authenticated)/dashboard/widgets/contratos/parcelas-status.tsx)
+- **Path:** [src/app/(authenticated)/dashboard/widgets/contratos/parcelas-status.tsx](../src/app/(authenticated)/dashboard/widgets/contratos/parcelas-status.tsx)
 - **Tons usados:** `success` (Pagas), `warning` (Pendentes), `destructive` (Atrasadas)
 - **O que verificar:**
   - StackedBar com 3 segmentos distintos (verde/âmbar/vermelho)
@@ -43,7 +43,7 @@ Widgets que afetam visualização de dados financeiros ou status crítico — qu
 - **Risco:** Zero — mapping 1:1 semântico
 
 #### `[ ]` WidgetContasReceber
-- **Path:** [src/app/(authenticated)/dashboard/widgets/financeiro/contas-receber.tsx](../../src/app/(authenticated)/dashboard/widgets/financeiro/contas-receber.tsx)
+- **Path:** [src/app/(authenticated)/dashboard/widgets/financeiro/contas-receber.tsx](../src/app/(authenticated)/dashboard/widgets/financeiro/contas-receber.tsx)
 - **Tons usados:** `success` (A vencer), `chart-4` (Até 30d), `warning` (30-60d), `chart-2` (60-90d), `destructive` (90+)
 - **O que verificar:**
   - **Gradação** de cor entre as 5 faixas de aging — deve sentir progressão visual do saudável ao crítico
@@ -51,7 +51,7 @@ Widgets que afetam visualização de dados financeiros ou status crítico — qu
 - **Risco:** Médio — `chart-4` e `chart-2` são gradações intermediárias. Se o gradiente "verde → vermelho" não estiver evidente, anotar para ajuste dos tokens chart-*.
 
 #### `[ ]` WidgetContasPagar
-- **Path:** [src/app/(authenticated)/dashboard/widgets/financeiro/contas-pagar.tsx](../../src/app/(authenticated)/dashboard/widgets/financeiro/contas-pagar.tsx)
+- **Path:** [src/app/(authenticated)/dashboard/widgets/financeiro/contas-pagar.tsx](../src/app/(authenticated)/dashboard/widgets/financeiro/contas-pagar.tsx)
 - **Tons usados:** Mesmos de ContasReceber (aging compartilhado)
 - **O que verificar:** Mesmo padrão — gradação de aging visível
 - **Risco:** Médio (mesmo da ContasReceber)
@@ -61,7 +61,7 @@ Widgets que afetam visualização de dados financeiros ou status crítico — qu
 Widgets que usam `chart-1..5` para séries sem significado semântico inerente. Risco de "parecerem iguais" se os tokens chart-* estiverem muito próximos.
 
 #### `[ ]` WidgetStatusDistribuicao (processos)
-- **Path:** [src/app/(authenticated)/dashboard/widgets/processos/status-distribuicao.tsx](../../src/app/(authenticated)/dashboard/widgets/processos/status-distribuicao.tsx)
+- **Path:** [src/app/(authenticated)/dashboard/widgets/processos/status-distribuicao.tsx](../src/app/(authenticated)/dashboard/widgets/processos/status-distribuicao.tsx)
 - **Tons usados:** `success` (Ativos), `warning` (Suspensos), `neutral` (Arquivados), `info` (Em Recurso)
 - **Fallback:** hardcoded `var(--success)` e `var(--muted-foreground)` quando não há `porStatus`
 - **O que verificar:**
@@ -70,7 +70,7 @@ Widgets que usam `chart-1..5` para séries sem significado semântico inerente. 
 - **Risco:** Baixo
 
 #### `[ ]` WidgetSegmento (processos)
-- **Path:** [src/app/(authenticated)/dashboard/widgets/processos/segmento.tsx](../../src/app/(authenticated)/dashboard/widgets/processos/segmento.tsx)
+- **Path:** [src/app/(authenticated)/dashboard/widgets/processos/segmento.tsx](../src/app/(authenticated)/dashboard/widgets/processos/segmento.tsx)
 - **Tons usados:** `chart-1` (Trabalhista), `chart-2` (Cível), `chart-4` (Previdenciário), `warning` (Empresarial), `destructive` (Criminal), `chart-5` (Outros)
 - **O que verificar:**
   - 6 cores **distinguíveis** no donut — segmentos pequenos ainda identificáveis
@@ -78,31 +78,31 @@ Widgets que usam `chart-1..5` para séries sem significado semântico inerente. 
 - **Risco:** Médio — `destructive` para "Criminal" é uma escolha editorial. Pode ser reinterpretado como "área de risco" ou inadequado se você quer imparcialidade.
 
 #### `[ ]` WidgetAging (processos)
-- **Path:** [src/app/(authenticated)/dashboard/widgets/processos/aging.tsx](../../src/app/(authenticated)/dashboard/widgets/processos/aging.tsx)
+- **Path:** [src/app/(authenticated)/dashboard/widgets/processos/aging.tsx](../src/app/(authenticated)/dashboard/widgets/processos/aging.tsx)
 - **Tons usados:** `success` (<1 ano), `warning` (1-2 anos), `chart-2` (2-5 anos), `destructive` (>5 anos)
 - **O que verificar:** Gradação de aging visível (similar ao financeiro)
 - **Risco:** Baixo
 
 #### `[ ]` WidgetProcessosComTabs
-- **Path:** [src/app/(authenticated)/dashboard/widgets/processos/processos-tabs.tsx](../../src/app/(authenticated)/dashboard/widgets/processos/processos-tabs.tsx)
+- **Path:** [src/app/(authenticated)/dashboard/widgets/processos/processos-tabs.tsx](../src/app/(authenticated)/dashboard/widgets/processos/processos-tabs.tsx)
 - **Tons usados:** herda de `porStatus` e `porSegmento` (re-render dos tons acima)
 - **O que verificar:** Toggle entre tabs Status/Segmento — cores consistentes entre tabs
 - **Risco:** Baixo
 
 #### `[ ]` WidgetDespesasCategoria (financeiro)
-- **Path:** [src/app/(authenticated)/dashboard/widgets/financeiro/despesas-categoria.tsx](../../src/app/(authenticated)/dashboard/widgets/financeiro/despesas-categoria.tsx)
+- **Path:** [src/app/(authenticated)/dashboard/widgets/financeiro/despesas-categoria.tsx](../src/app/(authenticated)/dashboard/widgets/financeiro/despesas-categoria.tsx)
 - **Tons usados:** `primary` (Pessoal), `chart-2` (Aluguel), `chart-3` (Serviços), `warning` (Tributário), `neutral` (Outros)
 - **O que verificar:** MiniDonut com 5 categorias de despesa distinguíveis
 - **Risco:** Baixo
 
 #### `[ ]` WidgetModalidade (audiências)
-- **Path:** [src/app/(authenticated)/dashboard/widgets/audiencias/modalidade.tsx](../../src/app/(authenticated)/dashboard/widgets/audiencias/modalidade.tsx)
+- **Path:** [src/app/(authenticated)/dashboard/widgets/audiencias/modalidade.tsx](../src/app/(authenticated)/dashboard/widgets/audiencias/modalidade.tsx)
 - **Tons usados:** `info` (Virtual), `primary` (Presencial), `warning` (Híbrida)
 - **O que verificar:** 3 modalidades com cores distintas no donut + legend
 - **Risco:** Baixo — semanticamente "Virtual" como info, "Presencial" como primary faz sentido
 
 #### `[ ]` WidgetPorTipo (audiências)
-- **Path:** [src/app/(authenticated)/dashboard/widgets/audiencias/por-tipo.tsx](../../src/app/(authenticated)/dashboard/widgets/audiencias/por-tipo.tsx)
+- **Path:** [src/app/(authenticated)/dashboard/widgets/audiencias/por-tipo.tsx](../src/app/(authenticated)/dashboard/widgets/audiencias/por-tipo.tsx)
 - **Tons usados:** `primary` (Instrução), `info` (Conciliação), `destructive` (Julgamento), `neutral` (UNA), `warning` (Perícia)
 - **O que verificar:** Bar chart horizontal com barras progressivas
 - **Risco:** **Alto** — "Julgamento" como `destructive` é editorialmente carregado. Julgamento não é ruim, é fase normal do processo. **Considerar** trocar para `primary` ou `chart-3`.
@@ -114,7 +114,7 @@ Widgets que usam `chart-1..5` para séries sem significado semântico inerente. 
 URL: <http://localhost:3000/portal/dashboard>
 
 #### `[ ]` Dashboard do Portal
-- **Path:** [src/app/portal/(dashboard)/dashboard/](../../src/app/portal/(dashboard)/dashboard/)
+- **Path:** [src/app/portal/(dashboard)/dashboard/](../src/app/portal/(dashboard)/dashboard/)
 - **O que verificar:**
   - Cards de KPI com cores do namespace `--portal-*`
   - `PortalBadge` variantes (success/warning/danger/info/neutral) em listagens
@@ -197,6 +197,6 @@ Páginas que tiveram replacements mecânicos do script Python (85 arquivos modif
 **Referências:**
 - Documentação dos tokens: [/library/tokens/semantic-tones](http://localhost:3000/library/tokens/semantic-tones)
 - Harness visual: [/library/visual-diff/widgets](http://localhost:3000/library/visual-diff/widgets)
-- Relatório de precisão semântica: [TONE-ACCURACY-REPORT.md](./TONE-ACCURACY-REPORT.md)
-- Helper: [src/lib/design-system/semantic-tones.ts](../../src/lib/design-system/semantic-tones.ts)
-- globals.css (fonte dos tokens): [src/app/globals.css](../../src/app/globals.css)
+- Relatório de precisão semântica: [reports/history/tone-accuracy-2026-04.md](reports/history/tone-accuracy-2026-04.md)
+- Helper: [src/lib/design-system/semantic-tones.ts](../src/lib/design-system/semantic-tones.ts)
+- globals.css (fonte dos tokens): [src/app/globals.css](../src/app/globals.css)

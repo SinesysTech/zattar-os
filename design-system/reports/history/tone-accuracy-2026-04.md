@@ -177,19 +177,19 @@
 - **Atual:** `destructive`
 - **Proposto:** `chart-3`
 - **Motivo:** Direito criminal é especialidade legítima, não um "alerta". Vermelho sugere que a área é "perigosa".
-- **Arquivo:** [processos-metrics.ts:28](../../src/app/(authenticated)/dashboard/repositories/processos-metrics.ts#L28)
+- **Arquivo:** [processos-metrics.ts:28](../../../src/app/(authenticated)/dashboard/repositories/processos-metrics.ts#L28)
 
 **2. Tipo de audiência "Julgamento" em `audiencias-metrics.ts`**
 - **Atual:** `destructive`
 - **Proposto:** `primary` ou `chart-3`
 - **Motivo:** Julgamento é fase normal do processo. Vermelho cria viés negativo que pode influenciar leitura do widget.
-- **Arquivo:** [audiencias-metrics.ts:265](../../src/app/(authenticated)/dashboard/repositories/audiencias-metrics.ts#L265)
+- **Arquivo:** [audiencias-metrics.ts:265](../../../src/app/(authenticated)/dashboard/repositories/audiencias-metrics.ts#L265)
 
 **3. Segmento "Empresarial" em `processos-metrics.ts`**
 - **Atual:** `warning`
 - **Proposto:** `chart-3` ou `chart-5`
 - **Motivo:** Direito empresarial não é área de "atenção" — âmbar sugere risco desnecessariamente.
-- **Arquivo:** [processos-metrics.ts:29](../../src/app/(authenticated)/dashboard/repositories/processos-metrics.ts#L29)
+- **Arquivo:** [processos-metrics.ts:29](../../../src/app/(authenticated)/dashboard/repositories/processos-metrics.ts#L29)
 
 #### Média prioridade — revisão visual recomendada
 
@@ -249,6 +249,6 @@ Validação automática. Zero risco — tons ainda são válidos no enum `Semant
 
 **Última atualização:** Sessão de refatoração do Design System — Zattar OS.
 **Referências:**
-- [VISUAL-REVIEW-CHECKLIST.md](./VISUAL-REVIEW-CHECKLIST.md)
-- [semantic-tones.ts helper](../../src/lib/design-system/semantic-tones.ts)
+- [VISUAL-REVIEW.md](../../VISUAL-REVIEW.md)
+- [semantic-tones.ts helper](../../../src/lib/design-system/semantic-tones.ts)
 - Página da Dev Library: [/library/tokens/semantic-tones](http://localhost:3000/library/tokens/semantic-tones)

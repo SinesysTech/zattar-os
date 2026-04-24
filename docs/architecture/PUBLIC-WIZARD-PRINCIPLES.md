@@ -119,7 +119,7 @@ Pra contexto de futuras alterações:
 ## Referências
 
 - [src/shared/assinatura-digital/components/public-shell/RULES.md](../../src/shared/assinatura-digital/components/public-shell/RULES.md) — regras operacionais do shell
-- [docs/architecture/VISUAL-REVIEW-CHECKLIST.md](./VISUAL-REVIEW-CHECKLIST.md) — checklist de auditoria visual geral
+- [design-system/VISUAL-REVIEW.md](../../design-system/VISUAL-REVIEW.md) — checklist de auditoria visual geral
 - [src/lib/design-system/tokens.ts](../../src/lib/design-system/tokens.ts) — tokens canônicos
 - [src/app/globals.css](../../src/app/globals.css) — CSS variables OKLCH e classes utilitárias
 - [src/components/ui/input-styles.ts](../../src/components/ui/input-styles.ts) — constante `INPUT_GLASS_BASE_CLASSES`

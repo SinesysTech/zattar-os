@@ -19,10 +19,14 @@
 ## Fontes de contexto (sources)
 
 - **Repositório**: `SynthropicTechnology/zattar-os` branch `master` — https://github.com/SynthropicTechnology/zattar-os
-- **Design System interno**: `design-system/MASTER.md` (58KB, Single Source of Truth narrativa + governance)
-- **Tokens canônicos**: `src/app/globals.css` (202 CSS variables + `@theme inline`)
-- **Mirror TS**: `src/lib/design-system/tokens.ts`, `token-registry.ts`
+- **Este arquivo (`README.md`)**: Single Source of Truth narrativa — manifesto, content, visual, iconography
+- **Tokens canônicos**: `src/app/globals.css` (226 CSS variables + classes `.glass-*`)
+- **Mirror TS**: `src/lib/design-system/tokens.ts`, `token-registry.ts`, `semantic-tones.ts`, `variants.ts`
+- **Matriz de tokens**: `design-system/extensions.md` (auto-gerado, 226 tokens documentados)
+- **Checklist de auditoria visual**: `design-system/VISUAL-REVIEW.md`
+- **Enforcement**: `npm run audit:design-system` (bloqueador no CI)
 - **Componentes fundacionais**: `src/components/ui/typography.tsx`, `src/components/shared/glass-panel.tsx`, `brand-mark.tsx`
+- **Playground viva**: `src/app/(dev)/library/*` (tokens, badges, shells)
 - **Inspiração cruzada**: `uploads/DESIGN-stripe.md` (referência de rigor tipográfico — não copiado)
 
 ## Princípios (Manifesto Glass Briefing)

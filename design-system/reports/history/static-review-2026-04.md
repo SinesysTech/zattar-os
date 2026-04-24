@@ -17,7 +17,7 @@
 - ❌ Problemas de performance (bundle size, re-renders) — precisam de profiling
 - ❌ Acessibilidade real com screen readers — precisa de AT testing
 
-Para essas validações visuais, siga [`VISUAL-REVIEW-CHECKLIST.md`](./VISUAL-REVIEW-CHECKLIST.md) com `npm run dev` aberto.
+Para essas validações visuais, siga [`VISUAL-REVIEW.md`](../../VISUAL-REVIEW.md) com `npm run dev` aberto.
 
 ---
 

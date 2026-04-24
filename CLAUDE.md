@@ -64,58 +64,33 @@ Alguns módulos sob `(authenticated)/` são propositalmente embrionários (proxi
 
 ## Design System — "Glass Briefing"
 
-O ZattarOS segue o Design System **Glass Briefing** — glassmorphism com hierarquia por profundidade, cores em OKLCH, e sistema de superfícies inspirado em Material Design 3. **Toda implementação de UI DEVE respeitar este sistema.**
+O ZattarOS usa o DS **Glass Briefing** — glassmorphism sutil sobre fundação sólida, OKLCH ancorado em hue 281° (Zattar Purple), tipografia Montserrat+Inter. **Toda UI admin DEVE aderir.**
 
-### Fontes Canônicas
+### Fontes (única verdade)
 
-| Arquivo | O que contém | Autoridade |
-|---|---|---|
-| `src/app/globals.css` | **202 CSS variables primárias** em `:root`+`.dark` + ~140 aliases `@theme inline` + classes `.glass-*` | **CANÔNICA** |
-| `src/lib/design-system/tokens.ts` | Espelho TS (spacing, typography, opacity, layout, palette, events, MD3, portal) | Mirror |
-| `src/lib/design-system/token-registry.ts` | Lista tipada de todos os tokens (para audit) | Registro |
-| `design-system/MASTER.md` | Single Source of Truth narrativa + contratos + anti-patterns | Doc |
-| `design-system/GOVERNANCE.md` | Workflow de mudança, cadência, escalação | Processo |
-| `design-system/ROADMAP.md` | KPIs, metas trimestrais, baseline histórico | Plano |
-| `design-system/reports/latest.json` | Último snapshot do audit | Métricas |
-| `tailwind.config.ts` | **Apenas plugins + `max-w-350`** (Tailwind v4 lê cores do `@theme inline`) | Legacy |
-| `src/components/shared/glass-panel.tsx` | `<GlassPanel depth={1\|2\|3}>` | Componente |
-| `src/components/ui/typography.tsx` | `<Heading>` (10 níveis) e `<Text>` (17 variantes) | Componente |
+| Fonte | Papel |
+|---|---|
+| [src/app/globals.css](src/app/globals.css) | Tokens canônicos (226 CSS variables + classes `.glass-*`) |
+| [src/lib/design-system/](src/lib/design-system/) | Mirror TS: `tokens.ts`, `token-registry.ts`, `semantic-tones.ts`, `variants.ts` |
+| [design-system/README.md](design-system/README.md) | Contrato narrativo (manifesto, voice, visual foundations, iconography) |
+| [design-system/VISUAL-REVIEW.md](design-system/VISUAL-REVIEW.md) | Checklist de auditoria visual por widget |
+| [src/app/(dev)/library/](src/app/(dev)/library/) | Playground viva (tokens, badges, shells) — `npm run dev` + `/library` |
+| `npm run audit:design-system` | Enforcement automático + KPIs + grade atual |
 
-### Regras Obrigatórias de UI
+### Regras absolutas (bloqueadas pelo audit)
 
-1. **Nunca hardcode cores** — Use CSS variables (`bg-primary`, `text-muted-foreground`, `border-outline-variant`) ou tokens de `tokens.ts`. Cores literais como `bg-blue-500` ou `#hex` são proibidas.
-2. **Hierarquia por Glass Depth** — Containers usam `GlassPanel` com depth semântico:
-   - **Depth 1** (`glass-widget`): containers transparentes, painéis grandes
-   - **Depth 2** (`glass-kpi`): cards de métricas, KPIs, destaque médio
-   - **Depth 3** (`primary tint`): ênfase máxima
-3. **Dialogs/Modals** — Usar classes `glass-dialog` e `glass-dialog-overlay` para manter consistência com blur/transparência.
-4. **Tipografia via componentes** — Usar `Heading` e `Text` de `@/components/ui/typography` com as variantes semânticas (page, section, card, kpi-value, label, caption, meta-label, micro-caption, overline). Não inventar tamanhos avulsos.
-5. **Espaçamento via tokens** — Seguir o grid de 4px definido em `SPACING` e os layouts semânticos (`PAGE_LAYOUT`, `SEMANTIC_SPACING`) de `tokens.ts`.
-6. **Componentes shared obrigatórios** — Antes de criar componentes novos, verificar se já existe em `@/components/shared/` ou `@/components/ui/`:
-   - Layout: `PageShell`, `FormShell`, `TemporalViewShell`, `DetailSheet`
-   - Glass: `GlassPanel`, `WidgetContainer`, `AmbientBackdrop`
-   - Navegação: `TabPills`, `ViewSwitcher`, `DateNavigation`, `WeekNavigator`
-   - Dados: `DataTable`, `TablePagination`, `EmptyState`
-   - Tipografia: `Heading`, `Text`, `BrandMark`
-7. **Cores semânticas por namespace** — Usar os namespaces corretos:
-   - Status: `--success`, `--warning`, `--info`, `--destructive`
-   - Superfícies: `--surface-*` (9 variantes de container)
-   - Chart/dados: `--chart-1` a `--chart-8`
-   - Eventos: `--event-audiencia`, `--event-expediente`, `--event-prazo`, etc.
-   - Portal: `--portal-*` (11 tokens dedicados)
-   - Chat: `--chat-thread-bg`, `--chat-bubble-received`, `--chat-bubble-sent`, `--chat-sidebar-active`
-   - Widgets: `--widget-*` (radius, padding, gap, transition)
-8. **Opacidade via escala definida** — Usar os níveis de `OPACITY_SCALE` de `tokens.ts` (subtle, whisper, tint, soft, medium, strong, emphasis) em vez de valores arbitrários.
-9. **Dark mode** — Toda UI deve funcionar em light e dark. As CSS variables já têm override em `.dark` — não criar lógica condicional manual.
+1. **Zero cor literal** — sempre CSS var (`bg-primary`, `text-muted-foreground`, `border-outline-variant`) ou token de `@/lib/design-system`. `bg-blue-500`, `#hex` e OKLCH inline são bloqueados.
+2. **Containers via `<GlassPanel depth={1|2|3}>`** — depth 1 (widget padrão), 2 (KPI), 3 (ênfase). Dialogs/modais usam classes `glass-dialog` + `glass-dialog-overlay`.
+3. **Tipografia via `<Heading level>` + `<Text variant>`** — compor `font-heading text-2xl` manualmente é bloqueado. Variantes semânticas: `page`, `section`, `card`, `kpi-value`, `label`, `meta-label`, `caption`, `overline`.
+4. **Shared antes de novo** — verificar `@/components/shared/` e `@/components/ui/` (PageShell, DataShell, DialogFormShell, GlassPanel, TabPills, IconContainer, SemanticBadge, Heading, Text, BrandMark) antes de criar componente.
+5. **Dark mode obrigatório** — CSS variables já têm override `.dark`. Sidebar é sempre escura em ambos os modos. Nunca criar lógica condicional manual.
 
-### Referência Rápida de Validação Visual
-
-Consulte `docs/architecture/VISUAL-REVIEW-CHECKLIST.md` para o checklist completo de auditoria visual (11 widgets, mapeamento semântico de tons, portal dashboard).
+Detalhes de namespace (event, portal, chat, chart, user palette, MD3 surfaces), padrões de opacidade, animação e cópia em PT-BR vivem em [design-system/README.md](design-system/README.md). Não duplicar aqui.
 
 ## Base de Dados (Supabase)
 
-- Todas as tabelas têm **RLS**. 
-- Os scripts SQL situam-se em `supabase/migrations/`. 
+- Todas as tabelas têm **RLS**.
+- Os scripts SQL situam-se em `supabase/migrations/`.
 - `database.types.ts` é autogerado.
 
 ## RAG e Integração LLM Compartilhada
@@ -124,66 +99,3 @@ Consulte `docs/architecture/VISUAL-REVIEW-CHECKLIST.md` para o checklist complet
 - Todas as **Server Actions publicadas** podem ser engajadas como *Ferramentas de IA* (Tools via Model Context Protocol), permitindo que agentes manipulem processos em CLI e na Web UI.
 
 *(Para o manual estendido de comportamento do software, diagramas SSE/MCP e troubleshooting, leia `docs/architecture/AGENTS.md` e `docs/architecture/ARCHITECTURE.md` em profundidade).*
-
-<!-- GSD:project-start source:PROJECT.md -->
-## Project
-
-**ZattarOS Chat Redesign**
-
-Redesign completo do modulo de chat do ZattarOS para alinhar ao design system "Glass Briefing" ja implementado em Audiencias, Expedientes e Processos. Inclui refatoracao visual de todos os componentes (sidebar, bolhas, header, input, detail panel) e introducao de novas features como context bar de processo vinculado, audio waveform visual e empty state com suggestion cards.
-
-**Core Value:** Comunicacao em tempo real entre advogados e equipe com coerencia visual total ao design system Glass Briefing, preservando todas as funcionalidades existentes (mensagens, chamadas, gravacao de audio, upload de arquivos).
-
-### Constraints
-
-- **Stack**: Next.js 16, React 19, Tailwind CSS 4, shadcn/ui — manter
-- **Componentes shared**: Reutilizar GlassPanel, TabPills, SearchInput, IconContainer, Heading, SemanticBadge
-- **FSD Architecture**: Manter modulo em `src/app/(authenticated)/chat/`
-- **Tokens CSS existentes**: Usar os tokens `--chat-*` ja definidos em globals.css
-- **Funcionalidade**: Zero regressao — todas as features atuais devem continuar funcionando
-- **Performance**: Manter lazy loading do ChatWindow e Suspense boundaries
-<!-- GSD:project-end -->
-
-<!-- GSD:stack-start source:STACK.md -->
-## Technology Stack
-
-- **Framework**: Next.js 16 (App Router, Turbopack, Server Actions, React 19)
-- **Linguagem**: TypeScript 5 (strict mode)
-- **Estilização**: Tailwind CSS 4 + CSS variables OKLCH em `globals.css`
-- **Componentes**: shadcn/ui + Design System "Glass Briefing" (`GlassPanel`, `Heading`, `Text`, `TabPills`)
-- **Backend**: Supabase (PostgreSQL + RLS + pgvector), Redis
-- **Design Tokens**: `src/lib/design-system/tokens.ts` (spacing, typography, opacity, layout)
-- **Fonts**: Inter (body), Montserrat (heading), Manrope (headline/display), Geist Mono (mono)
-<!-- GSD:stack-end -->
-
-<!-- GSD:conventions-start source:CONVENTIONS.md -->
-## Conventions
-
-- **Cores**: Sempre via CSS variables (`bg-primary`, `text-muted-foreground`) — nunca `bg-blue-500` ou `#hex`
-- **Glass Depth**: `GlassPanel depth={1}` (containers) → `depth={2}` (KPIs) → `depth={3}` (ênfase)
-- **Tipografia**: `Heading level="page|section|card"` e `Text variant="label|caption|kpi-value"` — sem tamanhos avulsos
-- **Espaçamento**: Grid 4px via `SPACING`/`SEMANTIC_SPACING` de `tokens.ts`
-- **Opacidade**: Escala semântica de `OPACITY_SCALE` (subtle → emphasis) — sem valores arbitrários
-- **Componentes**: Verificar `@/components/shared/` e `@/components/ui/` antes de criar novos
-- **Dialogs**: Classes `glass-dialog` + `glass-dialog-overlay` para consistência visual
-- **Dark mode**: Obrigatório — CSS variables já têm override `.dark`, não criar lógica manual
-<!-- GSD:conventions-end -->
-
-<!-- GSD:architecture-start source:ARCHITECTURE.md -->
-## Architecture
-
-Architecture not yet mapped. Follow existing patterns found in the codebase.
-<!-- GSD:architecture-end -->
-
-<!-- GSD:workflow-start source:GSD defaults -->
-## Workflow
-
-Edit directly. Não é necessário invocar GSD antes de Edit/Write.
-<!-- GSD:workflow-end -->
-
-<!-- GSD:profile-start -->
-## Developer Profile
-
-> Profile not yet configured. Run `/gsd:profile-user` to generate your developer profile.
-> This section is managed by `generate-claude-profile` -- do not edit manually.
-<!-- GSD:profile-end -->
