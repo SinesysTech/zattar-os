@@ -8,6 +8,7 @@
 import * as React from 'react';
 import { ChevronRight, Folder, FolderOpen, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Text } from '@/components/ui/typography';
 import { Button } from '@/components/ui/button';
 import { useFolders } from '../hooks/use-folders';
 import type { PastaHierarquia, PastaComContadores } from '../domain';
@@ -134,7 +135,7 @@ export function FolderTree({ onFolderSelect, selectedFolderId }: FolderTreeProps
         onClick={() => onFolderSelect(null)}
       >
         <Home className="h-4 w-4" />
-        <span className="text-sm">Todos os documentos</span>
+        <Text variant="label" as="span">Todos os documentos</Text>
       </Button>
 
       {/* Pastas */}

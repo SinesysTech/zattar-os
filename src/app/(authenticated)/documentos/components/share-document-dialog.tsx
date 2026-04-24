@@ -6,6 +6,7 @@
 
 import * as React from 'react';
 import { Search, UserPlus, X, Users, Mail, Trash2, Shield} from 'lucide-react';
+import { Text } from '@/components/ui/typography';
 import {
   ResponsiveDialog,
   ResponsiveDialogContent,
@@ -279,9 +280,9 @@ export function ShareDocumentDialog({
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium truncate">
+                          <Text variant="label" as="p" className="font-medium truncate">
                             {usuario.nomeExibicao || usuario.nomeCompleto}
-                          </p>
+                          </Text>
                           {usuario.emailCorporativo && (
                             <p className="text-xs text-muted-foreground truncate">
                               {usuario.emailCorporativo}

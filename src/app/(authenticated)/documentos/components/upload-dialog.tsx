@@ -6,6 +6,7 @@
 
 import * as React from 'react';
 import { Upload, File, X} from 'lucide-react';
+import { Text } from '@/components/ui/typography';
 import {
   ResponsiveDialog,
   ResponsiveDialogContent,
@@ -193,7 +194,7 @@ export function UploadDialog({
                 {uploading && (
                   <div className="mt-3 sm:mt-4 space-y-2">
                     <div className="flex items-center justify-between text-xs sm:text-sm">
-                      <span className="text-muted-foreground">Enviando...</span>
+                      <Text variant="caption" as="span" className="text-muted-foreground">Enviando...</Text>
                       <span className="font-medium">{progress}%</span>
                     </div>
                     <Progress value={progress} className="h-2" />

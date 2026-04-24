@@ -5,6 +5,7 @@
  */
 
 import * as React from 'react';
+import { Text } from '@/components/ui/typography';
 import {
   Dialog,
   DialogContent,
@@ -131,11 +132,11 @@ export function CreateFolderDialog({
                   <SelectItem value="privada">Privada (apenas para mim)</SelectItem>
                 </SelectContent>
               </Select>
-              <p className="text-xs text-muted-foreground">
+              <Text variant="caption" className="text-muted-foreground">
                 {tipo === 'comum'
                   ? 'Todos os usuários poderão ver esta pasta'
                   : 'Apenas você poderá ver esta pasta'}
-              </p>
+              </Text>
             </div>
 
             <div className="space-y-2">

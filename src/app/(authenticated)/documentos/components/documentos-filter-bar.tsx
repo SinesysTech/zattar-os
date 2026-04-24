@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { Check, ChevronDown, X } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Text } from '@/components/ui/typography';
 import {
   Command,
   CommandEmpty,
@@ -219,7 +220,7 @@ function CriadorFilter({
           </div>
           <CommandList className="max-h-52 px-1.5 pb-1.5">
             <CommandEmpty>
-              <span className="text-[11px] text-muted-foreground/40">Não encontrado</span>
+              <Text variant="caption" as="span" className="text-muted-foreground/40">Não encontrado</Text>
             </CommandEmpty>
             <CommandGroup>
               {criadores.map((criador) => (

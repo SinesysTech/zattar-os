@@ -6,6 +6,7 @@
 
 import * as React from 'react';
 import { FileText, MoreVertical, Share2, Trash2 } from 'lucide-react';
+import { Text } from '@/components/ui/typography';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import {
@@ -87,7 +88,7 @@ export function DocumentTable({ documentos, onDocumentoClick }: DocumentTablePro
                     )}
                   </div>
                 ) : (
-                  <span className="text-sm text-muted-foreground">—</span>
+                  <Text variant="caption" as="span" className="text-muted-foreground">—</Text>
                 )}
               </TableCell>
               <TableCell>

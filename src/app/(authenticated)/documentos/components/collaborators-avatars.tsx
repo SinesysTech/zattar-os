@@ -7,6 +7,7 @@
 
 import * as React from 'react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Text } from '@/components/ui/typography';
 import {
   Tooltip,
   TooltipContent,
@@ -44,7 +45,7 @@ export function CollaboratorsAvatars({ collaborators }: CollaboratorsAvatarsProp
             </TooltipTrigger>
             <TooltipContent>
               <p className="font-medium">{collab.name}</p>
-              <p className="text-xs text-muted-foreground">Editando agora</p>
+              <Text variant="caption" className="text-muted-foreground">Editando agora</Text>
             </TooltipContent>
           </Tooltip>
         ))}
