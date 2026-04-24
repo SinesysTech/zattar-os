@@ -8,12 +8,14 @@ import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { actionBulkBaixar, type ActionResult } from '../actions';
+import type { Expediente } from '../domain';
+import { BulkSelectionPreview } from './bulk-selection-preview';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
 interface ExpedientesBulkBaixarDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  expedienteIds: number[];
+  selectedExpedientes: Expediente[];
   onSuccess: () => void;
 }
 
@@ -26,10 +28,14 @@ const initialState: ActionResult = {
 export function ExpedientesBulkBaixarDialog({
   open,
   onOpenChange,
-  expedienteIds,
+  selectedExpedientes,
   onSuccess,
 }: ExpedientesBulkBaixarDialogProps) {
   const [justificativa, setJustificativa] = React.useState('');
+  const expedienteIds = React.useMemo(
+    () => selectedExpedientes.map((e) => e.id),
+    [selectedExpedientes]
+  );
   const actionWithIds = React.useCallback(
     async (prevState: ActionResult | null, formData: FormData) => {
       return actionBulkBaixar(expedienteIds, prevState, formData);
@@ -96,6 +102,7 @@ export function ExpedientesBulkBaixarDialog({
       footer={footerButtons}
     >
       <form id="bulk-baixar-form" onSubmit={handleSubmit} className="space-y-4">
+        <BulkSelectionPreview expedientes={selectedExpedientes} />
         <div className="space-y-2">
           <Label htmlFor="justificativaBaixa">
             Justificativa da Baixa <span className="text-destructive">*</span>

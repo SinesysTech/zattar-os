@@ -8,6 +8,8 @@ import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { toast } from 'sonner';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { actionBulkTransferirResponsavel, type ActionResult } from '../actions';
+import type { Expediente } from '../domain';
+import { BulkSelectionPreview } from './bulk-selection-preview';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
 interface Usuario {
@@ -18,7 +20,7 @@ interface Usuario {
 interface ExpedientesBulkTransferirDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  expedienteIds: number[];
+  selectedExpedientes: Expediente[];
   usuarios: Usuario[];
   onSuccess: () => void;
 }
@@ -32,11 +34,15 @@ const initialState: ActionResult = {
 export function ExpedientesBulkTransferirDialog({
   open,
   onOpenChange,
-  expedienteIds,
+  selectedExpedientes,
   usuarios,
   onSuccess,
 }: ExpedientesBulkTransferirDialogProps) {
   const [responsavelId, setResponsavelId] = React.useState<string>('');
+  const expedienteIds = React.useMemo(
+    () => selectedExpedientes.map((e) => e.id),
+    [selectedExpedientes]
+  );
   const actionWithIds = React.useCallback(
     async (prevState: ActionResult | null, formData: FormData) => {
       return actionBulkTransferirResponsavel(expedienteIds, prevState, formData);
@@ -107,6 +113,7 @@ export function ExpedientesBulkTransferirDialog({
       footer={footerButtons}
     >
       <form id="bulk-transferir-form" onSubmit={handleSubmit} className="space-y-4">
+        <BulkSelectionPreview expedientes={selectedExpedientes} />
         <div className="space-y-2">
           <Label htmlFor="responsavelId">Novo Responsável</Label>
           <Select

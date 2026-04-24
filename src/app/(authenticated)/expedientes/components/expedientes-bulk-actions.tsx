@@ -23,7 +23,6 @@ export function ExpedientesBulkActions({
   const [isBaixarOpen, setIsBaixarOpen] = React.useState(false);
 
   const selectedCount = selectedRows.length;
-  const selectedIds = selectedRows.map((row) => row.id);
 
   if (selectedCount === 0) {
     return null;
@@ -60,7 +59,7 @@ export function ExpedientesBulkActions({
       <ExpedientesBulkTransferirDialog
         open={isTransferirOpen}
         onOpenChange={setIsTransferirOpen}
-        expedienteIds={selectedIds}
+        selectedExpedientes={selectedRows}
         usuarios={usuarios}
         onSuccess={() => {
           onSuccess();
@@ -71,7 +70,7 @@ export function ExpedientesBulkActions({
       <ExpedientesBulkBaixarDialog
         open={isBaixarOpen}
         onOpenChange={setIsBaixarOpen}
-        expedienteIds={selectedIds}
+        selectedExpedientes={selectedRows}
         onSuccess={() => {
           onSuccess();
           setIsBaixarOpen(false);
