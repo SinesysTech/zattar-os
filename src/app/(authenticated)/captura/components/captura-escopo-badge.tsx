@@ -100,7 +100,7 @@ export function CapturaEscopoBadge({
         <ul className="px-3 py-2 grid grid-cols-2 gap-x-3 gap-y-1 max-h-56 overflow-y-auto">
           {detalhes.map((d, idx) => (
             <li key={`${d.tribunal}-${d.grau}-${idx}`} className="flex items-center gap-1.5">
-              <span className="inline-flex items-center px-1.5 py-0.5 rounded-[4px] text-[9px] font-semibold tabular-nums border border-border/15 bg-muted/20 text-muted-foreground tracking-wide">
+              <span className="inline-flex items-center px-1.5 py-0.5 rounded-lg text-[9px] font-semibold tabular-nums border border-border/15 bg-muted/20 text-muted-foreground tracking-wide">
                 {d.tribunal}
               </span>
               <span className="text-[10px] text-muted-foreground/80">{formatarGrau(d.grau)}</span>

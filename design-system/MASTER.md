@@ -2,7 +2,10 @@
 
 > **Single Source of Truth** para todas as decisões visuais do Zattar OS.
 > Arquitetura alinhada com **DTCG v2025.10** (Design Tokens Community Group, W3C) e **Tailwind CSS v4** (`@theme inline`).
-> Última revisão: 2026-04-22 · Versão: **2.0.0**
+> Última revisão: 2026-04-24 · Versão: **3.0.0** · Linguagem visual: **Zattar**
+> Base de referência visual: [`DESIGN-stripe (1).md`](../DESIGN-stripe%20(1).md) — fonte de inspiração externa. Os valores foram absorvidos e renomeados para o domínio Zattar; a partir daqui, o MASTER é a autoridade.
+
+> ⚠️ **Breaking change 2.x → 3.0** — o ZattarOS abandonou a linguagem "Glass Briefing" (glassmorphism com blur + transparência) e adotou a **Linguagem Zattar**: superfícies opacas brancas, hierarquia por sombras azuladas multicamada, paleta ancorada em Zattar Purple `#533afd` e Deep Navy `#061b31`. O componente `<GlassPanel>` e as classes `.glass-*` foram preservados como API pública, mas o tratamento visual interno foi inteiramente reescrito. A escala tipográfica agora usa **weight 300 como assinatura** em display sizes, com OpenType `ss01` habilitado em todo texto.
 
 ---
 
@@ -19,7 +22,7 @@
 9. [Bordas e Raio](#9-bordas-e-raio)
 10. [Sombras e Elevação](#10-sombras-e-elevação)
 11. [Ícones](#11-ícones)
-12. [Sistema Glass](#12-sistema-glass)
+12. [Sistema de Elevação (ex-Glass)](#12-sistema-de-elevação-ex-glass)
 13. [Patterns de Página](#13-patterns-de-página)
 14. [Animações](#14-animações)
 15. [Responsividade](#15-responsividade)
@@ -37,950 +40,623 @@
 
 ## 1. Manifesto
 
-### O que somos
+O ZattarOS é um sistema corporativo para firmas legais. Seu design precisa refletir **precisão técnica** e **autoridade financeira** — uma linguagem visual ancorada em confiança institucional e sofisticação tipográfica.
 
-Zattar OS é um sistema de gestão jurídica para escritórios brasileiros. Não é um SaaS genérico, não é um dashboard corporativo frio. É a **mesa de trabalho digital** de um advogado — precisa ser funcional como uma ferramenta de precisão e ter a presença visual de um escritório premium.
+### Cinco princípios não-negociáveis
 
-### Princípios de Design
+1. **Leveza como assinatura.** O peso tipográfico padrão em display sizes é **300** (thin). Onde sistemas convencionais gritam em 700 bold, o ZattarOS sussurra em 300. A tipografia só precisa ser autoritativa quando o conteúdo também é.
+2. **Profundidade por cor, não por transparência.** A elevação é comunicada por **sombras azul-tintadas multicamada** (`rgba(50,50,93,0.25)`), não por `backdrop-blur`. Cards são **opacos** e brancos, não translúcidos. Isso é a inversão deliberada do antigo "Glass Briefing".
+3. **Zattar Purple como âncora interativa.** `#533afd` é o único roxo. É o CTA primário, o link, o estado selecionado, a borda de foco. Ruby `#ea2261` e Magenta `#f96bee` existem **apenas como acentos decorativos** em gradientes hero e ilustrações — nunca em botões ou links.
+4. **Raios conservadores (4–8px).** Nada de pill (`rounded-full`) em cards ou botões. Nada de `rounded-2xl` (16px) no default. O raio de trabalho é **4px**, com variações até 8px para elementos hero.
+5. **`ss01` em todo texto sans-serif, `tnum` em toda coluna numérica.** A feature OpenType `ss01` modifica glifos (`a`, `g`, `l`) para um desenho mais geométrico. É a "impressão digital" tipográfica do sistema. `tnum` garante alinhamento vertical de números em tabelas financeiras. Os dois modos **nunca se sobrepõem**.
 
-| # | Princípio | Significado |
-|---|-----------|-------------|
-| 1 | **Vidro sobre pedra** | Glass morphism sutil sobre fundação sólida. Transparência para elegância, nunca para confusão |
-| 2 | **Dados primeiro, decoração nunca** | Cada pixel serve informação. Sem badges fake, sem teatro corporativo |
-| 3 | **Roxo com propósito** | O roxo Zattar (`#5523eb`) aparece apenas onde há intenção — CTAs, foco, estados ativos |
-| 4 | **Hierarquia por opacidade** | Não multiplicamos cores; usamos opacidade do mesmo token para criar profundidade |
-| 5 | **Mobile-honest** | Responsive real — escondemos o que não cabe, nunca comprimimos até ficar ilegível |
-| 6 | **Tipografia é arquitetura** | Montserrat para títulos, Inter para o conteúdo que importa |
-| 7 | **Animação é feedback, não espetáculo** | 150-300ms, transform/opacity apenas. Respeitar `prefers-reduced-motion` |
-| 8 | **Tokens > classes > hex** | Semantic tokens vencem utility classes vencem valores literais — nunca o inverso |
+### O que o ZattarOS **não é**
 
-### Personalidade Visual
-
-- **Tom**: Profissional-premium, nunca corporativo-frio
-- **Densidade**: Alta (informação densa com espaçamento preciso)
-- **Contraste**: Forte em light mode, sutil em dark mode
-- **Estética**: Glass Briefing — vidro fosco com bordas sutis e sombras de ambiente
-- **Tint**: Todos os neutros carregam micro-tint roxo (hue 281°, croma 0.005–0.01)
+- Não é glassmorphism. Não há `backdrop-filter: blur()` em containers primários.
+- Não é minimalista vazio. O whitespace é **mensurado**, não oceânico. Dados densos, chrome generoso.
+- Não é Material 3. Apesar de preservarmos tokens `surface-container-*` para interop com shadcn/ui, a hierarquia MD3 é subordinada ao sistema Zattar.
+- Não é "corporate light blue". O azul aqui é **navy profundo** (`#061b31`), não clear-sky.
 
 ---
 
 ## 2. Arquitetura de Tokens
 
-O Zattar OS segue a hierarquia de tokens **DTCG v2025.10**: três camadas de abstração crescente de propósito.
+Três camadas, cada uma com um papel discreto:
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│  CAMADA 3 — COMPONENT TOKENS                            │
-│  ────────────────────────────                           │
-│  Aplicação específica a um componente                   │
-│  Ex: --widget-radius, --tab-pill-active-bg              │
-│  Consome: Semantic Tokens                               │
-└─────────────────────────────────────────────────────────┘
-                            ▲
-                            │
-┌─────────────────────────────────────────────────────────┐
-│  CAMADA 2 — SEMANTIC TOKENS                             │
-│  ───────────────────────────                            │
-│  Propósito e intenção (independente de valor)           │
-│  Ex: --primary, --destructive, --success                │
-│  Consome: Reference Tokens                              │
-└─────────────────────────────────────────────────────────┘
-                            ▲
-                            │
-┌─────────────────────────────────────────────────────────┐
-│  CAMADA 1 — REFERENCE TOKENS (CORE)                     │
-│  ────────────────────────────────                       │
-│  Valores brutos OKLCH, imutáveis                        │
-│  Ex: oklch(0.48 0.26 281) (Zattar Purple)               │
-│  Consome: nada                                          │
-└─────────────────────────────────────────────────────────┘
+┌─ Reference (Core) ─┐    ┌─ Semantic ──────┐    ┌─ Component ──┐
+│ --zattar-purple    │ →  │ --primary       │ →  │ --btn-bg     │
+│ --navy-900         │    │ --foreground    │    │ --input-ring │
+│ --slate-500        │    │ --muted         │    │ --card-shadow│
+└────────────────────┘    └─────────────────┘    └──────────────┘
 ```
 
-### Regras de direção
+| Camada | Papel | Exemplo | Localização canônica |
+|---|---|---|---|
+| **Reference** | Valor bruto (hex/OKLCH), nunca referenciado direto por componentes | `--zattar-purple-500: oklch(0.52 0.27 276)` | [src/app/globals.css:233+](src/app/globals.css) (`:root` block) |
+| **Semantic** | Papel na UI, referencia Reference | `--primary: var(--zattar-purple-500)` | [src/app/globals.css:233+](src/app/globals.css) (`:root` block) |
+| **Component** | Derivação por componente, referencia Semantic | `--btn-primary-bg: var(--primary)` | [src/components/ui/button.tsx](src/components/ui/button.tsx) (inline) |
 
-1. **Component tokens** DEVEM consumir semantic tokens.
-2. **Semantic tokens** DEVEM consumir reference tokens.
-3. Componentes React DEVEM consumir **semantic ou component tokens**, nunca reference tokens diretos.
-4. **Hex literais e valores OKLCH inline são proibidos** em `.tsx/.ts/.css` fora de `globals.css`.
+**Regra**: componentes consomem **apenas semantic tokens** ou utilities Tailwind que resolvem para semantic (`bg-primary`, `text-foreground`). Nunca Reference direto. Nunca hex literal.
 
-### Pontos de Truth
+### Espelhamento TS
 
-| Fonte | O que contém | Autoridade |
-|---|---|---|
-| [`src/app/globals.css`](../src/app/globals.css) — `:root` + `.dark` + `@theme inline` | **202 CSS variables primárias** + ~140 aliases `@theme inline` gerados pelo Tailwind v4 | **CANÔNICA** |
-| [`src/lib/design-system/tokens.ts`](../src/lib/design-system/tokens.ts) | Espelho TypeScript read-only com tipo tipado das keys | Espelho |
-| [`design-system/MASTER.md`](./MASTER.md) | Esta documentação + governance | Fonte narrativa |
-| [`tailwind.config.ts`](../tailwind.config.ts) | Apenas plugins (ex: `tailwindcss-animate`) — **não contém tokens** | Legacy |
-
-> **Tailwind v4**: as cores/fontes são lidas de `@theme inline` em `globals.css`, não de `tailwind.config.ts`. Qualquer token adicionado no `.ts` é ignorado para utility generation.
+- [src/lib/design-system/tokens.ts](src/lib/design-system/tokens.ts) — exporta `SPACING`, `TYPOGRAPHY`, `OPACITY_SCALE`, `LAYOUT`, `STRIPE_PALETTE`, `ELEVATION` para consumo programático
+- [src/lib/design-system/token-registry.ts](src/lib/design-system/token-registry.ts) — lista tipada de todos os tokens existentes (usado pelo audit)
+- [tailwind.config.ts](tailwind.config.ts) — apenas plugins e overrides mínimos; Tailwind v4 lê cores do `@theme inline` em `globals.css`
 
 ---
 
 ## 3. Reference Tokens (Core)
 
-Todas as cores usam **OKLCH** com hue 281° (Zattar Purple) como âncora tonal. Neutros possuem micro-tint do primary para coesão.
+### 3.1 Paleta base Zattar
 
-**Fórmula**: `oklch(Lightness Chroma Hue / Alpha)`
+Todos os valores em hex e OKLCH equivalente (para o `:root` do `globals.css`).
 
-### 3.1 Âncoras de Marca
+#### Primary Purple
 
-| Token conceitual | Light | Dark | Hex aproximado |
+| Token | Hex | OKLCH | Uso |
 |---|---|---|---|
-| Brand Primary | `oklch(0.48 0.26 281)` | `oklch(0.70 0.20 281)` | `#5523eb` / `#9f85ff` |
-| Action Orange | `oklch(0.60 0.22 45)` | `oklch(0.70 0.20 45)` | `#e67e40` / `#e88a4a` |
-| Hue Tonal | `281°` | `281°` | (roxo Zattar) |
+| `--zattar-purple-500` | `#533afd` | `oklch(0.52 0.27 276)` | CTA primário, links, estado selecionado |
+| `--zattar-purple-600` | `#4434d4` | `oklch(0.45 0.25 276)` | Hover do primário |
+| `--zattar-purple-700` | `#2e2b8c` | `oklch(0.30 0.21 276)` | Ícone em hover profundo |
+| `--zattar-purple-400` | `#665efd` | `oklch(0.55 0.22 275)` | Highlight de range/input |
+| `--zattar-purple-300` | `#b9b9f9` | `oklch(0.78 0.10 276)` | Border ativa, subdued hover |
+| `--zattar-purple-200` | `#d6d9fc` | `oklch(0.89 0.04 275)` | Borders suaves secundárias |
+| `--zattar-purple-900` | `#362baa` | `oklch(0.33 0.18 275)` | Dashed border, drop zones |
 
-### 3.2 User Palette (18 cores)
+#### Deep Navy & Text
 
-Escala cromatic wheel OKLCH para tags, labels de eventos, cores configuráveis pelo usuário. Luminosidade perceptualmente uniforme (`L ≈ 0.65`), croma 0.18 para contraste WCAG AA em superfícies claras. Definidas uma única vez (sem dark override — são pigmentos de usuário).
-
-| Token | Hue | Descrição | Uso |
+| Token | Hex | OKLCH | Uso |
 |---|---|---|---|
-| `--palette-1` | 25° | vermelho | `#ED4949` |
-| `--palette-2` | 50° | laranja | `#ED7E40` |
-| `--palette-3` | 75° | âmbar | `#E5A23A` |
-| `--palette-4` | 95° | amarelo | `#DAB52D` |
-| `--palette-5` | 130° | lima | `#9FBE3E` |
-| `--palette-6` | 145° | verde | `#4FB04F` |
-| `--palette-7` | 160° | esmeralda | `#3DAF7A` |
-| `--palette-8` | 180° | teal | `#3DAFA6` |
-| `--palette-9` | 210° | ciano | `#3DA8C7` |
-| `--palette-10` | 230° | azul claro | `#3D90D6` |
-| `--palette-11` | 255° | azul | `#3D6BD6` |
-| `--palette-12` | 275° | índigo | `#4D55E0` |
-| `--palette-13` | 295° | violeta | `#6E48E0` |
-| `--palette-14` | 310° | roxo | `#8E48E0` |
-| `--palette-15` | 330° | fúcsia | `#C449D6` |
-| `--palette-16` | 0° | pink | `#D6498F` |
-| `--palette-17` | 15° | rosa | `#DA4566` |
-| `--palette-18` | 281° (gray) | cinza neutro | `#6B6B70` |
+| `--navy-heading` | `#061b31` | `oklch(0.21 0.045 253)` | **Todo heading, nav text, strong label**. Substitui `#000000`. |
+| `--navy-label` | `#273951` | `oklch(0.32 0.045 253)` | Form labels, subheadings |
+| `--navy-body` | `#64748d` | `oklch(0.54 0.03 250)` | Body text, descrições, captions |
+| `--navy-975` | `#0d253d` | `oklch(0.25 0.045 253)` | Darkest neutral (quase-black azulado) |
 
-Fonte: [`globals.css:759-794`](../src/app/globals.css#L759-L794)
+#### Brand Dark
+
+| Token | Hex | OKLCH | Uso |
+|---|---|---|---|
+| `--brand-dark-900` | `#1c1e54` | `oklch(0.22 0.10 275)` | Seções brand imersivas, footer, **base do dark mode** |
+
+#### Accent Colors (decorativos apenas)
+
+| Token | Hex | OKLCH | Uso |
+|---|---|---|---|
+| `--accent-ruby` | `#ea2261` | `oklch(0.58 0.25 15)` | Ícones, gradientes decorativos |
+| `--accent-magenta` | `#f96bee` | `oklch(0.73 0.25 330)` | Gradientes, decoração hero |
+| `--accent-magenta-100` | `#ffd7ef` | `oklch(0.92 0.08 340)` | Surfaces tintadas, badges temáticos |
+
+#### Status
+
+| Token | Hex | OKLCH | Uso |
+|---|---|---|---|
+| `--success-500` | `#15be53` | `oklch(0.70 0.20 145)` | Badge de sucesso |
+| `--success-700` | `#108c3d` | `oklch(0.55 0.18 150)` | Texto em badge de sucesso |
+| `--warning-600` | `#9b6829` | `oklch(0.52 0.10 65)` | Destaque lemon (warning/highlight) |
+
+#### Borders & Surface
+
+| Token | Hex | OKLCH | Uso |
+|---|---|---|---|
+| `--border-default` | `#e5edf5` | `oklch(0.94 0.01 245)` | Borda padrão de cards, dividers |
+| `--surface-white` | `#ffffff` | `oklch(1 0 0)` | Background de página, card base |
+
+#### Shadow Colors (literais)
+
+Estas ficam como literais RGBA — OKLCH em box-shadow tem suporte incompleto em browsers 2025.
+
+| Token | Valor | Uso |
+|---|---|---|
+| `--shadow-zattar-blue` | `rgba(50, 50, 93, 0.25)` | Sombra primária (far shadow) |
+| `--shadow-zattar-deep` | `rgba(3, 3, 39, 0.25)` | Sombra profunda (modais) |
+| `--shadow-neutral` | `rgba(0, 0, 0, 0.1)` | Sombra secundária (near shadow) |
+| `--shadow-ambient` | `rgba(23, 23, 23, 0.08)` | Ambient lift suave |
+| `--shadow-soft` | `rgba(23, 23, 23, 0.06)` | Lift mínimo |
+| `--shadow-top-sticky` | `rgba(0, 55, 112, 0.08)` | Sticky header shadow |
 
 ---
 
 ## 4. Semantic Tokens
 
-### 4.1 Core Palette
+Camada semântica que componentes consomem. Definida em `:root` de [src/app/globals.css](src/app/globals.css).
 
-| Token | Light | Dark | Propósito |
+### 4.1 Núcleo shadcn (obrigatório)
+
+Dark mode segue a receita literal da "dark brand section" (seção 6.2). Todo semantic que não é explicitamente redefinido no DESIGN MD herda alpha-white sobre `--brand-dark-900`, mantendo coerência com a vocabulary do documento de referência.
+
+| Semantic | Light (`:root`) | Dark (`.dark`) | Usage |
 |---|---|---|---|
-| `--background` | `oklch(0.96 0.01 281)` | `oklch(0.17 0.005 281)` | Canvas principal |
-| `--foreground` | `oklch(0.15 0.01 281)` | `oklch(0.98 0 0)` | Texto principal |
-| `--card` | `oklch(1.0 0 0)` | `oklch(0.22 0.005 281)` | Fundo de cards |
-| `--card-foreground` | `oklch(0.15 0.01 281)` | `oklch(0.98 0 0)` | Texto de cards |
-| `--popover` | `oklch(1.0 0 0)` | `oklch(0.22 0.005 281)` | Fundo de popovers |
-| `--primary` | `oklch(0.48 0.26 281)` | `oklch(0.70 0.20 281)` | CTAs, links, foco, estados ativos |
-| `--primary-foreground` | `oklch(1.0 0 0)` | `oklch(0.15 0.10 281)` | Texto sobre primary |
-| `--secondary` | `oklch(0.95 0.04 281)` | `oklch(0.28 0.01 281)` | Accent suave, purple wash |
-| `--muted` | `oklch(0.92 0.01 281)` | `oklch(0.28 0.005 281)` | Fundos desabilitados |
-| `--muted-foreground` | `oklch(0.42 0.01 281)` | `oklch(0.65 0.005 281)` | Texto secundário |
-| `--accent` | `oklch(0.95 0.04 281)` | `oklch(0.28 0.01 281)` | Hover states |
-| `--border` | `oklch(0.87 0.01 281)` | `oklch(1 0 0 / 0.12)` | Bordas de containers |
-| `--input` | `oklch(0.87 0.01 281)` | `oklch(1 0 0 / 0.12)` | Bordas de inputs |
-| `--ring` | `transparent` | `transparent` | Anel de foco (desabilitado intencionalmente) |
-| `--brand` | `oklch(0.48 0.26 281)` | `oklch(0.70 0.20 281)` | Referência pura da marca |
-| `--highlight` | `oklch(0.60 0.22 45)` | `oklch(0.70 0.20 45)` | Badges de ação, alertas que pedem atenção |
+| `--background` | `--surface-white` (`#ffffff`) | `--brand-dark-900` (`#1c1e54`) | Page background |
+| `--foreground` | `--navy-heading` (`#061b31`) | `#ffffff` | Body text |
+| `--card` | `--surface-white` | `--brand-dark-900` | Card surface (dark herda bg) |
+| `--card-foreground` | `--navy-heading` | `#ffffff` | Card text |
+| `--popover` | `--surface-white` | `--brand-dark-900` | Popover surface |
+| `--popover-foreground` | `--navy-heading` | `#ffffff` | Popover text |
+| `--primary` | `--zattar-purple-500` (`#533afd`) | `--zattar-purple-500` | CTA, link, selected — **não muda no dark** |
+| `--primary-foreground` | `#ffffff` | `#ffffff` | Text on primary |
+| `--secondary` | `oklch(0.96 0.005 250)` | `rgba(255,255,255,0.06)` | Secondary button bg |
+| `--secondary-foreground` | `--navy-heading` | `#ffffff` | Text on secondary |
+| `--muted` | `oklch(0.97 0.005 245)` | `rgba(255,255,255,0.04)` | Muted bg |
+| `--muted-foreground` | `--navy-body` (`#64748d`) | `rgba(255,255,255,0.7)` | Muted text |
+| `--accent` | `oklch(0.96 0.005 250)` | `rgba(255,255,255,0.08)` | Hover/focus bg |
+| `--accent-foreground` | `--zattar-purple-500` | `--zattar-purple-500` | Accent text |
+| `--destructive` | `--accent-ruby` (`#ea2261`) | `--accent-ruby` | Destructive action |
+| `--destructive-foreground` | `#ffffff` | `#ffffff` | Text on destructive |
+| `--border` | `--border-default` (`#e5edf5`) | `rgba(255,255,255,0.1)` | Default border (literal do MD) |
+| `--input` | `--border-default` | `rgba(255,255,255,0.1)` | Input border |
+| `--ring` | `--zattar-purple-500` | `--zattar-purple-500` | Focus ring |
 
-### 4.2 Status Semânticos
+### 4.2 Status
 
-| Token | Light | Dark | Uso |
+| Semantic | Light | Dark | Usage |
 |---|---|---|---|
-| `--success` | `oklch(0.55 0.18 145)` | `oklch(0.70 0.18 145)` | Concluído, ativo, positivo |
-| `--success-foreground` | `oklch(1.0 0 0)` | `oklch(0.98 0 0)` | Texto sobre success |
-| `--warning` | `oklch(0.60 0.18 75)` | `oklch(0.78 0.16 85)` | Atenção, pendente, suspense |
-| `--warning-foreground` | `oklch(1.0 0 0)` | `oklch(0.15 0 0)` | Texto sobre warning |
-| `--info` | `oklch(0.55 0.18 250)` | `oklch(0.70 0.18 250)` | Informacional, terceiros |
-| `--info-foreground` | `oklch(1.0 0 0)` | `oklch(0.98 0 0)` | Texto sobre info |
-| `--destructive` | `oklch(0.55 0.22 25)` | `oklch(0.65 0.20 25)` | Erro, cancelado, perigoso |
-| `--destructive-foreground` | `oklch(1.0 0 0)` | `oklch(1.0 0 0)` | Texto sobre destructive |
+| `--success` | `--success-500` (`#15be53`) | `--success-500` | Success states |
+| `--success-foreground` | `--success-700` (`#108c3d`) | `#ffffff` | Success text |
+| `--warning` | `--warning-600` (`#9b6829`) | `--warning-600` | Warning states |
+| `--warning-foreground` | `#ffffff` | `#ffffff` | Warning text |
+| `--info` | `--zattar-purple-500` | `--zattar-purple-500` | Info states (reusa primary) |
+| `--info-foreground` | `#ffffff` | `#ffffff` | Info text |
 
-**Utility classes** em `@layer utilities`:
+### 4.3 Brand (legacy compat)
 
-- `.text-status-{success|warning|error|info}` — apenas cor de texto
-- `.bg-status-{success|warning|error|info}` — background soft (10% opacity) + cor de texto
-
-### 4.3 Sidebar (Premium dark-always)
-
-| Token | Light | Dark |
-|---|---|---|
-| `--sidebar` | `oklch(0.22 0.01 281)` | `oklch(0.17 0.005 281)` |
-| `--sidebar-foreground` | `oklch(0.98 0 0)` | `oklch(0.98 0 0)` |
-| `--sidebar-primary` | `oklch(0.70 0.20 281)` | `oklch(0.70 0.20 281)` |
-| `--sidebar-primary-foreground` | `oklch(1.0 0 0)` | `oklch(1.0 0 0)` |
-| `--sidebar-accent` | `oklch(0.30 0.01 281)` | `oklch(0.26 0.005 281)` |
-| `--sidebar-accent-foreground` | `oklch(1 0 0)` | `oklch(0.98 0 0)` |
-| `--sidebar-border` | `oklch(1 0 0 / 0.1)` | `oklch(1 0 0 / 0.1)` |
-| `--sidebar-ring` | `oklch(0.70 0.20 281)` | `oklch(0.70 0.20 281)` |
-
-### 4.4 Charts
-
-| Token | Light | Dark | Uso |
+| Semantic | Light | Dark | Usage |
 |---|---|---|---|
-| `--chart-1` | `oklch(0.48 0.26 281)` | `oklch(0.70 0.20 281)` | Primário (roxo) |
-| `--chart-2` | `oklch(0.60 0.22 45)` | `oklch(0.70 0.20 45)` | Secundário (laranja) |
-| `--chart-3` | `oklch(0.92 0.01 281)` | `oklch(0.35 0.005 281)` | Background/referência (cinza) |
-| `--chart-4` | `oklch(0.55 0.18 150)` | `oklch(0.65 0.18 150)` | Positivo (verde) |
-| `--chart-5` | `oklch(0.70 0.01 281)` | `oklch(0.50 0.005 281)` | Neutro (cinza médio) |
-| `--chart-6` | `oklch(0.65 0.15 200)` | `oklch(0.65 0.15 200)` | Ciano |
-| `--chart-7` | `oklch(0.60 0.18 320)` | `oklch(0.60 0.18 320)` | Magenta |
-| `--chart-8` | `oklch(0.70 0.12 80)` | `oklch(0.70 0.12 80)` | Amarelo |
+| `--brand` | `--zattar-purple-500` | `--zattar-purple-500` | Alias de `--primary` |
+| `--highlight` | `--accent-ruby` | `--accent-ruby` | **Descontinuado como UI** — só decoração. Badges/elementos que usavam `--highlight` migram para `--primary` ou `--warning`. |
 
-**Derivados** (light/dark via `oklch(from ...)`):
+### 4.4 Surface (hierarquia Zattar)
 
-- `--chart-primary-soft` · `--chart-destructive-soft` · `--chart-warning-soft` · `--chart-success-soft` · `--chart-muted-soft` — alphas 0.35–0.50 para preenchimento de treemaps/funnels
-- `--chart-success-dark` · `--chart-warning-dark` — 5% mais escuros para contraste em stacked bars
+Sem blur. Sem transparência. Cada surface é opaca, diferenciada por sombra.
 
-### 4.5 Material Design 3 (Surface & Tonal)
-
-Escala MD3 completa — neutros tintados com hue 281° e croma 0.005-0.01.
-
-**Surface Hierarchy (9 tokens)**:
-
-| Token | Light | Dark | Uso |
+| Semantic | Light | Dark | Usage |
 |---|---|---|---|
-| `--surface` | `oklch(0.98 0.005 281)` | `oklch(0.12 0.005 281)` | Layer base |
-| `--surface-dim` | `oklch(0.90 0.005 281)` | `oklch(0.12 0.005 281)` | Surface atenuada |
-| `--surface-bright` | `oklch(1.0 0 0)` | `oklch(0.30 0.005 281)` | Surface ênfase |
-| `--surface-container-lowest` | `oklch(1.0 0 0)` | `oklch(0.06 0.005 281)` | Elevação -1 |
-| `--surface-container-low` | `oklch(0.97 0.005 281)` | `oklch(0.14 0.005 281)` | Elevação 0 |
-| `--surface-container` | `oklch(0.96 0.005 281)` | `oklch(0.17 0.005 281)` | Elevação 1 (padrão) |
-| `--surface-container-high` | `oklch(0.94 0.005 281)` | `oklch(0.20 0.005 281)` | Elevação 2 |
-| `--surface-container-highest` | `oklch(0.92 0.005 281)` | `oklch(0.24 0.005 281)` | Elevação 3 |
-| `--surface-variant` | `oklch(0.93 0.01 281)` | `oklch(0.24 0.01 281)` | Surface alternativa |
+| `--surface-1` | `--surface-white` | `oklch(0.25 0.06 275)` | Base surface (flat) |
+| `--surface-2` | `--surface-white` | `oklch(0.28 0.07 275)` | Elevated surface |
+| `--surface-3` | `--surface-white` | `oklch(0.32 0.08 275)` | Peak surface |
 
-Aliases rápidos (utility classes):
+### 4.5 Module namespaces (preservados)
 
-- `.bg-surface-1` → `var(--surface-1)`
-- `.bg-surface-2` → `var(--surface-2)`
-- `.bg-surface-3` → `var(--surface-3)`
-
-**Surface Foreground & Inverse**:
-
-- `--on-surface` / `--on-surface-variant`
-- `--inverse-surface` / `--inverse-on-surface`
-- `--outline` / `--outline-variant`
-
-**Primary Extended**: `--on-primary`, `--primary-container`, `--on-primary-container`, `--primary-fixed`, `--primary-fixed-dim`, `--on-primary-fixed`, `--on-primary-fixed-variant`
-
-**Secondary Extended**: mesmos 7 slots para secondary
-
-**Tertiary** (vermelho complementar hue 25°): `--tertiary`, `--on-tertiary`, `--tertiary-container`, `--on-tertiary-container`, `--tertiary-fixed`, `--tertiary-fixed-dim`, `--on-tertiary-fixed`, `--on-tertiary-fixed-variant`
-
-**Error Extended**: `--error-container`, `--on-error-container`, `--on-error`
-
-**Dim Variants**: `--primary-dim`, `--secondary-dim`, `--tertiary-dim`, `--error-dim`, `--inverse-primary`, `--surface-tint`
-
-> Total MD3: 38 tokens. Usar quando precisar de hierarquia de elevação rigorosa.
-
-### 4.6 Entidades de Domínio
-
-Cores semânticas por tipo de entidade jurídica, mapeadas a tokens de status:
-
-```css
---entity-cliente:         var(--primary);
---entity-parte-contraria: var(--warning);
---entity-terceiro:        var(--info);
---entity-representante:   var(--success);
-```
-
-| Tipo | Text | Background | Exemplo |
-|---|---|---|---|
-| Cliente | `text-primary/70` | `bg-primary/8` | Cards de cliente |
-| Parte Contrária | `text-warning/70` | `bg-warning/8` | Cards de parte contrária |
-| Terceiro | `text-info/70` | `bg-info/8` | Peritos, advogados, testemunhas |
-| Representante | `text-success/70` | `bg-success/8` | Representantes legais |
-
-### 4.7 Event Colors (Calendário)
-
-Mapeamento `palette → event` para fontes de evento de calendário:
-
-| Token | Aponta para | Semântica |
-|---|---|---|
-| `--event-audiencia` | `--palette-10` (azul claro) | Formal/oficial |
-| `--event-expediente` | `--palette-3` (âmbar) | Atenção/prazo |
-| `--event-obrigacao` | `--palette-2` (laranja) | Financeiro |
-| `--event-pericia` | `--palette-13` (violeta) | Técnico/expert |
-| `--event-agenda` | `--palette-12` (índigo) | Pessoal/neutro |
-| `--event-prazo` | `--palette-1` (vermelho) | Urgência |
-| `--event-default` | `--palette-11` (azul) | Fallback |
-
-### 4.8 Chat
-
-| Token | Light | Dark |
-|---|---|---|
-| `--chat-thread-bg` | `oklch(0.97 0.005 281)` | `oklch(0.15 0.005 281)` |
-| `--chat-bubble-received` | `oklch(1.0 0 0)` | `oklch(0.26 0.005 281)` |
-| `--chat-bubble-sent` | `var(--primary)` | `var(--primary)` |
-| `--chat-sidebar-active` | `oklch(0.95 0.04 281)` | `oklch(0.24 0.01 281)` |
-
-Utility classes: `.bg-chat-thread`, `.bg-chat-bubble-received`, `.bg-chat-bubble-sent`, `.bg-chat-sidebar-active`.
-
-### 4.9 Video Call (Always Dark)
-
-Videochamada ignora light/dark mode — sempre escura por demanda de contraste em vídeo.
-
-| Token | Valor |
-|---|---|
-| `--video-bg` | `oklch(0.145 0.005 281)` |
-| `--video-surface` | `oklch(0.21 0.005 281)` |
-| `--video-surface-hover` | `oklch(0.278 0.005 281)` |
-| `--video-border` | `oklch(0.278 0.005 281)` |
-| `--video-muted` | `oklch(0.556 0.01 281)` |
-| `--video-text` | `oklch(1.0 0 0)` |
-| `--video-skeleton` | `oklch(0.278 0.005 281)` |
-
-### 4.10 Portal do Cliente
-
-Scope dedicado para a rota `(portal)` — totalmente separado da UI admin.
-
-| Token | Descrição |
-|---|---|
-| `--portal-bg` · `--portal-card` · `--portal-card-hover` · `--portal-surface` | Fundos |
-| `--portal-text` · `--portal-text-muted` · `--portal-text-subtle` | Texto (3 níveis) |
-| `--portal-primary` · `--portal-primary-soft` | Primary + variant soft |
-| `--portal-success` · `--portal-success-soft` | Status |
-| `--portal-warning` · `--portal-warning-soft` | Status |
-| `--portal-danger` · `--portal-danger-soft` | Status |
-| `--portal-info` · `--portal-info-soft` | Status |
-
-> **11 tokens × 2 temas** — evitam acoplamento entre admin e portal.
-
-### 4.11 Efeitos Visuais
-
-**Glow Effects** (usados em hover de CTAs, shadow ambient):
-
-- `--glow-primary` (alpha 0.35/0.25 L/D)
-- `--glow-primary-subtle` (alpha 0.04/0.03)
-- `--glow-primary-faint` (alpha 0.02/0.015)
-- `--glow-destructive` (alpha 0.50/0.35)
-- `--glow-warning` (alpha 0.40/0.30)
-
-**Skeleton** (cinza neutro dedicado, chroma 0 — não tintado):
-
-- `--skeleton` · `--skeleton-highlight`
-
-**Gauge Meter**:
-
-- `--gauge-good` → `--success`
-- `--gauge-warning` → `--warning`
-- `--gauge-danger` → `--destructive`
-- `--gauge-neutral` → `--primary`
-
-**Insight Banner**:
-
-- `--insight-alert-bg` → `--destructive`
-- `--insight-success-bg` → `--success`
-- `--insight-info-bg` → `--primary`
-- `--insight-warning-bg` → `--warning`
-
-### 4.12 Hierarquia por Opacidade
-
-Em vez de criar dezenas de cores, modulamos opacidade sobre tokens semânticos. **Usar esta escala, nunca inventar**.
-
-```
-Texto principal:     text-foreground
-Texto secundário:    text-muted-foreground
-Texto terciário:     text-muted-foreground/50
-Texto quaternário:   text-muted-foreground/40
-Texto fantasma:      text-muted-foreground/55  (mono nums)
-Texto mínimo:        text-muted-foreground/60  (subtítulos widgets)
-
-Borda forte:         border-border
-Borda média:         border-border/30
-Borda sutil:         border-border/20
-Borda mínima:        border-border/10
-Borda fantasma:      border-border/[0.06]
-
-Fundo primary:       bg-primary/15  (hover forte)
-Fundo primary médio: bg-primary/10  (icon backgrounds)
-Fundo primary soft:  bg-primary/8   (badges, icon containers)
-Fundo primary sutil: bg-primary/6   (tags pill)
-Fundo primary tint:  bg-primary/5   (container tags)
-Fundo primary leve:  bg-primary/4   (insight banners)
-Fundo primary mín:   bg-primary/3   (card selecionado)
-```
+Portal, chat, video, events — redefinidos com paleta Zattar. Ver seção 5.
 
 ---
 
 ## 5. Component Tokens
 
-Tokens de componente específicos, definidos em `globals.css:691-742`.
+### 5.1 Botões
 
-### 5.1 Widget System
+```css
+/* Primary */
+--btn-primary-bg: var(--zattar-purple-500);
+--btn-primary-bg-hover: var(--zattar-purple-600);
+--btn-primary-fg: var(--surface-white);
+--btn-primary-radius: 4px;
+--btn-primary-padding: 8px 16px;
+--btn-primary-font-size: 16px;
+--btn-primary-font-weight: 400;
 
-| Token | Valor | Uso |
-|---|---|---|
-| `--widget-radius` | `1rem` (16px) | Border radius de widgets |
-| `--widget-padding` | `1.25rem` (20px) | Padding interno |
-| `--widget-gap` | `1rem` (16px) | Gap entre items |
-| `--widget-border-opacity` | `0.06` | Opacidade de bordas |
-| `--widget-label-size` | `10px` | Tamanho de labels |
-| `--widget-number-weight` | `700` | Peso de números |
-| `--widget-transition` | `200ms` | Duração de transição |
-| `--widget-hover-scale` | `1.01` | Scale no hover |
+/* Ghost */
+--btn-ghost-bg: transparent;
+--btn-ghost-bg-hover: color-mix(in oklab, var(--zattar-purple-500) 5%, transparent);
+--btn-ghost-fg: var(--zattar-purple-500);
+--btn-ghost-border: 1px solid var(--zattar-purple-300);
+```
 
-### 5.2 Card Entity
+### 5.2 Cards
 
-| Token | Valor |
-|---|---|
-| `--card-entity-radius` | `1rem` |
-| `--card-entity-padding` | `1rem` |
-| `--card-entity-avatar-size` | `2.5rem` (40px) |
-| `--card-entity-avatar-radius` | `0.75rem` |
+```css
+--card-bg: var(--surface-white);
+--card-border: 1px solid var(--border-default);
+--card-radius: 6px;
+--card-shadow-standard: var(--shadow-zattar-blue) 0 30px 45px -30px,
+                       var(--shadow-neutral)     0 18px 36px -18px;
+--card-shadow-ambient: var(--shadow-ambient) 0 15px 35px 0;
+```
 
-### 5.3 Tab Pills
+### 5.3 Inputs
 
-| Token | Valor |
-|---|---|
-| `--tab-pill-radius` | `0.75rem` |
-| `--tab-pill-padding-x` | `0.75rem` |
-| `--tab-pill-padding-y` | `0.375rem` |
-| `--tab-pill-active-bg` | `var(--primary)` |
+```css
+--input-bg: var(--surface-white);
+--input-border: 1px solid var(--border-default);
+--input-radius: 4px;
+--input-focus-ring: 1px solid var(--zattar-purple-500);
+--input-label-color: var(--navy-label);
+--input-text-color: var(--navy-heading);
+--input-placeholder: var(--navy-body);
+```
 
-### 5.4 Pulse Strip
+### 5.4 Badges
 
-| Token | Valor |
-|---|---|
-| `--pulse-gap` | `1.5rem` |
-| `--pulse-padding-x` | `1.25rem` |
-| `--pulse-padding-y` | `0.75rem` |
+```css
+/* Neutral pill */
+--badge-neutral-bg: var(--surface-white);
+--badge-neutral-fg: oklch(0 0 0);
+--badge-neutral-border: 1px solid oklch(0.98 0 245);
+--badge-radius: 4px;
 
-### 5.5 Detail Panel & Search
+/* Success */
+--badge-success-bg: color-mix(in oklab, var(--success-500) 20%, transparent);
+--badge-success-fg: var(--success-700);
+--badge-success-border: 1px solid color-mix(in oklab, var(--success-500) 40%, transparent);
+```
 
-| Token | Valor |
-|---|---|
-| `--detail-panel-width` | `380px` |
-| `--search-radius` | `0.5rem` |
-| `--search-bg` | `rgba(255, 255, 255, 0.04)` |
+### 5.5 Portal do Cliente
+
+O Portal é seção brand imersiva — usa `--brand-dark-900` como base em ambos os modos.
+
+```css
+--portal-bg: var(--brand-dark-900);
+--portal-card: color-mix(in oklab, var(--surface-white) 10%, var(--brand-dark-900));
+--portal-text: var(--surface-white);
+--portal-text-muted: oklch(1 0 0 / 0.70);
+```
 
 ---
 
 ## 6. Modes & Themes
 
-Zattar OS opera em **5 modos visuais independentes**. Cada modo é ativado por seletor CSS e sobrescreve um subset de tokens.
+### 6.1 Light Mode (default)
 
-| Modo | Seletor | Escopo | Tokens sobrescritos |
-|---|---|---|---|
-| **Light** (default) | `:root` | Admin logado | Todos |
-| **Dark** | `:root.dark` | Admin + toggle | Todos |
-| **Portal** | `:root[data-portal]` + classes `bg-portal-*` | `/portal/*` (cliente) | `--portal-*` (22 tokens) |
-| **Website** | `html.website-root-scale.dark` | `/website/*` (marketing) | `--primary`, `--primary-dim`, `--background` + glass overrides |
-| **Auth Runway** | `.auth-runway` class scope | `/auth/*` | Spotlight + noise apenas, tokens ficam |
-| **Video Call** | `--video-*` tokens isolados | Chamadas ativas | 7 tokens always-dark |
+Canvas branco puro, headings em deep navy, superfícies opacas com sombras azul-tintadas. Segue o guia visual Zattar 1:1.
 
-### 6.1 Theme Presets (Runtime)
+### 6.2 Dark Mode
 
-Usuário pode trocar a cor primária via `body[data-theme-preset]`. 7 presets em `globals.css:2020-2053`:
+O ZattarOS **mantém** dark mode, aplicando a receita de "dark brand section" descrita no design MD de referência como padrão de toda a superfície dark. Valores **literais** (sem interpolação inventada):
 
-| Preset | Primary OKLCH | Aproximação |
+| Token | Valor | Origem no DESIGN MD |
 |---|---|---|
-| Default | `oklch(0.48 0.26 281)` | Zattar Purple |
-| `blue` | `oklch(0.53 0.24 250)` | Azul |
-| `green` | `oklch(0.52 0.19 150)` | Verde |
-| `orange` | `oklch(0.65 0.21 45)` | Laranja |
-| `red` | `oklch(0.55 0.22 25)` | Vermelho |
-| `violet` | `oklch(0.6 0.24 290)` | Violeta |
-| `yellow` | `oklch(0.75 0.18 90)` | Amarelo |
-| `slate` | `oklch(0.4 0.03 240)` | Cinza-azul |
+| `--background` (dark) | `#1c1e54` | Brand Dark — "dark brand section" |
+| `--foreground` (dark) | `#ffffff` | "white text" em dark section |
+| `--muted-foreground` (dark) | `rgba(255,255,255,0.7)` | "Body 16px weight 300, rgba(255,255,255,0.7)" |
+| `--card` (dark) | `#1c1e54` | Mesma base (cards dentro de dark section herdam a cor) |
+| `--card-foreground` (dark) | `#ffffff` | — |
+| `--border` (dark) | `rgba(255,255,255,0.1)` | "Cards inside use rgba(255,255,255,0.1) border" |
+| `--input` (dark) | `rgba(255,255,255,0.1)` | Mesma regra de border em dark |
+| `--primary` (dark) | `#533afd` | Zattar Purple mantém — o roxo não muda de hue |
+| `--primary-foreground` (dark) | `#ffffff` | — |
+| `--ring` (dark) | `#533afd` | Focus ring mantém o roxo |
 
-### 6.2 Radius Presets (Runtime)
+**Princípio**: dark mode é a "dark brand section" expandida para a página inteira. Sem cálculos de luminância inventados; os valores são os do design MD de referência, aplicados uniformemente.
 
-`body[data-theme-radius]`:
+### 6.3 Application
 
-| Preset | `--radius` |
-|---|---|
-| `none` | `0rem` |
-| `sm` | `0.25rem` |
-| `md` | `0.5rem` (default) |
-| `lg` | `0.75rem` |
-| `xl` | `1rem` |
-
-### 6.3 Scale Presets (Runtime)
-
-`body[data-theme-scale]` ajusta font-size base:
-
-- `sm`: `90%`
-- default: `100%`
-- `lg`: `110%`
+Toggle via classe `.dark` no `<html>` (via `next-themes`). Nenhum componente faz detecção manual — só consome semantic tokens.
 
 ---
 
 ## 7. Tipografia
 
-### 7.1 Root Font Size
+### 7.1 Famílias
 
-**IMPORTANTE**: `html { font-size: 18px }` — todos os tamanhos `rem` são inflados.
-
-```
-text-xs  (0.75rem)  → 13.5px real
-text-sm  (0.875rem) → 15.75px real
-text-base (1rem)    → 18px real
-text-lg  (1.125rem) → 20.25px real
-text-xl  (1.25rem)  → 22.5px real
-text-2xl (1.5rem)   → 27px real
-```
-
-Tamanhos micro usam `px` fixo para precisão (imunes ao root 18px).
-
-Override: `html.website-root-scale { font-size: 16.2px }` (marketing).
-
-### 7.2 Font Stack
-
-| Variável CSS | Classe Tailwind | Fonte | Uso |
+| Função | Família | Fallback | Licença |
 |---|---|---|---|
-| `--font-sans` | `font-sans` | **Inter** | Corpo de texto, formulários, tabelas |
-| `--font-heading` | `font-heading` | **Montserrat** | Títulos de página, seções, cards |
-| `--font-display` | `font-display` | **Montserrat** (alias) | KPIs, métricas grandes |
-| `--font-headline` | `font-headline` | **Manrope** | Headlines do Magistrate AI |
-| `--font-mono` | `font-mono` | **Geist Mono** | Código, números de processo |
-| `--font-label` | (alias) | Inter | Labels, chips, badges |
-| `--font-body` | (alias) | Inter | Body de texto longo |
+| Sans (display, body, UI) | **Switzer** | `Inter, -apple-system, BlinkMacSystemFont, sans-serif` | Fontshare (grátis) |
+| Mono (código, tabular) | **Source Code Pro** | `ui-monospace, SFMono-Regular, monospace` | Google Fonts (grátis) |
 
-### 7.3 Componentes Tipados (Enforcement)
+> **Por quê Switzer**: fonte geométrica variable, suporta peso 300, suporta OpenType `ss01`/`ss02` que reproduzem o "DNA geométrico" do sohne-var da Stripe sem o custo de licenciamento. Já carregada via `next/font/local` ou Fontshare CDN.
 
-**Enforcement rígido**: usar `<Heading>` e `<Text>` de `@/components/ui/typography`. Compor classes manualmente é bloqueado por `audit:design-system`.
+### 7.2 OpenType Features
 
-| Componente | Uso | CSS Class |
-|---|---|---|
-| `<Heading level="page">` | Título de página | `.text-page-title` |
-| `<Heading level="section">` | Seção principal | `.text-section-title` |
-| `<Heading level="card">` | Card grande, painel | `.text-card-title` |
-| `<Heading level="subsection">` | Subseção, accordion | `.text-subsection-title` |
-| `<Heading level="widget">` | Widget header | `.text-widget-title` |
-| `<Heading level="marketing-hero">` | Hero website | `.text-marketing-hero` |
-| `<Heading level="marketing-section">` | Seção website | `.text-marketing-section` |
-| `<Text variant="kpi-value">` | Métricas destaque | `.text-kpi-value` |
-| `<Text variant="meta-label">` | Labels uppercase | `.text-meta-label` |
-| `<Text variant="widget-sub">` | Subtítulo widget | `.text-widget-sub` |
-| `<Text variant="caption">` | Texto auxiliar | `.text-caption` |
-| `<Text variant="helper">` | Dicas de campo | `.text-helper` |
-| `<Text variant="micro-badge">` | Texto badge | `.text-micro-badge` |
-| `<Text variant="overline">` | Label ALL-CAPS | `.text-overline` |
-| `<Text variant="label">` | Labels de campo | `.text-label` |
-| `<Text variant="micro-caption">` | Timestamps terciários | `.text-micro-caption` |
-| `<Text variant="marketing-lead">` | Lead website | `.text-marketing-lead` |
+Aplicadas globalmente via CSS no `:root`:
 
-### 7.4 Escala Tipográfica Completa
+```css
+:root {
+  font-feature-settings: "ss01" on, "ss02" on, "cv11" on;
+}
 
-| Classe CSS | Size | Weight | Family | Uso |
-|---|---|---|---|---|
-| `.text-display-1` | 36-60px (clamp) | Bold | heading | Hero, landing |
-| `.text-display-2` | 30-48px (clamp) | Bold | heading | Hero secundário |
-| `.text-page-title` | 24px | Bold | heading | PageShell title |
-| `.text-section-title` | 20px | Semibold | heading | Seção principal |
-| `.text-card-title` | 18px | Semibold | heading | Card grande |
-| `.text-subsection-title` | 16px | Semibold | heading | Subseção, accordion |
-| `.text-widget-title` | 14px | Semibold | heading | Widget header |
-| `.text-body-lg` | ~20px | Normal | sans | Lead body |
-| `.text-body` | ~18px | Normal | sans | Body padrão |
-| `.text-body-sm` | ~16px | Normal | sans | Body compacto |
-| `.text-label` | 14px | Medium | sans | Labels de campo |
-| `.text-caption` | 13px | Normal | sans | Texto auxiliar |
-| `.text-helper` | 13px | Normal | sans | Dicas, descrições |
-| `.text-widget-sub` | 12px | Normal | sans | Subtítulo de widget |
-| `.text-overline` | 11px | Semibold | sans | ALL-CAPS genérico |
-| `.text-meta-label` | 11px | Semibold | sans | Metadata uppercase (tracking 0.14em) |
-| `.text-kpi-value` | 24px | Bold | heading | KPIs (tabular-nums) |
-| `.text-mono-num` | 10px | Normal | mono | Números processo/datas |
-| `.text-micro-caption` | 10px | Normal | sans | Timestamps terciários |
-| `.text-micro-badge` | 9px | Medium | sans | Texto de badge |
+/* Em colunas numéricas (tables, charts, KPIs): */
+.tabular-nums,
+[data-tabular] {
+  font-feature-settings: "tnum" on;
+}
+```
 
-### 7.5 Marketing (Website Público)
+- `ss01` / `ss02` / `cv11`: alternates geométricas (single-storey `a`, reta `l`, `g` de dois andares)
+- `tnum`: numerais tabulares para alinhamento vertical em dados financeiros
+- `ss01` e `tnum` **nunca se sobrepõem** (um número em parágrafo usa ss01, um número em tabela usa tnum)
 
-Escalas dedicadas — **não usar em admin**:
+### 7.3 Escala Hierárquica
 
-| Classe | Clamp | Uso |
-|---|---|---|
-| `.text-marketing-hero` | 36px → 80px | H1 principal (hero landing) |
-| `.text-marketing-section` | 26px → 48px | H2 de seção |
-| `.text-marketing-title` | 22px → 34px | H3 bloco interno |
-| `.text-marketing-lead` | 15px → 19px | Parágrafo lead |
-| `.text-marketing-overline` | 13px | Label ALL-CAPS em primary |
+| Variant (Heading/Text) | Role | Size | Weight | Line-height | Letter-spacing | Feature |
+|---|---|---|---|---|---|---|
+| `Heading display-hero` | Hero máximo | 56px (3.50rem) | 300 | 1.03 | -1.4px | ss01 |
+| `Heading display` | Hero secundário | 48px (3.00rem) | 300 | 1.15 | -0.96px | ss01 |
+| `Heading page` | Título de página | 32px (2.00rem) | 300 | 1.10 | -0.64px | ss01 |
+| `Heading section` | Seção de feature | 26px (1.63rem) | 300 | 1.12 | -0.26px | ss01 |
+| `Heading card` | Card title, subseção | 22px (1.38rem) | 300 | 1.10 | -0.22px | ss01 |
+| `Heading widget` | Widget title | 18px (1.13rem) | 400 | 1.30 | normal | ss01 |
+| `Heading kpi-value` | Valor de KPI | 32px (2.00rem) | 300 | 1.10 | -0.64px | tnum |
+| `Text body-large` | Intro text | 18px (1.13rem) | 300 | 1.40 | normal | ss01 |
+| `Text body` | Body padrão | 16px (1.00rem) | 300 | 1.40 | normal | ss01 |
+| `Text label` | Form label | 14px (0.88rem) | 400 | 1.20 | normal | ss01 |
+| `Text button` | Botão grande | 16px (1.00rem) | 400 | 1.00 | normal | ss01 |
+| `Text button-sm` | Botão compacto | 14px (0.88rem) | 400 | 1.00 | normal | ss01 |
+| `Text link` | Link | 14px (0.88rem) | 400 | 1.00 | normal | ss01 |
+| `Text caption` | Metadata | 13px (0.81rem) | 400 | 1.30 | normal | ss01 |
+| `Text caption-sm` | Timestamps | 12px (0.75rem) | 400 | 1.33 | normal | ss01 |
+| `Text caption-tabular` | Dados financeiros | 12px (0.75rem) | 400 | 1.33 | -0.36px | tnum |
+| `Text micro` | Axis labels | 10px (0.63rem) | 300 | 1.15 | 0.1px | ss01 |
+| `Text micro-tabular` | Chart data numérico | 10px (0.63rem) | 300 | 1.15 | -0.3px | tnum |
+| `Text code` | Código inline | 12px (0.75rem) | 500 | 2.00 | normal | — |
+| `Text code-label` | Label técnico | 12px (0.75rem) | 500 uppercase | 2.00 | normal | — |
 
-### 7.6 Fallback Typography (MDX & Legacy)
+### 7.4 Princípios
 
-Classes de fallback em `@layer components` para contextos que não usam `<Heading>/<Text>`:
-
-`.typography-{h1|h2|h3|h4|p|lead|large|small|muted|blockquote|list|inline-code|table|table-wrapper}`
-
-> **Regra**: Não usar em componentes novos. Apenas MDX renderizado ou compatibilidade retroativa.
-
-### 7.7 Regras Críticas
-
-- **Body text mínimo**: `text-sm` (~15.75px) em desktop, `text-xs` (~13.5px) em mobile
-- **Números financeiros**: Sempre `tabular-nums`
-- **KPIs**: `font-heading font-bold tabular-nums` (Montserrat)
-- **tracking-tight**: Apenas em títulos de página
-- **tracking-wider**: Apenas em labels uppercase
-- **Headings HTML**: `h1-h6` recebem `font-heading text-foreground` automaticamente via `globals.css`
+- **Light weight is the signature** — 300 em display, sempre. Sem 600/700 em sans.
+- **Progressive tracking** — letter-spacing tightens com size: -1.4 (56px) → -0.64 (32px) → -0.22 (22px) → normal (16px-)
+- **Two-weight simplicity** — 300 (heading/body) e 400 (UI/buttons/links). Source Code Pro usa 500/700.
+- **Heading color** — sempre `--navy-heading` (#061b31), nunca `#000`.
 
 ---
 
 ## 8. Espaçamento
 
-### 8.1 Grid Base: 4px
+### 8.1 Grid base: 8px
 
-Todo espaçamento é múltiplo de 4px. Usamos a escala do Tailwind.
+Escala densa no small-end (otimizada para dados financeiros):
 
-### 8.2 Layout Semântico
+```
+1, 2, 4, 6, 8, 10, 12, 14, 16, 20, 24, 32, 40, 48, 64, 80, 96
+```
 
-Exportados via `SPACING_SEMANTIC` em `tokens.ts`:
+### 8.2 Tokens
 
-| Contexto | Padding | Gap | Classes |
-|---|---|---|---|
-| **Página** | `p-4 sm:p-6 lg:p-8` | `gap-6 lg:gap-8` | Container principal |
-| **Seção** | `p-4 sm:p-6` | `gap-4 sm:gap-6` | Blocos dentro de página |
-| **Card padrão** | `p-4 sm:p-6` | `gap-3 sm:gap-4` | Cards normais |
-| **Card compacto** | `p-3 sm:p-4` | `gap-2` | Cards em grids densos |
-| **Card minimal** | `p-3` | `gap-1.5` | Kanban cards |
-| **GlassPanel** | `p-5` | `gap-3` | Panels glass |
-| **PulseStrip** | `px-5 py-3` | `gap-6` | Barra de stats |
-| **Formulário** | — | `gap-4` (fields), `gap-6` (seções) | Forms |
-| **Tabela** | `px-3 py-2` (cell), `px-3 py-3` (header) | `gap-4` | DataTable |
-| **Dialog** | `p-6` | `gap-4`, `gap-2` (footer) | Modais |
+Exportados em [src/lib/design-system/tokens.ts](src/lib/design-system/tokens.ts) como `SPACING`:
 
-### 8.3 Escala de Gap
+```ts
+export const SPACING = {
+  '0': '0',
+  '0.25': '1px',
+  '0.5': '2px',
+  '1': '4px',
+  '1.5': '6px',
+  '2': '8px',
+  '2.5': '10px',
+  '3': '12px',
+  '3.5': '14px',
+  '4': '16px',
+  '5': '20px',
+  '6': '24px',
+  '8': '32px',
+  '10': '40px',
+  '12': '48px',
+  '16': '64px',
+  '20': '80px',
+  '24': '96px',
+} as const;
+```
 
-| Nome | Classe | Pixels | Uso |
-|---|---|---|---|
-| Tight | `gap-1` | 4px | Icon+text inline |
-| Compact | `gap-1.5` | 6px | Dentro de cards pequenos |
-| Default | `gap-2` | 8px | Entre elementos inline |
-| Loose | `gap-3` | 12px | Entre cards, entre items |
-| Section | `gap-4` | 16px | Entre seções |
-| Block | `gap-6` | 24px | Entre blocos maiores |
-| Page | `gap-8` | 32px | Espaçamento de página |
+### 8.3 Semantic spacing
 
-### 8.4 Container Max-Widths
+```ts
+export const SEMANTIC_SPACING = {
+  cardPadding: SPACING['4'],        // 16px
+  cardPaddingLg: SPACING['6'],      // 24px
+  sectionGap: SPACING['12'],        // 48px
+  sectionGapLg: SPACING['16'],      // 64px
+  gridGap: SPACING['3'],            // 12px
+  gridGapLg: SPACING['4'],          // 16px
+  inputPadding: `${SPACING['2']} ${SPACING['3']}`, // 8px 12px
+  buttonPadding: `${SPACING['2']} ${SPACING['4']}`, // 8px 16px
+  badgePadding: `0 ${SPACING['1.5']}`, // 0 6px
+};
+```
 
-| Contexto | Classe | Uso |
-|---|---|---|
-| Página CRM | `max-w-350` (1400px) | Partes, Contratos |
-| Dialog padrão | `sm:max-w-md` | Forms simples |
-| Dialog largo | `sm:max-w-lg` | Side panels |
-| Sheet | `w-full sm:w-96` | Widget picker |
-| Detail Panel | `380px` (`--detail-panel-width`) | Panel lateral |
+### 8.4 Página
 
-> Utility Tailwind `max-w-350`/`w-350` = 1400px, definido em [`tailwind.config.ts:19-25`](../tailwind.config.ts#L19-L25). Único token Tailwind que não está no CSS.
+```ts
+export const PAGE_LAYOUT = {
+  maxWidth: '1080px',    // Container principal Zattar
+  gutter: SPACING['6'],  // 24px
+  heroGap: SPACING['16'], // 64px entre hero e feature
+};
+```
 
 ---
 
 ## 9. Bordas e Raio
 
-### 9.1 Border Radius
+### 9.1 Escala conservadora
 
-| Token | Classe | Pixels | Uso |
-|---|---|---|---|
-| Base | `--radius: 0.5rem` | 8px | Valor runtime (customizável via `data-theme-radius`) |
-| 2XL | `rounded-2xl` | 16px | GlassPanel, containers externos |
-| XL | `rounded-xl` | 12px | Cards, botões grandes, avatares |
-| LG | `rounded-lg` | 8px | Inputs, alert banners |
-| MD | `rounded-md` | 6px | Botões pequenos, badges |
-| SM | `rounded-sm` | 4px | Elementos mínimos |
-| Full | `rounded-full` | 50% | Badges pill, dots |
+| Token | Value | Uso |
+|---|---|---|
+| `--radius-none` | 0 | Elementos full-bleed |
+| `--radius-xs` | 1px | Fine-grained (divisores com arredondamento sutil) |
+| `--radius-sm` | 4px | **Default** — botões, inputs, badges, cards padrão |
+| `--radius-md` | 5px | Cards standard |
+| `--radius-lg` | 6px | Nav container, cards comfortable, dropdowns |
+| `--radius-xl` | 8px | Cards featured, hero elements |
+| `--radius-2xl` | 12px | **Reservado** — apenas hero/decorative, nunca default |
 
-### 9.2 Hierarquia de Uso
+O token base `--radius` resolve para **`--radius-sm` (4px)**.
 
-```
-Container externo (GlassPanel):  rounded-2xl
-Card / button grande:            rounded-xl
-Input / card menor:              rounded-lg
-Badge / botão pequeno:           rounded-md
-Elemento mínimo:                 rounded-sm
-Dot / avatar / pill:             rounded-full
-```
+### 9.2 Espessura de borda
 
-### 9.3 Patterns de Borda
+- Default: `1px solid var(--border)` (cor: `--border-default`)
+- Ativo/selecionado: `1px solid var(--zattar-purple-300)`
+- Foco: `1px solid var(--zattar-purple-500)` + ring outline
+- Destrutivo: `1px solid var(--destructive)`
+- Dashed (drop zone, placeholder): `1px dashed var(--zattar-purple-900)`
 
-```
-Container padrão:  border border-border/20
-Container depth-2: border border-border/30
-Divider sutil:     border-t border-border/10
-Divider forte:     border-t border-border
-Input:             border border-input
-Accent left:       border-l-[3px] border-l-{color}
-Dashed (filters):  border-dashed
-Kanban header:     border-b-2 {stage.color}
-```
+### 9.3 Proibições
+
+- ❌ `rounded-full` em cards, containers, inputs
+- ❌ `rounded-2xl` ou maior como default de card
+- ❌ Borda de 2px+ em elementos UI padrão
 
 ---
 
 ## 10. Sombras e Elevação
 
-### 10.1 Escala Padrão
+### 10.1 Filosofia
 
-| Nível | Classe | Uso |
-|---|---|---|
-| 0 | `shadow-none` | Flat elements |
-| 1 | `shadow-sm` | Botões, elevação sutil |
-| 2 | `shadow` | Cards padrão |
-| 3 | `shadow-md` | Hover states, cards ativos |
-| 4 | `shadow-lg` | Drag overlays, modais |
-| **PROIBIDO** | ~~`shadow-xl`~~ ~~`shadow-2xl`~~ | **NUNCA** |
+A sombra é **brand-colored**. Usa o mesmo azul-navy do sistema cromático, não cinza neutro. A sombra far (mais distante) carrega a cor; a sombra near (mais próxima) é neutra escura.
 
-### 10.2 Glass Shadows (Customizadas)
+Fórmula Zattar:
 
-```css
-/* Light Mode */
-glass-kpi:          0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02),
-                    inset 0 1px 0 rgba(255,255,255,0.85)
-glass-kpi:hover:    0 4px 16px rgba(0,0,0,0.06),
-                    inset 0 1px 0 rgba(255,255,255,0.95)
-glass-widget:       0 2px 12px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02),
-                    inset 0 1px 0 rgba(255,255,255,0.8)
-glass-widget:hover: 0 4px 24px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.03),
-                    inset 0 1px 0 rgba(255,255,255,0.9)
-glass-dialog:       0 24px 48px rgba(0,0,0,0.12), 0 8px 24px rgba(0,0,0,0.08),
-                    0 2px 6px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.9)
-glass-dropdown:     0 8px 32px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04),
-                    inset 0 1px 0 rgba(255,255,255,1)
-ambient:            0 20px 40px rgba(0,0,0,0.08)
+```
+shadow:
+  rgba(50, 50, 93, 0.25) 0px Y1 B1 -S1,  /* blue-tinted far */
+  rgba(0, 0, 0, 0.1)     0px Y2 B2 -S2;  /* neutral near */
 ```
 
-Utility class: `.shadow-ambient` (light mode only).
+Onde `Y1/B1 > Y2/B2` (far shadow sempre maior que near).
 
-### 10.3 Glow Effects
+### 10.2 Escala de elevação
 
-Alphas derivados de tokens de cor para halos decorativos:
+| Level | Token | Valor | Uso |
+|---|---|---|---|
+| 0 — Flat | `--elevation-flat` | `none` | Page background, texto inline |
+| 1 — Ambient | `--elevation-ambient` | `rgba(23,23,23,0.06) 0 3px 6px` | Lift sutil, hover hint |
+| 2 — Standard | `--elevation-standard` | `rgba(23,23,23,0.08) 0 15px 35px` | Cards standard, painéis |
+| 3 — Elevated | `--elevation-elevated` | `rgba(50,50,93,0.25) 0 30px 45px -30px, rgba(0,0,0,0.1) 0 18px 36px -18px` | Cards featured, dropdowns, popovers |
+| 4 — Deep | `--elevation-deep` | `rgba(3,3,39,0.25) 0 14px 21px -14px, rgba(0,0,0,0.1) 0 8px 17px -8px` | Modais, floating panels |
+| Ring | `--elevation-ring` | `0 0 0 2px var(--zattar-purple-500)` | Foco de teclado |
 
-```css
-.purple-glow-hover:hover { box-shadow: 0 0 30px var(--glow-primary-subtle); }
-```
+### 10.3 Regras
+
+- Sombras **nunca** são cinza neutro. Sempre tintadas.
+- Hover em cards intensifica a sombra (geralmente passando de Level 2 para Level 3).
+- Sticky headers usam sombra superior (`rgba(0,55,112,0.08)` top-edge).
+- Dark mode reduz opacidades (0.25 → 0.15) mas mantém a fórmula.
 
 ---
 
 ## 11. Ícones
 
-### 11.1 Biblioteca: Lucide React
+### 11.1 Biblioteca
 
-**Única biblioteca de ícones**. Sem emojis como ícones UI. Sem mistura de bibliotecas.
+- **lucide-react** como única biblioteca de ícones.
+- Stroke-width padrão: **1.5** (não 2). Combina com o peso 300 da tipografia.
 
-### 11.2 Escala de Tamanho
+### 11.2 Sizing
 
-| Tamanho | Classe | Pixels | Uso |
-|---|---|---|---|
-| XS | `size-2` | 8px | Dots decorativos |
-| SM | `size-2.5` | 10px | Contato em cards |
-| MD | `size-3` | 12px | Footer metrics |
-| MD+ | `size-3.5` | 14px | Botões, search input |
-| Default | `size-4` / `h-4 w-4` | 16px | Headers, actions |
-| LG | `h-5 w-5` | 20px | Ícones maiores |
-| XL | `h-6 w-6` | 24px | Section headers |
-| 2XL | `h-8 w-8` | 32px | Dialog actions, empty states |
-| 3XL | `h-10 w-10` | 40px | Empty state principal |
+| Contexto | Tamanho | Classe |
+|---|---|---|
+| Inline com texto body | 16px | `size-4` |
+| UI em botão | 14px | `size-3.5` |
+| Navigation | 18px | `size-4.5` |
+| Feature card | 20–24px | `size-5` / `size-6` |
+| Hero/illustrative | 32px+ | `size-8+` |
 
-### 11.3 Cores de Ícones
+### 11.3 Cor
 
-```
-Padrão:      text-muted-foreground
-Sutil:       text-muted-foreground/50
-Muito sutil: text-muted-foreground/40
-Fantasma:    text-muted-foreground/55
-Primary:     text-primary
-Semântico:   text-destructive | text-success | text-warning | text-info
-Dinâmico:    style={{ color }}  (por config)
-```
-
-### 11.4 Icon Containers
-
-| Tamanho | Classes | Pixels | Uso |
-|---|---|---|---|
-| LG | `size-10 rounded-xl flex items-center justify-center shrink-0` | 40px | Cards de processo |
-| MD | `size-8 rounded-lg flex items-center justify-center shrink-0` | 32px | Listas, rows |
-| SM | `size-6 rounded-md flex items-center justify-center shrink-0` | 24px | Inline, badges |
-| XS | `size-5 rounded flex items-center justify-center shrink-0` | 20px | Indicators |
-
-**Componente obrigatório**: `<IconContainer size>` de `@/components/ui/icon-container`.
+- Default: `text-muted-foreground` (navy-body)
+- Ativo: `text-primary` (zattar-purple)
+- Em botão primário: `text-primary-foreground` (branco)
+- Decorativo (accent): `text-[var(--accent-ruby)]` ou magenta
 
 ---
 
-## 12. Sistema Glass
+## 12. Sistema de Elevação (ex-Glass)
 
-### 12.1 Variantes de Glass
+> ⚠️ **Renomeação semântica 2.x → 3.0** — o antigo "Sistema Glass" foi aposentado. O componente `<GlassPanel>` e as classes `.glass-*` **persistem como API pública** para compatibilidade, mas implementam agora o **Sistema de Elevação Zattar** (sombras tintadas, superfícies opacas).
 
-| Classe | BG Light | BG Dark | Blur | Uso |
-|---|---|---|---|---|
-| `glass-kpi` | `rgba(255,255,255,0.70)` | `rgba(255,255,255,0.06)` | 12px | KPI cards, stat cards |
-| `glass-widget` | `rgba(255,255,255,0.62)` | `rgba(255,255,255,0.04)` | 16px | Widget containers |
-| `glass-card` | `rgba(255,255,255,0.72)` | (light only) | 20px | Cards premium |
-| `glass-panel` | `rgba(255,255,255,0.65)` | (light only) | 20px | Panels gerais |
-| `glass-dropdown` | `rgba(255,255,255,0.95)` | `rgba(30,30,35,0.95)` | 20px | Dropdowns, menus flutuantes |
-| `glass-dialog` | `rgba(255,255,255,0.92)` | `rgba(18,18,22,0.92)` | 24px | Modais elevados |
-| `glass-dialog-overlay` | `rgba(0,0,0,0.25)` + blur 4px | `rgba(0,0,0,0.55)` + blur 4px | — | Backdrop de modal |
+### 12.1 `<GlassPanel depth={1|2|3}>`
 
-### 12.2 GlassPanel Depth
+Mantém a mesma API, novo comportamento visual:
 
-Component `<GlassPanel depth>`:
+| Depth | Antes (glass) | Agora (Zattar) | Uso |
+|---|---|---|---|
+| 1 | backdrop-blur 20px, bg transparent | bg-card, border default, elevation ambient | Containers grandes, widgets |
+| 2 | bg mais opaco, kpi treatment | bg-card, border default, elevation standard | KPIs, métricas |
+| 3 | primary tint, backdrop-blur xl | bg-card, border primary/20, elevation elevated | Destaque máximo |
 
-| Depth | Classes internas | Uso |
-|---|---|---|
-| **1** (default) | `glass-widget bg-transparent border-border/20` | Containers de widget |
-| **2** | `glass-kpi bg-transparent border-border/30` | KPI cards, stats |
-| **3** | `bg-primary/[0.04] backdrop-blur-xl border-primary/10` | Destaque máximo |
+### 12.2 Classes utilitárias
 
-Classe base: `rounded-2xl border transition-all duration-300 flex flex-col`
+- `.glass-widget` → agora aplica `elevation-standard` + border default + bg-card
+- `.glass-kpi` → agora aplica `elevation-standard` + border default + bg-card (visualmente idêntico a widget; diferenciação por padding/tipografia)
+- `.glass-dropdown` → elevation-elevated + bg-popover + border
+- `.glass-dialog` + `.glass-dialog-overlay` → elevation-deep + overlay escuro `rgba(6,27,49,0.50)`
 
-### 12.3 Regras do Glass
-
-1. Sempre com `border` sutil (`border-border/20` ou `border-border/30`)
-2. Sombra inset para "brilho de borda" em light mode
-3. **NUNCA** usar `bg-white/10` em light mode (invisível) — mínimo `bg-white/55`
-4. Light mode auto-inverte `bg-white/*` e `border-white/*` patterns via regra CSS em `globals.css:646-666`
-5. Floating overlays (popovers, dropdowns, tooltips) **removem backdrop-filter** automaticamente via `[data-slot]` rules em `globals.css:675-683`
+**Sem** `backdrop-filter`, **sem** `backdrop-blur`, **sem** `bg-*/0.04` em nenhuma dessas classes.
 
 ---
 
 ## 13. Patterns de Página
 
-### 13.1 Header de Página
-
-```jsx
-<div className="flex items-start justify-between gap-4">
-  <Heading level="page">Título</Heading>
-  <div className="flex items-center gap-2">{actions}</div>
-</div>
-```
-
-Subtítulo: `text-sm text-muted-foreground/50 mt-0.5`
-
-### 13.2 Layout de Página
-
-Exportado em `PAGE_LAYOUT` em `tokens.ts`:
-
-```ts
-container:      'max-w-350 mx-auto'
-sectionGap:     'space-y-5'
-pagePadding:    'py-6'
-page:           'max-w-350 mx-auto space-y-5 py-6'  // composição completa
-cardGrid:       'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3'
-detailLayout:   'grid gap-3 lg:grid-cols-[1fr_380px]'
-detailPanel:    'sticky top-4 self-start'
-pageHeader:     'flex items-start justify-between gap-4'
-toolbar:        'flex flex-col sm:flex-row items-start sm:items-center gap-3'
-```
-
-### 13.3 Modos de Visualização
-
-| Modo | Descrição | Componente |
-|---|---|---|
-| **Grid** | Cards em grid responsivo | `EntityCard` / `ContratoCard` |
-| **List** | Rows compactos | `EntityListRow` / `ContratoListRow` |
-| **Pipeline/Kanban** | Colunas com drag-drop | `KanbanColumn` + cards |
-
-### 13.4 Estados Padrão
-
-| Estado | Componente |
-|---|---|
-| Vazio | `<EmptyState icon title description action />` |
-| Carregando | `<Skeleton />` ou `.skeleton` utility (shimmer) |
-| Erro | `<EmptyState variant="error" />` |
-
-### 13.5 Componentes Shell Obrigatórios
-
-| Uso | Componente | Import |
-|---|---|---|
-| Layout de página | `<PageShell>` | `@/components/shared/page-shell` |
-| Layout de tabela | `<DataShell>` | `@/components/shared/data-shell` |
-| Dialog de form | `<DialogFormShell>` | `@/components/shared/dialog-form-shell` |
-| Temporal view (calendário) | `<TemporalViewShell>` | `@/components/shared/temporal-view-shell` |
-| Detail sheet | `<DetailSheet>` | `@/components/shared/detail-sheet` |
-| Form | `<FormShell>` | `@/components/shared/form-shell` |
-
-### 13.6 Toolbars & Filter Bars (Pills) — **11px OBRIGATÓRIO**
-
-Toolbars de listagem (filter-bar, bulk-actions, view-toggle, segment picker) seguem **um único tamanho de fonte**: `text-[11px]` com `font-medium`. Isso garante densidade visual consistente entre módulos (Audiências, Expedientes, Contratos, Perícias, etc.).
-
-**Pill trigger canônico** (replicado em `audiencias-filter-bar.tsx`, `expedientes-filter-bar.tsx`):
+### 13.1 Estrutura básica
 
 ```tsx
-<div
-  className={cn(
-    'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
-    active
-      ? 'border-primary/20 bg-primary/5 text-primary'
-      : 'border-border/15 text-muted-foreground/60 hover:bg-muted/30',
-    open && 'ring-1 ring-ring',
-  )}
->
-  {children}
-  <span>{label}</span>
-</div>
+<PageShell title="..." actions={...}>
+  <section className="max-w-270 mx-auto">
+    {/* Grid de cards */}
+  </section>
+</PageShell>
 ```
 
-**Erros comuns (anti-patterns)**:
+### 13.2 Hero (quando aplicável)
 
-| ❌ ERRADO | ✅ CORRETO | Motivo |
-|---|---|---|
-| `text-caption` (13px) em pill de filtro | `text-[11px]` | Quebra densidade canônica; vira ilha visual |
-| `text-xs` (12px) em pill | `text-[11px]` | Imperceptível mas inconsistente |
-| Tamanhos mistos dentro da mesma toolbar | Padronizar `text-[11px]` | Hierarquia confusa |
-| Filter-bar 11px + bulk-actions 13px | Ambos 11px | Toolbars coexistem na mesma tela |
+- Background: `bg-background` (branco)
+- Headline: `<Heading level="display">` com weight 300, letter-spacing -0.96
+- Subtitle: `<Text variant="body-large">` com color muted-foreground
+- CTAs: `<Button>` primary + `<Button variant="ghost">` lado-a-lado
+- Max-width: 1080px
 
-**Labels de pipeline/stepper** (acima da listagem): `text-meta-label` (11px uppercase tracking 0.14em semibold) — mantêm a mesma base de 11px com tratamento semântico.
+### 13.3 Dark brand sections
 
-**Texto de apoio DENTRO dos popovers** (empty state, "Carregando…"): `text-[11px] text-muted-foreground/40` — mesma escala.
+Para seções imersivas (portal do cliente, dashboard hero):
 
-**Fluxo de promoção para token** (quando consolidar):
-Se `text-[11px]` repetir em 5+ lugares, promover para utility `.text-filter-pill` em `globals.css`. Até lá, o valor literal é intencional para sinalizar "isto é pill de toolbar" na revisão de código.
+```tsx
+<section className="bg-(--brand-dark-900) text-white">
+  {/* heading branco, body com alpha 0.70 */}
+</section>
+```
+
+### 13.4 Section rhythm
+
+Alternância light ↔ dark-brand previne monotonia sem introduzir cor arbitrária. Use com parcimônia — 1 a 2 seções dark por página.
+
+### 13.5 Grid de features
+
+- 3 colunas em desktop
+- 2 colunas em tablet
+- 1 coluna em mobile
+- Gap: 16px (grid-gap token)
 
 ---
 
 ## 14. Animações
 
-### 14.1 Escala de Duração
+### 14.1 Filosofia
 
-| Nome | Duração | Uso |
-|---|---|---|
-| Fast | `150ms` | Hover de botão, toggle |
-| Normal | `200ms` | Maioria das interações |
-| Slow | `300ms` | Abertura de panels, glass |
-| Chart | `500ms` | Barras, progress |
-| Long | `700ms` | Funnel bars, gauge |
-| Count | `1200ms` | AnimatedNumber |
+O sistema Zattar é **restrained**. Nada de spring bouncy, nada de gradient-sweep. Animações são **sutis e funcionais**:
 
-### 14.2 Propriedades Animáveis
+- Duração padrão: **200ms**
+- Easing padrão: `cubic-bezier(0.4, 0, 0.2, 1)` (standard ease)
+- Hover em card: shadow intensifica de Level 2 → 3, 200ms
+- Focus ring: aparece instantâneo, sem fade
+- Accordion/collapse: 250ms standard ease
 
-Exportadas em `TRANSITIONS` em `tokens.ts`:
+### 14.2 Tokens
 
-```
-transition-all duration-200     (padrão)
-transition-colors duration-200  (só cor)
-transition-transform duration-200
-transition-opacity duration-200
-```
-
-### 14.3 Easing
-
-- **Padrão**: `ease-in-out`
-- **Progress**: `ease-out`
-- **Counting**: `cubic-out` (`1 - Math.pow(1 - progress, 3)`)
-
-### 14.4 Hover Effects
-
-```
-Card scale:       hover:scale-[1.01]
-Card shadow:      hover:shadow-md
-Background:       hover:bg-white/4 (sutil)
-Background forte: hover:bg-muted/50
-Opacity reveal:   opacity-0 group-hover:opacity-100
-Icon scale:       group-hover:scale-110
+```ts
+export const MOTION = {
+  duration: {
+    instant: '0ms',
+    fast: '150ms',
+    base: '200ms',
+    slow: '300ms',
+  },
+  easing: {
+    standard: 'cubic-bezier(0.4, 0, 0.2, 1)',
+    decelerate: 'cubic-bezier(0, 0, 0.2, 1)',
+    accelerate: 'cubic-bezier(0.4, 0, 1, 1)',
+  },
+};
 ```
 
-### 14.5 Keyframes Customizados
+### 14.3 Respeito a `prefers-reduced-motion`
 
-- `skeleton-shimmer` (1.8s ease-in-out infinite) — shimmer em `.skeleton`
-- `auth-breathe` (10s ease-in-out) — spotlight breathing em auth
-- `auth-drift` (22s ease-in-out) — warm spotlight drift em auth
-
-### 14.6 Regras
-
-1. **Sempre respeitar `prefers-reduced-motion`** — implementado globalmente em `globals.css:971-981`
-2. **Nunca animar `width`, `height`, `top`, `left`** — usar `transform` e `opacity`
-3. Drag overlay: `opacity-95 shadow-lg rotate-1`
-4. Loading: `animate-pulse` para skeletons ou `.skeleton` (preferido), `animate-spin` para spinners
-5. `animate-ping` apenas em indicadores de foco crítico
-6. Elementos interativos (button, a, input, select, textarea, `[role="button"]`) recebem `transition-all duration-200 ease-in-out` automaticamente via `globals.css:1010-1017`
+```css
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+```
 
 ---
 
@@ -988,443 +664,232 @@ Icon scale:       group-hover:scale-110
 
 ### 15.1 Breakpoints
 
-| Prefixo | Largura | Dispositivo |
+| Nome | Width | Tailwind |
 |---|---|---|
-| (default) | < 640px | Mobile |
-| `sm:` | ≥ 640px | Mobile landscape |
-| `md:` | ≥ 768px | Tablet |
-| `lg:` | ≥ 1024px | Desktop |
-| `xl:` | ≥ 1280px | Desktop largo |
-| `2xl:` | ≥ 1536px | Ultra wide |
-| `xs:` (custom) | ≥ 480px | Entre mobile/sm |
+| xs | < 480px | — |
+| sm | 640px | `sm:` |
+| md | 768px | `md:` |
+| lg | 1024px | `lg:` |
+| xl | 1280px | `xl:` |
+| 2xl | 1536px | `2xl:` |
 
-### 15.2 Patterns Responsivos
+### 15.2 Collapsing strategy
 
-```
-Grid de cards:  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3
-Grid de KPIs:   grid-cols-1 md:grid-cols-2 lg:grid-cols-4
-Grid de stats:  gap-4 md:grid-cols-5
-Dashboard:      grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3
-Direção:        flex-col sm:flex-row
-Padding:        p-4 sm:p-6 lg:p-8
-Texto:          text-xs sm:text-sm
-Visibilidade:   hidden sm:block / hidden md:block / hidden lg:block
-Largura:        w-full sm:w-auto
-```
+- Hero: 56px → 48px → 32px (mobile)
+- Grid: 3 cols → 2 cols → 1 col
+- Section spacing: 64px → 40px em mobile
+- Nav horizontal → hamburger em < md
+- Tabelas: scroll horizontal em mobile
 
-### 15.3 Overflow Prevention
+### 15.3 Touch targets
 
-Regras globais em `globals.css:962-969` + `1050-1053`:
-
-- `html, body { overflow-x-hidden; max-width: 100vw }`
-- `[style*="width"] { max-width: 100% !important }`
-- Flex/grid containers → `min-w-0` para evitar overflow
+- Botões: mínimo 44×44px de área touch
+- Links nav: padding suficiente (8px+ vertical)
 
 ---
 
 ## 16. Acessibilidade
 
-### 16.1 Contraste (WCAG 2.1)
+### 16.1 Contraste mínimo
 
-- **Texto normal**: mínimo **4.5:1**
-- **Texto grande**: mínimo **3:1**
-- **NUNCA** usar `text-muted-foreground/30` ou inferior para texto legível (apenas decorativo)
-- Dark mode do primary é `L=0.70` para garantir 6:1 em fundo escuro
+- Texto body sobre background: **4.5:1** (WCAG AA)
+- Texto grande (18pt+ ou 14pt bold): **3:1**
+- Elementos UI (borders, ícones): **3:1**
 
-### 16.2 Interação
+### 16.2 Focus ring
 
-- Touch targets: **mínimo 44×44px**
-- Focus visible: `focus-visible:ring-2 focus-visible:ring-ring` (exceto em `*:focus` globais removidos)
-- Todos clicáveis: `cursor-pointer`
-- `aria-label` em botões icon-only
-- `sr-only` para texto acessível escondido
-- Tab order deve seguir ordem visual
+- Sempre visível em navegação por teclado
+- `outline: 2px solid var(--zattar-purple-500)`
+- `outline-offset: 2px`
+- Nunca `outline: none` sem substituto equivalente
 
-### 16.3 Motion
+### 16.3 Navegação por teclado
 
-- `@media (prefers-reduced-motion: reduce)` implementado globalmente
-- Fornece alternativa estática para animações (skeleton fallback, auth spotlights param)
+- Todos os elementos interativos tabuláveis
+- Ordem de tab lógica (DOM order = visual order)
+- Skip link obrigatório em páginas principais (`<SkipLink>`)
 
-### 16.4 Semântica
+### 16.4 ARIA
 
-- `h1-h6` com `font-heading` automaticamente
-- `alt` obrigatório em `<Image>`
-- `aria-busy` em estados de loading
-- `role` apropriado em componentes customizados
+- Ícones decorativos: `aria-hidden="true"`
+- Ícones funcionais (botão-ícone): `aria-label`
+- Landmarks: `<main>`, `<nav>`, `<aside>`, `<header>`, `<footer>`
 
 ---
 
 ## 17. Badges Semânticos
 
-### 17.1 Sistema
+### 17.1 Variants
 
-**Nunca** hardcodar cores de badge. Usar:
+| Variant | Bg | Fg | Border | Uso |
+|---|---|---|---|---|
+| `neutral` | `--surface-white` | `oklch(0 0 0)` | `1px solid oklch(0.98 0 245)` | Metadata, counters |
+| `success` | `rgba(21,190,83,0.2)` | `--success-700` | `1px solid rgba(21,190,83,0.4)` | Active, paid, confirmed |
+| `warning` | `color-mix(in oklab, var(--warning-600) 20%, transparent)` | `var(--warning-600)` | `1px solid color-mix(...40%)` | Pending, attention |
+| `destructive` | `color-mix(in oklab, var(--destructive) 20%, transparent)` | `var(--destructive)` | `1px solid ...40%` | Error, cancelled |
+| `info` | `color-mix(in oklab, var(--zattar-purple-500) 10%, transparent)` | `var(--zattar-purple-500)` | `1px solid ...30%` | Info, processing |
 
-```tsx
-import { SemanticBadge } from '@/components/ui/semantic-badge'
+### 17.2 Estrutura
 
-<SemanticBadge category="tribunal" value="TRT1" />
-<SemanticBadge category="status" value="ATIVO" tone="soft" />
-```
+- Padding: `1px 6px` (neutral) ou `2px 8px` (status)
+- Radius: 4px
+- Font: 10px weight 300 (status) ou 11px weight 400 (neutral)
+- Uppercase opcional para labels técnicos
 
-### 17.2 Categorias (27)
+### 17.3 Componente canônico
 
-Mapeadas em [`src/lib/design-system/variants.ts`](../src/lib/design-system/variants.ts):
-
-| Categoria | Exemplos |
-|---|---|
-| `tribunal` | TRT1, TRT2, TST, STJ, STF, TJ-* |
-| `status` | ATIVO, SUSPENSO, ARQUIVADO, CONCLUIDO |
-| `grau` | 1o_GRAU, 2o_GRAU, TST, SUPERIOR |
-| `parte_tipo` | PERITO, TESTEMUNHA, MINISTERIO, ADVOGADO |
-| `polo` | ATIVO, PASSIVO, AUTOR, REU |
-| `audiencia_status` | AGENDADA, REALIZADA, CANCELADA |
-| `audiencia_modalidade` | PRESENCIAL, VIRTUAL, HIBRIDA |
-| `expediente_tipo` | CITACAO, INTIMACAO, NOTIFICACAO |
-| `captura_status` | PENDENTE, CAPTURADO, ERRO |
-| `comunicacao_cnj` | PENDENTE, ENVIADO, CONFIRMADO |
-| `pericia_situacao` | AGUARDANDO, EM_ANDAMENTO, CONCLUIDA |
-| `parcela_status` | PENDENTE, PAGO, VENCIDO, CANCELADO |
-| `repasse_status` | PENDENTE, PAGO, CANCELADO |
-
-> Lista completa: [`variants.ts`](../src/lib/design-system/variants.ts).
-
-### 17.3 Tones
-
-| Tone | Estilo | Uso |
-|---|---|---|
-| `soft` (default) | BG claro + texto colorido | Dentro de cards, tabelas |
-| `solid` | BG forte + texto branco | Destaque, headers |
+Usar `<Badge variant="...">` de [src/components/ui/badge.tsx](src/components/ui/badge.tsx) ou `<SemanticBadge>` de [src/components/ui/semantic-badge.tsx](src/components/ui/semantic-badge.tsx).
 
 ---
 
 ## 18. Theming Runtime
 
-### 18.1 ActiveThemeProvider
+### 18.1 Toggle
 
-Troca dinâmica de tema via data attributes no `<body>`:
+`next-themes` aplica/remove a classe `.dark` no `<html>`. Todas as CSS variables têm override em `.dark { ... }` no `globals.css`.
 
-- `data-theme-preset` — cor primária (7 presets)
-- `data-theme-radius` — raio (5 presets)
-- `data-theme-scale` — scale de fonte (3 presets)
-- `data-theme-content-layout` — `centered` (max-w-1280 + centro)
-- `class="dark"` — dark mode
+### 18.2 Inicialização
 
-### 18.2 Classes especiais
+Para evitar flash de tema errado, o `<ThemeProvider>` em [src/components/ui/theme-provider.tsx](src/components/ui/theme-provider.tsx) usa `defaultTheme="system"` + `enableSystem`.
 
-- `.website-root-scale` — escopo de marketing (font-size 16.2px + primary mais saturado)
-- `.auth-runway` — escopo de auth (spotlights + noise)
-- `.pedrinho-chat-wrapper` — escopo do assistente AI (overrides CopilotKit)
+### 18.3 Override por componente
+
+Proibido. Nenhum componente deve detectar `theme === 'dark'` e renderizar condicionalmente. Todos devem consumir semantic tokens e deixar o CSS resolver.
 
 ---
 
 ## 19. Governance
 
-### 19.1 Modelo
-
-Zattar OS usa modelo **Federated** com core centralizado:
-
-- **Core Team**: mantém `globals.css`, `tokens.ts`, MASTER.md, componentes shared
-- **Feature Teams**: consomem tokens, propõem novos via workflow §21
-- **Contribuidores**: qualquer dev pode propor token via PR seguindo §21
-
-### 19.2 Roles
+### 19.1 Roles
 
 | Role | Responsabilidade |
 |---|---|
-| **Design System Owner** | Mantém MASTER.md, aprova PRs de tokens |
-| **Adoption Champion** | 1 por módulo, garante que o módulo usa o sistema |
-| **Contributor** | Qualquer dev que consume e propõe |
+| **Design System Owner** | Mantém `globals.css`, `tokens.ts`, MASTER.md, aprova PRs estruturais |
+| **Module Developer** | Consome semantic tokens; nunca edita Reference direto |
+| **Reviewer** | Valida compliance em PRs |
 
-### 19.3 Cadência
+### 19.2 Invariantes
 
-| Evento | Frequência | Duração | Quem |
-|---|---|---|---|
-| Adoption Check-in | Mensal | 45min | Owner + Champions |
-| Governance Retro | Trimestral | 90min | Todos |
-| Token PR Review | On-demand | — | Owner + 1 Champion |
+1. **Nenhum hex literal fora de `globals.css` Reference tokens.**
+2. **Nenhum import direto de hex do design MD de referência — sempre via semantic.**
+3. **Docs simultâneas**: nenhum token merged sem entrada em `MASTER.md` + `token-registry.ts`.
+4. **Versionamento**: 3.0 = breaking (esta migração), 3.x = additions, 3.x.y = fixes.
 
-### 19.4 Princípios
-
-1. **CSS primeiro**: token só existe quando está em `@theme inline` + `:root`/`.dark` em `globals.css`
-2. **Docs simultâneas**: nenhum token é merged sem entrada correspondente em `MASTER.md`
-3. **Versionamento semântico**: adições = minor, breaking = major, fixes = patch
-4. **Deprecação com prazo**: tokens deprecated têm no mínimo 1 ciclo de aviso antes da remoção
+Ver [design-system/GOVERNANCE.md](design-system/GOVERNANCE.md) para o fluxo completo.
 
 ---
 
 ## 20. Métricas de Adoção
 
-Métricas inspiradas em **zeroheight Adoption Framework** e **Netguru DS Maturity Matrix**.
+Geradas por `npm run audit:design-system`:
 
-### 20.1 KPIs Primários
-
-| Métrica | Definição | Meta Q2/2026 | Fonte |
-|---|---|---|---|
-| **Component Coverage** | % de arquivos `.tsx` que importam ≥1 typed component (`<Heading>/<Text>/<GlassPanel>/<IconContainer>`) | ≥ 40% | `audit:design-system` |
-| **Manual Composition Rate** | Arquivos compondo `font-heading text-2xl` manualmente (anti-pattern) | 0 | grep |
-| **Hardcoded Color Rate** | Arquivos com classes `bg-<color>-<n>` ou hex literal | ≤ 3 arquivos | grep |
-| **`shadow-xl` Usage** | Arquivos com `shadow-xl` (proibido) | 0 em `(authenticated)/` | grep |
-| **Token Documentation Coverage** | % de CSS variables documentadas em MASTER.md | ≥ 95% | `audit:design-system` |
-| **Typed Component Adoption** | Contagem absoluta de arquivos com `<Heading>/<Text>/<GlassPanel>/<PageShell>` | ≥ 200 | grep |
-
-### 20.2 KPIs Secundários
-
-| Métrica | Definição | Meta |
+| KPI | Meta | Status |
 |---|---|---|
-| **Exception Log Volume** | PRs marcados com `design-system:exception` | ≤ 2/mês |
-| **Time-to-Token** | Horas entre proposta de token e merge em `globals.css` | ≤ 48h |
-| **Drift Incidents** | Bugs visuais por divergência de tokens em QA | 0 por sprint |
-| **Module Adoption Score** | % de módulos com ≥1 `PageShell` + componentes typed | ≥ 90% |
+| Hex literals fora de Reference | 0 | Gate CI |
+| Tailwind color hardcodes (bg-blue-500 etc) | 0 | Gate CI |
+| Tokens sem documentação em MASTER.md | 0 | Warning |
+| `<GlassPanel>` sem depth explícito | 0 | Warning |
+| Cards com `rounded-2xl+` | 0 | Gate CI |
+| Fontes fora de Switzer/Source Code Pro | 0 | Gate CI |
 
-### 20.3 Como medir
-
-Executar localmente:
-
-```bash
-npm run audit:design-system            # report completo em JSON + Markdown
-npm run audit:design-system -- --fail  # exit 1 se meta não atingida (CI)
-```
-
-O relatório é salvo em `design-system/reports/YYYY-MM-DD.md` e `design-system/reports/latest.json`.
-
-### 20.4 Baseline (2026-04-22, post Sprints 1+2+3)
-
-**Todos os 8 KPIs verdes.** Score overall 66 limitado por violações em components globais (`bg-white/[1-15]` fora do escopo admin) + adoption file-% em 36% (meta info 40%).
-
-| Métrica | Valor | Meta | Status |
-|---|---|---|:---:|
-| Overall Score | **66/100 (C)** | ≥ 75 (B) | WARN |
-| Typography Adoption | **230** | ≥ 200 | ✅ OK |
-| GlassPanel Adoption | 126 | ≥ 115 | ✅ OK |
-| IconContainer Adoption | 32 | — | baseline |
-| PageShell Adoption | 39 | — | baseline |
-| SemanticBadge Adoption | 51 | — | baseline |
-| Any typed (file %) | **36%** (369/1021) | ≥ 40% | WARN |
-| Manual Composition | 0 | 0 | ✅ OK |
-| `shadow-xl/2xl` em auth | 0 | 0 | ✅ OK |
-| Hardcoded Tailwind colors | 3 | ≤ 3 | ✅ OK |
-| Hex em auth | **0** | ≤ 9 | ✅ OK |
-| Token Registry Coverage | **100%** (202/202) | ≥ 99% | ✅ OK |
-| Token Documentation Coverage | **95%** | ≥ 95% | ✅ OK |
+Snapshot diário em [design-system/reports/latest.json](design-system/reports/latest.json).
 
 ---
 
 ## 21. Workflow de Mudança
 
-### 21.1 Adicionar token novo
+1. Proposta em issue: motivação, before/after, impacto em audit.
+2. PR toca `globals.css` + `tokens.ts` + `token-registry.ts` + `MASTER.md` **no mesmo commit**.
+3. Audit passa local (`npm run audit:design-system:ci`).
+4. Review pelo DS Owner.
+5. Merge → rebuild + snapshot de métricas.
 
-```
-1. PROPOR       → abrir issue "[DS] Novo token: --xxx" com caso de uso + valor proposto
-2. DISCUTIR     → owner + 1 champion revisam em 48h
-3. IMPLEMENTAR  → PR contendo:
-                  ├─ globals.css: definição em :root + .dark (se aplicável)
-                  ├─ globals.css: @theme inline mapping
-                  ├─ tokens.ts: entrada no agrupamento correto (se TS-consumed)
-                  ├─ MASTER.md: seção apropriada atualizada
-                  └─ tests: ao menos 1 uso real em componente
-4. REVIEW       → owner aprova MASTER + código
-5. MERGE        → automático se audit:design-system passar
-```
-
-### 21.2 Modificar token existente
-
-```
-1. CHECK        → npm run audit:design-system -- --where=<token-name>
-                  (lista todos os usos do token)
-2. PROPOSAL     → PR alterando valor com:
-                  ├─ screenshots antes/depois
-                  ├─ breakdown de impacto (# arquivos afetados)
-                  └─ justificativa
-3. APROVACAO    → owner + 2 champions (não 1)
-4. MERGE        → com label "design-system:breaking" se tour de módulos exigida
-```
-
-### 21.3 Deprecar token
-
-```
-1. MARK         → adicionar @deprecated em MASTER + comment em globals.css
-2. WAIT         → 1 ciclo de sprint mínimo
-3. MIGRATE      → owner cria PRs de migração automática (sed/codemod) para consumidores
-4. REMOVE       → PR removendo token + audit final
-```
-
-### 21.4 Como rodar o audit
-
-```bash
-# Relatório completo
-npm run audit:design-system
-
-# Só métricas de adoção (rápido)
-npm run audit:design-system -- --metrics-only
-
-# Detalhar ofensores de um padrão específico
-npm run audit:design-system -- --violations=hardcoded-colors
-npm run audit:design-system -- --violations=shadow-xl
-npm run audit:design-system -- --violations=manual-composition
-
-# Saída CI (exit code 1 se falhar)
-npm run audit:design-system -- --ci
-
-# Onde um token está sendo usado
-npm run audit:design-system -- --where=--primary
-```
+Deprecation: manter token antigo com `@deprecated` por 1 sprint, notificar em CHANGELOG, então remover.
 
 ---
 
 ## 22. Anti-Patterns
 
-### 22.1 Absolutos (bloqueiam PR)
+### ❌ Nunca
 
-| Anti-Pattern | Correto |
-|---|---|
-| Emojis como ícones UI | SVG do Lucide |
-| `shadow-xl` / `shadow-2xl` | `shadow-lg` no máximo |
-| Hardcoded color (`bg-blue-500`, `text-red-600`) | Tokens semânticos (`bg-primary`, `text-destructive`) |
-| Hex literal (`#fff`, `#5523eb`) em componentes | Variável OKLCH ou token |
-| `font-heading text-2xl font-bold` manual | `<Heading level="page">` |
-| Composição manual de `<Text>` | `<Text variant="...">` |
-| `text-gray-400` em light mode | `text-muted-foreground/50` mínimo |
-| `bg-white/10` em light mode | `bg-white/55` mínimo |
-| Fontes literais (`font-family: 'Inter'`) | CSS variable (`font-sans`) |
-| Mistura de bibliotecas de ícones | Apenas Lucide React |
-| `<Sheet>` como detail panel | `<Dialog>` com classes `glass-dialog` |
-| `z-index` arbitrário (`z-[999]`) | Escala definida (`z-10/20/30/40/50/60/70`) |
-| Animar `width`/`height`/`top`/`left` | Usar `transform` + `opacity` |
-| Botões icon-only sem `aria-label` | Sempre incluir `aria-label` |
-| `text-caption` (13px) em pill/trigger de filtro | `text-[11px]` — ver §13.6 |
-| Filter-bar com `text-xs`/`text-sm`/`text-caption` | `text-[11px] font-medium` — ver §13.6 |
-| Tamanhos de fonte mistos dentro da mesma toolbar | Padronizar — ver §13.6 |
+```tsx
+// Hex literal
+<div style={{ background: '#533afd' }}>   // → bg-primary
 
-### 22.2 Fortes (review exige justificativa)
+// Tailwind color hardcode
+<div className="bg-blue-500">             // → bg-primary
 
-| Anti-Pattern | Racional |
-|---|---|
-| Criar novo `--palette-N` | Os 18 existentes cobrem todos os casos de tag/event |
-| Criar `--tertiary` novo | MD3 `--tertiary` (hue 25°) já existe |
-| Usar `--tertiary` fora de vermelho complementar | É reservado para erro/destaque complementar |
-| Criar nova classe `.glass-*` | 7 variantes já cobrem todos os contextos |
-| Criar novo `font-*` | 5 stacks já cobrem todos os usos |
+// Weight 600/700 em sans display
+<Heading className="font-bold">           // → weight 300 já é default
 
-### 22.3 Convenções (não-bloqueantes)
+// Border radius pill em card
+<Card className="rounded-full">           // → rounded-sm (4px)
 
-- Preferir `<SemanticBadge>` sobre `<Badge>` com classes manuais
-- Preferir `IconContainer` sobre `<div className="size-10 rounded-xl">`
-- Preferir `<PageShell>` sobre montar header/content manualmente
-- Preferir `SPACING_SEMANTIC.page.padding` sobre `p-4 sm:p-6 lg:p-8`
+// backdrop-blur em surface primária
+<div className="backdrop-blur-xl">        // → elevation tokens
+
+// Black puro em heading
+<h1 className="text-black">               // → text-foreground (navy)
+
+// Orange/yellow em interactive
+<Button className="bg-orange-500">        // → bg-primary (purple)
+```
+
+### ✅ Sempre
+
+```tsx
+// Semantic token
+<div className="bg-primary">
+
+// Typography component
+<Heading level="page">Audiências</Heading>
+<Text variant="body">descrição...</Text>
+
+// Tabular em número
+<Text variant="caption-tabular">R$ 1.234,56</Text>
+
+// GlassPanel com depth
+<GlassPanel depth={2}>...</GlassPanel>
+
+// Ring de foco semântico
+<button className="focus-visible:ring-2 focus-visible:ring-primary">
+```
 
 ---
 
 ## 23. Checklist Pre-Entrega
 
-### Visual
+Antes de dar merge em qualquer mudança visual:
 
-- [ ] Sem emojis como ícones (apenas Lucide SVG)
-- [ ] Todas as cores via tokens (CSS variables), sem hardcoded
-- [ ] Hover states não causam layout shift
-- [ ] Glass elements visíveis em light mode (opacity ≥ 55%)
-- [ ] Badges usando `<SemanticBadge>`, nunca classes de cor
-
-### Interação
-
-- [ ] Todos clicáveis têm `cursor-pointer`
-- [ ] Hover states fornecem feedback visual
-- [ ] Transições em 150–300ms
-- [ ] Focus states visíveis para teclado
-
-### Layout
-
-- [ ] Responsivo em 375px, 768px, 1024px, 1440px
-- [ ] Sem scroll horizontal em mobile
-- [ ] Conteúdo não escondido atrás de elementos fixos
-- [ ] `max-width` consistente
-
-### Dados
-
-- [ ] Números com `tabular-nums`
-- [ ] Empty states definidos
-- [ ] Loading skeletons definidos (usar `.skeleton` shimmer)
-
-### Acessibilidade
-
-- [ ] Alt text em imagens
-- [ ] Labels em form inputs
-- [ ] `aria-label` em botões icon-only
-- [ ] `prefers-reduced-motion` respeitado
-- [ ] Contraste 4.5:1 mínimo em texto
-
-### Tokens
-
-- [ ] Nenhum novo hex literal
-- [ ] Nenhuma nova classe de cor Tailwind (`bg-blue-*` etc)
-- [ ] Se novo token foi criado: workflow §21 seguido
-- [ ] `npm run audit:design-system -- --ci` passa
+- [ ] Nenhum hex literal fora de `globals.css :root`
+- [ ] Nenhuma Tailwind color utility (`bg-blue-*`, `text-red-*` etc)
+- [ ] Todo texto sans usa `<Heading>` ou `<Text>` (sem `<h1>` direto, sem `<span className="text-xl">`)
+- [ ] Todo card usa `<GlassPanel>` ou `<Card>` (sem `<div>` com classes de sombra inline)
+- [ ] Border-radius ≤ 8px em containers/botões/inputs
+- [ ] Weight 300 em `Heading` display/page/section
+- [ ] Focus ring visível e roxo
+- [ ] Dark mode validado
+- [ ] `npm run audit:design-system` sem novos offenders
+- [ ] `npm run type-check` passando
 
 ---
 
 ## 24. Mapa de Arquivos
 
-```
-design-system/
-├── MASTER.md                    ESTE ARQUIVO — Single Source of Truth
-├── GOVERNANCE.md                Workflow de mudança + escalação
-├── ROADMAP.md                   Plano de adequação + métricas
-├── UNIFIED_LAYOUT_PATTERN.md    Patterns específicos de layout
-└── reports/
-    ├── latest.json              Último relatório do audit
-    └── YYYY-MM-DD.md            Snapshots históricos
-
-src/app/globals.css              CANÔNICO — 495 CSS variables + @theme inline
-                                  ├─ :root  (light mode + component tokens)
-                                  ├─ .dark  (dark mode override)
-                                  ├─ @theme inline (Tailwind v4 token registry)
-                                  ├─ @layer base (HTML defaults)
-                                  ├─ @layer components (typography classes, tabs)
-                                  └─ @layer utilities (glass, skeleton, status, chat)
-
-src/lib/design-system/
-├── tokens.ts                    TS mirror: SPACING, TYPOGRAPHY, PAGE_LAYOUT,
-│                                 GLASS_DEPTH, ICON_CONTAINER, AVATAR_SIZES,
-│                                 SHADOWS, RADIUS, TRANSITIONS, Z_INDEX,
-│                                 COLOR_TOKENS, PALETTE, EVENT_COLORS,
-│                                 PORTAL, SURFACE, MD3
-├── variants.ts                  Semantic badge variants (27 categorias)
-├── event-colors.ts              Calendar/agenda event colors
-├── semantic-tones.ts            Domain tone layer (no color)
-├── utils.ts                     Formatters BR (CPF/CNPJ/Date/Currency)
-└── index.ts                     Barrel export
-
-src/components/
-├── ui/                          104+ componentes shadcn/ui + typed wrappers
-│   ├── typography.tsx           <Heading> <Text> (typed enforcement)
-│   ├── icon-container.tsx       <IconContainer>
-│   ├── semantic-badge.tsx       <SemanticBadge>
-│   └── ...
-├── shared/                      Shells obrigatórios
-│   ├── page-shell.tsx
-│   ├── data-shell.tsx
-│   ├── dialog-form-shell.tsx
-│   ├── glass-panel.tsx
-│   └── ...
-└── dashboard/                   Primitivos CRM (EntityCard, PulseStrip, TabPills)
-
-tailwind.config.ts               LEGACY v4 — apenas plugins + maxWidth custom
-                                 (cores estão em @theme inline do CSS)
-```
-
-### Fontes (carregadas em `layout.tsx`)
-
-```
-Inter       → --font-inter       → font-sans      (corpo, UI)
-Montserrat  → --font-montserrat  → font-heading   (títulos)
-Montserrat  → --font-montserrat  → font-display   (KPIs — alias)
-Manrope     → --font-manrope     → font-headline  (Magistrate AI)
-Geist Mono  → --font-geist-mono  → font-mono      (código, números)
-```
+| Arquivo | Papel | Editar? |
+|---|---|---|
+| [design-system/MASTER.md](design-system/MASTER.md) | Este documento — contrato narrativo | Sim, via workflow seção 21 |
+| [design-system/GOVERNANCE.md](design-system/GOVERNANCE.md) | Workflow e roles | Raramente |
+| [design-system/ROADMAP.md](design-system/ROADMAP.md) | Metas trimestrais, KPIs, baseline | Por quarter |
+| [design-system/reports/](design-system/reports/) | Snapshots do audit | Auto-gerado |
+| [src/app/globals.css](src/app/globals.css) | **CSS Canônico** — `:root` + `.dark` + `@theme inline` + classes | DS Owner |
+| [src/lib/design-system/tokens.ts](src/lib/design-system/tokens.ts) | Espelho TS dos tokens (SPACING, TYPOGRAPHY, etc) | DS Owner |
+| [src/lib/design-system/token-registry.ts](src/lib/design-system/token-registry.ts) | Lista tipada para audit | Sincronizar com globals |
+| [src/components/shared/glass-panel.tsx](src/components/shared/glass-panel.tsx) | `<GlassPanel depth={1\|2\|3}>` — API estável, visual Zattar | DS Owner |
+| [src/components/ui/typography.tsx](src/components/ui/typography.tsx) | `<Heading>` + `<Text>` com escala Zattar | DS Owner |
+| [src/app/layout.tsx](src/app/layout.tsx) | Imports de Switzer + Source Code Pro | DS Owner |
+| [tailwind.config.ts](tailwind.config.ts) | Apenas plugins + max-w custom | Raramente |
 
 ---
 
-**Fim do MASTER.md v2.0.0** — Quando em dúvida, leia `globals.css` primeiro (é a fonte canônica), MASTER.md depois (é a fonte narrativa).
-
-Para workflow de mudança, ver [`GOVERNANCE.md`](./GOVERNANCE.md).
-Para plano de adequação e KPIs, ver [`ROADMAP.md`](./ROADMAP.md).
+**Fim do MASTER.md — versão 3.0.0**

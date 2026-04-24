@@ -231,72 +231,136 @@
 /* :root = LIGHT MODE (default para área logada) */
 /* .dark = DARK MODE (website público + toggle) */
 :root {
+  /* ============================================================================
+   * ZATTAR DESIGN SYSTEM — LIGHT MODE (v3.0)
+   * Linguagem visual Zattar — superfícies opacas, sombras azul-tintadas,
+   * Zattar Purple #533afd como âncora interativa, Deep Navy #061b31 para headings.
+   * Canonical spec: design-system/MASTER.md
+   * ============================================================================ */
+
   /* Configuração Global */
   --radius: 0.5rem;
-  /* 8px -> Visual Tech/Sharp */
+  /* 8px — mantido neste commit; próxima etapa migra para 0.25rem (4px Zattar) */
 
-  /* === ZATTAR LIGHT MODE === */
-  /* Âncoras: Primary #5523eb | Neutral #282828 | Highlight oklch(0.6 0.22 45) */
-  --background: oklch(0.96 0.01 281);
-  --foreground: oklch(0.15 0.01 281);
+  /* ========================================================================
+   * REFERENCE TOKENS — Zattar Purple Scale
+   * ======================================================================== */
+  --zattar-purple-200: oklch(0.89 0.04 275);   /* #d6d9fc — borda suave */
+  --zattar-purple-300: oklch(0.78 0.10 276);   /* #b9b9f9 — borda ativa */
+  --zattar-purple-400: oklch(0.55 0.22 275);   /* #665efd — range, highlight */
+  --zattar-purple-500: oklch(0.52 0.27 276);   /* #533afd — PRIMARY */
+  --zattar-purple-600: oklch(0.45 0.25 276);   /* #4434d4 — hover primary */
+  --zattar-purple-700: oklch(0.30 0.21 276);   /* #2e2b8c — deep hover */
+  --zattar-purple-900: oklch(0.33 0.18 275);   /* #362baa — dashed border */
 
-  /* Cards & Popovers */
-  --card: oklch(1.0 0 0);
-  --card-foreground: oklch(0.15 0.01 281);
+  /* ========================================================================
+   * REFERENCE TOKENS — Navy & Text (deep blue, não gray)
+   * ======================================================================== */
+  --navy-heading: oklch(0.21 0.045 253);       /* #061b31 — todos os headings */
+  --navy-label: oklch(0.32 0.045 253);         /* #273951 — form labels */
+  --navy-body: oklch(0.54 0.03 250);           /* #64748d — body, captions */
+  --navy-975: oklch(0.25 0.045 253);           /* #0d253d — darkest neutral */
 
-  --popover: oklch(1.0 0 0);
-  --popover-foreground: oklch(0.15 0.01 281);
+  /* ========================================================================
+   * REFERENCE TOKENS — Brand Dark (seção brand imersiva + dark mode base)
+   * ======================================================================== */
+  --brand-dark-900: oklch(0.22 0.10 275);      /* #1c1e54 */
 
-  /* Primary: Zattar Purple #5523eb = oklch(0.48 0.26 281) */
-  --primary: oklch(0.48 0.26 281);
-  --primary-foreground: oklch(1.0 0 0);
+  /* ========================================================================
+   * REFERENCE TOKENS — Accent Colors (APENAS decorativos, nunca UI)
+   * ======================================================================== */
+  --accent-ruby: oklch(0.58 0.25 15);          /* #ea2261 — ícones, gradientes */
+  --accent-magenta: oklch(0.73 0.25 330);      /* #f96bee — gradientes hero */
+  --accent-magenta-100: oklch(0.92 0.08 340);  /* #ffd7ef — surfaces tintadas */
 
-  /* Secondary: Primary tone-95 (purple wash suave) */
-  --secondary: oklch(0.95 0.04 281);
-  --secondary-foreground: oklch(0.15 0.01 281);
+  /* ========================================================================
+   * REFERENCE TOKENS — Status
+   * ======================================================================== */
+  --success-500: oklch(0.70 0.20 145);         /* #15be53 */
+  --success-700: oklch(0.55 0.18 150);         /* #108c3d */
+  --warning-600: oklch(0.52 0.10 65);          /* #9b6829 — lemon */
 
-  --muted: oklch(0.92 0.01 281);
-  --muted-foreground: oklch(0.42 0.01 281);
+  /* ========================================================================
+   * REFERENCE TOKENS — Borders & Surface
+   * ======================================================================== */
+  --surface-white: oklch(1 0 0);               /* #ffffff */
+  --border-default: oklch(0.94 0.01 245);      /* #e5edf5 */
 
-  /* Accent: Purple wash para hovers */
-  --accent: oklch(0.95 0.04 281);
-  --accent-foreground: oklch(0.15 0.01 281);
+  /* ========================================================================
+   * REFERENCE TOKENS — Shadow (RGBA literal — OKLCH em box-shadow ainda frágil)
+   * ======================================================================== */
+  --shadow-zattar-blue: rgba(50, 50, 93, 0.25);
+  --shadow-zattar-deep: rgba(3, 3, 39, 0.25);
+  --shadow-neutral: rgba(0, 0, 0, 0.1);
+  --shadow-ambient: rgba(23, 23, 23, 0.08);
+  --shadow-soft: rgba(23, 23, 23, 0.06);
+  --shadow-top-sticky: rgba(0, 55, 112, 0.08);
 
-  /* Skeleton: cinza neutro dedicado para estados de loading (chroma 0) */
-  --skeleton: oklch(0.93 0 0);
+  /* ========================================================================
+   * SEMANTIC TOKENS — Núcleo shadcn (obrigatório)
+   * ======================================================================== */
+  --background: var(--surface-white);
+  --foreground: var(--navy-heading);
+
+  --card: var(--surface-white);
+  --card-foreground: var(--navy-heading);
+
+  --popover: var(--surface-white);
+  --popover-foreground: var(--navy-heading);
+
+  --primary: var(--zattar-purple-500);
+  --primary-foreground: var(--surface-white);
+
+  --secondary: oklch(0.97 0.005 250);
+  --secondary-foreground: var(--navy-heading);
+
+  --muted: oklch(0.98 0.005 245);
+  --muted-foreground: var(--navy-body);
+
+  --accent: oklch(0.97 0.01 276);
+  --accent-foreground: var(--zattar-purple-500);
+
+  --destructive: var(--accent-ruby);
+  --destructive-foreground: var(--surface-white);
+
+  --border: var(--border-default);
+  --input: var(--border-default);
+  --ring: var(--zattar-purple-500);
+
+  /* Skeleton: cinza neutro dedicado para loading */
+  --skeleton: oklch(0.94 0 0);
   --skeleton-highlight: oklch(0.97 0 0);
 
-  /* Destructive */
-  --destructive: oklch(0.55 0.22 25);
-  --destructive-foreground: oklch(1.0 0 0);
+  /* ========================================================================
+   * SEMANTIC TOKENS — Sidebar (SEMPRE escura em ambos os temas)
+   * ======================================================================== */
+  --sidebar: var(--brand-dark-900);
+  --sidebar-foreground: var(--surface-white);
+  --sidebar-primary: var(--zattar-purple-400);
+  --sidebar-primary-foreground: var(--surface-white);
+  --sidebar-accent: oklch(1 0 0 / 0.08);
+  --sidebar-accent-foreground: var(--surface-white);
+  --sidebar-border: oklch(1 0 0 / 0.10);
+  --sidebar-ring: var(--zattar-purple-400);
 
-  /* Borders: Neutral com tint */
-  --border: oklch(0.87 0.01 281);
-  --input: oklch(0.87 0.01 281);
-  --ring: transparent;
+  /* ========================================================================
+   * SEMANTIC TOKENS — Brand
+   * --highlight é DEPRECATED para UI, permanece apenas como alias decorativo
+   * ======================================================================== */
+  --brand: var(--zattar-purple-500);
+  --highlight: var(--accent-ruby);
 
-  /* SIDEBAR (Premium escura em ambos os temas) */
-  --sidebar: oklch(0.22 0.01 281);
-  --sidebar-foreground: oklch(0.98 0 0);
-  --sidebar-primary: oklch(0.70 0.20 281);
-  --sidebar-primary-foreground: oklch(1.0 0 0);
-  --sidebar-accent: oklch(0.30 0.01 281);
-  --sidebar-accent-foreground: oklch(1.0 0 0);
-  --sidebar-border: oklch(1.0 0 0 / 0.1);
-  --sidebar-ring: oklch(0.70 0.20 281);
-
-  /* CORES DA MARCA & GRÁFICOS */
-  --brand: oklch(0.48 0.26 281);
-  --highlight: oklch(0.60 0.22 45);
-
-  --chart-1: oklch(0.48 0.26 281);
-  --chart-2: oklch(0.60 0.22 45);
-  --chart-3: oklch(0.92 0.01 281);
-  --chart-4: oklch(0.55 0.18 150);
-  --chart-5: oklch(0.70 0.01 281);
-  --chart-6: oklch(0.65 0.15 200);
-  --chart-7: oklch(0.60 0.18 320);
-  --chart-8: oklch(0.70 0.12 80);
+  /* ========================================================================
+   * SEMANTIC TOKENS — Charts (paleta Zattar)
+   * ======================================================================== */
+  --chart-1: var(--zattar-purple-500);
+  --chart-2: var(--accent-ruby);
+  --chart-3: var(--success-500);
+  --chart-4: var(--warning-600);
+  --chart-5: var(--accent-magenta);
+  --chart-6: var(--navy-body);
+  --chart-7: var(--zattar-purple-300);
+  --chart-8: var(--navy-label);
 
   /* Tons derivados para treemaps e funnels */
   --chart-primary-soft: oklch(from var(--primary) l c h / 0.50);
@@ -307,182 +371,210 @@
   --chart-success-dark: oklch(from var(--success) calc(l - 0.05) c h);
   --chart-warning-dark: oklch(from var(--warning) calc(l - 0.05) c h);
 
-  /* Glow effects */
+  /* ========================================================================
+   * SEMANTIC TOKENS — Glow effects
+   * ======================================================================== */
   --glow-primary: oklch(from var(--primary) l c h / 0.35);
   --glow-primary-subtle: oklch(from var(--primary) l c h / 0.04);
   --glow-primary-faint: oklch(from var(--primary) l c h / 0.02);
   --glow-destructive: oklch(from var(--destructive) l c h / 0.50);
   --glow-warning: oklch(from var(--warning) l c h / 0.40);
 
-  /* VIDEO CALL TOKENS (always dark — videochamada é sempre escura) */
-  --video-bg: oklch(0.145 0.005 281);
-  --video-surface: oklch(0.21 0.005 281);
-  --video-surface-hover: oklch(0.278 0.005 281);
-  --video-border: oklch(0.278 0.005 281);
-  --video-muted: oklch(0.556 0.01 281);
-  --video-text: oklch(1.0 0 0);
-  --video-skeleton: oklch(0.278 0.005 281);
+  /* ========================================================================
+   * VIDEO CALL TOKENS (sempre dark — videochamada nunca clareia)
+   * ======================================================================== */
+  --video-bg: var(--brand-dark-900);
+  --video-surface: oklch(1 0 0 / 0.06);
+  --video-surface-hover: oklch(1 0 0 / 0.10);
+  --video-border: oklch(1 0 0 / 0.12);
+  --video-muted: oklch(1 0 0 / 0.60);
+  --video-text: var(--surface-white);
+  --video-skeleton: oklch(1 0 0 / 0.06);
 
-  /* SEMANTIC STATUS COLORS (Light) */
-  --success: oklch(0.55 0.18 145);
-  --success-foreground: oklch(1.0 0 0);
-  --warning: oklch(0.60 0.18 75);
-  --warning-foreground: oklch(1.0 0 0);
-  --info: oklch(0.55 0.18 250);
-  --info-foreground: oklch(1.0 0 0);
+  /* ========================================================================
+   * SEMANTIC TOKENS — Status
+   * ======================================================================== */
+  --success: var(--success-500);
+  --success-foreground: var(--success-700);
+  --warning: var(--warning-600);
+  --warning-foreground: var(--surface-white);
+  --info: var(--zattar-purple-500);
+  --info-foreground: var(--surface-white);
 
-  /* SURFACE TOKENS (Light Layering) */
-  --surface-1: oklch(0.98 0.005 281);
-  --surface-2: oklch(0.97 0.005 281);
-  --surface-3: oklch(0.95 0.005 281);
+  /* ========================================================================
+   * SEMANTIC TOKENS — Surface (hierarquia Zattar)
+   * Todas as surfaces light são opacas/brancas — hierarquia por sombra, não cor
+   * ======================================================================== */
+  --surface-1: var(--surface-white);
+  --surface-2: var(--surface-white);
+  --surface-3: var(--surface-white);
 
-  /* CHAT-SPECIFIC TOKENS (Light) */
-  --chat-thread-bg: oklch(0.97 0.005 281);
-  --chat-bubble-received: oklch(1.0 0 0);
+  /* ========================================================================
+   * SEMANTIC TOKENS — Chat
+   * ======================================================================== */
+  --chat-thread-bg: oklch(0.98 0.005 245);
+  --chat-bubble-received: var(--surface-white);
   --chat-bubble-sent: var(--primary);
-  --chat-sidebar-active: oklch(0.95 0.04 281);
+  --chat-sidebar-active: oklch(0.96 0.02 276);
 
-  /* MD3 SURFACE HIERARCHY (Light) */
-  /* Neutrals tintados com hue 281° (primary) e croma mínima (0.005-0.01) */
-  --surface: oklch(0.98 0.005 281);
-  --surface-dim: oklch(0.90 0.005 281);
-  --surface-bright: oklch(1.0 0 0);
-  --surface-container-lowest: oklch(1.0 0 0);
-  --surface-container-low: oklch(0.97 0.005 281);
-  --surface-container: oklch(0.96 0.005 281);
-  --surface-container-high: oklch(0.94 0.005 281);
-  --surface-container-highest: oklch(0.92 0.005 281);
-  --surface-variant: oklch(0.93 0.01 281);
-  --on-surface: oklch(0.15 0.01 281);
-  --on-surface-variant: oklch(0.38 0.01 281);
-  --inverse-surface: oklch(0.20 0.01 281);
-  --inverse-on-surface: oklch(0.96 0.005 281);
-  --outline: oklch(0.50 0.01 281);
-  --outline-variant: oklch(0.78 0.01 281);
+  /* ========================================================================
+   * MD3 SURFACE HIERARCHY (compat shadcn — subordinado ao sistema Zattar)
+   * Em light mode todas as surfaces são white/near-white; hierarquia real via sombra
+   * ======================================================================== */
+  --surface: var(--surface-white);
+  --surface-dim: oklch(0.96 0.005 245);
+  --surface-bright: var(--surface-white);
+  --surface-container-lowest: var(--surface-white);
+  --surface-container-low: oklch(0.98 0.005 245);
+  --surface-container: oklch(0.97 0.005 245);
+  --surface-container-high: oklch(0.95 0.005 245);
+  --surface-container-highest: oklch(0.93 0.005 245);
+  --surface-variant: oklch(0.94 0.01 245);
+  --on-surface: var(--navy-heading);
+  --on-surface-variant: var(--navy-body);
+  --inverse-surface: var(--brand-dark-900);
+  --inverse-on-surface: var(--surface-white);
+  --outline: var(--navy-body);
+  --outline-variant: var(--border-default);
 
-  /* Primary Extended (Light) — derivados da escala tonal hue 281° */
-  --on-primary: oklch(1.0 0 0);
-  --primary-container: oklch(0.90 0.10 281);
-  --on-primary-container: oklch(0.15 0.10 281);
-  --primary-fixed: oklch(0.90 0.10 281);
-  --primary-fixed-dim: oklch(0.80 0.18 281);
-  --on-primary-fixed: oklch(0.15 0.10 281);
-  --on-primary-fixed-variant: oklch(0.35 0.22 281);
+  /* Primary Extended (Light) */
+  --on-primary: var(--surface-white);
+  --primary-container: oklch(0.92 0.08 276);
+  --on-primary-container: var(--zattar-purple-700);
+  --primary-fixed: oklch(0.92 0.08 276);
+  --primary-fixed-dim: var(--zattar-purple-300);
+  --on-primary-fixed: var(--zattar-purple-700);
+  --on-primary-fixed-variant: var(--zattar-purple-600);
 
-  /* Secondary Extended (Light) — tom desaturado do primary */
-  --on-secondary: oklch(1.0 0 0);
-  --secondary-container: oklch(0.90 0.06 281);
-  --on-secondary-container: oklch(0.20 0.06 281);
-  --secondary-fixed: oklch(0.92 0.06 281);
-  --secondary-fixed-dim: oklch(0.80 0.10 281);
-  --on-secondary-fixed: oklch(0.20 0.06 281);
-  --on-secondary-fixed-variant: oklch(0.40 0.10 281);
+  /* Secondary Extended (Light) */
+  --on-secondary: var(--navy-heading);
+  --secondary-container: oklch(0.94 0.03 275);
+  --on-secondary-container: var(--navy-heading);
+  --secondary-fixed: oklch(0.94 0.03 275);
+  --secondary-fixed-dim: oklch(0.86 0.06 275);
+  --on-secondary-fixed: var(--navy-heading);
+  --on-secondary-fixed-variant: var(--navy-label);
 
-  /* Tertiary (Light) — vermelho complementar (hue 25°) */
-  --tertiary: oklch(0.50 0.20 25);
-  --on-tertiary: oklch(1.0 0 0);
-  --tertiary-container: oklch(0.90 0.08 25);
-  --on-tertiary-container: oklch(0.15 0.08 25);
-  --tertiary-fixed: oklch(0.90 0.08 25);
-  --tertiary-fixed-dim: oklch(0.80 0.14 25);
-  --on-tertiary-fixed: oklch(0.15 0.08 25);
-  --on-tertiary-fixed-variant: oklch(0.35 0.16 25);
+  /* Tertiary (Light) — Ruby como complemento */
+  --tertiary: var(--accent-ruby);
+  --on-tertiary: var(--surface-white);
+  --tertiary-container: oklch(0.92 0.08 15);
+  --on-tertiary-container: oklch(0.25 0.14 15);
+  --tertiary-fixed: oklch(0.92 0.08 15);
+  --tertiary-fixed-dim: oklch(0.82 0.14 15);
+  --on-tertiary-fixed: oklch(0.20 0.14 15);
+  --on-tertiary-fixed-variant: oklch(0.35 0.18 15);
 
   /* Error (Light) */
-  --error-container: oklch(0.90 0.08 25);
-  --on-error-container: oklch(0.15 0.08 25);
-  --on-error: oklch(1.0 0 0);
+  --error-container: oklch(0.92 0.08 15);
+  --on-error-container: oklch(0.20 0.14 15);
+  --on-error: var(--surface-white);
 
   /* Dim Variants (Light) */
-  --primary-dim: oklch(0.35 0.24 281);
-  --secondary-dim: oklch(0.45 0.14 281);
-  --tertiary-dim: oklch(0.45 0.18 25);
-  --error-dim: oklch(0.50 0.20 25);
-  --inverse-primary: oklch(0.80 0.18 281);
-  --surface-tint: oklch(0.48 0.26 281);
+  --primary-dim: var(--zattar-purple-700);
+  --secondary-dim: var(--navy-label);
+  --tertiary-dim: oklch(0.40 0.18 15);
+  --error-dim: oklch(0.45 0.20 15);
+  --inverse-primary: var(--zattar-purple-300);
+  --surface-tint: var(--zattar-purple-500);
 
-  /* === PORTAL DO CLIENTE — Tokens Derivados (Light) === */
-  --portal-bg: oklch(0.97 0.005 281);
-  --portal-card: oklch(1.0 0 0);
-  --portal-card-hover: oklch(0.98 0.005 281);
-  --portal-surface: oklch(0.95 0.008 281);
-  --portal-text: oklch(0.15 0.01 281);
-  --portal-text-muted: oklch(0.45 0.01 281);
-  --portal-text-subtle: oklch(0.60 0.005 281);
-  --portal-primary: var(--primary);
-  --portal-primary-soft: oklch(0.95 0.05 281);
-  --portal-success: var(--success);
-  --portal-success-soft: oklch(0.95 0.05 145);
-  --portal-warning: var(--warning);
-  --portal-warning-soft: oklch(0.95 0.05 75);
-  --portal-danger: var(--destructive);
-  --portal-danger-soft: oklch(0.95 0.05 25);
-  --portal-info: var(--info);
-  --portal-info-soft: oklch(0.95 0.05 250);
+  /* ========================================================================
+   * PORTAL DO CLIENTE — Brand-immersive (dark em ambos os modos)
+   * Segue a receita "dark brand section" do MASTER.md §13.3
+   * ======================================================================== */
+  --portal-bg: var(--brand-dark-900);
+  --portal-card: oklch(from var(--brand-dark-900) calc(l + 0.06) c h);
+  --portal-card-hover: oklch(from var(--brand-dark-900) calc(l + 0.10) c h);
+  --portal-surface: oklch(from var(--brand-dark-900) calc(l + 0.04) c h);
+  --portal-text: var(--surface-white);
+  --portal-text-muted: oklch(1 0 0 / 0.70);
+  --portal-text-subtle: oklch(1 0 0 / 0.50);
+  --portal-primary: var(--zattar-purple-400);
+  --portal-primary-soft: oklch(from var(--zattar-purple-400) l c h / 0.20);
+  --portal-success: var(--success-500);
+  --portal-success-soft: oklch(from var(--success-500) l c h / 0.20);
+  --portal-warning: var(--warning-600);
+  --portal-warning-soft: oklch(from var(--warning-600) l c h / 0.20);
+  --portal-danger: var(--accent-ruby);
+  --portal-danger-soft: oklch(from var(--accent-ruby) l c h / 0.20);
+  --portal-info: var(--zattar-purple-400);
+  --portal-info-soft: oklch(from var(--zattar-purple-400) l c h / 0.20);
 }
 
 .dark {
-  /* ZATTAR DARK MODE */
-  /* Âncoras: Primary #5523eb (hue 281°) | Neutral #282828 | Highlight hue 45° */
-  /* Fundo Deep Charcoal com micro-tint roxo */
-  --background: oklch(0.17 0.005 281);
-  --foreground: oklch(0.98 0 0);
+  /* ============================================================================
+   * ZATTAR DESIGN SYSTEM — DARK MODE (v3.0)
+   * Receita "dark brand section" expandida para toda a página (MASTER.md §6.2).
+   * Valores LITERAIS do DESIGN MD de referência — sem interpolação inventada.
+   * ============================================================================ */
 
-  /* Cards levemente mais claros que o fundo */
-  --card: oklch(0.22 0.005 281);
-  --card-foreground: oklch(0.98 0 0);
+  /* ========================================================================
+   * SEMANTIC TOKENS — Núcleo shadcn
+   * Primary NÃO muda no dark: Zattar Purple mantém hue E luminância.
+   * ======================================================================== */
+  --background: var(--brand-dark-900);
+  --foreground: var(--surface-white);
 
-  --popover: oklch(0.22 0.005 281);
-  --popover-foreground: oklch(0.98 0 0);
+  --card: var(--brand-dark-900);
+  --card-foreground: var(--surface-white);
 
-  /* Primary: Tom 70 do primary para contraste em fundo escuro (~6:1) */
-  --primary: oklch(0.70 0.20 281);
-  --primary-foreground: oklch(0.15 0.10 281);
+  --popover: var(--brand-dark-900);
+  --popover-foreground: var(--surface-white);
 
-  --secondary: oklch(0.28 0.01 281);
-  --secondary-foreground: oklch(0.98 0 0);
+  --primary: var(--zattar-purple-500);
+  --primary-foreground: var(--surface-white);
 
-  --muted: oklch(0.28 0.005 281);
-  --muted-foreground: oklch(0.65 0.005 281);
+  --secondary: oklch(1 0 0 / 0.06);
+  --secondary-foreground: var(--surface-white);
 
-  --accent: oklch(0.28 0.01 281);
-  --accent-foreground: oklch(0.98 0 0);
+  --muted: oklch(1 0 0 / 0.04);
+  --muted-foreground: oklch(1 0 0 / 0.70);      /* Literal: rgba(255,255,255,0.7) */
 
-  /* Skeleton: cinza neutro dedicado para loading (chroma 0) */
-  --skeleton: oklch(0.22 0 0);
-  --skeleton-highlight: oklch(0.28 0 0);
+  --accent: oklch(1 0 0 / 0.08);
+  --accent-foreground: var(--zattar-purple-400);
 
-  --destructive: oklch(0.65 0.20 25);
-  --destructive-foreground: oklch(1.0 0 0);
+  --destructive: var(--accent-ruby);
+  --destructive-foreground: var(--surface-white);
 
-  --border: oklch(1.0 0 0 / 0.12);
-  --input: oklch(1.0 0 0 / 0.12);
-  --ring: transparent;
+  --border: oklch(1 0 0 / 0.10);                /* Literal: rgba(255,255,255,0.1) */
+  --input: oklch(1 0 0 / 0.10);
+  --ring: var(--zattar-purple-500);
 
-  /* Sidebar Dark (consistente com light — sempre escura) */
-  --sidebar: oklch(0.17 0.005 281);
-  --sidebar-foreground: oklch(0.98 0 0);
-  --sidebar-primary: oklch(0.70 0.20 281);
-  --sidebar-primary-foreground: oklch(1.0 0 0);
-  --sidebar-accent: oklch(0.26 0.005 281);
-  --sidebar-accent-foreground: oklch(0.98 0 0);
-  --sidebar-border: oklch(1.0 0 0 / 0.1);
-  --sidebar-ring: oklch(0.70 0.20 281);
+  /* Skeleton — alpha branco sobre dark-brand */
+  --skeleton: oklch(1 0 0 / 0.06);
+  --skeleton-highlight: oklch(1 0 0 / 0.10);
 
-  /* Cores de Marca Dark */
-  --brand: oklch(0.70 0.20 281);
-  --highlight: oklch(0.70 0.20 45);
+  /* ========================================================================
+   * SIDEBAR — Igual ao light mode (sempre dark-brand)
+   * ======================================================================== */
+  --sidebar: var(--brand-dark-900);
+  --sidebar-foreground: var(--surface-white);
+  --sidebar-primary: var(--zattar-purple-400);
+  --sidebar-primary-foreground: var(--surface-white);
+  --sidebar-accent: oklch(1 0 0 / 0.08);
+  --sidebar-accent-foreground: var(--surface-white);
+  --sidebar-border: oklch(1 0 0 / 0.10);
+  --sidebar-ring: var(--zattar-purple-400);
 
-  --chart-1: oklch(0.70 0.20 281);
-  --chart-2: oklch(0.70 0.20 45);
-  --chart-3: oklch(0.35 0.005 281);
-  --chart-4: oklch(0.65 0.18 150);
-  --chart-5: oklch(0.50 0.005 281);
-  --chart-6: oklch(0.65 0.15 200);
-  --chart-7: oklch(0.60 0.18 320);
+  /* ========================================================================
+   * BRAND
+   * ======================================================================== */
+  --brand: var(--zattar-purple-500);
+  --highlight: var(--accent-ruby);
+
+  /* ========================================================================
+   * CHARTS — mesma paleta Zattar, ajustada para dark background
+   * ======================================================================== */
+  --chart-1: var(--zattar-purple-400);
+  --chart-2: var(--accent-ruby);
+  --chart-3: var(--success-500);
+  --chart-4: var(--accent-magenta);
+  --chart-5: oklch(1 0 0 / 0.40);
+  --chart-6: var(--zattar-purple-300);
+  --chart-7: oklch(0.70 0.15 200);
   --chart-8: oklch(0.70 0.12 80);
 
-  /* Tons derivados para treemaps e funnels (Dark) */
+  /* Tons derivados (Dark) */
   --chart-primary-soft: oklch(from var(--primary) l c h / 0.35);
   --chart-destructive-soft: oklch(from var(--destructive) l c h / 0.30);
   --chart-warning-soft: oklch(from var(--warning) l c h / 0.30);
@@ -491,108 +583,118 @@
   --chart-success-dark: oklch(from var(--success) calc(l - 0.05) c h);
   --chart-warning-dark: oklch(from var(--warning) calc(l - 0.05) c h);
 
-  /* Glow effects (Dark) */
+  /* Glow (Dark) */
   --glow-primary: oklch(from var(--primary) l c h / 0.25);
   --glow-primary-subtle: oklch(from var(--primary) l c h / 0.03);
   --glow-primary-faint: oklch(from var(--primary) l c h / 0.015);
   --glow-destructive: oklch(from var(--destructive) l c h / 0.35);
   --glow-warning: oklch(from var(--warning) l c h / 0.30);
 
-  /* SEMANTIC STATUS COLORS (Dark) — tons mais claros para contraste */
-  --success: oklch(0.70 0.18 145);
-  --success-foreground: oklch(0.98 0 0);
-  --warning: oklch(0.78 0.16 85);
-  --warning-foreground: oklch(0.15 0 0);
-  --info: oklch(0.70 0.18 250);
-  --info-foreground: oklch(0.98 0 0);
+  /* ========================================================================
+   * STATUS — cores de status mantêm hue, só o foreground muda para branco
+   * ======================================================================== */
+  --success: var(--success-500);
+  --success-foreground: var(--surface-white);
+  --warning: var(--warning-600);
+  --warning-foreground: var(--surface-white);
+  --info: var(--zattar-purple-500);
+  --info-foreground: var(--surface-white);
 
-  /* SURFACE TOKENS (Dark) — com micro-tint hue 281° */
-  --surface-1: oklch(0.20 0.005 281);
-  --surface-2: oklch(0.22 0.005 281);
-  --surface-3: oklch(0.26 0.005 281);
+  /* ========================================================================
+   * SURFACE — alpha-white sobre brand-dark
+   * ======================================================================== */
+  --surface-1: var(--brand-dark-900);
+  --surface-2: oklch(1 0 0 / 0.04);
+  --surface-3: oklch(1 0 0 / 0.08);
 
-  /* CHAT-SPECIFIC TOKENS (Dark) */
-  --chat-thread-bg: oklch(0.15 0.005 281);
-  --chat-bubble-received: oklch(0.26 0.005 281);
+  /* ========================================================================
+   * CHAT (Dark)
+   * ======================================================================== */
+  --chat-thread-bg: oklch(from var(--brand-dark-900) calc(l - 0.04) c h);
+  --chat-bubble-received: oklch(1 0 0 / 0.06);
   --chat-bubble-sent: var(--primary);
-  --chat-sidebar-active: oklch(0.24 0.01 281);
+  --chat-sidebar-active: oklch(1 0 0 / 0.08);
 
-  /* MD3 SURFACE HIERARCHY (Dark) — escala tonal neutra tintada */
-  --surface: oklch(0.12 0.005 281);
-  --surface-dim: oklch(0.12 0.005 281);
-  --surface-bright: oklch(0.30 0.005 281);
-  --surface-container-lowest: oklch(0.06 0.005 281);
-  --surface-container-low: oklch(0.14 0.005 281);
-  --surface-container: oklch(0.17 0.005 281);
-  --surface-container-high: oklch(0.20 0.005 281);
-  --surface-container-highest: oklch(0.24 0.005 281);
-  --surface-variant: oklch(0.24 0.01 281);
-  --on-surface: oklch(0.98 0 0);
-  --on-surface-variant: oklch(0.70 0.005 281);
-  --inverse-surface: oklch(0.96 0.005 281);
-  --inverse-on-surface: oklch(0.35 0.005 281);
-  --outline: oklch(0.50 0.005 281);
-  --outline-variant: oklch(0.35 0.005 281);
+  /* ========================================================================
+   * MD3 SURFACE HIERARCHY (Dark) — alpha-white sobre brand-dark
+   * ======================================================================== */
+  --surface: var(--brand-dark-900);
+  --surface-dim: oklch(from var(--brand-dark-900) calc(l - 0.04) c h);
+  --surface-bright: oklch(1 0 0 / 0.10);
+  --surface-container-lowest: oklch(from var(--brand-dark-900) calc(l - 0.06) c h);
+  --surface-container-low: oklch(from var(--brand-dark-900) calc(l - 0.02) c h);
+  --surface-container: var(--brand-dark-900);
+  --surface-container-high: oklch(1 0 0 / 0.04);
+  --surface-container-highest: oklch(1 0 0 / 0.08);
+  --surface-variant: oklch(1 0 0 / 0.06);
+  --on-surface: var(--surface-white);
+  --on-surface-variant: oklch(1 0 0 / 0.70);
+  --inverse-surface: var(--surface-white);
+  --inverse-on-surface: var(--navy-heading);
+  --outline: oklch(1 0 0 / 0.40);
+  --outline-variant: oklch(1 0 0 / 0.10);
 
-  /* Primary Extended (Dark) — escala invertida vs light */
-  --on-primary: oklch(0.20 0.14 281);
-  --primary-container: oklch(0.35 0.20 281);
-  --on-primary-container: oklch(0.90 0.10 281);
-  --primary-fixed: oklch(0.90 0.10 281);
-  --primary-fixed-dim: oklch(0.80 0.18 281);
-  --on-primary-fixed: oklch(0.10 0.06 281);
-  --on-primary-fixed-variant: oklch(0.30 0.18 281);
+  /* Primary Extended (Dark) */
+  --on-primary: var(--surface-white);
+  --primary-container: oklch(from var(--zattar-purple-500) calc(l + 0.05) c h);
+  --on-primary-container: var(--surface-white);
+  --primary-fixed: oklch(0.92 0.08 276);
+  --primary-fixed-dim: var(--zattar-purple-300);
+  --on-primary-fixed: var(--zattar-purple-700);
+  --on-primary-fixed-variant: var(--zattar-purple-600);
 
   /* Secondary Extended (Dark) */
-  --on-secondary: oklch(0.20 0.06 281);
-  --secondary-container: oklch(0.35 0.10 281);
-  --on-secondary-container: oklch(0.90 0.06 281);
-  --secondary-fixed: oklch(0.92 0.06 281);
-  --secondary-fixed-dim: oklch(0.80 0.10 281);
-  --on-secondary-fixed: oklch(0.20 0.06 281);
-  --on-secondary-fixed-variant: oklch(0.40 0.10 281);
+  --on-secondary: var(--surface-white);
+  --secondary-container: oklch(1 0 0 / 0.08);
+  --on-secondary-container: var(--surface-white);
+  --secondary-fixed: oklch(0.92 0.06 275);
+  --secondary-fixed-dim: oklch(0.80 0.10 275);
+  --on-secondary-fixed: var(--navy-heading);
+  --on-secondary-fixed-variant: var(--navy-label);
 
-  /* Tertiary (Dark) — vermelho hue 25° */
-  --tertiary: oklch(0.75 0.16 25);
-  --on-tertiary: oklch(0.20 0.10 25);
-  --tertiary-container: oklch(0.35 0.16 25);
-  --on-tertiary-container: oklch(0.90 0.08 25);
-  --tertiary-fixed: oklch(0.90 0.08 25);
-  --tertiary-fixed-dim: oklch(0.80 0.14 25);
-  --on-tertiary-fixed: oklch(0.15 0.08 25);
-  --on-tertiary-fixed-variant: oklch(0.35 0.16 25);
+  /* Tertiary (Dark) — Ruby */
+  --tertiary: var(--accent-ruby);
+  --on-tertiary: var(--surface-white);
+  --tertiary-container: oklch(from var(--accent-ruby) calc(l - 0.15) c h);
+  --on-tertiary-container: var(--surface-white);
+  --tertiary-fixed: oklch(0.92 0.08 15);
+  --tertiary-fixed-dim: oklch(0.82 0.14 15);
+  --on-tertiary-fixed: oklch(0.20 0.14 15);
+  --on-tertiary-fixed-variant: oklch(0.35 0.18 15);
 
   /* Error (Dark) */
-  --error-container: oklch(0.35 0.14 25);
-  --on-error-container: oklch(0.90 0.08 25);
-  --on-error: oklch(0.20 0.10 25);
+  --error-container: oklch(from var(--accent-ruby) calc(l - 0.15) c h);
+  --on-error-container: var(--surface-white);
+  --on-error: var(--surface-white);
 
   /* Dim Variants (Dark) */
-  --primary-dim: oklch(0.58 0.22 281);
-  --secondary-dim: oklch(0.65 0.12 281);
-  --tertiary-dim: oklch(0.60 0.14 25);
-  --error-dim: oklch(0.55 0.18 25);
-  --inverse-primary: oklch(0.48 0.26 281);
-  --surface-tint: oklch(0.80 0.18 281);
+  --primary-dim: var(--zattar-purple-700);
+  --secondary-dim: oklch(1 0 0 / 0.30);
+  --tertiary-dim: oklch(from var(--accent-ruby) calc(l - 0.10) c h);
+  --error-dim: oklch(from var(--accent-ruby) calc(l - 0.10) c h);
+  --inverse-primary: var(--zattar-purple-300);
+  --surface-tint: var(--zattar-purple-400);
 
-  /* === PORTAL DO CLIENTE — Tokens Derivados (Dark) === */
-  --portal-bg: oklch(0.14 0.005 281);
-  --portal-card: oklch(0.20 0.008 281);
-  --portal-card-hover: oklch(0.24 0.008 281);
-  --portal-surface: oklch(0.17 0.005 281);
-  --portal-text: oklch(0.95 0.005 281);
-  --portal-text-muted: oklch(0.65 0.01 281);
-  --portal-text-subtle: oklch(0.50 0.005 281);
-  --portal-primary: var(--primary);
-  --portal-primary-soft: oklch(0.25 0.05 281);
-  --portal-success: var(--success);
-  --portal-success-soft: oklch(0.25 0.05 145);
-  --portal-warning: var(--warning);
-  --portal-warning-soft: oklch(0.25 0.05 75);
-  --portal-danger: var(--destructive);
-  --portal-danger-soft: oklch(0.25 0.05 25);
-  --portal-info: var(--info);
-  --portal-info-soft: oklch(0.25 0.05 250);
+  /* ========================================================================
+   * PORTAL (Dark) — mesma receita; o Portal já era brand-immersive
+   * ======================================================================== */
+  --portal-bg: var(--brand-dark-900);
+  --portal-card: oklch(from var(--brand-dark-900) calc(l + 0.06) c h);
+  --portal-card-hover: oklch(from var(--brand-dark-900) calc(l + 0.10) c h);
+  --portal-surface: oklch(from var(--brand-dark-900) calc(l + 0.04) c h);
+  --portal-text: var(--surface-white);
+  --portal-text-muted: oklch(1 0 0 / 0.70);
+  --portal-text-subtle: oklch(1 0 0 / 0.50);
+  --portal-primary: var(--zattar-purple-400);
+  --portal-primary-soft: oklch(from var(--zattar-purple-400) l c h / 0.20);
+  --portal-success: var(--success-500);
+  --portal-success-soft: oklch(from var(--success-500) l c h / 0.20);
+  --portal-warning: var(--warning-600);
+  --portal-warning-soft: oklch(from var(--warning-600) l c h / 0.20);
+  --portal-danger: var(--accent-ruby);
+  --portal-danger-soft: oklch(from var(--accent-ruby) l c h / 0.20);
+  --portal-info: var(--zattar-purple-400);
+  --portal-info-soft: oklch(from var(--zattar-purple-400) l c h / 0.20);
 }
 
 /* =============================================================================
