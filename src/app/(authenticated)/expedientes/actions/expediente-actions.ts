@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient as createSupabaseClient } from "@/lib/supabase/server";
+import { createDbClient } from "@/lib/supabase/db-client";
 import {
   createExpedienteSchema,
   updateExpedienteSchema,
@@ -26,6 +27,39 @@ import { listarUploads } from "@/app/(authenticated)/documentos/service";
 // =============================================================================
 
 import type { ActionResult } from './types';
+
+/**
+ * Persiste o erro de um hook after() em logs_alteracao para durability.
+ * Permite auditar posteriormente se algum hook pós-criação falhou (AI indexing,
+ * geração automática de peça, etc.) sem depender do stdout do processo, que é
+ * efêmero. Usa try/catch interno — falha de log não pode propagar.
+ */
+async function registrarErroHook(
+  expedienteId: number,
+  usuarioId: number,
+  tipoEvento: string,
+  erro: unknown
+): Promise<void> {
+  try {
+    const db = createDbClient();
+    const mensagem = erro instanceof Error ? erro.message : String(erro);
+    await db.from('logs_alteracao').insert({
+      tipo_entidade: 'expedientes',
+      entidade_id: expedienteId,
+      tipo_evento: tipoEvento,
+      usuario_que_executou_id: usuarioId,
+      dados_evento: {
+        erro: mensagem,
+        stack: erro instanceof Error ? erro.stack : undefined,
+        timestamp: new Date().toISOString(),
+      },
+    });
+  } catch (logError) {
+    // Falha ao logar erro — não pode propagar (estamos dentro de um after()
+    // justamente de um erro). Apenas stdout como último recurso.
+    console.error('[expedientes] Falha ao persistir erro de hook:', logError);
+  }
+}
 
 // =============================================================================
 // HELPERS
@@ -155,6 +189,12 @@ export async function actionCriarExpediente(
             `❌ [AI] Erro ao indexar expediente ${expedienteId}:`,
             error
           );
+          await registrarErroHook(
+            expedienteId,
+            user.id,
+            'erro_indexacao_ai',
+            error
+          );
         }
       });
     }
@@ -187,6 +227,12 @@ export async function actionCriarExpediente(
         } catch (error) {
           console.error(
             `❌ [AUTO-GEN] Erro ao gerar peça para expediente ${expedienteId}:`,
+            error
+          );
+          await registrarErroHook(
+            expedienteId,
+            user.id,
+            'erro_geracao_automatica_peca',
             error
           );
         }

@@ -153,6 +153,26 @@ function converterParaExpediente(data: ExpedienteRow | ExpedienteRowComOrigem): 
 // FUNCOES DE LEITURA
 // =============================================================================
 
+/**
+ * Busca um expediente pelo id.
+ *
+ * Usa a view `expedientes_com_origem`, que faz LEFT JOIN com `dados_primeiro_grau`
+ * (visão agregada do acervo) para enriquecer o expediente com os campos de
+ * origem — úteis em processos de 2º grau que referenciam o 1º grau original.
+ *
+ * IMPORTANTE — campos nullable por contrato:
+ * Os campos `trtOrigem`, `nomeParteAutoraOrigem`, `nomeParteReOrigem` e
+ * `orgaoJulgadorOrigem` serão `undefined` (omitidos na conversão) quando não
+ * houver match no 1º grau — seja porque o processo é originário de 1º grau,
+ * porque o acervo correspondente ainda não foi capturado, ou porque o
+ * expediente foi criado manualmente sem vínculo. A UI precisa ser null-safe
+ * ao consumi-los. Use `getExpedientePartyNames()` de `domain.ts` para obter
+ * os nomes de parte priorizando origem > manual com fallback seguro.
+ *
+ * @param id id do expediente
+ * @returns Result com o Expediente (possivelmente com origem fields undefined)
+ *   ou null se não encontrado.
+ */
 export async function findExpedienteById(
   id: number
 ): Promise<Result<Expediente | null>> {

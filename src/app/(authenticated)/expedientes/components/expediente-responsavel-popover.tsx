@@ -12,6 +12,7 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { actionAtualizarExpedientePayload } from '../actions';
 
@@ -74,12 +75,29 @@ export function ExpedienteResponsavelPopover({
       setIsPending(true);
       setOpen(false);
 
+      // Toast com id para ser substituído pelo resultado, evitando flicker
+      // quando a action é rápida. Padroniza com os popovers de tipo e prazo
+      // (que já exibem feedback visível).
+      const toastId = toast.loading(
+        userId === null ? 'Removendo responsável...' : 'Atribuindo responsável...'
+      );
+
       const result = await actionAtualizarExpedientePayload(expedienteId, {
         responsavelId: userId,
       });
 
       if (result.success) {
+        toast.success(
+          userId === null ? 'Responsável removido' : 'Responsável atribuído',
+          { id: toastId }
+        );
         onSuccess?.();
+      } else {
+        toast.error('Não foi possível atualizar o responsável', {
+          id: toastId,
+          description:
+            result.error || result.message || 'Tente novamente.',
+        });
       }
       setIsPending(false);
     },
