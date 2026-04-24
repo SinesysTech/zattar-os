@@ -4,6 +4,7 @@ import * as React from 'react';
 import { FileDown, Send } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
+import { Text } from '@/components/ui/typography';
 import { actionValidarGeracaoPdfs } from '@/app/(authenticated)/contratos/actions/gerar-pdfs-contrato-action';
 import { actionEnviarContratoParaAssinatura } from '../../actions/enviar-contrato-assinatura-action';
 import type { CampoFaltante } from '@/shared/assinatura-digital/services/mapeamento-contrato-input-data';
@@ -169,14 +170,14 @@ export function DocumentosContratacaoCard({
           <FileDown className="size-4" aria-hidden="true" />
         </div>
         <div className="flex-1 min-w-0">
-          <h4 className="text-label font-semibold text-foreground">
+          <Text variant="label" as="h4" className="font-semibold text-foreground">
             Documentos de contratação
-          </h4>
-          <p className="text-caption text-muted-foreground mt-0.5 leading-relaxed">
+          </Text>
+          <Text variant="caption" className="text-muted-foreground mt-0.5 leading-relaxed">
             Gera os documentos do formulário de contratação deste segmento
             preenchidos com os dados do contrato. Se faltar informação,
             complete antes do download ou envio.
-          </p>
+          </Text>
         </div>
         <div className="flex items-center gap-1.5 shrink-0">
           <Button

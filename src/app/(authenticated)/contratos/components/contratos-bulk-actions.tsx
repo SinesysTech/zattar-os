@@ -11,6 +11,7 @@
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { Text } from '@/components/ui/typography';
 import {
   Select,
   SelectContent,
@@ -70,10 +71,10 @@ export function ContratosBulkActionsBar({
 
   return (
     <div className="flex flex-wrap items-center gap-2 rounded-xl border border-primary/15 bg-primary/5 px-3 py-1.5">
-      <div className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-primary whitespace-nowrap">
+      <Text variant="caption" as="div" className="inline-flex items-center gap-1.5 font-semibold text-primary whitespace-nowrap">
         <CheckSquare className="size-3.5" aria-hidden="true" />
         {selectedCount} selecionado{selectedCount > 1 ? 's' : ''}
-      </div>
+      </Text>
 
       <span className="h-3.5 w-px bg-primary/15" aria-hidden="true" />
 

@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Text } from '@/components/ui/typography';
 import { CheckCircle2, Copy } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -66,9 +67,9 @@ export function ModalLinkAssinaturaDialog({
               Copiar
             </Button>
           </div>
-          <p className="text-sm text-muted-foreground">
+          <Text variant="caption" className="text-muted-foreground">
             Expira em: <span className="font-medium">{dataFormatada}</span>
-          </p>
+          </Text>
         </div>
 
         <DialogFooter>

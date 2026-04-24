@@ -12,6 +12,7 @@ import { useActionState } from 'react';
 import { Button } from '@/components/ui/button';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Label } from '@/components/ui/label';
+import { Text } from '@/components/ui/typography';
 import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
@@ -276,10 +277,10 @@ export function ContratoForm({
             </Select>
             <input type="hidden" name="tipoContrato" value={formData.tipoContrato} />
             {getFieldError('tipoContrato') && (
-              <p className="text-xs text-destructive flex items-center gap-1">
+              <Text variant="caption" className="text-destructive flex items-center gap-1">
                 <AlertCircle className="h-3 w-3" />
                 {getFieldError('tipoContrato')}
-              </p>
+              </Text>
             )}
           </div>
 
@@ -304,10 +305,10 @@ export function ContratoForm({
             </Select>
             <input type="hidden" name="tipoCobranca" value={formData.tipoCobranca} />
             {getFieldError('tipoCobranca') && (
-              <p className="text-xs text-destructive flex items-center gap-1">
+              <Text variant="caption" className="text-destructive flex items-center gap-1">
                 <AlertCircle className="h-3 w-3" />
                 {getFieldError('tipoCobranca')}
-              </p>
+              </Text>
             )}
           </div>
         </div>
@@ -335,10 +336,10 @@ export function ContratoForm({
             </Select>
             <input type="hidden" name="segmentoId" value={formData.segmentoId} />
             {getFieldError('segmentoId') && (
-              <p className="text-xs text-destructive flex items-center gap-1">
+              <Text variant="caption" className="text-destructive flex items-center gap-1">
                 <AlertCircle className="h-3 w-3" />
                 {getFieldError('segmentoId')}
-              </p>
+              </Text>
             )}
           </div>
 
@@ -393,10 +394,10 @@ export function ContratoForm({
             />
             <input type="hidden" name="clienteId" value={formData.clienteId} />
             {getFieldError('clienteId') && (
-              <p className="text-xs text-destructive flex items-center gap-1">
+              <Text variant="caption" className="text-destructive flex items-center gap-1">
                 <AlertCircle className="h-3 w-3" />
                 {getFieldError('clienteId')}
-              </p>
+              </Text>
             )}
           </div>
 
@@ -421,10 +422,10 @@ export function ContratoForm({
             </Select>
             <input type="hidden" name="papelClienteNoContrato" value={formData.papelClienteNoContrato} />
             {getFieldError('papelClienteNoContrato') && (
-              <p className="text-xs text-destructive flex items-center gap-1">
+              <Text variant="caption" className="text-destructive flex items-center gap-1">
                 <AlertCircle className="h-3 w-3" />
                 {getFieldError('papelClienteNoContrato')}
-              </p>
+              </Text>
             )}
           </div>
         </div>

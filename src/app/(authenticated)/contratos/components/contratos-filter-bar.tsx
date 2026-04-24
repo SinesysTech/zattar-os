@@ -21,6 +21,7 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
+import { Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import { actionListarSegmentos, type Segmento } from '../actions';
 import {
@@ -170,11 +171,11 @@ function SegmentoFilter({
           </div>
           <CommandList className="max-h-52 px-1.5 pb-1.5">
             {isLoading ? (
-              <div className="py-6 text-center text-[11px] text-muted-foreground/40">Carregando...</div>
+              <Text variant="caption" as="div" className="py-6 text-center text-muted-foreground/40">Carregando...</Text>
             ) : (
               <>
                 <CommandEmpty>
-                  <span className="text-[11px] text-muted-foreground/40">Nenhum segmento</span>
+                  <Text variant="caption" as="span" className="text-muted-foreground/40">Nenhum segmento</Text>
                 </CommandEmpty>
                 <CommandGroup>
                   {segmentos.map((segmento) => {
