@@ -46,6 +46,10 @@ const eslintConfig = defineConfig([
   },
   // Override default ignores of eslint-config-next.
   globalIgnores([
+    // Claude Code harness directory (worktrees, skills, local settings).
+    // Worktrees here pin older commits and would otherwise flood lint with
+    // stale errors from code already fixed on master.
+    ".claude/**",
     // Default ignores of eslint-config-next:
     ".next/**",
     "out/**",
