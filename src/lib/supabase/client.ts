@@ -102,6 +102,35 @@ function installLockNoiseFilter() {
 installLockNoiseFilter();
 
 /**
+ * Adapter `userStorage` SSR-safe.
+ *
+ * Em @supabase/ssr >=0.9.0, quando `cookies.encode === 'tokens-only'`, o
+ * `createBrowserClient` avalia `options?.auth?.userStorage ?? window.localStorage`
+ * sincronamente durante a construção ([createBrowserClient.js:41]). Isso quebra
+ * o SSR de Client Components ("use client"), que ainda rodam no servidor no
+ * primeiro render — `window` é undefined lá.
+ *
+ * Fornecemos um adapter explícito que forwarda para `window.localStorage` no
+ * browser e vira no-op durante SSR (onde nenhum `supabase.auth.*` é chamado
+ * — essas operações rodam só em `useEffect`/handlers). É o mesmo padrão do
+ * `createServerClient`, que usa `memoryLocalStorageAdapter()` no server.
+ */
+const browserUserStorage = {
+  getItem(key: string): string | null {
+    if (typeof window === 'undefined') return null;
+    return window.localStorage.getItem(key);
+  },
+  setItem(key: string, value: string): void {
+    if (typeof window === 'undefined') return;
+    window.localStorage.setItem(key, value);
+  },
+  removeItem(key: string): void {
+    if (typeof window === 'undefined') return;
+    window.localStorage.removeItem(key);
+  },
+};
+
+/**
  * getAll/setAll implementados manualmente via `document.cookie` para que
  * possamos passar `encode: 'tokens-only'` no objeto `cookies`. Sem isso,
  * o SDK lança erro exigindo as implementações quando um `cookies` custom
@@ -190,14 +219,19 @@ export function createClient() {
   // reduz steals espúrios em conexões lentas de dev e StrictMode.
   //
   // `cookies.encode: 'tokens-only'` mantém apenas access/refresh tokens nos
-  // cookies; o user object vai para `window.localStorage` via `userStorage`
-  // (ativado automaticamente pelo @supabase/ssr). Isto elimina o warning
+  // cookies; o user object vai para `userStorage` (browserUserStorage acima),
+  // que forwarda para `window.localStorage` no browser e é no-op no SSR.
+  // Fornecê-lo explicitamente evita que o SDK dereferencie `window.localStorage`
+  // durante construção no SSR de Client Components. Isto elimina o warning
   // "Using the user object as returned from supabase.auth.getSession()..."
   // que o SDK emite ao envolver `session.user` em Proxy no server-side.
   // Precisa estar sincronizado com os clients de server (server.ts,
   // api-auth.ts, proxy.ts).
   const options = {
-    auth: { lockAcquireTimeout: LOCK_ACQUIRE_TIMEOUT_MS },
+    auth: {
+      lockAcquireTimeout: LOCK_ACQUIRE_TIMEOUT_MS,
+      userStorage: browserUserStorage,
+    },
     cookies: browserCookieMethods,
   } as unknown as Parameters<typeof createBrowserClient>[2];
 
