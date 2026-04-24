@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Spacing scale</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  .scale { display: flex; align-items: flex-end; gap: 16px; padding: 8px 0; }
+  .step { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .bar { background: var(--primary); border-radius: 4px; width: 20px; }
+  .v { font-family: var(--font-mono); font-size: 10px; color: var(--muted-foreground); }
+  .t { font-family: var(--font-mono); font-size: 10px; color: var(--foreground); font-weight: 500; }
+
+  .usage { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .usage-card { padding: 12px 14px; border-radius: 10px; background: var(--card); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 4px; }
+  .usage-card .lbl { font-family: var(--font-mono); font-size: 10px; color: var(--muted-foreground); }
+  .usage-card .val { font-size: 13px; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="eyebrow">SPACING · GRID 4PX</div>
+  <div class="scale">
+    <div class="step"><div class="bar" style="height: 4px;"></div><span class="t">1</span><span class="v">4</span></div>
+    <div class="step"><div class="bar" style="height: 8px;"></div><span class="t">2</span><span class="v">8</span></div>
+    <div class="step"><div class="bar" style="height: 12px;"></div><span class="t">3</span><span class="v">12</span></div>
+    <div class="step"><div class="bar" style="height: 16px;"></div><span class="t">4</span><span class="v">16</span></div>
+    <div class="step"><div class="bar" style="height: 24px;"></div><span class="t">6</span><span class="v">24</span></div>
+    <div class="step"><div class="bar" style="height: 32px;"></div><span class="t">8</span><span class="v">32</span></div>
+    <div class="step"><div class="bar" style="height: 48px;"></div><span class="t">12</span><span class="v">48</span></div>
+    <div class="step"><div class="bar" style="height: 64px;"></div><span class="t">16</span><span class="v">64</span></div>
+  </div>
+  <div class="usage">
+    <div class="usage-card"><span class="lbl">page padding</span><span class="val">p-4 sm:p-6 lg:p-8</span></div>
+    <div class="usage-card"><span class="lbl">card padding</span><span class="val">p-4 sm:p-6</span></div>
+    <div class="usage-card"><span class="lbl">admin max-width</span><span class="val">1400px</span></div>
+    <div class="usage-card"><span class="lbl">detail panel</span><span class="val">380px fixed</span></div>
+  </div>
+</div>
+</body>
+</html>

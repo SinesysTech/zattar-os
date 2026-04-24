@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Type — Meta & Mono</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  .row-t { display: grid; grid-template-columns: 120px 1fr 80px; gap: 16px; align-items: baseline; padding: 6px 0; }
+  .row-t:not(:last-child) { border-bottom: 1px dashed var(--border); }
+  .row-t .tok { font-family: var(--font-mono); font-size: 10px; color: var(--muted-foreground); }
+  .row-t .size { font-family: var(--font-mono); font-size: 10px; color: var(--muted-foreground); text-align: right; }
+  .meta-demo {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    background: var(--card);
+    border: 1px solid var(--border);
+  }
+  .meta-demo > div { display: flex; flex-direction: column; gap: 4px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="eyebrow">LABELS · META · MONO</div>
+  <div>
+    <div class="row-t">
+      <span class="tok">label</span>
+      <span class="text-label">Nome da parte</span>
+      <span class="size">14/1 · 500</span>
+    </div>
+    <div class="row-t">
+      <span class="tok">overline</span>
+      <span class="text-overline">Em andamento</span>
+      <span class="size">11 · .08em</span>
+    </div>
+    <div class="row-t">
+      <span class="tok">meta-label</span>
+      <span class="text-meta-label">Tribunal · Responsável · Localidade</span>
+      <span class="size">11 · .14em</span>
+    </div>
+    <div class="row-t">
+      <span class="tok">mono-num</span>
+      <span class="text-mono-num">0001234-56.2024.5.01.0001</span>
+      <span class="size">10 · Geist</span>
+    </div>
+  </div>
+  <div class="meta-demo">
+    <div>
+      <span class="text-meta-label">Tribunal</span>
+      <span style="font-size: 13px; font-weight: 600;">TRT1</span>
+    </div>
+    <div>
+      <span class="text-meta-label">Responsável</span>
+      <span style="font-size: 13px; font-weight: 600;">Dra. Ana Ribeiro</span>
+    </div>
+    <div>
+      <span class="text-meta-label">Comarca</span>
+      <span style="font-size: 13px; font-weight: 600;">Rio de Janeiro</span>
+    </div>
+    <div>
+      <span class="text-meta-label">Distribuição</span>
+      <span class="mono" style="font-size: 13px;">03/04/2024</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>

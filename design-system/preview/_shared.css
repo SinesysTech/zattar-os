@@ -1,0 +1,74 @@
+/* Shared preview card styles — imported by every preview/*.html */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@500;600;700;800&family=Manrope:wght@500;600;700&family=Geist+Mono:wght@400;500&display=swap');
+@import url('../colors_and_type.css');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: var(--font-sans);
+  color: var(--foreground);
+  background: var(--background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.card {
+  width: 100%;
+  min-height: 100%;
+  padding: 20px 24px;
+  background: var(--background);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+}
+
+/* Ambient wash behind cards, subtle */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(600px at 100% 0%, oklch(0.48 0.26 281 / 0.04), transparent 60%),
+    radial-gradient(500px at 0% 100%, oklch(0.48 0.26 281 / 0.03), transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+.card > * { position: relative; z-index: 1; }
+
+.row { display: flex; gap: 12px; align-items: center; }
+.col { display: flex; flex-direction: column; }
+.grow { flex: 1; }
+
+.swatch {
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  aspect-ratio: 1;
+  position: relative;
+  overflow: hidden;
+}
+.swatch-row {
+  display: grid;
+  grid-template-columns: repeat(var(--n, 6), 1fr);
+  gap: 10px;
+}
+
+.kbd {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--muted);
+  color: var(--muted-foreground);
+}
+
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.eyebrow {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--muted-foreground);
+  font-weight: 600;
+}

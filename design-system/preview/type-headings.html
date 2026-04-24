@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Type — Headings</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  .row-t { display: grid; grid-template-columns: 120px 1fr 80px; gap: 16px; align-items: baseline; padding: 6px 0; }
+  .row-t:not(:last-child) { border-bottom: 1px dashed var(--border); }
+  .row-t .tok { font-family: var(--font-mono); font-size: 10px; color: var(--muted-foreground); }
+  .row-t .size { font-family: var(--font-mono); font-size: 10px; color: var(--muted-foreground); text-align: right; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="row" style="justify-content: space-between; align-items: baseline;">
+    <div>
+      <div class="eyebrow">HEADINGS</div>
+      <div style="font-family: var(--font-heading); font-weight: 700; font-size: 18px; margin-top: 2px;">Montserrat · -0.02em</div>
+    </div>
+    <span class="mono" style="font-size: 11px; color: var(--muted-foreground);">var(--font-heading)</span>
+  </div>
+  <div>
+    <div class="row-t">
+      <span class="tok">page-title</span>
+      <span class="text-page-title">Processos</span>
+      <span class="size">24/1.2 · 700</span>
+    </div>
+    <div class="row-t">
+      <span class="tok">section-title</span>
+      <span class="text-section-title">Meus processos ativos</span>
+      <span class="size">20/1.25 · 600</span>
+    </div>
+    <div class="row-t">
+      <span class="tok">card-title</span>
+      <span class="text-card-title">0001234-56.2024.5.01.0001</span>
+      <span class="size">18/1.3 · 600</span>
+    </div>
+    <div class="row-t">
+      <span class="tok">subsection</span>
+      <span class="text-subsection-title">Partes envolvidas</span>
+      <span class="size">16/1.35 · 600</span>
+    </div>
+    <div class="row-t">
+      <span class="tok">widget-title</span>
+      <span class="text-widget-title">Últimas audiências</span>
+      <span class="size">14/1.4 · 600</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>

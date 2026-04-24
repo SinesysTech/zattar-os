@@ -1,0 +1,2450 @@
+/**
+ * ZATTAROS DESIGN SYSTEM - FUNDAÇÃO
+ * 
+ * Hierarquia de Tokens:
+ * 1. Brand Tokens (--color-brand-*): Cores da marca Zattar
+ * 2. Semantic Tokens (--color-*): Mapeamento shadcn/ui
+ * 3. Component Tokens: Derivados dos semânticos
+ * 
+ * Regras Críticas para Agentes:
+ * - NUNCA use valores OKLCH diretos no código (use variáveis)
+ * - Sidebar SEMPRE usa tokens --sidebar-* (escura em ambos os temas)
+ * - Primary = Zattar Purple (CTAs, links, foco)
+ * - Highlight = Action Orange (badges de status, alertas de ação)
+ * 
+ * @see .qoder/rules/design-system-foundation.md
+ */
+@import "tailwindcss";
+
+@import "./tw-animate.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  /* --- 1. Mapeamento de Cores Semânticas (Shadcn Standard) --- */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* --- 2. Sidebar (Menu Lateral) --- */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* --- 3. Gráficos (Charts) --- */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* --- 4. Zattar Custom Tokens --- */
+  --color-brand: var(--brand);
+  /* O Roxo Zattar Puro */
+  --color-highlight: var(--highlight);
+  /* O Laranja de Ação */
+
+  /* --- 5. Semantic Status Colors --- */
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+
+  /* --- 6. Surface Tokens (Layering) --- */
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+
+  /* --- 7. Chat Tokens --- */
+  --color-chat-thread-bg: var(--chat-thread-bg);
+  --color-chat-bubble-received: var(--chat-bubble-received);
+  --color-chat-bubble-sent: var(--chat-bubble-sent);
+  --color-chat-sidebar-active: var(--chat-sidebar-active);
+
+  /* --- 7b. Video Call Tokens (always dark) --- */
+  --color-video-bg: var(--video-bg);
+  --color-video-surface: var(--video-surface);
+  --color-video-surface-hover: var(--video-surface-hover);
+  --color-video-border: var(--video-border);
+  --color-video-muted: var(--video-muted);
+  --color-video-text: var(--video-text);
+  --color-video-skeleton: var(--video-skeleton);
+
+  /* --- 8. Tipografia & Layout --- */
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-montserrat);
+  /* Títulos */
+  --font-headline: var(--font-manrope);
+  /* Magistrate AI Headline */
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-montserrat);
+  /* KPIs, métricas grandes — alias de heading */
+  --font-label: var(--font-inter);
+  /* Alias → font-sans (labels, chips, badges) */
+  --font-body: var(--font-inter);
+  /* Alias → font-sans (corpo de texto) */
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  /* Breakpoints Customizados (Opcional, mas útil para mobile-first preciso) */
+  --breakpoint-xs: 480px;
+  /* sm, md, lg, xl, 2xl já são padrão do Tailwind */
+
+  /* --- 9. Magistrate AI Tokens (MD3) --- */
+  --color-surface: var(--surface);
+  --color-surface-dim: var(--surface-dim);
+  --color-surface-bright: var(--surface-bright);
+  --color-surface-container-lowest: var(--surface-container-lowest);
+  --color-surface-container-low: var(--surface-container-low);
+  --color-surface-container: var(--surface-container);
+  --color-surface-container-high: var(--surface-container-high);
+  --color-surface-container-highest: var(--surface-container-highest);
+  --color-surface-variant: var(--surface-variant);
+  --color-on-surface: var(--on-surface);
+  --color-on-surface-variant: var(--on-surface-variant);
+  --color-inverse-surface: var(--inverse-surface);
+  --color-inverse-on-surface: var(--inverse-on-surface);
+
+  --color-outline: var(--outline);
+  --color-outline-variant: var(--outline-variant);
+
+  --color-on-primary: var(--on-primary);
+  --color-primary-container: var(--primary-container);
+  --color-on-primary-container: var(--on-primary-container);
+  --color-primary-fixed: var(--primary-fixed);
+  --color-primary-fixed-dim: var(--primary-fixed-dim);
+  --color-on-primary-fixed: var(--on-primary-fixed);
+  --color-on-primary-fixed-variant: var(--on-primary-fixed-variant);
+
+  --color-on-secondary: var(--on-secondary);
+  --color-secondary-container: var(--secondary-container);
+  --color-on-secondary-container: var(--on-secondary-container);
+  --color-secondary-fixed: var(--secondary-fixed);
+  --color-secondary-fixed-dim: var(--secondary-fixed-dim);
+  --color-on-secondary-fixed: var(--on-secondary-fixed);
+  --color-on-secondary-fixed-variant: var(--on-secondary-fixed-variant);
+
+  --color-tertiary: var(--tertiary);
+  --color-on-tertiary: var(--on-tertiary);
+  --color-tertiary-container: var(--tertiary-container);
+  --color-on-tertiary-container: var(--on-tertiary-container);
+  --color-tertiary-fixed: var(--tertiary-fixed);
+  --color-tertiary-fixed-dim: var(--tertiary-fixed-dim);
+  --color-on-tertiary-fixed: var(--on-tertiary-fixed);
+  --color-on-tertiary-fixed-variant: var(--on-tertiary-fixed-variant);
+
+  --color-error-container: var(--error-container);
+  --color-on-error-container: var(--on-error-container);
+  --color-on-error: var(--on-error);
+
+  /* --- 10. Portal do Cliente --- */
+  --color-portal-bg: var(--portal-bg);
+  --color-portal-card: var(--portal-card);
+  --color-portal-card-hover: var(--portal-card-hover);
+  --color-portal-surface: var(--portal-surface);
+  --color-portal-text: var(--portal-text);
+  --color-portal-text-muted: var(--portal-text-muted);
+  --color-portal-text-subtle: var(--portal-text-subtle);
+  --color-portal-primary: var(--portal-primary);
+  --color-portal-primary-soft: var(--portal-primary-soft);
+  --color-portal-success: var(--portal-success);
+  --color-portal-success-soft: var(--portal-success-soft);
+  --color-portal-warning: var(--portal-warning);
+  --color-portal-warning-soft: var(--portal-warning-soft);
+  --color-portal-danger: var(--portal-danger);
+  --color-portal-danger-soft: var(--portal-danger-soft);
+  --color-portal-info: var(--portal-info);
+  --color-portal-info-soft: var(--portal-info-soft);
+
+  /* --- 11. Magistrate AI: Dim & Tint Tokens --- */
+  --color-primary-dim: var(--primary-dim);
+  --color-secondary-dim: var(--secondary-dim);
+  --color-tertiary-dim: var(--tertiary-dim);
+  --color-error-dim: var(--error-dim);
+  --color-inverse-primary: var(--inverse-primary);
+  --color-surface-tint: var(--surface-tint);
+
+  /* --- 12. User-Selectable Palette (tags, labels, events) --- */
+  --color-palette-1: var(--palette-1);
+  --color-palette-2: var(--palette-2);
+  --color-palette-3: var(--palette-3);
+  --color-palette-4: var(--palette-4);
+  --color-palette-5: var(--palette-5);
+  --color-palette-6: var(--palette-6);
+  --color-palette-7: var(--palette-7);
+  --color-palette-8: var(--palette-8);
+  --color-palette-9: var(--palette-9);
+  --color-palette-10: var(--palette-10);
+  --color-palette-11: var(--palette-11);
+  --color-palette-12: var(--palette-12);
+  --color-palette-13: var(--palette-13);
+  --color-palette-14: var(--palette-14);
+  --color-palette-15: var(--palette-15);
+  --color-palette-16: var(--palette-16);
+  --color-palette-17: var(--palette-17);
+  --color-palette-18: var(--palette-18);
+
+  /* --- 13. Event Colors (semantic for calendar) --- */
+  --color-event-audiencia: var(--event-audiencia);
+  --color-event-expediente: var(--event-expediente);
+  --color-event-obrigacao: var(--event-obrigacao);
+  --color-event-pericia: var(--event-pericia);
+  --color-event-agenda: var(--event-agenda);
+  --color-event-prazo: var(--event-prazo);
+  --color-event-default: var(--event-default);
+}
+
+/* --- FUNDAÇÃO DE VARIÁVEIS --- */
+/* :root = LIGHT MODE (default para área logada) */
+/* .dark = DARK MODE (website público + toggle) */
+:root {
+  /* Configuração Global */
+  --radius: 0.5rem;
+  /* 8px -> Visual Tech/Sharp */
+
+  /* === ZATTAR LIGHT MODE === */
+  /* Âncoras: Primary #5523eb | Neutral #282828 | Highlight oklch(0.6 0.22 45) */
+  --background: oklch(0.96 0.01 281);
+  --foreground: oklch(0.15 0.01 281);
+
+  /* Cards & Popovers */
+  --card: oklch(1.0 0 0);
+  --card-foreground: oklch(0.15 0.01 281);
+
+  --popover: oklch(1.0 0 0);
+  --popover-foreground: oklch(0.15 0.01 281);
+
+  /* Primary: Zattar Purple #5523eb = oklch(0.48 0.26 281) */
+  --primary: oklch(0.48 0.26 281);
+  --primary-foreground: oklch(1.0 0 0);
+
+  /* Secondary: Primary tone-95 (purple wash suave) */
+  --secondary: oklch(0.95 0.04 281);
+  --secondary-foreground: oklch(0.15 0.01 281);
+
+  --muted: oklch(0.92 0.01 281);
+  --muted-foreground: oklch(0.42 0.01 281);
+
+  /* Accent: Purple wash para hovers */
+  --accent: oklch(0.95 0.04 281);
+  --accent-foreground: oklch(0.15 0.01 281);
+
+  /* Skeleton: cinza neutro dedicado para estados de loading (chroma 0) */
+  --skeleton: oklch(0.93 0 0);
+  --skeleton-highlight: oklch(0.97 0 0);
+
+  /* Destructive */
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(1.0 0 0);
+
+  /* Borders: Neutral com tint */
+  --border: oklch(0.87 0.01 281);
+  --input: oklch(0.87 0.01 281);
+  --ring: transparent;
+
+  /* SIDEBAR (Premium escura em ambos os temas) */
+  --sidebar: oklch(0.22 0.01 281);
+  --sidebar-foreground: oklch(0.98 0 0);
+  --sidebar-primary: oklch(0.70 0.20 281);
+  --sidebar-primary-foreground: oklch(1.0 0 0);
+  --sidebar-accent: oklch(0.30 0.01 281);
+  --sidebar-accent-foreground: oklch(1.0 0 0);
+  --sidebar-border: oklch(1.0 0 0 / 0.1);
+  --sidebar-ring: oklch(0.70 0.20 281);
+
+  /* CORES DA MARCA & GRÁFICOS */
+  --brand: oklch(0.48 0.26 281);
+  --highlight: oklch(0.60 0.22 45);
+
+  --chart-1: oklch(0.48 0.26 281);
+  --chart-2: oklch(0.60 0.22 45);
+  --chart-3: oklch(0.92 0.01 281);
+  --chart-4: oklch(0.55 0.18 150);
+  --chart-5: oklch(0.70 0.01 281);
+  --chart-6: oklch(0.65 0.15 200);
+  --chart-7: oklch(0.60 0.18 320);
+  --chart-8: oklch(0.70 0.12 80);
+
+  /* Tons derivados para treemaps e funnels */
+  --chart-primary-soft: oklch(from var(--primary) l c h / 0.50);
+  --chart-destructive-soft: oklch(from var(--destructive) l c h / 0.45);
+  --chart-warning-soft: oklch(from var(--warning) l c h / 0.45);
+  --chart-success-soft: oklch(from var(--success) l c h / 0.50);
+  --chart-muted-soft: oklch(from var(--muted-foreground) l c h / 0.40);
+  --chart-success-dark: oklch(from var(--success) calc(l - 0.05) c h);
+  --chart-warning-dark: oklch(from var(--warning) calc(l - 0.05) c h);
+
+  /* Glow effects */
+  --glow-primary: oklch(from var(--primary) l c h / 0.35);
+  --glow-primary-subtle: oklch(from var(--primary) l c h / 0.04);
+  --glow-primary-faint: oklch(from var(--primary) l c h / 0.02);
+  --glow-destructive: oklch(from var(--destructive) l c h / 0.50);
+  --glow-warning: oklch(from var(--warning) l c h / 0.40);
+
+  /* VIDEO CALL TOKENS (always dark — videochamada é sempre escura) */
+  --video-bg: oklch(0.145 0.005 281);
+  --video-surface: oklch(0.21 0.005 281);
+  --video-surface-hover: oklch(0.278 0.005 281);
+  --video-border: oklch(0.278 0.005 281);
+  --video-muted: oklch(0.556 0.01 281);
+  --video-text: oklch(1.0 0 0);
+  --video-skeleton: oklch(0.278 0.005 281);
+
+  /* SEMANTIC STATUS COLORS (Light) */
+  --success: oklch(0.55 0.18 145);
+  --success-foreground: oklch(1.0 0 0);
+  --warning: oklch(0.60 0.18 75);
+  --warning-foreground: oklch(1.0 0 0);
+  --info: oklch(0.55 0.18 250);
+  --info-foreground: oklch(1.0 0 0);
+
+  /* SURFACE TOKENS (Light Layering) */
+  --surface-1: oklch(0.98 0.005 281);
+  --surface-2: oklch(0.97 0.005 281);
+  --surface-3: oklch(0.95 0.005 281);
+
+  /* CHAT-SPECIFIC TOKENS (Light) */
+  --chat-thread-bg: oklch(0.97 0.005 281);
+  --chat-bubble-received: oklch(1.0 0 0);
+  --chat-bubble-sent: var(--primary);
+  --chat-sidebar-active: oklch(0.95 0.04 281);
+
+  /* MD3 SURFACE HIERARCHY (Light) */
+  /* Neutrals tintados com hue 281° (primary) e croma mínima (0.005-0.01) */
+  --surface: oklch(0.98 0.005 281);
+  --surface-dim: oklch(0.90 0.005 281);
+  --surface-bright: oklch(1.0 0 0);
+  --surface-container-lowest: oklch(1.0 0 0);
+  --surface-container-low: oklch(0.97 0.005 281);
+  --surface-container: oklch(0.96 0.005 281);
+  --surface-container-high: oklch(0.94 0.005 281);
+  --surface-container-highest: oklch(0.92 0.005 281);
+  --surface-variant: oklch(0.93 0.01 281);
+  --on-surface: oklch(0.15 0.01 281);
+  --on-surface-variant: oklch(0.38 0.01 281);
+  --inverse-surface: oklch(0.20 0.01 281);
+  --inverse-on-surface: oklch(0.96 0.005 281);
+  --outline: oklch(0.50 0.01 281);
+  --outline-variant: oklch(0.78 0.01 281);
+
+  /* Primary Extended (Light) — derivados da escala tonal hue 281° */
+  --on-primary: oklch(1.0 0 0);
+  --primary-container: oklch(0.90 0.10 281);
+  --on-primary-container: oklch(0.15 0.10 281);
+  --primary-fixed: oklch(0.90 0.10 281);
+  --primary-fixed-dim: oklch(0.80 0.18 281);
+  --on-primary-fixed: oklch(0.15 0.10 281);
+  --on-primary-fixed-variant: oklch(0.35 0.22 281);
+
+  /* Secondary Extended (Light) — tom desaturado do primary */
+  --on-secondary: oklch(1.0 0 0);
+  --secondary-container: oklch(0.90 0.06 281);
+  --on-secondary-container: oklch(0.20 0.06 281);
+  --secondary-fixed: oklch(0.92 0.06 281);
+  --secondary-fixed-dim: oklch(0.80 0.10 281);
+  --on-secondary-fixed: oklch(0.20 0.06 281);
+  --on-secondary-fixed-variant: oklch(0.40 0.10 281);
+
+  /* Tertiary (Light) — vermelho complementar (hue 25°) */
+  --tertiary: oklch(0.50 0.20 25);
+  --on-tertiary: oklch(1.0 0 0);
+  --tertiary-container: oklch(0.90 0.08 25);
+  --on-tertiary-container: oklch(0.15 0.08 25);
+  --tertiary-fixed: oklch(0.90 0.08 25);
+  --tertiary-fixed-dim: oklch(0.80 0.14 25);
+  --on-tertiary-fixed: oklch(0.15 0.08 25);
+  --on-tertiary-fixed-variant: oklch(0.35 0.16 25);
+
+  /* Error (Light) */
+  --error-container: oklch(0.90 0.08 25);
+  --on-error-container: oklch(0.15 0.08 25);
+  --on-error: oklch(1.0 0 0);
+
+  /* Dim Variants (Light) */
+  --primary-dim: oklch(0.35 0.24 281);
+  --secondary-dim: oklch(0.45 0.14 281);
+  --tertiary-dim: oklch(0.45 0.18 25);
+  --error-dim: oklch(0.50 0.20 25);
+  --inverse-primary: oklch(0.80 0.18 281);
+  --surface-tint: oklch(0.48 0.26 281);
+
+  /* === PORTAL DO CLIENTE — Tokens Derivados (Light) === */
+  --portal-bg: oklch(0.97 0.005 281);
+  --portal-card: oklch(1.0 0 0);
+  --portal-card-hover: oklch(0.98 0.005 281);
+  --portal-surface: oklch(0.95 0.008 281);
+  --portal-text: oklch(0.15 0.01 281);
+  --portal-text-muted: oklch(0.45 0.01 281);
+  --portal-text-subtle: oklch(0.60 0.005 281);
+  --portal-primary: var(--primary);
+  --portal-primary-soft: oklch(0.95 0.05 281);
+  --portal-success: var(--success);
+  --portal-success-soft: oklch(0.95 0.05 145);
+  --portal-warning: var(--warning);
+  --portal-warning-soft: oklch(0.95 0.05 75);
+  --portal-danger: var(--destructive);
+  --portal-danger-soft: oklch(0.95 0.05 25);
+  --portal-info: var(--info);
+  --portal-info-soft: oklch(0.95 0.05 250);
+}
+
+.dark {
+  /* ZATTAR DARK MODE */
+  /* Âncoras: Primary #5523eb (hue 281°) | Neutral #282828 | Highlight hue 45° */
+  /* Fundo Deep Charcoal com micro-tint roxo */
+  --background: oklch(0.17 0.005 281);
+  --foreground: oklch(0.98 0 0);
+
+  /* Cards levemente mais claros que o fundo */
+  --card: oklch(0.22 0.005 281);
+  --card-foreground: oklch(0.98 0 0);
+
+  --popover: oklch(0.22 0.005 281);
+  --popover-foreground: oklch(0.98 0 0);
+
+  /* Primary: Tom 70 do primary para contraste em fundo escuro (~6:1) */
+  --primary: oklch(0.70 0.20 281);
+  --primary-foreground: oklch(0.15 0.10 281);
+
+  --secondary: oklch(0.28 0.01 281);
+  --secondary-foreground: oklch(0.98 0 0);
+
+  --muted: oklch(0.28 0.005 281);
+  --muted-foreground: oklch(0.65 0.005 281);
+
+  --accent: oklch(0.28 0.01 281);
+  --accent-foreground: oklch(0.98 0 0);
+
+  /* Skeleton: cinza neutro dedicado para loading (chroma 0) */
+  --skeleton: oklch(0.22 0 0);
+  --skeleton-highlight: oklch(0.28 0 0);
+
+  --destructive: oklch(0.65 0.20 25);
+  --destructive-foreground: oklch(1.0 0 0);
+
+  --border: oklch(1.0 0 0 / 0.12);
+  --input: oklch(1.0 0 0 / 0.12);
+  --ring: transparent;
+
+  /* Sidebar Dark (consistente com light — sempre escura) */
+  --sidebar: oklch(0.17 0.005 281);
+  --sidebar-foreground: oklch(0.98 0 0);
+  --sidebar-primary: oklch(0.70 0.20 281);
+  --sidebar-primary-foreground: oklch(1.0 0 0);
+  --sidebar-accent: oklch(0.26 0.005 281);
+  --sidebar-accent-foreground: oklch(0.98 0 0);
+  --sidebar-border: oklch(1.0 0 0 / 0.1);
+  --sidebar-ring: oklch(0.70 0.20 281);
+
+  /* Cores de Marca Dark */
+  --brand: oklch(0.70 0.20 281);
+  --highlight: oklch(0.70 0.20 45);
+
+  --chart-1: oklch(0.70 0.20 281);
+  --chart-2: oklch(0.70 0.20 45);
+  --chart-3: oklch(0.35 0.005 281);
+  --chart-4: oklch(0.65 0.18 150);
+  --chart-5: oklch(0.50 0.005 281);
+  --chart-6: oklch(0.65 0.15 200);
+  --chart-7: oklch(0.60 0.18 320);
+  --chart-8: oklch(0.70 0.12 80);
+
+  /* Tons derivados para treemaps e funnels (Dark) */
+  --chart-primary-soft: oklch(from var(--primary) l c h / 0.35);
+  --chart-destructive-soft: oklch(from var(--destructive) l c h / 0.30);
+  --chart-warning-soft: oklch(from var(--warning) l c h / 0.30);
+  --chart-success-soft: oklch(from var(--success) l c h / 0.35);
+  --chart-muted-soft: oklch(from var(--muted-foreground) l c h / 0.25);
+  --chart-success-dark: oklch(from var(--success) calc(l - 0.05) c h);
+  --chart-warning-dark: oklch(from var(--warning) calc(l - 0.05) c h);
+
+  /* Glow effects (Dark) */
+  --glow-primary: oklch(from var(--primary) l c h / 0.25);
+  --glow-primary-subtle: oklch(from var(--primary) l c h / 0.03);
+  --glow-primary-faint: oklch(from var(--primary) l c h / 0.015);
+  --glow-destructive: oklch(from var(--destructive) l c h / 0.35);
+  --glow-warning: oklch(from var(--warning) l c h / 0.30);
+
+  /* SEMANTIC STATUS COLORS (Dark) — tons mais claros para contraste */
+  --success: oklch(0.70 0.18 145);
+  --success-foreground: oklch(0.98 0 0);
+  --warning: oklch(0.78 0.16 85);
+  --warning-foreground: oklch(0.15 0 0);
+  --info: oklch(0.70 0.18 250);
+  --info-foreground: oklch(0.98 0 0);
+
+  /* SURFACE TOKENS (Dark) — com micro-tint hue 281° */
+  --surface-1: oklch(0.20 0.005 281);
+  --surface-2: oklch(0.22 0.005 281);
+  --surface-3: oklch(0.26 0.005 281);
+
+  /* CHAT-SPECIFIC TOKENS (Dark) */
+  --chat-thread-bg: oklch(0.15 0.005 281);
+  --chat-bubble-received: oklch(0.26 0.005 281);
+  --chat-bubble-sent: var(--primary);
+  --chat-sidebar-active: oklch(0.24 0.01 281);
+
+  /* MD3 SURFACE HIERARCHY (Dark) — escala tonal neutra tintada */
+  --surface: oklch(0.12 0.005 281);
+  --surface-dim: oklch(0.12 0.005 281);
+  --surface-bright: oklch(0.30 0.005 281);
+  --surface-container-lowest: oklch(0.06 0.005 281);
+  --surface-container-low: oklch(0.14 0.005 281);
+  --surface-container: oklch(0.17 0.005 281);
+  --surface-container-high: oklch(0.20 0.005 281);
+  --surface-container-highest: oklch(0.24 0.005 281);
+  --surface-variant: oklch(0.24 0.01 281);
+  --on-surface: oklch(0.98 0 0);
+  --on-surface-variant: oklch(0.70 0.005 281);
+  --inverse-surface: oklch(0.96 0.005 281);
+  --inverse-on-surface: oklch(0.35 0.005 281);
+  --outline: oklch(0.50 0.005 281);
+  --outline-variant: oklch(0.35 0.005 281);
+
+  /* Primary Extended (Dark) — escala invertida vs light */
+  --on-primary: oklch(0.20 0.14 281);
+  --primary-container: oklch(0.35 0.20 281);
+  --on-primary-container: oklch(0.90 0.10 281);
+  --primary-fixed: oklch(0.90 0.10 281);
+  --primary-fixed-dim: oklch(0.80 0.18 281);
+  --on-primary-fixed: oklch(0.10 0.06 281);
+  --on-primary-fixed-variant: oklch(0.30 0.18 281);
+
+  /* Secondary Extended (Dark) */
+  --on-secondary: oklch(0.20 0.06 281);
+  --secondary-container: oklch(0.35 0.10 281);
+  --on-secondary-container: oklch(0.90 0.06 281);
+  --secondary-fixed: oklch(0.92 0.06 281);
+  --secondary-fixed-dim: oklch(0.80 0.10 281);
+  --on-secondary-fixed: oklch(0.20 0.06 281);
+  --on-secondary-fixed-variant: oklch(0.40 0.10 281);
+
+  /* Tertiary (Dark) — vermelho hue 25° */
+  --tertiary: oklch(0.75 0.16 25);
+  --on-tertiary: oklch(0.20 0.10 25);
+  --tertiary-container: oklch(0.35 0.16 25);
+  --on-tertiary-container: oklch(0.90 0.08 25);
+  --tertiary-fixed: oklch(0.90 0.08 25);
+  --tertiary-fixed-dim: oklch(0.80 0.14 25);
+  --on-tertiary-fixed: oklch(0.15 0.08 25);
+  --on-tertiary-fixed-variant: oklch(0.35 0.16 25);
+
+  /* Error (Dark) */
+  --error-container: oklch(0.35 0.14 25);
+  --on-error-container: oklch(0.90 0.08 25);
+  --on-error: oklch(0.20 0.10 25);
+
+  /* Dim Variants (Dark) */
+  --primary-dim: oklch(0.58 0.22 281);
+  --secondary-dim: oklch(0.65 0.12 281);
+  --tertiary-dim: oklch(0.60 0.14 25);
+  --error-dim: oklch(0.55 0.18 25);
+  --inverse-primary: oklch(0.48 0.26 281);
+  --surface-tint: oklch(0.80 0.18 281);
+
+  /* === PORTAL DO CLIENTE — Tokens Derivados (Dark) === */
+  --portal-bg: oklch(0.14 0.005 281);
+  --portal-card: oklch(0.20 0.008 281);
+  --portal-card-hover: oklch(0.24 0.008 281);
+  --portal-surface: oklch(0.17 0.005 281);
+  --portal-text: oklch(0.95 0.005 281);
+  --portal-text-muted: oklch(0.65 0.01 281);
+  --portal-text-subtle: oklch(0.50 0.005 281);
+  --portal-primary: var(--primary);
+  --portal-primary-soft: oklch(0.25 0.05 281);
+  --portal-success: var(--success);
+  --portal-success-soft: oklch(0.25 0.05 145);
+  --portal-warning: var(--warning);
+  --portal-warning-soft: oklch(0.25 0.05 75);
+  --portal-danger: var(--destructive);
+  --portal-danger-soft: oklch(0.25 0.05 25);
+  --portal-info: var(--info);
+  --portal-info-soft: oklch(0.25 0.05 250);
+}
+
+/* =============================================================================
+ * LIGHT MODE: Glass & Effect Overrides
+ * =============================================================================
+ * :root (sem .dark) = light mode. Estas regras adaptam os efeitos visuais.
+ * Seletor :root:not(.dark) garante que NÃO se aplica quando dark mode ativo.
+ */
+:root:not(.dark) .glass-card {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 2px 12px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+:root:not(.dark) .glass-panel {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+:root:not(.dark) .glass-glow::after {
+  background: oklch(0.48 0.26 281 / 0.03);
+}
+
+:root:not(.dark) .text-gradient {
+  background-image: linear-gradient(135deg, oklch(0.48 0.26 281) 0%, oklch(0.35 0.24 281) 100%);
+}
+
+:root:not(.dark) .neon-glow,
+:root:not(.dark) .neon-text-glow {
+  text-shadow: none;
+}
+
+:root:not(.dark) .gradient-border::before {
+  background: linear-gradient(135deg, oklch(0.48 0.26 281 / 0.3), oklch(0.80 0.01 281 / 0.1));
+}
+
+:root:not(.dark) .purple-glow-hover:hover {
+  box-shadow: 0 0 30px oklch(0.48 0.26 281 / 0.1);
+}
+
+:root:not(.dark) .shadow-ambient {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* Light mode: invert white-opacity patterns for visibility on light bg */
+:root:not(.dark) [class*="border-white/"] {
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+:root:not(.dark) [class*="hover\\:border-white/"]:hover {
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+:root:not(.dark) [class*="bg-white/5"],
+:root:not(.dark) [class*="hover\\:bg-white/5"]:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+:root:not(.dark) [class*="bg-white/10"] {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+:root:not(.dark) [class*="bg-white/20"] {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+/* =============================================================================
+ * FLOATING OVERLAYS — No Glassmorphism
+ * =============================================================================
+ * Dropdowns, selects, popovers, tooltips e menus de contexto devem ter
+ * fundo sólido para garantir contraste e legibilidade de texto.
+ * Remove backdrop-filter e força bg opaco em todos os floating elements.
+ */
+[data-slot="popover-content"],
+[data-slot="select-content"],
+[data-slot="dropdown-menu-content"],
+[data-slot="dropdown-menu-sub-content"],
+[data-slot="tooltip-content"],
+[data-slot="command"] {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* =============================================================================
+ * WIDGET DESIGN SYSTEM — Tokens
+ * =============================================================================
+ * Tokens centralizados para o sistema de widgets da dashboard.
+ * Usados por primitivas (GlassPanel, WidgetContainer, etc.)
+ */
+:root {
+  --widget-radius: 1rem;
+  --widget-padding: 1.25rem;
+  --widget-gap: 1rem;
+  --widget-border-opacity: 0.06;
+  --widget-label-size: 10px;
+  --widget-number-weight: 700;
+  --widget-transition: 200ms;
+  --widget-hover-scale: 1.01;
+
+  /* Gauge meter */
+  --gauge-good: var(--success);
+  --gauge-warning: var(--warning);
+  --gauge-danger: var(--destructive);
+  --gauge-neutral: var(--primary);
+
+  /* Insight banner */
+  --insight-alert-bg: var(--destructive);
+  --insight-success-bg: var(--success);
+  --insight-info-bg: var(--primary);
+  --insight-warning-bg: var(--warning);
+
+  /* ── Entity Type Colors ── */
+  /* Cores semânticas por tipo de entidade no sistema jurídico */
+  --entity-cliente: var(--primary);
+  --entity-parte-contraria: var(--warning);
+  --entity-terceiro: var(--info);
+  --entity-representante: var(--success);
+
+  /* ── Pulse Strip ── */
+  --pulse-gap: 1.5rem;
+  --pulse-padding-x: 1.25rem;
+  --pulse-padding-y: 0.75rem;
+
+  /* ── Card Entity ── */
+  --card-entity-radius: 1rem;
+  --card-entity-padding: 1rem;
+  --card-entity-avatar-size: 2.5rem;
+  --card-entity-avatar-radius: 0.75rem;
+
+  /* ── Tab Pills ── */
+  --tab-pill-radius: 0.75rem;
+  --tab-pill-padding-x: 0.75rem;
+  --tab-pill-padding-y: 0.375rem;
+  --tab-pill-active-bg: var(--primary);
+
+  /* ── Detail Panel ── */
+  --detail-panel-width: 380px;
+
+  /* ── Search ── */
+  --search-radius: 0.5rem;
+  --search-bg: rgba(255, 255, 255, 0.04);
+
+  /* =========================================================================
+   * USER-SELECTABLE PALETTE — Tags, Labels, Event Colors
+   * =========================================================================
+   * 18 cores escolhidas pelo usuário (criar tag de processo, label de nota,
+   * cor de evento de calendário). Derivadas em OKLCH com luminosidade
+   * perceptualmente uniforme (L=0.65) e croma 0.18 — distinção clara entre
+   * cores adjacentes, contraste WCAG AA contra superfícies claras.
+   *
+   * Hue ordenado em ciclo cromático completo: vermelho→laranja→amarelo→
+   * verde→ciano→azul→roxo→magenta. 18 stops a cada ~20°.
+   *
+   * USO:
+   *   - Database stores hex (legacy compat) — TAG_COLORS em domain.ts mapeia
+   *   - UI consome via var(--palette-N) ou via helper getPaletteToken(n)
+   * ========================================================================= */
+  --palette-1: oklch(0.65 0.18 25);
+  /* vermelho      #ED4949 */
+  --palette-2: oklch(0.68 0.18 50);
+  /* laranja       #ED7E40 */
+  --palette-3: oklch(0.74 0.16 75);
+  /* âmbar         #E5A23A */
+  --palette-4: oklch(0.80 0.16 95);
+  /* amarelo       #DAB52D */
+  --palette-5: oklch(0.78 0.18 130);
+  /* lima          #9FBE3E */
+  --palette-6: oklch(0.70 0.18 145);
+  /* verde         #4FB04F */
+  --palette-7: oklch(0.70 0.15 160);
+  /* esmeralda     #3DAF7A */
+  --palette-8: oklch(0.72 0.13 180);
+  /* teal          #3DAFA6 */
+  --palette-9: oklch(0.72 0.14 210);
+  /* ciano         #3DA8C7 */
+  --palette-10: oklch(0.68 0.16 230);
+  /* azul claro    #3D90D6 */
+  --palette-11: oklch(0.62 0.20 255);
+  /* azul          #3D6BD6 */
+  --palette-12: oklch(0.60 0.22 275);
+  /* índigo        #4D55E0 */
+  --palette-13: oklch(0.62 0.22 295);
+  /* violeta       #6E48E0 */
+  --palette-14: oklch(0.62 0.22 310);
+  /* roxo          #8E48E0 */
+  --palette-15: oklch(0.65 0.22 330);
+  /* fúcsia        #C449D6 */
+  --palette-16: oklch(0.65 0.20 0);
+  /* pink          #D6498F */
+  --palette-17: oklch(0.62 0.22 15);
+  /* rosa          #DA4566 */
+  --palette-18: oklch(0.55 0.01 281);
+  /* cinza neutro  #6B6B70 */
+
+  /* =========================================================================
+   * EVENT COLORS — Calendar/Agenda Event Sources
+   * =========================================================================
+   * Cores semânticas por tipo de fonte de evento. Derivadas da paleta acima
+   * mas com nomes intencionais que refletem o domínio (audiência, expediente,
+   * obrigação, perícia, agenda).
+   * ========================================================================= */
+  --event-audiencia: var(--palette-10);
+  /* azul claro — formal/oficial */
+  --event-expediente: var(--palette-3);
+  /* âmbar — atenção/prazo */
+  --event-obrigacao: var(--palette-2);
+  /* laranja — financeiro */
+  --event-pericia: var(--palette-13);
+  /* violeta — técnico/expert */
+  --event-agenda: var(--palette-12);
+  /* índigo — pessoal/neutro (distinto de perícia) */
+  --event-prazo: var(--palette-1);
+  /* vermelho — urgência */
+  --event-default: var(--palette-11);
+  /* azul */
+}
+
+/* =============================================================================
+ * DASHBOARD: Glass Effect Cards
+ * =============================================================================
+ * Glass KPI  — cards de métricas, mais opacos para legibilidade
+ * Glass Widget — painéis maiores, mais transparentes para atmosfera
+ */
+
+/* Light mode */
+:root:not(.dark) .glass-kpi {
+  background: rgba(255, 255, 255, 0.70);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    0 1px 2px rgba(0, 0, 0, 0.02),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+:root:not(.dark) .glass-kpi:hover {
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+:root:not(.dark) .glass-widget {
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow:
+    0 2px 12px rgba(0, 0, 0, 0.04),
+    0 1px 2px rgba(0, 0, 0, 0.02),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+:root:not(.dark) .glass-widget:hover {
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.06),
+    0 1px 3px rgba(0, 0, 0, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* Dark mode */
+.dark .glass-kpi {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.dark .glass-kpi:hover {
+  background: rgba(255, 255, 255, 0.10);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* Glass Dropdown — quase opaco, ideal para popovers e dropdowns flutuantes */
+:root:not(.dark) .glass-dropdown {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.dark .glass-dropdown {
+  background: rgba(30, 30, 35, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.dark .glass-widget {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.dark .glass-widget:hover {
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Glass Dialog — modal elevado com contraste alto e separação de profundidade */
+:root:not(.dark) .glass-dialog {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.12),
+    0 8px 24px rgba(0, 0, 0, 0.08),
+    0 2px 6px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.dark .glass-dialog {
+  background: rgba(18, 18, 22, 0.92);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.5),
+    0 8px 24px rgba(0, 0, 0, 0.3),
+    0 2px 6px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* Glass Dialog Overlay — backdrop com blur para separação de contexto */
+:root:not(.dark) .glass-dialog-overlay {
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.dark .glass-dialog-overlay {
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* --- ESTILOS BASE --- */
+@layer base {
+
+  /* Prevenir scroll horizontal globalmente */
+  html,
+  body {
+    @apply overflow-x-hidden;
+    max-width: 100vw;
+  }
+
+  /* Acessibilidade: Respeitar preferencia de movimento reduzido */
+  @media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  * {
+    @apply border-border outline-none;
+  }
+
+  html {
+    font-size: 18px;
+  }
+
+  html.website-root-scale {
+    font-size: 16.2px;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  /* Tipografia Zattar */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading text-foreground;
+  }
+
+  /* Micro-interações: Transições suaves em elementos interativos */
+  button,
+  a,
+  input,
+  select,
+  textarea,
+  [role="button"] {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  /* Foco: remover anel/contorno globalmente */
+  *:focus,
+  *:focus-visible,
+  *:focus-within {
+    @apply outline-none ring-0 ring-offset-0;
+  }
+
+  /* Prevenir overflow horizontal em elementos comuns */
+  img,
+  video,
+  iframe,
+  embed,
+  object {
+    @apply max-w-full h-auto;
+  }
+
+  /* Tabelas responsivas - prevenir overflow */
+  table {
+    @apply w-full table-auto;
+  }
+
+  /* Containers principais - garantir que não ultrapassem viewport */
+  main,
+  section,
+  article,
+  aside,
+  header,
+  footer {
+    @apply max-w-full;
+  }
+
+  /* Prevenir overflow em elementos com largura fixa */
+  [style*="width"] {
+    max-width: 100% !important;
+  }
+}
+
+/* --- ESTILOS DO SCROLL AREA (shadcn/ui) --- */
+@layer components {
+  /* =============================================================================
+   * TABS COMPONENT (shadcn/ui)
+   * =============================================================================
+   * Estilos para garantir que as tabs tenham o visual correto
+   */
+
+  /* TabsList - Container das tabs com fundo cinza */
+  [data-slot="tabs-list"] {
+    @apply bg-muted rounded-lg p-1 h-auto;
+  }
+
+  /* TabsTrigger - Cada tab individual */
+  [data-slot="tabs-trigger"] {
+    @apply rounded-md px-3 py-1.5 text-sm font-medium transition-all;
+    @apply text-muted-foreground;
+  }
+
+  /* TabsTrigger - Estado ativo (tab selecionada) */
+  [data-slot="tabs-trigger"][data-state="active"] {
+    @apply bg-background text-foreground shadow-sm;
+  }
+
+  /* TabsTrigger - Hover */
+  [data-slot="tabs-trigger"]:hover:not([data-state="active"]) {
+    @apply text-foreground/80;
+  }
+
+  /* =============================================================================
+   * TIPOGRAFIA (TOKENS)
+   * =============================================================================
+   * Preferir `Typography.*` (src/components/ui/typography.tsx).
+   * As classes abaixo existem como fallback e para casos específicos (ex.: MDX).
+   */
+
+  .typography-h1 {
+    @apply scroll-m-20 text-3xl font-bold tracking-tight md:text-4xl;
+  }
+
+  .typography-h2 {
+    @apply scroll-m-20 text-2xl font-semibold tracking-tight;
+  }
+
+  .typography-h3 {
+    @apply scroll-m-20 text-xl font-semibold tracking-tight;
+  }
+
+  .typography-h4 {
+    @apply scroll-m-20 text-lg font-semibold tracking-tight;
+  }
+
+  .typography-p {
+    @apply leading-7 text-foreground;
+  }
+
+  .typography-lead {
+    @apply text-lg text-muted-foreground;
+  }
+
+  .typography-large {
+    @apply text-lg font-semibold;
+  }
+
+  .typography-small {
+    @apply text-sm font-medium leading-none;
+  }
+
+  .typography-muted {
+    @apply text-sm text-muted-foreground;
+  }
+
+  .typography-blockquote {
+    @apply border-l-2 border-border pl-6 italic text-muted-foreground;
+  }
+
+  .typography-list {
+    @apply my-6 ml-6 list-disc [&>li]:mt-2;
+  }
+
+  .typography-inline-code {
+    @apply rounded bg-muted px-1.5 py-0.5 font-mono text-sm;
+  }
+
+  .typography-table-wrapper {
+    @apply my-6 w-full overflow-x-auto rounded-md border;
+  }
+
+  .typography-table {
+    @apply w-full text-sm;
+  }
+
+  .typography-table th {
+    @apply border-b bg-muted/40 px-3 py-2 text-left font-medium;
+  }
+
+  .typography-table td {
+    @apply border-b px-3 py-2 align-top;
+  }
+
+  /* =============================================================================
+   * ESCALA TIPOGRÁFICA UNIFICADA — DESIGN SYSTEM ZATTAR
+   * =============================================================================
+   *
+   * IMPORTANTE: html { font-size: 18px } infla todos os tamanhos rem.
+   * text-sm (0.875rem) → 15.75px real, text-base (1rem) → 18px real, etc.
+   *
+   * REGRA: Headings e UI compacta usam px fixo para precisão.
+   *        Body text e conteúdo longo usam rem para escalar com o root.
+   *
+   * HIERARQUIA VISUAL (do maior ao menor):
+   * ┌─────────────────────────┬─────────┬──────────────────────────────┐
+   * │ Classe                  │ Size    │ Uso                          │
+   * ├─────────────────────────┼─────────┼──────────────────────────────┤
+   * │ .text-display-1         │ 36-60px │ Hero, landing                │
+   * │ .text-display-2         │ 30-48px │ Hero secundário              │
+   * │ .text-page-title        │ 24px    │ Título de página (PageShell) │
+   * │ .text-section-title     │ 20px    │ Seção principal              │
+   * │ .text-card-title        │ 18px    │ Card grande, painel          │
+   * │ .text-subsection-title  │ 16px    │ Subseção                     │
+   * │ .text-widget-title      │ 14px    │ Widget header (dashboard)    │
+   * ├─────────────────────────┼─────────┼──────────────────────────────┤
+   * │ .text-body-lg           │ ~20px   │ Lead text (rem)              │
+   * │ .text-body              │ ~18px   │ Corpo padrão (rem)           │
+   * │ .text-body-sm           │ ~16px   │ Corpo compacto (rem)         │
+   * ├─────────────────────────┼─────────┼──────────────────────────────┤
+   * │ .text-label             │ 14px    │ Labels de campo              │
+   * │ .text-caption           │ 13px    │ Texto auxiliar               │
+   * │ .text-helper            │ 13px    │ Dicas, descrições            │
+   * │ .text-widget-sub        │ 12px    │ Subtítulo de widget          │
+   * │ .text-overline          │ 11px    │ Labels ALL-CAPS              │
+   * │ .text-meta-label        │ 11px    │ Metadata uppercase           │
+   * │ .text-mono-num          │ 10px    │ Números, datas, processos    │
+   * │ .text-micro-caption     │ 10px    │ Timestamps terciários        │
+   * │ .text-micro-badge       │  9px    │ Texto dentro de badges       │
+   * └─────────────────────────┴─────────┴──────────────────────────────┘
+   */
+
+  /* === DISPLAY HEADINGS (Hero, Landing) === */
+  .text-display-1 {
+    font-size: clamp(2.25rem, 5vw, 3.75rem);
+    /* 36px → 60px */
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    @apply font-heading font-bold text-foreground;
+  }
+
+  .text-display-2 {
+    font-size: clamp(1.875rem, 4vw, 3rem);
+    /* 30px → 48px */
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    @apply font-heading font-bold text-foreground;
+  }
+
+  /* === PAGE & SECTION HEADINGS (px fixo — imunes ao root 18px) === */
+
+  /* Título principal da página: "Processos", "Partes", "Dashboard" */
+  .text-page-title {
+    font-size: 24px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    @apply scroll-m-20 font-heading font-bold text-foreground;
+  }
+
+  /* Seção principal dentro de uma página */
+  .text-section-title {
+    font-size: 20px;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    @apply scroll-m-20 font-heading font-semibold text-foreground;
+  }
+
+  /* Título de card grande ou painel de detalhe */
+  .text-card-title {
+    font-size: 18px;
+    line-height: 1.3;
+    @apply scroll-m-20 font-heading font-semibold text-foreground;
+  }
+
+  /* Subseção, accordion, grupo de campos */
+  .text-subsection-title {
+    font-size: 16px;
+    line-height: 1.35;
+    @apply scroll-m-20 font-heading font-semibold text-foreground;
+  }
+
+  /* Título de widget/card compacto (dashboard, glass panels) */
+  .text-widget-title {
+    font-size: 14px;
+    line-height: 1.4;
+    @apply font-heading font-semibold text-foreground;
+  }
+
+  /* === BODY TEXT (rem-based — escalam com root) === */
+
+  .text-body-lg {
+    @apply text-xl leading-relaxed text-foreground;
+  }
+
+  .text-body {
+    @apply text-lg leading-relaxed text-foreground;
+  }
+
+  .text-body-sm {
+    @apply text-base leading-normal text-foreground;
+  }
+
+  /* === SUPPORTING TEXT (px fixo para precisão em UI compacta) === */
+
+  /* Label de campo em formulário */
+  .text-label {
+    font-size: 14px;
+    @apply font-medium leading-none text-foreground;
+  }
+
+  /* Texto auxiliar, descrições curtas */
+  .text-caption {
+    font-size: 13px;
+    @apply leading-normal text-muted-foreground;
+  }
+
+  /* Dicas, textos de ajuda */
+  .text-helper {
+    font-size: 13px;
+    @apply leading-normal text-muted-foreground;
+  }
+
+  /* Subtítulo de widget — abaixo do título em WidgetContainer */
+  .text-widget-sub {
+    font-size: 12px;
+    @apply text-muted-foreground/60;
+  }
+
+  /* Label ALL-CAPS genérico */
+  .text-overline {
+    font-size: 11px;
+    @apply font-semibold uppercase text-muted-foreground;
+    letter-spacing: 0.1em;
+  }
+
+  /* Mono/Code/Data */
+  .text-code {
+    @apply font-mono text-base;
+  }
+
+  .text-data {
+    @apply font-mono text-base tabular-nums;
+  }
+
+  /* =============================================================================
+   * MICRO TYPOGRAPHY — DESIGN SYSTEM V2
+   * =============================================================================
+   * Tamanhos compactos extraídos de Processos, Audiências, Dashboard e Partes.
+   * Todos em px fixo (imunes ao root 18px).
+   */
+
+  /* Meta Label — labels de campo em maiúsculas (RESPONSÁVEL, LOCALIDADE, TRIBUNAL) */
+  .text-meta-label {
+    font-size: 11px;
+    @apply font-semibold uppercase text-muted-foreground;
+    letter-spacing: 0.14em;
+  }
+
+  /* Mono Num — datas, números de processo, valores tabulares */
+  .text-mono-num {
+    font-size: 10px;
+    @apply font-mono text-muted-foreground/55 tabular-nums;
+  }
+
+  /* Micro Caption — informações terciárias muito pequenas (timestamps, contadores) */
+  .text-micro-caption {
+    font-size: 10px;
+    @apply text-muted-foreground/50;
+  }
+
+  /* Micro Badge — texto dentro de badges e tags compactos */
+  .text-micro-badge {
+    font-size: 9px;
+    @apply font-medium;
+  }
+
+  /* KPI Value — valores grandes de destaque em painéis métricos */
+  .text-kpi-value {
+    font-size: 24px;
+    @apply font-bold font-heading tabular-nums;
+  }
+
+  /* =============================================================================
+   * MARKETING TYPOGRAPHY — Landing / Website Público
+   * =============================================================================
+   * Escalas dedicadas às rotas de marketing em src/app/website/*. Nunca usar
+   * nos módulos admin (usam text-page/section/card/widget-title acima).
+   *
+   * Usar via Heading level="marketing-hero|marketing-section" e
+   * Text variant="marketing-lead" em @/components/ui/typography.
+   */
+
+  /* Hero de landing — H1 principal, ex.: "Justiça para quem trabalha.".
+     Escala calibrada em "major third" (1.25x) para proporção harmônica entre
+     os níveis de marketing. Max 80px é suficiente para drama sem competir com
+     o layout bento e colunas estreitas.
+     Nota: o website roda com html.website-root-scale (font-size 16.2px). */
+  .text-marketing-hero {
+    font-size: clamp(2.25rem, 2.5vw + 1.75rem, 5rem); /* 36px → 80px */
+    line-height: 1;
+    letter-spacing: -0.035em;
+    @apply font-heading font-extrabold text-foreground;
+  }
+
+  /* Seção de landing — H2 de seção, ex.: "Soluções jurídicas de alta precisão." */
+  .text-marketing-section {
+    font-size: clamp(1.625rem, 1.5vw + 1rem, 3rem); /* 26px → 48px */
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    @apply font-heading font-bold text-foreground;
+  }
+
+  /* Título de bloco dentro de seção de landing — H3 intermediário,
+     ex.: "Defesa Assertiva.", "Recuperação de Ativos." */
+  .text-marketing-title {
+    font-size: clamp(1.375rem, 0.75vw + 0.875rem, 2.125rem); /* 22px → 34px */
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    @apply font-heading font-bold text-foreground;
+  }
+
+  /* Parágrafo lead de landing — abaixo do hero/section.
+     Tamanho calibrado para body confortável sem competir com os headings.
+     Cor em 82% do foreground: contraste AA sobre fundo escuro (~7:1) e ainda
+     diferencia hierarquicamente do heading (100%). */
+  .text-marketing-lead {
+    font-size: clamp(0.9375rem, 0.3vw + 0.8125rem, 1.1875rem); /* 15px → 19px */
+    line-height: 1.6;
+    color: color-mix(in oklch, var(--foreground) 82%, transparent);
+  }
+
+  /* Overline marketing — label superior em seções de landing, ex.: "Especialidades". */
+  .text-marketing-overline {
+    font-size: 13px;
+    line-height: 1;
+    letter-spacing: 0.18em;
+    @apply font-bold uppercase text-primary;
+  }
+
+  /* ════════════════════════════════════════════════════════════════════════
+     WEBSITE MARKETING OVERRIDES (.website-root-scale escopo)
+     ════════════════════════════════════════════════════════════════════════
+     Ajustes específicos para o contexto marketing:
+     1) Tokens brand mais fiéis à logo #5523eb (oklch 0.44 0.28 280)
+     2) Fundo cinza-escuro (#121212 OLED-inspired) com textura noise sutil
+        para dar premium-feel e evitar o "preto sem alma".
+     3) Seletor mais robusto (both html.dark AND body-level fallback) para
+        funcionar em SSR antes do WebsiteScaleProvider hidratar. */
+
+  .website-root-scale.dark,
+  html.website-root-scale.dark body {
+    /* Primary website — clareado o suficiente para AA em fundo escuro
+       (L=0.62 sobre L=0.14 ≈ 5.1:1) mas mais saturado, próximo da logo. */
+    --primary: oklch(0.62 0.26 281);
+    /* Primary-dim = tom da logo em si #5523eb; usar em gradients, borders
+       e accents decorativos (NUNCA body text, contraste insuficiente). */
+    --primary-dim: oklch(0.48 0.28 281);
+    /* Fundo website: cinza-escuro (~#121212) em vez de preto puro.
+       Recomendação Dark Mode OLED da ui-ux-pro-max skill. */
+    --background: oklch(0.14 0.004 281);
+  }
+
+  /* Textura noise sutil no body do website — dá profundidade tátil sem
+     interferir na legibilidade. SVG inline evita round-trip de rede. */
+  .website-root-scale.dark body {
+    background-color: var(--background);
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% 0%, color-mix(in oklch, var(--primary-dim) 5%, transparent) 0%, transparent 70%),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.035 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-attachment: fixed, fixed;
+    background-size: 100% 100%, 200px 200px;
+  }
+
+  /* Glass KPI website — fundo sólido com tint primary sutil, evita que o
+     backdrop-blur capture luz de imagens claras atrás (problema observado
+     nos overlay cards de Services). */
+  .website-root-scale.dark .glass-kpi,
+  .website-root-scale.dark [class*="glass-kpi"] {
+    background: color-mix(in oklch, var(--surface-container) 85%, var(--primary) 4%);
+    backdrop-filter: blur(20px) saturate(1.3);
+    -webkit-backdrop-filter: blur(20px) saturate(1.3);
+    border: 1px solid color-mix(in oklch, var(--primary) 22%, transparent);
+    box-shadow:
+      0 12px 32px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 color-mix(in oklch, var(--primary) 10%, transparent);
+  }
+
+  .website-root-scale.dark .glass-kpi:hover {
+    background: color-mix(in oklch, var(--surface-container) 78%, var(--primary) 8%);
+    border-color: color-mix(in oklch, var(--primary) 35%, transparent);
+  }
+
+  .website-root-scale.dark .glass-widget {
+    background: color-mix(in oklch, var(--surface-container) 70%, transparent);
+    backdrop-filter: blur(16px) saturate(1.2);
+    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    border: 1px solid color-mix(in oklch, var(--primary) 14%, transparent);
+    box-shadow:
+      0 6px 24px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 color-mix(in oklch, var(--primary) 6%, transparent);
+  }
+
+  .website-root-scale.dark .glass-widget:hover {
+    background: color-mix(in oklch, var(--surface-container) 60%, transparent);
+    border-color: color-mix(in oklch, var(--primary) 24%, transparent);
+  }
+
+  /* === ALIASES (retrocompatibilidade) === */
+
+  /* text-page-heading é alias de text-page-title */
+  .text-page-heading {
+    font-size: 24px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    @apply scroll-m-20 font-heading font-semibold tracking-tight;
+  }
+
+  /* text-card-heading é alias de text-widget-title */
+  .text-card-heading {
+    font-size: 14px;
+    line-height: 1.4;
+    @apply font-heading font-semibold;
+  }
+
+  /* Scrollbar Thumb - Hover states e transições suaves */
+  [data-slot="scroll-area-thumb"] {
+    @apply transition-colors duration-200;
+  }
+
+  /* Scrollbar Thumb - Hover state mais visível */
+  [data-slot="scroll-area-scrollbar"]:hover [data-slot="scroll-area-thumb"] {
+    @apply bg-border/80;
+  }
+
+  /* Scrollbar Thumb - Active state durante scroll */
+  [data-slot="scroll-area-scrollbar"][data-state="visible"] [data-slot="scroll-area-thumb"] {
+    @apply bg-border;
+  }
+
+  /* Scrollbar - Transição suave de visibilidade (comportamento hover padrão) */
+  [data-slot="scroll-area-scrollbar"] {
+    @apply transition-opacity duration-300;
+  }
+
+  /* Scrollbar - Auto-hide quando não está em uso (comportamento padrão: hover) */
+  [data-slot="scroll-area-scrollbar"][data-state="hidden"] {
+    @apply opacity-0;
+  }
+
+  [data-slot="scroll-area-scrollbar"][data-state="visible"] {
+    @apply opacity-100;
+  }
+
+  /* Scrollbar sempre visível - use a classe .scroll-area-always no ScrollArea */
+  [data-slot="scroll-area"].scroll-area-always [data-slot="scroll-area-scrollbar"] {
+    @apply opacity-100;
+  }
+
+  /* Scrollbar apenas durante scroll - use a classe .scroll-area-scroll no ScrollArea */
+  [data-slot="scroll-area"].scroll-area-scroll [data-slot="scroll-area-scrollbar"] {
+    @apply opacity-0;
+  }
+
+  [data-slot="scroll-area"].scroll-area-scroll[data-scrolling="true"] [data-slot="scroll-area-scrollbar"] {
+    @apply opacity-100;
+  }
+
+  /* Corner - Canto onde scrollbars se encontram */
+  [data-radix-scroll-area-corner] {
+    @apply bg-background;
+  }
+
+  /* Scrollbar na Sidebar - Cor muito sutil, quase imperceptível, integrada ao fundo escuro */
+  /* Usa opacidade muito baixa do foreground para criar um tom que se mistura com o background */
+  [data-sidebar="content"] [data-slot="scroll-area-thumb"] {
+    background-color: hsl(var(--sidebar-foreground) / 0.06);
+  }
+
+  [data-sidebar="content"] [data-slot="scroll-area-scrollbar"]:hover [data-slot="scroll-area-thumb"] {
+    background-color: hsl(var(--sidebar-foreground) / 0.10);
+  }
+
+  [data-sidebar="content"] [data-slot="scroll-area-scrollbar"][data-state="visible"] [data-slot="scroll-area-thumb"] {
+    background-color: hsl(var(--sidebar-foreground) / 0.08);
+  }
+
+  /* Scrollbar no Sidebar Inset - Cor sutil, minimalista como a sidebar */
+  /* Usa opacidade baixa do foreground para criar um tom discreto */
+  [data-sidebar="inset-content"] [data-slot="scroll-area-thumb"] {
+    background-color: hsl(var(--foreground) / 0.06);
+  }
+
+  [data-sidebar="inset-content"] [data-slot="scroll-area-scrollbar"]:hover [data-slot="scroll-area-thumb"] {
+    background-color: hsl(var(--foreground) / 0.10);
+  }
+
+  [data-sidebar="inset-content"] [data-slot="scroll-area-scrollbar"][data-state="visible"] [data-slot="scroll-area-thumb"] {
+    background-color: hsl(var(--foreground) / 0.08);
+  }
+
+  .scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Prevenir overflow horizontal em componentes comuns */
+  .container,
+  .container-fluid,
+  [class*="max-w-"] {
+    @apply max-w-full;
+  }
+
+  /* Garantir que flex containers não causem overflow */
+  .flex,
+  [class*="flex"] {
+    @apply min-w-0;
+  }
+
+  /* Grid containers - prevenir overflow */
+  .grid,
+  [class*="grid"] {
+    @apply min-w-0;
+  }
+
+  /* Sidebar e SidebarInset - garantir que não ultrapassem viewport */
+  [data-sidebar],
+  [data-sidebar-inset],
+  [data-slot="sidebar-inset"] {
+    @apply max-w-full overflow-x-hidden;
+  }
+
+  /* Garantir que o container principal do dashboard não cause overflow */
+  #main-content,
+  [id="main-content"] {
+    @apply max-w-full overflow-x-hidden;
+  }
+}
+
+@layer utilities {
+
+  /* Canvas dot pattern + ambient gradient — depth for glass surfaces */
+  .canvas-dots {
+    --dot-color: oklch(0 0 0 / 0.08);
+    --dot-size: 0.8px;
+    --dot-gap: 14px;
+    background-image:
+      radial-gradient(ellipse 80% 60% at 15% 20%, oklch(0.85 0 0 / 0.25), transparent),
+      radial-gradient(ellipse 70% 50% at 85% 80%, oklch(0.88 0 0 / 0.20), transparent),
+      radial-gradient(circle, var(--dot-color) var(--dot-size), transparent var(--dot-size));
+    background-size: 100% 100%, 100% 100%, var(--dot-gap) var(--dot-gap);
+    background-position: center center;
+  }
+
+  :is(.dark) .canvas-dots,
+  .canvas-dots:is(.dark *) {
+    --dot-color: oklch(1 0 0 / 0.06);
+  }
+
+  /* ══════════════════════════════════════════════════════════
+     SKELETON — Shimmer animado, cinza neutro
+     Substitui o pulse genérico do Tailwind.
+     Respeita prefers-reduced-motion.
+     ══════════════════════════════════════════════════════════ */
+
+  .skeleton {
+    background-color: var(--skeleton);
+    background-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--skeleton-highlight) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    background-repeat: no-repeat;
+    background-position: -150% 0;
+    animation: skeleton-shimmer 1.8s ease-in-out infinite;
+  }
+
+  @keyframes skeleton-shimmer {
+    0% { background-position: -150% 0; }
+    100% { background-position: 150% 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton {
+      animation: none;
+      background-image: none;
+    }
+  }
+
+  /* ══════════════════════════════════════════════════════════
+     AUTH — CINEMATIC RUNWAY
+     Full-dark, sem card. Grid + spotlights + noise.
+     ══════════════════════════════════════════════════════════ */
+
+  .auth-runway {
+    background: var(--background);
+    color: var(--foreground);
+  }
+
+  :is(.dark) .auth-runway,
+  .auth-runway:is(.dark *) {
+    background: var(--background);
+  }
+
+  /* Noise texture (subtle depth) */
+  .auth-noise {
+    @apply fixed inset-0 pointer-events-none;
+    z-index: 0;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 256px;
+  }
+
+  /* Spotlights */
+  .auth-spotlight {
+    @apply fixed pointer-events-none;
+    width: 900px;
+    height: 700px;
+    top: 38%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(ellipse 100% 80%, oklch(0.48 0 0 / 0.10), transparent 60%);
+    filter: blur(30px);
+    z-index: 1;
+    animation: auth-breathe 10s ease-in-out infinite;
+  }
+
+  .auth-spotlight-warm {
+    @apply fixed pointer-events-none;
+    width: 450px;
+    height: 450px;
+    top: 65%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, oklch(0.60 0 0 / 0.04), transparent 55%);
+    filter: blur(50px);
+    z-index: 1;
+    animation: auth-drift 22s ease-in-out infinite;
+  }
+
+  .auth-edge-glow {
+    @apply fixed pointer-events-none;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 400px;
+    background: radial-gradient(ellipse, oklch(0.70 0 0 / 0.04), transparent 60%);
+    z-index: 1;
+  }
+
+  @keyframes auth-breathe {
+    0%, 100% { opacity: 0.65; }
+    50% { opacity: 1; }
+  }
+
+  @keyframes auth-drift {
+    0%, 100% { transform: translate(-50%, -50%) translate(0, 0); }
+    50% { transform: translate(-50%, -50%) translate(30px, -15px); }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .auth-spotlight,
+    .auth-spotlight-warm {
+      animation: none;
+    }
+  }
+
+  /* macOS-style overlay scrollbar */
+  .scrollbar-macos {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+
+  .scrollbar-macos:hover {
+    scrollbar-color: oklch(0 0 0 / 0.18) transparent;
+  }
+
+  .scrollbar-macos::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .scrollbar-macos::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-macos::-webkit-scrollbar-thumb {
+    background: oklch(0 0 0 / 0);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+    transition: background 0.2s ease;
+  }
+
+  .scrollbar-macos:hover::-webkit-scrollbar-thumb {
+    background: oklch(0 0 0 / 0.18);
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  .scrollbar-macos::-webkit-scrollbar-thumb:hover {
+    background: oklch(0 0 0 / 0.3);
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  :is(.dark) .scrollbar-macos:hover {
+    scrollbar-color: oklch(1 0 0 / 0.15) transparent;
+  }
+
+  :is(.dark) .scrollbar-macos:hover::-webkit-scrollbar-thumb {
+    background: oklch(1 0 0 / 0.15);
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  :is(.dark) .scrollbar-macos::-webkit-scrollbar-thumb:hover {
+    background: oklch(1 0 0 / 0.25);
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  /* Legacy scrollbar-custom (fallback) */
+  .scrollbar-custom {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    @apply bg-border/60 rounded-full hover:bg-border transition-colors;
+  }
+
+  /* =============================================================================
+   * STATUS UTILITIES
+   * =============================================================================
+   * Use these for semantic status colors across the app.
+   * Prefer these over hardcoded colors like text-red-600, text-green-500, etc.
+   */
+
+  /* Status Text Colors */
+  .text-status-success {
+    color: var(--success);
+  }
+
+  .text-status-warning {
+    color: var(--warning);
+  }
+
+  .text-status-error {
+    color: var(--destructive);
+  }
+
+  .text-status-info {
+    color: var(--info);
+  }
+
+  /* Status Backgrounds (Soft) - for badges, alerts, tags */
+  .bg-status-success {
+    background-color: oklch(from var(--success) l c h / 0.1);
+    color: var(--success);
+  }
+
+  .bg-status-warning {
+    background-color: oklch(from var(--warning) l c h / 0.1);
+    color: var(--warning);
+  }
+
+  .bg-status-error {
+    background-color: oklch(from var(--destructive) l c h / 0.1);
+    color: var(--destructive);
+  }
+
+  .bg-status-info {
+    background-color: oklch(from var(--info) l c h / 0.1);
+    color: var(--info);
+  }
+
+  /* Surface Utilities */
+  .bg-surface-1 {
+    background-color: var(--surface-1);
+  }
+
+  .bg-surface-2 {
+    background-color: var(--surface-2);
+  }
+
+  .bg-surface-3 {
+    background-color: var(--surface-3);
+  }
+
+  /* Chat Utilities */
+  .bg-chat-thread {
+    background-color: var(--chat-thread-bg);
+  }
+
+  .bg-chat-bubble-received {
+    background-color: var(--chat-bubble-received);
+  }
+
+  .bg-chat-bubble-sent {
+    background-color: var(--chat-bubble-sent);
+  }
+
+  .bg-chat-sidebar-active {
+    background-color: var(--chat-sidebar-active);
+  }
+}
+
+/* --- ESTILOS DE IMPRESSÃO --- */
+@media print {
+
+  /* Ocultar elementos de navegação e interativos */
+  aside,
+  header,
+  .no-print,
+  button[role="combobox"],
+  .fixed,
+  [data-radix-collection-item] {
+    display: none !important;
+  }
+
+  /* Resetar layout para fluxo de documento */
+  body,
+  main,
+  .sidebar-inset {
+    background: white !important;
+    color: black !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  /* Ajustar Cards para impressão */
+  .bg-card {
+    border: 1px solid #e5e7eb !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+
+  /* Normalizar tabelas */
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+
+  th,
+  td {
+    border: 1px solid #e5e7eb !important;
+    color: black !important;
+  }
+
+  /* Mostrar URLs de links (útil para contexto jurídico) */
+  a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #666;
+  }
+}
+
+/* =============================================================================
+ * PEDRINHO AMBIENT AGENT - Glass Briefing Style
+ * =============================================================================
+ * Interface do agente em 3 modos: Orb, Command Bar, Briefing Panel.
+ * O CopilotChat é embutido no Briefing Panel com overrides visuais.
+ */
+
+/*
+ * Briefing Panel: Minimal CSS for properties not expressible via CopilotKit v2 slots.
+ * Message styling, input visibility, and suggestions are handled via slot props
+ * in briefing-panel.tsx (messageView, input, suggestionView).
+ */
+
+/* Chat container: transparent bg, Inter font, thin scrollbar */
+.pedrinho-chat-wrapper .copilotKitChat {
+  background-color: transparent;
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+/* Hide native input — replaced by BriefingInput (multimodal) */
+.pedrinho-chat-wrapper .copilotKitInput {
+  display: none !important;
+}
+
+/* Reduce padding reserved for hidden native input */
+.pedrinho-chat-wrapper .copilotKitChat [style*="padding-bottom"] {
+  padding-bottom: 8px !important;
+}
+
+.pedrinho-chat-wrapper .copilotKitMessages {
+  background: transparent;
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--border) / 0.15) transparent;
+}
+
+/* Markdown: inline code & code blocks */
+.pedrinho-chat-wrapper .copilotKitMarkdown {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: inherit;
+}
+
+.pedrinho-chat-wrapper .copilotKitMarkdown code {
+  font-size: 0.75rem;
+  background-color: hsl(var(--foreground) / 0.05);
+  border-radius: 0.25rem;
+  padding: 0.125rem 0.375rem;
+}
+
+.pedrinho-chat-wrapper .copilotKitCodeBlock {
+  border-radius: 0.625rem;
+  border: 1px solid hsl(var(--border) / 0.08);
+  overflow: hidden;
+}
+
+.pedrinho-chat-wrapper .copilotKitCodeBlockToolbar {
+  background-color: hsl(var(--foreground) / 0.03);
+  border-bottom: 1px solid hsl(var(--border) / 0.06);
+  font-size: 0.6875rem;
+}
+
+/* Activity dots — brand-tinted */
+.pedrinho-chat-wrapper .copilotKitActivityDot1,
+.pedrinho-chat-wrapper .copilotKitActivityDot2,
+.pedrinho-chat-wrapper .copilotKitActivityDot3 {
+  background-color: hsl(var(--primary) / 0.4);
+}
+
+/* Command bar markdown */
+.pedrinho-markdown {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* =============================================================================
+ * THEME CUSTOMIZER - Presets, Radius & Scale
+ * =============================================================================
+ * Estilos dinâmicos aplicados via data attributes pelo ActiveThemeProvider
+ */
+
+/* --- Theme Presets (Color Variations) --- */
+body[data-theme-preset="blue"] {
+  --primary: oklch(0.53 0.24 250);
+  --primary-foreground: oklch(0.98 0 0);
+}
+
+body[data-theme-preset="green"] {
+  --primary: oklch(0.52 0.19 150);
+  --primary-foreground: oklch(0.98 0 0);
+}
+
+body[data-theme-preset="orange"] {
+  --primary: oklch(0.65 0.21 45);
+  --primary-foreground: oklch(0.98 0 0);
+}
+
+body[data-theme-preset="red"] {
+  --primary: oklch(0.55 0.22 25);
+  --primary-foreground: oklch(0.98 0 0);
+}
+
+body[data-theme-preset="violet"] {
+  --primary: oklch(0.6 0.24 290);
+  --primary-foreground: oklch(0.98 0 0);
+}
+
+body[data-theme-preset="yellow"] {
+  --primary: oklch(0.75 0.18 90);
+  --primary-foreground: oklch(0.2 0 0);
+}
+
+body[data-theme-preset="slate"] {
+  --primary: oklch(0.4 0.03 240);
+  --primary-foreground: oklch(0.98 0 0);
+}
+
+/* --- Border Radius Variations --- */
+body[data-theme-radius="none"] {
+  --radius: 0rem;
+}
+
+body[data-theme-radius="sm"] {
+  --radius: 0.25rem;
+}
+
+body[data-theme-radius="md"] {
+  --radius: 0.5rem;
+}
+
+body[data-theme-radius="lg"] {
+  --radius: 0.75rem;
+}
+
+body[data-theme-radius="xl"] {
+  --radius: 1rem;
+}
+
+/* --- Scale Variations (Font Size Adjustments) --- */
+body[data-theme-scale="sm"] {
+  font-size: 90%;
+}
+
+body[data-theme-scale="lg"] {
+  font-size: 110%;
+}
+
+/* --- Content Layout Variations --- */
+body[data-theme-content-layout="centered"] .content-container {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* =============================================================================
+ * GLOBAL FOCUS RING REMOVAL
+ * =============================================================================
+ * Regra fora de qualquer @layer para garantir prioridade máxima sobre
+ * utilitários Tailwind (focus-visible:ring-*) dos componentes shadcn/ui.
+ */
+*:focus,
+*:focus-visible {
+  outline: none !important;
+  --tw-ring-shadow: 0 0 #0000 !important;
+  --tw-ring-offset-shadow: 0 0 #0000 !important;
+}
+
+/* =============================================================================
+ * MAGISTRATE AI: GLOBAL DESIGN SYSTEM COMPONENTS
+ * =============================================================================
+ * Estilos baseados no Design System "The Neon Magistrate"
+ */
+@layer components {
+
+  /* Typography */
+  .display-lg {
+    @apply font-headline text-5xl md:text-7xl font-extrabold tracking-[-0.02em];
+  }
+
+  .headline-lg {
+    @apply font-headline text-3xl md:text-4xl font-bold tracking-[-0.01em];
+  }
+
+  .label-md {
+    @apply font-sans text-xs uppercase tracking-widest text-primary font-bold;
+  }
+
+  .body-editorial {
+    @apply font-sans text-lg md:text-xl text-on-surface-variant leading-relaxed;
+  }
+
+  /* Specific Textures & Layers */
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, var(--primary) 0%, var(--primary-dim) 100%);
+  }
+
+  /* Glassmorphism */
+  .glass-panel {
+    @apply bg-surface-variant/60 backdrop-blur-[20px];
+  }
+
+  /* Focus ring Glass Briefing — aplicado quando ancestor tem [data-wizard-public].
+     Unifica shadcn default (ring-ring/50) com tokens primary pra coerência visual
+     na navegação por teclado dentro do wizard público. */
+  [data-wizard-public] *:focus-visible {
+    --tw-ring-color: color-mix(in oklch, var(--primary) 25%, transparent);
+  }
+  [data-wizard-public] [data-slot="button"]:focus-visible,
+  [data-wizard-public] [data-slot="select-trigger"]:focus-visible {
+    outline: 2px solid color-mix(in oklch, var(--primary) 30%, transparent);
+    outline-offset: 2px;
+  }
+
+  /* Scrollbar thin — aplicável a qualquer container com overflow.
+     Usa tokens de design system, adapta light/dark automaticamente via CSS vars.
+     Firefox usa scrollbar-* properties; Chrome/Safari usam ::-webkit-scrollbar.
+     Aplicado por default no PublicStepCard overflow-y-auto e sidebar do wizard. */
+  .scrollbar-glass {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklch, var(--outline-variant) 50%, transparent) transparent;
+  }
+  .scrollbar-glass::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-glass::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-glass::-webkit-scrollbar-thumb {
+    background-color: color-mix(in oklch, var(--outline-variant) 50%, transparent);
+    border-radius: 9999px;
+    transition: background-color 200ms;
+  }
+  .scrollbar-glass::-webkit-scrollbar-thumb:hover {
+    background-color: color-mix(in oklch, var(--primary) 40%, transparent);
+  }
+
+  /* Field Glass — input/textarea/trigger styling alinhado ao Glass Briefing.
+     Use junto de className para sobrescrever bordas, fundos e altura herdados
+     de wrappers que ainda usam classes hardcoded do shadcn (InputCPF, InputCNPJ,
+     InputTelefone, InputCEP). Combina com <Input variant="glass" /> e SelectTrigger. */
+  .glass-field.glass-field {
+    height: 2.75rem;
+    border-radius: 0.75rem;
+    border-color: color-mix(in oklch, var(--outline-variant) 60%, transparent);
+    background-color: color-mix(in oklch, var(--surface-container-lowest) 70%, transparent);
+    padding-left: 1rem;
+    padding-right: 1rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    transition: color 200ms, background-color 200ms, border-color 200ms, box-shadow 200ms;
+  }
+  .glass-field.glass-field:hover {
+    border-color: var(--outline-variant);
+    background-color: var(--surface-container-lowest);
+  }
+  .glass-field.glass-field:focus,
+  .glass-field.glass-field:focus-visible {
+    border-color: color-mix(in oklch, var(--primary) 40%, transparent);
+    background-color: var(--surface-container-lowest);
+    box-shadow: 0 0 0 2px color-mix(in oklch, var(--primary) 20%, transparent);
+    outline: none;
+  }
+  .dark .glass-field.glass-field {
+    background-color: color-mix(in oklch, var(--surface-container-low) 40%, transparent);
+  }
+  .dark .glass-field.glass-field:hover {
+    background-color: color-mix(in oklch, var(--surface-container-low) 60%, transparent);
+  }
+  .dark .glass-field.glass-field:focus,
+  .dark .glass-field.glass-field:focus-visible {
+    background-color: color-mix(in oklch, var(--surface-container-low) 70%, transparent);
+  }
+
+  .glass-glow {
+    @apply relative overflow-hidden;
+  }
+
+  .glass-glow::after {
+    content: '';
+    @apply absolute inset-0 bg-primary/5 pointer-events-none;
+  }
+
+  /* Shadows & Depth */
+  .shadow-ambient {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .border-ghost {
+    @apply border border-outline-variant/20;
+  }
+
+  /* Component: Buttons */
+  .btn-primary {
+    @apply bg-primary text-on-primary-fixed rounded-md font-bold px-6 py-3 transition-colors hover:bg-primary-container;
+  }
+
+  .btn-secondary {
+    @apply border border-outline-variant/20 text-on-surface rounded-md font-bold px-6 py-3 transition-colors hover:bg-surface-container-high;
+  }
+
+  .btn-tertiary {
+    @apply text-on-surface font-bold px-4 py-2 relative transition-all;
+  }
+
+  .btn-tertiary::after {
+    content: '';
+    @apply absolute bottom-0 left-4 right-4 h-0.5 bg-primary origin-left scale-x-0 transition-transform duration-300;
+  }
+
+  .btn-tertiary:hover::after {
+    @apply scale-x-100;
+  }
+
+  /* Component: Chips */
+  .chip-legal {
+    @apply bg-surface-container-highest text-primary rounded-full px-4 py-1.5 text-sm font-bold border-none;
+  }
+
+  /* Component: Cards */
+  .card-editorial {
+    @apply bg-surface-container rounded-xl p-5 md:p-8 border-none;
+  }
+
+  /* Component: Inputs */
+  .input-magistrate {
+    @apply bg-surface-container-high rounded-sm text-on-surface border-none px-4 py-3 transition-all outline-none ring-0 focus:border focus:border-primary/50 focus:shadow-[0_0_4px_var(--color-primary)];
+  }
+
+  .input-error {
+    @apply text-destructive;
+  }
+
+  /* Component: Trust Ticker */
+  .trust-ticker-container {
+    @apply flex items-center justify-center gap-6 opacity-40 grayscale transition-all duration-500 hover:grayscale-0;
+  }
+
+  /* =============================================================================
+   * MAGISTRATE AI: Glass & Effect Utilities
+   * =============================================================================
+   */
+
+  /* Glass Card — primary glass surface (semi-transparent + blur) */
+  .glass-card {
+    background: rgba(31, 31, 31, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(72, 72, 72, 0.2);
+  }
+
+  /* Neon Glow — purple text shadow for headlines */
+  .neon-glow,
+  .neon-text-glow {
+    text-shadow: 0 0 10px oklch(0.80 0.18 281 / 0.4);
+  }
+
+  /* Gradient Border — premium card with animated purple border */
+  .gradient-border {
+    @apply relative overflow-hidden;
+    background: rgba(25, 25, 25, 0.6);
+    border-radius: 0.75rem;
+  }
+
+  .gradient-border::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+    border-radius: 0.75rem;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.4), rgba(0, 0, 0, 0.1));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Purple Glow Hover — subtle purple shadow on hover */
+  .purple-glow-hover {
+    @apply transition-shadow duration-300;
+  }
+
+  .purple-glow-hover:hover {
+    box-shadow: 0 0 30px rgba(168, 85, 247, 0.15);
+  }
+
+  /* Nav Sticky — smooth scroll transition for floating navbar */
+  .nav-sticky {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Sidebar Active State */
+  .sidebar-active {
+    @apply rounded-lg text-purple-400 font-bold;
+    border-right: 2px solid #a855f7;
+    background: rgba(168, 85, 247, 0.05);
+  }
+}
+
+/* Auth orb drift animation */
+@keyframes drift {
+
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  25% {
+    transform: translate(30px, -20px);
+  }
+
+  50% {
+    transform: translate(-20px, 30px);
+  }
+
+  75% {
+    transform: translate(20px, 20px);
+  }
+}
+
+/* ═══ Auth V2 — Mesh Aurora Drift Animations ═══
+   Three independent drift paths with scale modulation
+   for organic, never-repeating mesh gradient canvas. */
+@keyframes mesh-drift-1 {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  25% {
+    transform: translate(30px, -40px) scale(1.05);
+  }
+
+  50% {
+    transform: translate(-20px, 20px) scale(0.98);
+  }
+
+  75% {
+    transform: translate(40px, 10px) scale(1.02);
+  }
+}
+
+@keyframes mesh-drift-2 {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  25% {
+    transform: translate(-40px, 30px) scale(1.03);
+  }
+
+  50% {
+    transform: translate(30px, -20px) scale(0.97);
+  }
+
+  75% {
+    transform: translate(-10px, -30px) scale(1.05);
+  }
+}
+
+@keyframes mesh-drift-3 {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1.02);
+  }
+
+  33% {
+    transform: translate(20px, 30px) scale(0.96);
+  }
+
+  66% {
+    transform: translate(-30px, -15px) scale(1.04);
+  }
+}
+
+/* Aurora ribbon — horizontal light band that breathes */
+@keyframes aurora-shift {
+  0% {
+    transform: rotate(-4deg) scaleY(0.5) translateX(-5%);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: rotate(-2deg) scaleY(0.6) translateX(5%);
+    opacity: 1;
+  }
+
+  100% {
+    transform: rotate(-4deg) scaleY(0.5) translateX(-5%);
+    opacity: 0.8;
+  }
+}
+
+@keyframes typingBounce {
+  0%, 60%, 100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-4px);
+  }
+}

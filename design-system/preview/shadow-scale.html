@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Shadow scale</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; padding: 10px 4px 24px; }
+  .tile {
+    background: white;
+    border-radius: 12px;
+    aspect-ratio: 1.1;
+    padding: 14px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    border: 1px solid oklch(0.92 0.01 281 / 0.5);
+  }
+  .lbl { font-family: var(--font-mono); font-size: 10px; color: var(--muted-foreground); font-weight: 500; }
+  .v  { font-family: var(--font-mono); font-size: 9px; color: var(--muted-foreground); opacity: .7; }
+  .forbidden {
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: oklch(0.55 0.22 25 / 0.08);
+    border: 1px solid oklch(0.55 0.22 25 / 0.3);
+    color: oklch(0.45 0.22 25);
+    font-size: 12px;
+    display: flex; gap: 10px; align-items: center;
+  }
+  .forbidden .mono { background: oklch(0.55 0.22 25 / 0.12); padding: 2px 6px; border-radius: 4px; font-size: 10px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="eyebrow">SHADOW · ELEVAÇÃO</div>
+  <div class="grid">
+    <div class="tile" style="box-shadow: none;"><span class="lbl">none</span><span class="v">repouso plano</span></div>
+    <div class="tile" style="box-shadow: 0 1px 2px rgba(0,0,0,0.05);"><span class="lbl">sm</span><span class="v">separação sutil</span></div>
+    <div class="tile" style="box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);"><span class="lbl">shadow</span><span class="v">card repouso</span></div>
+    <div class="tile" style="box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.05);"><span class="lbl">md</span><span class="v">hover</span></div>
+    <div class="tile" style="box-shadow: 0 10px 15px rgba(0,0,0,0.08), 0 4px 6px rgba(0,0,0,0.04);"><span class="lbl">lg</span><span class="v">overlay</span></div>
+  </div>
+  <div class="forbidden">
+    <span class="mono">proibido</span>
+    <span>shadow-xl · shadow-2xl — sempre usar lg como teto</span>
+  </div>
+</div>
+</body>
+</html>

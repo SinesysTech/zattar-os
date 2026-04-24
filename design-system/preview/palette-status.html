@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Colors — Status & Semantic</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  .status-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .status-tile {
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: white;
+    min-height: 110px;
+    justify-content: space-between;
+  }
+  .status-tile .head { display: flex; justify-content: space-between; align-items: center; font-family: var(--font-mono); font-size: 10px; opacity: 0.85; }
+  .status-tile .val { font-family: var(--font-heading); font-weight: 700; font-size: 16px; }
+  .chip-strip { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip {
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: var(--font-sans);
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="eyebrow">SEMANTIC · STATUS</div>
+  <div class="status-grid">
+    <div class="status-tile" style="background: var(--success);">
+      <div class="head"><span>SUCCESS</span><span>145°</span></div>
+      <div class="val">Deferido</div>
+    </div>
+    <div class="status-tile" style="background: var(--warning);">
+      <div class="head"><span>WARNING</span><span>75°</span></div>
+      <div class="val">Pendente</div>
+    </div>
+    <div class="status-tile" style="background: var(--info);">
+      <div class="head"><span>INFO</span><span>250°</span></div>
+      <div class="val">Audiência</div>
+    </div>
+    <div class="status-tile" style="background: var(--destructive);">
+      <div class="head"><span>DESTRUCTIVE</span><span>25°</span></div>
+      <div class="val">Prazo</div>
+    </div>
+  </div>
+  <div class="col" style="gap: 8px;">
+    <span class="eyebrow">CHIPS EM USO</span>
+    <div class="chip-strip">
+      <span class="chip" style="background: oklch(0.55 0.18 145 / 0.12); color: oklch(0.35 0.16 145);">ATIVO</span>
+      <span class="chip" style="background: oklch(0.60 0.18 75 / 0.14); color: oklch(0.40 0.17 75);">SUSPENSO</span>
+      <span class="chip" style="background: oklch(0.92 0.01 281); color: oklch(0.42 0.01 281);">ARQUIVADO</span>
+      <span class="chip" style="background: oklch(0.55 0.22 25 / 0.14); color: oklch(0.45 0.22 25);">PRAZO VENCIDO</span>
+      <span class="chip" style="background: oklch(0.48 0.26 281 / 0.12); color: var(--primary);">EM ANDAMENTO</span>
+      <span class="chip" style="background: oklch(0.55 0.18 250 / 0.12); color: oklch(0.42 0.18 250);">AGENDADA</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>

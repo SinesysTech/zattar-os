@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Radius scale</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  .grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+  .tile { padding: 12px; border: 1px solid var(--border); background: var(--card); display: flex; flex-direction: column; gap: 6px; align-items: center; justify-content: center; aspect-ratio: 1; }
+  .block { width: 48px; height: 36px; background: var(--primary); }
+  .lbl { font-family: var(--font-mono); font-size: 10px; color: var(--muted-foreground); }
+  .v { font-family: var(--font-mono); font-size: 9px; color: var(--muted-foreground); }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="eyebrow">RADIUS · HIERARQUIA</div>
+  <div class="grid">
+    <div class="tile" style="border-radius: 4px;">
+      <div class="block" style="border-radius: 4px;"></div>
+      <span class="lbl">sm</span><span class="v">4px</span>
+    </div>
+    <div class="tile" style="border-radius: 6px;">
+      <div class="block" style="border-radius: 6px;"></div>
+      <span class="lbl">md</span><span class="v">6px</span>
+    </div>
+    <div class="tile" style="border-radius: 8px;">
+      <div class="block" style="border-radius: 8px;"></div>
+      <span class="lbl">lg (base)</span><span class="v">8px</span>
+    </div>
+    <div class="tile" style="border-radius: 12px;">
+      <div class="block" style="border-radius: 12px;"></div>
+      <span class="lbl">xl</span><span class="v">12px</span>
+    </div>
+    <div class="tile" style="border-radius: 16px;">
+      <div class="block" style="border-radius: 16px;"></div>
+      <span class="lbl">2xl</span><span class="v">16px</span>
+    </div>
+    <div class="tile" style="border-radius: 999px;">
+      <div class="block" style="border-radius: 999px;"></div>
+      <span class="lbl">full</span><span class="v">pill/dot</span>
+    </div>
+  </div>
+  <div style="font-size: 11px; color: var(--muted-foreground);">2xl → GlassPanel · xl → cards/botões · lg → inputs · md → badges · full → pills/avatars</div>
+</div>
+</body>
+</html>
