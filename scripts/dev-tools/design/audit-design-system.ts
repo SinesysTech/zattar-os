@@ -492,10 +492,12 @@ async function auditCoverage(): Promise<TokenCoverage> {
   };
 }
 
-// Thin page wrappers (server components que só fazem auth + fetch + <Client/>)
+// Thin page wrappers (arquivos `page.tsx` que só delegam: server com
+// auth+fetch+<Client/>, ou client-side que só faz dynamic import + Skeleton)
 // não deveriam ser penalizados no score de adoção — o papel deles é delegar,
-// não renderizar tipografia. Filtro conservador: apenas `page.tsx` sem
-// 'use client', sem classes text-*/font-* e com padrão de return ou redirect.
+// não renderizar tipografia. O gate `hasTypography` garante que qualquer
+// page.tsx que renderize texto próprio (`text-*`, `font-*`, `<h1>`) continua
+// contando como candidato à adoção.
 async function filterOutThinPageWrappers(files: string[]): Promise<string[]> {
   const result: string[] = [];
   for (const file of files) {
@@ -504,13 +506,12 @@ async function filterOutThinPageWrappers(files: string[]): Promise<string[]> {
       continue;
     }
     const content = await fs.readFile(file, 'utf-8');
-    const isClient = /['"`]use client['"`]/m.test(content);
     const hasTypography =
       /className=["'`][^"'`]*\b(text-(sm|xs|lg|xl|2xl|base|\[|display|page|section|card|kpi|label|caption|overline|meta|widget)|font-(bold|semibold|medium|heading|display))/.test(
         content,
       );
     const hasDelegation = /return\s+(<|\(|redirect)|redirect\(/.test(content);
-    const isThinWrapper = !isClient && !hasTypography && hasDelegation;
+    const isThinWrapper = !hasTypography && hasDelegation;
     if (!isThinWrapper) result.push(file);
   }
   return result;
