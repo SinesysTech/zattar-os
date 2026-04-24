@@ -39,6 +39,37 @@ function assertServerOnly(): void {
 }
 
 /**
+ * Detecta se a chave fornecida é um JWT legacy (service_role antigo).
+ * Formato novo: sb_secret_…; formato legacy: JWT iniciando com "eyJ".
+ */
+function isLegacyKey(secretKey: string): boolean {
+  return secretKey.startsWith('eyJ');
+}
+
+/**
+ * Emite um aviso único por processo quando a chave em uso é legacy.
+ * Only em desenvolvimento/teste — em produção o log seria ruído.
+ * Objetivo: lembrar o operador de rotacionar para sb_secret_* antes da
+ * remoção das chaves legacy pelo Supabase (prevista para late 2026).
+ */
+let legacyKeyWarned = false;
+function warnIfLegacyKey(secretKey: string): void {
+  if (
+    legacyKeyWarned ||
+    process.env.NODE_ENV === 'production' ||
+    !isLegacyKey(secretKey)
+  ) {
+    return;
+  }
+  legacyKeyWarned = true;
+  console.warn(
+    '[supabase] Chave legacy (service_role JWT) detectada. ' +
+      'Rotacione para o formato novo (sb_secret_…) no dashboard do Supabase; ' +
+      'as chaves legacy serão removidas pelo Supabase em late 2026.'
+  );
+}
+
+/**
  * Configuração do Supabase obtida das variáveis de ambiente.
  * Aceita a nova Secret Key (recomendada) e mantém fallback para a chave legacy
  * enquanto o Supabase não remove o suporte (previsto para late 2026).
@@ -58,6 +89,8 @@ function getSupabaseConfig() {
         'A variável legacy SUPABASE_SERVICE_ROLE_KEY ainda é aceita como fallback até o Supabase removê-la.'
     );
   }
+
+  warnIfLegacyKey(secretKey);
 
   return { url, secretKey };
 }
