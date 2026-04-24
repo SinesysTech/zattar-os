@@ -393,12 +393,27 @@ function matchGlob(file: string, pattern: string): boolean {
   return re.test(file);
 }
 
-async function countImports(files: string[], importPath: string): Promise<string[]> {
+async function countImports(
+  files: string[],
+  importPath: string,
+  componentName?: string
+): Promise<string[]> {
   const matching: string[] = [];
-  const needle = new RegExp(`from\\s+['"\`]${importPath.replace(/[/\-]/g, '\\$&')}['"\`]`);
+  const specific = new RegExp(`from\\s+['"\`]${importPath.replace(/[/\-]/g, '\\$&')}['"\`]`);
+  // Barrel parent — ex: `@/components/shared/page-shell` → aceita também
+  // `import { PageShell, ... } from '@/components/shared'` (barrel).
+  const lastSlash = importPath.lastIndexOf('/');
+  const parentPath = lastSlash > 0 ? importPath.slice(0, lastSlash) : null;
+  const barrel =
+    parentPath && componentName
+      ? new RegExp(
+          `import\\s*\\{[^}]*\\b${componentName}\\b[^}]*\\}\\s*from\\s*['"\`]${parentPath.replace(/[/\-]/g, '\\$&')}['"\`]`,
+          's'
+        )
+      : null;
   for (const file of files) {
     const content = await fs.readFile(file, 'utf-8');
-    if (needle.test(content)) {
+    if (specific.test(content) || (barrel && barrel.test(content))) {
       matching.push(path.relative(REPO_ROOT, file));
     }
   }
@@ -471,9 +486,9 @@ async function auditCoverage(): Promise<TokenCoverage> {
 
 async function auditAdoption(files: string[]): Promise<AdoptionMetrics> {
   const typography = await countImports(files, '@/components/ui/typography');
-  const glassPanel = await countImports(files, '@/components/shared/glass-panel');
+  const glassPanel = await countImports(files, '@/components/shared/glass-panel', 'GlassPanel');
   const iconContainer = await countImports(files, '@/components/ui/icon-container');
-  const pageShell = await countImports(files, '@/components/shared/page-shell');
+  const pageShell = await countImports(files, '@/components/shared/page-shell', 'PageShell');
   const semanticBadge = await countImports(files, '@/components/ui/semantic-badge');
   const designSystem = await countImports(files, '@/lib/design-system');
 
@@ -547,9 +562,9 @@ async function auditModules(files: string[], violations: ViolationsReport): Prom
 
   const typedFiles = new Set<string>();
   const typography = await countImports(files, '@/components/ui/typography');
-  const glassPanel = await countImports(files, '@/components/shared/glass-panel');
+  const glassPanel = await countImports(files, '@/components/shared/glass-panel', 'GlassPanel');
   const iconContainer = await countImports(files, '@/components/ui/icon-container');
-  const pageShell = await countImports(files, '@/components/shared/page-shell');
+  const pageShell = await countImports(files, '@/components/shared/page-shell', 'PageShell');
   const semanticBadge = await countImports(files, '@/components/ui/semantic-badge');
   [...typography, ...glassPanel, ...iconContainer, ...pageShell, ...semanticBadge].forEach((f) => typedFiles.add(f));
 
