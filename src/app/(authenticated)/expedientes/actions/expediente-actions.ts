@@ -28,6 +28,7 @@ import { listarUploads } from "@/app/(authenticated)/documentos/service";
 // =============================================================================
 
 import type { ActionResult } from './types';
+import { parseFormDataHeuristico } from './form-data-parser';
 
 /**
  * Persiste o erro de um hook after() em logs_alteracao para durability.
@@ -270,43 +271,7 @@ export async function actionAtualizarExpediente(
       };
     }
 
-    const rawData: Record<string, unknown> = {};
-
-    for (const [key, value] of formData.entries()) {
-      if (typeof value === 'string') {
-        const trimmed = value.trim();
-
-        if (trimmed === 'true') {
-          rawData[key] = true;
-        } else if (trimmed === 'false') {
-          rawData[key] = false;
-        } else if (key.includes('Id')) {
-          if (trimmed === '' || trimmed === '0') {
-            rawData[key] = null;
-          } else {
-            const num = parseInt(trimmed, 10);
-            if (!isNaN(num)) {
-              rawData[key] = num;
-            }
-          }
-        } else if (
-          !isNaN(Number(trimmed)) &&
-          trimmed !== '' &&
-          (key.includes("qtde") ||
-            key.includes("pagina") ||
-            key.includes("limite"))
-        ) {
-          rawData[key] = parseInt(trimmed, 10);
-        } else if (trimmed === '') {
-          rawData[key] = null;
-        } else {
-          rawData[key] = trimmed;
-        }
-      } else {
-        rawData[key] = value;
-      }
-    }
-
+    const rawData = parseFormDataHeuristico(formData);
     const validation = updateExpedienteSchema.safeParse(rawData);
 
     if (!validation.success) {
