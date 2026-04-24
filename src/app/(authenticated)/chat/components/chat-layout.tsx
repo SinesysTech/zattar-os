@@ -38,11 +38,11 @@ export function ChatLayout({ salas, currentUserId, currentUserName, initialSelec
 
   return (
     <div className="flex h-[calc(100vh-7.5rem)] rounded-2xl border border-border overflow-hidden bg-(--surface-container-low)">
-      {/* Sidebar column (LAYOUT-01, LAYOUT-02) */}
+      {/* Sidebar column (LAYOUT-01, LAYOUT-02) — 280px conforme spec Glass Briefing */}
       <div
         className={cn(
           "h-full flex flex-col border-r border-border/40 dark:border-white/[0.06] bg-(--surface-container-low)",
-          "w-full md:w-[360px] md:min-w-[360px] shrink-0",
+          "w-full md:w-[280px] md:min-w-[280px] shrink-0",
           selectedChat ? "hidden md:flex" : "flex"
         )}
       >

@@ -34,20 +34,20 @@ export function ChatListItem({ chat, active, onClick }: ChatListItemProps) {
         )}
       />
 
-      {/* Avatar 40px rounded-xl (SIDE-05) */}
-      <div className="relative w-10 h-10 shrink-0">
-        <div className="w-full h-full rounded-xl overflow-hidden">
+      {/* Avatar circular 32px (spec Glass Briefing ChatPanel.jsx) */}
+      <div className="relative size-8 shrink-0">
+        <div className="size-full rounded-full overflow-hidden">
           {chat.image ? (
-            <img src={chat.image} alt={chat.name || chat.nome} className="w-full h-full object-cover" />
+            <img src={chat.image} alt={chat.name || chat.nome} className="size-full object-cover" />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-primary/12 text-primary text-xs font-semibold">
+            <div className="size-full flex items-center justify-center bg-primary/12 text-primary text-[11px] font-semibold">
               {generateAvatarFallback(chat.name || chat.nome)}
             </div>
           )}
         </div>
         {/* Online indicator dot — outside overflow-hidden so it's not clipped */}
         <div className={cn(
-          "absolute -bottom-px -right-px w-2.5 h-2.5 rounded-full border-2 border-(--surface-container-low) z-10",
+          "absolute -bottom-px -right-px size-2 rounded-full border-2 border-(--surface-container-low) z-10",
           chat.usuario?.onlineStatus === 'online' ? "bg-success" : "bg-muted-foreground/30"
         )} />
       </div>

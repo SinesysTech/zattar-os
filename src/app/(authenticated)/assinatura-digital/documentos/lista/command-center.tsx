@@ -18,7 +18,7 @@ import {
   ViewToggle,
   type ViewToggleOption,
 } from "@/components/dashboard/view-toggle";
-import { GlassPanel } from "@/components/shared/glass-panel";
+import { StatCard } from "@/app/(authenticated)/dashboard/components/widgets/stat-card";
 import { Button } from "@/components/ui/button";
 import type { DocumentosStats } from '@/shared/assinatura-digital/services/documentos.service';
 import type { DocumentoListItem } from '@/shared/assinatura-digital/adapters/documento-card-adapter';
@@ -34,53 +34,6 @@ const VIEW_OPTIONS: ViewToggleOption[] = [
   { id: "cards", icon: LayoutGrid, label: "Cartões" },
   { id: "lista", icon: List, label: "Lista" },
 ];
-
-// ─── KPI Card (padrao POC) ─────────────────────────────────────────────
-
-function KpiCard({
-  label,
-  value,
-  icon: Icon,
-  tile,
-  iconColor,
-  valueColor,
-  meta,
-}: {
-  label: string;
-  value: number;
-  icon: React.ElementType;
-  tile: string;
-  iconColor: string;
-  valueColor?: string;
-  meta?: string;
-}) {
-  return (
-    <GlassPanel depth={2} className="px-4 py-3">
-      <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0">
-          <p className="text-[10px] font-medium uppercase tracking-[0.08em] text-muted-foreground/60">
-            {label}
-          </p>
-          <p
-            className={`font-heading text-xl font-bold leading-none mt-1 tabular-nums ${valueColor ?? ""}`}
-          >
-            {value}
-          </p>
-        </div>
-        <span
-          className={`inline-flex size-8 items-center justify-center rounded-lg shrink-0 ${tile}`}
-        >
-          <Icon className={`size-4 ${iconColor}`} />
-        </span>
-      </div>
-      {meta && (
-        <p className="text-[11px] font-medium text-muted-foreground/70 mt-2.5">
-          {meta}
-        </p>
-      )}
-    </GlassPanel>
-  );
-}
 
 // ─── Props ─────────────────────────────────────────────────────────────
 
@@ -123,49 +76,43 @@ export function DocumentosCommandCenter({
         }
       />
 
-      {/* ── KPI Strip ───────────────────────────────────── */}
+      {/* ── KPI Strip (consolidado em StatCard — ver StatCard.tsx) ────── */}
       {stats && (
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
-          <KpiCard
-            label="Total"
+          <StatCard
+            title="Total"
             value={stats.total}
             icon={FileText}
-            tile="bg-primary/8"
-            iconColor="text-primary/70"
-            meta="documentos"
+            description="documentos"
+            variant="default"
           />
-          <KpiCard
-            label="Rascunhos"
+          <StatCard
+            title="Rascunhos"
             value={stats.rascunhos}
             icon={PenLine}
-            tile="bg-muted-foreground/8"
-            iconColor="text-muted-foreground/60"
-            meta="em edição"
+            description="em edição"
+            variant="default"
           />
-          <KpiCard
-            label="Aguardando"
+          <StatCard
+            title="Aguardando"
             value={stats.aguardando}
             icon={Clock}
-            tile="bg-info/10"
-            iconColor="text-info/70"
-            meta="pendentes de assinatura"
+            description="pendentes de assinatura"
+            variant="info"
           />
-          <KpiCard
-            label="Concluídos"
+          <StatCard
+            title="Concluídos"
             value={stats.concluidos}
             icon={CheckCircle2}
-            tile="bg-success/10"
-            iconColor="text-success/70"
-            valueColor="text-success"
-            meta="finalizados"
+            description="finalizados"
+            variant="success"
           />
-          <KpiCard
-            label="Cancelados"
+          <StatCard
+            title="Cancelados"
             value={stats.cancelados}
             icon={XCircle}
-            tile="bg-destructive/10"
-            iconColor="text-destructive/60"
-            meta="arquivados"
+            description="arquivados"
+            variant="danger"
           />
         </div>
       )}

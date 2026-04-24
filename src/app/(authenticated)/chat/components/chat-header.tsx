@@ -46,9 +46,9 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare: _onS
           className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity duration-150 rounded-lg px-1 -mx-1"
           aria-label="Ver perfil"
         >
-          <Avatar className="size-9 rounded-[0.625rem] overflow-visible shrink-0">
-            <AvatarImage src={image} alt={name} className="rounded-[0.625rem]" />
-            <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold rounded-[0.625rem]">
+          <Avatar className="size-8 rounded-full overflow-visible shrink-0">
+            <AvatarImage src={image} alt={name} className="rounded-full" />
+            <AvatarFallback className="bg-primary/10 text-primary text-[11px] font-semibold rounded-full">
               {generateAvatarFallback(name)}
             </AvatarFallback>
             {!isGroup && <AvatarIndicator variant={onlineStatus} />}

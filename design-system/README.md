@@ -80,7 +80,7 @@
 | Perito / Testemunha / Representante | Third-party actors |
 | Parcela / Repasse | Financial installments |
 | Assinatura Digital | Electronic signature (Zattar rota pública) |
-| Magistrate AI | Assistente IA interno |
+| Pedrinho | Assistente IA interno (rail lateral direito, não é rota separada) |
 
 ### Exemplos reais de copy
 - Título de card de processo: `"0001234-56.2024.5.01.0001"` — número CNJ puro, sem prefixo.
@@ -111,7 +111,7 @@
 
 - **Inter** (sans) — corpo, forms, tables. `var(--font-sans)`.
 - **Montserrat** (heading + display) — títulos, KPIs grandes. `var(--font-heading)`.
-- **Manrope** (headline) — headlines do módulo Magistrate AI. `var(--font-headline)`.
+- **Manrope** (headline) — headlines em seções especiais e no assistente Pedrinho. `var(--font-headline)`.
 - **Geist Mono** — código, números de processo, datas. `var(--font-mono)`.
 
 **Root font-size real no app**: `18px` (não 16!). Todos `rem` são inflados. Para preview web neste projeto, normalizamos em 16px; o CSS final em produção deve usar `html{font-size:18px}`.
@@ -288,7 +288,6 @@ Regras:
         ├── GlassPanel.jsx
         ├── KpiCard.jsx
         ├── ProcessCard.jsx
-        ├── PulseStrip.jsx
         ├── Chip.jsx
         ├── Button.jsx
         ├── IconContainer.jsx
@@ -296,6 +295,16 @@ Regras:
 ```
 
 (Arquivos importados do repo original estão em `src/` para referência futura.)
+
+### Componentes divergentes do produto real
+
+Três protótipos JSX do bundle original **não representam o produto final** e foram desativados como referência canônica:
+
+- **`PulseStrip.jsx`** (activity feed com log de intimações/movimentações) — **não existe no app**. Decisão: escopo futuro se o roadmap de dashboard jurídico pedir. Remove da spec por enquanto. O componente homônimo em `src/components/dashboard/pulse-strip.tsx` é um **KPI metrics strip** (totalizadores), não activity feed.
+
+- **`Topbar.jsx`** (header genérico com search global + title/subtitle + user inline) — o app evoluiu para **`DashboardHeader`** Pedrinho-centric (logo + módulos + toggle do assistente Pedrinho). A busca é **per-página** (cada módulo tem seu `SearchInput`). Decisão: atualizar spec para refletir modelo Pedrinho-centric, não reintroduzir Topbar genérico.
+
+- **Magistrate AI** (item do secondary nav no Sidebar.jsx) — **não existe no código**. Era um nome de conceito legado. O assistente real se chama **Pedrinho** e vive como rail lateral direito, não como item de nav. Removido.
 
 ---
 
