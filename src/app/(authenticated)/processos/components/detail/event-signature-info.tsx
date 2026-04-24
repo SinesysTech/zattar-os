@@ -1,6 +1,7 @@
 'use client';
 
 import { CheckCircle2, ShieldAlert } from 'lucide-react';
+import { Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 
 interface EventSignatureInfoProps {
@@ -43,9 +44,9 @@ export function EventSignatureInfo({
 
             {/* Texto da assinatura */}
             <div>
-              <p className="text-[13px] font-medium leading-tight">
+              <Text variant="label" as="p" className="font-medium leading-tight">
                 Assinado digitalmente por
-              </p>
+              </Text>
               <p className="text-[13px] text-muted-foreground font-normal leading-tight mt-0.5">
                 {signatario}
               </p>
@@ -69,9 +70,9 @@ export function EventSignatureInfo({
 
             {/* Texto do sigilo */}
             <div>
-              <p className="text-[13px] font-medium leading-tight">
+              <Text variant="label" as="p" className="font-medium leading-tight">
                 Documento sigiloso — acesso restrito
-              </p>
+              </Text>
             </div>
           </div>
         )}

@@ -13,6 +13,7 @@
 import { useMemo } from 'react';
 import { FileText, GitCommitHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Text } from '@/components/ui/typography';
 import { TimelineSidebarItem } from './timeline-sidebar-item';
 import type { TimelineItemUnificado } from './types';
 
@@ -86,9 +87,9 @@ export function TimelineSidebar({
       <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-16 pt-3">
         {itensOrdenados.length === 0 ? (
           <div className="px-4 py-6 text-center">
-            <p className="text-xs text-muted-foreground italic">
+            <Text variant="caption" className="text-muted-foreground italic">
               Nenhum item na timeline.
-            </p>
+            </Text>
           </div>
         ) : (
           <>

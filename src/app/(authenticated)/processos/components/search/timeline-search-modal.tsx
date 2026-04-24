@@ -12,6 +12,7 @@
 
 import { useEffect, useRef } from 'react';
 import { Search, ArrowUp, ArrowDown, CornerDownLeft } from 'lucide-react';
+import { Text } from '@/components/ui/typography';
 import {
   Dialog,
   DialogContent,
@@ -158,11 +159,11 @@ export function TimelineSearchModal({
         >
           {results.length === 0 ? (
             <div className="py-8 text-center">
-              <p className="text-sm text-muted-foreground">
+              <Text variant="caption" className="text-muted-foreground">
                 {query.trim() || activeFilters.size > 0
                   ? 'Nenhum resultado encontrado'
                   : 'Digite para buscar na timeline'}
-              </p>
+              </Text>
             </div>
           ) : (
             results.map((item, index) => (

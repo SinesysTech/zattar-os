@@ -7,6 +7,7 @@ import { Plus, Trash2, StickyNote } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 
 interface ViewerAnnotation {
@@ -62,8 +63,8 @@ export function DocumentAnnotationOverlay({
             <StickyNote className="size-3.5" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-foreground">Anotações</p>
-            <p className="text-[11px] text-muted-foreground">Painel flutuante da leitura</p>
+            <Text variant="label" as="p" className="font-semibold text-foreground">Anotações</Text>
+            <Text variant="caption" className="text-muted-foreground">Painel flutuante da leitura</Text>
           </div>
         </div>
       </div>

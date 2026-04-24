@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { Check, Search, UserX } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Text } from '@/components/ui/typography';
 import {
   Command,
   CommandEmpty,
@@ -112,7 +113,7 @@ export function ResponsavelPopover({
             <CommandEmpty>
               <div className="flex flex-col items-center gap-1 py-3">
                 <Search className="size-4 text-muted-foreground/30" />
-                <span className="text-[11px] text-muted-foreground/40">Nenhum usuário encontrado</span>
+                <Text variant="caption" as="span" className="text-muted-foreground/40">Nenhum usuário encontrado</Text>
               </div>
             </CommandEmpty>
             <CommandGroup>

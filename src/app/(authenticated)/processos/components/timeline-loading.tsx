@@ -8,6 +8,7 @@
 
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Text } from '@/components/ui/typography';
 import { Progress } from '@/components/ui/progress';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
@@ -56,7 +57,7 @@ export function TimelineLoading({
           <div className="flex items-center justify-center gap-3">
             <LoadingSpinner size="lg" className="text-primary" />
             <div className="text-center space-y-2">
-              <p className="text-base font-medium">{message}</p>
+              <Text variant="label" as="p" className="text-base font-medium">{message}</Text>
               {isCapturing && (
                 <>
                   <Progress value={undefined} className="w-64 mx-auto" />

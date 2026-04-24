@@ -1,6 +1,7 @@
 'use client';
 
 import { Scale, ArrowUpRight, Users, FileText } from 'lucide-react';
+import { Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import type { ProcessoPhase } from './types';
 import { PHASE_CONFIG } from './types';
@@ -28,9 +29,9 @@ export function TimelinePhaseMarker({ phase, className }: TimelinePhaseMarkerPro
     >
       <div className="h-px flex-1 bg-border/8" />
       <Icon className="size-3 text-muted-foreground/25 shrink-0" />
-      <span className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/30 font-bold whitespace-nowrap shrink-0">
+      <Text variant="overline" as="span" className="text-muted-foreground/30 font-bold whitespace-nowrap shrink-0">
         Fase: {config.label}
-      </span>
+      </Text>
       <div className="h-px flex-1 bg-border/8" />
     </div>
   );

@@ -1,5 +1,7 @@
 'use client';
 
+import { Text } from '@/components/ui/typography';
+
 /**
  * TimelineContextCard
  *
@@ -39,14 +41,14 @@ export function TimelineContextCard({
       </p>
 
       {/* Partes do processo */}
-      <p className="text-sm font-medium truncate">
+      <Text variant="label" as="p" className="font-medium truncate">
         {partes}
-      </p>
+      </Text>
 
       {/* Órgão julgador */}
-      <p className="text-xs text-muted-foreground truncate">
+      <Text variant="caption" className="text-muted-foreground truncate">
         {orgao}
-      </p>
+      </Text>
     </div>
   );
 }

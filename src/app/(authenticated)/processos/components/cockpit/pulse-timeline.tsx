@@ -3,6 +3,7 @@
 import { useMemo, useRef, useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import type { TimelineItemUnificado } from '../timeline/types';
 import type { GrauProcesso } from '@/app/(authenticated)/partes';
@@ -131,9 +132,9 @@ export function PulseTimeline({
         {futureItems.length > 0 && (
           <div className="opacity-70 pt-2">
             <div className="px-4 py-1">
-              <span className="text-[9px] uppercase tracking-wider text-muted-foreground/30 font-semibold">
+              <Text variant="overline" as="span" className="text-muted-foreground/30">
                 Próximos eventos
-              </span>
+              </Text>
             </div>
             {futureItems
               .sort((a, b) => new Date(a.data).getTime() - new Date(b.data).getTime())

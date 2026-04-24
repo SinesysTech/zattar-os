@@ -9,6 +9,7 @@
 
 import { useRef, useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
+import { Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 
 interface ViewerPaginationPillProps {
@@ -117,7 +118,7 @@ export function ViewerPaginationPill({
         />
 
         {/* Separador e total de páginas */}
-        <span className="text-muted-foreground text-sm font-mono select-none">/</span>
+        <Text variant="caption" as="span" className="text-muted-foreground font-mono select-none">/</Text>
         <span className="text-muted-foreground text-sm font-mono select-none ml-1">
           {totalPages}
         </span>

@@ -13,6 +13,7 @@
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
+import { Text } from '@/components/ui/typography';
 import { getTimelineItemMeta } from './constants';
 import { TimelineTypeBadge } from './timeline-type-badge';
 import type { TimelineItemUnificado } from './types';
@@ -152,9 +153,9 @@ export function TimelineSidebarItem({
                     : 'TST'}
               </span>
             )}
-            <span className="text-xs text-muted-foreground font-mono shrink-0">
+            <Text variant="caption" as="span" className="text-muted-foreground font-mono shrink-0">
               {dataFormatada}
-            </span>
+            </Text>
           </div>
 
           {/* Linha 2: título do item */}

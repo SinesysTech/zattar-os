@@ -3,6 +3,7 @@
 import { forwardRef } from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 
 interface TimelineNowMarkerProps {
@@ -24,9 +25,9 @@ export const TimelineNowMarker = forwardRef<HTMLDivElement, TimelineNowMarkerPro
           <div className="h-px flex-1 bg-linear-to-r from-transparent via-primary/25 to-primary/25" />
           <div className="flex items-center gap-2 rounded-lg bg-primary/6 border border-primary/15 px-3 py-1.5">
             <div className="size-2 rounded-full bg-primary animate-pulse" />
-            <span className="text-[10px] font-semibold text-primary/80 uppercase tracking-wider">
+            <Text variant="overline" as="span" className="text-primary/80">
               Hoje — {hoje}
-            </span>
+            </Text>
           </div>
           <div className="h-px flex-1 bg-linear-to-l from-transparent via-primary/25 to-primary/25" />
         </div>

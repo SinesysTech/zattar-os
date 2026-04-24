@@ -11,6 +11,7 @@
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { FileText, Scale, MessageSquare, Activity, Paperclip } from 'lucide-react';
+import { Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import type { TimelineItemUnificado } from '../timeline/types';
 
@@ -167,7 +168,7 @@ export function TimelineSearchResult({
         {/* Textos */}
         <div className="flex flex-col min-w-0 gap-0.5">
           {/* Título com destaque */}
-          <p className="text-sm font-medium truncate leading-snug text-foreground">
+          <Text variant="label" as="p" className="font-medium truncate leading-snug text-foreground">
             {partesTitulo.map((parte, i) =>
               parte.match ? (
                 <span key={i} className="font-semibold text-primary">
@@ -177,7 +178,7 @@ export function TimelineSearchResult({
                 <span key={i}>{parte.text}</span>
               )
             )}
-          </p>
+          </Text>
 
           {/* Linha secundária: badge + anexo */}
           <div className="flex items-center gap-1.5">

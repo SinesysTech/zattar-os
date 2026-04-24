@@ -2,6 +2,7 @@
 
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import type { TimelineItemUnificado } from '../timeline/types';
 
@@ -21,9 +22,9 @@ function MetadataRow({
 }) {
   return (
     <div className="flex justify-between items-start gap-4">
-      <span className="text-[13px] text-muted-foreground font-medium shrink-0">
+      <Text variant="label" as="span" className="text-muted-foreground font-medium shrink-0">
         {label}
-      </span>
+      </Text>
       <span className="text-[13px] text-foreground text-right min-w-0">
         {children}
       </span>

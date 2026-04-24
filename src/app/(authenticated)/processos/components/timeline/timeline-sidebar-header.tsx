@@ -9,6 +9,7 @@
 
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 
 interface TimelineSidebarHeaderProps {
@@ -78,7 +79,7 @@ export function TimelineSidebarHeader({
       </div>
 
       {/* Estatísticas */}
-      <p className="text-xs text-muted-foreground">
+      <Text variant="caption" className="text-muted-foreground">
         {totalItems}{' '}
         {totalItems === 1 ? 'item' : 'itens'}
         {' · '}
@@ -87,7 +88,7 @@ export function TimelineSidebarHeader({
         {' · '}
         {totalMovimentos}{' '}
         {totalMovimentos === 1 ? 'movimento' : 'movimentos'}
-      </p>
+      </Text>
     </div>
   );
 }

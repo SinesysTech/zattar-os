@@ -20,6 +20,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { FileText, RefreshCw } from 'lucide-react';
 import { LoadingSpinner } from '@/components/ui/loading-state';
+import { Text } from '@/components/ui/typography';
 import { toast } from 'sonner';
 import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
 import { actionGerarUrlDownload } from '@/app/(authenticated)/documentos';
@@ -211,7 +212,7 @@ export function DocumentViewer({
           // Estado de erro com retry
           <div className="flex flex-col items-center justify-center h-full gap-3 p-8 text-center">
             <FileText className="h-12 w-12 text-destructive" aria-hidden="true" />
-            <p className="text-sm text-destructive">{error}</p>
+            <Text variant="caption" className="text-destructive">{error}</Text>
             <button
               type="button"
               onClick={() => {

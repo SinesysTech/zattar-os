@@ -1,6 +1,7 @@
 'use client';
 
 import { FileText, Scale, ArrowUpRight, Mail, Calendar, Layers } from 'lucide-react';
+import { Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import type { TimelineFilterType } from './types';
 import type { GrauProcesso } from '@/app/(authenticated)/partes';
@@ -54,7 +55,7 @@ export function TimelineFilterChips({
             <FileText className="size-3" />
             {counts.docs} {counts.docs === 1 ? 'doc' : 'docs'}
           </span>
-          <span className="text-muted-foreground/30">·</span>
+          <Text variant="caption" as="span" className="text-muted-foreground/30">·</Text>
           <span>{counts.movs} {counts.movs === 1 ? 'mov' : 'movs'}</span>
         </div>
         <kbd className="flex items-center gap-0.5 rounded border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">

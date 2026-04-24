@@ -18,6 +18,7 @@ import {
   Minimize2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Text } from '@/components/ui/typography';
 import {
   Tooltip,
   TooltipContent,
@@ -69,7 +70,7 @@ export function ViewerToolbar({
           {date && (
             <>
               <span className="text-muted-foreground/50 shrink-0" aria-hidden="true">&middot;</span>
-              <span className="text-[11px] text-muted-foreground whitespace-nowrap shrink-0">{date}</span>
+              <Text variant="caption" as="span" className="text-muted-foreground whitespace-nowrap shrink-0">{date}</Text>
             </>
           )}
         </div>
