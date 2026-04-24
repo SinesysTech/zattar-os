@@ -12,6 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Text } from '@/components/ui/typography';
 import { Eye, EyeOff} from 'lucide-react';
 import { actionAlterarSenhaComVerificacao } from '@/app/(authenticated)/usuarios';
 
@@ -196,9 +197,9 @@ export function AlterarSenhaDialog({
                   )}
                 </button>
               </div>
-              <p className="text-xs text-muted-foreground">
+              <Text variant="caption" className="text-muted-foreground">
                 Mínimo de 8 caracteres, máximo de 72
-              </p>
+              </Text>
             </div>
 
             <div className="space-y-2">
