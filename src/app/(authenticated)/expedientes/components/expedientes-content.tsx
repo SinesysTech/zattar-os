@@ -22,6 +22,7 @@ import { FileSearch } from 'lucide-react';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
 import { useTiposExpedientes } from '@/app/(authenticated)/tipos-expedientes';
 import { useExpedientes } from '../hooks/use-expedientes';
+import { actionContarExpedientesPorStatus } from '../actions';
 import type { Expediente } from '../domain';
 import { getExpedientePartyNames } from '../domain';
 import { ExpedientesPulseStrip } from './expedientes-pulse-strip';
@@ -234,32 +235,34 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
     incluirSemPrazo: true,
   });
 
-  // Contadores globais são carregados separadamente para evitar distorção quando
-  // a aba ativa usa apenas uma parte do dataset.
-  const { paginacao: paginacaoPendentes } = useExpedientes({
-    pagina: 1,
-    limite: 1,
-    baixado: false,
-    incluirSemPrazo: true,
-  });
+  // Contadores globais carregados em uma única request server (2 COUNT em
+  // paralelo dentro da action). Antes: 2 calls useExpedientes({ limite: 1 }) —
+  // agora: 1 request, metade do round-trip overhead cliente ↔ server.
+  const [statusCounts, setStatusCounts] = useState<{ pendentes: number; baixados: number }>(
+    { pendentes: 0, baixados: 0 }
+  );
 
-  const { paginacao: paginacaoBaixados } = useExpedientes({
-    pagina: 1,
-    limite: 1,
-    baixado: true,
-    incluirSemPrazo: true,
-  });
-
-  // Contadores globais derivados dos dados (sem chamadas extras)
-  const globalCounts = useMemo(() => {
-    const pendentes = paginacaoPendentes?.total ?? 0;
-    const baixados = paginacaoBaixados?.total ?? 0;
-    return {
-      todos: pendentes + baixados,
-      pendentes,
-      baixados,
+  useEffect(() => {
+    let cancelado = false;
+    (async () => {
+      const result = await actionContarExpedientesPorStatus();
+      if (!cancelado && result.success && result.data) {
+        setStatusCounts(result.data as { pendentes: number; baixados: number });
+      }
+    })();
+    return () => {
+      cancelado = true;
     };
-  }, [paginacaoBaixados, paginacaoPendentes]);
+  }, [refreshCounter]);
+
+  const globalCounts = useMemo(
+    () => ({
+      todos: statusCounts.pendentes + statusCounts.baixados,
+      pendentes: statusCounts.pendentes,
+      baixados: statusCounts.baixados,
+    }),
+    [statusCounts]
+  );
 
   const rotuloExpedientes = useMemo(() => expedientesDaAba, [expedientesDaAba]);
 

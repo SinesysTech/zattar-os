@@ -154,6 +154,62 @@ function converterParaExpediente(data: ExpedienteRow | ExpedienteRowComOrigem): 
 // =============================================================================
 
 /**
+ * Conta expedientes por status (pendentes / baixados) em uma única ida ao
+ * server. Usado pelo ExpedientesContent para popular o badge de contagens
+ * sem depender de duas chamadas `listarExpedientes({ limite: 1 })` separadas.
+ *
+ * Backend executa dois COUNT com head=true em paralelo — não materializa
+ * nenhum row, apenas lê o `total` do header de cada resposta. Extremamente
+ * eficiente e cacheado pelo próprio Postgres para planos idênticos.
+ */
+export async function contarExpedientesPorStatus(): Promise<
+  Result<{ pendentes: number; baixados: number }>
+> {
+  try {
+    const db = createDbClient();
+    const [pendentesResult, baixadosResult] = await Promise.all([
+      db
+        .from('expedientes')
+        .select('*', { count: 'exact', head: true })
+        .is('baixado_em', null),
+      db
+        .from('expedientes')
+        .select('*', { count: 'exact', head: true })
+        .not('baixado_em', 'is', null),
+    ]);
+
+    if (pendentesResult.error) {
+      return err(
+        appError('DATABASE_ERROR', pendentesResult.error.message, {
+          code: pendentesResult.error.code,
+        })
+      );
+    }
+    if (baixadosResult.error) {
+      return err(
+        appError('DATABASE_ERROR', baixadosResult.error.message, {
+          code: baixadosResult.error.code,
+        })
+      );
+    }
+
+    return ok({
+      pendentes: pendentesResult.count ?? 0,
+      baixados: baixadosResult.count ?? 0,
+    });
+  } catch (error) {
+    return err(
+      appError(
+        'DATABASE_ERROR',
+        'Erro ao contar expedientes por status.',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+/**
  * Busca um expediente pelo id.
  *
  * Usa a view `expedientes_com_origem`, que faz LEFT JOIN com `dados_primeiro_grau`

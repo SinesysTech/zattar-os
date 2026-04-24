@@ -16,6 +16,7 @@ import {
   realizarBaixa,
   reverterBaixa,
   listarExpedientes,
+  contarExpedientesPorStatus,
 } from "../service";
 import { after } from "next/server";
 import { indexDocument } from "@/lib/ai/services/indexing.service";
@@ -512,6 +513,40 @@ export async function actionReverterBaixa(
       error:
         error instanceof Error ? error.message : "Erro interno do servidor",
       message: "Erro ao reverter baixa de expediente. Tente novamente.",
+    };
+  }
+}
+
+/**
+ * Conta expedientes por status (pendentes / baixados) em uma única request.
+ * Consolida as duas chamadas que o ExpedientesContent fazia separadamente
+ * via `useExpedientes({ limite: 1, baixado: true|false })` em uma única
+ * roundtrip para o server.
+ */
+export async function actionContarExpedientesPorStatus(): Promise<ActionResult> {
+  try {
+    await authenticateRequest();
+    const result = await contarExpedientesPorStatus();
+
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.message,
+        message: result.error.message,
+      };
+    }
+
+    return {
+      success: true,
+      data: result.data,
+      message: "Contagens carregadas com sucesso",
+    };
+  } catch (error) {
+    console.error("Erro ao contar expedientes:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao carregar contagens. Tente novamente.",
     };
   }
 }

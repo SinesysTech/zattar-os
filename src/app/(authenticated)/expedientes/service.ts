@@ -50,6 +50,17 @@ export async function buscarExpediente(id: number): Promise<Result<Expediente | 
   return repository.findExpedienteById(id);
 }
 
+/**
+ * Wrapper do service para a contagem de expedientes por status.
+ * Ver docstring em `repository.contarExpedientesPorStatus` — consumido pelo
+ * ExpedientesContent para popular os badges da barra de filtros.
+ */
+export async function contarExpedientesPorStatus(): Promise<
+  Result<{ pendentes: number; baixados: number }>
+> {
+  return repository.contarExpedientesPorStatus();
+}
+
 export async function listarExpedientes(params: ListarExpedientesParams): Promise<Result<PaginatedResponse<Expediente>>> {
   const saneParams = {
     ...params,

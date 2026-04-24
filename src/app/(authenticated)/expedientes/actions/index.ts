@@ -16,6 +16,7 @@ export {
   actionBaixarExpediente,
   actionReverterBaixa,
   actionListarExpedientes,
+  actionContarExpedientesPorStatus,
 } from './expediente-actions';
 
 export type { ActionResult } from './types';
