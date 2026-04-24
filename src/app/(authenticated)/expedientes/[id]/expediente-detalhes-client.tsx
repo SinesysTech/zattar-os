@@ -55,15 +55,15 @@ import {
 import { ExpedienteResponsavelPopover } from '@/app/(authenticated)/expedientes/components/expediente-responsavel-popover';
 
 import type {
-  ExpedienteDetailBundle,
-  MockArquivo,
-  MockHistoricoEvento,
-  MockTipoExpediente,
-  MockUsuario,
-} from './mocks';
+  ExpedienteDetalheBundle,
+  DetalheArquivo,
+  DetalheHistoricoEvento,
+  DetalheTipo,
+  DetalheUsuario,
+} from './types';
 
 interface ExpedienteDetalhesClientProps {
-  bundle: ExpedienteDetailBundle;
+  bundle: ExpedienteDetalheBundle;
   expedienteId: number;
 }
 
@@ -484,9 +484,9 @@ function DadosTab({
   onSaveTipo,
 }: {
   expediente: Expediente;
-  usuarios: MockUsuario[];
-  tiposExpedientes: MockTipoExpediente[];
-  tipoAtual: MockTipoExpediente | null;
+  usuarios: DetalheUsuario[];
+  tiposExpedientes: DetalheTipo[];
+  tipoAtual: DetalheTipo | null;
   onSaveDescricao: (novo: string) => Promise<void>;
   onSaveObservacoes: (novo: string) => Promise<void>;
   onSaveTipo: (id: number | null) => Promise<void>;
@@ -651,7 +651,7 @@ function DadosTab({
 // TAB · ARQUIVOS — lista editorial numerada
 // ============================================================================
 
-function ArquivosTab({ arquivos }: { arquivos: MockArquivo[] }) {
+function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
   if (arquivos.length === 0) {
     return (
       <GlassPanel depth={1} className="p-12 text-center rounded-2xl">
@@ -668,7 +668,7 @@ function ArquivosTab({ arquivos }: { arquivos: MockArquivo[] }) {
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
-  const CATEGORIA_LABELS: Record<MockArquivo['categoria'], string> = {
+  const CATEGORIA_LABELS: Record<DetalheArquivo['categoria'], string> = {
     intimacao: 'Intimação',
     decisao: 'Decisão',
     peca: 'Peça',
@@ -736,13 +736,13 @@ function HistoricoTab({
   historico,
   usuarios,
 }: {
-  historico: MockHistoricoEvento[];
-  usuarios: MockUsuario[];
+  historico: DetalheHistoricoEvento[];
+  usuarios: DetalheUsuario[];
 }) {
   const getUsuario = (id: number | null) =>
     id ? usuarios.find((u) => u.id === id) : null;
 
-  const eventStyle: Record<MockHistoricoEvento['tipo'], { dot: string; tag: string }> = {
+  const eventStyle: Record<DetalheHistoricoEvento['tipo'], { dot: string; tag: string }> = {
     criacao: { dot: 'bg-primary', tag: 'CRIAÇÃO' },
     atribuicao_responsavel: { dot: 'bg-info', tag: 'ATRIBUIÇÃO' },
     alteracao_tipo: { dot: 'bg-warning', tag: 'TIPO' },
@@ -934,7 +934,7 @@ function ResponsavelCard({
 }: {
   expedienteId: number;
   responsavelId: number | null | undefined;
-  usuarios: MockUsuario[];
+  usuarios: DetalheUsuario[];
 }) {
   const usuario = responsavelId ? usuarios.find((u) => u.id === responsavelId) : null;
   const initials =
@@ -1092,8 +1092,8 @@ function InlineTipoEditor({
   options,
   onSave,
 }: {
-  current: MockTipoExpediente | null;
-  options: MockTipoExpediente[];
+  current: DetalheTipo | null;
+  options: DetalheTipo[];
   onSave: (id: number | null) => Promise<void>;
 }) {
   const [open, setOpen] = React.useState(false);
