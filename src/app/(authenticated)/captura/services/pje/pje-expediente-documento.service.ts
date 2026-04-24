@@ -91,7 +91,6 @@ export async function fetchDocumentoMetadata(
     }
 
     const data = await response.json();
-    console.log('DEBUG - Response JSON:', JSON.stringify(data));
     return data;
   }, { url });
 
