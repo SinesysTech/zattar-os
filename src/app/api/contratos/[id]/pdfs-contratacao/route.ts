@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { gerarZipPdfsParaContrato } from '@/app/(authenticated)/contratos/services/documentos-contratacao.service';
+import { gerarZipPdfsParaContrato } from '@/shared/assinatura-digital/services/documentos-contratacao.service';
 import { checkRateLimit } from '@/app/(authenticated)/contratos/services/rate-limit-local';
 
 export const runtime = 'nodejs';

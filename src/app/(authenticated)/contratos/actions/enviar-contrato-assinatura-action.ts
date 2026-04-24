@@ -7,8 +7,8 @@ import {
   carregarDadosContrato,
   carregarPacoteContratacaoPorSegmento,
   carregarTemplatesPorUuids,
-} from '../services/documentos-contratacao.service';
-import { contratoParaInputData } from '../services/mapeamento-contrato-input-data';
+} from '@/shared/assinatura-digital/services/documentos-contratacao.service';
+import { contratoParaInputData } from '@/shared/assinatura-digital/services/mapeamento-contrato-input-data';
 import { generatePdfFromTemplate } from '@/shared/assinatura-digital/services/template-pdf.service';
 import { criarPacote } from '@/shared/assinatura-digital/services/pacote.service';
 

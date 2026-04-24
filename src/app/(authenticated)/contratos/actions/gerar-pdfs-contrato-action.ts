@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 import { authenticatedAction } from '@/lib/safe-action';
-import { validarGeracaoPdfs } from '../services/documentos-contratacao.service';
+import { validarGeracaoPdfs } from '@/shared/assinatura-digital/services/documentos-contratacao.service';
 
 const validarSchema = z.object({
   contratoId: z.number().int().positive(),

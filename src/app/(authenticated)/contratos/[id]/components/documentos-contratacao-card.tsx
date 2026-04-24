@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { actionValidarGeracaoPdfs } from '@/app/(authenticated)/contratos/actions/gerar-pdfs-contrato-action';
 import { actionEnviarContratoParaAssinatura } from '../../actions/enviar-contrato-assinatura-action';
-import type { CampoFaltante } from '@/app/(authenticated)/contratos/services/mapeamento-contrato-input-data';
+import type { CampoFaltante } from '@/shared/assinatura-digital/services/mapeamento-contrato-input-data';
 import { ModalCamposFaltantesDialog } from './modal-campos-faltantes-dialog';
 import { ModalLinkAssinaturaDialog } from './modal-link-assinatura-dialog';
 

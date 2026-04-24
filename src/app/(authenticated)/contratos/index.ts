@@ -210,12 +210,12 @@ export { actionValidarGeracaoPdfs } from './actions/gerar-pdfs-contrato-action';
 export {
   validarGeracaoPdfs,
   gerarZipPdfsParaContrato,
-} from './services/documentos-contratacao.service';
+} from '@/shared/assinatura-digital/services/documentos-contratacao.service';
 export type {
   CampoFaltante,
   DadosContratoParaMapping,
   InputDataMapeado,
-} from './services/mapeamento-contrato-input-data';
+} from '@/shared/assinatura-digital/services/mapeamento-contrato-input-data';
 
 // ============================================================================
 // Pacote de Assinatura (Caminho B — Pacote Compartilhado)

@@ -1,22 +1,28 @@
-import { lerPacotePorToken } from '@/shared/assinatura-digital/services/pacote.service';
-import { notFound } from 'next/navigation';
-import { AssinaturaPacoteClient } from './page-client';
+import { lerPacoteParaWizard } from '@/shared/assinatura-digital/services/pacote.service'
+import { notFound } from 'next/navigation'
+import { PacoteTerminalState } from './page-client'
+import { PacoteWizardClient } from './pacote-wizard-client'
 
-export const runtime = 'nodejs';
+export const runtime = 'nodejs'
 
 export default async function AssinaturaPacotePage({
   params,
 }: {
-  params: Promise<{ token: string }>;
+  params: Promise<{ token: string }>
 }) {
-  const { token } = await params;
+  const { token } = await params
 
   if (!token || token.length !== 64) {
-    notFound();
+    notFound()
   }
 
-  const pacote = await lerPacotePorToken(token);
-  if (!pacote) notFound();
+  const dados = await lerPacoteParaWizard(token)
+  if (!dados) notFound()
 
-  return <AssinaturaPacoteClient pacote={pacote} />;
+  // Estados terminais — antes de abrir o wizard, bloqueia com tela amigável.
+  if (dados.status_efetivo !== 'ativo' || !dados.hidratacao) {
+    return <PacoteTerminalState status={dados.status_efetivo} />
+  }
+
+  return <PacoteWizardClient dados={dados} />
 }

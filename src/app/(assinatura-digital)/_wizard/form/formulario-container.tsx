@@ -22,7 +22,22 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import type { StepConfig } from '@/shared/assinatura-digital/types/store'
 import { PublicWizardShell } from '@/shared/assinatura-digital'
 
-export default function FormularioContainer() {
+export type FormularioContainerModo = 'formulario' | 'pacote'
+
+interface FormularioContainerProps {
+  /**
+   * Controla o conjunto de steps exibidos.
+   *
+   * - `'formulario'` (default): fluxo público completo — CPF, identidade,
+   *   contato, dynamic form, visualização, foto?, termos, assinatura, sucesso.
+   * - `'pacote'`: fluxo de assinatura de pacote (contrato admin) — entra
+   *   direto em visualização, pulando a coleta de dados do cliente. Usado
+   *   quando o store já vem hidratado com cliente/contrato/templates.
+   */
+  modo?: FormularioContainerModo
+}
+
+export default function FormularioContainer({ modo = 'formulario' }: FormularioContainerProps = {}) {
   const etapaAtual = useFormularioStore((state) => state.etapaAtual)
   const etapaAnterior = useFormularioStore((state) => state.etapaAnterior)
 
@@ -62,52 +77,59 @@ export default function FormularioContainer() {
   const buildStepConfigs = (
     formularioConfig: { foto_necessaria?: boolean; geolocation_necessaria?: boolean } | null,
     temContratosPendentes: boolean = false,
+    modoAtual: FormularioContainerModo = 'formulario',
   ): StepConfig[] => {
-    const configs: StepConfig[] = [
-      { id: 'cpf', index: 0, component: 'VerificarCPF', required: true, enabled: true },
-    ]
-    let currentIndex = 1
+    const configs: StepConfig[] = []
+    let currentIndex = 0
 
-    if (temContratosPendentes) {
-      configs.push({
-        id: 'pendentes',
-        index: currentIndex++,
-        component: 'ContratosPendentesStep',
-        required: false,
-        enabled: true,
-      })
+    // Steps iniciais de coleta de dados: presentes apenas no fluxo público completo.
+    // No modo 'pacote' o cliente e o contrato já existem — o wizard abre direto em visualização.
+    if (modoAtual === 'formulario') {
+      configs.push({ id: 'cpf', index: currentIndex++, component: 'VerificarCPF', required: true, enabled: true })
+
+      if (temContratosPendentes) {
+        configs.push({
+          id: 'pendentes',
+          index: currentIndex++,
+          component: 'ContratosPendentesStep',
+          required: false,
+          enabled: true,
+        })
+      }
+
+      configs.push(
+        {
+          id: 'identidade',
+          index: currentIndex++,
+          component: 'DadosIdentidade',
+          required: true,
+          enabled: true,
+        },
+        {
+          id: 'contato',
+          index: currentIndex++,
+          component: 'DadosContato',
+          required: true,
+          enabled: true,
+        },
+        {
+          id: 'acao',
+          index: currentIndex++,
+          component: 'DynamicFormStep',
+          required: true,
+          enabled: true,
+        },
+      )
     }
 
-    configs.push(
-      {
-        id: 'identidade',
-        index: currentIndex++,
-        component: 'DadosIdentidade',
-        required: true,
-        enabled: true,
-      },
-      {
-        id: 'contato',
-        index: currentIndex++,
-        component: 'DadosContato',
-        required: true,
-        enabled: true,
-      },
-      {
-        id: 'acao',
-        index: currentIndex++,
-        component: 'DynamicFormStep',
-        required: true,
-        enabled: true,
-      },
-      {
-        id: 'visualizacao',
-        index: currentIndex++,
-        component: 'VisualizacaoPdfStep',
-        required: true,
-        enabled: true,
-      },
-    )
+    // Visualização + foto? + termos + assinatura + sucesso — comuns a ambos os modos.
+    configs.push({
+      id: 'visualizacao',
+      index: currentIndex++,
+      component: 'VisualizacaoPdfStep',
+      required: true,
+      enabled: true,
+    })
 
     const fotoNecessaria = formularioConfig?.foto_necessaria ?? true
     if (fotoNecessaria) {
@@ -120,7 +142,6 @@ export default function FormularioContainer() {
       })
     }
 
-    // Termos + Assinatura + Sucesso sempre presentes
     configs.push(
       {
         id: 'termos',
@@ -144,10 +165,10 @@ export default function FormularioContainer() {
 
   useEffect(() => {
     const temPendentes = (contratosPendentes?.length ?? 0) > 0
-    const configs = buildStepConfigs(formularioFlowConfig, temPendentes)
+    const configs = buildStepConfigs(formularioFlowConfig, temPendentes, modo)
     setStepConfigs(configs)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formularioFlowConfig, contratosPendentes])
+  }, [formularioFlowConfig, contratosPendentes, modo])
 
   // Verificar se template possui conteúdo Markdown (para decidir entre Markdown/PDF)
   useEffect(() => {

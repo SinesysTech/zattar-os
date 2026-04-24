@@ -1,16 +1,4 @@
 /**
- * Utils - Barrel exports
+ * Re-export do shared. Fonte primária: `@/shared/partes/utils`.
  */
-export {
-  formatarCpf,
-  formatarCnpj,
-  formatarTelefone,
-  formatarCep,
-  formatarEnderecoCompleto,
-  formatarData,
-  formatarNome,
-  formatarTipoPessoa,
-  calcularIdade,
-} from './format';
-
-export * from './validation';
+export * from '@/shared/partes/utils';

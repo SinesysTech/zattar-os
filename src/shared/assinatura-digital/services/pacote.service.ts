@@ -2,6 +2,14 @@ import { createServiceClient } from '@/lib/supabase/service-client';
 import { randomBytes } from 'crypto';
 import { createDocumentoFromUploadedPdf } from './documentos.service';
 import type { TemplateBasico } from './data.service';
+import {
+  carregarDadosContrato,
+  carregarPacoteContratacaoPorSegmento,
+  carregarTemplatesPorUuids,
+  type PacoteTemplatesContratacao,
+  type SegmentoDoFormulario,
+} from './documentos-contratacao.service';
+import { contratoParaInputData, type InputDataMapeado } from './mapeamento-contrato-input-data';
 
 const DURACAO_PACOTE_DIAS = Number(process.env.PACOTE_DURACAO_DIAS ?? 7);
 
@@ -183,5 +191,124 @@ export async function lerPacotePorToken(
     pacote: pacote as Pacote,
     documentos,
     status_efetivo,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Hidratação completa para o wizard público
+// ---------------------------------------------------------------------------
+
+export interface PacoteWizardFormulario {
+  id: number;
+  formulario_uuid: string;
+  nome: string;
+  slug: string;
+  segmento_id: number;
+  foto_necessaria: boolean;
+  geolocation_necessaria: boolean;
+  metadados_seguranca: string[] | null;
+  form_schema: unknown | null;
+  termos_html: string | null;
+}
+
+export interface PacoteParaWizard {
+  pacote: Pacote;
+  status_efetivo: PacoteStatus;
+  documentos: DocumentoNoPacote[];
+
+  /** Dados hidratáveis — presentes apenas quando status_efetivo === 'ativo'. */
+  hidratacao: {
+    contrato: { id: number; segmento_id: number; cliente_id: number };
+    inputData: InputDataMapeado;
+    segmento: SegmentoDoFormulario;
+    formulario: PacoteWizardFormulario;
+    templates: TemplateBasico[];
+    templateUuids: string[];
+  } | null;
+}
+
+async function carregarFormularioCompleto(
+  formularioId: number,
+): Promise<PacoteWizardFormulario | null> {
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from('assinatura_digital_formularios')
+    .select(
+      'id, formulario_uuid, nome, slug, segmento_id, foto_necessaria, geolocation_necessaria, metadados_seguranca, form_schema, termos_html',
+    )
+    .eq('id', formularioId)
+    .maybeSingle();
+
+  if (error || !data) return null;
+
+  return {
+    id: data.id,
+    formulario_uuid: data.formulario_uuid,
+    nome: data.nome,
+    slug: data.slug,
+    segmento_id: data.segmento_id,
+    foto_necessaria: data.foto_necessaria ?? true,
+    geolocation_necessaria: data.geolocation_necessaria ?? false,
+    metadados_seguranca: data.metadados_seguranca ?? null,
+    form_schema: data.form_schema ?? null,
+    termos_html: data.termos_html ?? null,
+  };
+}
+
+/**
+ * Leitura enriquecida do pacote para abrir o wizard público a partir do Step
+ * de Visualização. Compõe `lerPacotePorToken` com os loaders de contrato,
+ * pacote de templates e formulário completo, e devolve um shape pronto para
+ * hidratar o `useFormularioStore` no client.
+ *
+ * Se o pacote não está ativo (expirado, cancelado ou já concluído), retorna
+ * sem o payload de hidratação — o roteador server-side deve redirecionar
+ * para os estados terminais.
+ */
+export async function lerPacoteParaWizard(
+  token: string,
+): Promise<PacoteParaWizard | null> {
+  const base = await lerPacotePorToken(token);
+  if (!base) return null;
+
+  if (base.status_efetivo !== 'ativo') {
+    return { ...base, hidratacao: null };
+  }
+
+  const contratoId = base.pacote.contrato_id;
+  const formularioId = base.pacote.formulario_id;
+
+  const dadosContrato = await carregarDadosContrato(contratoId);
+  if (!dadosContrato || !dadosContrato.cliente || dadosContrato.contrato.segmento_id == null) {
+    return { ...base, hidratacao: null };
+  }
+
+  const segmentoId = dadosContrato.contrato.segmento_id;
+  const [pacoteTemplates, formulario] = await Promise.all([
+    carregarPacoteContratacaoPorSegmento(segmentoId),
+    carregarFormularioCompleto(formularioId),
+  ]);
+
+  if (!pacoteTemplates || !formulario) {
+    return { ...base, hidratacao: null };
+  }
+
+  const templates = await carregarTemplatesPorUuids(pacoteTemplates.templateUuidsUnificados);
+  const inputData = contratoParaInputData(dadosContrato);
+
+  return {
+    ...base,
+    hidratacao: {
+      contrato: {
+        id: dadosContrato.contrato.id,
+        segmento_id: segmentoId,
+        cliente_id: dadosContrato.contrato.cliente_id,
+      },
+      inputData,
+      segmento: pacoteTemplates.segmento,
+      formulario,
+      templates,
+      templateUuids: pacoteTemplates.templateUuidsUnificados,
+    },
   };
 }

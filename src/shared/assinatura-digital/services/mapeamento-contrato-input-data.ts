@@ -1,5 +1,5 @@
 import type { ClienteBasico } from '@/shared/assinatura-digital/services/data.service';
-import { isTipoParteContraria, type PapelContratual, type TipoEntidadeContrato } from '../domain';
+import { isTipoParteContraria, type PapelContratual, type TipoEntidadeContrato } from '@/shared/assinatura-digital/types/contrato-partes';
 
 export interface DadosContratoParaMapping {
   contrato: { id: number; segmento_id: number | null; cliente_id: number };

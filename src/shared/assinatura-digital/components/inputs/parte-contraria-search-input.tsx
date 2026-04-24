@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { CheckCircle2, Building2, User, SearchX, UserPlus, Clock } from 'lucide-react';
 import { searchPartesContrariasList } from '../../actions';
-import type { ParteContrariaComEndereco } from '@/app/(authenticated)/partes/types';
+import type { ParteContrariaComEndereco } from '@/shared/partes/types';
 import { cn } from '@/lib/utils';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"

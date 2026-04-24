@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Text } from '@/components/ui/typography';
-import type { CampoFaltante } from '@/app/(authenticated)/contratos/services/mapeamento-contrato-input-data';
+import type { CampoFaltante } from '@/shared/assinatura-digital/services/mapeamento-contrato-input-data';
 
 interface ModalCamposFaltantesDialogProps {
   open: boolean;

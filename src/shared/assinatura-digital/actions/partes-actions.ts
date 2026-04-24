@@ -6,9 +6,9 @@ import {
   findParteContrariaByCNPJ,
   findAllPartesContrarias,
   searchPartesContrariaComEndereco,
-} from '@/app/(authenticated)/partes/server';
-import { normalizarDocumento } from '@/app/(authenticated)/partes';
-import type { Cliente, ParteContraria, ParteContrariaComEndereco } from '@/app/(authenticated)/partes/types';
+} from '@/shared/partes/server';
+import { normalizarDocumento } from '@/shared/partes';
+import type { Cliente, ParteContraria, ParteContrariaComEndereco } from '@/shared/partes/types';
 
 /**
  * Busca um cliente por CPF

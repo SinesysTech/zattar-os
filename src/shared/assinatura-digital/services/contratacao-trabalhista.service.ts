@@ -25,7 +25,7 @@ import {
   criarParteContraria,
   desativarCliente,
   desativarPartesContrariasEmMassa,
-} from '@/app/(authenticated)/partes/server';
+} from '@/shared/partes/server';
 import {
   normalizarDocumento,
   type CreateClientePFInput,
@@ -33,13 +33,13 @@ import {
   type UpdateClienteInput,
   type Cliente,
   type ParteContraria,
-} from '@/app/(authenticated)/partes';
-import { criarContrato } from '@/app/(authenticated)/contratos/service';
+} from '@/shared/partes';
+import { criarContrato } from '@/shared/contratos/service';
 import type {
   PapelContratual,
   Contrato,
-} from '@/app/(authenticated)/contratos/domain';
-import { criarEndereco } from '@/app/(authenticated)/enderecos/service';
+} from '@/shared/contratos/domain';
+import { criarEndereco } from '@/shared/enderecos/service';
 import { getSegmentoBySlug } from './segmentos.service';
 import { getFormularioBySlugAndSegmentoId } from './formularios.service';
 import {
