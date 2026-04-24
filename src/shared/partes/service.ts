@@ -94,9 +94,16 @@ import {
 import type {
   ClienteComEndereco,
   ClienteComEnderecoEProcessos,
+  ParteContrariaComEndereco,
   ParteContrariaComEnderecoEProcessos,
+  TerceiroComEndereco,
   TerceiroComEnderecoEProcessos,
 } from './domain';
+import {
+  buscarEnderecoPorId as buscarEnderecoPorIdServico,
+  buscarEnderecosPorEntidade as buscarEnderecosPorEntidadeServico,
+} from '@/shared/enderecos/service';
+import type { Endereco } from '@/shared/enderecos/types';
 import type {
   AtualizarRepresentanteParams,
   BuscarRepresentantesPorOABParams,
@@ -113,6 +120,39 @@ import {
   toAppError,
 } from './errors';
 import { validarInput, verificarDuplicidadeDocumento } from './utils';
+
+// =============================================================================
+// HELPERS COMPARTILHADOS
+// =============================================================================
+
+/**
+ * Resolve o endereço de uma entidade (cliente, parte contrária ou terceiro)
+ * respeitando os dois caminhos de vínculo em uso no schema:
+ *
+ *  1. Preferido — FK direta (`<entidade>.endereco_id -> enderecos.id`).
+ *  2. Fallback  — relação polimórfica (`enderecos.entidade_tipo + entidade_id`),
+ *     necessária para registros legados onde `endereco_id` nunca foi preenchido.
+ *
+ * Retorna `null` quando nenhum endereço ativo é encontrado; nunca lança.
+ */
+async function resolverEnderecoDeEntidade(params: {
+  enderecoIdFK: number | null | undefined;
+  entidadeTipo: 'cliente' | 'parte_contraria' | 'terceiro';
+  entidadeId: number;
+}): Promise<Endereco | null> {
+  if (params.enderecoIdFK) {
+    const fkResult = await buscarEnderecoPorIdServico(params.enderecoIdFK);
+    if (fkResult.success) return fkResult.data;
+    // Se a FK não resolver (NOT_FOUND/inconsistência), tenta fallback polimórfico.
+  }
+
+  const polyResult = await buscarEnderecosPorEntidadeServico({
+    entidade_tipo: params.entidadeTipo,
+    entidade_id: params.entidadeId,
+  });
+  if (!polyResult.success || polyResult.data.length === 0) return null;
+  return polyResult.data[0];
+}
 
 // =============================================================================
 // SERVICOS - CLIENTE
@@ -157,6 +197,34 @@ export async function buscarCliente(id: number): Promise<Result<Cliente | null>>
   }
 
   return findClienteById(id);
+}
+
+/**
+ * Busca um cliente pelo ID com o endereço principal populado.
+ *
+ * Usado pelos dialogs de edição para hidratar os campos de endereço corretamente.
+ * Resolve o endereço via FK (`clientes.endereco_id`) e cai para fallback polimórfico
+ * em registros legados.
+ */
+export async function buscarClienteComEndereco(
+  id: number
+): Promise<Result<ClienteComEndereco | null>> {
+  if (!id || id <= 0) {
+    return err(appError('VALIDATION_ERROR', 'ID invalido'));
+  }
+
+  const clienteResult = await findClienteById(id);
+  if (!clienteResult.success) return err(clienteResult.error);
+  if (!clienteResult.data) return ok(null);
+
+  const cliente = clienteResult.data;
+  const endereco = await resolverEnderecoDeEntidade({
+    enderecoIdFK: cliente.endereco_id,
+    entidadeTipo: 'cliente',
+    entidadeId: id,
+  });
+
+  return ok({ ...cliente, endereco } as ClienteComEndereco);
 }
 
 /**
@@ -452,6 +520,31 @@ export async function buscarParteContraria(id: number): Promise<Result<ParteCont
 }
 
 /**
+ * Busca uma parte contrária pelo ID com o endereço principal populado.
+ * Usada pelo dialog de edição para hidratar os campos de endereço.
+ */
+export async function buscarParteContrariaComEndereco(
+  id: number
+): Promise<Result<ParteContrariaComEndereco | null>> {
+  if (!id || id <= 0) {
+    return err(appError('VALIDATION_ERROR', 'ID invalido'));
+  }
+
+  const parteResult = await findParteContrariaById(id);
+  if (!parteResult.success) return err(parteResult.error);
+  if (!parteResult.data) return ok(null);
+
+  const parte = parteResult.data;
+  const endereco = await resolverEnderecoDeEntidade({
+    enderecoIdFK: parte.endereco_id,
+    entidadeTipo: 'parte_contraria',
+    entidadeId: id,
+  });
+
+  return ok({ ...parte, endereco } as ParteContrariaComEndereco);
+}
+
+/**
  * Busca uma parte contraria pelo documento
  */
 export async function buscarParteContrariaPorDocumento(
@@ -605,6 +698,31 @@ export async function buscarTerceiro(id: number): Promise<Result<Terceiro | null
   }
 
   return findTerceiroById(id);
+}
+
+/**
+ * Busca um terceiro pelo ID com o endereço principal populado.
+ * Usada pelo dialog de edição para hidratar os campos de endereço.
+ */
+export async function buscarTerceiroComEndereco(
+  id: number
+): Promise<Result<TerceiroComEndereco | null>> {
+  if (!id || id <= 0) {
+    return err(appError('VALIDATION_ERROR', 'ID invalido'));
+  }
+
+  const terceiroResult = await findTerceiroById(id);
+  if (!terceiroResult.success) return err(terceiroResult.error);
+  if (!terceiroResult.data) return ok(null);
+
+  const terceiro = terceiroResult.data;
+  const endereco = await resolverEnderecoDeEntidade({
+    enderecoIdFK: terceiro.endereco_id,
+    entidadeTipo: 'terceiro',
+    entidadeId: id,
+  });
+
+  return ok({ ...terceiro, endereco } as TerceiroComEndereco);
 }
 
 /**

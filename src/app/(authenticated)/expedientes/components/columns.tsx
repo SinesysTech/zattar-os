@@ -462,14 +462,6 @@ export function ExpedienteActions({
         open={showVisualizar}
         onOpenChange={setShowVisualizar}
         expediente={expediente}
-        usuarios={usuarios}
-        tiposExpedientes={tiposExpedientes.map(t => ({ 
-          id: t.id, 
-          tipoExpediente: t.tipoExpediente,
-          createdBy: 0,
-          createdAt: '',
-          updatedAt: ''
-        })) as import('@/app/(authenticated)/tipos-expedientes').TipoExpediente[]}
       />
 
       <ExpedientesBaixarDialog

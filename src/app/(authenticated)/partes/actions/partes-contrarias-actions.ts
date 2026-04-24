@@ -157,9 +157,14 @@ export async function actionListarPartesContrarias(params: ListarPartesContraria
   }
 }
 
-export async function actionBuscarParteContraria(id: number) {
+export async function actionBuscarParteContraria(
+  id: number,
+  opts?: { incluirEndereco?: boolean }
+) {
   try {
-    const result = await service.buscarParteContraria(id);
+    const result = opts?.incluirEndereco
+      ? await service.buscarParteContrariaComEndereco(id)
+      : await service.buscarParteContraria(id);
     if (!result.success) return { success: false, error: result.error.message };
     if (!result.data) return { success: false, error: 'Parte contraria nao encontrada' };
     return { success: true, data: result.data };

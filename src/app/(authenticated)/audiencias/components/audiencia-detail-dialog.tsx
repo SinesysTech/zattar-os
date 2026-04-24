@@ -370,15 +370,10 @@ export function AudienciaDetailDialog({
           {/* HEADER · Capa do processo */}
           <div className="shrink-0 border-b border-border/40 px-5 pt-4 pb-3">
             <div className="mb-1 flex items-center justify-between gap-3">
-              <DialogTitle asChild>
-                <Heading
-                  level="card"
-                  className="min-w-0 flex-1 truncate leading-snug text-foreground -tracking-[0.01em]"
-                >
-                  {poloAtivo}
-                  <span className="mx-1.5 font-medium text-muted-foreground/70">×</span>
-                  {poloPassivo}
-                </Heading>
+              <DialogTitle className="min-w-0 flex-1 truncate -tracking-[0.01em] text-foreground">
+                {poloAtivo}
+                <span className="mx-1.5 font-medium text-muted-foreground/70">×</span>
+                {poloPassivo}
               </DialogTitle>
               {audiencia && <AudienciaStatusBadge status={audiencia.status} />}
               <button

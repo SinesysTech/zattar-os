@@ -24,6 +24,7 @@ import type { CapturaKpiData } from './captura-kpi-strip';
 import { useCapturasLog } from '../hooks/use-capturas-log';
 import { useAdvogadosMap } from '../hooks/use-advogados-map';
 import { useCredenciaisMap } from '../hooks/use-credenciais-map';
+import { CapturaEscopoBadge } from './captura-escopo-badge';
 
 // =============================================================================
 // HELPERS (shared with glass-list)
@@ -102,14 +103,6 @@ const TIPO_LABELS: Record<TipoCaptura, string> = {
   timeline: 'Timeline',
 };
 
-const GRAU_LABELS: Record<string, string> = {
-  '1': '1º Grau',
-  '2': '2º Grau',
-  primeiro_grau: '1º Grau',
-  segundo_grau: '2º Grau',
-  unico: 'Único',
-};
-
 const STATUS_LABELS: Record<string, string> = {
   completed: 'Concluída',
   in_progress: 'Em Andamento',
@@ -178,15 +171,11 @@ interface CapturaGlassCardsProps {
 
 function CapturaCard({
   captura,
-  advogadoNome,
-  tribunalCodigo,
-  grau,
+  credenciaisMap,
   onView,
 }: {
   captura: CapturaLog;
-  advogadoNome: string | undefined;
-  tribunalCodigo: string | undefined;
-  grau: string | undefined;
+  credenciaisMap: Map<number, { tribunal: string; grau: string }>;
   onView: () => void;
 }) {
   const TipoIcon = getTipoIcon(captura.tipo_captura);
@@ -213,11 +202,6 @@ function CapturaCard({
             <span className="block text-sm font-semibold truncate">
               {formatarTipo(captura.tipo_captura)}
             </span>
-            {advogadoNome && (
-              <span className="text-xs text-muted-foreground/55 truncate block">
-                {advogadoNome}
-              </span>
-            )}
           </div>
         </div>
         <div className={cn('w-2.5 h-2.5 rounded-full shrink-0 mt-1', getStatusDotColor(captura.status))} />
@@ -227,23 +211,13 @@ function CapturaCard({
 
       {/* Details */}
       <div className="space-y-1.5">
-        {/* Tribunal + Grau */}
+        {/* Escopo (tribunais + graus agregados) */}
         <div className="flex items-center justify-between">
-          <span className="text-[11px] text-muted-foreground/60">Tribunal</span>
-          <div className="flex items-center gap-1.5">
-            {tribunalCodigo ? (
-              <span className="text-[10px] font-semibold tabular-nums border border-border/15 bg-muted/20 text-muted-foreground px-1.5 py-0.5 rounded-[5px]">
-                {tribunalCodigo}
-              </span>
-            ) : (
-              <span className="text-[11px] text-muted-foreground/30">—</span>
-            )}
-            {grau && (
-              <span className="text-[11px] text-muted-foreground/60">
-                {GRAU_LABELS[grau] ?? grau}
-              </span>
-            )}
-          </div>
+          <span className="text-[11px] text-muted-foreground/60">Escopo</span>
+          <CapturaEscopoBadge
+            credencialIds={captura.credencial_ids}
+            credenciaisMap={credenciaisMap}
+          />
         </div>
 
         {/* Status */}
@@ -323,14 +297,15 @@ export function CapturaGlassCards({
   const { advogadosMap } = useAdvogadosMap();
   const { credenciaisMap } = useCredenciaisMap();
 
-  const resolveTribunalGrau = React.useCallback(
-    (captura: CapturaLog): { tribunal?: string; grau?: string } => {
-      if (!captura.credencial_ids?.length) return {};
+  const resolveTribunais = React.useCallback(
+    (captura: CapturaLog): string[] => {
+      if (!captura.credencial_ids?.length) return [];
+      const tribunais = new Set<string>();
       for (const credId of captura.credencial_ids) {
         const info = credenciaisMap.get(credId);
-        if (info) return { tribunal: info.tribunal, grau: info.grau };
+        if (info) tribunais.add(info.tribunal);
       }
-      return {};
+      return Array.from(tribunais);
     },
     [credenciaisMap]
   );
@@ -355,10 +330,7 @@ export function CapturaGlassCards({
     let result = capturas;
 
     if (filters?.tribunal) {
-      result = result.filter((c) => {
-        const { tribunal } = resolveTribunalGrau(c);
-        return tribunal === filters.tribunal;
-      });
+      result = result.filter((c) => resolveTribunais(c).includes(filters.tribunal as string));
     }
 
     if (search) {
@@ -366,13 +338,13 @@ export function CapturaGlassCards({
       result = result.filter((c) => {
         const tipoLabel = formatarTipo(c.tipo_captura).toLowerCase();
         const advogado = c.advogado_id ? (advogadosMap.get(c.advogado_id) ?? '').toLowerCase() : '';
-        const { tribunal } = resolveTribunalGrau(c);
-        return tipoLabel.includes(q) || advogado.includes(q) || (tribunal?.toLowerCase().includes(q) ?? false);
+        const tribunais = resolveTribunais(c).join(' ').toLowerCase();
+        return tipoLabel.includes(q) || advogado.includes(q) || tribunais.includes(q);
       });
     }
 
     return result;
-  }, [capturas, search, filters?.tribunal, advogadosMap, resolveTribunalGrau]);
+  }, [capturas, search, filters?.tribunal, advogadosMap, resolveTribunais]);
 
   if (isLoading) return <CardsSkeleton />;
 
@@ -388,21 +360,14 @@ export function CapturaGlassCards({
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
-      {filtered.map((captura) => {
-        const { tribunal, grau } = resolveTribunalGrau(captura);
-        return (
-          <CapturaCard
-            key={captura.id}
-            captura={captura}
-            advogadoNome={
-              captura.advogado_id ? advogadosMap.get(captura.advogado_id) : undefined
-            }
-            tribunalCodigo={tribunal}
-            grau={grau}
-            onView={() => onView?.(captura)}
-          />
-        );
-      })}
+      {filtered.map((captura) => (
+        <CapturaCard
+          key={captura.id}
+          captura={captura}
+          credenciaisMap={credenciaisMap}
+          onView={() => onView?.(captura)}
+        />
+      ))}
     </div>
   );
 }

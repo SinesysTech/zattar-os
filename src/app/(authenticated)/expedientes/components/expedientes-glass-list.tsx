@@ -3,19 +3,24 @@
 import * as React from 'react';
 import { parseISO, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { FileSearch, ChevronRight, Lock, Monitor, AlertTriangle } from 'lucide-react';
+import {
+  FileSearch,
+  Lock,
+  Monitor,
+  AlertTriangle,
+  CheckCircle2,
+} from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Heading, Text } from '@/components/ui/typography';
 
 import {
   type Expediente,
   type UrgencyLevel,
   getExpedienteUrgencyLevel,
   GRAU_TRIBUNAL_LABELS,
-  ORIGEM_EXPEDIENTE_LABELS,
-  OrigemExpediente,
   getExpedientePartyNames,
 } from '../domain';
 import type { Usuario } from '@/app/(authenticated)/usuarios';
@@ -29,15 +34,25 @@ import {
   ExpedienteResponsavelPopover,
   ResponsavelTriggerContent,
 } from './expediente-responsavel-popover';
-import {
-  ExpedienteTipoPopover,
-  TipoTriggerContent,
-} from './expediente-tipo-popover';
+import { ExpedienteTipoPopover } from './expediente-tipo-popover';
 import { ExpedienteTextEditor } from './expediente-text-editor';
+
+// =============================================================================
+// CONSTANTS
+// =============================================================================
+
+// [ temporal | main (flex) | responsável | ação ]
+const GRID_TEMPLATE = 'grid-cols-[200px_minmax(0,1fr)_180px_44px]';
+const GRID_EXPANSION_OFFSET = 'pl-[216px]'; // 200px + 16px gap (p-4)
 
 // =============================================================================
 // TYPES
 // =============================================================================
+
+interface TipoExpedienteOption {
+  id: number;
+  tipoExpediente?: string;
+}
 
 interface ExpedientesGlassListProps {
   expedientes: Expediente[];
@@ -45,21 +60,231 @@ interface ExpedientesGlassListProps {
   onViewDetail: (expediente: Expediente) => void;
   onBaixar?: (expediente: Expediente) => void;
   usuariosData?: Usuario[];
-  tiposExpedientesData?: { id: number; tipoExpediente?: string }[];
+  tiposExpedientesData?: TipoExpedienteOption[];
   onSuccess?: () => void;
 }
 
 // =============================================================================
-// COUNTDOWN BADGE
+// TEMPORAL BLOCK (coluna 1) — Fatal + Ciência + Vencido/Countdown
 // =============================================================================
 
-function CountdownBadge({ dias, urgency }: { dias: number | null; urgency: UrgencyLevel }) {
-  if (dias === null) return <span className="text-[11px] text-muted-foreground/40 tabular-nums">--</span>;
-  const label = `${dias}d`;
+function TemporalBlock({
+  expediente,
+  urgency,
+}: {
+  expediente: Expediente;
+  urgency: UrgencyLevel;
+}) {
+  const dias = getExpedienteDiasRestantes(expediente);
+  const temPrazo = Boolean(expediente.dataPrazoLegalParte);
+  const vencido = urgency === 'critico' && !expediente.baixadoEm;
+
   return (
-    <span className={cn('text-[11px] font-semibold tabular-nums px-2 py-1 rounded-lg text-center', URGENCY_COUNTDOWN[urgency])}>
-      {label}
-    </span>
+    <div className="flex items-start gap-2">
+      <div
+        className={cn(
+          'mt-1.5 size-2 shrink-0 rounded-full',
+          URGENCY_DOT[urgency],
+        )}
+      />
+      <div className="min-w-0 flex flex-col gap-0.5">
+        {temPrazo ? (
+          <div className="flex items-baseline gap-1.5">
+            <Text variant="meta-label" className="text-muted-foreground/65">
+              Fatal
+            </Text>
+            <Text variant="caption" className="tabular-nums font-medium">
+              {format(parseISO(expediente.dataPrazoLegalParte!), 'dd MMM yyyy', {
+                locale: ptBR,
+              })}
+            </Text>
+          </div>
+        ) : (
+          <Text variant="caption" className="text-muted-foreground/50 italic">
+            Sem prazo
+          </Text>
+        )}
+        {expediente.dataCienciaParte && (
+          <div className="flex items-baseline gap-1.5">
+            <Text variant="meta-label" className="text-muted-foreground/55">
+              Ciência
+            </Text>
+            <Text
+              variant="micro-caption"
+              className="tabular-nums text-muted-foreground/70"
+            >
+              {format(parseISO(expediente.dataCienciaParte), 'dd/MM/yyyy')}
+            </Text>
+          </div>
+        )}
+        {temPrazo && (vencido || dias !== null) && (
+          <div className="mt-1 flex items-center gap-1 flex-wrap">
+            {vencido && (
+              <SemanticBadge
+                category="expediente_status"
+                value="VENCIDO"
+                variantOverride="destructive"
+                toneOverride="soft"
+                className="text-[10px] px-1.5 py-0 h-5"
+              >
+                Vencido
+              </SemanticBadge>
+            )}
+            {dias !== null && (
+              <span
+                className={cn(
+                  'inline-flex items-center rounded-lg px-1.5 py-0.5',
+                  'text-[10px] font-semibold tabular-nums',
+                  URGENCY_COUNTDOWN[urgency],
+                )}
+              >
+                {dias}d
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// =============================================================================
+// MAIN CELL (coluna 2) — 4 linhas narrativas
+// =============================================================================
+
+function MainCell({
+  expediente,
+  tiposExpedientesData,
+  onSuccess,
+}: {
+  expediente: Expediente;
+  tiposExpedientesData?: TipoExpedienteOption[];
+  onSuccess?: () => void;
+}) {
+  const partes = getExpedientePartyNames(expediente);
+  const grauLabel = GRAU_TRIBUNAL_LABELS[expediente.grau] ?? expediente.grau;
+  const orgao =
+    expediente.descricaoOrgaoJulgador || expediente.orgaoJulgadorOrigem;
+  const tipo = expediente.tipoExpedienteId
+    ? tiposExpedientesData?.find((t) => t.id === expediente.tipoExpedienteId)
+    : null;
+  const tipoLabel = tipo?.tipoExpediente ?? 'Verificar';
+
+  return (
+    <div className="min-w-0 flex flex-col gap-1">
+      {/* L1 — Tipo como título + flags */}
+      <div className="flex items-center gap-2 flex-wrap">
+        <ExpedienteTipoPopover
+          expedienteId={expediente.id}
+          tipoExpedienteId={expediente.tipoExpedienteId}
+          tiposExpedientes={tiposExpedientesData ?? []}
+          onSuccess={onSuccess}
+        >
+          <Heading
+            level="widget"
+            as="h3"
+            className={cn(
+              'truncate',
+              !tipo && 'text-muted-foreground/60 italic font-normal',
+            )}
+          >
+            {tipoLabel}
+          </Heading>
+        </ExpedienteTipoPopover>
+        {expediente.segredoJustica && (
+          <SemanticBadge
+            category="status"
+            value="SEGREDO"
+            variantOverride="warning"
+            toneOverride="soft"
+            className="text-[10px] gap-1"
+          >
+            <Lock className="size-2.5" />
+            Segredo
+          </SemanticBadge>
+        )}
+        {expediente.juizoDigital && (
+          <SemanticBadge
+            category="status"
+            value="DIGITAL"
+            variantOverride="info"
+            toneOverride="soft"
+            className="text-[10px] gap-1"
+          >
+            <Monitor className="size-2.5" />
+            Digital
+          </SemanticBadge>
+        )}
+        {expediente.prioridadeProcessual && (
+          <SemanticBadge
+            category="priority"
+            value="ALTA"
+            variantOverride="destructive"
+            toneOverride="soft"
+            className="text-[10px] gap-1"
+          >
+            <AlertTriangle className="size-2.5" />
+            Prioridade
+          </SemanticBadge>
+        )}
+      </div>
+      {/* L2 — Partes */}
+      {(partes.autora || partes.re) && (
+        <Text variant="caption" className="truncate text-muted-foreground/70">
+          {partes.autora}
+          {partes.autora && partes.re && (
+            <span className="text-muted-foreground/40"> vs. </span>
+          )}
+          {partes.re}
+        </Text>
+      )}
+      {/* L3 — Rito · número · badges de tribunal */}
+      <div className="flex items-center gap-1.5 flex-wrap">
+        {expediente.classeJudicial && (
+          <>
+            <Text
+              variant="caption"
+              className="text-muted-foreground/60 truncate"
+            >
+              {expediente.classeJudicial}
+            </Text>
+            <Text variant="caption" className="text-muted-foreground/30">
+              ·
+            </Text>
+          </>
+        )}
+        <Text
+          variant="caption"
+          className="tabular-nums text-muted-foreground/70 truncate"
+        >
+          {expediente.numeroProcesso}
+        </Text>
+        <SemanticBadge
+          category="tribunal"
+          value={expediente.trt}
+          className="text-[10px]"
+        >
+          {expediente.trt}
+        </SemanticBadge>
+        <SemanticBadge
+          category="grau"
+          value={expediente.grau}
+          className="text-[10px]"
+        >
+          {grauLabel}
+        </SemanticBadge>
+      </div>
+      {/* L4 — Órgão julgador */}
+      {orgao && (
+        <Text
+          variant="micro-caption"
+          className="truncate text-muted-foreground/55"
+          title={orgao}
+        >
+          {orgao}
+        </Text>
+      )}
+    </div>
   );
 }
 
@@ -79,16 +304,10 @@ function GlassRow({
   onViewDetail: () => void;
   onBaixar?: (expediente: Expediente) => void;
   usuariosData?: Usuario[];
-  tiposExpedientesData?: { id: number; tipoExpediente?: string }[];
+  tiposExpedientesData?: TipoExpedienteOption[];
   onSuccess?: () => void;
 }) {
   const urgency = getExpedienteUrgencyLevel(expediente);
-  const dias = getExpedienteDiasRestantes(expediente);
-  const partes = getExpedientePartyNames(expediente);
-  const grauLabel = GRAU_TRIBUNAL_LABELS[expediente.grau] ?? expediente.grau;
-  const origemLabel = ORIGEM_EXPEDIENTE_LABELS[expediente.origem] ?? expediente.origem;
-
-  const orgaoJulgador = expediente.descricaoOrgaoJulgador || expediente.orgaoJulgadorOrigem;
 
   return (
     <div
@@ -103,117 +322,20 @@ function GlassRow({
       }}
       className={cn(
         'group w-full text-left rounded-2xl border border-border/60 bg-card p-4 cursor-pointer',
-        'transition-all duration-180 ease-out',
-        'hover:border-border hover:shadow-[0_4px_14px_rgba(0,0,0,0.06)] hover:-translate-y-px',
+        'transition-colors duration-200 ease-out',
+        'hover:border-border hover:shadow-sm',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
         URGENCY_BORDER[urgency],
       )}
     >
-      <div className="grid grid-cols-[32px_2.5fr_1fr_0.8fr_0.8fr_80px_80px_40px] gap-3 items-center">
-        {/* 1. Urgency dot */}
-        <div className="flex items-center justify-center">
-          <div className={cn('w-2 h-2 rounded-full shrink-0', URGENCY_DOT[urgency])} />
-        </div>
-
-        {/* 2. Main cell — stacked info */}
-        <div className="min-w-0">
-          {/* Title row: processo number + tipo popover + indicator badges */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-xs font-medium tabular-nums truncate">
-              {expediente.numeroProcesso}
-            </span>
-            {/* Tipo expediente — popover inline */}
-            <ExpedienteTipoPopover
-              expedienteId={expediente.id}
-              tipoExpedienteId={expediente.tipoExpedienteId}
-              tiposExpedientes={tiposExpedientesData ?? []}
-              onSuccess={onSuccess}
-            >
-              <TipoTriggerContent
-                tipoExpedienteId={expediente.tipoExpedienteId}
-                tiposExpedientes={tiposExpedientesData ?? []}
-                size="sm"
-              />
-            </ExpedienteTipoPopover>
-            {urgency === 'critico' && !expediente.baixadoEm && (
-              <span className="inline-flex items-center bg-destructive/10 border border-destructive/20 text-destructive rounded px-1.5 py-0.5 text-[9px] font-semibold shrink-0">
-                Vencido
-              </span>
-            )}
-            {/* Indicator badges */}
-            {expediente.segredoJustica && (
-              <span className="inline-flex items-center gap-1 bg-warning/10 border border-warning/20 text-warning rounded px-1.5 py-0.5 text-[10px] font-semibold">
-                <Lock className="w-2.5 h-2.5" />
-                Segredo
-              </span>
-            )}
-            {expediente.juizoDigital && (
-              <span className="inline-flex items-center gap-1 bg-info/10 border border-info/25 text-info rounded px-1.5 py-0.5 text-[10px] font-semibold">
-                <Monitor className="w-2.5 h-2.5" />
-                Digital
-              </span>
-            )}
-            {expediente.prioridadeProcessual && (
-              <span className="inline-flex items-center gap-1 bg-destructive/10 border border-destructive/20 text-destructive rounded px-1.5 py-0.5 text-[10px] font-semibold">
-                <AlertTriangle className="w-2.5 h-2.5" />
-                Prioridade
-              </span>
-            )}
-          </div>
-          {/* Partes */}
-          {(partes.autora || partes.re) && (
-            <div className="text-[10px] text-muted-foreground/60 truncate mt-0.5">
-              {partes.autora}
-              {partes.autora && partes.re && (
-                <span className="text-muted-foreground/40"> vs. </span>
-              )}
-              {partes.re}
-            </div>
-          )}
-          {/* Classe judicial */}
-          {expediente.classeJudicial && (
-            <div className="text-[10px] text-muted-foreground/45 mt-0.5 truncate">
-              {expediente.classeJudicial}
-            </div>
-          )}
-          {/* Orgao julgador */}
-          {orgaoJulgador && (
-            <div className="text-[10px] text-muted-foreground/45 mt-0.5 truncate" title={orgaoJulgador}>
-              {orgaoJulgador}
-            </div>
-          )}
-        </div>
-
-        {/* 3. Prazo date + ciencia */}
-        <div className="min-w-0">
-          {expediente.dataPrazoLegalParte ? (
-            <>
-              <div className="text-[11px] tabular-nums">
-                {format(parseISO(expediente.dataPrazoLegalParte), 'dd MMM yyyy', { locale: ptBR })}
-              </div>
-              {expediente.dataCienciaParte && (
-                <div className="text-[9px] text-muted-foreground/50 mt-0.5">
-                  Ciencia: {format(parseISO(expediente.dataCienciaParte), 'dd/MM/yy')}
-                </div>
-              )}
-            </>
-          ) : (
-            <span className="text-[11px] text-muted-foreground/40">Sem prazo</span>
-          )}
-        </div>
-
-        {/* 4. TRT + Grau */}
-        <div className="flex flex-col gap-1 min-w-0">
-          <SemanticBadge category="tribunal" value={expediente.trt} className="text-[10px] w-fit">
-            {expediente.trt}
-          </SemanticBadge>
-          <SemanticBadge category="grau" value={expediente.grau} className="text-[10px] w-fit">
-            {grauLabel}
-          </SemanticBadge>
-        </div>
-
-        {/* 5. Responsavel — popover inline */}
-        <div className="min-w-0">
+      <div className={cn('grid gap-4 items-start', GRID_TEMPLATE)}>
+        <TemporalBlock expediente={expediente} urgency={urgency} />
+        <MainCell
+          expediente={expediente}
+          tiposExpedientesData={tiposExpedientesData}
+          onSuccess={onSuccess}
+        />
+        <div className="min-w-0 self-center">
           <ExpedienteResponsavelPopover
             expedienteId={expediente.id}
             responsavelId={expediente.responsavelId}
@@ -227,54 +349,48 @@ function GlassRow({
             />
           </ExpedienteResponsavelPopover>
         </div>
-
-        {/* 6. Origem badge */}
-        <div>
-          <span
-            className={cn(
-              'inline-flex text-[10px] font-medium px-2 py-0.5 rounded-md',
-              expediente.origem === OrigemExpediente.CAPTURA
-                ? 'bg-info/8 text-info'
-                : expediente.origem === OrigemExpediente.COMUNICA_CNJ
-                  ? 'bg-warning/8 text-warning'
-                  : 'bg-muted text-muted-foreground/60',
-            )}
-          >
-            {origemLabel}
-          </span>
-        </div>
-
-        {/* 7. Countdown badge */}
-        <div className="flex items-center justify-center">
-          <CountdownBadge dias={dias} urgency={urgency} />
-        </div>
-
-        {/* 8. Actions */}
-        <div className="flex items-center justify-end gap-1">
+        <div className="flex items-center justify-end self-center">
           {onBaixar && !expediente.baixadoEm && (
             <button
               type="button"
-              onClick={(e) => { e.stopPropagation(); onBaixar(expediente); }}
-              onKeyDown={(e) => { e.stopPropagation(); }}
-              className="px-2 py-1 rounded-md bg-success/6 text-success text-[10px] font-medium hover:bg-success/12 transition-colors cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+                onBaixar(expediente);
+              }}
+              onKeyDown={(e) => e.stopPropagation()}
+              aria-label="Concluir expediente"
+              title="Concluir expediente"
+              className={cn(
+                'inline-flex size-9 items-center justify-center rounded-xl',
+                'text-success/80 hover:text-success hover:bg-success/10',
+                'transition-colors duration-150 cursor-pointer',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+              )}
             >
-              Baixar
+              <CheckCircle2 className="size-5" />
             </button>
           )}
-          <ChevronRight className="w-4 h-4 text-muted-foreground/40 opacity-0 group-hover:opacity-100 transition-opacity" />
         </div>
       </div>
 
-      {/* Expansion — descrição + observações editáveis (aparece no hover) */}
+      {/* Expansion — descrição + observações editáveis (no hover) */}
       <div
-        className="hidden group-hover:grid grid-cols-1 md:grid-cols-2 gap-4 mt-3 pt-3 pl-8 border-t border-border/20"
+        className={cn(
+          'hidden group-hover:grid grid-cols-1 md:grid-cols-2 gap-4',
+          'mt-3 pt-3 border-t border-border/20',
+          GRID_EXPANSION_OFFSET,
+        )}
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}
       >
         <div className="min-w-0">
-          <p className="text-[9px] font-medium text-muted-foreground/50 uppercase tracking-wider mb-1.5">
+          <Text
+            variant="overline"
+            as="p"
+            className="mb-1.5 text-muted-foreground/55"
+          >
             Descrição
-          </p>
+          </Text>
           <ExpedienteTextEditor
             expedienteId={expediente.id}
             field="descricaoArquivos"
@@ -284,9 +400,13 @@ function GlassRow({
           />
         </div>
         <div className="min-w-0">
-          <p className="text-[9px] font-medium text-muted-foreground/50 uppercase tracking-wider mb-1.5">
+          <Text
+            variant="overline"
+            as="p"
+            className="mb-1.5 text-muted-foreground/55"
+          >
             Observações
-          </p>
+          </Text>
           <ExpedienteTextEditor
             expedienteId={expediente.id}
             field="observacoes"
@@ -308,28 +428,30 @@ function ListSkeleton() {
   return (
     <div className="flex flex-col gap-2">
       {Array.from({ length: 6 }, (_, i) => (
-        <div key={i} className="rounded-2xl border border-border/40 bg-card p-4">
-          <div className="grid grid-cols-[32px_2.5fr_1fr_0.8fr_0.8fr_80px_80px_40px] gap-3 items-center">
-            <Skeleton className="w-2 h-2 rounded-full" />
+        <div
+          key={i}
+          className="rounded-2xl border border-border/40 bg-card p-4"
+        >
+          <div className={cn('grid gap-4 items-start', GRID_TEMPLATE)}>
+            <div className="flex items-start gap-2">
+              <Skeleton className="mt-1.5 size-2 rounded-full" />
+              <div className="space-y-1.5 flex-1">
+                <Skeleton className="h-3.5 w-28" />
+                <Skeleton className="h-2.5 w-24" />
+                <Skeleton className="h-4 w-16 rounded-md" />
+              </div>
+            </div>
             <div className="space-y-1.5">
-              <Skeleton className="h-3.5 w-48" />
+              <Skeleton className="h-4 w-44" />
+              <Skeleton className="h-3 w-56" />
+              <Skeleton className="h-3 w-48" />
               <Skeleton className="h-2.5 w-36" />
             </div>
-            <div className="space-y-1">
-              <Skeleton className="h-3 w-20" />
-              <Skeleton className="h-2 w-14" />
+            <div className="flex items-center gap-2 self-center">
+              <Skeleton className="size-7 rounded-full" />
+              <Skeleton className="h-3 w-24" />
             </div>
-            <div className="space-y-1">
-              <Skeleton className="h-5 w-12 rounded-md" />
-              <Skeleton className="h-5 w-14 rounded-md" />
-            </div>
-            <div className="flex items-center gap-2">
-              <Skeleton className="w-5.5 h-5.5 rounded-full" />
-              <Skeleton className="h-3 w-16" />
-            </div>
-            <Skeleton className="h-5 w-14 rounded-md" />
-            <Skeleton className="h-5 w-10 rounded-lg mx-auto" />
-            <div />
+            <Skeleton className="size-9 rounded-xl ml-auto self-center" />
           </div>
         </div>
       ))}
@@ -344,9 +466,19 @@ function ListSkeleton() {
 function GlassEmptyState() {
   return (
     <div className="flex flex-col items-center justify-center py-16 opacity-60">
-      <FileSearch className="w-10 h-10 text-muted-foreground/30 mb-4" />
-      <p className="text-sm font-medium text-muted-foreground/50">Nenhum expediente encontrado</p>
-      <p className="text-xs text-muted-foreground/30 mt-1">Tente ajustar os filtros ou criar um novo expediente</p>
+      <FileSearch className="size-10 text-muted-foreground/30 mb-4" />
+      <Text
+        variant="caption"
+        className="font-medium text-muted-foreground/60"
+      >
+        Nenhum expediente encontrado
+      </Text>
+      <Text
+        variant="micro-caption"
+        className="mt-1 text-muted-foreground/40"
+      >
+        Tente ajustar os filtros ou criar um novo expediente
+      </Text>
     </div>
   );
 }

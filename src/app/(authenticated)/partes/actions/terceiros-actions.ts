@@ -159,9 +159,14 @@ export async function actionListarTerceiros(params: ListarTerceirosParams = {}) 
   }
 }
 
-export async function actionBuscarTerceiro(id: number) {
+export async function actionBuscarTerceiro(
+  id: number,
+  opts?: { incluirEndereco?: boolean }
+) {
   try {
-    const result = await service.buscarTerceiro(id);
+    const result = opts?.incluirEndereco
+      ? await service.buscarTerceiroComEndereco(id)
+      : await service.buscarTerceiro(id);
     if (!result.success) return { success: false, error: result.error.message };
     if (!result.data) return { success: false, error: 'Terceiro nao encontrado' };
     return { success: true, data: result.data };

@@ -371,20 +371,23 @@ export function PartesClient({ initialStats }: PartesClientProps) {
       if (!Number.isFinite(id)) return;
 
       try {
+        // Edição sempre exige endereço populado para hidratar os campos do dialog;
+        // sem o flag `incluirEndereco`, os fetches retornam a entidade "crua" (sem JOIN)
+        // e o form mostraria os campos de endereço em branco mesmo existindo registro.
         if (kind === 'cliente') {
-          const res = await actionBuscarCliente(id);
+          const res = await actionBuscarCliente(id, { incluirEndereco: true });
           if (!res.success || !res.data) throw new Error(res.error ?? 'Cliente não encontrado');
           setEditTarget({ kind, entity: res.data as Cliente });
         } else if (kind === 'parte_contraria') {
-          const res = await actionBuscarParteContraria(id);
+          const res = await actionBuscarParteContraria(id, { incluirEndereco: true });
           if (!res.success || !res.data) throw new Error(res.error ?? 'Parte contrária não encontrada');
           setEditTarget({ kind, entity: res.data as ParteContraria });
         } else if (kind === 'terceiro') {
-          const res = await actionBuscarTerceiro(id);
+          const res = await actionBuscarTerceiro(id, { incluirEndereco: true });
           if (!res.success || !res.data) throw new Error(res.error ?? 'Terceiro não encontrado');
           setEditTarget({ kind, entity: res.data as Terceiro });
         } else if (kind === 'representante') {
-          const res = await actionBuscarRepresentantePorId(id);
+          const res = await actionBuscarRepresentantePorId(id, { incluirEndereco: true });
           if (!res.success || !res.data) throw new Error(res.error ?? 'Representante não encontrado');
           setEditTarget({ kind, entity: res.data as Representante });
         }

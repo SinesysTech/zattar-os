@@ -132,7 +132,7 @@ export function CapturaClient() {
         <div>
           <Heading level="page">Captura</Heading>
           <p className="text-sm text-muted-foreground/50 mt-0.5">
-            Automação de captura judicial — PJE/TRT
+            Automação de captura judicial
           </p>
         </div>
         <Button

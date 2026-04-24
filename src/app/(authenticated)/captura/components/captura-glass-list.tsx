@@ -28,6 +28,7 @@ import type { CapturaKpiData } from './captura-kpi-strip';
 import { useCapturasLog } from '../hooks/use-capturas-log';
 import { useAdvogadosMap } from '../hooks/use-advogados-map';
 import { useCredenciaisMap } from '../hooks/use-credenciais-map';
+import { CapturaEscopoBadge } from './captura-escopo-badge';
 
 // =============================================================================
 // TIPOS
@@ -140,14 +141,6 @@ const TIPO_LABELS: Record<TipoCaptura, string> = {
   timeline: 'Timeline',
 };
 
-const GRAU_LABELS: Record<string, string> = {
-  '1': '1º Grau',
-  '2': '2º Grau',
-  primeiro_grau: '1º Grau',
-  segundo_grau: '2º Grau',
-  unico: 'Único',
-};
-
 const STATUS_LABELS: Record<StatusCaptura, string> = {
   completed: 'Concluída',
   in_progress: 'Em Andamento',
@@ -195,18 +188,12 @@ function calcularDuracao(captura: CapturaLog): string {
 
 function GlassRow({
   captura,
-  advogadoNome,
-  tribunalCodigo,
-  grau,
+  credenciaisMap,
   onView,
-  isAlt,
 }: {
   captura: CapturaLog;
-  advogadoNome: string | undefined;
-  tribunalCodigo: string | undefined;
-  grau: string | undefined;
+  credenciaisMap: Map<number, { tribunal: string; grau: string }>;
   onView: () => void;
-  isAlt: boolean;
 }) {
   const TipoIcon = getTipoIcon(captura.tipo_captura);
 
@@ -220,16 +207,15 @@ function GlassRow({
         'w-full text-left rounded-2xl border border-border/40 p-4 cursor-pointer bg-card',
         'transition-all duration-180 ease-out',
         'hover:bg-accent/40 hover:border-border/60 hover:scale-[1.0025] hover:-translate-y-px hover:shadow-lg',
-        isAlt && 'bg-muted/20',
       )}
     >
-      <div className="grid grid-cols-[10px_1fr_80px_70px_120px_80px_80px_56px] gap-3 items-center">
+      <div className="grid grid-cols-[10px_1fr_170px_120px_80px_80px_56px] gap-3 items-center">
         {/* Status dot */}
         <div className="flex items-center justify-center">
           <div className={cn('w-2 h-2 rounded-full shrink-0', getStatusDotColor(captura.status))} />
         </div>
 
-        {/* Main info: icon + tipo + advogado */}
+        {/* Main info: icon + tipo */}
         <div className="flex items-center gap-3 min-w-0">
           <div className={cn('w-9 h-9 rounded-[0.625rem] flex items-center justify-center shrink-0', getTipoIconBg(captura.tipo_captura))}>
             <TipoIcon className={cn('w-4 h-4', getTipoIconColor(captura.tipo_captura))} />
@@ -238,37 +224,15 @@ function GlassRow({
             <span className="block text-sm font-semibold truncate">
               {formatarTipo(captura.tipo_captura)}
             </span>
-            {advogadoNome && (
-              <div className="flex items-center gap-1.5 mt-0.5">
-                <div className="size-4 rounded-full bg-linear-to-br from-primary to-highlight flex items-center justify-center shrink-0">
-                  <span className="text-[7px] font-bold text-white">
-                    {advogadoNome.split(' ').map((n: string) => n[0]).slice(0, 2).join('').toUpperCase()}
-                  </span>
-                </div>
-                <span className="text-xs text-muted-foreground/55 truncate">
-                  {advogadoNome}
-                </span>
-              </div>
-            )}
           </div>
         </div>
 
-        {/* Tribunal */}
-        <div>
-          {tribunalCodigo ? (
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded-[5px] text-[10px] font-semibold tabular-nums border border-border/15 bg-muted/20 text-muted-foreground tracking-wide">
-              {tribunalCodigo}
-            </span>
-          ) : (
-            <span className="text-xs text-muted-foreground/30">—</span>
-          )}
-        </div>
-
-        {/* Grau */}
-        <div>
-          <span className="text-xs text-muted-foreground/60">
-            {grau ? (GRAU_LABELS[grau] ?? grau) : '—'}
-          </span>
+        {/* Escopo: tribunais + graus agregados com tooltip */}
+        <div className="flex items-center">
+          <CapturaEscopoBadge
+            credencialIds={captura.credencial_ids}
+            credenciaisMap={credenciaisMap}
+          />
         </div>
 
         {/* Status badge */}
@@ -327,17 +291,16 @@ function ListSkeleton() {
     <div className="flex flex-col gap-2">
       {Array.from({ length: 5 }, (_, i) => (
         <GlassPanel key={i} depth={1} className="p-4">
-          <div className="grid grid-cols-[10px_1fr_80px_70px_120px_80px_80px_56px] gap-3 items-center">
+          <div className="grid grid-cols-[10px_1fr_170px_120px_80px_80px_56px] gap-3 items-center">
             <Skeleton className="w-2 h-2 rounded-full" />
             <div className="flex items-center gap-3">
               <Skeleton className="w-9 h-9 rounded-[0.625rem]" />
-              <div className="space-y-1.5 flex-1">
-                <Skeleton className="h-4 w-40" />
-                <Skeleton className="h-3 w-28" />
-              </div>
+              <Skeleton className="h-4 w-40" />
             </div>
-            <Skeleton className="h-5 w-12 rounded" />
-            <Skeleton className="h-3 w-14" />
+            <div className="flex items-center gap-1.5">
+              <Skeleton className="h-5 w-20 rounded" />
+              <Skeleton className="h-3 w-14" />
+            </div>
             <Skeleton className="h-5 w-20 rounded-full ml-auto" />
             <Skeleton className="h-3 w-16 ml-auto" />
             <Skeleton className="h-3 w-12 ml-auto" />
@@ -430,15 +393,15 @@ export function CapturaGlassList({
   const { advogadosMap } = useAdvogadosMap();
   const { credenciaisMap } = useCredenciaisMap();
 
-  // Resolve tribunal/grau from first credencial_id
-  const resolveTribunalGrau = React.useCallback(
-    (captura: CapturaLog): { tribunal?: string; grau?: string } => {
-      if (!captura.credencial_ids?.length) return {};
+  const resolveTribunais = React.useCallback(
+    (captura: CapturaLog): string[] => {
+      if (!captura.credencial_ids?.length) return [];
+      const tribunais = new Set<string>();
       for (const credId of captura.credencial_ids) {
         const info = credenciaisMap.get(credId);
-        if (info) return { tribunal: info.tribunal, grau: info.grau };
+        if (info) tribunais.add(info.tribunal);
       }
-      return {};
+      return Array.from(tribunais);
     },
     [credenciaisMap]
   );
@@ -465,10 +428,7 @@ export function CapturaGlassList({
 
     // Tribunal filter (client-side since API doesn't support it)
     if (filters?.tribunal) {
-      result = result.filter((c) => {
-        const { tribunal } = resolveTribunalGrau(c);
-        return tribunal === filters.tribunal;
-      });
+      result = result.filter((c) => resolveTribunais(c).includes(filters.tribunal as string));
     }
 
     // Text search
@@ -477,13 +437,13 @@ export function CapturaGlassList({
       result = result.filter((c) => {
         const tipoLabel = formatarTipo(c.tipo_captura).toLowerCase();
         const advogado = c.advogado_id ? (advogadosMap.get(c.advogado_id) ?? '').toLowerCase() : '';
-        const { tribunal } = resolveTribunalGrau(c);
-        return tipoLabel.includes(q) || advogado.includes(q) || (tribunal?.toLowerCase().includes(q) ?? false);
+        const tribunais = resolveTribunais(c).join(' ').toLowerCase();
+        return tipoLabel.includes(q) || advogado.includes(q) || tribunais.includes(q);
       });
     }
 
     return result;
-  }, [capturas, search, filters?.tribunal, advogadosMap, resolveTribunalGrau]);
+  }, [capturas, search, filters?.tribunal, advogadosMap, resolveTribunais]);
 
   if (isLoading) return <ListSkeleton />;
 
@@ -499,22 +459,14 @@ export function CapturaGlassList({
 
   return (
     <div className="flex flex-col gap-2">
-        {filtered.map((captura, i) => {
-          const { tribunal, grau } = resolveTribunalGrau(captura);
-          return (
-            <GlassRow
-              key={captura.id}
-              captura={captura}
-              advogadoNome={
-                captura.advogado_id ? advogadosMap.get(captura.advogado_id) : undefined
-              }
-              tribunalCodigo={tribunal}
-              grau={grau}
-              onView={() => onView?.(captura)}
-              isAlt={i % 2 === 1}
-            />
-          );
-        })}
+        {filtered.map((captura) => (
+          <GlassRow
+            key={captura.id}
+            captura={captura}
+            credenciaisMap={credenciaisMap}
+            onView={() => onView?.(captura)}
+          />
+        ))}
       {paginacao && paginacao.totalPaginas > 1 && (
         <PaginationBar
           paginacao={paginacao}

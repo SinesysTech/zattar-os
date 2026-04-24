@@ -1,0 +1,114 @@
+'use client';
+
+import * as React from 'react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
+
+const GRAU_LABELS: Record<string, string> = {
+  '1': '1º Grau',
+  '2': '2º Grau',
+  primeiro_grau: '1º Grau',
+  segundo_grau: '2º Grau',
+  unico: 'Único',
+};
+
+type CredencialInfo = { tribunal: string; grau: string };
+
+export interface CapturaEscopoBadgeProps {
+  credencialIds: number[] | undefined;
+  credenciaisMap: Map<number, CredencialInfo>;
+  layout?: 'row' | 'stack';
+  className?: string;
+}
+
+function formatarGrau(grau: string): string {
+  return GRAU_LABELS[grau] ?? grau;
+}
+
+function resumirTribunais(tribunais: string[]): string {
+  if (tribunais.length === 0) return '—';
+  if (tribunais.length === 1) return tribunais[0];
+  return `${tribunais.length} tribunais`;
+}
+
+function resumirGraus(graus: string[]): string {
+  if (graus.length === 0) return '';
+  if (graus.length === 1) return formatarGrau(graus[0]);
+  const ordenados = [...graus].sort();
+  return `${ordenados.map((g) => formatarGrau(g).replace(' Grau', '')).join(' e ')} grau`;
+}
+
+export function CapturaEscopoBadge({
+  credencialIds,
+  credenciaisMap,
+  layout = 'row',
+  className,
+}: CapturaEscopoBadgeProps) {
+  const { tribunais, graus, detalhes } = React.useMemo(() => {
+    if (!credencialIds?.length) {
+      return { tribunais: [] as string[], graus: [] as string[], detalhes: [] as CredencialInfo[] };
+    }
+    const tribunaisSet = new Set<string>();
+    const grausSet = new Set<string>();
+    const detalhesList: CredencialInfo[] = [];
+    for (const id of credencialIds) {
+      const info = credenciaisMap.get(id);
+      if (!info) continue;
+      tribunaisSet.add(info.tribunal);
+      grausSet.add(info.grau);
+      detalhesList.push(info);
+    }
+    return {
+      tribunais: Array.from(tribunaisSet),
+      graus: Array.from(grausSet),
+      detalhes: detalhesList,
+    };
+  }, [credencialIds, credenciaisMap]);
+
+  if (tribunais.length === 0) {
+    return <span className="text-xs text-muted-foreground/30">—</span>;
+  }
+
+  const tribunaisLabel = resumirTribunais(tribunais);
+  const grausLabel = resumirGraus(graus);
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <div
+          className={cn(
+            'inline-flex items-center gap-1.5 cursor-help',
+            layout === 'stack' && 'flex-col items-end gap-0.5',
+            className,
+          )}
+        >
+          <span className="inline-flex items-center px-1.5 py-0.5 rounded-[5px] text-[10px] font-semibold tabular-nums border border-border/15 bg-muted/20 text-muted-foreground tracking-wide">
+            {tribunaisLabel}
+          </span>
+          {grausLabel && (
+            <span className="text-xs text-muted-foreground/60">{grausLabel}</span>
+          )}
+        </div>
+      </TooltipTrigger>
+      <TooltipContent side="top" align="start" className="max-w-xs p-0 overflow-hidden">
+        <div className="px-3 py-2 border-b border-border/40">
+          <p className="text-[11px] font-semibold text-foreground">Escopo da captura</p>
+          <p className="text-[10px] text-muted-foreground/80">
+            {tribunais.length} tribunal{tribunais.length === 1 ? '' : 'is'} ·{' '}
+            {graus.length} grau{graus.length === 1 ? '' : 's'}
+          </p>
+        </div>
+        <ul className="px-3 py-2 grid grid-cols-2 gap-x-3 gap-y-1 max-h-56 overflow-y-auto">
+          {detalhes.map((d, idx) => (
+            <li key={`${d.tribunal}-${d.grau}-${idx}`} className="flex items-center gap-1.5">
+              <span className="inline-flex items-center px-1.5 py-0.5 rounded-[4px] text-[9px] font-semibold tabular-nums border border-border/15 bg-muted/20 text-muted-foreground tracking-wide">
+                {d.tribunal}
+              </span>
+              <span className="text-[10px] text-muted-foreground/80">{formatarGrau(d.grau)}</span>
+            </li>
+          ))}
+        </ul>
+      </TooltipContent>
+    </Tooltip>
+  );
+}

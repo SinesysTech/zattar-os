@@ -26,8 +26,9 @@ import {
 
 import { Button } from '@/components/ui/button';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { cn } from '@/lib/utils';
 
 import {
   Expediente,
@@ -35,8 +36,8 @@ import {
   GRAU_TRIBUNAL_LABELS,
   getExpedientePartyNames,
 } from '../domain';
-import type { Usuario } from '@/app/(authenticated)/usuarios';
-import type { TipoExpediente } from '@/app/(authenticated)/tipos-expedientes';
+import { useUsuarios } from '@/app/(authenticated)/usuarios';
+import { useTiposExpedientes } from '@/app/(authenticated)/tipos-expedientes';
 import {
   ExpedienteResponsavelPopover,
   ResponsavelTriggerContent,
@@ -59,8 +60,6 @@ interface ExpedienteVisualizarDialogProps {
   expediente: Expediente | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  usuarios?: Usuario[];
-  tiposExpedientes?: TipoExpediente[];
   onSuccess?: () => void;
 }
 
@@ -106,9 +105,13 @@ function Section({
     <section className="space-y-1.5">
       <header className="flex items-center gap-2">
         <span className="text-muted-foreground/60">{icon}</span>
-        <h3 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+        <Text
+          variant="overline"
+          as="h3"
+          className="font-semibold text-muted-foreground/70"
+        >
           {title}
-        </h3>
+        </Text>
       </header>
       <div className="rounded-xl border border-border/30 bg-card divide-y divide-border/20">
         {children}
@@ -117,37 +120,48 @@ function Section({
   );
 }
 
-function InfoRow({
+function DataRow({
   label,
   children,
+  editable = false,
 }: {
   label: string;
   children: React.ReactNode;
+  editable?: boolean;
 }) {
   return (
-    <div className="flex items-start justify-between gap-3 px-3 py-2 text-sm">
-      <dt className="text-[12px] text-muted-foreground/65 shrink-0">{label}</dt>
-      <dd className="text-right font-medium text-foreground/90 min-w-0">
+    <div className="flex items-start justify-between gap-3 px-3 py-2">
+      <Text
+        variant="caption"
+        as="dt"
+        className={cn(
+          'shrink-0 text-muted-foreground/65',
+          editable && 'pt-1',
+        )}
+      >
+        {label}
+      </Text>
+      <dd
+        className={cn(
+          'min-w-0',
+          editable
+            ? 'flex-1 flex justify-end'
+            : 'text-right text-sm font-medium text-foreground/90',
+        )}
+      >
         {children}
       </dd>
     </div>
   );
 }
 
-function EditableRow({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="flex items-start justify-between gap-3 px-3 py-2 text-sm">
-      <dt className="text-[12px] text-muted-foreground/65 shrink-0 pt-1">{label}</dt>
-      <dd className="flex-1 flex justify-end min-w-0">{children}</dd>
-    </div>
-  );
-}
+const InfoRow = ({ label, children }: { label: string; children: React.ReactNode }) => (
+  <DataRow label={label}>{children}</DataRow>
+);
+
+const EditableRow = ({ label, children }: { label: string; children: React.ReactNode }) => (
+  <DataRow label={label} editable>{children}</DataRow>
+);
 
 function Separator() {
   return <hr className="border-border/20" />;
@@ -170,9 +184,9 @@ function MetaItem({
 }) {
   return (
     <div className="flex flex-col gap-1 min-w-0">
-      <span className="text-[10px] uppercase tracking-wider text-muted-foreground/55">
+      <Text variant="micro-caption" className="uppercase tracking-wider text-muted-foreground/55">
         {label}
-      </span>
+      </Text>
       <div className="flex items-center gap-1.5 text-sm">{children}</div>
     </div>
   );
@@ -186,9 +200,9 @@ function Audit({
   updatedAt: string | null;
 }) {
   return (
-    <div className="flex items-center justify-between gap-3 pt-3 text-[10px] text-muted-foreground/55">
-      <span>Criado em {formatarDataHora(createdAt)}</span>
-      <span>Atualizado em {formatarDataHora(updatedAt)}</span>
+    <div className="flex items-center justify-between gap-3 pt-3 text-muted-foreground/55">
+      <Text variant="micro-caption">Criado em {formatarDataHora(createdAt)}</Text>
+      <Text variant="micro-caption">Atualizado em {formatarDataHora(updatedAt)}</Text>
     </div>
   );
 }
@@ -201,10 +215,11 @@ export function ExpedienteVisualizarDialog({
   expediente,
   open,
   onOpenChange,
-  usuarios = [],
-  tiposExpedientes = [],
   onSuccess,
 }: ExpedienteVisualizarDialogProps) {
+  const { usuarios } = useUsuarios();
+  const { tiposExpedientes } = useTiposExpedientes({ limite: 100 });
+
   if (!expediente) {
     return (
       <DialogFormShell
@@ -256,21 +271,23 @@ export function ExpedienteVisualizarDialog({
   const dialogTitle = (
     <div className="flex items-start justify-between gap-3">
       <div className="flex-1 min-w-0">
-        <div className="text-base font-heading font-semibold tracking-tight truncate">
+        <Heading level="card" as="h2" className="truncate">
           {expediente.classeJudicial
             ? `${expediente.classeJudicial} ${expediente.numeroProcesso}`
             : expediente.numeroProcesso}
-        </div>
-        <div className="flex items-center gap-1.5 mt-1 flex-wrap text-xs font-normal text-muted-foreground/65">
+        </Heading>
+        <div className="flex items-center gap-1.5 mt-1 flex-wrap text-muted-foreground/65">
           <Scale className="h-3.5 w-3.5" />
-          <span>{expediente.trt}</span>
-          <span>·</span>
-          <span>{formatarGrau(expediente.grau)}</span>
+          <Text variant="caption">{expediente.trt}</Text>
+          <Text variant="caption">·</Text>
+          <Text variant="caption">{formatarGrau(expediente.grau)}</Text>
           {expediente.dataCriacaoExpediente && (
             <>
-              <span>·</span>
+              <Text variant="caption">·</Text>
               <Calendar className="h-3.5 w-3.5" />
-              <span>{formatarData(expediente.dataCriacaoExpediente)}</span>
+              <Text variant="caption">
+                {formatarData(expediente.dataCriacaoExpediente)}
+              </Text>
             </>
           )}
         </div>

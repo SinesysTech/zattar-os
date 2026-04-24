@@ -199,9 +199,14 @@ export async function actionListarClientes(params: ListarClientesParams = {}) {
   }
 }
 
-export async function actionBuscarCliente(id: number) {
+export async function actionBuscarCliente(
+  id: number,
+  opts?: { incluirEndereco?: boolean }
+) {
   try {
-    const result = await service.buscarCliente(id);
+    const result = opts?.incluirEndereco
+      ? await service.buscarClienteComEndereco(id)
+      : await service.buscarCliente(id);
     if (!result.success) return { success: false, error: result.error.message };
     if (!result.data) return { success: false, error: 'Cliente nao encontrado' };
     return { success: true, data: result.data };
