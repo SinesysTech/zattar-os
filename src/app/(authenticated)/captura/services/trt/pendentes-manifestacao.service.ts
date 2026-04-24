@@ -287,21 +287,29 @@ export async function pendentesManifestacaoCapture(
     console.log(`   ✅ ${timelinesPersistidas} timelines persistidas no PostgreSQL`);
 
     // 5.3 Buscar IDs dos processos no acervo (para vínculos de partes)
+    // Batch lookup: uma única query com .in() em vez de N queries individuais.
     console.log("   📦 Buscando processos no acervo...");
     const mapeamentoIds = new Map<number, number>();
     const supabase = createServiceClient();
 
-    for (const idPje of processosIds) {
-      const { data } = await supabase
+    if (processosIds.length > 0) {
+      const { data: acervos, error: erroAcervo } = await supabase
         .from("acervo")
-        .select("id")
-        .eq("id_pje", idPje)
+        .select("id, id_pje")
+        .in("id_pje", processosIds)
         .eq("trt", params.config.codigo)
-        .eq("grau", params.config.grau)
-        .single();
+        .eq("grau", params.config.grau);
 
-      if (data?.id) {
-        mapeamentoIds.set(idPje, data.id);
+      if (erroAcervo) {
+        console.warn(
+          `   ⚠️ Erro ao buscar processos no acervo: ${erroAcervo.message}. Vínculos de partes serão pulados.`
+        );
+      } else {
+        for (const row of acervos ?? []) {
+          const idPje = row.id_pje as number;
+          const id = row.id as number;
+          if (idPje && id) mapeamentoIds.set(idPje, id);
+        }
       }
     }
     console.log(

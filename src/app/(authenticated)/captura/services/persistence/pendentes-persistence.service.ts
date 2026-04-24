@@ -320,9 +320,18 @@ export async function atualizarDocumentoPendente(
     arquivo_bucket: string;
   }
 ): Promise<void> {
+  if (!pendenteId || pendenteId <= 0) {
+    throw new Error(
+      `ID de expediente inválido ao atualizar documento: ${pendenteId}`
+    );
+  }
+
   const supabase = createServiceClient();
 
-  const { error } = await supabase
+  // .select("id") força o retorno das linhas atualizadas para detectar o caso
+  // em que o expediente não existe — UPDATE isolado acerta 0 rows sem erro,
+  // gerando registro órfão no Backblaze (arquivo existe, expediente não).
+  const { data: linhasAtualizadas, error } = await supabase
     .from("expedientes")
     .update({
       arquivo_nome: arquivoInfo.arquivo_nome,
@@ -330,11 +339,18 @@ export async function atualizarDocumentoPendente(
       arquivo_key: arquivoInfo.arquivo_key,
       arquivo_bucket: arquivoInfo.arquivo_bucket,
     })
-    .eq("id", pendenteId);
+    .eq("id", pendenteId)
+    .select("id");
 
   if (error) {
     throw new Error(
       `Erro ao atualizar documento do expediente ${pendenteId}: ${error.message}`
+    );
+  }
+
+  if (!linhasAtualizadas || linhasAtualizadas.length === 0) {
+    throw new Error(
+      `Expediente ${pendenteId} não encontrado ao vincular arquivo. Arquivo já foi enviado ao storage mas não foi vinculado no banco — verificar Backblaze.`
     );
   }
 
