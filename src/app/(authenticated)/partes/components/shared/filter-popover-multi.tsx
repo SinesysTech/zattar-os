@@ -4,6 +4,7 @@ import * as React from 'react';
 import { PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';
+import { Text } from '@/components/ui/typography';
 import {
   Popover,
   PopoverContent,
@@ -90,7 +91,7 @@ export function FilterPopoverMulti({
                         checked={isSelected}
                         className="pointer-events-none data-[state=checked]:text-white [&>span]:text-white"
                       />
-                      <span className="leading-none">{option.label}</span>
+                      <Text variant="label" as="span" className="leading-none">{option.label}</Text>
                     </div>
                   </CommandItem>
                 );

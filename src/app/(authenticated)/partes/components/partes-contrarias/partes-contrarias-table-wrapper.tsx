@@ -13,6 +13,7 @@ import { Eye, Pencil } from 'lucide-react';
 import { useDebounce } from '@/hooks/use-debounce';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
+import { Text } from '@/components/ui/typography';
 import {
   DataShell,
   DataTable,
@@ -214,9 +215,9 @@ export function PartesContrariasTableWrapper() {
                 <CopyButton text={parte.nome} label="Copiar nome" />
               </div>
               <div className="flex items-center gap-1">
-                <span className="text-xs text-muted-foreground">
+                <Text variant="caption" as="span" className="text-muted-foreground">
                   {documento}
-                </span>
+                </Text>
                 {documentoRaw && (
                   <CopyButton text={documentoRaw} label={isPF ? 'Copiar CPF' : 'Copiar CNPJ'} />
                 )}

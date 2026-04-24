@@ -5,6 +5,7 @@ import { Check} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { Text } from '@/components/ui/typography';
 import {
     Command,
     CommandEmpty,
@@ -116,7 +117,7 @@ export function ClienteResponsavelCell({
                             </span>
                         </>
                     ) : (
-                        <span className="text-xs font-normal">Não atribuído</span>
+                        <Text variant="caption" as="span" className="font-normal">Não atribuído</Text>
                     )}
                 </Button>
             </PopoverTrigger>

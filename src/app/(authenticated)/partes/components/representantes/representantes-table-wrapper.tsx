@@ -23,6 +23,7 @@ import {
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
+import { Text } from '@/components/ui/typography';
 import { Eye, Pencil } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ProcessoRelacionado } from '../../types';
@@ -143,7 +144,7 @@ function OabsBadges({ oabs }: { oabs: InscricaoOAB[] }) {
         />
       ))}
       {oabsRestantes > 0 && (
-        <span className="text-xs text-muted-foreground">+{oabsRestantes}</span>
+        <Text variant="caption" as="span" className="text-muted-foreground">+{oabsRestantes}</Text>
       )}
     </div>
   );

@@ -13,6 +13,7 @@ import type { Table as TanstackTable, SortingState, ColumnDef, RowSelectionState
 import { useDebounce } from '@/hooks/use-debounce';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
+import { Text } from '@/components/ui/typography';
 import { Eye, Pencil } from 'lucide-react';
 import {
   DataShell,
@@ -194,9 +195,9 @@ export function TerceirosTableWrapper() {
                 <CopyButton text={terceiro.nome} label="Copiar nome" />
               </div>
               <div className="flex items-center gap-1">
-                <span className="text-xs text-muted-foreground">
+                <Text variant="caption" as="span" className="text-muted-foreground">
                   {documento}
-                </span>
+                </Text>
                 {documentoRaw && (
                   <CopyButton text={documentoRaw} label={isPF ? 'Copiar CPF' : 'Copiar CNPJ'} />
                 )}

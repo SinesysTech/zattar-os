@@ -10,6 +10,7 @@
 
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
+import { Text } from '@/components/ui/typography';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -43,9 +44,9 @@ export function ClientesBulkActionsBar({
 
   return (
     <div className="flex items-center gap-2 rounded-md border bg-muted/50 px-3 py-2">
-      <span className="text-[11px] font-medium whitespace-nowrap">
+      <Text variant="caption" as="span" className="font-medium whitespace-nowrap">
         {selectedCount} selecionado{selectedCount > 1 ? 's' : ''}
-      </span>
+      </Text>
 
       <div className="flex items-center gap-1 ml-2">
         <Button

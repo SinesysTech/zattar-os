@@ -6,6 +6,7 @@ import { Eye, Pencil, Trash2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
+import { Text } from '@/components/ui/typography';
 import {
   Tooltip,
   TooltipContent,
@@ -287,9 +288,9 @@ export const getClientesColumns = (
               </div>
             )}
             <div className="flex items-center gap-1">
-              <span className="text-xs text-muted-foreground">
+              <Text variant="caption" as="span" className="text-muted-foreground">
                 {documento}
-              </span>
+              </Text>
               {documentoRaw && (
                 <CopyButton text={documentoRaw} label={isPF ? 'Copiar CPF' : 'Copiar CNPJ'} />
               )}

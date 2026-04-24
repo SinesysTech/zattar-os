@@ -9,6 +9,7 @@
 
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
+import { Text } from '@/components/ui/typography';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,9 +39,9 @@ export function RepresentantesBulkActionsBar({
 
   return (
     <div className="flex items-center gap-2 rounded-md border bg-muted/50 px-3 py-2">
-      <span className="text-[11px] font-medium whitespace-nowrap">
+      <Text variant="caption" as="span" className="font-medium whitespace-nowrap">
         {selectedCount} selecionado{selectedCount > 1 ? 's' : ''}
-      </span>
+      </Text>
       <div className="flex items-center gap-1 ml-2">
         <Button variant="outline" size="sm" className="text-destructive hover:text-destructive" onClick={onExcluir}>
           <Trash2 className="mr-1.5 h-3.5 w-3.5" />

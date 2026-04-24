@@ -8,6 +8,7 @@
 import * as React from 'react';
 import { Phone, Mail } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Text } from '@/components/ui/typography';
 import { CopyButton } from './copy-button';
 
 interface TelefoneData {
@@ -94,14 +95,16 @@ export function ContatoCell({
             )}
           />
         )}
-        <span
+        <Text
+          variant="caption"
+          as="span"
           className={cn(
-            'text-sm whitespace-nowrap',
+            'whitespace-nowrap',
             !telefoneData && 'text-muted-foreground'
           )}
         >
           {telefoneData?.formatado || '-'}
-        </span>
+        </Text>
         {telefoneData && (
           <CopyButton text={telefoneData.raw} label="Copiar telefone" />
         )}
@@ -116,12 +119,14 @@ export function ContatoCell({
             )}
           />
         )}
-        <span
-          className={cn('text-sm truncate', !emailValue && 'text-muted-foreground')}
+        <Text
+          variant="caption"
+          as="span"
+          className={cn('truncate', !emailValue && 'text-muted-foreground')}
           title={emailValue || undefined}
         >
           {emailValue ? emailValue.toLowerCase() : '-'}
-        </span>
+        </Text>
         {emailValue && <CopyButton text={emailValue} label="Copiar e-mail" />}
       </div>
     </div>
