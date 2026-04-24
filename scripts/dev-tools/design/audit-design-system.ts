@@ -396,7 +396,8 @@ function matchGlob(file: string, pattern: string): boolean {
 async function countImports(
   files: string[],
   importPath: string,
-  componentName?: string
+  componentName?: string,
+  proxyPatterns?: RegExp[]
 ): Promise<string[]> {
   const matching: string[] = [];
   const specific = new RegExp(`from\\s+['"\`]${importPath.replace(/[/\-]/g, '\\$&')}['"\`]`);
@@ -411,9 +412,16 @@ async function countImports(
           's'
         )
       : null;
+  // Proxy patterns — re-exports conhecidos do componente (ex: dashboard widgets
+  // importam `GlassPanel`/`WidgetContainer` via `../primitives` que re-exporta
+  // de `@/components/shared/glass-panel`). Adoção transitiva real.
   for (const file of files) {
     const content = await fs.readFile(file, 'utf-8');
     if (specific.test(content) || (barrel && barrel.test(content))) {
+      matching.push(path.relative(REPO_ROOT, file));
+      continue;
+    }
+    if (proxyPatterns && proxyPatterns.some((re) => re.test(content))) {
       matching.push(path.relative(REPO_ROOT, file));
     }
   }
@@ -486,7 +494,10 @@ async function auditCoverage(): Promise<TokenCoverage> {
 
 async function auditAdoption(files: string[]): Promise<AdoptionMetrics> {
   const typography = await countImports(files, '@/components/ui/typography');
-  const glassPanel = await countImports(files, '@/components/shared/glass-panel', 'GlassPanel');
+  const glassPanel = await countImports(files, '@/components/shared/glass-panel', 'GlassPanel', [
+    // Dashboard widgets: primitives.tsx re-exporta GlassPanel e WidgetContainer
+    /import\s*\{[^}]*\b(GlassPanel|WidgetContainer)\b[^}]*\}\s*from\s*['"`][./]+primitives['"`]/s,
+  ]);
   const iconContainer = await countImports(files, '@/components/ui/icon-container');
   const pageShell = await countImports(files, '@/components/shared/page-shell', 'PageShell');
   const semanticBadge = await countImports(files, '@/components/ui/semantic-badge');
@@ -562,7 +573,10 @@ async function auditModules(files: string[], violations: ViolationsReport): Prom
 
   const typedFiles = new Set<string>();
   const typography = await countImports(files, '@/components/ui/typography');
-  const glassPanel = await countImports(files, '@/components/shared/glass-panel', 'GlassPanel');
+  const glassPanel = await countImports(files, '@/components/shared/glass-panel', 'GlassPanel', [
+    // Dashboard widgets: primitives.tsx re-exporta GlassPanel e WidgetContainer
+    /import\s*\{[^}]*\b(GlassPanel|WidgetContainer)\b[^}]*\}\s*from\s*['"`][./]+primitives['"`]/s,
+  ]);
   const iconContainer = await countImports(files, '@/components/ui/icon-container');
   const pageShell = await countImports(files, '@/components/shared/page-shell', 'PageShell');
   const semanticBadge = await countImports(files, '@/components/ui/semantic-badge');
