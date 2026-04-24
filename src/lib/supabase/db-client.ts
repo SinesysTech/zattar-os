@@ -4,7 +4,17 @@
  * Este arquivo encapsula o acesso ao Supabase para uso nos repositórios.
  * Toda comunicação com o banco deve passar por aqui.
  *
- * REGRA: Este módulo NÃO deve importar nada de React/Next.js
+ * REGRA: Este módulo NÃO deve importar nada de React/Next.js.
+ * REGRA: Este módulo É SERVER-ONLY. Nunca pode executar no browser —
+ *        o guard `assertServerOnly()` lança se invocado no cliente.
+ *
+ * Chaves do Supabase (nomenclatura oficial vigente — 2026):
+ *   - Publishable Key (novo): `sb_publishable_…` — uso no frontend (browser)
+ *   - Secret Key (novo):      `sb_secret_…`      — uso server-only, bypassa RLS
+ *   - anon / service_role (legacy JWTs): aceitos até a remoção pelo Supabase
+ *     em late 2026. Mantemos fallback transitório em SUPABASE_SERVICE_ROLE_KEY.
+ *
+ * Ref: https://supabase.com/docs — "API Key Migration"
  */
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
@@ -15,15 +25,28 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 export type DbClient = SupabaseClient;
 
 /**
- * Configuração do Supabase obtida das variáveis de ambiente
+ * Falha ruidosamente se o módulo for carregado no browser.
+ * Defesa em profundidade: a Secret Key nunca deve sair do servidor.
+ */
+function assertServerOnly(): void {
+  if (typeof window !== 'undefined') {
+    throw new Error(
+      '[supabase/db-client] createDbClient/getDbClient são server-only. ' +
+        'Não importe este módulo de Client Components nem de código que roda no browser. ' +
+        'Para uso no browser, utilize @/lib/supabase/client (publishable key).'
+    );
+  }
+}
+
+/**
+ * Configuração do Supabase obtida das variáveis de ambiente.
+ * Aceita a nova Secret Key (recomendada) e mantém fallback para a chave legacy
+ * enquanto o Supabase não remove o suporte (previsto para late 2026).
  */
 function getSupabaseConfig() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-
-  // Para operações de service (backend), usar secret key
-  // Prioridade: SUPABASE_SECRET_KEY (nova) > SUPABASE_SERVICE_ROLE_KEY (legacy)
   const secretKey =
-    process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+    process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!url) {
     throw new Error('Missing NEXT_PUBLIC_SUPABASE_URL environment variable');
@@ -31,7 +54,8 @@ function getSupabaseConfig() {
 
   if (!secretKey) {
     throw new Error(
-      'Missing Supabase secret key. Set SUPABASE_SECRET_KEY environment variable.'
+      'Missing Supabase Secret Key. Defina SUPABASE_SECRET_KEY (formato sb_secret_…) no ambiente. ' +
+        'A variável legacy SUPABASE_SERVICE_ROLE_KEY ainda é aceita como fallback até o Supabase removê-la.'
     );
   }
 
@@ -93,12 +117,13 @@ export async function logQuery<T>(
  * Cria cliente Supabase para uso em services/repositories
  *
  * Este cliente:
- * - Usa secret key (bypassa RLS)
+ * - Usa Secret Key (bypassa RLS) — nomenclatura oficial Supabase pós-migração
  * - Deve ser usado APENAS em código server-side
- * - NUNCA expor ao browser
+ * - NUNCA expor ao browser (o guard `assertServerOnly` falha ruidosamente)
  * - Suporta query logging via DEBUG_SUPABASE
  */
 export function createDbClient(): DbClient {
+  assertServerOnly();
   const config = getSupabaseConfig();
 
   return createClient(config.url, config.secretKey, {
