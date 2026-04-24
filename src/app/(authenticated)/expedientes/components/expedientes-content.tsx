@@ -341,6 +341,30 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
   const showVencidosBanner = vencidos.length > 0 && filters.status !== 'baixados';
   const showSemResponsavelBanner = semResponsavel.length > 3 && !showVencidosBanner && filters.status !== 'baixados';
 
+  // ─── Filtros ativos (para empty state contextual) ───────────────────────────
+
+  const temFiltroAtivo = useMemo(
+    () =>
+      filters.status !== 'pendentes' ||
+      filters.trt !== null ||
+      filters.grau !== null ||
+      filters.origem !== null ||
+      filters.responsavel !== null ||
+      filters.tipo !== null,
+    [filters]
+  );
+
+  const limparFiltros = useCallback(() => {
+    setFilters({
+      status: 'pendentes',
+      trt: null,
+      grau: null,
+      origem: null,
+      responsavel: null,
+      tipo: null,
+    });
+  }, []);
+
   // ─── Detail/action handlers ──────────────────────────────────────────────────
 
   const handleViewDetail = useCallback((expediente: Expediente) => {
@@ -438,22 +462,35 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
         )}
 
         {/* Empty state — só para views que renderizam a lista filtrada (quadro/semana/mes/ano).
-            `lista` tem empty state próprio dentro do DataShell/DataTable. */}
+            `lista` tem empty state próprio dentro do DataShell/DataTable.
+            3 estados distintos: busca, filtros restritivos, sem dados reais. */}
         {!isLoading &&
           viewMode !== 'lista' &&
           filteredExpedientes.length === 0 && (
             <EmptyState
               icon={FileSearch}
-              title={search.trim() ? 'Nenhum expediente encontrado' : 'Nada por aqui ainda'}
+              title={
+                search.trim()
+                  ? 'Nenhum expediente corresponde à busca'
+                  : temFiltroAtivo
+                  ? 'Nenhum expediente corresponde aos filtros'
+                  : 'Nada por aqui ainda'
+              }
               description={
                 search.trim()
-                  ? 'Tente ajustar os filtros ou limpar a busca para ver mais resultados.'
+                  ? `A busca "${search.trim()}" não retornou resultados. Tente termos mais curtos ou revise os filtros.`
+                  : temFiltroAtivo
+                  ? 'Os filtros aplicados estão restritivos. Limpe-os para ver todos os expedientes.'
                   : 'Crie o primeiro expediente ou troque de aba para conferir os baixados.'
               }
               action={
                 search.trim() ? (
                   <Button variant="outline" onClick={() => setSearch('')}>
                     Limpar busca
+                  </Button>
+                ) : temFiltroAtivo ? (
+                  <Button variant="outline" onClick={limparFiltros}>
+                    Limpar filtros
                   </Button>
                 ) : (
                   <Button onClick={() => setIsCreateOpen(true)}>

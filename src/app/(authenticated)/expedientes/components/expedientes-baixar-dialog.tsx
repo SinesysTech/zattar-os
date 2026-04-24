@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { LoadingSpinner } from '@/components/ui/loading-state';
+import { Info } from 'lucide-react';
 import { toast } from 'sonner';
 import { actionBaixarExpediente, type ActionResult } from '../actions';
 import { Expediente, ResultadoDecisao, RESULTADO_DECISAO_LABELS } from '../domain';
@@ -201,9 +202,19 @@ export function ExpedientesBaixarDialog({
           </div>
         )}
 
-        {/* Informações da Decisão */}
+        {/* Informações da Decisão — obrigatório para tipos recursais */}
         {requiresDecisao && (
-          <div className="space-y-3 pt-2">
+          <div className="space-y-3 pt-2 border-t">
+            <div className="flex items-start gap-2 pt-3 rounded-md bg-muted/40 p-3 text-xs text-muted-foreground">
+              <Info className="h-4 w-4 shrink-0 mt-0.5 text-primary" />
+              <span>
+                Este campo é obrigatório porque o tipo atual é{' '}
+                <strong className="text-foreground">
+                  {currentTipo?.tipoExpediente}
+                </strong>{' '}
+                — recursos exigem registro do resultado da decisão para auditoria.
+              </span>
+            </div>
             <Label>Resultado da Decisão *</Label>
             <div className="flex flex-col gap-3">
               <label className="flex items-center space-x-2 cursor-pointer border rounded-md p-3 hover:bg-muted/50 transition-colors">
