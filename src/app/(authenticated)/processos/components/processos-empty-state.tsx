@@ -25,7 +25,7 @@ export function ProcessosEmptyState({ onClearFilters, hasFilters }: ProcessosEmp
       </EmptyHeader>
       {hasFilters && (
         <Button variant="outline" onClick={onClearFilters}>
-          Limpar Filtros
+          Limpar filtros
         </Button>
       )}
     </Empty>

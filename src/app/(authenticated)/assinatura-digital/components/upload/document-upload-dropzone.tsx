@@ -146,7 +146,7 @@ export function DocumentUploadDropzone({ onUploadSuccess }: DocumentUploadDropzo
         {selectedFile && !isUploading && !uploadedFile && (
           <div className="mt-8 flex justify-center animate-fade-in-up">
             <Button onClick={autoUpload} size="lg">
-              Confirmar e Enviar Documento
+              Confirmar e enviar documento
             </Button>
           </div>
         )}

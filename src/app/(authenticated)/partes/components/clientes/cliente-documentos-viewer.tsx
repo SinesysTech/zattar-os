@@ -6,7 +6,8 @@
 
 import * as React from 'react';
 import {
-  FileText, Download, FolderOpen, FileImage, FileSpreadsheet, File} from 'lucide-react';
+  FileText, Download, FolderOpen, FileImage, FileSpreadsheet, File, Dot,
+} from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Card, CardContent } from '@/components/ui/card';
@@ -175,7 +176,7 @@ export function ClienteDocumentosViewer({
                     <p className="font-medium truncate text-sm">{doc.name}</p>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
                       <span>{formatFileSize(doc.size)}</span>
-                      <span>•</span>
+                      <Dot className="size-3 shrink-0" aria-hidden />
                       <span>
                         {doc.lastModified
                           ? formatDistanceToNow(new Date(doc.lastModified), {

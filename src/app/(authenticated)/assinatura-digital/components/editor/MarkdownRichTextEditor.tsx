@@ -328,7 +328,7 @@ export function MarkdownRichTextEditor({ value, onChange, formularios }: Markdow
               />
             </div>
             <Button onClick={insertLink} className="w-full">
-              Inserir Link
+              Inserir link
             </Button>
           </div>
         </DialogContent>

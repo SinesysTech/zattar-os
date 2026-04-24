@@ -134,7 +134,7 @@ export function GerarFolhaDialog({ open, onOpenChange, onSuccess }: GerarFolhaDi
               Cancelar
             </Button>
             <Button type="submit" disabled={form.formState.isSubmitting}>
-              Gerar Folha
+              Gerar folha
             </Button>
           </DialogFooter>
         </form>

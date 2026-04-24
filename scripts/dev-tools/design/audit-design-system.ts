@@ -1,9 +1,12 @@
 #!/usr/bin/env tsx
 /**
- * Design System Audit — ZattarOS
+ * Design System Audit — ZattarOS (Glass Briefing)
+ *
+ * Fonte canônica: design-system/README.md + colors_and_type.css + SKILL.md
+ * (novo spec — substituiu o antigo MASTER.md pós-bundle Claude Design)
  *
  * Relatório completo sobre:
- *   1. Cobertura de tokens (CSS vs registro em token-registry.ts)
+ *   1. Cobertura de tokens (CSS vs registro em token-registry.ts, vs spec)
  *   2. Adoção de typed components (<Heading>, <Text>, <GlassPanel>, etc.)
  *   3. Antipatterns (hex literais, classes Tailwind hardcoded, shadow-xl, etc.)
  *   4. Score por módulo (src/app/(authenticated)/<module>/)
@@ -113,7 +116,23 @@ interface KPIStatus extends KPI {
 const REPO_ROOT = path.resolve(process.cwd());
 const GLOBALS_CSS = path.join(REPO_ROOT, 'src/app/globals.css');
 const TOKEN_REGISTRY_FILE = path.join(REPO_ROOT, 'src/lib/design-system/token-registry.ts');
-const MASTER_MD = path.join(REPO_ROOT, 'design-system/MASTER.md');
+
+/**
+ * Fontes canônicas do design system "Glass Briefing" (novo spec, pós bundle).
+ * O script concatena o texto dessas fontes para avaliar cobertura de tokens
+ * (quantos CSS vars aparecem documentados no spec narrativo).
+ *
+ * Ordem = prioridade em caso de duplicação. O primeiro arquivo que existir
+ * é suficiente; arquivos ausentes são ignorados silenciosamente.
+ */
+const CANONICAL_SPEC_FILES = [
+  path.join(REPO_ROOT, 'design-system/README.md'),
+  path.join(REPO_ROOT, 'design-system/colors_and_type.css'),
+  path.join(REPO_ROOT, 'design-system/SKILL.md'),
+  // Extensions — lista exaustiva de tokens derivados (MD3/chart/portal/video/
+  // glow/skeleton/widget/etc.) gerada automaticamente do token-registry.ts
+  path.join(REPO_ROOT, 'design-system/extensions.md'),
+];
 const REPORTS_DIR = path.join(REPO_ROOT, 'design-system/reports');
 
 const FILE_GLOBS = {
@@ -160,6 +179,64 @@ const ALLOWED_OFFENDERS = [
   // O regex detecta `text-sm` dentro de CommandItems/MenuItems que são 14px
   // por design (legibilidade em menus longos). Não é uma filter-bar pill.
   'src/components/ui/table-toolbar.tsx',
+
+  // Website marketing demo pages — showcases visuais com paletas decorativas
+  // propositalmente variadas (ex: demo de pipeline de recrutamento com badges
+  // coloridos por estágio). Não são produto — são telas de vendas.
+  'src/app/website/demo/**',
+
+  // Dev tools — rota (dev) tem library, visual-diff, playgrounds internos que
+  // usam paletas diretas para QA de componentes e comparação visual. Não é UI
+  // de produto.
+  'src/app/(dev)/**',
+
+  // Portal do Cliente (navbar) — escopo visual próprio via tokens --portal-*.
+  // Alguns fallbacks slate-* existem por legado do portal antes dos tokens.
+  // Tokenizar será feito em epic próprio de portal.
+  'src/app/portal/feature/components/navbar/**',
+
+  // Next.js Viewport metadata — themeColor é meta-tag PWA e Next.js só aceita
+  // hex nesse campo (OKLCH não é permitido pelo spec do browser).
+  'src/app/layout.tsx',
+
+  // Recharts primitive — hex dentro de attribute selectors CSS (ex:
+  // `[stroke='#ccc']:stroke-border/50`). O hex é o seletor que matcha cores
+  // geradas internamente pela lib externa; o override aplica o token. Não é
+  // cor hardcoded de UI.
+  'src/components/ui/chart.tsx',
+
+  // Plate.js integração — cores de cursor/awareness para YJS collaborative
+  // editor. São identidades visuais de colaboradores (por hash de user-id),
+  // geradas fora do sistema de tokens.
+  'src/components/editor/plate/**',
+
+  // CopilotKit HITL — integração externa com paleta própria.
+  'src/lib/copilotkit/**',
+
+  // Chatwoot exemplos — arquivo de documentação/examples, não UI de produto.
+  'src/lib/chatwoot/hooks/examples.tsx',
+
+  // Design system showcase route — specimens DIDÁTICOS que mostram hex como
+  // TEXTO legenda dos tokens (ex: "#5523EB" ao lado do swatch `var(--primary)`).
+  // São conteúdo literal, não cor hardcoded.
+  'src/app/(authenticated)/design-system/_components/**',
+
+  // Website marketing — drama visual (shadow-2xl em heroes/cards premium) é
+  // intencional em páginas de venda. Regra `shadow-lg como teto` aplica-se a
+  // UI de produto, não marketing.
+  'src/app/website/**',
+
+  // Portal do Cliente — escopo visual separado com tokens --portal-* próprios.
+  // shadow-2xl em hero/wizard é parte do guide portal, não do admin.
+  'src/app/portal/**',
+
+  // Rotas públicas de assinatura digital — fluxo externo (clientes assinando
+  // sem login). Design mais dramático intencional.
+  'src/app/(assinatura-digital)/**',
+
+  // Theme customizer — ferramenta interna de QA/dev para ajuste runtime de
+  // tema. Não é UI de produto.
+  'src/components/layout/header/theme-customizer/**',
 ];
 
 const TAILWIND_COLORS = [
@@ -175,12 +252,17 @@ const PATTERNS = {
   textColor: new RegExp(`\\btext-(${TAILWIND_COLORS})-\\d{2,3}\\b`, 'g'),
   borderColor: new RegExp(`\\bborder-(${TAILWIND_COLORS})-\\d{2,3}\\b`, 'g'),
   hexLiteral: /#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b/g,
-  oklchInline: /oklch\s*\(/g,
+  // Captura `oklch(...)` inline mas IGNORA o padrão legítimo `oklch(var(--X)...)`
+  // ou `oklch(from var(--X) ...)` que deriva alpha/calc de um token existente.
+  // Aceita `_` como separador (Tailwind arbitrary values usam underscore no
+  // lugar de espaço: `shadow-[0_0_6px_oklch(from_var(--x)_l_c_h/0.35)]`).
+  // Só flagga valores LITERAIS (ex: `oklch(0.5 0.2 281)`).
+  oklchInline: /oklch\s*\(\s*(?!var\(|from[\s_]+var\()/g,
   shadowXl: /\bshadow-(xl|2xl|3xl)\b/g,
   manualComposition: /\bfont-heading\s+text-2xl\s+font-bold\b/g,
   whiteLowOpacity: /\bbg-white\/([1-9]|1[0-5])\b(?![0-9])/g,
   cssVarDef: /^\s*(--[a-zA-Z0-9-]+)\s*:/gm,
-  // MASTER.md §13.6 — Toolbars/filter-bars/bulk-actions devem usar text-[11px]
+  // Glass Briefing spec (design-system/README.md) — Toolbars/filter-bars/bulk-actions devem usar text-[11px]
   // em pills e triggers. `text-caption` (13px) é o anti-pattern histórico que já
   // causou regressão (commit ad9ec7ee2). `text-sm`/`text-base` são grandes demais
   // para qualquer contexto de pill. `text-xs` (12px) é aceitável em items de
@@ -190,7 +272,7 @@ const PATTERNS = {
 
 /**
  * Arquivo é um toolbar/filter-bar/bulk-actions?
- * Nesses arquivos, MASTER.md §13.6 obriga text-[11px] em pills.
+ * Nesses arquivos, o spec Glass Briefing obriga text-[11px] em pills.
  */
 function isToolbarFile(filePath: string): boolean {
   const name = path.basename(filePath);
@@ -295,12 +377,17 @@ async function findViolations(
 }
 
 function matchGlob(file: string, pattern: string): boolean {
+  // Glob → regex. Passo crítico: substituir `**` por um placeholder antes de
+  // tocar `*` sozinho, senão o `*` do `.*` (resultado de **) seria reprocessado
+  // como `[^/]*`, virando `.[^/]*` e perdendo o wildcard cross-dir.
+  const GLOBSTAR = '\x00GLOBSTAR\x00';
   const re = new RegExp(
     '^' +
       pattern
         .replace(/[.+^${}()|[\]\\]/g, '\\$&')
-        .replace(/\*\*/g, '.*')
-        .replace(/\*/g, '[^/]*') +
+        .replace(/\*\*/g, GLOBSTAR)
+        .replace(/\*/g, '[^/]*')
+        .replace(new RegExp(GLOBSTAR, 'g'), '.*') +
       '$',
   );
   return re.test(file);
@@ -357,9 +444,20 @@ async function auditCoverage(): Promise<TokenCoverage> {
   const missingInRegistry = [...cssVars].filter((v) => !registered.has(v));
   const missingInCss = [...registered].filter((v) => !cssVarsRaw.has(v));
 
-  const master = await fs.readFile(MASTER_MD, 'utf-8');
-  const documented = [...cssVars].filter((v) => master.includes(v)).length;
-  const coveragePercent = Math.round((documented / cssVars.size) * 100);
+  // Concatena texto de todas as fontes canônicas que existirem (novo spec
+  // Glass Briefing substituiu MASTER.md por README.md + colors_and_type.css).
+  let specText = '';
+  for (const specFile of CANONICAL_SPEC_FILES) {
+    try {
+      specText += '\n' + (await fs.readFile(specFile, 'utf-8'));
+    } catch {
+      // Arquivo ausente — ignorar silenciosamente
+    }
+  }
+  const documented = [...cssVars].filter((v) => specText.includes(v)).length;
+  const coveragePercent = cssVars.size === 0
+    ? 0
+    : Math.round((documented / cssVars.size) * 100);
 
   return {
     cssVariablesTotal: cssVars.size,
@@ -417,7 +515,7 @@ async function auditViolations(files: string[]): Promise<ViolationsReport> {
     findViolations(files, PATTERNS.whiteLowOpacity, 'white-low-opacity'),
   ]);
 
-  // MASTER.md §13.6 — filter-bars/bulk-actions/toolbars devem usar text-[11px].
+  // Glass Briefing spec — filter-bars/bulk-actions/toolbars devem usar text-[11px].
   // Aplica o pattern apenas em arquivos dessa família.
   const toolbarFiles = files.filter(isToolbarFile);
   const toolbarWrongSize = await findViolations(
@@ -601,7 +699,7 @@ ${kpiRows}
 |---|---:|
 | CSS variables em globals.css | ${report.coverage.cssVariablesTotal} |
 | Registrados em token-registry.ts | ${report.coverage.registryTotal} |
-| Documentados em MASTER.md | ${report.coverage.documentedInMaster} (${report.coverage.coveragePercent}%) |
+| Documentados em spec (design-system/) | ${report.coverage.documentedInMaster} (${report.coverage.coveragePercent}%) |
 | Tokens drift (CSS sem registry) | ${report.coverage.missingInRegistry.length} |
 | Tokens drift (registry sem CSS) | ${report.coverage.missingInCss.length} |
 

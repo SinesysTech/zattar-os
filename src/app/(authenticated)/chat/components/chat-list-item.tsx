@@ -25,6 +25,15 @@ export function ChatListItem({ chat, active, onClick }: ChatListItemProps) {
       )}
       onClick={onClick}
     >
+      {/* Active rail — Glass Briefing: 3px left bar indicator (kit pattern) */}
+      <span
+        aria-hidden="true"
+        className={cn(
+          "absolute left-0 top-2 bottom-2 w-[3px] rounded-r-full bg-primary transition-opacity duration-200",
+          active ? "opacity-100" : "opacity-0"
+        )}
+      />
+
       {/* Avatar 40px rounded-xl (SIDE-05) */}
       <div className="relative w-10 h-10 shrink-0">
         <div className="w-full h-full rounded-xl overflow-hidden">

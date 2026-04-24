@@ -237,7 +237,7 @@ export function OrcamentoItemDialog({
               Cancelar
             </Button>
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? 'Salvando...' : isEditing ? 'Salvar Alterações' : 'Adicionar Item'}
+              {isLoading ? 'Salvando...' : isEditing ? 'Salvar Alterações' : 'Adicionar item'}
             </Button>
           </DialogFooter>
         </form>

@@ -409,7 +409,7 @@ export function GerarPecaDialog({
                 Voltar
               </Button>
               <Button onClick={handleGerar} disabled={generating}>
-                Gerar Peça
+                Gerar peça
               </Button>
             </>
           )}
@@ -420,7 +420,7 @@ export function GerarPecaDialog({
                 Fechar
               </Button>
               <Button onClick={() => router.push(`/app/documentos/${result.documentoId}`)}>
-                Abrir Documento
+                Abrir documento
               </Button>
             </>
           )}

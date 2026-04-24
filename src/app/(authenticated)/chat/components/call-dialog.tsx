@@ -224,7 +224,7 @@ export function CallDialog({
                 Cancelar
               </Button>
               <Button onClick={() => { setError(null); startCall(); }} className="bg-info hover:bg-info">
-                Tentar Novamente
+                Tentar novamente
               </Button>
             </div>
           </div>

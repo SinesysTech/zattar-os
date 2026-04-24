@@ -206,7 +206,7 @@ export default function PdfCanvasArea({
           field.justAdded && "animate-in fade-in-0 zoom-in-95",
           field.isDragging && "opacity-50"
         )}
-        title={hasHeightWarning ? "⚠️ Texto pode não caber" : signer ? `${signer.nome}` : "Duplo clique para editar"}
+        title={hasHeightWarning ? "Atenção: texto pode não caber no campo" : signer ? `${signer.nome}` : "Duplo clique para editar"}
         style={{
           left: field.posicao.x,
           top: field.posicao.y,

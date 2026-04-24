@@ -157,7 +157,7 @@ export function RegiaoFormDialog({
       maxWidth="2xl"
       footer={
         <Button onClick={handleSave} disabled={isSaving || !isFormValid}>
-          {isSaving ? "Salvando..." : isEditing ? "Salvar Alterações" : "Criar Região"}
+          {isSaving ? "Salvando..." : isEditing ? "Salvar Alterações" : "Criar região"}
         </Button>
       }
     >

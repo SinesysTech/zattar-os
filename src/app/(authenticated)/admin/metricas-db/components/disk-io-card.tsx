@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { AppBadge as Badge } from "@/components/ui/app-badge";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { Loader2, AlertTriangle } from "lucide-react";
 import type { MetricasDiskIO, DiskIOStatus } from "@/app/(authenticated)/admin";
 
 interface DiskIOCardProps {
@@ -68,7 +69,7 @@ export function DiskIOCard({ diskIO, diskIOStatus, diskIOMessage }: DiskIOCardPr
     const bgClass = isLoading
       ? "bg-info/10 text-info"
       : "bg-warning/10 text-warning";
-    const icon = isLoading ? "⏳" : "⚠️";
+    const Icon = isLoading ? Loader2 : AlertTriangle;
 
     return (
       <Card>
@@ -78,7 +79,10 @@ export function DiskIOCard({ diskIO, diskIOStatus, diskIOMessage }: DiskIOCardPr
         </CardHeader>
         <CardContent>
           <div className={`rounded-md p-4 text-sm ${bgClass}`}>
-            <p className="font-medium">{icon} {title}</p>
+            <p className="flex items-center gap-2 font-medium">
+              <Icon className={`size-4 ${isLoading ? "animate-spin" : ""}`} />
+              {title}
+            </p>
             <p className="mt-1 text-xs">{description}</p>
           </div>
         </CardContent>

@@ -159,7 +159,7 @@ export function PagarFolhaDialog({
               Cancelar
             </Button>
             <Button type="submit" disabled={form.formState.isSubmitting}>
-              Confirmar Pagamento
+              Confirmar pagamento
             </Button>
           </DialogFooter>
         </form>

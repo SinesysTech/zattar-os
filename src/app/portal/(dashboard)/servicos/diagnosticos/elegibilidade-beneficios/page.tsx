@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
+import { Check, Circle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import {
@@ -139,11 +140,16 @@ function InfoRow({ label, value, highlight }: { label: string; value: string; hi
 }
 
 function Requisito({ ok, text }: { ok: boolean; text: string }) {
+  const Icon = ok ? Check : Circle;
   return (
     <div className="flex items-start gap-2 py-1">
-      <span className={cn("mt-0.5 text-xs font-bold", ok ? "text-portal-success" : "text-muted-foreground/50")}>
-        {ok ? "✓" : "○"}
-      </span>
+      <Icon
+        className={cn(
+          "mt-0.5 size-3.5 shrink-0",
+          ok ? "text-portal-success" : "text-muted-foreground/50",
+        )}
+        strokeWidth={ok ? 3 : 2}
+      />
       <span className={cn("text-sm", ok ? "text-foreground" : "text-muted-foreground/70")}>{text}</span>
     </div>
   );

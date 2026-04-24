@@ -243,48 +243,46 @@
   /* 8px — mantido neste commit; próxima etapa migra para 0.25rem (4px Zattar) */
 
   /* ========================================================================
-   * REFERENCE TOKENS — Zattar Purple Scale
+   * REFERENCE TOKENS — Zattar Purple Scale (spec Glass Briefing — hue 281°)
+   * Âncora: oklch(0.48 0.26 281) = #5523EB (PRIMARY)
    * ======================================================================== */
-  --zattar-purple-200: oklch(0.89 0.04 275);   /* #d6d9fc — borda suave */
-  --zattar-purple-300: oklch(0.78 0.10 276);   /* #b9b9f9 — borda ativa */
-  --zattar-purple-400: oklch(0.55 0.22 275);   /* #665efd — range, highlight */
-  --zattar-purple-500: oklch(0.52 0.27 276);   /* #533afd — PRIMARY */
-  --zattar-purple-600: oklch(0.45 0.25 276);   /* #4434d4 — hover primary */
-  --zattar-purple-700: oklch(0.30 0.21 276);   /* #2e2b8c — deep hover */
-  --zattar-purple-900: oklch(0.33 0.18 275);   /* #362baa — dashed border */
+  --zattar-purple-200: oklch(0.89 0.04 281);   /* borda suave */
+  --zattar-purple-300: oklch(0.78 0.10 281);   /* borda ativa */
+  --zattar-purple-400: oklch(0.60 0.22 281);   /* primary light (dark-mode accent) */
+  --zattar-purple-500: oklch(0.48 0.26 281);   /* #5523EB — PRIMARY (spec) */
+  --zattar-purple-600: oklch(0.40 0.25 281);   /* hover primary */
+  --zattar-purple-700: oklch(0.35 0.24 281);   /* primary-dim (spec) */
+  --zattar-purple-900: oklch(0.22 0.18 281);   /* deep, brand-dark */
 
   /* ========================================================================
-   * REFERENCE TOKENS — Navy & Text (deep blue, não gray)
+   * REFERENCE TOKENS — Legado preservado por compatibilidade com MD3 extended,
+   * portal tokens, chart tokens e video call. Valores rebindados para spec
+   * Glass Briefing (hue 281° onde o spec usa 281°).
+   * Novos consumidores: usar semantic tokens diretamente (--foreground, etc.)
    * ======================================================================== */
-  --navy-heading: oklch(0.21 0.045 253);       /* #061b31 — todos os headings */
-  --navy-label: oklch(0.32 0.045 253);         /* #273951 — form labels */
-  --navy-body: oklch(0.54 0.03 250);           /* #64748d — body, captions */
-  --navy-975: oklch(0.25 0.045 253);           /* #0d253d — darkest neutral */
 
-  /* ========================================================================
-   * REFERENCE TOKENS — Brand Dark (seção brand imersiva + dark mode base)
-   * ======================================================================== */
-  --brand-dark-900: oklch(0.22 0.10 275);      /* #1c1e54 */
+  /* Navy & Text — antes hue 253°, agora hue 281° alinhado ao spec */
+  --navy-heading: oklch(0.15 0.01 281);        /* = spec --foreground (light) */
+  --navy-label: oklch(0.32 0.01 281);          /* intermediário hue 281° */
+  --navy-body: oklch(0.42 0.01 281);           /* = spec --muted-foreground (light) */
 
-  /* ========================================================================
-   * REFERENCE TOKENS — Accent Colors (APENAS decorativos, nunca UI)
-   * ======================================================================== */
-  --accent-ruby: oklch(0.58 0.25 15);          /* #ea2261 — ícones, gradientes */
-  --accent-magenta: oklch(0.73 0.25 330);      /* #f96bee — gradientes hero */
-  --accent-magenta-100: oklch(0.92 0.08 340);  /* #ffd7ef — surfaces tintadas */
+  /* Brand Dark — antes hue 275°, agora hue 281° alinhado ao spec --card dark */
+  --brand-dark-900: oklch(0.22 0.005 281);     /* = spec --card (dark) */
 
-  /* ========================================================================
-   * REFERENCE TOKENS — Status
-   * ======================================================================== */
-  --success-500: oklch(0.70 0.20 145);         /* #15be53 */
-  --success-700: oklch(0.55 0.18 150);         /* #108c3d */
-  --warning-600: oklch(0.52 0.10 65);          /* #9b6829 — lemon */
+  /* Accent — decorativos, hues 25°/330° mantidos mas valores spec-aligned */
+  --accent-ruby: oklch(0.55 0.22 25);          /* = spec --destructive */
+  --accent-magenta: oklch(0.65 0.22 330);      /* = spec --palette-15 (fúcsia) */
+
+  /* Status — valores spec exatos (antes eram variações MD) */
+  --success-500: oklch(0.55 0.18 145);         /* = spec --success (light) */
+  --success-700: oklch(0.45 0.18 145);         /* variant deeper para foreground contrast */
+  --warning-600: oklch(0.60 0.18 75);          /* = spec --warning (light) */
 
   /* ========================================================================
    * REFERENCE TOKENS — Borders & Surface
    * ======================================================================== */
   --surface-white: oklch(1 0 0);               /* #ffffff */
-  --border-default: oklch(0.94 0.01 245);      /* #e5edf5 */
+  --border-default: oklch(0.87 0.01 281);      /* = spec --border (light) */
 
   /* ========================================================================
    * REFERENCE TOKENS — Shadow (RGBA literal — OKLCH em box-shadow ainda frágil)
@@ -298,34 +296,36 @@
 
   /* ========================================================================
    * SEMANTIC TOKENS — Núcleo shadcn (obrigatório)
+   * Spec canônico: design-system/colors_and_type.css (Glass Briefing)
+   * Âncora: hue 281° — Zattar Purple #5523EB
    * ======================================================================== */
-  --background: var(--surface-white);
-  --foreground: var(--navy-heading);
+  --background: oklch(0.96 0.01 281);
+  --foreground: oklch(0.15 0.01 281);
 
-  --card: var(--surface-white);
-  --card-foreground: var(--navy-heading);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.15 0.01 281);
 
-  --popover: var(--surface-white);
-  --popover-foreground: var(--navy-heading);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.15 0.01 281);
 
-  --primary: var(--zattar-purple-500);
-  --primary-foreground: var(--surface-white);
+  --primary: oklch(0.48 0.26 281);          /* #5523EB — Zattar Purple */
+  --primary-foreground: oklch(1 0 0);
 
-  --secondary: oklch(0.97 0.005 250);
-  --secondary-foreground: var(--navy-heading);
+  --secondary: oklch(0.95 0.04 281);        /* purple wash */
+  --secondary-foreground: oklch(0.15 0.01 281);
 
-  --muted: oklch(0.98 0.005 245);
-  --muted-foreground: var(--navy-body);
+  --muted: oklch(0.92 0.01 281);            /* micro-tinted neutral */
+  --muted-foreground: oklch(0.42 0.01 281);
 
-  --accent: oklch(0.97 0.01 276);
-  --accent-foreground: var(--zattar-purple-500);
+  --accent: oklch(0.95 0.04 281);
+  --accent-foreground: oklch(0.15 0.01 281);
 
-  --destructive: var(--accent-ruby);
-  --destructive-foreground: var(--surface-white);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(1 0 0);
 
-  --border: var(--border-default);
-  --input: var(--border-default);
-  --ring: var(--zattar-purple-500);
+  --border: oklch(0.87 0.01 281);
+  --input: oklch(0.87 0.01 281);
+  --ring: transparent;                       /* Glass Briefing: focus via shadow inset, não ring visível */
 
   /* Skeleton: cinza neutro dedicado para loading */
   --skeleton: oklch(0.94 0 0);
@@ -333,33 +333,33 @@
 
   /* ========================================================================
    * SEMANTIC TOKENS — Sidebar (SEMPRE escura em ambos os temas)
+   * Spec Glass Briefing: hue 281°, chroma 0.01 (premium dark-always)
    * ======================================================================== */
-  --sidebar: var(--brand-dark-900);
-  --sidebar-foreground: var(--surface-white);
-  --sidebar-primary: var(--zattar-purple-400);
-  --sidebar-primary-foreground: var(--surface-white);
-  --sidebar-accent: oklch(1 0 0 / 0.08);
-  --sidebar-accent-foreground: var(--surface-white);
+  --sidebar: oklch(0.22 0.01 281);
+  --sidebar-foreground: oklch(0.98 0 0);
+  --sidebar-primary: oklch(0.70 0.20 281);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.30 0.01 281);
+  --sidebar-accent-foreground: oklch(1 0 0);
   --sidebar-border: oklch(1 0 0 / 0.10);
-  --sidebar-ring: var(--zattar-purple-400);
+  --sidebar-ring: oklch(0.70 0.20 281);
 
   /* ========================================================================
-   * SEMANTIC TOKENS — Brand
-   * --highlight é DEPRECATED para UI, permanece apenas como alias decorativo
+   * SEMANTIC TOKENS — Brand (spec Glass Briefing)
    * ======================================================================== */
-  --brand: var(--zattar-purple-500);
-  --highlight: var(--accent-ruby);
+  --brand: oklch(0.48 0.26 281);              /* pure Zattar Purple */
+  --highlight: oklch(0.60 0.22 45);           /* Action Orange */
 
   /* ========================================================================
-   * SEMANTIC TOKENS — Charts (paleta Zattar)
+   * SEMANTIC TOKENS — Charts (spec Glass Briefing — hue 281° anchored)
    * ======================================================================== */
-  --chart-1: var(--zattar-purple-500);
-  --chart-2: var(--accent-ruby);
-  --chart-3: var(--success-500);
-  --chart-4: var(--warning-600);
-  --chart-5: var(--accent-magenta);
+  --chart-1: oklch(0.48 0.26 281);            /* Zattar Purple */
+  --chart-2: oklch(0.60 0.22 45);             /* Action Orange */
+  --chart-3: oklch(0.92 0.01 281);            /* neutral tinted */
+  --chart-4: oklch(0.55 0.18 150);            /* success */
+  --chart-5: oklch(0.70 0.01 281);            /* muted neutral */
   --chart-6: var(--navy-body);
-  --chart-7: var(--zattar-purple-300);
+  --chart-7: oklch(0.78 0.10 276);            /* purple light */
   --chart-8: var(--navy-label);
 
   /* Tons derivados para treemaps e funnels */
@@ -403,19 +403,20 @@
 
   /* ========================================================================
    * SEMANTIC TOKENS — Surface (hierarquia Zattar)
-   * Todas as surfaces light são opacas/brancas — hierarquia por sombra, não cor
+   * Spec Glass Briefing: surfaces micro-tintadas com hue 281°
    * ======================================================================== */
-  --surface-1: var(--surface-white);
-  --surface-2: var(--surface-white);
-  --surface-3: var(--surface-white);
+  --surface-1: oklch(0.98 0.005 281);
+  --surface-2: oklch(0.97 0.005 281);
+  --surface-3: oklch(0.95 0.005 281);
 
   /* ========================================================================
    * SEMANTIC TOKENS — Chat
+   * Spec: design-system/colors_and_type.css — hue 281°
    * ======================================================================== */
-  --chat-thread-bg: oklch(0.98 0.005 245);
-  --chat-bubble-received: var(--surface-white);
+  --chat-thread-bg: oklch(0.97 0.005 281);
+  --chat-bubble-received: oklch(1 0 0);
   --chat-bubble-sent: var(--primary);
-  --chat-sidebar-active: oklch(0.96 0.02 276);
+  --chat-sidebar-active: oklch(0.95 0.04 281);
 
   /* ========================================================================
    * MD3 SURFACE HIERARCHY (compat shadcn — subordinado ao sistema Zattar)
@@ -471,7 +472,7 @@
   --on-error: var(--surface-white);
 
   /* Dim Variants (Light) */
-  --primary-dim: var(--zattar-purple-700);
+  --primary-dim: oklch(0.35 0.24 281);      /* Spec Glass Briefing — hue 281° */
   --secondary-dim: var(--navy-label);
   --tertiary-dim: oklch(0.40 0.18 15);
   --error-dim: oklch(0.45 0.20 15);
@@ -509,58 +510,59 @@
    * ============================================================================ */
 
   /* ========================================================================
-   * SEMANTIC TOKENS — Núcleo shadcn
-   * Primary NÃO muda no dark: Zattar Purple mantém hue E luminância.
+   * SEMANTIC TOKENS — Núcleo shadcn (Dark)
+   * Spec canônico: design-system/colors_and_type.css (Glass Briefing)
+   * Âncora: hue 281° — neutros micro-tintados em toda a escala
    * ======================================================================== */
-  --background: var(--brand-dark-900);
-  --foreground: var(--surface-white);
+  --background: oklch(0.17 0.005 281);
+  --foreground: oklch(0.98 0 0);
 
-  --card: var(--brand-dark-900);
-  --card-foreground: var(--surface-white);
+  --card: oklch(0.22 0.005 281);
+  --card-foreground: oklch(0.98 0 0);
 
-  --popover: var(--brand-dark-900);
-  --popover-foreground: var(--surface-white);
+  --popover: oklch(0.22 0.005 281);
+  --popover-foreground: oklch(0.98 0 0);
 
-  --primary: var(--zattar-purple-500);
-  --primary-foreground: var(--surface-white);
+  --primary: oklch(0.70 0.20 281);              /* dark: lift pra contraste — #9f85ff */
+  --primary-foreground: oklch(0.15 0.10 281);
 
-  --secondary: oklch(1 0 0 / 0.06);
-  --secondary-foreground: var(--surface-white);
+  --secondary: oklch(0.28 0.01 281);
+  --secondary-foreground: oklch(0.98 0 0);
 
-  --muted: oklch(1 0 0 / 0.04);
-  --muted-foreground: oklch(1 0 0 / 0.70);      /* Literal: rgba(255,255,255,0.7) */
+  --muted: oklch(0.28 0.005 281);
+  --muted-foreground: oklch(0.65 0.005 281);
 
-  --accent: oklch(1 0 0 / 0.08);
-  --accent-foreground: var(--zattar-purple-400);
+  --accent: oklch(0.28 0.01 281);
+  --accent-foreground: oklch(0.98 0 0);
 
-  --destructive: var(--accent-ruby);
-  --destructive-foreground: var(--surface-white);
+  --destructive: oklch(0.65 0.20 25);
+  --destructive-foreground: oklch(1 0 0);
 
-  --border: oklch(1 0 0 / 0.10);                /* Literal: rgba(255,255,255,0.1) */
-  --input: oklch(1 0 0 / 0.10);
-  --ring: var(--zattar-purple-500);
+  --border: oklch(1 0 0 / 0.12);
+  --input: oklch(1 0 0 / 0.12);
+  --ring: transparent;                           /* Glass Briefing: focus via shadow inset */
 
   /* Skeleton — alpha branco sobre dark-brand */
   --skeleton: oklch(1 0 0 / 0.06);
   --skeleton-highlight: oklch(1 0 0 / 0.10);
 
   /* ========================================================================
-   * SIDEBAR — Igual ao light mode (sempre dark-brand)
+   * SIDEBAR — Igual ao light mode (sempre dark-brand, hue 281°)
    * ======================================================================== */
-  --sidebar: var(--brand-dark-900);
-  --sidebar-foreground: var(--surface-white);
-  --sidebar-primary: var(--zattar-purple-400);
-  --sidebar-primary-foreground: var(--surface-white);
-  --sidebar-accent: oklch(1 0 0 / 0.08);
-  --sidebar-accent-foreground: var(--surface-white);
+  --sidebar: oklch(0.22 0.01 281);
+  --sidebar-foreground: oklch(0.98 0 0);
+  --sidebar-primary: oklch(0.70 0.20 281);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.30 0.01 281);
+  --sidebar-accent-foreground: oklch(1 0 0);
   --sidebar-border: oklch(1 0 0 / 0.10);
-  --sidebar-ring: var(--zattar-purple-400);
+  --sidebar-ring: oklch(0.70 0.20 281);
 
   /* ========================================================================
-   * BRAND
+   * BRAND (Dark) — spec Glass Briefing
    * ======================================================================== */
-  --brand: var(--zattar-purple-500);
-  --highlight: var(--accent-ruby);
+  --brand: oklch(0.70 0.20 281);
+  --highlight: oklch(0.70 0.20 45);
 
   /* ========================================================================
    * CHARTS — mesma paleta Zattar, ajustada para dark background
@@ -591,29 +593,29 @@
   --glow-warning: oklch(from var(--warning) l c h / 0.30);
 
   /* ========================================================================
-   * STATUS — cores de status mantêm hue, só o foreground muda para branco
+   * STATUS (Dark) — spec: design-system/colors_and_type.css
    * ======================================================================== */
-  --success: var(--success-500);
-  --success-foreground: var(--surface-white);
-  --warning: var(--warning-600);
-  --warning-foreground: var(--surface-white);
-  --info: var(--zattar-purple-500);
-  --info-foreground: var(--surface-white);
+  --success: oklch(0.70 0.18 145);
+  --success-foreground: oklch(1 0 0);
+  --warning: oklch(0.78 0.16 85);
+  --warning-foreground: oklch(0.15 0 0);
+  --info: oklch(0.70 0.18 250);
+  --info-foreground: oklch(1 0 0);
 
   /* ========================================================================
-   * SURFACE — alpha-white sobre brand-dark
+   * SURFACE — micro-tintadas hue 281° (spec Glass Briefing)
    * ======================================================================== */
-  --surface-1: var(--brand-dark-900);
-  --surface-2: oklch(1 0 0 / 0.04);
-  --surface-3: oklch(1 0 0 / 0.08);
+  --surface-1: oklch(0.20 0.005 281);
+  --surface-2: oklch(0.22 0.005 281);
+  --surface-3: oklch(0.26 0.005 281);
 
   /* ========================================================================
-   * CHAT (Dark)
+   * CHAT (Dark) — spec: design-system/colors_and_type.css
    * ======================================================================== */
-  --chat-thread-bg: oklch(from var(--brand-dark-900) calc(l - 0.04) c h);
-  --chat-bubble-received: oklch(1 0 0 / 0.06);
+  --chat-thread-bg: oklch(0.15 0.005 281);
+  --chat-bubble-received: oklch(0.26 0.005 281);
   --chat-bubble-sent: var(--primary);
-  --chat-sidebar-active: oklch(1 0 0 / 0.08);
+  --chat-sidebar-active: oklch(0.24 0.01 281);
 
   /* ========================================================================
    * MD3 SURFACE HIERARCHY (Dark) — alpha-white sobre brand-dark
@@ -668,7 +670,7 @@
   --on-error: var(--surface-white);
 
   /* Dim Variants (Dark) */
-  --primary-dim: var(--zattar-purple-700);
+  --primary-dim: oklch(0.58 0.22 281);        /* Spec Glass Briefing — hue 281° */
   --secondary-dim: oklch(1 0 0 / 0.30);
   --tertiary-dim: oklch(from var(--accent-ruby) calc(l - 0.10) c h);
   --error-dim: oklch(from var(--accent-ruby) calc(l - 0.10) c h);
@@ -1311,12 +1313,13 @@
   }
 
   /* === PAGE & SECTION HEADINGS (px fixo — imunes ao root 18px) === */
+  /* Valores exatos do spec: design-system/colors_and_type.css */
 
   /* Título principal da página: "Processos", "Partes", "Dashboard" */
   .text-page-title {
     font-size: 24px;
     line-height: 1.2;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
     @apply scroll-m-20 font-heading font-bold text-foreground;
   }
 
@@ -1324,8 +1327,22 @@
   .text-section-title {
     font-size: 20px;
     line-height: 1.25;
-    letter-spacing: -0.01em;
     @apply scroll-m-20 font-heading font-semibold text-foreground;
+  }
+
+  /* Display hero — landing, empty states dramáticos (spec Glass Briefing) */
+  .text-display-1 {
+    font-size: clamp(36px, 5vw, 60px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    @apply font-heading font-bold text-foreground;
+  }
+
+  .text-display-2 {
+    font-size: clamp(30px, 4vw, 48px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    @apply font-heading font-bold text-foreground;
   }
 
   /* Título de card grande ou painel de detalhe */
@@ -1349,18 +1366,24 @@
     @apply font-heading font-semibold text-foreground;
   }
 
-  /* === BODY TEXT (rem-based — escalam com root) === */
+  /* === BODY TEXT (px fixo conforme spec — independente de root font-size) === */
 
   .text-body-lg {
-    @apply text-xl leading-relaxed text-foreground;
+    font-size: 20px;
+    line-height: 1.6;
+    @apply text-foreground;
   }
 
   .text-body {
-    @apply text-lg leading-relaxed text-foreground;
+    font-size: 18px;
+    line-height: 1.55;
+    @apply text-foreground;
   }
 
   .text-body-sm {
-    @apply text-base leading-normal text-foreground;
+    font-size: 16px;
+    line-height: 1.5;
+    @apply text-foreground;
   }
 
   /* === SUPPORTING TEXT (px fixo para precisão em UI compacta) === */
@@ -1374,26 +1397,29 @@
   /* Texto auxiliar, descrições curtas */
   .text-caption {
     font-size: 13px;
-    @apply leading-normal text-muted-foreground;
+    line-height: 1.4;
+    @apply text-muted-foreground;
   }
 
   /* Dicas, textos de ajuda */
   .text-helper {
     font-size: 13px;
-    @apply leading-normal text-muted-foreground;
+    line-height: 1.4;
+    @apply text-muted-foreground;
   }
 
   /* Subtítulo de widget — abaixo do título em WidgetContainer */
   .text-widget-sub {
     font-size: 12px;
-    @apply text-muted-foreground/60;
+    line-height: 1.4;
+    @apply text-muted-foreground;
   }
 
-  /* Label ALL-CAPS genérico */
+  /* Label ALL-CAPS genérico (spec Glass Briefing: tracking 0.08em) */
   .text-overline {
     font-size: 11px;
     @apply font-semibold uppercase text-muted-foreground;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
   }
 
   /* Mono/Code/Data */
@@ -1419,16 +1445,17 @@
     letter-spacing: 0.14em;
   }
 
-  /* Mono Num — datas, números de processo, valores tabulares */
+  /* Mono Num — datas, números de processo, valores tabulares (spec Glass Briefing) */
   .text-mono-num {
     font-size: 10px;
-    @apply font-mono text-muted-foreground/55 tabular-nums;
+    @apply font-mono text-muted-foreground tabular-nums;
   }
 
   /* Micro Caption — informações terciárias muito pequenas (timestamps, contadores) */
   .text-micro-caption {
     font-size: 10px;
-    @apply text-muted-foreground/50;
+    line-height: 1.3;
+    @apply text-muted-foreground;
   }
 
   /* Micro Badge — texto dentro de badges e tags compactos */

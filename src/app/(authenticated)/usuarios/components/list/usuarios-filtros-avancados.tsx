@@ -53,7 +53,7 @@ export function UsuariosFiltrosAvancados({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button variant="outline" className="relative">
-          Filtros Avançados
+          Filtros avançados
           {hasFilters && (
             <span className="ml-2 h-2 w-2 rounded-full bg-primary" />
           )}

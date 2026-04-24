@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
@@ -88,7 +89,7 @@ export function EditableTextCell({
                             onClick={handleSave}
                             disabled={isLoading}
                         >
-                            {isLoading && <span className="mr-2 animate-spin">⏳</span>}
+                            {isLoading && <Loader2 className="mr-2 size-4 animate-spin" />}
                             Salvar
                         </Button>
                     </div>

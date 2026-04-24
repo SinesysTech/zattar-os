@@ -27,7 +27,7 @@ import type { Audiencia } from '../domain';
 import { ModalidadeAudiencia } from '../domain';
 import { actionCriarAudiencia, actionAtualizarAudiencia, type ActionResult } from '../actions';
 import { toast } from 'sonner';
-import { CalendarIcon } from 'lucide-react';
+import { CalendarIcon, Loader2 } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
@@ -479,7 +479,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
           >
             {isPending ? (
               <>
-                <span className="animate-spin mr-2">⏳</span>
+                <Loader2 className="mr-2 size-4 animate-spin" />
                 {initialData ? 'Atualizando...' : 'Criando...'}
               </>
             ) : (

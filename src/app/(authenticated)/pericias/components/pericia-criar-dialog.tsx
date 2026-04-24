@@ -285,7 +285,7 @@ export function PericiaCriarDialog({
             Cancelar
           </Button>
           <Button onClick={handleSave} disabled={isSaving || !isFormValid}>
-            {isSaving ? 'Criando...' : 'Criar Perícia'}
+            {isSaving ? 'Criando...' : 'Criar perícia'}
           </Button>
         </>
       }

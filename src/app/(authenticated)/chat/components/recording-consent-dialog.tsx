@@ -93,7 +93,7 @@ export function RecordingConsentDialog({
             Cancelar
           </Button>
           <Button onClick={handleConsent} disabled={!agreed}>
-            Iniciar Gravação
+            Iniciar gravação
           </Button>
         </DialogFooter>
       </DialogContent>

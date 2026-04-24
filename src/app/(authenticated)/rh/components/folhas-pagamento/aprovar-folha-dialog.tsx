@@ -176,7 +176,7 @@ export function AprovarFolhaDialog({
               Cancelar
             </Button>
             <Button type="submit" disabled={form.formState.isSubmitting}>
-              Aprovar Folha
+              Aprovar folha
             </Button>
           </DialogFooter>
         </form>

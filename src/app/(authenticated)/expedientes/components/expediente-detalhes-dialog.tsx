@@ -89,7 +89,7 @@ const PrazoEditor: React.FC<PrazoEditorProps> = ({ exp, onUpdated, onSuccess }) 
     <div className="flex items-center gap-2 mt-2">
       {!openEdit && (
         <Button size="sm" variant="outline" onClick={() => setOpenEdit(true)}>
-          {exp.dataPrazoLegalParte ? 'Alterar Prazo' : 'Definir Prazo'}
+          {exp.dataPrazoLegalParte ? 'Alterar prazo' : 'Definir prazo'}
         </Button>
       )}
 

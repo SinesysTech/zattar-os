@@ -55,7 +55,9 @@ export type TokenCategory =
   | 'search'
   | 'typography'
   | 'radius'
-  | 'breakpoint';
+  | 'breakpoint'
+  | 'reference'
+  | 'shadow';
 
 export type TokenMode = 'light' | 'dark' | 'portal' | 'website' | 'video-always';
 
@@ -322,12 +324,66 @@ export const BREAKPOINT_REGISTRY: TokenEntry[] = [
   { name: '--breakpoint-xs', category: 'breakpoint', layer: 'reference', modes: ['light', 'dark'], purpose: 'Extra small (< sm), 480px' },
 ];
 
+/**
+ * Reference tokens internos de globals.css — escalas brand/neutral/accent/status
+ * que alimentam os semantic tokens. Não devem ser usados diretamente em
+ * componentes (usar semantic tokens ex: --primary, --foreground, --destructive).
+ * Servem como building blocks para compor semantic tokens e preservar
+ * consistência cromática entre light/dark.
+ */
+export const REFERENCE_REGISTRY: TokenEntry[] = [
+  // Zattar Purple Scale — âncora #5523EB hue 281° (spec Glass Briefing)
+  { name: '--zattar-purple-200', category: 'reference', layer: 'reference', modes: ['light', 'dark'], purpose: 'Borda suave hue 281°' },
+  { name: '--zattar-purple-300', category: 'reference', layer: 'reference', modes: ['light', 'dark'], purpose: 'Borda ativa' },
+  { name: '--zattar-purple-400', category: 'reference', layer: 'reference', modes: ['light', 'dark'], purpose: 'Primary light / dark-mode accent' },
+  { name: '--zattar-purple-500', category: 'reference', layer: 'reference', modes: ['light', 'dark'], purpose: '#5523EB — PRIMARY anchor' },
+  { name: '--zattar-purple-600', category: 'reference', layer: 'reference', modes: ['light', 'dark'], purpose: 'Hover primary' },
+  { name: '--zattar-purple-700', category: 'reference', layer: 'reference', modes: ['light', 'dark'], purpose: 'Primary-dim' },
+  { name: '--zattar-purple-900', category: 'reference', layer: 'reference', modes: ['light', 'dark'], purpose: 'Deep, brand-dark' },
+
+  // Navy scale — legado, rebindado ao spec (hue 281°). Preservado por compat MD3.
+  { name: '--navy-heading', category: 'reference', layer: 'reference', modes: ['light', 'dark'], purpose: 'Legado — = --foreground light' },
+  { name: '--navy-label', category: 'reference', layer: 'reference', modes: ['light', 'dark'], purpose: 'Legado — intermediário hue 281°' },
+  { name: '--navy-body', category: 'reference', layer: 'reference', modes: ['light', 'dark'], purpose: 'Legado — = --muted-foreground light' },
+
+  // Brand dark — sidebar/video/portal base
+  { name: '--brand-dark-900', category: 'reference', layer: 'reference', modes: ['light', 'dark'], purpose: 'Dark base para sidebar, video, portal' },
+
+  // Accent — decorativos, usados em chart-2/tertiary/error
+  { name: '--accent-ruby', category: 'reference', layer: 'reference', modes: ['light', 'dark'], purpose: 'Decorativo hue 25° — chart, tertiary' },
+  { name: '--accent-magenta', category: 'reference', layer: 'reference', modes: ['light', 'dark'], purpose: 'Decorativo hue 330° — chart, gradient' },
+
+  // Status scale — valores spec exatos
+  { name: '--success-500', category: 'status', layer: 'reference', modes: ['light', 'dark'], purpose: 'Success mid — spec light' },
+  { name: '--success-700', category: 'status', layer: 'reference', modes: ['light', 'dark'], purpose: 'Success deep — foreground contrast' },
+  { name: '--warning-600', category: 'status', layer: 'reference', modes: ['light', 'dark'], purpose: 'Warning — spec light' },
+
+  // Surface & border primitives
+  { name: '--surface-white', category: 'reference', layer: 'reference', modes: ['light', 'dark'], purpose: '#ffffff — base surface' },
+  { name: '--border-default', category: 'reference', layer: 'reference', modes: ['light', 'dark'], purpose: '= --border light' },
+];
+
+/**
+ * Shadow tokens — RGBA literais para box-shadow (OKLCH em box-shadow ainda
+ * é frágil em alguns browsers).
+ */
+export const SHADOW_REGISTRY: TokenEntry[] = [
+  { name: '--shadow-zattar-blue', category: 'shadow', layer: 'reference', modes: ['light', 'dark'], purpose: 'Sombra azul-tintada (cards, elevation)' },
+  { name: '--shadow-zattar-deep', category: 'shadow', layer: 'reference', modes: ['light', 'dark'], purpose: 'Sombra deep (modal, dialog)' },
+  { name: '--shadow-neutral', category: 'shadow', layer: 'reference', modes: ['light', 'dark'], purpose: 'Sombra neutra fallback' },
+  { name: '--shadow-ambient', category: 'shadow', layer: 'reference', modes: ['light', 'dark'], purpose: 'Ambient shadow (20px 40px 0.08)' },
+  { name: '--shadow-soft', category: 'shadow', layer: 'reference', modes: ['light', 'dark'], purpose: 'Sombra suave (cards em repouso)' },
+  { name: '--shadow-top-sticky', category: 'shadow', layer: 'reference', modes: ['light', 'dark'], purpose: 'Sticky headers, navbar top' },
+];
+
 // =============================================================================
 // CONSOLIDADO
 // =============================================================================
 
 /** Todos os tokens registrados. */
 export const TOKEN_REGISTRY: readonly TokenEntry[] = [
+  ...REFERENCE_REGISTRY,
+  ...SHADOW_REGISTRY,
   ...CORE_REGISTRY,
   ...STATUS_REGISTRY,
   ...SIDEBAR_REGISTRY,

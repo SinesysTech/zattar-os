@@ -124,7 +124,7 @@ export function TemplateCard({
 
         {/* Action button */}
         <Button onClick={() => onUseTemplate(template)} className="w-full">
-          Usar Template
+          Usar template
         </Button>
       </CardFooter>
     </Card>

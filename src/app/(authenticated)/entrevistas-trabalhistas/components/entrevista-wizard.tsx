@@ -307,7 +307,7 @@ export function EntrevistaWizard({ entrevista, contratoId, onFinish }: Entrevist
 
         {isLastStep ? (
           <Button onClick={handleFinalize} disabled={isLoading}>
-            {isLoading ? 'Finalizando...' : 'Finalizar Entrevista'}
+            {isLoading ? 'Finalizando...' : 'Finalizar entrevista'}
             <CheckCircle2 className="ml-2 h-4 w-4" />
           </Button>
         ) : (

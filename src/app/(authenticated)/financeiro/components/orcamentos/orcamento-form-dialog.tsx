@@ -379,7 +379,7 @@ export function OrcamentoFormDialog({
                             Cancelar
                         </Button>
                         <Button type="submit" disabled={isLoading}>
-                            {isLoading ? 'Salvando...' : isEditing ? 'Salvar Alterações' : 'Criar Orçamento'}
+                            {isLoading ? 'Salvando...' : isEditing ? 'Salvar Alterações' : 'Criar orçamento'}
                         </Button>
                     </DialogFooter>
                 </form>

@@ -109,7 +109,7 @@ export function PlaceholderInsertMenu({
       <PopoverTrigger asChild>
         {trigger || (
           <Button variant="outline" size="sm">
-            Inserir Placeholder
+            Inserir placeholder
           </Button>
         )}
       </PopoverTrigger>

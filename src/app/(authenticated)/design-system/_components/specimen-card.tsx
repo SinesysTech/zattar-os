@@ -1,0 +1,37 @@
+import * as React from "react";
+import { cn } from "@/lib/utils";
+import { GlassPanel } from "@/components/shared/glass-panel";
+import { Heading, Text } from "@/components/ui/typography";
+
+interface SpecimenCardProps {
+  eyebrow: string;
+  title?: string;
+  aside?: React.ReactNode;
+  className?: string;
+  children: React.ReactNode;
+}
+
+export function SpecimenCard({
+  eyebrow,
+  title,
+  aside,
+  className,
+  children,
+}: SpecimenCardProps) {
+  return (
+    <GlassPanel depth={1} className={cn("p-5 gap-4", className)}>
+      <div className="flex items-baseline justify-between gap-4">
+        <div className="space-y-0.5">
+          <Text variant="meta-label">{eyebrow}</Text>
+          {title && <Heading level="card">{title}</Heading>}
+        </div>
+        {aside && (
+          <Text variant="micro-caption" className="font-mono">
+            {aside}
+          </Text>
+        )}
+      </div>
+      <div>{children}</div>
+    </GlassPanel>
+  );
+}

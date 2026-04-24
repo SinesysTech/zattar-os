@@ -250,7 +250,7 @@ export function AddEditEventDialog({
 						</Button>
 					</ModalClose>
 					<Button form="event-form" type="submit">
-						{isEditing ? "Salvar Alterações" : "Criar Evento"}
+						{isEditing ? "Salvar Alterações" : "Criar evento"}
 					</Button>
 				</ModalFooter>
 			</ModalContent>

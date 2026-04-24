@@ -126,6 +126,10 @@ const HEADING_LEVELS = {
   card: { className: 'text-card-title', tag: 'h3' as const },
   subsection: { className: 'text-subsection-title', tag: 'h4' as const },
   widget: { className: 'text-widget-title', tag: 'h3' as const },
+  // Display scale — hero de empty states, landing dramáticos dentro do admin
+  // (spec Glass Briefing: clamp responsive, tracking negativo agressivo).
+  'display-1': { className: 'text-display-1', tag: 'h1' as const },
+  'display-2': { className: 'text-display-2', tag: 'h1' as const },
   // Marketing scale — apenas para src/app/website/* (landing, contato, etc.).
   // Não usar nos módulos admin.
   'marketing-hero': { className: 'text-marketing-hero', tag: 'h1' as const },
