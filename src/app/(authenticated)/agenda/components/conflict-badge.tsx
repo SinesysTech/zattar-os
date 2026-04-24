@@ -6,6 +6,7 @@
  */
 
 import { TriangleAlert } from "lucide-react";
+import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 
 export interface ConflictBadgeProps {
@@ -24,9 +25,9 @@ export function ConflictBadge({ className }: ConflictBadgeProps) {
       aria-label="Conflito de horario detectado"
     >
       <TriangleAlert className="size-2.5 text-warning" />
-      <span className="text-[8px] font-bold text-warning uppercase tracking-wider">
+      <Text variant="overline" as="span" className="text-[8px] font-bold text-warning">
         Conflito
-      </span>
+      </Text>
     </div>
   );
 }

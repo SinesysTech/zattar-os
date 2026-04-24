@@ -32,6 +32,7 @@ import {
   Check,
   CircleDot,
 } from "lucide-react";
+import { Heading, Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 import type { MockEvent, ChecklistItem } from "./mock-data";
 import { MOCK_CHECKLIST, sourceColorClasses } from "./mock-data";
@@ -120,12 +121,14 @@ export function AgendaEventDetail({
                 </div>
                 <div className="min-w-0">
                   <div className="flex items-center gap-2.5 flex-wrap mb-1">
-                    <h2
+                    <Heading
+                      level="card"
+                      as="h2"
                       id="event-detail-title"
                       className="text-[17px] font-bold text-foreground"
                     >
                       {event.title}
-                    </h2>
+                    </Heading>
                     {event.status && (
                       <span className={cn(
                         "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium",
@@ -155,7 +158,7 @@ export function AgendaEventDetail({
             <div className="flex gap-0 mb-4 rounded-xl border border-border/15 bg-muted/4 p-3.5">
               {/* Horário */}
               <div className="flex-1">
-                <span className="text-[11px] font-medium text-muted-foreground/40 uppercase tracking-wider">Horário</span>
+<Text variant="overline" as="span" className="text-muted-foreground/40">Horário</Text>
                 <div className="flex items-center gap-1.5 mt-1 text-[13.5px] font-medium text-foreground">
                   <Clock className="size-3.5 text-muted-foreground/40" />
                   {fmtTime(event.start)} – {fmtTime(event.end)}
@@ -164,7 +167,7 @@ export function AgendaEventDetail({
               <div className="w-px bg-border/15 mx-4" />
               {/* Modalidade */}
               <div className="flex-1">
-                <span className="text-[11px] font-medium text-muted-foreground/40 uppercase tracking-wider">Modalidade</span>
+<Text variant="overline" as="span" className="text-muted-foreground/40">Modalidade</Text>
                 <div className="mt-1">
                   {event.modalidade ? (
                     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11.5px] font-medium bg-primary/10 text-primary">
@@ -179,7 +182,7 @@ export function AgendaEventDetail({
               <div className="w-px bg-border/15 mx-4" />
               {/* Tribunal */}
               <div className="flex-1">
-                <span className="text-[11px] font-medium text-muted-foreground/40 uppercase tracking-wider">Tribunal</span>
+<Text variant="overline" as="span" className="text-muted-foreground/40">Tribunal</Text>
                 <div className="flex items-center gap-1.5 mt-1 text-[13.5px] font-medium text-foreground">
                   <Landmark className="size-3.5 text-muted-foreground/40" />
                   {event.trt ?? "—"}{event.grau ? ` · ${event.grau}` : ""}
@@ -188,7 +191,7 @@ export function AgendaEventDetail({
               <div className="w-px bg-border/15 mx-4" />
               {/* Responsável */}
               <div className="flex-1">
-                <span className="text-[11px] font-medium text-muted-foreground/40 uppercase tracking-wider">Responsável</span>
+<Text variant="overline" as="span" className="text-muted-foreground/40">Responsável</Text>
                 <div className="flex items-center gap-1.5 mt-1 text-[13.5px] font-medium text-foreground">
                   {event.responsavel ? (
                     <>
