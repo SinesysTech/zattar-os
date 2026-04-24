@@ -10,6 +10,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import { GazetteTimeline } from './gazette-timeline';
 import { useGazetteStore } from './hooks/use-gazette-store';
@@ -186,10 +187,10 @@ export function GazetteSyncDialog({ trigger }: GazetteSyncDialogProps) {
         {/* ── Section: Sincronizar ── */}
         {section === 'sincronizar' && (
           <div className="flex flex-col gap-4 pt-1">
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <Text variant="caption" className="text-muted-foreground leading-relaxed">
               Dispare uma sincronização manual para buscar novas publicações
               do Comunicação CNJ.
-            </p>
+            </Text>
 
             {/* CTA button */}
             <Button
