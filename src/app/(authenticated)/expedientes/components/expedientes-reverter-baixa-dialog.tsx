@@ -5,6 +5,8 @@
 import * as React from 'react';
 import { useActionState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { AlertTriangle} from 'lucide-react';
 import { toast } from 'sonner';
 import { actionReverterBaixa, type ActionResult } from '../actions';
@@ -13,6 +15,8 @@ import { DialogFormShell } from '@/components/shared/dialog-shell';
 
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
+
+const PALAVRA_CONFIRMACAO = 'REVERTER';
 interface ExpedientesReverterBaixaDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -34,6 +38,7 @@ export function ExpedientesReverterBaixaDialog({
 }: ExpedientesReverterBaixaDialogProps) {
   // Usar key para resetar o formulário quando o diálogo fechar
   const [formKey, setFormKey] = React.useState(0);
+  const [textoConfirmacao, setTextoConfirmacao] = React.useState('');
 
   const [formState, formAction, isPending] = useActionState(
     actionReverterBaixa.bind(null, expediente?.id || 0),
@@ -44,8 +49,12 @@ export function ExpedientesReverterBaixaDialog({
   React.useEffect(() => {
     if (!open) {
       setFormKey((prev) => prev + 1);
+      setTextoConfirmacao('');
     }
   }, [open]);
+
+  const confirmacaoValida =
+    textoConfirmacao.trim().toUpperCase() === PALAVRA_CONFIRMACAO;
 
   // Chamar onSuccess quando a ação for bem-sucedida
   React.useEffect(() => {
@@ -88,8 +97,9 @@ export function ExpedientesReverterBaixaDialog({
       <Button
         type="submit"
         variant="destructive"
-        disabled={isPending}
+        disabled={isPending || !confirmacaoValida}
         form="reverter-baixa-form"
+        title={!confirmacaoValida ? `Digite ${PALAVRA_CONFIRMACAO} para habilitar` : undefined}
       >
         {isPending && <LoadingSpinner className="mr-2" />}
         Reverter Baixa
@@ -150,6 +160,30 @@ export function ExpedientesReverterBaixaDialog({
               nos logs do sistema.
             </div>
           </div>
+        </div>
+
+        {/* Confirmação textual — previne reversão acidental */}
+        <div className="space-y-2">
+          <Label htmlFor="reverter-confirmacao" className="text-sm">
+            Para confirmar, digite{' '}
+            <span className="font-semibold text-foreground">{PALAVRA_CONFIRMACAO}</span> abaixo
+          </Label>
+          <Input
+            id="reverter-confirmacao"
+            type="text"
+            autoComplete="off"
+            autoCorrect="off"
+            spellCheck={false}
+            value={textoConfirmacao}
+            onChange={(event) => setTextoConfirmacao(event.target.value)}
+            disabled={isPending}
+            aria-invalid={textoConfirmacao.length > 0 && !confirmacaoValida}
+            aria-describedby="reverter-confirmacao-hint"
+            placeholder={PALAVRA_CONFIRMACAO}
+          />
+          <p id="reverter-confirmacao-hint" className="text-xs text-muted-foreground">
+            Case-insensitive. A ação só será habilitada após a confirmação exata.
+          </p>
         </div>
 
         {/* Mensagem de erro */}
