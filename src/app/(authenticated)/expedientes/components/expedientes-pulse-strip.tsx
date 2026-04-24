@@ -95,12 +95,12 @@ export function ExpedientesPulseStrip({
           >
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">
-                <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate">
+                <p className="text-meta-label truncate">
                   {metric.label}
                 </p>
                 <div className="flex items-baseline gap-1.5 mt-1">
                   <p className={cn(
-                    'font-display text-2xl font-bold tabular-nums leading-none tracking-tight',
+                    'text-kpi-value leading-none tracking-tight',
                     metric.highlight && metric.value > 0 && 'text-destructive/80',
                   )}>
                     <AnimatedNumber value={metric.value} />
@@ -126,7 +126,7 @@ export function ExpedientesPulseStrip({
                   style={{ width: `${pct}%` }}
                 />
               </div>
-              <span className="text-[9px] tabular-nums text-muted-foreground/50 shrink-0">
+              <span className="text-micro-badge tabular-nums text-muted-foreground/50 shrink-0">
                 {pct}%
               </span>
             </div>

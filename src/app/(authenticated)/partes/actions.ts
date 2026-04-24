@@ -37,10 +37,13 @@ import {
   actionCriarCliente as _actionCriarCliente,
   actionAtualizarClienteForm as _actionAtualizarClienteForm,
   actionDesativarCliente as _actionDesativarCliente,
+  actionReativarEAtualizarCliente as _actionReativarEAtualizarCliente,
   actionCriarParteContraria as _actionCriarParteContraria,
   actionAtualizarParteContraria as _actionAtualizarParteContraria,
+  actionReativarEAtualizarParteContraria as _actionReativarEAtualizarParteContraria,
   actionCriarTerceiro as _actionCriarTerceiro,
   actionAtualizarTerceiro as _actionAtualizarTerceiro,
+  actionReativarEAtualizarTerceiro as _actionReativarEAtualizarTerceiro,
 } from './actions/partes-form-actions';
 
 export async function actionListarClientes(params: ListarClientesParams = {}) {
@@ -117,4 +120,28 @@ export async function actionAtualizarTerceiro(
   formData: FormData
 ) {
   return _actionAtualizarTerceiro(id, prevState, formData);
+}
+
+export async function actionReativarEAtualizarCliente(
+  id: number,
+  prevState: import('./actions/types').ActionResult | null,
+  formData: FormData
+) {
+  return _actionReativarEAtualizarCliente(id, prevState, formData);
+}
+
+export async function actionReativarEAtualizarParteContraria(
+  id: number,
+  prevState: import('./actions/types').ActionResult | null,
+  formData: FormData
+) {
+  return _actionReativarEAtualizarParteContraria(id, prevState, formData);
+}
+
+export async function actionReativarEAtualizarTerceiro(
+  id: number,
+  prevState: import('./actions/types').ActionResult | null,
+  formData: FormData
+) {
+  return _actionReativarEAtualizarTerceiro(id, prevState, formData);
 }

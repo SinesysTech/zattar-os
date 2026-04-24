@@ -144,16 +144,6 @@ function calcularDuracao(captura: CapturaLog): string {
   }
 }
 
-function getStatusDotColor(status: StatusCaptura): string {
-  switch (status) {
-    case 'completed': return 'bg-success';
-    case 'in_progress': return 'bg-info';
-    case 'failed': return 'bg-destructive';
-    case 'pending':
-    default: return 'bg-muted-foreground/40';
-  }
-}
-
 // =============================================================================
 // TYPES
 // =============================================================================
@@ -192,19 +182,14 @@ function CapturaCard({
       depth={2}
       className="p-4 h-full"
     >
-      {/* Header: Icon + Tipo + Status dot */}
-      <div className="flex items-start justify-between gap-2 mb-3">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center shrink-0', getTipoIconBg(captura.tipo_captura))}>
-            <TipoIcon className={cn('w-5 h-5', getTipoIconColor(captura.tipo_captura))} />
-          </div>
-          <div className="min-w-0">
-            <span className="block text-sm font-semibold truncate">
-              {formatarTipo(captura.tipo_captura)}
-            </span>
-          </div>
+      {/* Header: Icon + Tipo */}
+      <div className="flex items-center gap-3 mb-3 min-w-0">
+        <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center shrink-0', getTipoIconBg(captura.tipo_captura))}>
+          <TipoIcon className={cn('w-5 h-5', getTipoIconColor(captura.tipo_captura))} />
         </div>
-        <div className={cn('w-2.5 h-2.5 rounded-full shrink-0 mt-1', getStatusDotColor(captura.status))} />
+        <span className="text-sm font-semibold truncate min-w-0">
+          {formatarTipo(captura.tipo_captura)}
+        </span>
       </div>
 
       <div className="border-t border-border/10 my-2" />

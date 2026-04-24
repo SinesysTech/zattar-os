@@ -45,20 +45,6 @@ interface CapturaGlassListProps {
 // HELPERS
 // =============================================================================
 
-function getStatusDotColor(status: StatusCaptura): string {
-  switch (status) {
-    case 'completed':
-      return 'bg-success shadow-[0_0_6px_var(--success)]';
-    case 'in_progress':
-      return 'bg-info shadow-[0_0_6px_var(--info)]';
-    case 'failed':
-      return 'bg-destructive shadow-[0_0_6px_var(--destructive)]';
-    case 'pending':
-    default:
-      return 'bg-muted-foreground/40';
-  }
-}
-
 function getTipoIconBg(tipo: TipoCaptura): string {
   switch (tipo) {
     case 'acervo_geral': return 'bg-primary/[0.08]';
@@ -152,16 +138,16 @@ function formatarTipo(tipo: TipoCaptura): string {
   return TIPO_LABELS[tipo] ?? tipo;
 }
 
-function formatarDataHora(iso: string): string {
+function formatarDataHoraSeparado(iso: string): { data: string; hora: string } {
   try {
     const date = new Date(iso);
     const dd = String(date.getDate()).padStart(2, '0');
     const mm = String(date.getMonth() + 1).padStart(2, '0');
     const hh = String(date.getHours()).padStart(2, '0');
     const min = String(date.getMinutes()).padStart(2, '0');
-    return `${dd}/${mm} ${hh}:${min}`;
+    return { data: `${dd}/${mm}`, hora: `${hh}:${min}` };
   } catch {
-    return '—';
+    return { data: '—', hora: '' };
   }
 }
 
@@ -196,6 +182,7 @@ function GlassRow({
   onView: () => void;
 }) {
   const TipoIcon = getTipoIcon(captura.tipo_captura);
+  const { data, hora } = formatarDataHoraSeparado(captura.iniciado_em);
 
   return (
     <div
@@ -209,26 +196,25 @@ function GlassRow({
         'hover:bg-accent/40 hover:border-border/60 hover:scale-[1.0025] hover:-translate-y-px hover:shadow-lg',
       )}
     >
-      <div className="grid grid-cols-[10px_1fr_170px_120px_80px_80px_56px] gap-3 items-center">
-        {/* Status dot */}
-        <div className="flex items-center justify-center">
-          <div className={cn('w-2 h-2 rounded-full shrink-0', getStatusDotColor(captura.status))} />
+      <div className="grid grid-cols-[90px_1fr_200px_120px_80px_56px] gap-3 items-center">
+        {/* Data + hora (ancoragem temporal) */}
+        <div className="flex flex-col leading-tight">
+          <span className="text-xs font-medium text-foreground/80 tabular-nums">{data}</span>
+          <span className="text-[11px] text-muted-foreground/60 tabular-nums">{hora}</span>
         </div>
 
-        {/* Main info: icon + tipo */}
+        {/* Ícone + tipo */}
         <div className="flex items-center gap-3 min-w-0">
           <div className={cn('w-9 h-9 rounded-[0.625rem] flex items-center justify-center shrink-0', getTipoIconBg(captura.tipo_captura))}>
             <TipoIcon className={cn('w-4 h-4', getTipoIconColor(captura.tipo_captura))} />
           </div>
-          <div className="min-w-0">
-            <span className="block text-sm font-semibold truncate">
-              {formatarTipo(captura.tipo_captura)}
-            </span>
-          </div>
+          <span className="text-sm font-semibold truncate min-w-0">
+            {formatarTipo(captura.tipo_captura)}
+          </span>
         </div>
 
-        {/* Escopo: tribunais + graus agregados com tooltip */}
-        <div className="flex items-center">
+        {/* Escopo: tribunais + graus, texto único com tooltip */}
+        <div className="flex items-center min-w-0">
           <CapturaEscopoBadge
             credencialIds={captura.credencial_ids}
             credenciaisMap={credenciaisMap}
@@ -236,20 +222,13 @@ function GlassRow({
         </div>
 
         {/* Status badge */}
-        <div className="flex flex-col items-end gap-1">
+        <div className="flex items-center justify-end">
           <CapturaStatusSemanticBadge value={captura.status} className="text-[10px]">
             {STATUS_LABELS[captura.status] ?? captura.status}
           </CapturaStatusSemanticBadge>
         </div>
 
-        {/* Start time */}
-        <div className="text-right">
-          <span className="text-xs text-muted-foreground/60 tabular-nums">
-            {formatarDataHora(captura.iniciado_em)}
-          </span>
-        </div>
-
-        {/* Duration */}
+        {/* Duração */}
         <div className="text-right">
           <span className="text-xs text-muted-foreground/60 tabular-nums">
             {calcularDuracao(captura)}
@@ -257,7 +236,7 @@ function GlassRow({
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center justify-end gap-1">
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); onView(); }}
@@ -291,18 +270,17 @@ function ListSkeleton() {
     <div className="flex flex-col gap-2">
       {Array.from({ length: 5 }, (_, i) => (
         <GlassPanel key={i} depth={1} className="p-4">
-          <div className="grid grid-cols-[10px_1fr_170px_120px_80px_80px_56px] gap-3 items-center">
-            <Skeleton className="w-2 h-2 rounded-full" />
+          <div className="grid grid-cols-[90px_1fr_200px_120px_80px_56px] gap-3 items-center">
+            <div className="flex flex-col gap-1">
+              <Skeleton className="h-3 w-10" />
+              <Skeleton className="h-3 w-10" />
+            </div>
             <div className="flex items-center gap-3">
               <Skeleton className="w-9 h-9 rounded-[0.625rem]" />
               <Skeleton className="h-4 w-40" />
             </div>
-            <div className="flex items-center gap-1.5">
-              <Skeleton className="h-5 w-20 rounded" />
-              <Skeleton className="h-3 w-14" />
-            </div>
+            <Skeleton className="h-3 w-44" />
             <Skeleton className="h-5 w-20 rounded-full ml-auto" />
-            <Skeleton className="h-3 w-16 ml-auto" />
             <Skeleton className="h-3 w-12 ml-auto" />
             <div />
           </div>

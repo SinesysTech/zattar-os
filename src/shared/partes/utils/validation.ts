@@ -51,13 +51,48 @@ export async function verificarDuplicidadeDocumentoUpdate<T extends { id: number
   errorFactory: (doc: string, id: number) => AppError
 ): Promise<Result<void>> {
   if (!documento) return ok(undefined);
-  
+
   const result = await finder(documento);
   if (!result.success) return err(result.error);
-  
+
   if (result.data && result.data.id !== currentId) {
     return err(errorFactory(documento, result.data.id));
   }
-  
+
+  return ok(undefined);
+}
+
+/**
+ * Verifica duplicidade diferenciando cadastro ATIVO vs INATIVO.
+ *
+ * Usado em criação: permite à UI oferecer "reativar + atualizar" quando o
+ * conflito é com um registro soft-deleted, em vez de travar o usuário.
+ *
+ * - finder: retorna a entidade pelo documento sem filtrar por `ativo`
+ * - activeErrorFactory: erro quando o registro encontrado está ativo
+ * - inactiveErrorFactory: erro quando o registro encontrado está inativo
+ */
+export async function verificarDuplicidadeDocumentoComSoftDelete<
+  T extends { id: number; ativo: boolean | null | undefined }
+>(
+  documento: string | undefined | null,
+  finder: (doc: string) => Promise<Result<T | null>>,
+  activeErrorFactory: (doc: string, id: number) => AppError,
+  inactiveErrorFactory: (doc: string, id: number) => AppError
+): Promise<Result<void>> {
+  if (!documento) return ok(undefined);
+
+  const result = await finder(documento);
+  if (!result.success) return err(result.error);
+
+  if (result.data) {
+    // `ativo === false` é o único estado que consideramos "inativo explícito".
+    // `null`/`undefined` (registros legados sem preenchimento) são tratados
+    // como ativos para manter o comportamento estrito anterior.
+    const isAtivo = result.data.ativo !== false;
+    const factory = isAtivo ? activeErrorFactory : inactiveErrorFactory;
+    return err(factory(documento, result.data.id));
+  }
+
   return ok(undefined);
 }

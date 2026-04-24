@@ -48,6 +48,46 @@ export class DocumentoDuplicadoError extends Error {
 }
 
 /**
+ * Erro para documento duplicado em registro INATIVO (soft-deleted).
+ *
+ * Sinaliza que há registro com o mesmo CPF/CNPJ mas que foi soft-deleted.
+ * A UI pode oferecer a opção de reativar+atualizar em vez de criar novo.
+ *
+ * Diferença semântica de `DocumentoDuplicadoError`:
+ * - `DocumentoDuplicadoError`       → conflito com registro ATIVO (bloqueio real)
+ * - `DocumentoDuplicadoInativoError` → conflito com registro INATIVO (oferecer reativação)
+ */
+export class DocumentoDuplicadoInativoError extends Error {
+  public readonly tipoDocumento: 'CPF' | 'CNPJ';
+  public readonly documento: string;
+  public readonly entidade: 'cliente' | 'parte_contraria' | 'terceiro';
+  public readonly existingId: number;
+
+  constructor(
+    tipoDocumento: 'CPF' | 'CNPJ',
+    documento: string,
+    entidade: 'cliente' | 'parte_contraria' | 'terceiro',
+    existingId: number
+  ) {
+    const entidadeLabel = {
+      cliente: 'Cliente',
+      parte_contraria: 'Parte contraria',
+      terceiro: 'Terceiro',
+    }[entidade];
+
+    super(
+      `${entidadeLabel} com ${tipoDocumento} ${documento} ja cadastrado como INATIVO. ` +
+        `Reative o cadastro existente em vez de criar um novo.`
+    );
+    this.name = 'DocumentoDuplicadoInativoError';
+    this.tipoDocumento = tipoDocumento;
+    this.documento = documento;
+    this.entidade = entidade;
+    this.existingId = existingId;
+  }
+}
+
+/**
  * Erro para documento invalido (CPF ou CNPJ com formato incorreto)
  */
 export class DocumentoInvalidoError extends Error {
@@ -148,8 +188,21 @@ export class EmailInvalidoError extends Error {
  * Converte erros customizados do dominio para AppError
  */
 export function toAppError(error: Error): AppError {
+  if (error instanceof DocumentoDuplicadoInativoError) {
+    // Usamos `CONFLICT` + `kind: 'INACTIVE_DUPLICATE'` para distinguir do duplicado ativo
+    // na camada de action/UI, sem precisar criar um novo `ErrorCode` no @/types global.
+    return appError('CONFLICT', error.message, {
+      kind: 'INACTIVE_DUPLICATE',
+      tipoDocumento: error.tipoDocumento,
+      documento: error.documento,
+      entidade: error.entidade,
+      existingId: error.existingId,
+    });
+  }
+
   if (error instanceof DocumentoDuplicadoError) {
     return appError('CONFLICT', error.message, {
+      kind: 'ACTIVE_DUPLICATE',
       tipoDocumento: error.tipoDocumento,
       documento: error.documento,
       entidade: error.entidade,
@@ -206,6 +259,26 @@ export function toAppError(error: Error): AppError {
  */
 export function isDocumentoDuplicadoError(error: unknown): error is DocumentoDuplicadoError {
   return error instanceof DocumentoDuplicadoError;
+}
+
+/**
+ * Verifica se erro e DocumentoDuplicadoInativoError
+ */
+export function isDocumentoDuplicadoInativoError(
+  error: unknown
+): error is DocumentoDuplicadoInativoError {
+  return error instanceof DocumentoDuplicadoInativoError;
+}
+
+/**
+ * Dado um AppError, retorna true se representa um conflito com cadastro INATIVO.
+ * Útil na camada de action para direcionar o fluxo de reativação na UI.
+ */
+export function isInactiveDuplicateAppError(error: AppError): boolean {
+  return (
+    error.code === 'CONFLICT' &&
+    (error.details as Record<string, unknown> | undefined)?.kind === 'INACTIVE_DUPLICATE'
+  );
 }
 
 /**
@@ -292,6 +365,42 @@ export const parteContrariaCpfDuplicadoError = (cpf: string, existingId?: number
  */
 export const parteContrariaCnpjDuplicadoError = (cnpj: string, existingId?: number) =>
   new DocumentoDuplicadoError('CNPJ', cnpj, 'parte_contraria', existingId);
+
+/**
+ * Cria erro de parte contraria com CPF duplicado em cadastro INATIVO
+ */
+export const parteContrariaCpfDuplicadoInativoError = (cpf: string, existingId: number) =>
+  new DocumentoDuplicadoInativoError('CPF', cpf, 'parte_contraria', existingId);
+
+/**
+ * Cria erro de parte contraria com CNPJ duplicado em cadastro INATIVO
+ */
+export const parteContrariaCnpjDuplicadoInativoError = (cnpj: string, existingId: number) =>
+  new DocumentoDuplicadoInativoError('CNPJ', cnpj, 'parte_contraria', existingId);
+
+/**
+ * Cria erro de cliente com CPF duplicado em cadastro INATIVO
+ */
+export const clienteCpfDuplicadoInativoError = (cpf: string, existingId: number) =>
+  new DocumentoDuplicadoInativoError('CPF', cpf, 'cliente', existingId);
+
+/**
+ * Cria erro de cliente com CNPJ duplicado em cadastro INATIVO
+ */
+export const clienteCnpjDuplicadoInativoError = (cnpj: string, existingId: number) =>
+  new DocumentoDuplicadoInativoError('CNPJ', cnpj, 'cliente', existingId);
+
+/**
+ * Cria erro de terceiro com CPF duplicado em cadastro INATIVO
+ */
+export const terceiroCpfDuplicadoInativoError = (cpf: string, existingId: number) =>
+  new DocumentoDuplicadoInativoError('CPF', cpf, 'terceiro', existingId);
+
+/**
+ * Cria erro de terceiro com CNPJ duplicado em cadastro INATIVO
+ */
+export const terceiroCnpjDuplicadoInativoError = (cnpj: string, existingId: number) =>
+  new DocumentoDuplicadoInativoError('CNPJ', cnpj, 'terceiro', existingId);
 
 /**
  * Cria erro de terceiro com CPF duplicado

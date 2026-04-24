@@ -55,7 +55,7 @@ export {
   usePartes,
 } from "./hooks";
 
-export type { TipoEntidade, UsePartesParams, UsePartesResult } from "./hooks";
+export type { TipoEntidade, UsePartesParams, UsePartesResult, FiltroStatus } from "./hooks";
 
 // ============================================================================
 // Actions (Server Actions)

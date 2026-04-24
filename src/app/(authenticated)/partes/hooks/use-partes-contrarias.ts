@@ -31,12 +31,15 @@ export const usePartesContrarias = (
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Extrair valores primitivos para usar no callback
+  // Extrair valores primitivos para usar no callback.
+  // `ativo` é deixado serializável em string ("true"/"false"/"") para evitar instabilidade
+  // de referências em boolean | undefined dentro do useMemo de chave.
   const pagina = params.pagina ?? 1;
   const limite = params.limite ?? 50;
   const busca = params.busca || '';
   const tipo_pessoa = params.tipo_pessoa || '';
   const situacao = params.situacao || '';
+  const ativoKey = params.ativo === undefined ? '' : params.ativo ? 'true' : 'false';
   const incluirEndereco = params.incluirEndereco ?? false;
   const incluirProcessos = params.incluirProcessos ?? false;
 
@@ -48,10 +51,11 @@ export const usePartesContrarias = (
       busca,
       tipo_pessoa,
       situacao,
+      ativoKey,
       incluirEndereco,
       incluirProcessos,
     });
-  }, [pagina, limite, busca, tipo_pessoa, situacao, incluirEndereco, incluirProcessos]);
+  }, [pagina, limite, busca, tipo_pessoa, situacao, ativoKey, incluirEndereco, incluirProcessos]);
 
   // Usar ref para comparar valores anteriores e evitar loops
   const paramsRef = useRef<string>('');
@@ -61,12 +65,14 @@ export const usePartesContrarias = (
     setError(null);
 
     try {
+      const ativoParam = ativoKey === '' ? undefined : ativoKey === 'true';
       const result = await actionListarPartesContrarias({
         pagina,
         limite,
         busca: busca || undefined,
         tipo_pessoa: (tipo_pessoa as 'pf' | 'pj' | '') || undefined,
         situacao: (situacao as 'A' | 'I' | 'E' | 'H' | '') || undefined,
+        ativo: ativoParam,
         incluir_endereco: incluirEndereco,
         incluir_processos: incluirProcessos,
       });
@@ -90,7 +96,7 @@ export const usePartesContrarias = (
     } finally {
       setIsLoading(false);
     }
-  }, [pagina, limite, busca, tipo_pessoa, situacao, incluirEndereco, incluirProcessos]);
+  }, [pagina, limite, busca, tipo_pessoa, situacao, ativoKey, incluirEndereco, incluirProcessos]);
 
   useEffect(() => {
     // So executar se os parametros realmente mudaram

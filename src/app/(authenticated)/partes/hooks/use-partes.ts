@@ -28,11 +28,20 @@ import {
 
 export type TipoEntidade = 'todos' | 'clientes' | 'partes_contrarias' | 'terceiros' | 'representantes';
 
+/**
+ * Filtro de visibilidade em relação ao soft-delete (`ativo` boolean no DB).
+ * - `ativos`   → somente registros ativos (default da UI)
+ * - `inativos` → somente registros soft-deleted
+ * - `todos`    → ambos (visão administrativa/auditoria)
+ */
+export type FiltroStatus = 'ativos' | 'inativos' | 'todos';
+
 export interface UsePartesParams {
   tipoEntidade: TipoEntidade;
   busca?: string;
   pagina?: number;
   limite?: number;
+  status?: FiltroStatus;
 }
 
 export interface UsePartesResult {
@@ -43,6 +52,12 @@ export interface UsePartesResult {
   refetch: () => void;
 }
 
+function statusToAtivo(status: FiltroStatus): boolean | undefined {
+  if (status === 'ativos') return true;
+  if (status === 'inativos') return false;
+  return undefined;
+}
+
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
 export function usePartes({
@@ -50,6 +65,7 @@ export function usePartes({
   busca = '',
   pagina = 1,
   limite = 50,
+  status = 'ativos',
 }: UsePartesParams): UsePartesResult {
   const [partes, setPartes] = useState<EntityCardData[]>([]);
   const [total, setTotal] = useState(0);
@@ -64,8 +80,8 @@ export function usePartes({
   }, [busca]);
 
   const paramsKey = useMemo(
-    () => JSON.stringify({ tipoEntidade, debouncedBusca, pagina, limite }),
-    [tipoEntidade, debouncedBusca, pagina, limite]
+    () => JSON.stringify({ tipoEntidade, debouncedBusca, pagina, limite, status }),
+    [tipoEntidade, debouncedBusca, pagina, limite, status]
   );
 
   const paramsRef = useRef('');
@@ -76,6 +92,7 @@ export function usePartes({
 
     try {
       const buscaParam = debouncedBusca || undefined;
+      const ativoParam = statusToAtivo(status);
 
       // Clientes (ou "todos" — visão primária)
       if (tipoEntidade === 'clientes' || tipoEntidade === 'todos') {
@@ -83,6 +100,7 @@ export function usePartes({
           pagina,
           limite,
           busca: buscaParam,
+          ativo: ativoParam,
           incluir_endereco: true,
           incluir_processos: true,
         });
@@ -102,6 +120,7 @@ export function usePartes({
           pagina,
           limite,
           busca: buscaParam,
+          ativo: ativoParam,
           incluir_endereco: true,
           incluir_processos: true,
         });
@@ -122,6 +141,7 @@ export function usePartes({
           pagina,
           limite,
           busca: buscaParam,
+          ativo: ativoParam,
           incluir_endereco: true,
           incluir_processos: true,
         });
@@ -136,7 +156,7 @@ export function usePartes({
         return;
       }
 
-      // Representantes
+      // Representantes (sem soft-delete; a flag `ativos` vale apenas para as outras entidades)
       if (tipoEntidade === 'representantes') {
         const result = await actionListarRepresentantes({
           pagina,
@@ -159,7 +179,7 @@ export function usePartes({
     } finally {
       setIsLoading(false);
     }
-  }, [tipoEntidade, debouncedBusca, pagina, limite]);
+  }, [tipoEntidade, debouncedBusca, pagina, limite, status]);
 
   useEffect(() => {
     if (paramsRef.current !== paramsKey) {

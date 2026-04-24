@@ -34,7 +34,7 @@ import {
   Building2,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { usePartes, type TipoEntidade } from '@/app/(authenticated)/partes';
+import { usePartes, type TipoEntidade, type FiltroStatus } from '@/app/(authenticated)/partes';
 import { EntityCard, getInitials, timeAgo, type EntityCardData, type EntityCardKind } from '@/components/dashboard/entity-card';
 import type { Cliente, ParteContraria, Terceiro } from './domain';
 import type { Representante } from './types/representantes';
@@ -109,6 +109,55 @@ function CardSkeleton() {
         <div className="h-2 bg-muted-foreground/8 rounded w-12" />
       </div>
     </GlassPanel>
+  );
+}
+
+// ─── Status Filter Pills ──────────────────────────────────────────────────────
+//
+// Toggle compacto para filtrar listagens pelo soft-delete (`ativo`). Visualmente
+// espelha o padrão do TabPills/ViewToggle (mesma altura, mesmos radius/ring),
+// mas fica inline nos controles secundários da página — não compete com a
+// navegação primária (TipoEntidade).
+
+const STATUS_OPTIONS: ReadonlyArray<{ value: FiltroStatus; label: string }> = [
+  { value: 'ativos', label: 'Ativos' },
+  { value: 'inativos', label: 'Inativos' },
+  { value: 'todos', label: 'Todos' },
+];
+
+function StatusFilterPills({
+  value,
+  onChange,
+}: {
+  value: FiltroStatus;
+  onChange: (value: FiltroStatus) => void;
+}) {
+  return (
+    <div
+      role="radiogroup"
+      aria-label="Filtrar por status"
+      className="inline-flex items-center gap-0.5 rounded-xl border border-border/40 bg-muted/30 p-0.5"
+    >
+      {STATUS_OPTIONS.map((opt) => {
+        const selected = value === opt.value;
+        return (
+          <button
+            key={opt.value}
+            type="button"
+            role="radio"
+            aria-checked={selected}
+            onClick={() => onChange(opt.value)}
+            className={
+              selected
+                ? 'px-3 h-7 rounded-lg text-[11px] font-medium bg-primary/10 text-primary transition-colors'
+                : 'px-3 h-7 rounded-lg text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-foreground/4 transition-colors'
+            }
+          >
+            {opt.label}
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
@@ -293,6 +342,9 @@ export function PartesClient({ initialStats }: PartesClientProps) {
   const [viewMode, setViewMode] = useState<'cards' | 'list'>('cards');
   const [selectedParte, setSelectedParte] = useState<EntityCardData | null>(null);
   const [pagina, setPagina] = useState(1);
+  // Filtro de status: default 'ativos' — soft-deleted não aparecem sem ação explícita.
+  // Representantes ignoram esse filtro (não têm soft-delete).
+  const [statusFilter, setStatusFilter] = useState<FiltroStatus>('ativos');
 
   // Criação de parte
   type CreateType = 'clientes' | 'partes_contrarias' | 'terceiros' | 'representantes';
@@ -318,6 +370,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
     busca: search,
     pagina,
     limite: PAGE_SIZE,
+    status: statusFilter,
   });
 
   const totalPages = Math.ceil(total / PAGE_SIZE);
@@ -583,10 +636,16 @@ export function PartesClient({ initialStats }: PartesClientProps) {
         <ChevronRight className="size-3 ml-auto shrink-0" />
       </div>
 
-      {/* ── Tabs + Search + View Toggle ─────────────────────────── */}
+      {/* ── Tabs + Status Filter + Search + View Toggle ─────────── */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
         <TabPills tabs={tabs} active={activeTab} onChange={handleTabChange} />
         <div className="flex items-center gap-2 flex-1 justify-end">
+          {activeTab !== 'representantes' && (
+            <StatusFilterPills
+              value={statusFilter}
+              onChange={(next) => { setStatusFilter(next); setPagina(1); }}
+            />
+          )}
           <SearchInput
             value={search}
             onChange={(v) => { setSearch(v); setPagina(1); }}

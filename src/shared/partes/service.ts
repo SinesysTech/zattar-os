@@ -116,10 +116,24 @@ import type {
 import {
   clienteCpfDuplicadoError,
   clienteCnpjDuplicadoError,
+  clienteCpfDuplicadoInativoError,
+  clienteCnpjDuplicadoInativoError,
   clienteNaoEncontradoError,
+  parteContrariaCpfDuplicadoError,
+  parteContrariaCnpjDuplicadoError,
+  parteContrariaCpfDuplicadoInativoError,
+  parteContrariaCnpjDuplicadoInativoError,
+  terceiroCpfDuplicadoError,
+  terceiroCnpjDuplicadoError,
+  terceiroCpfDuplicadoInativoError,
+  terceiroCnpjDuplicadoInativoError,
   toAppError,
 } from './errors';
-import { validarInput, verificarDuplicidadeDocumento } from './utils';
+import {
+  validarInput,
+  verificarDuplicidadeDocumento,
+  verificarDuplicidadeDocumentoComSoftDelete,
+} from './utils';
 
 // =============================================================================
 // HELPERS COMPARTILHADOS
@@ -167,19 +181,21 @@ export async function criarCliente(input: CreateClienteInput): Promise<Result<Cl
   if (!valResult.success) return err(valResult.error);
   const dadosValidados = valResult.data;
 
-  // 2. Verificar duplicidade
+  // 2. Verificar duplicidade — separa ATIVO vs INATIVO para liberar reativação na UI
   if (dadosValidados.tipo_pessoa === 'pf') {
-    const dupResult = await verificarDuplicidadeDocumento(
+    const dupResult = await verificarDuplicidadeDocumentoComSoftDelete(
       dadosValidados.cpf,
       findClienteByCPF,
-      (doc, id) => toAppError(clienteCpfDuplicadoError(doc, id))
+      (doc, id) => toAppError(clienteCpfDuplicadoError(doc, id)),
+      (doc, id) => toAppError(clienteCpfDuplicadoInativoError(doc, id))
     );
     if (!dupResult.success) return err(dupResult.error);
   } else {
-    const dupResult = await verificarDuplicidadeDocumento(
+    const dupResult = await verificarDuplicidadeDocumentoComSoftDelete(
       dadosValidados.cnpj,
       findClienteByCNPJ,
-      (doc, id) => toAppError(clienteCnpjDuplicadoError(doc, id))
+      (doc, id) => toAppError(clienteCnpjDuplicadoError(doc, id)),
+      (doc, id) => toAppError(clienteCnpjDuplicadoInativoError(doc, id))
     );
     if (!dupResult.success) return err(dupResult.error);
   }
@@ -475,6 +491,17 @@ export async function desativarClientesEmMassa(ids: number[]): Promise<Result<nu
   return softDeleteClientesEmMassa(uniqueIds);
 }
 
+/**
+ * Reativa (ativo=true) um cliente soft-deleted e aplica um update.
+ * Espelha `reativarEAtualizarParteContraria` — ver docstring lá.
+ */
+export async function reativarEAtualizarCliente(
+  id: number,
+  input: UpdateClienteInput
+): Promise<Result<Cliente>> {
+  return atualizarCliente(id, { ...input, ativo: true } as UpdateClienteInput);
+}
+
 // =============================================================================
 // SERVICOS - PARTE CONTRARIA
 // =============================================================================
@@ -489,18 +516,21 @@ export async function criarParteContraria(
   if (!valResult.success) return err(valResult.error);
   const dadosValidados = valResult.data;
 
+  // Diferencia duplicado ATIVO (bloqueio real) de INATIVO (oferece reativação na UI).
   if (dadosValidados.tipo_pessoa === 'pf') {
-    const dupResult = await verificarDuplicidadeDocumento(
+    const dupResult = await verificarDuplicidadeDocumentoComSoftDelete(
       dadosValidados.cpf,
       findParteContrariaByCPF,
-      (doc, id) => appError('CONFLICT', 'Parte contraria com este CPF ja cadastrada', { field: 'cpf', existingId: id })
+      (doc, id) => toAppError(parteContrariaCpfDuplicadoError(doc, id)),
+      (doc, id) => toAppError(parteContrariaCpfDuplicadoInativoError(doc, id))
     );
     if (!dupResult.success) return err(dupResult.error);
   } else {
-    const dupResult = await verificarDuplicidadeDocumento(
+    const dupResult = await verificarDuplicidadeDocumentoComSoftDelete(
       dadosValidados.cnpj,
       findParteContrariaByCNPJ,
-      (doc, id) => appError('CONFLICT', 'Parte contraria com este CNPJ ja cadastrada', { field: 'cnpj', existingId: id })
+      (doc, id) => toAppError(parteContrariaCnpjDuplicadoError(doc, id)),
+      (doc, id) => toAppError(parteContrariaCnpjDuplicadoInativoError(doc, id))
     );
     if (!dupResult.success) return err(dupResult.error);
   }
@@ -658,6 +688,22 @@ export async function desativarPartesContrariasEmMassa(ids: number[]): Promise<R
   return softDeletePartesContrariasEmMassa(uniqueIds);
 }
 
+/**
+ * Reativa (ativo=true) uma parte contrária soft-deleted e aplica um update.
+ *
+ * Usado quando o usuário, ao tentar criar uma parte contrária nova com mesmo
+ * CPF/CNPJ de um cadastro inativo, opta por "reativar e atualizar".
+ *
+ * Garante que o update final inclui `ativo: true`, independente do que veio
+ * no `input` — evita inconsistência entre o propósito da operação e o payload.
+ */
+export async function reativarEAtualizarParteContraria(
+  id: number,
+  input: UpdateParteContrariaInput
+): Promise<Result<ParteContraria>> {
+  return atualizarParteContraria(id, { ...input, ativo: true } as UpdateParteContrariaInput);
+}
+
 // =============================================================================
 // SERVICOS - TERCEIRO
 // =============================================================================
@@ -670,18 +716,21 @@ export async function criarTerceiro(input: CreateTerceiroInput): Promise<Result<
   if (!valResult.success) return err(valResult.error);
   const dadosValidados = valResult.data;
 
+  // Diferencia duplicado ATIVO (bloqueio) vs INATIVO (oferece reativação na UI).
   if (dadosValidados.tipo_pessoa === 'pf') {
-     const dupResult = await verificarDuplicidadeDocumento(
+    const dupResult = await verificarDuplicidadeDocumentoComSoftDelete(
       dadosValidados.cpf,
       findTerceiroByCPF,
-      (doc, id) => appError('CONFLICT', 'Terceiro com este CPF ja cadastrado', { field: 'cpf', existingId: id })
+      (doc, id) => toAppError(terceiroCpfDuplicadoError(doc, id)),
+      (doc, id) => toAppError(terceiroCpfDuplicadoInativoError(doc, id))
     );
     if (!dupResult.success) return err(dupResult.error);
   } else {
-     const dupResult = await verificarDuplicidadeDocumento(
+    const dupResult = await verificarDuplicidadeDocumentoComSoftDelete(
       dadosValidados.cnpj,
       findTerceiroByCNPJ,
-      (doc, id) => appError('CONFLICT', 'Terceiro com este CNPJ ja cadastrado', { field: 'cnpj', existingId: id })
+      (doc, id) => toAppError(terceiroCnpjDuplicadoError(doc, id)),
+      (doc, id) => toAppError(terceiroCnpjDuplicadoInativoError(doc, id))
     );
     if (!dupResult.success) return err(dupResult.error);
   }
@@ -826,6 +875,17 @@ export async function desativarTerceirosEmMassa(ids: number[]): Promise<Result<n
   if (!uniqueIds.length) return err(appError('VALIDATION_ERROR', 'IDs invalidos'));
 
   return softDeleteTerceirosEmMassa(uniqueIds);
+}
+
+/**
+ * Reativa (ativo=true) um terceiro soft-deleted e aplica um update.
+ * Espelha `reativarEAtualizarParteContraria` — ver docstring lá.
+ */
+export async function reativarEAtualizarTerceiro(
+  id: number,
+  input: UpdateTerceiroInput
+): Promise<Result<Terceiro>> {
+  return atualizarTerceiro(id, { ...input, ativo: true } as UpdateTerceiroInput);
 }
 
 /**

@@ -107,6 +107,7 @@ export async function findAllTerceiros(params: ListarTerceirosParams = {}): Prom
       tipo_pessoa,
       tipo_parte,
       polo,
+      ativo,
       busca,
       nome,
       cpf,
@@ -129,6 +130,7 @@ export async function findAllTerceiros(params: ListarTerceirosParams = {}): Prom
     if (tipo_pessoa) query = query.eq('tipo_pessoa', tipo_pessoa);
     if (tipo_parte) query = query.eq('tipo_parte', tipo_parte);
     if (polo) query = query.eq('polo', polo);
+    if (ativo !== undefined) query = query.eq('ativo', ativo);
     if (nome) query = query.ilike('nome', `%${nome}%`);
     if (cpf) query = query.eq('cpf', normalizarDocumento(cpf));
     if (cnpj) query = query.eq('cnpj', normalizarDocumento(cnpj));
@@ -176,6 +178,7 @@ export async function findAllTerceirosComEnderecoEProcessos(
       tipo_parte,
       polo,
       situacao,
+      ativo,
       busca,
       nome,
       cpf,
@@ -199,6 +202,7 @@ export async function findAllTerceirosComEnderecoEProcessos(
     if (tipo_parte) query = query.eq('tipo_parte', tipo_parte);
     if (polo) query = query.eq('polo', polo);
     if (situacao) query = query.eq('situacao', situacao);
+    if (ativo !== undefined) query = query.eq('ativo', ativo);
     if (nome) query = query.ilike('nome', `%${nome}%`);
     if (cpf) query = query.eq('cpf', normalizarDocumento(cpf));
     if (cnpj) query = query.eq('cnpj', normalizarDocumento(cnpj));

@@ -90,29 +90,22 @@ function TemporalBlock({
       <div className="min-w-0 flex flex-col gap-0.5">
         {temPrazo ? (
           <div className="flex items-baseline gap-1.5">
-            <Text variant="meta-label" className="text-muted-foreground/65">
-              Fatal
-            </Text>
-            <Text variant="caption" className="tabular-nums font-medium">
+            <Text variant="meta-label">Fatal</Text>
+            <Text variant="caption" className="tabular-nums font-medium text-foreground">
               {format(parseISO(expediente.dataPrazoLegalParte!), 'dd MMM yyyy', {
                 locale: ptBR,
               })}
             </Text>
           </div>
         ) : (
-          <Text variant="caption" className="text-muted-foreground/50 italic">
+          <Text variant="caption" className="italic">
             Sem prazo
           </Text>
         )}
         {expediente.dataCienciaParte && (
           <div className="flex items-baseline gap-1.5">
-            <Text variant="meta-label" className="text-muted-foreground/55">
-              Ciência
-            </Text>
-            <Text
-              variant="micro-caption"
-              className="tabular-nums text-muted-foreground/70"
-            >
+            <Text variant="meta-label">Ciência</Text>
+            <Text variant="caption" className="tabular-nums font-medium text-foreground">
               {format(parseISO(expediente.dataCienciaParte), 'dd/MM/yyyy')}
             </Text>
           </div>
@@ -125,7 +118,7 @@ function TemporalBlock({
                 value="VENCIDO"
                 variantOverride="destructive"
                 toneOverride="soft"
-                className="text-[10px] px-1.5 py-0 h-5"
+                className="text-micro-badge px-1.5 py-0 h-5"
               >
                 Vencido
               </SemanticBadge>
@@ -134,7 +127,7 @@ function TemporalBlock({
               <span
                 className={cn(
                   'inline-flex items-center rounded-lg px-1.5 py-0.5',
-                  'text-[10px] font-semibold tabular-nums',
+                  'text-micro-badge tabular-nums',
                   URGENCY_COUNTDOWN[urgency],
                 )}
               >
@@ -181,11 +174,11 @@ function MainCell({
           onSuccess={onSuccess}
         >
           <Heading
-            level="widget"
+            level="card"
             as="h3"
             className={cn(
               'truncate',
-              !tipo && 'text-muted-foreground/60 italic font-normal',
+              !tipo && 'text-muted-foreground italic font-normal',
             )}
           >
             {tipoLabel}
@@ -197,7 +190,7 @@ function MainCell({
             value="SEGREDO"
             variantOverride="warning"
             toneOverride="soft"
-            className="text-[10px] gap-1"
+            className="text-micro-badge gap-1"
           >
             <Lock className="size-2.5" />
             Segredo
@@ -209,7 +202,7 @@ function MainCell({
             value="DIGITAL"
             variantOverride="info"
             toneOverride="soft"
-            className="text-[10px] gap-1"
+            className="text-micro-badge gap-1"
           >
             <Monitor className="size-2.5" />
             Digital
@@ -221,7 +214,7 @@ function MainCell({
             value="ALTA"
             variantOverride="destructive"
             toneOverride="soft"
-            className="text-[10px] gap-1"
+            className="text-micro-badge gap-1"
           >
             <AlertTriangle className="size-2.5" />
             Prioridade
@@ -262,14 +255,14 @@ function MainCell({
         <SemanticBadge
           category="tribunal"
           value={expediente.trt}
-          className="text-[10px]"
+          className="text-micro-badge"
         >
           {expediente.trt}
         </SemanticBadge>
         <SemanticBadge
           category="grau"
           value={expediente.grau}
-          className="text-[10px]"
+          className="text-micro-badge"
         >
           {grauLabel}
         </SemanticBadge>

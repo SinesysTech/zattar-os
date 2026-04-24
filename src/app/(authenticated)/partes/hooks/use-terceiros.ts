@@ -37,6 +37,7 @@ export const useTerceiros = (params: BuscarTerceirosParams = {}): UseTerceirosRe
   const tipo_parte = params.tipo_parte || '';
   const polo = params.polo || '';
   const situacao = params.situacao || '';
+  const ativoKey = params.ativo === undefined ? '' : params.ativo ? 'true' : 'false';
   const incluirEndereco = params.incluirEndereco ?? false;
   const incluirProcessos = params.incluirProcessos ?? false;
 
@@ -50,10 +51,11 @@ export const useTerceiros = (params: BuscarTerceirosParams = {}): UseTerceirosRe
       tipo_parte,
       polo,
       situacao,
+      ativoKey,
       incluirEndereco,
       incluirProcessos,
     });
-  }, [pagina, limite, busca, tipo_pessoa, tipo_parte, polo, situacao, incluirEndereco, incluirProcessos]);
+  }, [pagina, limite, busca, tipo_pessoa, tipo_parte, polo, situacao, ativoKey, incluirEndereco, incluirProcessos]);
 
   // Usar ref para comparar valores anteriores e evitar loops
   const paramsRef = useRef<string>('');
@@ -63,6 +65,7 @@ export const useTerceiros = (params: BuscarTerceirosParams = {}): UseTerceirosRe
     setError(null);
 
     try {
+      const ativoParam = ativoKey === '' ? undefined : ativoKey === 'true';
       const result = await actionListarTerceiros({
         pagina,
         limite,
@@ -73,6 +76,7 @@ export const useTerceiros = (params: BuscarTerceirosParams = {}): UseTerceirosRe
         // @ts-expect-error - polo no banco pode ter valores variados
         polo: polo || undefined,
         situacao: (situacao as 'A' | 'I') || undefined,
+        ativo: ativoParam,
         incluir_endereco: incluirEndereco,
         incluir_processos: incluirProcessos,
       });
@@ -96,7 +100,7 @@ export const useTerceiros = (params: BuscarTerceirosParams = {}): UseTerceirosRe
     } finally {
       setIsLoading(false);
     }
-  }, [pagina, limite, busca, tipo_pessoa, tipo_parte, polo, situacao, incluirEndereco, incluirProcessos]);
+  }, [pagina, limite, busca, tipo_pessoa, tipo_parte, polo, situacao, ativoKey, incluirEndereco, incluirProcessos]);
 
   useEffect(() => {
     // So executar se os parametros realmente mudaram

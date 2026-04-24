@@ -11,13 +11,32 @@
 // =============================================================================
 
 /**
+ * Códigos de erro semânticos propagáveis ao client (UI).
+ *
+ * `INACTIVE_DUPLICATE` → existe cadastro soft-deleted com o mesmo CPF/CNPJ
+ *   (a UI pode oferecer "reativar e atualizar" em vez de bloquear).
+ * `ACTIVE_DUPLICATE`   → conflito com cadastro ativo (bloqueio real).
+ */
+export type ActionErrorCode = 'INACTIVE_DUPLICATE' | 'ACTIVE_DUPLICATE';
+
+/**
  * Formato padrão de retorno das Server Actions do módulo Partes.
  * `errors` é opcional para compatibilidade com actions que não reportam
  * erros de validação por campo (ex: processo-partes-actions).
+ *
+ * `code` e `existingId` acompanham o retorno de erros que carregam semântica
+ * adicional — por exemplo, para direcionar um fluxo de reativação na UI.
  */
 export type ActionResult<T = unknown> =
   | { success: true; data: T; message: string }
-  | { success: false; error: string; errors?: Record<string, string[]>; message: string };
+  | {
+      success: false;
+      error: string;
+      errors?: Record<string, string[]>;
+      message: string;
+      code?: ActionErrorCode;
+      existingId?: number;
+    };
 
 // =============================================================================
 // ESTATÍSTICAS (partes-stats-actions)

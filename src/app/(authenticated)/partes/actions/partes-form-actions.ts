@@ -33,17 +33,46 @@ import {
   buscarCliente,
   listarClientes,
   desativarCliente,
+  reativarEAtualizarCliente,
   criarParteContraria,
   atualizarParteContraria,
   buscarParteContraria,
   listarPartesContrarias,
+  reativarEAtualizarParteContraria,
   criarTerceiro,
   atualizarTerceiro,
   buscarTerceiro,
   listarTerceiros,
+  reativarEAtualizarTerceiro,
 } from '../service';
+import { isInactiveDuplicateAppError } from '../errors';
+import type { AppError } from '@/types';
 
 import type { ActionResult } from './types';
+
+// Converte um AppError vindo do service em ActionResult de falha, preservando
+// o código semântico (INACTIVE_DUPLICATE / ACTIVE_DUPLICATE) e o `existingId`
+// quando aplicável — informação que a UI usa para direcionar o fluxo (ex:
+// dialog "Reativar e atualizar?").
+function appErrorToFailureResult(error: AppError, fallbackMessage: string): ActionResult {
+  const details = error.details as Record<string, unknown> | undefined;
+  const kind = details?.kind as string | undefined;
+  const existingId = details?.existingId as number | undefined;
+
+  const base = {
+    success: false as const,
+    error: error.message,
+    message: error.message || fallbackMessage,
+  };
+
+  if (isInactiveDuplicateAppError(error)) {
+    return { ...base, code: 'INACTIVE_DUPLICATE', existingId };
+  }
+  if (kind === 'ACTIVE_DUPLICATE') {
+    return { ...base, code: 'ACTIVE_DUPLICATE', existingId };
+  }
+  return base;
+}
 
 // =============================================================================
 // HELPERS
@@ -369,11 +398,7 @@ export async function actionCriarCliente(
     const createResult = await criarCliente(validation.data as CreateClienteInput);
 
     if (!createResult.success) {
-      return {
-        success: false,
-        error: createResult.error.message,
-        message: createResult.error.message,
-      };
+      return appErrorToFailureResult(createResult.error, 'Erro ao criar cliente. Tente novamente.');
     }
 
     const { draft, hasAny } = extractEnderecoDraft(formData);
@@ -618,11 +643,7 @@ export async function actionCriarParteContraria(
     const createResult = await criarParteContraria(validation.data as CreateParteContrariaInput);
 
     if (!createResult.success) {
-      return {
-        success: false,
-        error: createResult.error.message,
-        message: createResult.error.message,
-      };
+      return appErrorToFailureResult(createResult.error, 'Erro ao criar parte contraria. Tente novamente.');
     }
 
     const { draft, hasAny } = extractEnderecoDraft(formData);
@@ -825,11 +846,7 @@ export async function actionCriarTerceiro(
     const createResult = await criarTerceiro(validation.data as CreateTerceiroInput);
 
     if (!createResult.success) {
-      return {
-        success: false,
-        error: createResult.error.message,
-        message: createResult.error.message,
-      };
+      return appErrorToFailureResult(createResult.error, 'Erro ao criar terceiro. Tente novamente.');
     }
 
     const { draft, hasAny } = extractEnderecoDraft(formData);
@@ -1013,4 +1030,44 @@ export async function actionListarTerceiros(
       message: 'Erro ao carregar terceiros. Tente novamente.',
     };
   }
+}
+
+// =============================================================================
+// SERVER ACTIONS - REATIVAÇÃO (aplicam update e forçam `ativo=true`)
+//
+// Acionadas pela UI quando o usuário, ao tentar criar um registro novo com
+// CPF/CNPJ de um cadastro INATIVO, opta por "reativar e atualizar" em vez
+// de bloquear. Reutilizam o fluxo de atualização (hidratação de endereço,
+// revalidação de paths, etc.) — a única diferença é forçar `ativo: true`
+// no payload antes de chamar a action de update.
+// =============================================================================
+
+export async function actionReativarEAtualizarParteContraria(
+  id: number,
+  prevState: ActionResult | null,
+  formData: FormData
+): Promise<ActionResult> {
+  // Força `ativo=true` no payload serializado — o form já envia `ativo` via
+  // hidden input, mas sobrescrever aqui garante o contrato da operação
+  // independentemente do estado de UI no momento do submit.
+  formData.set('ativo', 'true');
+  return actionAtualizarParteContraria(id, prevState, formData);
+}
+
+export async function actionReativarEAtualizarCliente(
+  id: number,
+  prevState: ActionResult | null,
+  formData: FormData
+): Promise<ActionResult> {
+  formData.set('ativo', 'true');
+  return actionAtualizarClienteForm(id, prevState, formData);
+}
+
+export async function actionReativarEAtualizarTerceiro(
+  id: number,
+  prevState: ActionResult | null,
+  formData: FormData
+): Promise<ActionResult> {
+  formData.set('ativo', 'true');
+  return actionAtualizarTerceiro(id, prevState, formData);
 }

@@ -33,7 +33,7 @@ import { ExpedientesSemanaView } from './expedientes-semana-view';
 import { ExpedienteDialog } from './expediente-dialog';
 import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
 import { ExpedientesBaixarDialog } from './expedientes-baixar-dialog';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 
 // ─── Route constants ──────────────────────────────────────────────────────────
 
@@ -262,7 +262,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
           <Heading level="page">
             Expedientes
           </Heading>
-          <p className="text-sm text-muted-foreground mt-0.5" aria-live="polite">{subtitle}</p>
+          <Text variant="caption" as="p" className="mt-0.5" aria-live="polite">{subtitle}</Text>
         </div>
 
         <div className="flex items-center gap-2">

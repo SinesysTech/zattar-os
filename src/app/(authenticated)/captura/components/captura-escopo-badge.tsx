@@ -17,7 +17,6 @@ type CredencialInfo = { tribunal: string; grau: string };
 export interface CapturaEscopoBadgeProps {
   credencialIds: number[] | undefined;
   credenciaisMap: Map<number, CredencialInfo>;
-  layout?: 'row' | 'stack';
   className?: string;
 }
 
@@ -41,7 +40,6 @@ function resumirGraus(graus: string[]): string {
 export function CapturaEscopoBadge({
   credencialIds,
   credenciaisMap,
-  layout = 'row',
   className,
 }: CapturaEscopoBadgeProps) {
   const { tribunais, graus, detalhes } = React.useMemo(() => {
@@ -75,20 +73,21 @@ export function CapturaEscopoBadge({
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <div
+        <span
           className={cn(
-            'inline-flex items-center gap-1.5 cursor-help',
-            layout === 'stack' && 'flex-col items-end gap-0.5',
+            'inline-flex items-baseline gap-1 text-xs text-muted-foreground/80 cursor-help',
+            'hover:text-foreground transition-colors',
             className,
           )}
         >
-          <span className="inline-flex items-center px-1.5 py-0.5 rounded-[5px] text-[10px] font-semibold tabular-nums border border-border/15 bg-muted/20 text-muted-foreground tracking-wide">
-            {tribunaisLabel}
-          </span>
+          <span className="font-medium tabular-nums">{tribunaisLabel}</span>
           {grausLabel && (
-            <span className="text-xs text-muted-foreground/60">{grausLabel}</span>
+            <>
+              <span aria-hidden className="text-muted-foreground/40">·</span>
+              <span className="text-muted-foreground/60">{grausLabel}</span>
+            </>
           )}
-        </div>
+        </span>
       </TooltipTrigger>
       <TooltipContent side="top" align="start" className="max-w-xs p-0 overflow-hidden">
         <div className="px-3 py-2 border-b border-border/40">

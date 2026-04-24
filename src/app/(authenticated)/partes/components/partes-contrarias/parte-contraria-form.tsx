@@ -31,10 +31,24 @@ import { toast } from 'sonner';
 import { InputCEP, type InputCepAddress } from '@/app/(authenticated)/enderecos';
 import type { Endereco } from '@/app/(authenticated)/enderecos/types';
 import { InputTelefone } from '@/components/ui/input-telefone';
-import { actionCriarParteContraria, actionAtualizarParteContraria } from '../../actions';
+import {
+  actionCriarParteContraria,
+  actionAtualizarParteContraria,
+  actionReativarEAtualizarParteContraria,
+} from '../../actions';
 import type { ActionResult } from '../../actions/types';
 import type { ParteContraria } from '../../types';
 import { DialogFormShell, DialogNavPrevious, DialogNavNext } from '@/components/shared/dialog-shell';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
 // =============================================================================
@@ -168,6 +182,10 @@ export function ParteContrariaFormDialog({
   const [novoEmail, setNovoEmail] = React.useState('');
   const [mounted, setMounted] = React.useState(false);
   const formRef = React.useRef<HTMLFormElement>(null);
+  // Reativação: quando a criação detecta que já existe cadastro INATIVO com mesmo
+  // CPF/CNPJ, guardamos o id para oferecer "reativar + atualizar" via AlertDialog.
+  const [inactiveDuplicateId, setInactiveDuplicateId] = React.useState<number | null>(null);
+  const [isReactivating, setIsReactivating] = React.useState(false);
 
   // Garantir que o componente só renderize Select após hidratação
   React.useEffect(() => {
@@ -202,11 +220,38 @@ export function ParteContrariaFormDialog({
         toast.success(state.message);
         onOpenChange(false);
         onSuccessRef.current?.();
+      } else if (state.code === 'INACTIVE_DUPLICATE' && state.existingId) {
+        // Existe um cadastro INATIVO com este CPF/CNPJ — não mostrar toast,
+        // abrir o AlertDialog de reativação em vez de bloquear o usuário.
+        setInactiveDuplicateId(state.existingId);
       } else {
         toast.error(state.message);
       }
     }
   }, [state, onOpenChange]);
+
+  const handleConfirmReactivation = React.useCallback(async () => {
+    if (!inactiveDuplicateId || !formRef.current) return;
+    setIsReactivating(true);
+    try {
+      // Reaproveita o FormData atual do formulário — a action de reativação
+      // recebe o mesmo payload do create/update e força `ativo=true` no server.
+      const fd = new FormData(formRef.current);
+      const result = await actionReativarEAtualizarParteContraria(inactiveDuplicateId, null, fd);
+      if (result.success) {
+        toast.success(result.message || 'Parte contrária reativada e atualizada');
+        setInactiveDuplicateId(null);
+        onOpenChange(false);
+        onSuccessRef.current?.();
+      } else {
+        toast.error(result.message || 'Erro ao reativar cadastro');
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Erro ao reativar cadastro');
+    } finally {
+      setIsReactivating(false);
+    }
+  }, [inactiveDuplicateId, onOpenChange]);
 
   // Reset ao fechar ou inicializar com dados da parte contrária
   React.useEffect(() => {
@@ -1026,6 +1071,36 @@ export function ParteContrariaFormDialog({
             {renderCurrentStep()}
           </div>
         </form>
+
+        <AlertDialog
+          open={inactiveDuplicateId !== null}
+          onOpenChange={(open) => {
+            if (!open && !isReactivating) setInactiveDuplicateId(null);
+          }}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Cadastro inativo encontrado</AlertDialogTitle>
+              <AlertDialogDescription>
+                Já existe uma parte contrária INATIVA com este {isPJ ? 'CNPJ' : 'CPF'}.
+                Deseja reativá-la e atualizar os dados com as informações que você preencheu?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={isReactivating}>Cancelar</AlertDialogCancel>
+              <AlertDialogAction onClick={handleConfirmReactivation} disabled={isReactivating}>
+                {isReactivating ? (
+                  <>
+                    <LoadingSpinner className="mr-2" />
+                    Reativando...
+                  </>
+                ) : (
+                  'Reativar e atualizar'
+                )}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
     </DialogFormShell>
   );
 }
