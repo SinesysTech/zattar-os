@@ -35,12 +35,12 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
   return (
     <div className="flex flex-col h-full w-full">
       {/* Panel header — "Detalhes" per mock */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-border/40 dark:border-white/[0.06] shrink-0">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-border/40 dark:border-white/6 shrink-0">
         <span className="text-[0.75rem] font-semibold text-foreground">Detalhes</span>
         <Button
           size="icon"
           variant="ghost"
-          className="size-7 text-muted-foreground/50 hover:bg-foreground/[0.04] hover:text-foreground"
+          className="size-7 text-muted-foreground/50 hover:bg-foreground/4 hover:text-foreground"
           onClick={() => toggleProfileSheet(false)}
           aria-label="Fechar detalhes"
         >
@@ -52,7 +52,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
       <ScrollArea className="flex-1">
         {/* Profile section — 72px avatar centered per mock */}
         <div className="flex flex-col items-center gap-3 py-6 px-5">
-          <Avatar className="size-[72px] rounded-2xl overflow-visible">
+          <Avatar className="size-18 rounded-2xl overflow-visible">
             <AvatarImage src={user.avatar} alt={displayName} className="rounded-2xl" />
             <AvatarFallback className="bg-primary/10 text-primary text-xl font-semibold rounded-2xl">
               {generateAvatarFallback(displayName)}
@@ -75,14 +75,14 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
         </div>
 
         {/* Informacoes section — icon + label + value per mock */}
-        <div className="px-5 py-3.5 border-t border-border/40 dark:border-white/[0.06]">
+        <div className="px-5 py-3.5 border-t border-border/40 dark:border-white/6">
           <Text variant="overline" as="h5" className="text-muted-foreground/35 mb-3">
             Informacoes
           </Text>
           <div className="space-y-0">
             {/* Email */}
             <div className="flex items-center gap-2.5 py-2">
-              <div className="size-7 rounded-md flex items-center justify-center bg-primary/[0.06] shrink-0">
+              <div className="size-7 rounded-md flex items-center justify-center bg-primary/6 shrink-0">
                 <Mail className="size-3 text-primary/50" />
               </div>
               <div>
@@ -95,7 +95,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
             {/* Phone */}
             {user.phone && (
               <div className="flex items-center gap-2.5 py-2">
-                <div className="size-7 rounded-md flex items-center justify-center bg-primary/[0.06] shrink-0">
+                <div className="size-7 rounded-md flex items-center justify-center bg-primary/6 shrink-0">
                   <Phone className="size-3 text-primary/50" />
                 </div>
                 <div>
@@ -107,7 +107,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
             {/* Country / Membro desde */}
             {user.country && (
               <div className="flex items-center gap-2.5 py-2">
-                <div className="size-7 rounded-md flex items-center justify-center bg-primary/[0.06] shrink-0">
+                <div className="size-7 rounded-md flex items-center justify-center bg-primary/6 shrink-0">
                   <Calendar className="size-3 text-primary/50" />
                 </div>
                 <div>
@@ -121,7 +121,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
 
         {/* Media section — 3-column grid per mock */}
         {user.medias && user.medias.length > 0 && (
-          <div className="px-5 py-3.5 border-t border-border/40 dark:border-white/[0.06]">
+          <div className="px-5 py-3.5 border-t border-border/40 dark:border-white/6">
             <Text variant="overline" as="h5" className="text-muted-foreground/35 mb-3">
               Midia Compartilhada
             </Text>
@@ -129,7 +129,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
               {user.medias.map(
                 (item, i) =>
                   item.type === "image" && (
-                    <div key={i} className="aspect-square rounded-lg overflow-hidden bg-foreground/[0.04]">
+                    <div key={i} className="aspect-square rounded-lg overflow-hidden bg-foreground/4">
                       <Image
                         src={item.url}
                         alt="media"
@@ -147,7 +147,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
 
         {/* Website */}
         {user.website && (
-          <div className="px-5 py-3.5 border-t border-border/40 dark:border-white/[0.06]">
+          <div className="px-5 py-3.5 border-t border-border/40 dark:border-white/6">
             <Text variant="overline" as="h5" className="text-muted-foreground/35 mb-3">
               Website
             </Text>
