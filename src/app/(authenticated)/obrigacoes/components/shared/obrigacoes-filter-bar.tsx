@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Check, ChevronDown, X } from 'lucide-react';
 
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 
 import {
@@ -51,7 +52,7 @@ function FilterDropdownTrigger({
         open && 'ring-1 ring-ring',
       )}
     >
-      <span>{label}</span>
+      <Text variant="label" as="span">{label}</Text>
       {active && onClear ? (
         <span
           role="button"

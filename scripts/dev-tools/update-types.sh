@@ -25,11 +25,14 @@ PROJECT_ID="cxxdivtgeslrujpfpivs"
 TYPES_FILE="src/lib/supabase/database.types.ts"
 MODE="${1:---write}"
 
-if [[ -z "${SUPABASE_ACCESS_TOKEN:-}" ]]; then
-  echo "[db-types] SUPABASE_ACCESS_TOKEN não definido — skip."
-  echo "[db-types] Para ativar: export SUPABASE_ACCESS_TOKEN=<PAT do Supabase>."
-  exit 0
-fi
+TOKEN="${SUPABASE_ACCESS_TOKEN:-}"
+case "$TOKEN" in
+  "" | REPLACE_WITH_* | "<PAT>"* | sbp_COLOQUE_* )
+    echo "[db-types] SUPABASE_ACCESS_TOKEN ausente ou com placeholder — skip."
+    echo "[db-types] Para ativar: descomente e preencha em ~/.zshrc (ou equivalente)."
+    exit 0
+    ;;
+esac
 
 TMP_FILE="$(mktemp)"
 trap 'rm -f "$TMP_FILE"' EXIT

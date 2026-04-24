@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import {
   CalendarDays,
   CalendarRange,
@@ -24,20 +25,59 @@ import { useExpedientes } from '../hooks/use-expedientes';
 import type { Expediente } from '../domain';
 import { getExpedientePartyNames } from '../domain';
 import { ExpedientesPulseStrip } from './expedientes-pulse-strip';
-import { ExpedientesControlView } from './expedientes-control-view';
-import { ExpedientesListWrapper } from './expedientes-list-wrapper';
 import {
   ExpedientesFilterBar,
   type ExpedientesFilterBarFilters,
   type ExpedientesStatus,
 } from './expedientes-filter-bar';
-import { ExpedientesMonthWrapper } from './expedientes-month-wrapper';
-import { ExpedientesYearWrapper } from './expedientes-year-wrapper';
-import { ExpedientesSemanaView } from './expedientes-semana-view';
-import { ExpedienteDialog } from './expediente-dialog';
-import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
-import { ExpedientesBaixarDialog } from './expedientes-baixar-dialog';
 import { Heading, Text } from '@/components/ui/typography';
+
+// ─── Lazy-loaded views e dialogs ──────────────────────────────────────────────
+// As 5 views de expedientes são exclusivas entre si (só uma renderiza por vez),
+// então carregar só a ativa reduz o bundle inicial. Os 3 dialogs são
+// renderizados condicionalmente e lazy-loaded para não entrarem no first paint.
+
+const ViewSkeleton = () => (
+  <div className="space-y-3" aria-busy="true" aria-label="Carregando visualização">
+    {Array.from({ length: 4 }).map((_, i) => (
+      <Skeleton key={i} className="h-20 rounded-2xl" />
+    ))}
+  </div>
+);
+
+const ExpedientesControlView = dynamic(
+  () => import('./expedientes-control-view').then((m) => ({ default: m.ExpedientesControlView })),
+  { loading: ViewSkeleton, ssr: false }
+);
+const ExpedientesListWrapper = dynamic(
+  () => import('./expedientes-list-wrapper').then((m) => ({ default: m.ExpedientesListWrapper })),
+  { loading: ViewSkeleton, ssr: false }
+);
+const ExpedientesSemanaView = dynamic(
+  () => import('./expedientes-semana-view').then((m) => ({ default: m.ExpedientesSemanaView })),
+  { loading: ViewSkeleton, ssr: false }
+);
+const ExpedientesMonthWrapper = dynamic(
+  () => import('./expedientes-month-wrapper').then((m) => ({ default: m.ExpedientesMonthWrapper })),
+  { loading: ViewSkeleton, ssr: false }
+);
+const ExpedientesYearWrapper = dynamic(
+  () => import('./expedientes-year-wrapper').then((m) => ({ default: m.ExpedientesYearWrapper })),
+  { loading: ViewSkeleton, ssr: false }
+);
+
+const ExpedienteDialog = dynamic(
+  () => import('./expediente-dialog').then((m) => ({ default: m.ExpedienteDialog })),
+  { ssr: false }
+);
+const ExpedienteVisualizarDialog = dynamic(
+  () => import('./expediente-visualizar-dialog').then((m) => ({ default: m.ExpedienteVisualizarDialog })),
+  { ssr: false }
+);
+const ExpedientesBaixarDialog = dynamic(
+  () => import('./expedientes-baixar-dialog').then((m) => ({ default: m.ExpedientesBaixarDialog })),
+  { ssr: false }
+);
 
 // ─── Route constants ──────────────────────────────────────────────────────────
 
@@ -479,22 +519,27 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
         )}
       </main>
 
-      {/* 6. Overlays */}
-      <ExpedienteDialog
-        open={isCreateOpen}
-        onOpenChange={setIsCreateOpen}
-        onSuccess={() => {
-          setIsCreateOpen(false);
-          refetch();
-          setRefreshCounter((c) => c + 1);
-        }}
-      />
+      {/* 6. Overlays — renderizados condicionalmente para que os chunks
+          lazy-loaded só sejam baixados quando o dialog vai de fato abrir. */}
+      {isCreateOpen && (
+        <ExpedienteDialog
+          open={isCreateOpen}
+          onOpenChange={setIsCreateOpen}
+          onSuccess={() => {
+            setIsCreateOpen(false);
+            refetch();
+            setRefreshCounter((c) => c + 1);
+          }}
+        />
+      )}
 
-      <ExpedienteVisualizarDialog
-        expediente={selectedExpediente}
-        open={isDetailOpen}
-        onOpenChange={setIsDetailOpen}
-      />
+      {isDetailOpen && selectedExpediente && (
+        <ExpedienteVisualizarDialog
+          expediente={selectedExpediente}
+          open={isDetailOpen}
+          onOpenChange={setIsDetailOpen}
+        />
+      )}
 
       {baixarExpediente && (
         <ExpedientesBaixarDialog

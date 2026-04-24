@@ -7,6 +7,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Text } from '@/components/ui/typography';
 import { toast } from 'sonner';
 import { actionAnexarDeclaracao } from '../../actions/repasses';
 
@@ -59,7 +60,7 @@ export function UploadDeclaracaoDialog({ open, onOpenChange, parcelaId, onSucces
          </DialogHeader>
          <div className="space-y-4 py-4">
              <Input type="file" accept=".pdf,.jpg,.png" onChange={handleFileChange} disabled={isUploading} />
-             {file && <div className="text-sm">{file.name}</div>}
+             {file && <Text variant="caption" as="div">{file.name}</Text>}
          </div>
          <DialogFooter>
              <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>

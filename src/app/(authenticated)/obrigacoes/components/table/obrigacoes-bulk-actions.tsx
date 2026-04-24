@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Trash2, DollarSign, Download, RefreshCw } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
+import { Text } from '@/components/ui/typography';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -63,7 +64,7 @@ export function ObrigacoesBulkActions({
             Ações em Lote ({selectedRows.length})
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-[200px]">
+        <DropdownMenuContent align="end" className="w-50">
           <DropdownMenuItem disabled>
             <DollarSign className="mr-2 h-4 w-4" />
             Marcar como Pago
@@ -92,7 +93,7 @@ export function ObrigacoesBulkActions({
             <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
             <AlertDialogDescription>
               Esta ação não pode ser desfeita. Isso excluirá permanentemente{' '}
-              <span className="font-medium">{selectedRows.length}</span> obrigações
+              <Text variant="caption" as="span" className="font-medium">{selectedRows.length}</Text> obrigações
               selecionadas e todas as suas parcelas.
             </AlertDialogDescription>
           </AlertDialogHeader>

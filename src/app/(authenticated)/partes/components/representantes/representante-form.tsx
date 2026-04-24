@@ -414,7 +414,7 @@ export function RepresentanteFormDialog({
 
   // Renderizar Step 1 - Identificação
   const renderStep1 = () => (
-    <div className="grid gap-4 py-4">
+    <div className="grid gap-(--density-field-gap)">
       <div className="grid gap-2">
         <Label htmlFor="nome">
           Nome Completo <span className="text-destructive">*</span>
@@ -579,7 +579,7 @@ export function RepresentanteFormDialog({
 
   // Renderizar Step 2 - Contato
   const renderStep2 = () => (
-    <div className="grid gap-4 py-4">
+    <div className="grid gap-(--density-field-gap)">
       <div className="grid gap-2">
         <Label htmlFor="novo-email-representante">E-mails</Label>
         <div className="flex gap-2">
@@ -691,7 +691,7 @@ export function RepresentanteFormDialog({
 
   // Renderizar Step 3 - Endereço
   const renderStep3 = () => (
-    <div className="grid gap-4 py-4">
+    <div className="grid gap-(--density-field-gap)">
       <div className="grid gap-2">
         <Label>CEP</Label>
         <InputCEP
@@ -781,7 +781,7 @@ export function RepresentanteFormDialog({
 
   // Renderizar Step 4 - Informações Adicionais
   const renderStep4 = () => (
-    <div className="grid gap-4 py-4">
+    <div className="grid gap-(--density-field-gap)">
       <div className="mt-4 p-4 rounded-lg bg-muted/50 border">
         <Heading level="subsection" className="mb-2">Resumo do cadastro</Heading>
         <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
@@ -831,6 +831,7 @@ export function RepresentanteFormDialog({
       open={open}
       onOpenChange={onOpenChange}
       title={isEditMode ? 'Editar Representante' : stepInfo.title}
+      density="compact"
       multiStep={{
         current: currentStep,
         total: TOTAL_STEPS,

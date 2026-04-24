@@ -4,6 +4,7 @@
 import * as React from 'react';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Combobox } from '@/components/ui/combobox';
+import { Text } from '@/components/ui/typography';
 import { actionListarAcervoPaginado, type GrauAcervo } from '@/app/(authenticated)/acervo';
 import { AcordoForm } from './acordo-form';
 import { Label } from '@/components/ui/label';
@@ -128,7 +129,7 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
                 onChange={e => setBuscaProcesso(e.target.value)}
                 className="w-full"
               />
-              {isLoading && <span className="text-xs text-muted-foreground">Buscando...</span>}
+              {isLoading && <Text variant="caption" as="span" className="text-muted-foreground">Buscando...</Text>}
               {debouncedBusca.length >= 3 && !isLoading && (
                 <Combobox
                   options={processos.map(p => ({

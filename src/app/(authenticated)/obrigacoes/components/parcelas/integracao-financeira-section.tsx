@@ -5,6 +5,7 @@ import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Heading, Text } from '@/components/ui/typography';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -120,9 +121,9 @@ export function IntegracaoFinanceiraSection({ acordoId, onSyncComplete }: Integr
   return (
     <div className="rounded-lg border bg-card p-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold flex items-center gap-2">
+        <Heading level="section" as="h2" className="flex items-center gap-2">
           <RefreshCw className="h-5 w-5" /> Integração Financeira
-        </h2>
+        </Heading>
         <Badge variant="outline" className={cn('gap-1',
           statusGeral === 'sincronizado' && 'text-success border-success',
           statusGeral === 'pendente' && 'text-warning border-warning',

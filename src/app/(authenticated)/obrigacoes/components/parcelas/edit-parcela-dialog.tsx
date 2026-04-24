@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Label } from '@/components/ui/label';
+import { Text } from '@/components/ui/typography';
 import { AlertCircle, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import { Parcela } from '../../types';
@@ -143,7 +144,7 @@ export function EditParcelaDialog({
               disabled={isSaving}
               placeholder="0,00"
             />
-            <p className="text-xs text-muted-foreground">Atual: {formatCurrency(parcela.valorBrutoCreditoPrincipal)}</p>
+            <Text variant="caption" className="text-muted-foreground">Atual: {formatCurrency(parcela.valorBrutoCreditoPrincipal)}</Text>
           </div>
 
           <div className="space-y-2">

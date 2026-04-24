@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Text } from '@/components/ui/typography';
 import {
   actionStatusPrestacaoContas,
   type StatusPrestacaoContas,
@@ -48,9 +49,9 @@ export function PrestacaoContasSection({ parcelaId }: Props) {
 
   if (loading) {
     return (
-      <p className="text-xs text-muted-foreground py-2">
+      <Text variant="caption" className="text-muted-foreground py-2">
         Carregando status de prestação de contas…
-      </p>
+      </Text>
     );
   }
 
