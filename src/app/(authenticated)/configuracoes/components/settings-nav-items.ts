@@ -5,7 +5,6 @@ import {
   Bot,
   Palette,
   Sparkles,
-  Users,
   FileType,
   type LucideIcon,
 } from 'lucide-react';
@@ -117,9 +116,7 @@ export const SETTINGS_NAV_GROUPS: SettingsNavGroup[] = [
   },
 ];
 
-export const SETTINGS_EXTERNAL_LINKS: SettingsExternalLink[] = [
-  { label: 'Usuários', icon: Users, href: '/app/usuarios' },
-];
+export const SETTINGS_EXTERNAL_LINKS: SettingsExternalLink[] = [];
 
 // =============================================================================
 // HELPERS

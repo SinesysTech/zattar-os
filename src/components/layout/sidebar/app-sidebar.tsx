@@ -150,6 +150,11 @@ const navGestao = [
     url: "/app/financeiro",
     icon: Briefcase,
   },
+  {
+    title: "Usuários",
+    url: "/app/usuarios",
+    icon: Users,
+  },
 ]
 
 const DASHBOARD_URL = "/app/dashboard"
