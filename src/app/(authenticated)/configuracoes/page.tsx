@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 
+import { Text } from "@/components/ui/typography";
 import { actionObterMetricasDB } from "@/app/(authenticated)/admin";
 import { actionListarIntegracoesPorTipo } from "@/lib/integracoes";
 import { actionListarSystemPrompts } from "@/lib/system-prompts";
@@ -23,7 +24,7 @@ export default async function ConfiguracoesPage() {
     }
 
     return (
-      <div className="text-destructive">{metricasResult.error || "Erro ao carregar configurações"}</div>
+      <Text variant="caption" as="div" className="text-destructive">{metricasResult.error || "Erro ao carregar configurações"}</Text>
     );
   }
 
