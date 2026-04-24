@@ -382,7 +382,7 @@ export async function pendentesManifestacaoCapture(
       });
 
       console.log(
-        `   ✅ ${persistencia.total} pendentes processados (${persistencia.inseridos} inseridos, ${persistencia.atualizados} atualizados, ${persistencia.naoAtualizados} sem alteração, ${persistencia.erros} erros)`
+        `   ✅ ${persistencia.total} pendentes processados (${persistencia.inseridos} inseridos, ${persistencia.atualizados} atualizados, ${persistencia.naoAtualizados} sem alteração, ${persistencia.conflitos} conflitos OCC, ${persistencia.erros} erros)`
       );
     } catch (error) {
       console.error("   ❌ Erro ao salvar pendentes:", error);

@@ -808,6 +808,7 @@ export async function capturaCombinada(
           inseridos: persistenciaExp.inseridos,
           atualizados: persistenciaExp.atualizados,
           naoAtualizados: persistenciaExp.naoAtualizados,
+          conflitos: persistenciaExp.conflitos,
           erros: persistenciaExp.erros,
         });
         resultado.persistenciaExpedientes = persistenciaExp;

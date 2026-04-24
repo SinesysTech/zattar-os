@@ -39,11 +39,28 @@ export interface LogErro {
   contexto?: Record<string, unknown>;
 }
 
+/**
+ * Registrado quando o UPDATE protegido por OCC (Optimistic Concurrency Control)
+ * não encontra o registro com o `updated_at` esperado — sinal de que outro
+ * processo alterou a linha entre nosso SELECT e nosso UPDATE. Nenhuma
+ * persistência ocorre neste ciclo.
+ */
+export interface LogRegistroConflito {
+  tipo: 'conflito';
+  entidade: TipoEntidade;
+  id_pje: number;
+  trt: string;
+  grau: string;
+  numero_processo: string;
+  motivo: 'occ_stale_updated_at';
+}
+
 export type LogEntry =
   | LogRegistroNaoAtualizado
   | LogRegistroAtualizado
   | LogRegistroInserido
-  | LogErro;
+  | LogErro
+  | LogRegistroConflito;
 
 class CaptureLogService {
   private logs: LogEntry[] = [];
@@ -108,6 +125,28 @@ class CaptureLogService {
       trt,
       grau,
       numero_processo: numeroProcesso,
+    });
+  }
+
+  /**
+   * Registra uma colisão de OCC: outro processo atualizou o mesmo registro
+   * entre nosso SELECT e nosso UPDATE. Nada foi persistido neste ciclo.
+   */
+  logConflito(
+    entidade: TipoEntidade,
+    idPje: number,
+    trt: string,
+    grau: string,
+    numeroProcesso: string
+  ): void {
+    this.logs.push({
+      tipo: 'conflito',
+      entidade,
+      id_pje: idPje,
+      trt,
+      grau,
+      numero_processo: numeroProcesso,
+      motivo: 'occ_stale_updated_at',
     });
   }
 

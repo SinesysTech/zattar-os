@@ -36,6 +36,7 @@ export interface SalvarPendentesResult {
   inseridos: number;
   atualizados: number;
   naoAtualizados: number;
+  conflitos: number;
   erros: number;
   total: number;
 }
@@ -111,6 +112,7 @@ export async function salvarPendentes(
       inseridos: 0,
       atualizados: 0,
       naoAtualizados: 0,
+      conflitos: 0,
       erros: 0,
       total: 0,
     };
@@ -119,6 +121,7 @@ export async function salvarPendentes(
   let inseridos = 0;
   let atualizados = 0;
   let naoAtualizados = 0;
+  let conflitos = 0;
   let erros = 0;
 
   const entidade: TipoEntidade = "expedientes";
@@ -228,7 +231,12 @@ export async function salvarPendentes(
             registroExistente as Record<string, unknown>
           );
 
-          const { error } = await supabase
+          // OCC: ancorar o UPDATE no updated_at do SELECT. Se outro scraper
+          // atualizou a linha entre nosso SELECT e este UPDATE, o filtro não
+          // casará, data virá vazio e tratamos como conflito (sem persistir).
+          const updatedAtEsperado = registroExistente.updated_at as string | null;
+
+          const { data: linhasAtualizadas, error } = await supabase
             .from("expedientes")
             .update({
               ...dadosNovos,
@@ -237,10 +245,24 @@ export async function salvarPendentes(
             .eq("id_pje", processo.id)
             .eq("trt", trt)
             .eq("grau", grau)
-            .eq("numero_processo", numeroProcesso);
+            .eq("numero_processo", numeroProcesso)
+            .eq("updated_at", updatedAtEsperado)
+            .select("id");
 
           if (error) {
             throw error;
+          }
+
+          if (!linhasAtualizadas || linhasAtualizadas.length === 0) {
+            conflitos++;
+            captureLogService.logConflito(
+              entidade,
+              processo.id,
+              trt,
+              grau,
+              numeroProcesso
+            );
+            continue;
           }
 
           atualizados++;
@@ -274,6 +296,7 @@ export async function salvarPendentes(
     inseridos,
     atualizados,
     naoAtualizados,
+    conflitos,
     erros,
     total: processos.length,
   };
