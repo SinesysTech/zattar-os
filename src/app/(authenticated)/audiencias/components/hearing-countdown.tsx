@@ -10,6 +10,7 @@
 
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import { Text } from "@/components/ui/typography";
 
 export interface HearingCountdownProps {
   targetDate: Date;
@@ -60,9 +61,9 @@ export function HearingCountdown({ targetDate, className, compact = false }: Hea
 
   if (timeLeft.total <= 0) {
     return (
-      <span className={cn("text-[11px] font-medium text-muted-foreground/60", className)}>
+      <Text variant="caption" as="span" className={cn("font-medium text-muted-foreground/60", className)}>
         Agora
-      </span>
+      </Text>
     );
   }
 

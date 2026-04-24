@@ -12,6 +12,7 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import { actionAtualizarAudienciaPayload } from '../actions';
 import type { Audiencia } from '../domain';
@@ -116,9 +117,9 @@ export function AudienciaResponsavelPopover({
       >
         <Command className="bg-transparent">
           <div className="px-3 pt-3 pb-1.5">
-            <p className="text-[10px] font-medium text-muted-foreground/40 uppercase tracking-wider mb-2">
+            <Text variant="overline" as="p" className="text-muted-foreground/40 mb-2">
               Responsável
-            </p>
+            </Text>
             <CommandInput
               placeholder="Buscar..."
               className="h-8 text-xs rounded-lg"
@@ -128,7 +129,7 @@ export function AudienciaResponsavelPopover({
             <CommandEmpty>
               <div className="flex flex-col items-center gap-1 py-3">
                 <Search className="size-4 text-muted-foreground/30" />
-                <span className="text-[11px] text-muted-foreground/40">Nenhum usuário encontrado</span>
+                <Text variant="caption" as="span" className="text-muted-foreground/40">Nenhum usuário encontrado</Text>
               </div>
             </CommandEmpty>
             <CommandGroup>

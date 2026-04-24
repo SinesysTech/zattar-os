@@ -15,6 +15,7 @@
 import { useMemo } from "react";
 import { CheckCircle2, Circle, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Text } from "@/components/ui/typography";
 import type { Audiencia } from "../domain";
 
 export interface PrepScoreProps {
@@ -147,7 +148,12 @@ export function PrepScore({ audiencia, className, showBreakdown = false, size = 
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className={cn("font-bold tabular-nums", cfg.text, statusTextColors[status])}>{score}%</span>
+          <Text
+            variant="kpi-value"
+            className={cn("font-bold tabular-nums leading-none", cfg.text, statusTextColors[status])}
+          >
+            {score}%
+          </Text>
         </div>
       </div>
 

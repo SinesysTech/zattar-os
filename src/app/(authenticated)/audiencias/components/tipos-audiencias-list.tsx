@@ -11,6 +11,7 @@ import * as React from 'react';
 import { Video, MapPin, RefreshCw} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';
+import { Text } from '@/components/ui/typography';
 import { SearchInput } from '@/components/dashboard/search-input';
 import {
   Table,
@@ -78,7 +79,7 @@ export function TiposAudienciasList() {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
-        <p className="text-sm text-destructive">{error}</p>
+        <Text variant="caption" className="text-destructive">{error}</Text>
         <Button variant="outline" size="sm" onClick={fetchTipos}>
           <RefreshCw className="h-4 w-4 mr-2" />
           Tentar novamente
@@ -98,9 +99,9 @@ export function TiposAudienciasList() {
           className="max-w-sm"
         />
         <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">
+          <Text variant="caption" as="span" className="text-muted-foreground">
             {filteredTipos.length} tipo(s)
-          </span>
+          </Text>
           <Button variant="ghost" size="icon" aria-label="Atualizar" onClick={fetchTipos}>
             <RefreshCw className="h-4 w-4" />
           </Button>

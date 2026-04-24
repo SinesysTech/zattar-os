@@ -6,6 +6,7 @@ import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Cpu } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Text } from '@/components/ui/typography';
 import {
   auditLogService,
   type LogAlteracao,
@@ -199,9 +200,9 @@ export function AudienciaTimeline({
   const hasChanges = entries.some((e) => e.type !== 'captura_inicial');
   if (!hasChanges && entries.length <= 1) {
     return (
-      <div className={cn('text-sm text-muted-foreground', className)}>
+      <Text variant="caption" className={cn('text-muted-foreground', className)}>
         Sem alterações registradas
-      </div>
+      </Text>
     );
   }
 
@@ -243,9 +244,9 @@ export function AudienciaTimeline({
 
             {/* Description (for captura_inicial or system entries without changes) */}
             {entry.type === 'captura_inicial' && (
-              <p className="mt-0.5 text-sm text-muted-foreground">
+              <Text variant="caption" className="mt-0.5 text-muted-foreground">
                 {entry.descricao}
-              </p>
+              </Text>
             )}
 
             {/* Changes list */}

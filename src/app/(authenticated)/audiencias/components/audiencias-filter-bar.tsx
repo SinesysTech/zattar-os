@@ -12,6 +12,7 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import { StatusAudiencia } from '../domain';
 
@@ -304,7 +305,7 @@ function ResponsavelFilter({
           </div>
           <CommandList className="max-h-44 px-1.5 pb-1.5">
             <CommandEmpty>
-              <span className="text-[11px] text-muted-foreground/40">Não encontrado</span>
+              <Text variant="caption" as="span" className="text-muted-foreground/40">Não encontrado</Text>
             </CommandEmpty>
             <CommandGroup>
               {usuarios.map((usuario) => (
@@ -387,7 +388,7 @@ function TRTFilter({
           </div>
           <CommandList className="max-h-52 px-1.5 pb-1.5">
             <CommandEmpty>
-              <span className="text-[11px] text-muted-foreground/40">Não encontrado</span>
+              <Text variant="caption" as="span" className="text-muted-foreground/40">Não encontrado</Text>
             </CommandEmpty>
             <CommandGroup>
               {TRIBUNAIS.map((trt) => (

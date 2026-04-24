@@ -11,6 +11,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
+import { Heading, Text } from '@/components/ui/typography';
 import {
   Plus,
   Gavel,
@@ -378,10 +379,10 @@ export function AudienciasMockClient() {
       {/* ── Header ──────────────────────────────────────────────── */}
       <div className="flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-heading font-semibold tracking-tight">Audiências</h1>
-          <p className="text-sm text-muted-foreground/50 mt-0.5">
+          <Heading level="page">Audiências</Heading>
+          <Text variant="caption" className="text-muted-foreground/50 mt-0.5">
             {todayAudiencias.length} hoje · {MOCK_AUDIENCIAS.filter((a) => a.status === 'marcada').length} marcadas esta semana
-          </p>
+          </Text>
         </div>
         <Button size="sm" className="rounded-xl">
           <Plus className="size-3.5" />

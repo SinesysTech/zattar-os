@@ -31,6 +31,7 @@ import { CalendarIcon, Loader2 } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
+import { Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import { ptBR } from 'date-fns/locale';
 import { useTiposAudiencias } from '../hooks';
@@ -206,7 +207,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
                           {field.value ? (
                             format(field.value, 'dd/MM/yyyy', { locale: ptBR })
                           ) : (
-                            <span>Escolha uma data</span>
+                            <Text variant="caption" as="span">Escolha uma data</Text>
                           )}
                         </Button>
                       </PopoverTrigger>
@@ -265,7 +266,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
                           {field.value ? (
                             format(field.value, 'dd/MM/yyyy', { locale: ptBR })
                           ) : (
-                            <span>Escolha uma data</span>
+                            <Text variant="caption" as="span">Escolha uma data</Text>
                           )}
                         </Button>
                       </PopoverTrigger>

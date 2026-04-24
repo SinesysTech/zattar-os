@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Label } from '@/components/ui/label';
+import { Text } from '@/components/ui/typography';
 import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
@@ -42,9 +43,9 @@ function SectionHeader({
   return (
     <div className="flex items-center gap-2 mb-3">
       <Icon className="size-3.5 text-primary/70" />
-      <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.08em]">
+      <Text variant="overline" className="text-muted-foreground">
         {label}
-      </span>
+      </Text>
     </div>
   );
 }
@@ -623,9 +624,9 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
                 </div>
               ) : (
                 <div className="space-y-3 pt-1">
-                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.08em]">
+                  <Text variant="overline" as="p" className="text-muted-foreground">
                     Endereço Presencial
-                  </p>
+                  </Text>
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div className="sm:col-span-2">

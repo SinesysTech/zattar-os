@@ -5,6 +5,7 @@ import { useActionState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { Text } from '@/components/ui/typography';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { actionAtualizarAudiencia, type ActionResult } from '../actions';
@@ -122,7 +123,7 @@ export function AudienciasAlterarResponsavelDialog({
             </SelectContent>
           </Select>
           {generalError && (
-            <p className="text-sm font-medium text-destructive">{generalError}</p>
+            <Text variant="caption" className="font-medium text-destructive">{generalError}</Text>
           )}
         </div>
       </form>
