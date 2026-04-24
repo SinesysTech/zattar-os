@@ -29,13 +29,13 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare: _onS
 
   return (
     <div
-      className="relative z-10 flex items-center justify-between px-5 py-3 border-b border-border/40 dark:border-white/[0.06] backdrop-blur-[20px] bg-white/85 dark:bg-[rgba(22,18,34,0.8)]"
+      className="relative z-10 flex items-center justify-between px-5 py-3 border-b border-border/40 dark:border-white/6 backdrop-blur-[20px] bg-white/85 dark:bg-[rgba(22,18,34,0.8)]"
     >
       <div className="flex gap-3 items-center">
         <Button
           size="icon"
           variant="ghost"
-          className="size-8 lg:hidden text-muted-foreground/55 hover:bg-foreground/[0.04] hover:text-foreground transition-colors duration-200"
+          className="size-8 lg:hidden text-muted-foreground/55 hover:bg-foreground/4 hover:text-foreground transition-colors duration-200"
           onClick={() => setSelectedChat(null)}
         >
           <ArrowLeft className="size-4" />
@@ -83,7 +83,7 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare: _onS
                   size="icon"
                   aria-label="Chamada de Video"
                   variant="ghost"
-                  className="size-8 text-muted-foreground/55 hover:bg-foreground/[0.04] hover:text-foreground transition-colors duration-200"
+                  className="size-8 text-muted-foreground/55 hover:bg-foreground/4 hover:text-foreground transition-colors duration-200"
                   onClick={onVideoCall}
                 >
                   <Video className="size-4" />
@@ -97,7 +97,7 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare: _onS
                   size="icon"
                   aria-label="Chamada de Audio"
                   variant="ghost"
-                  className="size-8 text-muted-foreground/55 hover:bg-foreground/[0.04] hover:text-foreground transition-colors duration-200"
+                  className="size-8 text-muted-foreground/55 hover:bg-foreground/4 hover:text-foreground transition-colors duration-200"
                   onClick={onAudioCall}
                 >
                   <Phone className="size-4" />
@@ -112,7 +112,7 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare: _onS
             size="icon"
             aria-label="Mais opcoes"
             variant="ghost"
-            className="size-8 text-muted-foreground/55 hover:bg-foreground/[0.04] hover:text-foreground transition-colors duration-200"
+            className="size-8 text-muted-foreground/55 hover:bg-foreground/4 hover:text-foreground transition-colors duration-200"
           >
             <Ellipsis className="size-4" />
           </Button>

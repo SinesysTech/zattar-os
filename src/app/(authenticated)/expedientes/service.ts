@@ -198,6 +198,96 @@ export async function atribuirResponsavel(
   }
 }
 
+/**
+ * Atribui um único responsável a múltiplos expedientes numa única transação
+ * Postgres. All-or-nothing: se algum id não existir, a RPC lança exceção e
+ * nenhuma alteração é persistida.
+ */
+export async function bulkAtribuirResponsavel(
+  expedienteIds: number[],
+  responsavelId: number | null,
+  usuarioExecutouId: number
+): Promise<Result<{ atualizados: number; total: number }>> {
+  if (expedienteIds.length === 0) {
+    return err(appError('VALIDATION_ERROR', 'Selecione pelo menos um expediente.'));
+  }
+  if (usuarioExecutouId <= 0) {
+    return err(appError('UNAUTHORIZED', 'Usuário não autenticado.'));
+  }
+
+  try {
+    const db = createDbClient();
+    const { data, error } = await db.rpc('bulk_atribuir_responsavel_expedientes', {
+      p_expediente_ids: expedienteIds,
+      p_responsavel_id: responsavelId,
+      p_usuario_id: usuarioExecutouId,
+    });
+
+    if (error) {
+      return err(appError('DATABASE_ERROR', error.message));
+    }
+
+    const payload = data as { atualizados: number; total: number } | null;
+    return {
+      success: true,
+      data: {
+        atualizados: payload?.atualizados ?? expedienteIds.length,
+        total: payload?.total ?? expedienteIds.length,
+      },
+    };
+  } catch (error) {
+    return err(appError('DATABASE_ERROR', 'Erro ao transferir responsável em massa.', undefined, error instanceof Error ? error : undefined));
+  }
+}
+
+/**
+ * Baixa múltiplos expedientes numa única transação Postgres.
+ * Falha atomicamente se qualquer expediente estiver já baixado ou não for
+ * encontrado — nenhuma mudança é persistida nesse caso.
+ */
+export async function bulkBaixar(
+  expedienteIds: number[],
+  justificativaBaixa: string,
+  usuarioExecutouId: number,
+  baixadoEm: Date = new Date()
+): Promise<Result<{ atualizados: number; total: number }>> {
+  if (expedienteIds.length === 0) {
+    return err(appError('VALIDATION_ERROR', 'Selecione pelo menos um expediente.'));
+  }
+  if (!justificativaBaixa || !justificativaBaixa.trim()) {
+    return err(appError('VALIDATION_ERROR', 'Justificativa é obrigatória para baixa em massa.'));
+  }
+  if (usuarioExecutouId <= 0) {
+    return err(appError('UNAUTHORIZED', 'Usuário não autenticado.'));
+  }
+
+  try {
+    const db = createDbClient();
+    const { data, error } = await db.rpc('bulk_baixar_expedientes', {
+      p_expediente_ids: expedienteIds,
+      p_justificativa: justificativaBaixa,
+      p_baixado_em: baixadoEm.toISOString(),
+      p_usuario_id: usuarioExecutouId,
+    });
+
+    if (error) {
+      // A RPC usa RAISE EXCEPTION para violações de invariante (já baixados, ids inexistentes).
+      return err(appError('BAD_REQUEST', error.message));
+    }
+
+    const payload = data as { atualizados: number; total: number } | null;
+    return {
+      success: true,
+      data: {
+        atualizados: payload?.atualizados ?? expedienteIds.length,
+        total: payload?.total ?? expedienteIds.length,
+      },
+    };
+  } catch (error) {
+    return err(appError('DATABASE_ERROR', 'Erro ao baixar expedientes em massa.', undefined, error instanceof Error ? error : undefined));
+  }
+}
+
 export async function atualizarTipoDescricao(
   expedienteId: number,
   tipoExpedienteId: number | null,

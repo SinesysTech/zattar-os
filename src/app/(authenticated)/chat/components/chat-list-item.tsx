@@ -20,8 +20,8 @@ export function ChatListItem({ chat, active, onClick }: ChatListItemProps) {
         "group/item flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-200",
         "border border-transparent relative",
         active
-          ? "bg-(--chat-sidebar-active) border-primary/[0.08]"
-          : "hover:bg-foreground/[0.03]"
+          ? "bg-chat-sidebar-active border-primary/8"
+          : "hover:bg-foreground/3"
       )}
       onClick={onClick}
     >
@@ -29,7 +29,7 @@ export function ChatListItem({ chat, active, onClick }: ChatListItemProps) {
       <span
         aria-hidden="true"
         className={cn(
-          "absolute left-0 top-2 bottom-2 w-[3px] rounded-r-full bg-primary transition-opacity duration-200",
+          "absolute left-0 top-2 bottom-2 w-0.75rounded-r-full bg-primary transition-opacity duration-200",
           active ? "opacity-100" : "opacity-0"
         )}
       />
@@ -47,7 +47,7 @@ export function ChatListItem({ chat, active, onClick }: ChatListItemProps) {
         </div>
         {/* Online indicator dot — outside overflow-hidden so it's not clipped */}
         <div className={cn(
-          "absolute -bottom-px -right-px size-2 rounded-full border-2 border-(--surface-container-low) z-10",
+          "absolute -bottom-px -right-px size-2 rounded-full border-2 border-surface-container-low z-10",
           chat.usuario?.onlineStatus === 'online' ? "bg-success" : "bg-muted-foreground/30"
         )} />
       </div>
@@ -67,7 +67,7 @@ export function ChatListItem({ chat, active, onClick }: ChatListItemProps) {
             {chat.lastMessage}
           </span>
           {unreadCount > 0 && (
-            <span className="min-w-[18px] h-[18px] rounded-full bg-primary text-white text-[0.6rem] font-semibold flex items-center justify-center px-1 shrink-0">
+            <span className="min-w-4.5 h-[h-4.5unded-full bg-primary text-white text-[0.6rem] font-semibold flex items-center justify-center px-1 shrink-0">
               {unreadCount}
             </span>
           )}
@@ -76,7 +76,7 @@ export function ChatListItem({ chat, active, onClick }: ChatListItemProps) {
 
       {/* Hover dropdown (keep existing) */}
       <div
-        className="absolute end-2 top-1/2 -translate-y-1/2 opacity-0 group-hover/item:opacity-100"
+        className="absolute inset-e-2 top-1/2 -translate-y-1/2 opacity-0 group-hover/item:opacity-100"
         onClick={(e) => e.stopPropagation()}
       >
         <ChatUserDropdown chat={chat}>

@@ -1,11 +1,12 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
+
 import { createClient as createSupabaseClient } from "@/lib/supabase/server";
 import { authenticateRequest } from "@/lib/auth";
-import { realizarBaixa } from "../service";
-import { atribuirResponsavel } from "../service";
-import { z } from "zod";
+
+import { bulkAtribuirResponsavel, bulkBaixar } from "../service";
 import type { ActionResult } from "./types";
 
 // =============================================================================
@@ -21,6 +22,45 @@ const bulkBaixarSchema = z.object({
   expedienteIds: z.array(z.number().int().positive()).min(1, "Selecione pelo menos um expediente"),
   justificativaBaixa: z.string().min(1, "Justificativa é obrigatória para baixa sem protocolo"),
 });
+
+// =============================================================================
+// HELPER: resolver usuario.id do usuário autenticado
+// =============================================================================
+
+async function resolverUsuarioExecutouId(): Promise<
+  | { success: true; usuarioId: number }
+  | { success: false; error: string; message: string }
+> {
+  const supabase = await createSupabaseClient();
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user?.id) {
+    return {
+      success: false,
+      error: "Não autenticado",
+      message: "Usuário não autenticado.",
+    };
+  }
+
+  const { data: usuario, error: usuarioError } = await supabase
+    .from("usuarios")
+    .select("id")
+    .eq("auth_user_id", user.id)
+    .single();
+
+  if (usuarioError || !usuario) {
+    return {
+      success: false,
+      error: "Usuário não encontrado",
+      message: "Usuário não encontrado no sistema.",
+    };
+  }
+
+  return { success: true, usuarioId: usuario.id };
+}
 
 // =============================================================================
 // BULK ACTIONS
@@ -43,9 +83,12 @@ export async function actionBulkTransferirResponsavel(
     }
 
     const responsavelIdValue = formData.get("responsavelId");
-    const responsavelId = responsavelIdValue === "" || responsavelIdValue === "null" 
-      ? null 
-      : responsavelIdValue ? parseInt(responsavelIdValue as string, 10) : null;
+    const responsavelId =
+      responsavelIdValue === "" || responsavelIdValue === "null"
+        ? null
+        : responsavelIdValue
+        ? parseInt(responsavelIdValue as string, 10)
+        : null;
 
     const validation = bulkTransferirResponsavelSchema.safeParse({
       expedienteIds,
@@ -60,47 +103,20 @@ export async function actionBulkTransferirResponsavel(
       };
     }
 
-    const supabase = await createSupabaseClient();
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-    const authUserId = user?.id;
+    const usuarioResult = await resolverUsuarioExecutouId();
+    if (!usuarioResult.success) return usuarioResult;
 
-    if (authError || !authUserId) {
-      return {
-        success: false,
-        error: "Não autenticado",
-        message: "Usuário não autenticado.",
-      };
-    }
-
-    const { data: usuario, error: usuarioError } = await supabase
-      .from("usuarios")
-      .select("id")
-      .eq("auth_user_id", authUserId)
-      .single();
-
-    if (usuarioError || !usuario) {
-      return {
-        success: false,
-        error: "Usuário não encontrado",
-        message: "Usuário não encontrado no sistema.",
-      };
-    }
-
-    const results = await Promise.allSettled(
-      expedienteIds.map((id) => atribuirResponsavel(id, responsavelId, usuario.id))
+    const resultado = await bulkAtribuirResponsavel(
+      validation.data.expedienteIds,
+      validation.data.responsavelId,
+      usuarioResult.usuarioId
     );
 
-    const sucessos = results.filter((r) => r.status === "fulfilled" && r.value.success).length;
-    const falhas = results.length - sucessos;
-
-    if (falhas > 0) {
+    if (!resultado.success) {
       return {
         success: false,
-        error: "Alguns expedientes não puderam ser atualizados",
-        message: `${sucessos} expediente(s) atualizado(s), ${falhas} falha(s).`,
+        error: resultado.error.code,
+        message: resultado.error.message,
       };
     }
 
@@ -108,8 +124,8 @@ export async function actionBulkTransferirResponsavel(
 
     return {
       success: true,
-      data: { sucessos, total: expedienteIds.length },
-      message: `${sucessos} expediente(s) transferido(s) com sucesso.`,
+      data: resultado.data,
+      message: `${resultado.data.atualizados} expediente(s) transferido(s) com sucesso.`,
     };
   } catch (error) {
     console.error("Erro ao transferir responsável em massa:", error);
@@ -152,56 +168,20 @@ export async function actionBulkBaixar(
       };
     }
 
-    const supabase = await createSupabaseClient();
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-    const authUserId = user?.id;
+    const usuarioResult = await resolverUsuarioExecutouId();
+    if (!usuarioResult.success) return usuarioResult;
 
-    if (authError || !authUserId) {
-      return {
-        success: false,
-        error: "Não autenticado",
-        message: "Usuário não autenticado.",
-      };
-    }
-
-    const { data: usuario, error: usuarioError } = await supabase
-      .from("usuarios")
-      .select("id")
-      .eq("auth_user_id", authUserId)
-      .single();
-
-    if (usuarioError || !usuario) {
-      return {
-        success: false,
-        error: "Usuário não encontrado",
-        message: "Usuário não encontrado no sistema.",
-      };
-    }
-
-    const results = await Promise.allSettled(
-      expedienteIds.map((id) =>
-        realizarBaixa(
-          id,
-          {
-            expedienteId: id,
-            justificativaBaixa,
-          },
-          usuario.id
-        )
-      )
+    const resultado = await bulkBaixar(
+      validation.data.expedienteIds,
+      validation.data.justificativaBaixa,
+      usuarioResult.usuarioId
     );
 
-    const sucessos = results.filter((r) => r.status === "fulfilled" && r.value.success).length;
-    const falhas = results.length - sucessos;
-
-    if (falhas > 0) {
+    if (!resultado.success) {
       return {
         success: false,
-        error: "Alguns expedientes não puderam ser baixados",
-        message: `${sucessos} expediente(s) baixado(s), ${falhas} falha(s).`,
+        error: resultado.error.code,
+        message: resultado.error.message,
       };
     }
 
@@ -209,8 +189,8 @@ export async function actionBulkBaixar(
 
     return {
       success: true,
-      data: { sucessos, total: expedienteIds.length },
-      message: `${sucessos} expediente(s) baixado(s) com sucesso.`,
+      data: resultado.data,
+      message: `${resultado.data.atualizados} expediente(s) baixado(s) com sucesso.`,
     };
   } catch (error) {
     console.error("Erro ao baixar expedientes em massa:", error);

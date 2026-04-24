@@ -6,6 +6,7 @@ Auditoria Completa — Módulo expedientes (ZattarOS)
 Abaixo está a análise consolidada das 4 dimensões investigadas em paralelo, todas com a mesma profundidade. As seções 1–4 descrevem o sistema; a seção 5 é a lista única de problemas priorizada.
 
 1. Captura de Expedientes (pipeline PJe-TRT)
+
 1.1 Visão conceitual
 A captura é um scraper orientado ao advogado que sincroniza, sob demanda, os processos pendentes de manifestação no PJe-TRT com a tabela local expedientes. O fluxo:
 
@@ -30,12 +31,13 @@ Batch-first anti-N+1 correto no lookup principal — .in(...) + Map O(1).
 Retry com backoff exponencial em fetch.ts:224 (status 429/500-504 retentáveis).
 WeakMap cache de origin em fetch.ts:147.
 Raw payloads coletados para auditoria em pendentes-manifestacao.service.ts:463.
+
 2. Camada de Dados & Permissões
+
 2.1 Visão conceitual
 A arquitetura segue FSD com colocation rigoroso em (authenticated)/expedientes/: domain (Zod + tipos), service (regras), repository (Supabase), actions (Server Actions). O fluxo é unidirecional: Client → Action → Service → Repository → Supabase.
 
 Permissões em três camadas:
-
 RLS abrangente: authenticated pode SELECT/UPDATE em expedientes (sem eq(tenant_id, ...)).
 Service layer valida invariantes ("já baixado?", "está baixado antes de reverter?").
 Wrapper authenticatedAction em safe-action.ts garante auth, mas não diferencia roles (admin vs user).
@@ -52,7 +54,9 @@ Listar — repository.ts:186-333 usa view expedientes_com_origem (LEFT JOIN com 
 RLS minimalista por design: permissões granulares vivem em service + RPCs com SECURITY DEFINER, não em policies.
 RPCs com auditoria transacional embutem o log dentro da mesma transação.
 Bulk não-transacional: Promise.allSettled permite resultados parciais.
+
 3. Views & Páginas
+
 3.1 Visão conceitual
 Sete views: / (quadro), /lista, /semana, /mes, /ano, /quadro, /[id]. Padrão Server Component wrapper + Client Component stateful: cada page.tsx é RSC com export const dynamic = 'force-dynamic', envolve PageShell, usa Suspense e delega para expedientes-content.tsx (client component monolítico).
 
@@ -70,7 +74,9 @@ Design System Glass Briefing respeitado nos principais components (tokens OKLCH,
 ARIA razoável: aria-live="polite", aria-busy, role="status" em empty/loading.
 font-mono em timestamps (violação): expediente-detalhes-client.tsx:305,321,326,346,368,390.
 Tamanhos de fonte literais (text-[10px], text-[9px]) no detalhe — violação do DS.
+
 4. Componentes Interativos (edição)
+
 4.1 Visão conceitual
 O usuário executa ações em três padrões complementares:
 
@@ -86,15 +92,19 @@ Reverter baixa — expedientes-reverter-baixa-dialog.tsx:29-98 sem double-confir
 Bulk — expedientes-bulk-actions.tsx + dialogs dedicados sem preview dos itens afetados.
 Popovers — expediente-responsavel-popover.tsx, -tipo-popover.tsx, -prazo-popover.tsx — persistem direto na seleção, sem optimistic UI.
 Text editor — expediente-text-editor.tsx:1-67 é text plano (sem HTML rico), logo sem risco XSS.
+
 4.3 Descobertas
 useActionState estabelecido e consistente.
 Sem otimistic UI em lugar nenhum — toda UI espera o servidor.
 Sem focus-return após fechar dialog.
 sonner como toast padrão.
+
 5. Lista consolidada de problemas (priorizada)
+
 Crítico
 #	Problema	Arquivo:linha	Impacto	Correção
 1	Service-role key lida via env em server client — se .env.local vazar ou for versionado, bypass total de RLS	db-client.ts:25-26	Controle total do banco	Verificar .gitignore, secrets manager, rotacionar chaves, restringir uso server-only
+
 Alto
 #	Problema	Arquivo:linha	Impacto	Correção
 2	Bulk operations via Promise.allSettled sem transação — resultados parciais persistem	expediente-bulk-actions.ts:92	50/100 baixados e 50 não; estado inconsistente	RPC bulk_baixar_expedientes all-or-nothing
@@ -104,6 +114,7 @@ Alto
 6	Filtros globais não persistem em URL — trocar view ou refresh reseta tudo	expedientes-content.tsx:96-98	Fluxo interrompido; sem deep-link	Sincronizar com useSearchParams
 7	Reverter baixa destrói protocolo/justificativa com único clique de confirmação	expedientes-reverter-baixa-dialog.tsx:29-98	Perda acidental de dados auditáveis	Exigir digitação de "confirmar" ou double-modal
 8	ExpedientesContent é monólito client — renderiza o código de 5 views simultaneamente	expedientes-content.tsx:1	Re-renders em cascata; bundle inflado	Split em sub-componentes com dynamic() lazy
+
 Médio
 #	Problema	Arquivo:linha	Impacto	Correção
 9	RPC de auditoria de baixa pode falhar silenciosamente; expediente fica baixado sem log	service.ts:113-129	Rastreabilidade incompleta	Decisão documentada: revert ou propagar erro
@@ -126,6 +137,7 @@ Médio
 26	Bulk baixa reporta "X baixados" mas não lista falhas parciais	expedientes-bulk-baixar-dialog.tsx:48-57	Usuário não sabe o que não foi baixado	Retornar { successIds, failedIds, errors }
 27	actionBulkTransferirResponsavel não valida responsavelId ativo antes de disparar RPC	expediente-bulk-actions.ts:29-122	Falhas parciais com mensagem obscura	SELECT 1 FROM usuarios WHERE id = $1 antes
 28	findExpedienteById retorna origem campos potencialmente null sem documentação	repository.ts:163-166	Runtime error em getExpedientePartyNames	Documentar contrato + testes com expedientes sem origem
+
 Baixo
 #	Problema	Arquivo:linha	Impacto	Correção
 29	findExpedientesByClienteCPF faz 2 queries sequenciais	repository.ts:554-642	Performance em busca por CPF	CTE/JOIN único + índice em clientes(cpf)
@@ -140,6 +152,7 @@ Baixo
 38	Labels hardcoded em inglês coexistem com ptBR do date-fns	expedientes-semana-view.tsx:22	Inconsistência de idioma	i18n centralizado
 39	TODO explícito: salvarLogCaptura é placeholder	repository.ts:109	Baixa — log adicional nunca persistido	Implementar ou remover
 40	sincronização viewMode ↔ URL é unidirecional	expedientes-content.tsx:106-109	Back button pode ficar confuso	Hook useViewMode(pathname) bidirecional
+
 Resumo executivo
 ★ Insight ─────────────────────────────────────
 O módulo é arquiteturalmente sólido (FSD + colocation, separação clara domain/service/repository, RPCs com auditoria transacional, pipeline de captura com batching e retry), mas tem três classes de dívida técnica que merecem atenção:

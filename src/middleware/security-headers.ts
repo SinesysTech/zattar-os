@@ -48,6 +48,8 @@ const TRUSTED_DOMAINS = {
   copilotkit: ["https://api.cloud.copilotkit.ai", "https://cdn.copilotkit.ai"],
   // Cloudflare Stream - Video hosting (usado no hero da landing page)
   cloudflareStream: ["https://customer-lvnfk43x7eec1csc.cloudflarestream.com"],
+  // ViaCEP - Autofill de endereço a partir de CEP (client-side fetch)
+  viacep: ["https://viacep.com.br"],
 } as const;
 
 /**
@@ -137,7 +139,7 @@ export function buildCSPDirectives(nonce?: string): string {
       " "
     )} ${TRUSTED_DOMAINS.storage.join(" ")} ${TRUSTED_DOMAINS.ai.join(
       " "
-    )} ${TRUSTED_DOMAINS.dyte.join(" ")} ${TRUSTED_DOMAINS.chatwoot.join(" ")} ${TRUSTED_DOMAINS.copilotkit.join(" ")}`,
+    )} ${TRUSTED_DOMAINS.dyte.join(" ")} ${TRUSTED_DOMAINS.chatwoot.join(" ")} ${TRUSTED_DOMAINS.copilotkit.join(" ")} ${TRUSTED_DOMAINS.viacep.join(" ")}`,
 
     "frame-src": `'self' ${TRUSTED_DOMAINS.dyte.slice(1).join(" ")} ${
       TRUSTED_DOMAINS.chatwoot[0]

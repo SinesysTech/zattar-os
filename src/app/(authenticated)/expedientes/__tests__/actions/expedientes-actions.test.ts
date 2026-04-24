@@ -77,6 +77,8 @@ jest.mock('../../service', () => ({
     reverterBaixa: jest.fn(),
     listarExpedientes: jest.fn(),
     atribuirResponsavel: jest.fn(),
+    bulkAtribuirResponsavel: jest.fn(),
+    bulkBaixar: jest.fn(),
 }));
 
 // Mock documentos service (used in after() hook of actionCriarExpediente)
@@ -623,9 +625,9 @@ describe('Expediente Bulk Actions', () => {
     // =========================================================================
     describe('actionBulkTransferirResponsavel', () => {
         it('deve transferir responsável em massa com sucesso', async () => {
-            (mockService.atribuirResponsavel as jest.Mock).mockResolvedValue({
+            (mockService.bulkAtribuirResponsavel as jest.Mock).mockResolvedValue({
                 success: true,
-                data: mockExpediente,
+                data: { atualizados: 3, total: 3 },
             });
 
             const fd = createFormData({ responsavelId: '2' });
@@ -633,11 +635,12 @@ describe('Expediente Bulk Actions', () => {
 
             expect(result.success).toBe(true);
             if (result.success) {
-                expect(result.data).toEqual({ sucessos: 3, total: 3 });
+                expect(result.data).toEqual({ atualizados: 3, total: 3 });
                 expect(result.message).toContain('transferido');
             }
             expect(authenticateRequest).toHaveBeenCalled();
-            expect(mockService.atribuirResponsavel).toHaveBeenCalledTimes(3);
+            expect(mockService.bulkAtribuirResponsavel).toHaveBeenCalledTimes(1);
+            expect(mockService.bulkAtribuirResponsavel).toHaveBeenCalledWith([1, 2, 3], 2, 1);
             expect(revalidatePath).toHaveBeenCalledWith('/app/expedientes', 'layout');
         });
 
@@ -689,19 +692,24 @@ describe('Expediente Bulk Actions', () => {
             }
         });
 
-        it('deve reportar falhas parciais quando alguns expedientes falham', async () => {
-            (mockService.atribuirResponsavel as jest.Mock)
-                .mockResolvedValueOnce({ success: true, data: mockExpediente })
-                .mockResolvedValueOnce({ success: false, error: { message: 'Erro' } });
+        it('deve falhar atomicamente quando a RPC aborta (sem persistência parcial)', async () => {
+            (mockService.bulkAtribuirResponsavel as jest.Mock).mockResolvedValue({
+                success: false,
+                error: {
+                    code: 'DATABASE_ERROR',
+                    message: 'Expedientes não encontrados. Esperado: 2, atualizado: 1.',
+                },
+            });
 
             const fd = createFormData({ responsavelId: '2' });
             const result = await actionBulkTransferirResponsavel([1, 2], null, fd);
 
             expect(result.success).toBe(false);
             if (!result.success) {
-                expect(result.message).toContain('1 expediente(s) atualizado(s)');
-                expect(result.message).toContain('1 falha(s)');
+                expect(result.message).toContain('não encontrados');
             }
+            // Semântica all-or-nothing: revalidatePath NÃO deve ser chamado porque nada persistiu.
+            expect(revalidatePath).not.toHaveBeenCalled();
         });
     });
 
@@ -710,9 +718,9 @@ describe('Expediente Bulk Actions', () => {
     // =========================================================================
     describe('actionBulkBaixar', () => {
         it('deve baixar expedientes em massa com sucesso', async () => {
-            (mockService.realizarBaixa as jest.Mock).mockResolvedValue({
+            (mockService.bulkBaixar as jest.Mock).mockResolvedValue({
                 success: true,
-                data: { ...mockExpediente, baixadoEm: '2025-06-15' },
+                data: { atualizados: 2, total: 2 },
             });
 
             const fd = createFormData({ justificativaBaixa: 'Prazo vencido' });
@@ -720,11 +728,12 @@ describe('Expediente Bulk Actions', () => {
 
             expect(result.success).toBe(true);
             if (result.success) {
-                expect(result.data).toEqual({ sucessos: 2, total: 2 });
+                expect(result.data).toEqual({ atualizados: 2, total: 2 });
                 expect(result.message).toContain('baixado');
             }
             expect(authenticateRequest).toHaveBeenCalled();
-            expect(mockService.realizarBaixa).toHaveBeenCalledTimes(2);
+            expect(mockService.bulkBaixar).toHaveBeenCalledTimes(1);
+            expect(mockService.bulkBaixar).toHaveBeenCalledWith([1, 2], 'Prazo vencido', 1);
             expect(revalidatePath).toHaveBeenCalledWith('/app/expedientes', 'layout');
         });
 
@@ -762,19 +771,25 @@ describe('Expediente Bulk Actions', () => {
             }
         });
 
-        it('deve reportar falhas parciais quando alguns expedientes falham', async () => {
-            (mockService.realizarBaixa as jest.Mock)
-                .mockResolvedValueOnce({ success: true, data: mockExpediente })
-                .mockResolvedValueOnce({ success: false, error: { message: 'Erro' } });
+        it('deve falhar atomicamente quando a RPC detecta expedientes já baixados', async () => {
+            (mockService.bulkBaixar as jest.Mock).mockResolvedValue({
+                success: false,
+                error: {
+                    code: 'BAD_REQUEST',
+                    message: 'Existem 1 expediente(s) já baixado(s) na seleção. Operação abortada.',
+                },
+            });
 
             const fd = createFormData({ justificativaBaixa: 'Prazo vencido' });
             const result = await actionBulkBaixar([1, 2], null, fd);
 
             expect(result.success).toBe(false);
             if (!result.success) {
-                expect(result.message).toContain('1 expediente(s) baixado(s)');
-                expect(result.message).toContain('1 falha(s)');
+                expect(result.message).toContain('já baixado');
+                expect(result.message).toContain('abortada');
             }
+            // Semântica all-or-nothing: revalidatePath NÃO deve ser chamado.
+            expect(revalidatePath).not.toHaveBeenCalled();
         });
 
         it('deve tratar exceção inesperada', async () => {

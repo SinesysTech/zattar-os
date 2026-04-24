@@ -18,6 +18,9 @@ jest.mock('@/components/ui/responsive-dialog', () => ({
   ResponsiveDialogTitle: ({ children }: { children: React.ReactNode }) => (
     <h2 data-testid="dialog-title">{children}</h2>
   ),
+  ResponsiveDialogDescription: ({ children, className }: { children: React.ReactNode; className?: string }) => (
+    <p data-testid="dialog-description" className={className}>{children}</p>
+  ),
   ResponsiveDialogBody: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="dialog-body">{children}</div>
   ),

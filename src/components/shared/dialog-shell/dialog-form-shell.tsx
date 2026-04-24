@@ -118,11 +118,11 @@ export function DialogFormShell({
             {title}
           </ResponsiveDialogTitle>
 
-          {description && (
-            <ResponsiveDialogDescription className="text-caption">
-              {description}
-            </ResponsiveDialogDescription>
-          )}
+          <ResponsiveDialogDescription
+            className={description ? "text-caption" : "sr-only"}
+          >
+            {description ?? (typeof title === "string" ? title : "Formulário")}
+          </ResponsiveDialogDescription>
 
           {/* Barra de progresso para multi-step — hierarquia deliberadamente
               subordinada ao título (overline 11px + micro 10px) para não

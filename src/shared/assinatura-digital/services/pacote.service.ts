@@ -207,8 +207,19 @@ export interface PacoteWizardFormulario {
   geolocation_necessaria: boolean;
   metadados_seguranca: string[] | null;
   form_schema: unknown | null;
-  termos_html: string | null;
 }
+
+/**
+ * Motivo diagnóstico quando `hidratacao` retorna null em um pacote 'ativo'.
+ * Exposto para aparecer apenas em desenvolvimento, facilitando triagem quando
+ * um link recém-gerado leva à tela "Pacote indisponível".
+ */
+export type MotivoHidratacaoBloqueada =
+  | 'contrato_nao_encontrado'
+  | 'contrato_sem_cliente'
+  | 'contrato_sem_segmento'
+  | 'segmento_sem_formulario_contrato'
+  | 'formulario_nao_encontrado';
 
 export interface PacoteParaWizard {
   pacote: Pacote;
@@ -224,6 +235,36 @@ export interface PacoteParaWizard {
     templates: TemplateBasico[];
     templateUuids: string[];
   } | null;
+
+  /** Preenchido só quando hidratacao === null por inconsistência da config. */
+  motivoHidratacaoBloqueada?: MotivoHidratacaoBloqueada;
+
+  /** IDs relevantes p/ diagnóstico em dev (contrato, segmento, formulário). */
+  debugContexto?: {
+    contratoId: number | null;
+    segmentoId: number | null;
+    formularioId: number | null;
+  };
+}
+
+/**
+ * A coluna `metadados_seguranca` é `TEXT` no banco guardando JSON como string
+ * (ex: `'["ip","user_agent"]'`). O schema canônico (ver production_schema.sql
+ * linha 4678) é `text DEFAULT '["ip","user_agent"]'::text`. Interpretamos aqui
+ * para devolver uma lista tipada ao wizard, que espera `MetadadoSeguranca[]`.
+ */
+function parseMetadadosSeguranca(raw: unknown): string[] | null {
+  if (raw == null) return null;
+  if (Array.isArray(raw)) return raw.filter((x): x is string => typeof x === 'string');
+  if (typeof raw === 'string') {
+    try {
+      const parsed = JSON.parse(raw) as unknown;
+      return Array.isArray(parsed) ? parsed.filter((x): x is string => typeof x === 'string') : null;
+    } catch {
+      return null;
+    }
+  }
+  return null;
 }
 
 async function carregarFormularioCompleto(
@@ -233,12 +274,29 @@ async function carregarFormularioCompleto(
   const { data, error } = await supabase
     .from('assinatura_digital_formularios')
     .select(
-      'id, formulario_uuid, nome, slug, segmento_id, foto_necessaria, geolocation_necessaria, metadados_seguranca, form_schema, termos_html',
+      'id, formulario_uuid, nome, slug, segmento_id, ativo, foto_necessaria, geolocation_necessaria, metadados_seguranca, form_schema',
     )
     .eq('id', formularioId)
     .maybeSingle();
 
-  if (error || !data) return null;
+  if (error) {
+    console.warn('[pacote.service] carregarFormularioCompleto: erro no select', {
+      formularioId,
+      message: error.message,
+      code: error.code,
+    });
+    return null;
+  }
+  if (!data) {
+    console.warn('[pacote.service] carregarFormularioCompleto: linha inexistente', { formularioId });
+    return null;
+  }
+  if (data.ativo === false) {
+    console.warn('[pacote.service] carregarFormularioCompleto: formulário existe mas está inativo', {
+      formularioId,
+      nome: data.nome,
+    });
+  }
 
   return {
     id: data.id,
@@ -248,9 +306,8 @@ async function carregarFormularioCompleto(
     segmento_id: data.segmento_id,
     foto_necessaria: data.foto_necessaria ?? true,
     geolocation_necessaria: data.geolocation_necessaria ?? false,
-    metadados_seguranca: data.metadados_seguranca ?? null,
+    metadados_seguranca: parseMetadadosSeguranca(data.metadados_seguranca),
     form_schema: data.form_schema ?? null,
-    termos_html: data.termos_html ?? null,
   };
 }
 
@@ -268,7 +325,10 @@ export async function lerPacoteParaWizard(
   token: string,
 ): Promise<PacoteParaWizard | null> {
   const base = await lerPacotePorToken(token);
-  if (!base) return null;
+  if (!base) {
+    console.warn('[pacote.service] lerPacoteParaWizard: token não encontrado', token.slice(0, 12));
+    return null;
+  }
 
   if (base.status_efetivo !== 'ativo') {
     return { ...base, hidratacao: null };
@@ -278,8 +338,32 @@ export async function lerPacoteParaWizard(
   const formularioId = base.pacote.formulario_id;
 
   const dadosContrato = await carregarDadosContrato(contratoId);
-  if (!dadosContrato || !dadosContrato.cliente || dadosContrato.contrato.segmento_id == null) {
-    return { ...base, hidratacao: null };
+  if (!dadosContrato) {
+    console.warn('[pacote.service] hidratação abortada — contrato não encontrado', { contratoId });
+    return {
+      ...base,
+      hidratacao: null,
+      motivoHidratacaoBloqueada: 'contrato_nao_encontrado',
+      debugContexto: { contratoId, segmentoId: null, formularioId },
+    };
+  }
+  if (!dadosContrato.cliente) {
+    console.warn('[pacote.service] hidratação abortada — contrato sem cliente', { contratoId });
+    return {
+      ...base,
+      hidratacao: null,
+      motivoHidratacaoBloqueada: 'contrato_sem_cliente',
+      debugContexto: { contratoId, segmentoId: dadosContrato.contrato.segmento_id, formularioId },
+    };
+  }
+  if (dadosContrato.contrato.segmento_id == null) {
+    console.warn('[pacote.service] hidratação abortada — contrato sem segmento', { contratoId });
+    return {
+      ...base,
+      hidratacao: null,
+      motivoHidratacaoBloqueada: 'contrato_sem_segmento',
+      debugContexto: { contratoId, segmentoId: null, formularioId },
+    };
   }
 
   const segmentoId = dadosContrato.contrato.segmento_id;
@@ -288,8 +372,31 @@ export async function lerPacoteParaWizard(
     carregarFormularioCompleto(formularioId),
   ]);
 
-  if (!pacoteTemplates || !formulario) {
-    return { ...base, hidratacao: null };
+  if (!pacoteTemplates) {
+    console.warn('[pacote.service] hidratação abortada — nenhum formulário tipo contrato ativo no segmento', {
+      contratoId,
+      segmentoId,
+      formularioId,
+    });
+    return {
+      ...base,
+      hidratacao: null,
+      motivoHidratacaoBloqueada: 'segmento_sem_formulario_contrato',
+      debugContexto: { contratoId, segmentoId, formularioId },
+    };
+  }
+  if (!formulario) {
+    console.warn('[pacote.service] hidratação abortada — formulário do pacote não encontrado', {
+      contratoId,
+      segmentoId,
+      formularioId,
+    });
+    return {
+      ...base,
+      hidratacao: null,
+      motivoHidratacaoBloqueada: 'formulario_nao_encontrado',
+      debugContexto: { contratoId, segmentoId, formularioId },
+    };
   }
 
   const templates = await carregarTemplatesPorUuids(pacoteTemplates.templateUuidsUnificados);

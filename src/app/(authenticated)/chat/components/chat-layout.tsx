@@ -37,12 +37,12 @@ export function ChatLayout({ salas, currentUserId, currentUserName, initialSelec
   }, [initialSelectedChat, selectedChat, setSelectedChat]);
 
   return (
-    <div className="flex h-[calc(100vh-7.5rem)] rounded-2xl border border-border overflow-hidden bg-(--surface-container-low)">
+    <div className="flex h-[calc(100vh-7.5rem)] rounded-2xl border border-border overflow-hidden bg-surface-container-low">
       {/* Sidebar column (LAYOUT-01, LAYOUT-02) — 280px conforme spec Glass Briefing */}
       <div
         className={cn(
-          "h-full flex flex-col border-r border-border/40 dark:border-white/[0.06] bg-(--surface-container-low)",
-          "w-full md:w-[280px] md:min-w-[280px] shrink-0",
+          "h-full flex flex-col border-r border-border/40 dark:border-white/6 bg-surface-container-low",
+          "w-full md:w-70 md:min-w-70 shrink-0",
           selectedChat ? "hidden md:flex" : "flex"
         )}
       >
@@ -52,18 +52,18 @@ export function ChatLayout({ salas, currentUserId, currentUserName, initialSelec
       {/* Chat area column (LAYOUT-04) */}
       <div
         className={cn(
-          "h-full flex-1 min-w-0 flex flex-col relative bg-(--chat-thread-bg) overflow-hidden",
+          "h-full flex-1 min-w-0 flex flex-col relative bg-chat-thread-bg overflow-hidden",
           !selectedChat ? "hidden md:flex" : "flex"
         )}
       >
         {/* Ambient glow - top right */}
         <div
-          className="absolute top-0 right-0 w-[300px] h-[300px] pointer-events-none z-0"
+          className="absolute top-0 right-0 w-75 h-75 pointer-events-none z-0"
           style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.04) 0%, transparent 70%)' }}
         />
         {/* Ambient glow - bottom left */}
         <div
-          className="absolute bottom-0 left-0 w-[250px] h-[250px] pointer-events-none z-0"
+          className="absolute bottom-0 left-0 w-62.5 h-62.5 pointer-events-none z-0"
           style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.02) 0%, transparent 70%)' }}
         />
         {/* Content at z-10 */}
@@ -90,7 +90,7 @@ export function ChatLayout({ salas, currentUserId, currentUserName, initialSelec
 
       {/* Detail panel (LAYOUT-03, D-07, D-09, DETAIL-01) */}
       {showProfileSheet && (
-        <div className="hidden lg:flex w-[320px] shrink-0 border-l border-border/40 dark:border-white/[0.06] bg-(--surface-container-low)">
+        <div className="hidden lg:flex w-[320px] shrink-0 border-l border-border/40 dark:border-white/6 bg-surface-container-low">
           <ChatDetailPanel user={selectedChat?.usuario} />
         </div>
       )}
