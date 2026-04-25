@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
+import { GLASS_DEPTH } from '@/lib/design-system';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Heading, Text } from '@/components/ui/typography';
@@ -314,9 +315,10 @@ function GlassRow({
         }
       }}
       className={cn(
-        'group w-full text-left rounded-2xl border border-border/60 bg-card p-4 cursor-pointer',
+        GLASS_DEPTH[1],
+        'group w-full text-left rounded-2xl p-4 cursor-pointer',
         'transition-colors duration-200 ease-out',
-        'hover:border-border hover:shadow-sm',
+        'hover:border-border/50 hover:shadow-sm',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
         URGENCY_BORDER[urgency],
       )}
@@ -370,7 +372,7 @@ function GlassRow({
       <div
         className={cn(
           'hidden group-hover:grid grid-cols-1 md:grid-cols-2 gap-4',
-          'mt-3 pt-3 border-t border-border/20',
+          'mt-3 pt-3 border-t border-border/40',
           GRID_EXPANSION_OFFSET,
         )}
         onClick={(e) => e.stopPropagation()}
@@ -423,7 +425,7 @@ function ListSkeleton() {
       {Array.from({ length: 6 }, (_, i) => (
         <div
           key={i}
-          className="rounded-2xl border border-border/40 bg-card p-4"
+          className={cn(GLASS_DEPTH[1], 'rounded-2xl p-4')}
         >
           <div className={cn('grid gap-4 items-start', GRID_TEMPLATE)}>
             <div className="flex items-start gap-2">

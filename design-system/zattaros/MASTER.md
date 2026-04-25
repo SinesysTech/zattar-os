@@ -44,16 +44,28 @@
 
 ### Cores Semânticas
 
-Usar os tokens definidos no projeto e nunca equivalentes improvisados.
+Usar os tokens definidos no projeto e nunca equivalentes improvisados. Abaixo a distinção entre **tokens CSS semânticos** (existem em `globals.css` como variáveis) e **variantes visuais de componente** (nascem da composição de tokens dentro de um componente).
 
-- **Primary**: ações principais, links críticos, foco, seleção ativa
+#### Tokens CSS semânticos
+
+Fonte da verdade: `src/app/globals.css` + `src/lib/design-system/token-registry.ts`.
+
+- **Primary**: ações principais, links críticos, foco, seleção ativa (Zattar Purple)
 - **Secondary**: apoio visual e superfícies auxiliares
 - **Success**: estados positivos, concluído, válido, saudável
 - **Info**: estados informativos, em análise, neutro positivo
 - **Warning**: pendência, atenção, risco moderado
 - **Destructive**: erro, cancelamento, atraso crítico, ação irreversível
-- **Neutral**: arquivado, encerrado, inativo, sem significado forte
-- **Accent**: destaque complementar e indicadores especiais
+- **Accent**: destaque complementar (laranja/âmbar) para CTAs secundários e marcadores de ação pontuais
+- **Highlight**: token independente de realce pontual — tooltips ativos, badges de atenção leve, chips de foco momentâneo; **não é sinônimo de Accent**, os dois coexistem no sistema
+- **Muted / Foreground / Background / Border / Card / Popover**: superfícies e hierarquia base
+- **Sidebar-\***: tokens isolados da sidebar (permanece escura em ambos os temas)
+
+#### Variantes visuais de componente (sem token CSS próprio)
+
+- **Neutral**: **não é um token CSS**. É uma variante visual implementada no `Badge` (`src/components/ui/badge.tsx`) compondo `bg-muted` + `text-foreground` (tom soft) ou `bg-foreground` + `text-background` (tom solid). Usar para arquivado, encerrado, inativo, sem significado forte.
+
+> Regra: nunca criar uma variável CSS `--neutral` para simular esse comportamento. Sempre usar a variante `neutral` do `Badge` ou compor `muted` + `foreground` diretamente.
 
 ### Paleta Operacional
 
@@ -96,6 +108,32 @@ A paleta configurável do sistema deve ser usada para:
 - **Card/KPI:** label discreta + valor de alto contraste
 - **Meta informação:** texto secundário, nunca competir com heading
 
+### Classes Canônicas vs Legadas
+
+#### Classes CSS canônicas (usar sempre)
+
+Declaradas em `src/app/globals.css` com `font-family` explícita:
+
+- `.text-page-title`, `.text-section-title`, `.text-card-title`, `.text-widget-title`
+- `.text-display-1`, `.text-display-2`
+- `.text-body`, `.text-label`, `.text-helper`
+- `.text-kpi-value`, `.text-meta-label`, `.text-mono-num`
+- `.text-micro-badge`, `.text-overline`
+
+#### Componentes React canônicos
+
+Declarados em `src/components/ui/typography.tsx`:
+
+- `<Heading level="page|section|card|subsection|widget|display-1|display-2|marketing-hero|marketing-section|marketing-title" />`
+- `<Text variant="body|body-lg|body-sm|label|caption|helper|kpi-value|widget-sub|meta-label|micro-caption|micro-badge|overline|marketing-lead|marketing-overline" />`
+
+#### Classes e componentes legados (evitar em código novo)
+
+- Classes CSS `.typography-h1`, `.typography-h2`, `.typography-h3`, `.typography-h4` ainda presentes em `globals.css`. **Não aplicam `font-heading` explicitamente**, então caem no default do body (Inter) em vez de Montserrat. São tratáveis como débito técnico — ver seção "Débitos Técnicos Rastreados".
+- Componentes React `H1`, `H2`, `H3`, `H4`, `P`, `Blockquote`, `List`, `InlineCode`, `Lead`, `Large`, `Small`, `Muted`, `Table` marcados `@deprecated` em `typography.tsx`. Código novo deve usar `<Heading>` / `<Text>`.
+
+> Regra: em código novo, nunca importar os componentes `@deprecated` nem aplicar as classes `.typography-h*`. Migrações dos call-sites existentes acontecem progressivamente durante a fase de aplicação por página.
+
 ---
 
 ## Espaçamento e Densidade
@@ -126,17 +164,18 @@ Usar o eixo `data-density` já suportado pelos shells.
 
 ### Glass Depth
 
-Usar a hierarquia de profundidade já existente no projeto.
+Usar a hierarquia de profundidade já existente no projeto. Cada nível é consumido via `GLASS_DEPTH` em `src/lib/design-system/tokens.ts` ou via classes CSS dedicadas.
 
-- **Depth 1 / widget:** superfície leve para containers auxiliares
-- **Depth 2 / KPI:** camada mais perceptível para indicadores e blocos de resumo
-- **Depth 3 / destaque:** foco máximo com tint leve da cor primária
+- **Depth 1 / widget**: classe CSS dedicada `.glass-widget` em `globals.css`. Superfície leve para containers auxiliares.
+- **Depth 2 / KPI**: classe CSS dedicada `.glass-kpi` em `globals.css`. Camada mais perceptível para indicadores e blocos de resumo.
+- **Depth 3 / destaque**: **composição semântica com tint da cor primária** (`bg-primary/[0.04] backdrop-blur-xl border-primary/10`). Não existe classe `.glass-depth-3` ainda; o consumo autorizado é exclusivamente via `GLASS_DEPTH[3]` exportado em `tokens.ts`.
 
 ### Regras de Uso
 
 - Glass deve ajudar a hierarquia, não virar efeito decorativo gratuito.
 - Em light mode, transparência deve preservar contraste e legibilidade.
 - Em overlays e diálogos, o blur deve ser controlado e elegante.
+- **Nunca replicar inline** a composição do Depth 3 em JSX — sempre importar `GLASS_DEPTH` do design system. Isso garante que a futura migração para classe `.glass-depth-3` dedicada não exija refactor disperso.
 
 ---
 
@@ -179,19 +218,22 @@ Qualquer badge de domínio deve usar:
 
 ### Categorias de Domínio
 
-O design system deve refletir semântica visual para categorias como:
+O design system deve refletir semântica visual para o conjunto completo de categorias declaradas em `BadgeCategory` (`src/lib/design-system/variants.ts`). A tabela abaixo agrupa as ~37 categorias reais por domínio de negócio:
 
-- tribunal
-- status processual
-- status de audiência
-- modalidade de audiência
-- status de captura
-- tipo de parte
-- prioridade
-- contratos
-- obrigações
-- financeiro
-- indicadores especiais
+- **Processual**: `tribunal`, `status`, `grau`, `polo`, `parte`
+- **Audiências**: `audiencia_status`, `audiencia_modalidade`, `audiencia_indicador`
+- **Captura e expedientes**: `captura_status`, `expediente_tipo`, `expediente_status`
+- **Contratos e cobrança**: `tipo_contrato`, `tipo_cobranca`, `status_contrato`, `parcela_status`, `repasse_status`
+- **RH / folha**: `folha_status`, `salario_status`
+- **Obrigações**: `obrigacao_status`, `obrigacao_tipo`, `obrigacao_direcao`
+- **Documentos e templates**: `document_signature_status`, `template_status`
+- **Gestão de projetos**: `project_status`, `task_status`, `priority`
+- **Financeiro / contábil**: `payment_status`, `financial_alert`, `ativo_status`, `orcamento_status`, `orcamento_item_status`, `tipo_conta_contabil`, `conciliacao_status`
+- **Comunicação / VoIP**: `call_status`, `network_quality`, `online_status`
+- **Perícia**: `pericia_situacao`
+- **Erros**: `error_type`
+
+> Fonte da verdade para categorias: `BadgeCategory` em `src/lib/design-system/variants.ts`. Qualquer nova categoria de domínio deve ser adicionada lá primeiro (e refletida em `getSemanticBadgeVariant()` + `getSemanticBadgeTone()`) antes de aparecer em qualquer UI.
 
 ### Intenção Visual
 
@@ -303,16 +345,37 @@ O design system deve refletir semântica visual para categorias como:
 
 ## Arquivos de Referência
 
-- `src/app/globals.css`
-- `src/lib/design-system/tokens.ts`
-- `src/lib/design-system/variants.ts`
-- `src/components/ui/badge.tsx`
-- `src/components/ui/semantic-badge.tsx`
-- `src/components/ui/typography.tsx`
+### Fonte da verdade — tokens e variáveis
+
+- `src/app/globals.css` — CSS custom properties, classes glass, tipografia canônica
+- `src/lib/design-system/tokens.ts` — espelho tipado DTCG (cores, glass, spacing, typography, motion, etc.)
+- `src/lib/design-system/variants.ts` — mapa de domínio → variante visual (`BadgeCategory`, `getSemanticBadgeVariant`, `getSemanticBadgeTone`)
+- `src/lib/design-system/token-registry.ts` — inventário autoritativo dos 495 tokens
+
+### Componentes UI base
+
+- `src/components/ui/badge.tsx` — variantes CVA sem hardcode, base dos badges semânticos
+- `src/components/ui/semantic-badge.tsx` — wrapper que resolve domínio → variante + tone
+- `src/components/ui/typography.tsx` — `<Heading>` / `<Text>` (APIs canônicas) + componentes `@deprecated`
+
+### Shells e primitivas de layout
+
 - `src/components/shared/page-shell.tsx`
 - `src/components/shared/data-shell/data-shell.tsx`
 - `src/components/shared/dialog-shell/dialog-form-shell.tsx`
 - `src/components/shared/dialog-shell/dialog-detail-shell.tsx`
+- `src/components/shared/detail-section/detail-section.tsx` e `detail-section-card.tsx`
+
+---
+
+## Débitos Técnicos Rastreados
+
+Itens identificados na auditoria de conformidade MASTER ↔ implementação que **não** foram quitados nesta consolidação do MASTER. Serão endereçados na fase seguinte, quando a skill `ui-ux-pro-max` for aplicada página a página.
+
+1. **Classes `.typography-h1..h4` sem `font-heading`** em `src/app/globals.css` (linhas 1375-1387). Precisam declarar `font-family: var(--font-heading)` ou serem removidas após migração dos call-sites.
+2. **Duplicação de `.text-display-1` e `.text-display-2`** em `src/app/globals.css` (linhas 1478-1486 e 1513-1520). Manter apenas uma definição canônica.
+3. **`GLASS_DEPTH[3]` como composição inline** em `src/lib/design-system/tokens.ts` (linha 634). Candidato a virar classe `.glass-depth-3` dedicada em `globals.css`, para paridade com `.glass-widget` e `.glass-kpi`.
+4. **Migração dos call-sites legados**: substituir usos de `.typography-h*` e dos componentes `@deprecated` de `typography.tsx` pelas APIs canônicas (`<Heading>`, `<Text>`, `.text-page-title`, etc.). Será feito por página durante a fase de aplicação da skill.
 
 ---
 

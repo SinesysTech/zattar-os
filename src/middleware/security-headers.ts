@@ -16,6 +16,9 @@
  * Modo report-only para CSP
  * Em report-only, violações são reportadas mas não bloqueadas
  */
+export const CSP_ENABLED =
+  process.env.NODE_ENV !== "development" || process.env.ENABLE_CSP_IN_DEV === "true";
+
 export const REPORT_ONLY_MODE = process.env.CSP_REPORT_ONLY !== "false";
 
 /**
@@ -256,14 +259,16 @@ export function buildSecurityHeaders(
   };
 
   // CSP header - report-only ou enforcement
-  if (reportOnly) {
-    headers["Content-Security-Policy-Report-Only"] = cspDirectives;
-  } else {
-    headers["Content-Security-Policy"] = cspDirectives;
+  if (CSP_ENABLED) {
+    if (reportOnly) {
+      headers["Content-Security-Policy-Report-Only"] = cspDirectives;
+    } else {
+      headers["Content-Security-Policy"] = cspDirectives;
+    }
   }
 
   // Report-To header para CSP reporting
-  if (isProduction) {
+  if (CSP_ENABLED && isProduction) {
     headers["Report-To"] = JSON.stringify({
       group: "csp-endpoint",
       max_age: 10886400,
