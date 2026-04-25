@@ -4,6 +4,7 @@ import * as React from "react";
 import type { ColumnDef, Table as TanstackTable } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/typography";
 import {
   Avatar,
   AvatarFallback,
@@ -97,7 +98,7 @@ const columns: ColumnDef<Tarefa>[] = [
               {generateAvatarFallback(nome)}
             </AvatarFallback>
           </Avatar>
-          <span className="text-sm">{nome}</span>
+          <Text variant="label" as="span">{nome}</Text>
         </div>
       );
     },

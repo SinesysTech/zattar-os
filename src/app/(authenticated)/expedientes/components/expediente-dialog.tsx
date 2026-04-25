@@ -517,7 +517,12 @@ export function ExpedienteDialog({
                   onValueChange={setTrtValue}
                   disabled={isPending}
                 >
-                  <SelectTrigger id="trt" className="h-10 w-full">
+                  <SelectTrigger
+                    id="trt"
+                    className="h-10 w-full"
+                    aria-invalid={!!getErrors()?.trt}
+                    aria-describedby={getErrors()?.trt ? 'trt-error' : undefined}
+                  >
                     <SelectValue placeholder="Selecione o TRT" />
                   </SelectTrigger>
                   <SelectContent>
@@ -530,6 +535,7 @@ export function ExpedienteDialog({
                 </Select>
                 {getErrors()?.trt && (
                   <p
+                    id="trt-error"
                     role="alert"
                     className="text-sm font-medium text-destructive"
                   >
@@ -549,7 +555,12 @@ export function ExpedienteDialog({
                   onValueChange={setGrauValue}
                   disabled={isPending}
                 >
-                  <SelectTrigger id="grau" className="h-10 w-full">
+                  <SelectTrigger
+                    id="grau"
+                    className="h-10 w-full"
+                    aria-invalid={!!getErrors()?.grau}
+                    aria-describedby={getErrors()?.grau ? 'grau-error' : undefined}
+                  >
                     <SelectValue placeholder="Selecione o grau" />
                   </SelectTrigger>
                   <SelectContent>
@@ -562,6 +573,7 @@ export function ExpedienteDialog({
                 </Select>
                 {getErrors()?.grau && (
                   <p
+                    id="grau-error"
                     role="alert"
                     className="text-sm font-medium text-destructive"
                   >
@@ -748,9 +760,12 @@ export function ExpedienteDialog({
                   rows={4}
                   required
                   className="resize-none w-full"
+                  aria-invalid={!!getErrors()?.descricao}
+                  aria-describedby={getErrors()?.descricao ? 'descricao-error' : undefined}
                 />
                 {getErrors()?.descricao && (
                   <p
+                    id="descricao-error"
                     role="alert"
                     className="text-sm font-medium text-destructive"
                   >
@@ -795,10 +810,19 @@ export function ExpedienteDialog({
                   onChange={(e) => setHoraPrazoValue(e.target.value)}
                   disabled={isPending || !dataPrazoValue}
                   className="h-10 w-full pl-2"
+                  aria-invalid={
+                    !!(getErrors()?.dataPrazoLegalParte || getErrors()?.horaPrazo)
+                  }
+                  aria-describedby={
+                    getErrors()?.dataPrazoLegalParte || getErrors()?.horaPrazo
+                      ? 'prazo-error'
+                      : undefined
+                  }
                 />
                 {(getErrors()?.dataPrazoLegalParte ||
                   getErrors()?.horaPrazo) && (
                   <p
+                    id="prazo-error"
                     role="alert"
                     className="text-sm font-medium text-destructive"
                   >

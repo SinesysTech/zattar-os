@@ -196,8 +196,10 @@ export function DialogDetailShell({
           className,
         )}
       >
-        {/* a11y — sempre presente. */}
-        <DialogDescription className={description ? undefined : "sr-only"}>
+        {/* a11y — sempre `sr-only`. O detail shell trata `description` como
+            metadata de aria-describedby, não como subtítulo visível. Subtítulo
+            visual deve ir pelo slot `meta` (número do processo, órgão, etc.). */}
+        <DialogDescription className="sr-only">
           {description ?? (typeof title === "string" ? title : "Detalhes")}
         </DialogDescription>
 

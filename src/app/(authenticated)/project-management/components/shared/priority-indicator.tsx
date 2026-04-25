@@ -9,6 +9,7 @@ import {
   type Prioridade,
 } from "../../domain";
 import { cn } from "@/lib/utils";
+import { Text } from "@/components/ui/typography";
 import { getSemanticBadgeVariant, type BadgeVisualVariant } from "@/lib/design-system";
 
 const PRIORIDADE_ICONS: Record<Prioridade, React.ComponentType<{ className?: string }>> = {
@@ -50,7 +51,7 @@ export function PriorityIndicator({
     <span className={cn("inline-flex items-center gap-1", color, className)}>
       <Icon className="size-4" />
       {showLabel && (
-        <span className="text-sm">{PRIORIDADE_LABELS[prioridade]}</span>
+        <Text variant="label" as="span">{PRIORIDADE_LABELS[prioridade]}</Text>
       )}
     </span>
   );

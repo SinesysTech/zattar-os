@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import { useIsMobile } from "@/hooks/use-breakpoint";
+import { Text } from "@/components/ui/typography";
 import {
   Card,
   CardAction,
@@ -57,9 +58,9 @@ export function ChartProjectOverview({ data }: ChartProjectOverviewProps) {
           <CardTitle>Visão Geral dos Projetos</CardTitle>
         </CardHeader>
         <CardContent className="flex items-center justify-center py-12">
-          <p className="text-muted-foreground text-sm">
+          <Text variant="caption" className="text-muted-foreground">
             Nenhum dado disponível para o período.
-          </p>
+          </Text>
         </CardContent>
       </Card>
     );

@@ -4,6 +4,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, Calendar, ListTree } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Text } from "@/components/ui/typography";
 import {
   Avatar,
   AvatarFallback,
@@ -68,9 +69,9 @@ export function TaskCard({ tarefa, isDragOverlay }: TaskCardProps) {
             </button>
 
             <div className="min-w-0 flex-1 space-y-2">
-              <p className="text-sm font-medium leading-tight">
+              <Text variant="label" as="p" className="font-medium leading-tight">
                 {tarefa.titulo}
-              </p>
+              </Text>
 
               <div className="flex items-center gap-2 flex-wrap">
                 <PriorityIndicator

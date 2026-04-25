@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { AppBadge as Badge } from "@/components/ui/app-badge";
+import { Text } from "@/components/ui/typography";
 import {
   Card,
   CardAction,
@@ -92,9 +93,9 @@ export function Reminders({ lembretes }: RemindersProps) {
       </CardHeader>
       <CardContent>
         {lembretes.length === 0 ? (
-          <p className="text-muted-foreground text-sm">
+          <Text variant="caption" className="text-muted-foreground">
             Nenhum lembrete pendente.
-          </p>
+          </Text>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {lembretes.map((lembrete) => (

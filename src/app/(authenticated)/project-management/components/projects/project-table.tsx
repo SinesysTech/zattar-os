@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { ColumnDef, Table as TanstackTable } from "@tanstack/react-table";
 import { ArrowUpDown, Ellipsis } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/typography";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -184,9 +185,9 @@ export function ProjectTable({ projetos, viewModeSlot }: ProjectTableProps) {
         ) : null
       }
       footer={
-        <div className="text-muted-foreground text-sm">
+        <Text variant="caption" as="div" className="text-muted-foreground">
           {filteredCount} {filteredCount === 1 ? "projeto" : "projetos"}
-        </div>
+        </Text>
       }
     >
       <DataTable

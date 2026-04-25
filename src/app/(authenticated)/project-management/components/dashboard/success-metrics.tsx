@@ -1,5 +1,6 @@
 import { ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { cn, generateAvatarFallback } from "@/lib/utils";
+import { Text } from "@/components/ui/typography";
 import {
   Card,
   CardContent,
@@ -78,9 +79,9 @@ export function SuccessMetrics({ membros, resumo }: SuccessMetricsProps) {
             </TooltipProvider>
           </div>
         ) : (
-          <p className="text-muted-foreground text-sm">
+          <Text variant="caption" className="text-muted-foreground">
             Nenhum membro ativo.
-          </p>
+          </Text>
         )}
         <p className="mt-8 mb-2 text-sm font-bold">Resumo</p>
         <div className="divide-y *:py-3">

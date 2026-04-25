@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Text } from "@/components/ui/typography";
 import {
   Card,
   CardContent,
@@ -61,7 +62,7 @@ export function ProjectCard({ projeto }: ProjectCardProps) {
 
           <div className="mb-6">
             <div className="mb-2 flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Progresso</span>
+              <Text variant="label" as="span" className="text-muted-foreground">Progresso</Text>
               <span className="text-sm font-semibold">
                 {projeto.progresso}%
               </span>

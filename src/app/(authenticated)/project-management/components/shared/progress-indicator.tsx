@@ -1,4 +1,5 @@
 import { Progress } from "@/components/ui/progress";
+import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 
 interface ProgressIndicatorProps {
@@ -31,9 +32,9 @@ export function ProgressIndicator({
         indicatorColor={getIndicatorColor(clamped)}
       />
       {showLabel && (
-        <span className="text-muted-foreground text-sm tabular-nums">
+        <Text variant="caption" as="span" className="text-muted-foreground tabular-nums">
           {clamped}%
-        </span>
+        </Text>
       )}
     </div>
   );

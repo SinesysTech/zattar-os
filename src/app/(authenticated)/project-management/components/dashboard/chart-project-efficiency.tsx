@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Label, Pie, PieChart, Sector } from "recharts";
+import { Text } from "@/components/ui/typography";
 import { PieSectorDataItem } from "recharts/types/polar/Pie";
 import {
   Card,
@@ -74,9 +75,9 @@ export function ChartProjectEfficiency({
           </CardTitle>
         </CardHeader>
         <CardContent className="flex items-center justify-center py-12">
-          <p className="text-muted-foreground text-sm">
+          <Text variant="caption" className="text-muted-foreground">
             Nenhum dado disponível.
-          </p>
+          </Text>
         </CardContent>
       </Card>
     );

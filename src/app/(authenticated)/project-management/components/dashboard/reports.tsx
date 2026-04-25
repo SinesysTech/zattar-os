@@ -4,6 +4,7 @@ import * as React from "react";
 import type { ColumnDef, Table as TanstackTable } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/typography";
 import {
   DataShell,
   DataTable,
@@ -116,9 +117,9 @@ export function Reports({ projetos }: ReportsProps) {
         ) : null
       }
       footer={
-        <div className="text-muted-foreground text-sm">
+        <Text variant="caption" as="div" className="text-muted-foreground">
           {filteredCount} {filteredCount === 1 ? "projeto" : "projetos"}
-        </div>
+        </Text>
       }
     >
       <DataTable

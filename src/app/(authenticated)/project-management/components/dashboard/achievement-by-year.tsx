@@ -1,6 +1,7 @@
 "use client";
 
 import { Bar, BarChart, LabelList, XAxis, YAxis } from "recharts";
+import { Text } from "@/components/ui/typography";
 import {
   Card,
   CardContent,
@@ -32,9 +33,9 @@ export function AchievementByYear({ data }: AchievementByYearProps) {
           </CardDescription>
         </CardHeader>
         <CardContent className="flex items-center justify-center py-12">
-          <p className="text-muted-foreground text-sm">
+          <Text variant="caption" className="text-muted-foreground">
             Nenhum dado disponível.
-          </p>
+          </Text>
         </CardContent>
       </Card>
     );
