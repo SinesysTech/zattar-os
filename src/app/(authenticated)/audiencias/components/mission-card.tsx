@@ -31,7 +31,7 @@ import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { IconContainer } from '@/components/ui/icon-container';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 
 import type { Audiencia } from '../domain';
 import { MODALIDADE_AUDIENCIA_LABELS } from '../domain';
@@ -171,7 +171,7 @@ export function MissionCard({
             </IconContainer>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[9px] font-semibold uppercase tracking-wider text-primary/60">
+                <span className="text-micro-caption font-semibold uppercase tracking-wider text-primary/60">
                   {isOngoing ? 'Em andamento' : isPast ? 'Concluída' : 'Próxima missão'}
                 </span>
                 {isOngoing && <span className="size-1.5 rounded-full bg-success animate-pulse" />}
@@ -189,11 +189,11 @@ export function MissionCard({
                 {hours > 0 && (
                   <>
                     <span className={cn('text-sm font-bold', urgency.text)}>{pad(hours)}</span>
-                    <span className="text-[9px] text-muted-foreground/55">:</span>
+                    <span className="text-micro-caption text-muted-foreground/60">:</span>
                   </>
                 )}
                 <span className={cn('text-sm font-bold', urgency.text)}>{pad(minutes)}</span>
-                <span className="text-[9px] text-muted-foreground/55">:</span>
+                <span className="text-micro-caption text-muted-foreground/60">:</span>
                 <span className={cn('text-sm font-bold', urgency.text)}>{pad(seconds)}</span>
               </div>
             </div>
@@ -203,30 +203,30 @@ export function MissionCard({
         {/* Info grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
           <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">Horário</span>
+            <span className="text-micro-caption text-muted-foreground/60 uppercase tracking-wider">Horário</span>
             <span className="text-sm font-medium tabular-nums">
               {format(dataInicio, 'HH:mm', { locale: ptBR })} – {format(dataFim, 'HH:mm', { locale: ptBR })}
             </span>
           </div>
           <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">Tribunal</span>
+            <span className="text-micro-caption text-muted-foreground/60 uppercase tracking-wider">Tribunal</span>
             <div className="flex items-center gap-1.5">
               <span className="text-sm font-medium">{audiencia.trt || '–'}</span>
               {audiencia.grau && (
-                <span className="text-[9px] text-muted-foreground/60">
+                <span className="text-micro-caption text-muted-foreground/60">
                   {audiencia.grau === 'primeiro_grau' ? '1º grau' : audiencia.grau === 'segundo_grau' ? '2º grau' : 'Superior'}
                 </span>
               )}
             </div>
           </div>
           <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">Processo</span>
-            <span className="text-[11px] font-mono text-foreground/70 tabular-nums truncate">
+            <span className="text-micro-caption text-muted-foreground/60 uppercase tracking-wider">Processo</span>
+            <span className="text-mono-num text-foreground/70 truncate">
               {audiencia.numeroProcesso}
             </span>
           </div>
           <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">Modalidade</span>
+            <span className="text-micro-caption text-muted-foreground/60 uppercase tracking-wider">Modalidade</span>
             <div className="flex items-center gap-1.5">
               <ModalIcon className="size-3 text-muted-foreground/60" />
               <span className="text-sm font-medium">{modalidadeLabel || '–'}</span>
@@ -237,25 +237,25 @@ export function MissionCard({
         {/* Órgão jurisdicional */}
         {audiencia.orgaoJulgadorOrigem && (
           <div className="mb-2 px-3 py-1.5 rounded-lg bg-border/5">
-            <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">Órgão Jurisdicional</span>
-            <p className="text-[11px] text-foreground/60 mt-0.5">{audiencia.orgaoJulgadorOrigem}</p>
+            <span className="text-micro-caption text-muted-foreground/60 uppercase tracking-wider">Órgão Jurisdicional</span>
+            <Text variant="caption" as="p" className="mt-0.5 text-foreground/70">{audiencia.orgaoJulgadorOrigem}</Text>
           </div>
         )}
 
         {/* Parties */}
         {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
           <div className="flex items-center gap-2 mb-4 px-3 py-2 rounded-lg bg-border/5">
-            <span className="text-[10px] text-foreground/60 truncate">{audiencia.poloAtivoNome || '–'}</span>
-            <span className="text-[9px] text-muted-foreground/50 shrink-0">vs</span>
-            <span className="text-[10px] text-foreground/60 truncate">{audiencia.poloPassivoNome || '–'}</span>
+            <span className="text-micro-caption text-foreground/70 truncate">{audiencia.poloAtivoNome || '–'}</span>
+            <span className="text-micro-caption text-muted-foreground/55 shrink-0">vs</span>
+            <span className="text-micro-caption text-foreground/70 truncate">{audiencia.poloPassivoNome || '–'}</span>
           </div>
         )}
 
         {/* Observações */}
         {audiencia.observacoes && (
           <div className="mb-4 px-3 py-2 rounded-lg bg-border/5">
-            <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">Observações</span>
-            <p className="text-[11px] text-foreground/50 mt-0.5 line-clamp-2 italic">{audiencia.observacoes}</p>
+            <span className="text-micro-caption text-muted-foreground/60 uppercase tracking-wider">Observações</span>
+            <Text variant="caption" as="p" className="mt-0.5 line-clamp-2 italic text-foreground/60">{audiencia.observacoes}</Text>
           </div>
         )}
 
@@ -277,7 +277,7 @@ export function MissionCard({
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className={cn('font-bold tabular-nums text-[11px]', prepStatus)}>{prepScore}%</span>
+                <span className={cn('font-bold tabular-nums text-caption', prepStatus)}>{prepScore}%</span>
               </div>
             </div>
             <div className="space-y-0.5">
@@ -289,7 +289,7 @@ export function MissionCard({
                     <Circle className="size-2.5 text-muted-foreground/45 shrink-0" />
                   )}
                   <span className={cn(
-                    'text-[10px] truncate',
+                    'text-micro-caption truncate',
                     item.done ? 'text-muted-foreground/50 line-through' : 'text-foreground/70',
                   )}>
                     {item.label}
@@ -297,7 +297,7 @@ export function MissionCard({
                 </div>
               ))}
               {prepItems.length > 3 && (
-                <span className="text-[9px] text-muted-foreground/55">+{prepItems.length - 3} itens</span>
+                <span className="text-micro-caption text-muted-foreground/60">+{prepItems.length - 3} itens</span>
               )}
             </div>
           </div>
@@ -309,7 +309,7 @@ export function MissionCard({
                 key={action.label}
                 onClick={action.onClick}
                 className={cn(
-                  'flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] font-medium transition-all cursor-pointer group',
+                  'flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-micro-caption font-medium transition-all cursor-pointer group',
                   action.primary
                     ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm'
                     : 'text-muted-foreground/50 hover:text-foreground/70 hover:bg-foreground/4',

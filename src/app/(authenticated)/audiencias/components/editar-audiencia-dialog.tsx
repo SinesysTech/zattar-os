@@ -7,15 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Label } from '@/components/ui/label';
+import { Text } from '@/components/ui/typography';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 import {
   Select,
   SelectContent,
@@ -24,7 +17,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
-import { Typography } from '@/components/ui/typography';
+import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { actionListarAcervoPaginado } from '@/app/(authenticated)/acervo';
 import { actionListarUsuarios } from '@/app/(authenticated)/usuarios';
 import {
@@ -36,6 +29,7 @@ import { localToISO } from '@/app/(authenticated)/audiencias/lib/date-utils';
 import { isAudienciaCapturada, type Audiencia } from '../domain';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
+
 interface EditarAudienciaDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -126,18 +120,18 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
   const [cep, setCep] = React.useState('');
 
   // Date parsing utils
-  const parseLocalDate = React.useCallback((dateString: string): Date => { 
+  const parseLocalDate = React.useCallback((dateString: string): Date => {
     if (!dateString) return new Date();
-    const [year, month, day] = dateString.split('-').map(Number); 
-    return new Date(year, month - 1, day); 
+    const [year, month, day] = dateString.split('-').map(Number);
+    return new Date(year, month - 1, day);
   }, []);
-  
-  const formatYYYYMMDD = React.useCallback((d: Date): string => { 
+
+  const formatYYYYMMDD = React.useCallback((d: Date): string => {
     if (!d || isNaN(d.getTime())) return '';
-    const y = d.getFullYear(); 
-    const m = String(d.getMonth() + 1).padStart(2, '0'); 
-    const da = String(d.getDate()).padStart(2, '0'); 
-    return `${y}-${m}-${da}`; 
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const da = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${da}`;
   }, []);
 
   React.useEffect(() => {
@@ -145,7 +139,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
       setTrt(audiencia.trt || '');
       setGrau(audiencia.grau || '');
       setProcessoId([audiencia.processoId.toString()]);
-      
+
       if (audiencia.dataInicio) {
         const d_inicio = new Date(audiencia.dataInicio);
         setDataInicio(formatYYYYMMDD(d_inicio));
@@ -156,13 +150,13 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
         setDataFim(formatYYYYMMDD(d_fim));
         setHoraFim(audiencia.horaFim || '');
       }
-      
+
       setTipoAudienciaId(audiencia.tipoAudienciaId?.toString() || '');
       setSalaAudienciaId(audiencia.salaAudienciaId?.toString() || '');
       setUrlVirtual(audiencia.urlAudienciaVirtual || '');
       setResponsavelId(audiencia.responsavelId?.toString() || '');
       setObservacoes(audiencia.observacoes || '');
-      
+
       if (audiencia.enderecoPresencial) {
         setLogradouro(audiencia.enderecoPresencial.logradouro || '');
         setNumero(audiencia.enderecoPresencial.numero || '');
@@ -202,11 +196,11 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
 
       const processosResponse = result.data as { processos?: Processo[] } | undefined;
       let processosRetornados = processosResponse?.processos ?? [];
-      
+
       // Se não vier na lista, tenta mockar apenas para exibição
       if (audiencia && !processosRetornados.find(p => p.id === audiencia.processoId)) {
         processosRetornados = [
-          ...processosRetornados, 
+          ...processosRetornados,
           {
             id: audiencia.processoId,
             numero_processo: audiencia.numeroProcesso,
@@ -319,7 +313,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    
+
     if (!audiencia) {
       setError('Audiência não encontrada para edição.');
       return;
@@ -482,344 +476,385 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
   }, [processos]);
 
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Editar Audiência</DialogTitle>
-          <DialogDescription>
-            {isCapturada
-              ? 'Audiência capturada do PJE — ajuste responsável e observações aqui. Para alterar modalidade, link, endereço ou presença híbrida, use o painel de detalhes.'
-              : 'Altere os dados da audiência.'}
-          </DialogDescription>
-        </DialogHeader>
+    <DialogFormShell
+      open={open}
+      onOpenChange={handleClose}
+      title="Editar Audiência"
+      description={isCapturada
+        ? 'Audiência capturada do PJE — ajuste responsável e observações aqui. Para alterar modalidade, link, endereço ou presença híbrida, use o painel de detalhes.'
+        : 'Altere os dados da audiência.'
+      }
+      maxWidth="2xl"
+      density="compact"
+      bodyClassName="overflow-y-auto px-6 py-5"
+      footer={
+        <Button type="submit" form="editar-audiencia-form" disabled={isLoading}>
+          {isLoading && <LoadingSpinner className="mr-2" />}
+          Salvar
+        </Button>
+      }
+    >
+      <form id="editar-audiencia-form" onSubmit={handleSubmit} className="space-y-4">
+        {error && (
+          <div className="flex items-start gap-2.5 rounded-lg border border-destructive/30 bg-destructive/8 px-3.5 py-3 text-destructive">
+            <span className="shrink-0 mt-0.5">⚠️</span>
+            <span className="text-sm leading-snug">{error}</span>
+          </div>
+        )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {error && (
-            <div className="bg-destructive/10 text-destructive p-3 rounded-md text-sm">
-              {error}
-            </div>
-          )}
-
-          {isCapturada && (
-            <div className="bg-info/10 text-info p-3 rounded-md text-xs leading-relaxed">
+        {isCapturada && (
+          <div className="rounded-lg border border-info/25 bg-info/8 px-3.5 py-3 text-info">
+            <p className="text-xs leading-relaxed">
               <strong>Origem PJE:</strong> processo, datas, tipo e sala vêm do tribunal
               e continuam sincronizados. Modalidade, link, endereço e presença híbrida
               podem ser editados (edições manuais prevalecem sobre sincronizações futuras).
-            </div>
-          )}
+            </p>
+          </div>
+        )}
 
-          {!isCapturada && (
+        {!isCapturada && (
           <>
-          {/* TRT e Grau */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="trt">Tribunal (TRT) *</Label>
-              <Select value={trt} onValueChange={setTrt}>
-                <SelectTrigger id="trt">
-                  <SelectValue placeholder="Selecione o TRT" />
-                </SelectTrigger>
-                <SelectContent>
-                  {TRTS.map((tribunal) => (
-                    <SelectItem key={tribunal.value} value={tribunal.value}>
-                      {tribunal.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="grau">Grau *</Label>
-              <Select value={grau} onValueChange={setGrau}>
-                <SelectTrigger id="grau">
-                  <SelectValue placeholder="Selecione o grau" />
-                </SelectTrigger>
-                <SelectContent>
-                  {GRAUS.map((g) => (
-                    <SelectItem key={g.value} value={g.value}>
-                      {g.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          {/* Processo - Combobox com busca */}
-          <div className="space-y-2">
-            <Label htmlFor="processo">Processo *</Label>
-            {!trt || !grau ? (
-              <div className="flex items-center gap-2 p-2 border rounded-md bg-muted">
-                <Typography.Muted as="span">Selecione o TRT e Grau primeiro</Typography.Muted>
+            {/* TRT e Grau */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="trt">
+                  <Text variant="label">Tribunal (TRT) *</Text>
+                </Label>
+                <Select value={trt} onValueChange={setTrt}>
+                  <SelectTrigger id="trt">
+                    <SelectValue placeholder="Selecione o TRT" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {TRTS.map((tribunal) => (
+                      <SelectItem key={tribunal.value} value={tribunal.value}>
+                        {tribunal.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-            ) : loadingProcessos ? (
-              <div className="flex items-center gap-2 p-2 border rounded-md">
-                <LoadingSpinner />
-                <Typography.Muted as="span">Carregando processos...</Typography.Muted>
+              <div className="space-y-2">
+                <Label htmlFor="grau">
+                  <Text variant="label">Grau *</Text>
+                </Label>
+                <Select value={grau} onValueChange={setGrau}>
+                  <SelectTrigger id="grau">
+                    <SelectValue placeholder="Selecione o grau" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {GRAUS.map((g) => (
+                      <SelectItem key={g.value} value={g.value}>
+                        {g.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-            ) : (
-              <Combobox
-                options={processosOptions}
-                value={processoId}
-                onValueChange={setProcessoId}
-                placeholder="Buscar por número ou nome das partes..."
-                searchPlaceholder="Buscar processo..."
-                emptyText="Nenhum processo encontrado."
-                multiple={false}
-              />
-            )}
-          </div>
-
-          {/* Data e Hora de Início */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="dataInicio">Data de Início *</Label>
-              <DatePicker
-                value={dataInicio ? parseLocalDate(dataInicio) : null}
-                onChange={(d) => setDataInicio(d ? formatYYYYMMDD(d) : '')}
-                placeholder="Selecionar data"
-              />
             </div>
+
+            {/* Processo - Combobox com busca */}
             <div className="space-y-2">
-              <Label htmlFor="horaInicio">Hora de Início *</Label>
-              <Input
-                id="horaInicio"
-                type="time"
-                value={horaInicio}
-                onChange={(e) => setHoraInicio(e.target.value)}
-                required
-              />
-            </div>
-          </div>
-
-          {/* Data e Hora de Fim */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="dataFim">Data de Fim *</Label>
-              <DatePicker
-                value={dataFim ? parseLocalDate(dataFim) : null}
-                onChange={(d) => setDataFim(d ? formatYYYYMMDD(d) : '')}
-                placeholder="Selecionar data"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="horaFim">Hora de Fim *</Label>
-              <Input
-                id="horaFim"
-                type="time"
-                value={horaFim}
-                onChange={(e) => setHoraFim(e.target.value)}
-                required
-              />
-            </div>
-          </div>
-
-          {/* Tipo de Audiência */}
-          <div className="space-y-2">
-            <Label htmlFor="tipo">Tipo de Audiência</Label>
-            {loadingTipos ? (
-              <div className="flex items-center gap-2 p-2 border rounded-md">
-                <LoadingSpinner />
-                <Typography.Muted as="span">Carregando tipos...</Typography.Muted>
-              </div>
-            ) : (!trt || !grau) ? (
-              <Select disabled>
-                <SelectTrigger id="tipo">
-                  <SelectValue placeholder="Selecione TRT e Grau primeiro" />
-                </SelectTrigger>
-              </Select>
-            ) : (
-              <Select value={tipoAudienciaId} onValueChange={setTipoAudienciaId}>
-                <SelectTrigger id="tipo">
-                  <SelectValue placeholder="Selecione o tipo de audiência" />
-                </SelectTrigger>
-                <SelectContent>
-                  {tiposAudiencia.map((tipo) => (
-                    <SelectItem key={tipo.id} value={tipo.id.toString()}>
-                      {tipo.descricao} {tipo.is_virtual && '(Virtual)'}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          </div>
-
-          {/* Sala de Audiência */}
-          <div className="space-y-2">
-            <Label htmlFor="sala">Sala de Audiência</Label>
-            {loadingSalas ? (
-              <div className="flex items-center gap-2 p-2 border rounded-md">
-                <LoadingSpinner />
-                <Typography.Muted as="span">Carregando salas...</Typography.Muted>
-              </div>
-            ) : !processoSelecionado ? (
-              <Select disabled>
-                <SelectTrigger id="sala">
-                  <SelectValue placeholder="Selecione um processo primeiro" />
-                </SelectTrigger>
-              </Select>
-            ) : (
-              <Select value={salaAudienciaId} onValueChange={setSalaAudienciaId}>
-                <SelectTrigger id="sala">
-                  <SelectValue placeholder="Selecione a sala de audiência" />
-                </SelectTrigger>
-                <SelectContent>
-                  {salas.map((sala) => (
-                    <SelectItem key={sala.id} value={sala.id.toString()}>
-                      {sala.nome}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          </div>
-
-          {/* Condicional: Virtual ou Presencial */}
-          {tipoSelecionado && (
-            <>
-              {tipoSelecionado.is_virtual ? (
-                // Audiência Virtual - Campo URL
-                <div className="space-y-2">
-                  <Label htmlFor="urlVirtual">URL da Audiência Virtual</Label>
-                  <Input
-                    id="urlVirtual"
-                    type="url"
-                    placeholder="https://zoom.us/..."
-                    value={urlVirtual}
-                    onChange={(e) => setUrlVirtual(e.target.value)}
-                  />
+              <Label htmlFor="processo">
+                <Text variant="label">Processo *</Text>
+              </Label>
+              {!trt || !grau ? (
+                <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border/30 bg-muted/30 text-muted-foreground/60 text-sm">
+                  <span className="shrink-0">⏳</span>
+                  <Text variant="caption">Selecione o TRT e Grau primeiro</Text>
+                </div>
+              ) : loadingProcessos ? (
+                <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border/30 bg-muted/30 text-muted-foreground/60">
+                  <LoadingSpinner size="sm" />
+                  <Text variant="caption">Carregando processos...</Text>
                 </div>
               ) : (
-                // Audiência Presencial - Campos de Endereço
-                <>
+                <Combobox
+                  options={processosOptions}
+                  value={processoId}
+                  onValueChange={setProcessoId}
+                  placeholder="Buscar por número ou nome das partes..."
+                  searchPlaceholder="Buscar processo..."
+                  emptyText="Nenhum processo encontrado."
+                  multiple={false}
+                />
+              )}
+            </div>
+
+            {/* Data e Hora de Início */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="dataInicio">
+                  <Text variant="label">Data de Início *</Text>
+                </Label>
+                <DatePicker
+                  value={dataInicio ? parseLocalDate(dataInicio) : null}
+                  onChange={(d) => setDataInicio(d ? formatYYYYMMDD(d) : '')}
+                  placeholder="Selecionar data"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="horaInicio">
+                  <Text variant="label">Hora de Início *</Text>
+                </Label>
+                <Input
+                  id="horaInicio"
+                  type="time"
+                  value={horaInicio}
+                  onChange={(e) => setHoraInicio(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Data e Hora de Fim */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="dataFim">
+                  <Text variant="label">Data de Fim *</Text>
+                </Label>
+                <DatePicker
+                  value={dataFim ? parseLocalDate(dataFim) : null}
+                  onChange={(d) => setDataFim(d ? formatYYYYMMDD(d) : '')}
+                  placeholder="Selecionar data"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="horaFim">
+                  <Text variant="label">Hora de Fim *</Text>
+                </Label>
+                <Input
+                  id="horaFim"
+                  type="time"
+                  value={horaFim}
+                  onChange={(e) => setHoraFim(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Tipo de Audiência */}
+            <div className="space-y-2">
+              <Label htmlFor="tipo">
+                <Text variant="label">Tipo de Audiência</Text>
+              </Label>
+              {loadingTipos ? (
+                <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border/30 bg-muted/30 text-muted-foreground/60">
+                  <LoadingSpinner size="sm" />
+                  <Text variant="caption">Carregando tipos...</Text>
+                </div>
+              ) : (!trt || !grau) ? (
+                <Select disabled>
+                  <SelectTrigger id="tipo">
+                    <SelectValue placeholder="Selecione TRT e Grau primeiro" />
+                  </SelectTrigger>
+                </Select>
+              ) : (
+                <Select value={tipoAudienciaId} onValueChange={setTipoAudienciaId}>
+                  <SelectTrigger id="tipo">
+                    <SelectValue placeholder="Selecione o tipo de audiência" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {tiposAudiencia.map((tipo) => (
+                      <SelectItem key={tipo.id} value={tipo.id.toString()}>
+                        {tipo.descricao} {tipo.is_virtual && '(Virtual)'}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            </div>
+
+            {/* Sala de Audiência */}
+            <div className="space-y-2">
+              <Label htmlFor="sala">
+                <Text variant="label">Sala de Audiência</Text>
+              </Label>
+              {loadingSalas ? (
+                <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border/30 bg-muted/30 text-muted-foreground/60">
+                  <LoadingSpinner size="sm" />
+                  <Text variant="caption">Carregando salas...</Text>
+                </div>
+              ) : !processoSelecionado ? (
+                <Select disabled>
+                  <SelectTrigger id="sala">
+                    <SelectValue placeholder="Selecione um processo primeiro" />
+                  </SelectTrigger>
+                </Select>
+              ) : (
+                <Select value={salaAudienciaId} onValueChange={setSalaAudienciaId}>
+                  <SelectTrigger id="sala">
+                    <SelectValue placeholder="Selecione a sala de audiência" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {salas.map((sala) => (
+                      <SelectItem key={sala.id} value={sala.id.toString()}>
+                        {sala.nome}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            </div>
+
+            {/* Condicional: Virtual ou Presencial */}
+            {tipoSelecionado && (
+              <>
+                {tipoSelecionado.is_virtual ? (
+                  // Audiência Virtual - Campo URL
                   <div className="space-y-2">
-                    <Label className="text-base font-semibold">Endereço da Audiência Presencial</Label>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div className="sm:col-span-2 space-y-2">
-                      <Label htmlFor="logradouro">Logradouro</Label>
-                      <Input
-                        id="logradouro"
-                        placeholder="Rua, Avenida, etc."
-                        value={logradouro}
-                        onChange={(e) => setLogradouro(e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="numero">Número</Label>
-                      <Input
-                        id="numero"
-                        placeholder="123"
-                        value={numero}
-                        onChange={(e) => setNumero(e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="complemento">Complemento</Label>
-                      <Input
-                        id="complemento"
-                        placeholder="Sala, Bloco, etc."
-                        value={complemento}
-                        onChange={(e) => setComplemento(e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="bairro">Bairro</Label>
-                      <Input
-                        id="bairro"
-                        value={bairro}
-                        onChange={(e) => setBairro(e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div className="sm:col-span-2 space-y-2">
-                      <Label htmlFor="cidade">Cidade</Label>
-                      <Input
-                        id="cidade"
-                        value={cidade}
-                        onChange={(e) => setCidade(e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="estado">Estado</Label>
-                      <Input
-                        id="estado"
-                        placeholder="UF"
-                        maxLength={2}
-                        value={estado}
-                        onChange={(e) => setEstado(e.target.value.toUpperCase())}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="cep">CEP</Label>
+                    <Label htmlFor="urlVirtual">
+                      <Text variant="label">URL da Audiência Virtual</Text>
+                    </Label>
                     <Input
-                      id="cep"
-                      placeholder="00000-000"
-                      value={cep}
-                      onChange={(e) => setCep(e.target.value)}
+                      id="urlVirtual"
+                      type="url"
+                      placeholder="https://zoom.us/..."
+                      value={urlVirtual}
+                      onChange={(e) => setUrlVirtual(e.target.value)}
                     />
                   </div>
-                </>
-              )}
-            </>
-          )}
-          </>
-          )}
+                ) : (
+                  // Audiência Presencial - Campos de Endereço
+                  <>
+                    <div className="space-y-2">
+                      <Label className="font-semibold">
+                        <Text variant="label">Endereço da Audiência Presencial</Text>
+                      </Label>
+                    </div>
 
-          {/* Responsável */}
-          <div className="space-y-2">
-            <Label htmlFor="responsavel">Responsável (opcional)</Label>
-            {loadingUsuarios ? (
-              <div className="flex items-center gap-2 p-2 border rounded-md">
-                <LoadingSpinner />
-                <Typography.Muted as="span">Carregando usuários...</Typography.Muted>
-              </div>
-            ) : (
-              <Select value={responsavelId} onValueChange={setResponsavelId}>
-                <SelectTrigger id="responsavel">
-                  <SelectValue placeholder="Selecione um responsável" />
-                </SelectTrigger>
-                <SelectContent>
-                  {usuarios.map((usuario) => (
-                    <SelectItem key={usuario.id} value={usuario.id.toString()}>
-                      {usuario.nome_exibicao} ({usuario.email_corporativo})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      <div className="sm:col-span-2 space-y-2">
+                        <Label htmlFor="logradouro">
+                          <Text variant="label">Logradouro</Text>
+                        </Label>
+                        <Input
+                          id="logradouro"
+                          placeholder="Rua, Avenida, etc."
+                          value={logradouro}
+                          onChange={(e) => setLogradouro(e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="numero">
+                          <Text variant="label">Número</Text>
+                        </Label>
+                        <Input
+                          id="numero"
+                          placeholder="123"
+                          value={numero}
+                          onChange={(e) => setNumero(e.target.value)}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="complemento">
+                          <Text variant="label">Complemento</Text>
+                        </Label>
+                        <Input
+                          id="complemento"
+                          placeholder="Sala, Bloco, etc."
+                          value={complemento}
+                          onChange={(e) => setComplemento(e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="bairro">
+                          <Text variant="label">Bairro</Text>
+                        </Label>
+                        <Input
+                          id="bairro"
+                          value={bairro}
+                          onChange={(e) => setBairro(e.target.value)}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      <div className="sm:col-span-2 space-y-2">
+                        <Label htmlFor="cidade">
+                          <Text variant="label">Cidade</Text>
+                        </Label>
+                        <Input
+                          id="cidade"
+                          value={cidade}
+                          onChange={(e) => setCidade(e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="estado">
+                          <Text variant="label">Estado</Text>
+                        </Label>
+                        <Input
+                          id="estado"
+                          placeholder="UF"
+                          maxLength={2}
+                          value={estado}
+                          onChange={(e) => setEstado(e.target.value.toUpperCase())}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="cep">
+                        <Text variant="label">CEP</Text>
+                      </Label>
+                      <Input
+                        id="cep"
+                        placeholder="00000-000"
+                        value={cep}
+                        onChange={(e) => setCep(e.target.value)}
+                      />
+                    </div>
+                  </>
+                )}
+              </>
             )}
-          </div>
+          </>
+        )}
 
-          {/* Observações */}
-          <div className="space-y-2">
-            <Label htmlFor="observacoes">Observações</Label>
-            <Textarea
-              id="observacoes"
-              placeholder="Anotações adicionais sobre a audiência..."
-              value={observacoes}
-              onChange={(e) => setObservacoes(e.target.value)}
-              rows={3}
-            />
-          </div>
+        {/* Responsável */}
+        <div className="space-y-2">
+          <Label htmlFor="responsavel">
+            <Text variant="label">Responsável (opcional)</Text>
+          </Label>
+          {loadingUsuarios ? (
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border/30 bg-muted/30 text-muted-foreground/60">
+              <LoadingSpinner size="sm" />
+              <Text variant="caption">Carregando usuários...</Text>
+            </div>
+          ) : (
+            <Select value={responsavelId} onValueChange={setResponsavelId}>
+              <SelectTrigger id="responsavel">
+                <SelectValue placeholder="Selecione um responsável" />
+              </SelectTrigger>
+              <SelectContent>
+                {usuarios.map((usuario) => (
+                  <SelectItem key={usuario.id} value={usuario.id.toString()}>
+                    {usuario.nome_exibicao} ({usuario.email_corporativo})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        </div>
 
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={handleClose} disabled={isLoading}>
-              Cancelar
-            </Button>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading && <LoadingSpinner className="mr-2" />}
-              Salvar
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+        {/* Observações */}
+        <div className="space-y-2">
+          <Label htmlFor="observacoes">
+            <Text variant="label">Observações</Text>
+          </Label>
+          <Textarea
+            id="observacoes"
+            placeholder="Anotações adicionais sobre a audiência..."
+            value={observacoes}
+            onChange={(e) => setObservacoes(e.target.value)}
+            rows={3}
+            className="resize-none"
+          />
+        </div>
+      </form>
+    </DialogFormShell>
   );
 }

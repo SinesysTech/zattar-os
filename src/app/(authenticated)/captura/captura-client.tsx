@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { Heading } from '@/components/ui/typography';
 import { Button } from '@/components/ui/button';
 import { SearchInput } from '@/components/dashboard/search-input';
@@ -55,6 +56,8 @@ const VIEW_OPTIONS: ViewToggleOption[] = [
 // --- Component ---
 
 export function CapturaClient() {
+  const router = useRouter();
+
   // Tab state
   const [activeTab, setActiveTab] = useState<CapturaTab>('historico');
 
@@ -192,6 +195,7 @@ export function CapturaClient() {
               search={search}
               filters={filters}
               onKpiUpdate={setKpiData}
+              onView={(captura) => router.push(`/captura/historico/${captura.id}`)}
             />
           ) : (
             <CapturaGlassCards
@@ -199,6 +203,7 @@ export function CapturaClient() {
               search={search}
               filters={filters}
               onKpiUpdate={setKpiData}
+              onView={(captura) => router.push(`/captura/historico/${captura.id}`)}
             />
           )}
         </>

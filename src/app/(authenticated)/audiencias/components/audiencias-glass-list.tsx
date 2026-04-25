@@ -134,7 +134,7 @@ function PrepRing({ audiencia }: { audiencia: Audiencia }) {
       </svg>
       <span
         className={cn(
-          'absolute inset-0 flex items-center justify-center text-[10px] font-bold tabular-nums',
+          'absolute inset-0 flex items-center justify-center text-micro-caption font-bold tabular-nums',
           getScoreColor(score)
         )}
       >
@@ -242,11 +242,11 @@ function GlassRow({
         {/* DATA + HORA + PREP RING (coluna fixa à esquerda) */}
         <div className="flex flex-col items-center gap-1.5 w-22 shrink-0 pt-0.5">
           <div className="text-center">
-            <div className="text-[11.5px] font-semibold text-foreground leading-tight whitespace-nowrap">
+            <div className="text-caption font-semibold text-foreground leading-tight whitespace-nowrap">
               {format(dataInicio, 'dd MMM yyyy', { locale: ptBR })}
             </div>
             {audiencia.horaInicio && (
-              <div className="text-[11px] text-muted-foreground mt-0.5 tabular-nums">
+              <div className="text-caption text-muted-foreground mt-0.5 tabular-nums">
                 {audiencia.horaInicio.substring(0, 5).replace(':', 'h')}
               </div>
             )}
@@ -259,7 +259,7 @@ function GlassRow({
           {/* Linha 1: modalidade badge + status à direita */}
           <div className="flex items-center gap-2">
             {audiencia.modalidade && (
-              <span className="inline-flex items-center gap-1 rounded-md bg-primary/10 border border-primary/20 px-1.5 py-0.5 text-[10.5px] font-semibold tracking-[0.02em] text-primary">
+              <span className="inline-flex items-center gap-1 rounded-md bg-primary/10 border border-primary/20 px-1.5 py-0.5 text-caption font-semibold tracking-[0.02em] text-primary">
                 <ModalidadeIcon className="w-2.5 h-2.5" />
                 {MODALIDADE_AUDIENCIA_LABELS[audiencia.modalidade]}
               </span>
@@ -268,7 +268,7 @@ function GlassRow({
               {countdown ? (
                 <span
                   className={cn(
-                    'inline-flex items-center gap-1 text-[11px] font-semibold',
+                    'inline-flex items-center gap-1 text-caption font-semibold',
                     countdown.isUrgent ? 'text-warning' : 'text-success'
                   )}
                 >
@@ -279,7 +279,7 @@ function GlassRow({
                 <SemanticBadge
                   category="audiencia_status"
                   value={audiencia.status}
-                  className="text-[10px]"
+                  className="text-micro-caption"
                 >
                   {STATUS_AUDIENCIA_LABELS[audiencia.status]}
                 </SemanticBadge>
@@ -289,10 +289,10 @@ function GlassRow({
 
           {/* Linha 2: título + partes + litisconsórcio + nº processo */}
           <div className="mt-1">
-            <h3 className="text-[14px] font-semibold text-foreground leading-tight">
+            <h3 className="text-label font-semibold text-foreground leading-tight">
               {audiencia.tipoDescricao || 'Audiência'}
             </h3>
-            <div className="mt-0.5 text-[12.5px] text-foreground/85 leading-snug flex flex-wrap items-baseline gap-x-0">
+            <div className="mt-0.5 text-caption text-foreground/85 leading-snug flex flex-wrap items-baseline gap-x-0">
               <span className="font-medium">{poloAtivo}</span>
               {audiencia.poloAtivoRepresentaVarios && (
                 <span className="text-muted-foreground/60"> e outros</span>
@@ -305,7 +305,7 @@ function GlassRow({
               <span className="mx-2 inline-block w-0.75 h-0.75 rounded-full bg-muted-foreground/50 align-middle" />
               <span className="text-muted-foreground tabular-nums">{audiencia.numeroProcesso}</span>
               {(audiencia.poloAtivoRepresentaVarios || audiencia.poloPassivoRepresentaVarios) && (
-                <span className="ml-2 inline-flex items-center gap-1 bg-muted border border-border/70 text-muted-foreground rounded-md px-1.5 py-0.5 text-[10px] font-semibold">
+                <span className="ml-2 inline-flex items-center gap-1 bg-muted border border-border/70 text-muted-foreground rounded-md px-1.5 py-0.5 text-micro-caption font-semibold">
                   <Users className="w-2.5 h-2.5" />
                   Litisconsórcio
                 </span>
@@ -316,19 +316,19 @@ function GlassRow({
           {/* Linha 3: TRT + grau + sala + órgão julgador + indicadores */}
           <div className="mt-1 flex flex-wrap items-center gap-1.5">
             {audiencia.trt && (
-              <span className="text-[9px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/60">
+              <span className="text-micro-caption font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/60">
                 {audiencia.trt}
               </span>
             )}
             {audiencia.grau && (
-              <span className="inline-flex items-center rounded bg-muted border border-border/50 px-1.5 py-px text-[9px] font-semibold text-muted-foreground">
+              <span className="inline-flex items-center rounded bg-muted border border-border/50 px-1.5 py-px text-micro-caption font-semibold text-muted-foreground">
                 {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
               </span>
             )}
             {audiencia.salaAudienciaNome && (
               <>
                 <span className="w-0.75 h-0.75 rounded-full bg-muted-foreground/30 shrink-0" />
-                <span className="text-[11px] text-muted-foreground/60">
+                <span className="text-caption text-muted-foreground/60">
                   {audiencia.salaAudienciaNome}
                 </span>
               </>
@@ -336,23 +336,23 @@ function GlassRow({
             {orgaoJulgador && (
               <>
                 <span className="w-0.75 h-0.75 rounded-full bg-muted-foreground/30 shrink-0" />
-                <span className="text-[11px] text-muted-foreground/50">{orgaoJulgador}</span>
+                <span className="text-caption text-muted-foreground/50">{orgaoJulgador}</span>
               </>
             )}
             {audiencia.segredoJustica && (
-              <span className="inline-flex items-center gap-1 bg-warning/10 border border-warning/25 text-warning rounded-md px-1.5 py-0.5 text-[10px] font-semibold">
+              <span className="inline-flex items-center gap-1 bg-warning/10 border border-warning/25 text-warning rounded-md px-1.5 py-0.5 text-micro-caption font-semibold">
                 <Lock className="w-2.5 h-2.5" />
                 Segredo
               </span>
             )}
             {audiencia.juizoDigital && (
-              <span className="inline-flex items-center gap-1 bg-info/10 border border-info/25 text-info rounded-md px-1.5 py-0.5 text-[10px] font-semibold">
+              <span className="inline-flex items-center gap-1 bg-info/10 border border-info/25 text-info rounded-md px-1.5 py-0.5 text-micro-caption font-semibold">
                 <Monitor className="w-2.5 h-2.5" />
                 Digital
               </span>
             )}
             {audiencia.designada && (
-              <span className="inline-flex items-center gap-1 bg-success/10 border border-success/25 text-success rounded-md px-1.5 py-0.5 text-[10px] font-semibold">
+              <span className="inline-flex items-center gap-1 bg-success/10 border border-success/25 text-success rounded-md px-1.5 py-0.5 text-micro-caption font-semibold">
                 <CheckCircle2 className="w-2.5 h-2.5" />
                 Designada
               </span>
@@ -372,7 +372,7 @@ function GlassRow({
                   onChange={(e) => setObsDraft(e.target.value)}
                   placeholder="Anotações sobre a audiência..."
                   rows={2}
-                  className="text-[12px]"
+                  className="text-caption"
                   autoFocus
                 />
                 <div className="flex items-center justify-end gap-1">
@@ -380,7 +380,7 @@ function GlassRow({
                     size="sm"
                     variant="ghost"
                     onClick={handleCancelObs}
-                    className="h-6 text-[11px] px-2"
+                    className="h-6 text-caption px-2"
                   >
                     <X className="w-3 h-3" />
                     Cancelar
@@ -389,7 +389,7 @@ function GlassRow({
                     size="sm"
                     onClick={handleSaveObs}
                     disabled={savingObs}
-                    className="h-6 text-[11px] px-2"
+                    className="h-6 text-caption px-2"
                   >
                     {savingObs ? (
                       <LoadingSpinner size="sm" />
@@ -412,7 +412,7 @@ function GlassRow({
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}
-                        className="text-[11.5px] text-primary truncate hover:underline"
+                        className="text-caption text-primary truncate hover:underline"
                         title={audiencia.urlAudienciaVirtual}
                       >
                         {audiencia.urlAudienciaVirtual.replace(/^https?:\/\//, '')}
@@ -441,7 +441,7 @@ function GlassRow({
                     )}
                   >
                     <MessageSquare className="w-3 h-3 shrink-0 text-muted-foreground/60" />
-                    <span className="text-[11.5px] flex-1 line-clamp-1 leading-snug">
+                    <span className="text-caption flex-1 line-clamp-1 leading-snug">
                       {obsValue || 'Adicionar observações'}
                     </span>
                     <Pencil className="w-2.5 h-2.5 shrink-0 text-muted-foreground/40 opacity-0 group-hover:opacity-100 transition-opacity" />

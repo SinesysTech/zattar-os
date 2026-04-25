@@ -10,7 +10,7 @@ interface InputProps extends React.ComponentProps<"input"> {
 
 const VARIANT_CLASSES: Record<InputVariant, string> = {
   default:
-    "h-9 rounded-md border-input bg-transparent px-3 py-1 text-base shadow-xs md:text-sm dark:bg-input/30",
+    "h-[var(--density-control-h)] rounded-md border-input bg-transparent px-[var(--density-control-px)] py-1 text-base shadow-xs md:text-[length:var(--density-control-font-size)] dark:bg-input/30",
   glass:
     "h-11 rounded-xl border-outline-variant/60 bg-surface-container-lowest/70 px-4 text-base shadow-sm backdrop-blur-sm hover:border-outline-variant hover:bg-surface-container-lowest focus-visible:border-primary/40 focus-visible:bg-surface-container-lowest focus-visible:ring-2 focus-visible:ring-primary/20 md:text-sm dark:bg-surface-container-low/40 dark:hover:bg-surface-container-low/60 dark:focus-visible:bg-surface-container-low/70",
 }

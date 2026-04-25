@@ -128,7 +128,7 @@ export function TiposAudienciasList() {
             ) : (
               filteredTipos.map((tipo) => (
                 <TableRow key={tipo.id}>
-                  <TableCell className="font-mono text-xs text-muted-foreground">
+                  <TableCell className="text-mono-num text-muted-foreground">
                     {tipo.id}
                   </TableCell>
                   <TableCell>{tipo.descricao}</TableCell>

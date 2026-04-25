@@ -49,6 +49,7 @@ interface TokenCoverage {
   missingInCss: string[];
   documentedInMaster: number;
   coveragePercent: number;
+  densityCoveragePercent: number; // Nova KPI
 }
 
 interface AdoptionMetrics {
@@ -58,6 +59,7 @@ interface AdoptionMetrics {
   iconContainer: { count: number; files: string[] };
   pageShell: { count: number; files: string[] };
   semanticBadge: { count: number; files: string[] };
+  density: { count: number; files: string[] }; // Nova KPI
   anyTyped: { count: number; percent: number };
   designSystemImports: { count: number; percent: number };
 }
@@ -72,6 +74,8 @@ interface ViolationsReport {
   manualComposition: Violation[];
   whiteLowOpacity: Violation[];
   toolbarWrongSize: Violation[];
+  typographyRaw: Violation[]; // Nova KPI
+  spacingRaw: Violation[];    // Nova KPI
   total: number;
 }
 
@@ -152,6 +156,14 @@ const EXCLUDES = [
 
 // Ofensores aceitos (documentados em GOVERNANCE.md §6) — não entram no score
 const ALLOWED_OFFENDERS = [
+  // UI Primitives are allowed to use raw classes
+  'src/components/ui/**',
+  'src/components/shared/**',
+  'src/lib/design-system/**',
+  'src/app/globals.css',
+  'design-system/**',
+  'src/app/website/**', // marketing scale
+
   // PDF rendering (hex persistido para desenho em canvas, não é CSS de UI)
   'src/app/(authenticated)/assinatura-digital/components/editor/PdfCanvasArea.tsx',
   'src/app/(authenticated)/assinatura-digital/components/editor/FieldMappingEditor.tsx',
@@ -254,25 +266,19 @@ const PATTERNS = {
   hexLiteral: /#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b/g,
   // Captura `oklch(...)` inline mas IGNORA o padrão legítimo `oklch(var(--X)...)`
   // ou `oklch(from var(--X) ...)` que deriva alpha/calc de um token existente.
-  // Aceita `_` como separador (Tailwind arbitrary values usam underscore no
-  // lugar de espaço: `shadow-[0_0_6px_oklch(from_var(--x)_l_c_h/0.35)]`).
-  // Só flagga valores LITERAIS (ex: `oklch(0.5 0.2 281)`).
   oklchInline: /oklch\s*\(\s*(?!var\(|from[\s_]+var\()/g,
   shadowXl: /\bshadow-(xl|2xl|3xl)\b/g,
   manualComposition: /\bfont-heading\s+text-2xl\s+font-bold\b/g,
   whiteLowOpacity: /\bbg-white\/([1-9]|1[0-5])\b(?![0-9])/g,
   cssVarDef: /^\s*(--[a-zA-Z0-9-]+)\s*:/gm,
-  // Glass Briefing spec (design-system/README.md) — Toolbars/filter-bars/bulk-actions devem usar text-[11px]
-  // em pills e triggers. `text-caption` (13px) é o anti-pattern histórico que já
-  // causou regressão (commit ad9ec7ee2). `text-sm`/`text-base` são grandes demais
-  // para qualquer contexto de pill. `text-xs` (12px) é aceitável em items de
-  // popover/command e NÃO é flagged.
   toolbarWrongSize: /\btext-(caption|sm|base)\b/g,
+  // Novas KPIs de Violations
+  typographyRaw: /\b(text-(xs|sm|base|lg|xl|2xl|3xl)|font-(semibold|bold|medium)|leading-|tracking-)\b/g,
+  spacingRaw: /\b(p|px|py|pt|pb|pl|pr|m|mx|my|gap|space-(x|y))-[0-9.]+\b/g,
 };
 
 /**
  * Arquivo é um toolbar/filter-bar/bulk-actions?
- * Nesses arquivos, o spec Glass Briefing obriga text-[11px] em pills.
  */
 function isToolbarFile(filePath: string): boolean {
   const name = path.basename(filePath);
@@ -297,6 +303,11 @@ const KPI_TARGETS: KPI[] = [
   { name: 'Hex Literals in (authenticated)/', current: 0, target: 9, comparison: 'lte', severity: 'warn' },
   { name: 'Token Documentation Coverage', current: 0, target: 95, comparison: 'gte', severity: 'warn' },
   { name: 'CSS Variables in Registry', current: 0, target: 99, comparison: 'gte', severity: 'warn' },
+  // Novas Metas
+  { name: 'Density Coverage', current: 0, target: 100, comparison: 'gte', severity: 'block' },
+  { name: 'Density Adoption', current: 0, target: 5, comparison: 'gte', severity: 'info' },
+  { name: 'Typography Raw Violations', current: 0, target: 0, comparison: 'lte', severity: 'block' },
+  { name: 'Spacing Raw Violations', current: 0, target: 0, comparison: 'lte', severity: 'block' },
 ];
 
 // =============================================================================
@@ -327,32 +338,36 @@ async function loadRegisteredTokens(): Promise<Set<string>> {
   while ((m = re.exec(src)) !== null) {
     found.add(m[1]);
   }
-  // Tokens dinâmicos gerados via Array.from() no registry
   for (let i = 1; i <= 18; i++) found.add(`--palette-${i}`);
   for (let i = 1; i <= 8; i++) found.add(`--chart-${i}`);
   return found;
 }
 
-/**
- * Tokens derivados/aliases que NÃO são tokens reais de design.
- * Existem em globals.css mas são:
- *   - Aliases @theme inline do Tailwind v4 (geram utility classes a partir de semantic tokens)
- *   - Internals do Tailwind (ring/shadow helpers)
- *   - CSS vars locais de utility classes (não são globais)
- *   - Radius aliases derivados via calc() de --radius
- */
+async function loadDensityTokens(): Promise<Set<string>> {
+  const src = await fs.readFile(TOKEN_REGISTRY_FILE, 'utf-8');
+  const found = new Set<string>();
+  const densityBlock = src.match(/export const DENSITY_REGISTRY: TokenEntry\[\] = \[([\s\S]+?)\];/);
+  if (densityBlock) {
+    const re = /name:\s*['"`](--density-[a-zA-Z0-9-]+)['"`]/g;
+    let m;
+    while ((m = re.exec(densityBlock[1])) !== null) {
+      found.add(m[1]);
+    }
+  }
+  return found;
+}
+
 const DERIVED_ALIASES_PATTERNS: RegExp[] = [
-  /^--color-/,       // @theme inline aliases (bg-primary etc.)
-  /^--tw-/,          // Tailwind internals
-  /^--dot-/,         // .canvas-dots local vars
-  /^--radius-(lg|md|sm|xl|2xl)$/, // calc() derivados de --radius
+  /^--color-/,
+  /^--tw-/,
+  /^--dot-/,
+  /^--radius-(lg|md|sm|xl|2xl)$/,
 ];
 
 function isDerivedAlias(token: string): boolean {
   return DERIVED_ALIASES_PATTERNS.some((re) => re.test(token));
 }
 
-/** Busca ocorrências de um pattern em múltiplos arquivos. */
 async function findViolations(
   files: string[],
   pattern: RegExp,
@@ -377,9 +392,6 @@ async function findViolations(
 }
 
 function matchGlob(file: string, pattern: string): boolean {
-  // Glob → regex. Passo crítico: substituir `**` por um placeholder antes de
-  // tocar `*` sozinho, senão o `*` do `.*` (resultado de **) seria reprocessado
-  // como `[^/]*`, virando `.[^/]*` e perdendo o wildcard cross-dir.
   const GLOBSTAR = '\x00GLOBSTAR\x00';
   const re = new RegExp(
     '^' +
@@ -401,8 +413,6 @@ async function countImports(
 ): Promise<string[]> {
   const matching: string[] = [];
   const specific = new RegExp(`from\\s+['"\`]${importPath.replace(/[/\-]/g, '\\$&')}['"\`]`);
-  // Barrel parent — ex: `@/components/shared/page-shell` → aceita também
-  // `import { PageShell, ... } from '@/components/shared'` (barrel).
   const lastSlash = importPath.lastIndexOf('/');
   const parentPath = lastSlash > 0 ? importPath.slice(0, lastSlash) : null;
   const barrel =
@@ -412,9 +422,6 @@ async function countImports(
           's'
         )
       : null;
-  // Proxy patterns — re-exports conhecidos do componente (ex: dashboard widgets
-  // importam `GlassPanel`/`WidgetContainer` via `../primitives` que re-exporta
-  // de `@/components/shared/glass-panel`). Adoção transitiva real.
   for (const file of files) {
     const content = await fs.readFile(file, 'utf-8');
     if (specific.test(content) || (barrel && barrel.test(content))) {
@@ -440,10 +447,6 @@ function gradeFromScore(score: number): OverallScore['grade'] {
   return 'F';
 }
 
-// Score por módulo usa apenas `adoption - violationPenalty` (mais rígido que o
-// overall, que pondera coverage + violations). Thresholds calibrados à
-// distribuição real: módulos grandes possuem muitos sub-componentes funcionais
-// (combos, filters, form fields) que não importam typed components por design.
 function gradeFromModuleScore(score: number): OverallScore['grade'] {
   if (score >= 75) return 'A';
   if (score >= 60) return 'B';
@@ -459,28 +462,25 @@ function gradeFromModuleScore(score: number): OverallScore['grade'] {
 async function auditCoverage(): Promise<TokenCoverage> {
   const css = await loadGlobalsCss();
   const cssVarsRaw = extractCssVariables(css);
-  // Exclui aliases/derivados — eles existem por automação do Tailwind v4, não são
-  // tokens de design primários que devem ser documentados individualmente.
   const cssVars = new Set([...cssVarsRaw].filter((v) => !isDerivedAlias(v)));
   const registered = await loadRegisteredTokens();
 
   const missingInRegistry = [...cssVars].filter((v) => !registered.has(v));
   const missingInCss = [...registered].filter((v) => !cssVarsRaw.has(v));
 
-  // Concatena texto de todas as fontes canônicas que existirem (novo spec
-  // Glass Briefing substituiu MASTER.md por README.md + colors_and_type.css).
   let specText = '';
   for (const specFile of CANONICAL_SPEC_FILES) {
     try {
       specText += '\n' + (await fs.readFile(specFile, 'utf-8'));
-    } catch {
-      // Arquivo ausente — ignorar silenciosamente
-    }
+    } catch {}
   }
   const documented = [...cssVars].filter((v) => specText.includes(v)).length;
-  const coveragePercent = cssVars.size === 0
-    ? 0
-    : Math.round((documented / cssVars.size) * 100);
+  const coveragePercent = cssVars.size === 0 ? 0 : Math.round((documented / cssVars.size) * 100);
+
+  // Density Coverage
+  const densityTokens = await loadDensityTokens();
+  const declaredDensity = [...densityTokens].filter((t) => cssVarsRaw.has(t)).length;
+  const densityCoveragePercent = densityTokens.size === 0 ? 0 : Math.round((declaredDensity / densityTokens.size) * 100);
 
   return {
     cssVariablesTotal: cssVars.size,
@@ -489,15 +489,10 @@ async function auditCoverage(): Promise<TokenCoverage> {
     missingInCss,
     documentedInMaster: documented,
     coveragePercent,
+    densityCoveragePercent,
   };
 }
 
-// Thin page wrappers (arquivos `page.tsx` que só delegam: server com
-// auth+fetch+<Client/>, ou client-side que só faz dynamic import + Skeleton)
-// não deveriam ser penalizados no score de adoção — o papel deles é delegar,
-// não renderizar tipografia. O gate `hasTypography` garante que qualquer
-// page.tsx que renderize texto próprio (`text-*`, `font-*`, `<h1>`) continua
-// contando como candidato à adoção.
 async function filterOutThinPageWrappers(files: string[]): Promise<string[]> {
   const result: string[] = [];
   for (const file of files) {
@@ -506,10 +501,7 @@ async function filterOutThinPageWrappers(files: string[]): Promise<string[]> {
       continue;
     }
     const content = await fs.readFile(file, 'utf-8');
-    const hasTypography =
-      /className=["'`][^"'`]*\b(text-(sm|xs|lg|xl|2xl|base|\[|display|page|section|card|kpi|label|caption|overline|meta|widget)|font-(bold|semibold|medium|heading|display))/.test(
-        content,
-      );
+    const hasTypography = /\b(text-|font-|heading-|typography-)\b/.test(content);
     const hasDelegation = /return\s+(<|\(|redirect)|redirect\(/.test(content);
     const isThinWrapper = !hasTypography && hasDelegation;
     if (!isThinWrapper) result.push(file);
@@ -521,13 +513,22 @@ async function auditAdoption(files: string[]): Promise<AdoptionMetrics> {
   files = await filterOutThinPageWrappers(files);
   const typography = await countImports(files, '@/components/ui/typography');
   const glassPanel = await countImports(files, '@/components/shared/glass-panel', 'GlassPanel', [
-    // Dashboard widgets: primitives.tsx re-exporta GlassPanel e WidgetContainer
     /import\s*\{[^}]*\b(GlassPanel|WidgetContainer)\b[^}]*\}\s*from\s*['"`][./]+primitives['"`]/s,
   ]);
   const iconContainer = await countImports(files, '@/components/ui/icon-container');
   const pageShell = await countImports(files, '@/components/shared/page-shell', 'PageShell');
   const semanticBadge = await countImports(files, '@/components/ui/semantic-badge');
   const designSystem = await countImports(files, '@/lib/design-system');
+
+  // Density Adoption
+  const densityFiles: string[] = [];
+  const densityRegex = /(?:data-density=|density\s*=\s*["'](?:comfortable|compact)["'])/;
+  for (const file of files) {
+    const content = await fs.readFile(file, 'utf-8');
+    if (densityRegex.test(content)) {
+      densityFiles.push(path.relative(REPO_ROOT, file));
+    }
+  }
 
   const allTypedSet = new Set([
     ...typography,
@@ -544,6 +545,7 @@ async function auditAdoption(files: string[]): Promise<AdoptionMetrics> {
     iconContainer: { count: iconContainer.length, files: iconContainer },
     pageShell: { count: pageShell.length, files: pageShell },
     semanticBadge: { count: semanticBadge.length, files: semanticBadge },
+    density: { count: densityFiles.length, files: densityFiles },
     anyTyped: {
       count: allTypedSet.size,
       percent: Math.round((allTypedSet.size / files.length) * 100),
@@ -556,7 +558,7 @@ async function auditAdoption(files: string[]): Promise<AdoptionMetrics> {
 }
 
 async function auditViolations(files: string[]): Promise<ViolationsReport> {
-  const [bg, text, border, hex, oklch, shadow, composition, white] = await Promise.all([
+  const [bg, text, border, hex, oklch, shadow, composition, white, typographyRaw, spacingRaw] = await Promise.all([
     findViolations(files, PATTERNS.bgColor, 'hardcoded-bg-color'),
     findViolations(files, PATTERNS.textColor, 'hardcoded-text-color'),
     findViolations(files, PATTERNS.borderColor, 'hardcoded-border-color'),
@@ -565,10 +567,10 @@ async function auditViolations(files: string[]): Promise<ViolationsReport> {
     findViolations(files, PATTERNS.shadowXl, 'shadow-xl'),
     findViolations(files, PATTERNS.manualComposition, 'manual-composition'),
     findViolations(files, PATTERNS.whiteLowOpacity, 'white-low-opacity'),
+    findViolations(files, PATTERNS.typographyRaw, 'typography-raw'),
+    findViolations(files, PATTERNS.spacingRaw, 'spacing-raw'),
   ]);
 
-  // Glass Briefing spec — filter-bars/bulk-actions/toolbars devem usar text-[11px].
-  // Aplica o pattern apenas em arquivos dessa família.
   const toolbarFiles = files.filter(isToolbarFile);
   const toolbarWrongSize = await findViolations(
     toolbarFiles,
@@ -578,7 +580,8 @@ async function auditViolations(files: string[]): Promise<ViolationsReport> {
 
   const total =
     bg.length + text.length + border.length + hex.length + oklch.length +
-    shadow.length + composition.length + white.length + toolbarWrongSize.length;
+    shadow.length + composition.length + white.length + toolbarWrongSize.length +
+    typographyRaw.length + spacingRaw.length;
 
   return {
     hardcodedBgColors: bg,
@@ -590,6 +593,8 @@ async function auditViolations(files: string[]): Promise<ViolationsReport> {
     manualComposition: composition,
     whiteLowOpacity: white,
     toolbarWrongSize,
+    typographyRaw,
+    spacingRaw,
     total,
   };
 }
@@ -601,7 +606,6 @@ async function auditModules(files: string[], violations: ViolationsReport): Prom
   const typedFiles = new Set<string>();
   const typography = await countImports(files, '@/components/ui/typography');
   const glassPanel = await countImports(files, '@/components/shared/glass-panel', 'GlassPanel', [
-    // Dashboard widgets: primitives.tsx re-exporta GlassPanel e WidgetContainer
     /import\s*\{[^}]*\b(GlassPanel|WidgetContainer)\b[^}]*\}\s*from\s*['"`][./]+primitives['"`]/s,
   ]);
   const iconContainer = await countImports(files, '@/components/ui/icon-container');
@@ -629,6 +633,8 @@ async function auditModules(files: string[], violations: ViolationsReport): Prom
     ...violations.hexLiterals,
     ...violations.shadowXl,
     ...violations.manualComposition,
+    ...violations.typographyRaw,
+    ...violations.spacingRaw,
   ];
 
   for (const v of allViolations) {
@@ -676,6 +682,10 @@ function computeKpis(report: {
         report.coverage.cssVariablesTotal) *
         100,
     ),
+    'Density Coverage': report.coverage.densityCoveragePercent,
+    'Density Adoption': report.adoption.density.count,
+    'Typography Raw Violations': report.violations.typographyRaw.length,
+    'Spacing Raw Violations': report.violations.spacingRaw.length,
   };
 
   return KPI_TARGETS.map((k) => {
@@ -732,8 +742,11 @@ function renderMarkdown(report: AuditReport): string {
     ...report.violations.hexLiterals,
     ...report.violations.manualComposition,
     ...report.violations.shadowXl,
+    ...report.violations.typographyRaw,
+    ...report.violations.spacingRaw,
   ]
-    .slice(0, 15)
+    .slice(0, 20)
+    .sort((a, b) => a.file.localeCompare(b.file))
     .map((v) => `- \`${v.rule}\` at [${v.file}:${v.line}](${v.file}#L${v.line}): \`${v.match}\``)
     .join('\n');
 
@@ -756,6 +769,7 @@ ${kpiRows}
 | CSS variables em globals.css | ${report.coverage.cssVariablesTotal} |
 | Registrados em token-registry.ts | ${report.coverage.registryTotal} |
 | Documentados em spec (design-system/) | ${report.coverage.documentedInMaster} (${report.coverage.coveragePercent}%) |
+| Cobertura de Densidade | ${report.coverage.densityCoveragePercent}% |
 | Tokens drift (CSS sem registry) | ${report.coverage.missingInRegistry.length} |
 | Tokens drift (registry sem CSS) | ${report.coverage.missingInCss.length} |
 
@@ -776,8 +790,8 @@ ${report.coverage.missingInCss.length > 0
 | \`<IconContainer>\` | ${report.adoption.iconContainer.count} | ${Math.round((report.adoption.iconContainer.count / report.adoption.totalFiles) * 100)}% |
 | \`<PageShell>\` | ${report.adoption.pageShell.count} | ${Math.round((report.adoption.pageShell.count / report.adoption.totalFiles) * 100)}% |
 | \`<SemanticBadge>\` | ${report.adoption.semanticBadge.count} | ${Math.round((report.adoption.semanticBadge.count / report.adoption.totalFiles) * 100)}% |
+| **Adoção de Densidade** | **${report.adoption.density.count}** | **${Math.round((report.adoption.density.count / report.adoption.totalFiles) * 100)}%** |
 | **Qualquer typed** | **${report.adoption.anyTyped.count}** | **${report.adoption.anyTyped.percent}%** |
-| Importam \`@/lib/design-system\` | ${report.adoption.designSystemImports.count} | ${report.adoption.designSystemImports.percent}% |
 
 ## Violations
 
@@ -792,9 +806,11 @@ ${report.coverage.missingInCss.length > 0
 | Manual composition | ${report.violations.manualComposition.length} |
 | \`bg-white/[1-15]\` | ${report.violations.whiteLowOpacity.length} |
 | Toolbar wrong size (§13.6) | ${report.violations.toolbarWrongSize.length} |
+| Typography Raw | ${report.violations.typographyRaw.length} |
+| Spacing Raw | ${report.violations.spacingRaw.length} |
 | **TOTAL** | **${report.violations.total}** |
 
-${topViolations ? `### Top 15 violações\n\n${topViolations}` : '### No violations found'}
+${topViolations ? `### Top 20 violações (Worst Offenders)\n\n${topViolations}` : '### No violations found'}
 
 ## Module Scores
 
@@ -836,9 +852,7 @@ function renderConsole(report: AuditReport): void {
   console.log(`  CSS vars: ${report.coverage.cssVariablesTotal}`);
   console.log(`  Registry: ${report.coverage.registryTotal}`);
   console.log(`  Documentado: ${report.coverage.coveragePercent}%`);
-  if (report.coverage.missingInRegistry.length > 0) {
-    console.log(`  ${c.yellow}Drift CSS→Registry: ${report.coverage.missingInRegistry.length}${c.reset}`);
-  }
+  console.log(`  Densidade: ${report.coverage.densityCoveragePercent}%`);
 
   console.log(`\n${c.bold}Adoption${c.reset} (${report.adoption.totalFiles} arquivos TSX)`);
   console.log(`  Typography: ${report.adoption.typography.count}`);
@@ -846,6 +860,7 @@ function renderConsole(report: AuditReport): void {
   console.log(`  IconContainer: ${report.adoption.iconContainer.count}`);
   console.log(`  PageShell: ${report.adoption.pageShell.count}`);
   console.log(`  SemanticBadge: ${report.adoption.semanticBadge.count}`);
+  console.log(`  Density: ${report.adoption.density.count}`);
   console.log(`  ${c.cyan}Any typed: ${report.adoption.anyTyped.count} (${report.adoption.anyTyped.percent}%)${c.reset}`);
 
   console.log(`\n${c.bold}Violations${c.reset} (total ${report.violations.total})`);
@@ -853,11 +868,8 @@ function renderConsole(report: AuditReport): void {
   console.log(`  text-*: ${report.violations.hardcodedTextColors.length}`);
   console.log(`  border-*: ${report.violations.hardcodedBorderColors.length}`);
   console.log(`  hex: ${report.violations.hexLiterals.length}`);
-  console.log(`  oklch: ${report.violations.oklchInline.length}`);
-  console.log(`  shadow-xl: ${report.violations.shadowXl.length}`);
-  console.log(`  composition: ${report.violations.manualComposition.length}`);
-  console.log(`  white-low: ${report.violations.whiteLowOpacity.length}`);
-  console.log(`  toolbar-wrong-size: ${report.violations.toolbarWrongSize.length}`);
+  console.log(`  typography-raw: ${report.violations.typographyRaw.length}`);
+  console.log(`  spacing-raw: ${report.violations.spacingRaw.length}`);
 
   console.log(`\n${c.bold}Modules${c.reset} (top 10 por adoção)`);
   const top = [...report.modules].sort((a, b) => b.adoption - a.adoption).slice(0, 10);
@@ -977,7 +989,7 @@ async function main() {
     const key = args.violations.replace(/-([a-z])/g, (_, c) => c.toUpperCase()) as keyof ViolationsReport;
     const v = violations[key];
     if (!v || !Array.isArray(v)) {
-      console.error(`Unknown violation: ${args.violations}. Options: hardcoded-bg-colors, hardcoded-text-colors, hex-literals, shadow-xl, manual-composition, oklch-inline, white-low-opacity`);
+      console.error(`Unknown violation: ${args.violations}. Options: hardcoded-bg-colors, hardcoded-text-colors, hex-literals, shadow-xl, manual-composition, oklch-inline, white-low-opacity, typography-raw, spacing-raw`);
       process.exit(1);
     }
     v.forEach((x) => console.log(`${x.file}:${x.line} — ${x.match}`));

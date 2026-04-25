@@ -111,12 +111,11 @@ import { Typography } from '@/components/ui/typography';
 <div className="p-6">       // 24px
 
 // INCORRETO - Valores arbitrarios
-<div className="gap-3.25
-<div className="p-7">
+<div className="gap-3.25">
 <div style={{ padding: '17px' }}>
 ```
 
-### Valores permitidos: 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 8, 10, 12, 14, 16, 20, 24
+### Valores permitidos: 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 20, 24
 
 ## 5. Cores - Proibicoes
 

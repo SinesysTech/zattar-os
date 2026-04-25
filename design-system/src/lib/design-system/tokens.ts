@@ -322,6 +322,7 @@ export const GLOW_EFFECTS = {
 
 /**
  * Sistema de espaçamento baseado em grid de 4px.
+ * Com html { font-size: 16px }, todos os rem resolvem em múltiplos exatos de 4px.
  * Use estes valores para margins, paddings e gaps.
  */
 export const SPACING = {

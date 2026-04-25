@@ -16,6 +16,7 @@ import { parseISO, isSameWeek, isSameMonth } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { IconContainer } from '@/components/ui/icon-container';
+import { Text } from '@/components/ui/typography';
 import {
   Sparkline,
   AnimatedNumber,
@@ -132,14 +133,14 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
       <GlassPanel className="px-4 py-3">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+            <Text variant="micro-caption" as="p" className="font-medium uppercase tracking-wider text-muted-foreground/60">
               Semana
-            </p>
+            </Text>
             <div className="flex items-baseline gap-1.5 mt-1">
               <p className="font-display text-xl font-bold tabular-nums leading-none">
                 <AnimatedNumber value={stats.totalSemana} />
               </p>
-              <span className="text-[10px] text-muted-foreground/40">audiências</span>
+              <span className="text-micro-caption text-muted-foreground/45">audiências</span>
             </div>
           </div>
           <IconContainer size="md" className="bg-primary/8">
@@ -150,7 +151,7 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
         <div className="mt-2.5 flex items-center gap-2">
           <Sparkline data={stats.trend.length >= 2 ? stats.trend : [0, 0]} width={80} height={16} />
           {stats.trend.length >= 2 && stats.trend[0] > 0 && (
-            <span className={`text-[9px] font-medium tabular-nums ${
+            <span className={`text-micro-caption font-medium tabular-nums ${
               stats.trend[stats.trend.length - 1] >= stats.trend[0] ? 'text-success/60' : 'text-destructive/60'
             }`}>
               {`${stats.trend[stats.trend.length - 1] >= stats.trend[0] ? '+' : ''}${Math.round(((stats.trend[stats.trend.length - 1] - stats.trend[0]) / stats.trend[0]) * 100)}%`}
@@ -163,9 +164,9 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
       <GlassPanel className="px-4 py-3">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+            <Text variant="micro-caption" as="p" className="font-medium uppercase tracking-wider text-muted-foreground/60">
               Próxima
-            </p>
+            </Text>
             <div className="flex items-baseline gap-1.5 mt-1">
               <p className="font-display text-xl font-bold tabular-nums leading-none">
                 {stats.nextLabel}
@@ -179,11 +180,11 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
         {/* Detalhe do tribunal + modalidade */}
         <div className="mt-2.5">
           {stats.nextDetail ? (
-            <span className="text-[9px] text-muted-foreground/50 truncate block">
+            <span className="text-micro-caption text-muted-foreground/60 truncate block">
               {stats.nextDetail}
             </span>
           ) : (
-            <span className="text-[9px] text-muted-foreground/30">Nenhuma agendada</span>
+            <span className="text-micro-caption text-muted-foreground/40">Nenhuma agendada</span>
           )}
         </div>
       </GlassPanel>
@@ -192,14 +193,14 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
       <GlassPanel className="px-4 py-3">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+            <Text variant="micro-caption" as="p" className="font-medium uppercase tracking-wider text-muted-foreground/60">
               Realizadas
-            </p>
+            </Text>
             <div className="flex items-baseline gap-1.5 mt-1">
               <p className="font-display text-xl font-bold tabular-nums leading-none">
                 <AnimatedNumber value={stats.realizadasMes} />
               </p>
-              <span className="text-[10px] text-muted-foreground/40">/ {stats.relevantesMes} mês</span>
+              <span className="text-micro-caption text-muted-foreground/45">/ {stats.relevantesMes} mês</span>
             </div>
           </div>
           <IconContainer size="md" className="bg-success/8">
@@ -214,7 +215,7 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
               style={{ width: `${stats.taxaRealizacao}%` }}
             />
           </div>
-          <span className="text-[9px] tabular-nums text-muted-foreground/50 shrink-0">
+          <span className="text-micro-caption tabular-nums text-muted-foreground/60 shrink-0">
             {stats.taxaRealizacao}%
           </span>
         </div>
@@ -224,14 +225,14 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
       <GlassPanel className="px-4 py-3">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+            <Text variant="micro-caption" as="p" className="font-medium uppercase tracking-wider text-muted-foreground/60">
               Preparo
-            </p>
+            </Text>
             <div className="flex items-baseline gap-1.5 mt-1">
               <p className="font-display text-xl font-bold tabular-nums leading-none">
                 {stats.avgPrep}%
               </p>
-              <span className="text-[10px] text-muted-foreground/40">média</span>
+              <span className="text-micro-caption text-muted-foreground/45">média</span>
             </div>
           </div>
           <IconContainer size="md" className="bg-primary/8">
@@ -250,7 +251,7 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
               }}
             />
           </div>
-          <span className="text-[9px] tabular-nums text-muted-foreground/50 shrink-0">
+          <span className="text-micro-caption tabular-nums text-muted-foreground/60 shrink-0">
             {stats.avgPrep}%
           </span>
         </div>

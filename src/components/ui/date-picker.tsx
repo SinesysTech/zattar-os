@@ -97,7 +97,7 @@ export function DatePicker({ value, onChange, placeholder }: DatePickerProps) {
         onChange={handleInputChange}
         onBlur={handleInputBlur}
         placeholder={placeholder || 'DD/MM/AAAA'}
-        className={cn('pr-10 h-9')}
+        className={cn('pr-10 h-[var(--density-control-h)]')}
         maxLength={10}
       />
       <Popover open={open} onOpenChange={setOpen}>
@@ -106,7 +106,7 @@ export function DatePicker({ value, onChange, placeholder }: DatePickerProps) {
             type="button"
             variant="ghost"
             size="icon" aria-label="Calendário"
-            className="absolute right-0 h-9 w-9 hover:bg-transparent"
+            className="absolute right-0 h-[var(--density-control-h)] w-[var(--density-control-h)] hover:bg-transparent"
             onClick={() => setOpen(true)}
           >
             <CalendarIcon className="h-4 w-4 text-muted-foreground" />

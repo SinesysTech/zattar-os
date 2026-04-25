@@ -225,6 +225,16 @@
   --color-event-agenda: var(--event-agenda);
   --color-event-prazo: var(--event-prazo);
   --color-event-default: var(--event-default);
+
+  /* --- 14. Density Axis --- */
+  --density-control-h: var(--density-control-h);
+  --density-control-px: var(--density-control-px);
+  --density-control-font-size: var(--density-control-font-size);
+  --density-label-font-size: var(--density-label-font-size);
+  --density-field-gap: var(--density-field-gap);
+  --density-dialog-padding-x: var(--density-dialog-padding-x);
+  --density-dialog-padding-y: var(--density-dialog-padding-y);
+  --density-section-gap: var(--density-section-gap);
 }
 
 /* --- FUNDAÇÃO DE VARIÁVEIS --- */
@@ -246,13 +256,20 @@
    * REFERENCE TOKENS — Zattar Purple Scale (spec Glass Briefing — hue 281°)
    * Âncora: oklch(0.48 0.26 281) = #5523EB (PRIMARY)
    * ======================================================================== */
-  --zattar-purple-200: oklch(0.89 0.04 281);   /* borda suave */
-  --zattar-purple-300: oklch(0.78 0.10 281);   /* borda ativa */
-  --zattar-purple-400: oklch(0.60 0.22 281);   /* primary light (dark-mode accent) */
-  --zattar-purple-500: oklch(0.48 0.26 281);   /* #5523EB — PRIMARY (spec) */
-  --zattar-purple-600: oklch(0.40 0.25 281);   /* hover primary */
-  --zattar-purple-700: oklch(0.35 0.24 281);   /* primary-dim (spec) */
-  --zattar-purple-900: oklch(0.22 0.18 281);   /* deep, brand-dark */
+  --zattar-purple-200: oklch(0.89 0.04 281);
+  /* borda suave */
+  --zattar-purple-300: oklch(0.78 0.10 281);
+  /* borda ativa */
+  --zattar-purple-400: oklch(0.60 0.22 281);
+  /* primary light (dark-mode accent) */
+  --zattar-purple-500: oklch(0.48 0.26 281);
+  /* #5523EB — PRIMARY (spec) */
+  --zattar-purple-600: oklch(0.40 0.25 281);
+  /* hover primary */
+  --zattar-purple-700: oklch(0.35 0.24 281);
+  /* primary-dim (spec) */
+  --zattar-purple-900: oklch(0.22 0.18 281);
+  /* deep, brand-dark */
 
   /* ========================================================================
    * REFERENCE TOKENS — Legado preservado por compatibilidade com MD3 extended,
@@ -262,27 +279,38 @@
    * ======================================================================== */
 
   /* Navy & Text — antes hue 253°, agora hue 281° alinhado ao spec */
-  --navy-heading: oklch(0.15 0.01 281);        /* = spec --foreground (light) */
-  --navy-label: oklch(0.32 0.01 281);          /* intermediário hue 281° */
-  --navy-body: oklch(0.42 0.01 281);           /* = spec --muted-foreground (light) */
+  --navy-heading: oklch(0.15 0.01 281);
+  /* = spec --foreground (light) */
+  --navy-label: oklch(0.32 0.01 281);
+  /* intermediário hue 281° */
+  --navy-body: oklch(0.42 0.01 281);
+  /* = spec --muted-foreground (light) */
 
   /* Brand Dark — antes hue 275°, agora hue 281° alinhado ao spec --card dark */
-  --brand-dark-900: oklch(0.22 0.005 281);     /* = spec --card (dark) */
+  --brand-dark-900: oklch(0.22 0.005 281);
+  /* = spec --card (dark) */
 
   /* Accent — decorativos, hues 25°/330° mantidos mas valores spec-aligned */
-  --accent-ruby: oklch(0.55 0.22 25);          /* = spec --destructive */
-  --accent-magenta: oklch(0.65 0.22 330);      /* = spec --palette-15 (fúcsia) */
+  --accent-ruby: oklch(0.55 0.22 25);
+  /* = spec --destructive */
+  --accent-magenta: oklch(0.65 0.22 330);
+  /* = spec --palette-15 (fúcsia) */
 
   /* Status — valores spec exatos (antes eram variações MD) */
-  --success-500: oklch(0.55 0.18 145);         /* = spec --success (light) */
-  --success-700: oklch(0.45 0.18 145);         /* variant deeper para foreground contrast */
-  --warning-600: oklch(0.60 0.18 75);          /* = spec --warning (light) */
+  --success-500: oklch(0.55 0.18 145);
+  /* = spec --success (light) */
+  --success-700: oklch(0.45 0.18 145);
+  /* variant deeper para foreground contrast */
+  --warning-600: oklch(0.60 0.18 75);
+  /* = spec --warning (light) */
 
   /* ========================================================================
    * REFERENCE TOKENS — Borders & Surface
    * ======================================================================== */
-  --surface-white: oklch(1 0 0);               /* #ffffff */
-  --border-default: oklch(0.87 0.01 281);      /* = spec --border (light) */
+  --surface-white: oklch(1 0 0);
+  /* #ffffff */
+  --border-default: oklch(0.87 0.01 281);
+  /* = spec --border (light) */
 
   /* ========================================================================
    * REFERENCE TOKENS — Shadow (RGBA literal — OKLCH em box-shadow ainda frágil)
@@ -308,13 +336,16 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.15 0.01 281);
 
-  --primary: oklch(0.48 0.26 281);          /* #5523EB — Zattar Purple */
+  --primary: oklch(0.48 0.26 281);
+  /* #5523EB — Zattar Purple */
   --primary-foreground: oklch(1 0 0);
 
-  --secondary: oklch(0.95 0.04 281);        /* purple wash */
+  --secondary: oklch(0.95 0.04 281);
+  /* purple wash */
   --secondary-foreground: oklch(0.15 0.01 281);
 
-  --muted: oklch(0.92 0.01 281);            /* micro-tinted neutral */
+  --muted: oklch(0.92 0.01 281);
+  /* micro-tinted neutral */
   --muted-foreground: oklch(0.42 0.01 281);
 
   --accent: oklch(0.95 0.04 281);
@@ -325,7 +356,8 @@
 
   --border: oklch(0.87 0.01 281);
   --input: oklch(0.87 0.01 281);
-  --ring: transparent;                       /* Glass Briefing: focus via shadow inset, não ring visível */
+  --ring: transparent;
+  /* Glass Briefing: focus via shadow inset, não ring visível */
 
   /* Skeleton: cinza neutro dedicado para loading */
   --skeleton: oklch(0.94 0 0);
@@ -347,19 +379,27 @@
   /* ========================================================================
    * SEMANTIC TOKENS — Brand (spec Glass Briefing)
    * ======================================================================== */
-  --brand: oklch(0.48 0.26 281);              /* pure Zattar Purple */
-  --highlight: oklch(0.60 0.22 45);           /* Action Orange */
+  --brand: oklch(0.48 0.26 281);
+  /* pure Zattar Purple */
+  --highlight: oklch(0.60 0.22 45);
+  /* Action Orange */
 
   /* ========================================================================
    * SEMANTIC TOKENS — Charts (spec Glass Briefing — hue 281° anchored)
    * ======================================================================== */
-  --chart-1: oklch(0.48 0.26 281);            /* Zattar Purple */
-  --chart-2: oklch(0.60 0.22 45);             /* Action Orange */
-  --chart-3: oklch(0.92 0.01 281);            /* neutral tinted */
-  --chart-4: oklch(0.55 0.18 150);            /* success */
-  --chart-5: oklch(0.70 0.01 281);            /* muted neutral */
+  --chart-1: oklch(0.48 0.26 281);
+  /* Zattar Purple */
+  --chart-2: oklch(0.60 0.22 45);
+  /* Action Orange */
+  --chart-3: oklch(0.92 0.01 281);
+  /* neutral tinted */
+  --chart-4: oklch(0.55 0.18 150);
+  /* success */
+  --chart-5: oklch(0.70 0.01 281);
+  /* muted neutral */
   --chart-6: var(--navy-body);
-  --chart-7: oklch(0.78 0.10 276);            /* purple light */
+  --chart-7: oklch(0.78 0.10 276);
+  /* purple light */
   --chart-8: var(--navy-label);
 
   /* Tons derivados para treemaps e funnels */
@@ -472,7 +512,8 @@
   --on-error: var(--surface-white);
 
   /* Dim Variants (Light) */
-  --primary-dim: oklch(0.35 0.24 281);      /* Spec Glass Briefing — hue 281° */
+  --primary-dim: oklch(0.35 0.24 281);
+  /* Spec Glass Briefing — hue 281° */
   --secondary-dim: var(--navy-label);
   --tertiary-dim: oklch(0.40 0.18 15);
   --error-dim: oklch(0.45 0.20 15);
@@ -523,7 +564,8 @@
   --popover: oklch(0.22 0.005 281);
   --popover-foreground: oklch(0.98 0 0);
 
-  --primary: oklch(0.70 0.20 281);              /* dark: lift pra contraste — #9f85ff */
+  --primary: oklch(0.70 0.20 281);
+  /* dark: lift pra contraste — #9f85ff */
   --primary-foreground: oklch(0.15 0.10 281);
 
   --secondary: oklch(0.28 0.01 281);
@@ -540,7 +582,8 @@
 
   --border: oklch(1 0 0 / 0.12);
   --input: oklch(1 0 0 / 0.12);
-  --ring: transparent;                           /* Glass Briefing: focus via shadow inset */
+  --ring: transparent;
+  /* Glass Briefing: focus via shadow inset */
 
   /* Skeleton — alpha branco sobre dark-brand */
   --skeleton: oklch(1 0 0 / 0.06);
@@ -670,7 +713,8 @@
   --on-error: var(--surface-white);
 
   /* Dim Variants (Dark) */
-  --primary-dim: oklch(0.58 0.22 281);        /* Spec Glass Briefing — hue 281° */
+  --primary-dim: oklch(0.58 0.22 281);
+  /* Spec Glass Briefing — hue 281° */
   --secondary-dim: oklch(1 0 0 / 0.30);
   --tertiary-dim: oklch(from var(--accent-ruby) calc(l - 0.10) c h);
   --error-dim: oklch(from var(--accent-ruby) calc(l - 0.10) c h);
@@ -794,8 +838,11 @@
  */
 :root {
   --widget-radius: 1rem;
+  /* = 16px */
   --widget-padding: 1.25rem;
+  /* = 20px */
   --widget-gap: 1rem;
+  /* = 16px */
   --widget-border-opacity: 0.06;
   --widget-label-size: 10px;
   --widget-number-weight: 700;
@@ -823,19 +870,29 @@
 
   /* ── Pulse Strip ── */
   --pulse-gap: 1.5rem;
+  /* = 24px */
   --pulse-padding-x: 1.25rem;
+  /* = 20px */
   --pulse-padding-y: 0.75rem;
+  /* = 12px */
 
   /* ── Card Entity ── */
   --card-entity-radius: 1rem;
+  /* = 16px */
   --card-entity-padding: 1rem;
+  /* = 16px */
   --card-entity-avatar-size: 2.5rem;
+  /* = 40px */
   --card-entity-avatar-radius: 0.75rem;
+  /* = 12px */
 
   /* ── Tab Pills ── */
   --tab-pill-radius: 0.75rem;
+  /* = 12px */
   --tab-pill-padding-x: 0.75rem;
+  /* = 12px */
   --tab-pill-padding-y: 0.375rem;
+  /* = 6px */
   --tab-pill-active-bg: var(--primary);
 
   /* ── Detail Panel ── */
@@ -843,6 +900,7 @@
 
   /* ── Search ── */
   --search-radius: 0.5rem;
+  /* = 8px */
   --search-bg: rgba(255, 255, 255, 0.04);
 
   /* =========================================================================
@@ -1065,12 +1123,10 @@
  * DENSITY AXIS — eixo ortogonal de densidade para superfícies de formulário
  * =============================================================================
  *
- * Motivação: html { font-size: 18px } infla todos os valores em rem. Isso
- * serve ao conforto de leitura em páginas, mas em dialogs de cadastro com
- * 8+ campos produz sensação de escala "soprada" comparada ao padrão SaaS.
+ * Motivação: dialogs de cadastro com 8+ campos podem produzir sensação de
+ * escala "soprada" comparada ao padrão SaaS denso (Linear/Notion/Stripe).
  *
- * Em vez de refatorar cada dialog (drift) ou baixar o root (blast radius),
- * introduzimos um eixo de densidade declarado por `data-density` no shell
+ * Introduzimos um eixo de densidade declarado por `data-density` no shell
  * do dialog. Controles shadcn lêem via overrides CSS escopados — zero
  * mudança nos componentes individuais, zero risco fora do dialog.
  *
@@ -1088,28 +1144,45 @@
  */
 
 :root {
-  /* Comfortable — byte-identical aos hardcodes shadcn atuais (h-9/gap-4/px-6). */
-  --density-control-h: 2.25rem;             /* = h-9 (40,5px @ root 18px) */
-  --density-control-px: 0.75rem;            /* = px-3 */
-  --density-control-font-size: 0.875rem;    /* = text-sm (15,75px @ root 18px) */
-  --density-label-font-size: 0.875rem;      /* = text-sm */
-  --density-field-gap: 1rem;                /* = gap-4 (18px) */
-  --density-dialog-padding-x: 1.5rem;       /* = px-6 (27px) */
-  --density-dialog-padding-y: 1rem;         /* = py-4 (18px) */
+  /* Comfortable — idêntico aos hardcodes shadcn (h-9/gap-4/px-6).
+     Com root 16px, todos os rem resolvem em múltiplos de 4px (grid 4px). */
+  --density-control-h: 2.25rem;
+  /* = h-9 = 36px */
+  --density-control-px: 0.75rem;
+  /* = px-3 = 12px */
+  --density-control-font-size: 0.875rem;
+  /* = text-sm = 14px */
+  --density-label-font-size: 0.875rem;
+  /* = text-sm = 14px */
+  --density-field-gap: 1rem;
+  /* = gap-4 = 16px */
+  --density-dialog-padding-x: 1.5rem;
+  /* = px-6 = 24px */
+  --density-dialog-padding-y: 1rem;
+  /* = py-4 = 16px */
   --density-section-gap: 1rem;
+  /* = 16px */
 }
 
-/* Compact — px fixos escapam a inflação do root 18px e entregam a mesma
-   densidade percebida em Linear/Notion/Stripe (~36px de altura de controle). */
+/* Compact — densidade Linear/Notion/Stripe (~32px de altura de controle).
+   Com root 16px, todos os rem resolvem em múltiplos de 4px. */
 [data-density="compact"] {
-  --density-control-h: 2rem;                /* = 36px @ root 18px */
-  --density-control-px: 0.625rem;           /* ~11,25px */
-  --density-control-font-size: 13px;        /* fixo — escapa o root */
+  --density-control-h: 2rem;
+  /* = 32px */
+  --density-control-px: 0.5rem;
+  /* = 8px */
+  --density-control-font-size: 13px;
+  /* fixo — precisão sub-rem */
   --density-label-font-size: 12px;
-  --density-field-gap: 0.75rem;             /* ~13,5px */
-  --density-dialog-padding-x: 1.25rem;      /* ~22,5px */
-  --density-dialog-padding-y: 0.75rem;      /* ~13,5px */
+  /* fixo — precisão sub-rem */
+  --density-field-gap: 0.75rem;
+  /* = 12px */
+  --density-dialog-padding-x: 1.25rem;
+  /* = 20px */
+  --density-dialog-padding-y: 0.75rem;
+  /* = 12px */
   --density-section-gap: 0.75rem;
+  /* = 12px */
 }
 
 /* Controles: altura + padding horizontal. Atributo selector `[data-variant]`
@@ -1123,6 +1196,7 @@
 /* Font-size de controles só no viewport md+ — mobile mantém text-base (16px+)
    para evitar auto-zoom do iOS em focus de input. */
 @media (min-width: 768px) {
+
   [data-density="compact"] [data-slot="input"][data-variant="default"],
   [data-density="compact"] [data-slot="textarea"][data-variant="default"],
   [data-density="compact"] [data-slot="select-trigger"][data-variant="default"] {
@@ -1198,7 +1272,7 @@
   }
 
   html.website-root-scale {
-    font-size: 16.2px;
+    font-size: 18px;
   }
 
   body {
@@ -1366,8 +1440,8 @@
    * ESCALA TIPOGRÁFICA UNIFICADA — DESIGN SYSTEM ZATTAR
    * =============================================================================
    *
-   * IMPORTANTE: html { font-size: 18px } infla todos os tamanhos rem.
-   * text-sm (0.875rem) → 15.75px real, text-base (1rem) → 18px real, etc.
+   * html { font-size: 16px } — 1rem = 16px, grid 4px perfeito.
+   * text-sm (0.875rem) = 14px, text-base (1rem) = 16px.
    *
    * REGRA: Headings e UI compacta usam px fixo para precisão.
    *        Body text e conteúdo longo usam rem para escalar com o root.
@@ -1384,9 +1458,9 @@
    * │ .text-subsection-title  │ 16px    │ Subseção                     │
    * │ .text-widget-title      │ 14px    │ Widget header (dashboard)    │
    * ├─────────────────────────┼─────────┼──────────────────────────────┤
-   * │ .text-body-lg           │ ~20px   │ Lead text (rem)              │
-   * │ .text-body              │ ~18px   │ Corpo padrão (rem)           │
-   * │ .text-body-sm           │ ~16px   │ Corpo compacto (rem)         │
+   * │ .text-body-lg           │ 20px    │ Lead text (px fixo)          │
+   * │ .text-body              │ 18px    │ Corpo padrão (px fixo)       │
+   * │ .text-body-sm           │ 16px    │ Corpo compacto (px fixo)     │
    * ├─────────────────────────┼─────────┼──────────────────────────────┤
    * │ .text-label             │ 14px    │ Labels de campo              │
    * │ .text-caption           │ 13px    │ Texto auxiliar               │
@@ -1417,7 +1491,7 @@
     @apply font-heading font-bold text-foreground;
   }
 
-  /* === PAGE & SECTION HEADINGS (px fixo — imunes ao root 18px) === */
+  /* === PAGE & SECTION HEADINGS (px fixo — precisão independente do root) === */
   /* Valores exatos do spec: design-system/colors_and_type.css */
 
   /* Título principal da página: "Processos", "Partes", "Dashboard" */
@@ -1540,7 +1614,7 @@
    * MICRO TYPOGRAPHY — DESIGN SYSTEM V2
    * =============================================================================
    * Tamanhos compactos extraídos de Processos, Audiências, Dashboard e Partes.
-   * Todos em px fixo (imunes ao root 18px).
+   * Todos em px fixo para precisão sub-rem.
    */
 
   /* Meta Label — labels de campo em maiúsculas (RESPONSÁVEL, LOCALIDADE, TRIBUNAL) */
@@ -1569,10 +1643,12 @@
     @apply font-medium;
   }
 
-  /* KPI Value — valores grandes de destaque em painéis métricos */
+  /* KPI Value — valores grandes de destaque em painéis métricos.
+     Usa font-sans (Inter) para manter coerência de glifos numéricos entre
+     cards (Montserrat tem "1" com base/haste distinta que destoa do "0"/"7"). */
   .text-kpi-value {
     font-size: 24px;
-    @apply font-bold font-heading tabular-nums;
+    @apply font-bold tabular-nums;
   }
 
   /* =============================================================================
@@ -1589,9 +1665,10 @@
      Escala calibrada em "major third" (1.25x) para proporção harmônica entre
      os níveis de marketing. Max 80px é suficiente para drama sem competir com
      o layout bento e colunas estreitas.
-     Nota: o website roda com html.website-root-scale (font-size 16.2px). */
+     Nota: o website roda com html.website-root-scale (font-size 16px, idêntico ao root). */
   .text-marketing-hero {
-    font-size: clamp(2.25rem, 2.5vw + 1.75rem, 5rem); /* 36px → 80px */
+    font-size: clamp(2.25rem, 2.5vw + 1.75rem, 5rem);
+    /* 36px → 80px */
     line-height: 1;
     letter-spacing: -0.035em;
     @apply font-heading font-extrabold text-foreground;
@@ -1599,7 +1676,8 @@
 
   /* Seção de landing — H2 de seção, ex.: "Soluções jurídicas de alta precisão." */
   .text-marketing-section {
-    font-size: clamp(1.625rem, 1.5vw + 1rem, 3rem); /* 26px → 48px */
+    font-size: clamp(1.625rem, 1.5vw + 1rem, 3rem);
+    /* 26px → 48px */
     line-height: 1.1;
     letter-spacing: -0.025em;
     @apply font-heading font-bold text-foreground;
@@ -1608,7 +1686,8 @@
   /* Título de bloco dentro de seção de landing — H3 intermediário,
      ex.: "Defesa Assertiva.", "Recuperação de Ativos." */
   .text-marketing-title {
-    font-size: clamp(1.375rem, 0.75vw + 0.875rem, 2.125rem); /* 22px → 34px */
+    font-size: clamp(1.375rem, 0.75vw + 0.875rem, 2.125rem);
+    /* 22px → 34px */
     line-height: 1.15;
     letter-spacing: -0.015em;
     @apply font-heading font-bold text-foreground;
@@ -1619,7 +1698,8 @@
      Cor em 82% do foreground: contraste AA sobre fundo escuro (~7:1) e ainda
      diferencia hierarquicamente do heading (100%). */
   .text-marketing-lead {
-    font-size: clamp(0.9375rem, 0.3vw + 0.8125rem, 1.1875rem); /* 15px → 19px */
+    font-size: clamp(0.9375rem, 0.3vw + 0.8125rem, 1.1875rem);
+    /* 15px → 19px */
     line-height: 1.6;
     color: color-mix(in oklch, var(--foreground) 82%, transparent);
   }
@@ -1863,12 +1943,10 @@
 
   .skeleton {
     background-color: var(--skeleton);
-    background-image: linear-gradient(
-      90deg,
-      transparent 0%,
-      var(--skeleton-highlight) 50%,
-      transparent 100%
-    );
+    background-image: linear-gradient(90deg,
+        transparent 0%,
+        var(--skeleton-highlight) 50%,
+        transparent 100%);
     background-size: 200% 100%;
     background-repeat: no-repeat;
     background-position: -150% 0;
@@ -1876,8 +1954,13 @@
   }
 
   @keyframes skeleton-shimmer {
-    0% { background-position: -150% 0; }
-    100% { background-position: 150% 0; }
+    0% {
+      background-position: -150% 0;
+    }
+
+    100% {
+      background-position: 150% 0;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -1950,17 +2033,32 @@
   }
 
   @keyframes auth-breathe {
-    0%, 100% { opacity: 0.65; }
-    50% { opacity: 1; }
+
+    0%,
+    100% {
+      opacity: 0.65;
+    }
+
+    50% {
+      opacity: 1;
+    }
   }
 
   @keyframes auth-drift {
-    0%, 100% { transform: translate(-50%, -50%) translate(0, 0); }
-    50% { transform: translate(-50%, -50%) translate(30px, -15px); }
+
+    0%,
+    100% {
+      transform: translate(-50%, -50%) translate(0, 0);
+    }
+
+    50% {
+      transform: translate(-50%, -50%) translate(30px, -15px);
+    }
   }
 
   /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
+
     .auth-spotlight,
     .auth-spotlight-warm {
       animation: none;
@@ -2379,6 +2477,7 @@ body[data-theme-content-layout="centered"] .content-container {
   [data-wizard-public] *:focus-visible {
     --tw-ring-color: color-mix(in oklch, var(--primary) 25%, transparent);
   }
+
   [data-wizard-public] [data-slot="button"]:focus-visible,
   [data-wizard-public] [data-slot="select-trigger"]:focus-visible {
     outline: 2px solid color-mix(in oklch, var(--primary) 30%, transparent);
@@ -2393,18 +2492,22 @@ body[data-theme-content-layout="centered"] .content-container {
     scrollbar-width: thin;
     scrollbar-color: color-mix(in oklch, var(--outline-variant) 50%, transparent) transparent;
   }
+
   .scrollbar-glass::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
+
   .scrollbar-glass::-webkit-scrollbar-track {
     background: transparent;
   }
+
   .scrollbar-glass::-webkit-scrollbar-thumb {
     background-color: color-mix(in oklch, var(--outline-variant) 50%, transparent);
     border-radius: 9999px;
     transition: background-color 200ms;
   }
+
   .scrollbar-glass::-webkit-scrollbar-thumb:hover {
     background-color: color-mix(in oklch, var(--primary) 40%, transparent);
   }
@@ -2425,10 +2528,12 @@ body[data-theme-content-layout="centered"] .content-container {
     -webkit-backdrop-filter: blur(4px);
     transition: color 200ms, background-color 200ms, border-color 200ms, box-shadow 200ms;
   }
+
   .glass-field.glass-field:hover {
     border-color: var(--outline-variant);
     background-color: var(--surface-container-lowest);
   }
+
   .glass-field.glass-field:focus,
   .glass-field.glass-field:focus-visible {
     border-color: color-mix(in oklch, var(--primary) 40%, transparent);
@@ -2436,12 +2541,15 @@ body[data-theme-content-layout="centered"] .content-container {
     box-shadow: 0 0 0 2px color-mix(in oklch, var(--primary) 20%, transparent);
     outline: none;
   }
+
   .dark .glass-field.glass-field {
     background-color: color-mix(in oklch, var(--surface-container-low) 40%, transparent);
   }
+
   .dark .glass-field.glass-field:hover {
     background-color: color-mix(in oklch, var(--surface-container-low) 60%, transparent);
   }
+
   .dark .glass-field.glass-field:focus,
   .dark .glass-field.glass-field:focus-visible {
     background-color: color-mix(in oklch, var(--surface-container-low) 70%, transparent);
@@ -2675,9 +2783,13 @@ body[data-theme-content-layout="centered"] .content-container {
 }
 
 @keyframes typingBounce {
-  0%, 60%, 100% {
+
+  0%,
+  60%,
+  100% {
     transform: translateY(0);
   }
+
   30% {
     transform: translateY(-4px);
   }

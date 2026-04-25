@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 type BadgeTone = "soft" | "solid";
 
 const badgeVariants = cva(
-  "inline-flex items-center justify-center rounded-md px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 transition-[color,box-shadow] overflow-hidden",
+  "inline-flex items-center justify-center font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:pointer-events-none focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 transition-[color,box-shadow] overflow-hidden",
   {
     variants: {
       tone: {
@@ -24,6 +24,11 @@ const badgeVariants = cva(
         outline: "ring-1 ring-inset ring-border/40 text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
         neutral: "",
         accent: "",
+      },
+      size: {
+        xs: "px-1.5 py-0 text-[9px] rounded-sm [&>svg]:size-2.5 gap-0.5",
+        sm: "px-2 py-0.5 text-xs rounded-md [&>svg]:size-3 gap-1",
+        md: "px-2.5 py-0.5 text-[13px] rounded-md [&>svg]:size-3.5 gap-1",
       },
     },
     // Compound variants — TODAS as classes usam tokens semânticos do design system.
@@ -116,6 +121,7 @@ const badgeVariants = cva(
     defaultVariants: {
       tone: "solid",
       variant: "default",
+      size: "sm",
     }
   }
 );
@@ -124,6 +130,7 @@ function Badge({
   className,
   variant,
   tone,
+  size,
   asChild = false,
   ...props
 }: React.ComponentProps<"span"> &
@@ -132,7 +139,7 @@ function Badge({
   const Comp = asChild ? Slot : "span";
 
   return (
-    <Comp data-slot="badge" className={cn(badgeVariants({ variant, tone }), className)} {...props} />
+    <Comp data-slot="badge" className={cn(badgeVariants({ variant, tone, size }), className)} {...props} />
   );
 }
 

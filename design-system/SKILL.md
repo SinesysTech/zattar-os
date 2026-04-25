@@ -28,6 +28,8 @@ Then explore the other available files:
 ## When working on production code
 - Use shadcn/ui conventions (style: new-york).
 - Enforce `<Heading level>` and `<Text variant>` — never compose `font-heading text-2xl` manually.
+- Use layout primitives `<Stack gap>`, `<Inline gap>`, `<Inset variant>` instead of ad-hoc flex/gap/padding.
+- Support Density Axis: use `data-density="compact"` for dense dashboards/forms. Shells handle this automatically via `density` prop.
 - `--radius` is runtime-themeable. Always reference via `rounded-*` utilities, never hard-code `border-radius: 8px`.
 - Shadows cap at `shadow-lg`. `shadow-xl` / `shadow-2xl` are forbidden.
 - Animate only `transform` + `opacity`. Respect `prefers-reduced-motion`.

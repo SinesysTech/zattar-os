@@ -20,6 +20,7 @@ import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
 import {
   Landmark, CalendarDays, MapPin, Video, UserRound, MessageSquare, AlertCircle} from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Stack, Inline } from '@/components/ui/stack';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { actionListarAcervoPaginado } from '@/app/(authenticated)/acervo';
 import { actionListarUsuarios } from '@/app/(authenticated)/usuarios';
@@ -41,12 +42,12 @@ function SectionHeader({
   label: string;
 }) {
   return (
-    <div className="flex items-center gap-2 mb-3">
+    <Inline gap="tight" className="mb-3">
       <Icon className="size-3.5 text-primary/70" />
       <Text variant="overline" className="text-muted-foreground">
         {label}
       </Text>
-    </div>
+    </Inline>
   );
 }
 
@@ -60,8 +61,10 @@ function SectionCard({ children, className }: { children: React.ReactNode; class
 
 function FieldLabel({ htmlFor, children }: { htmlFor?: string; children: React.ReactNode }) {
   return (
-    <Label htmlFor={htmlFor} className="text-[13px] font-medium text-foreground/80 mb-1.5 block">
-      {children}
+    <Label htmlFor={htmlFor} className="mb-1.5 block">
+      <Text variant="label" className="text-foreground/80">
+        {children}
+      </Text>
     </Label>
   );
 }
@@ -425,6 +428,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
       title="Nova Audiência"
       description="Preencha os dados para registrar uma nova audiência no sistema."
       maxWidth="2xl"
+      density="compact"
       bodyClassName="overflow-y-auto px-6 py-5"
       footer={
         <Button type="submit" form="nova-audiencia-form" disabled={isLoading}>
@@ -433,17 +437,17 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
         </Button>
       }
     >
-      <form id="nova-audiencia-form" onSubmit={handleSubmit} className="space-y-4">
+      <form id="nova-audiencia-form" onSubmit={handleSubmit}>
+        <Stack gap="default">
+          {/* ── Erro ─────────────────────────────────────────────────────── */}
+          {error && (
+            <Inline align="start" gap="tight" className="rounded-lg border border-destructive/30 bg-destructive/8 px-3.5 py-3 text-destructive">
+              <AlertCircle className="size-4 shrink-0 mt-0.5" />
+              <span className="text-sm leading-snug">{error}</span>
+            </Inline>
+          )}
 
-        {/* ── Erro ─────────────────────────────────────────────────────── */}
-        {error && (
-          <div className="flex items-start gap-2.5 rounded-lg border border-destructive/30 bg-destructive/8 px-3.5 py-3 text-destructive">
-            <AlertCircle className="size-4 shrink-0 mt-0.5" />
-            <span className="text-sm leading-snug">{error}</span>
-          </div>
-        )}
-
-        {/* ── Seção 1: Jurisdição + Processo ───────────────────────────── */}
+          {/* ── Seção 1: Jurisdição + Processo ───────────────────────────── */}
         <SectionCard>
           <SectionHeader icon={Landmark} label="Jurisdição e Processo" />
           <div className="space-y-4">
@@ -742,7 +746,9 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
           />
         </SectionCard>
 
-      </form>
-    </DialogFormShell>
+        </Stack>
+        </form>
+        </DialogFormShell>
+
   );
 }

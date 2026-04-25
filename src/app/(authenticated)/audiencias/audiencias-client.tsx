@@ -43,7 +43,8 @@ import {
 } from '@/app/(authenticated)/audiencias';
 import type { Audiencia, TipoAudiencia, AudienciasViewMode } from '@/app/(authenticated)/audiencias';
 import type { AudienciasFilterBarFilters } from '@/app/(authenticated)/audiencias/components';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
+import { Stack, Inline } from '@/components/ui/stack';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // CONSTANTS
@@ -220,19 +221,21 @@ export function AudienciasClient({
   // ── Render ──────────────────────────────────────────────────────────────
 
   return (
-    <div className="space-y-5">
+    <Stack gap="loose">
       {/* ── Header ─────────────────────────────────────────── */}
       {viewMode !== 'quadro' && (
-        <div className="flex items-end justify-between gap-4">
-          <div>
+        <Inline align="end" justify="between">
+          <Stack gap="tight">
             <Heading level="page">Audiências</Heading>
-            <p className="text-sm text-muted-foreground/50 mt-0.5">{subtitle}</p>
-          </div>
+            <Text variant="helper" className="text-muted-foreground/50">
+              {subtitle}
+            </Text>
+          </Stack>
           <Button size="sm" className="rounded-xl" onClick={() => setIsNovaAudienciaOpen(true)}>
             <Plus className="size-3.5" />
             Nova Audiência
           </Button>
-        </div>
+        </Inline>
       )}
 
       {/* ── KPI Strip ──────────────────────────────────────── */}
@@ -251,6 +254,7 @@ export function AudienciasClient({
       )}
 
       {/* ── View Controls ──────────────────────────────────── */}
+      {/* design-system-escape: layout responsivo complexo stack-to-inline */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
         <AudienciasFilterBar
           filters={filters}
@@ -262,7 +266,7 @@ export function AudienciasClient({
           currentUserId={currentUserId}
           counts={filterCounts}
         />
-        <div className="flex items-center gap-2 flex-1 justify-end">
+        <Inline gap="tight" justify="end" className="flex-1 w-full sm:w-auto">
           <SearchInput
             value={search}
             onChange={setSearch}
@@ -273,17 +277,17 @@ export function AudienciasClient({
             onChange={handleViewChange}
             options={VIEW_OPTIONS}
           />
-        </div>
+        </Inline>
       </div>
 
       {/* ── Content ────────────────────────────────────────── */}
 
       {isLoading && (
-        <div className="space-y-3">
+        <Stack gap="tight">
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="h-20 rounded-2xl border border-border/20 bg-muted-foreground/5 animate-pulse" />
           ))}
-        </div>
+        </Stack>
       )}
 
       {!isLoading && viewMode === 'quadro' && (
@@ -350,6 +354,6 @@ export function AudienciasClient({
         onOpenChange={setIsNovaAudienciaOpen}
         onSuccess={refetch}
       />
-    </div>
+    </Stack>
   );
 }

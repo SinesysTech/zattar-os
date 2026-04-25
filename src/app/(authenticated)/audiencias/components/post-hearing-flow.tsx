@@ -132,16 +132,16 @@ export function PostHearingFlow({
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-2">
             <div className="size-1.5 rounded-full bg-warning/50" />
-            <span className="text-[9px] font-semibold uppercase tracking-wider text-warning/60">
+            <span className="text-micro-caption font-semibold uppercase tracking-wider text-warning/60">
               Concluída
             </span>
-            <span className="text-[10px] text-muted-foreground/55">
+            <span className="text-micro-caption text-muted-foreground/60">
               {audiencia.tipoDescricao} · {format(dataFim, "HH:mm", { locale: ptBR })}
             </span>
           </div>
           <div className="flex items-center gap-1">
             <Clock className={cn("size-2.5", urgencyColor)} />
-            <span className={cn("text-[10px] tabular-nums font-medium", urgencyColor)}>
+            <span className={cn("text-micro-caption tabular-nums font-medium", urgencyColor)}>
               há {elapsedLabel}
             </span>
           </div>
@@ -149,15 +149,15 @@ export function PostHearingFlow({
 
         {/* Process info */}
         <div className="flex items-center gap-2 mb-3">
-          <span className="text-[11px] font-mono text-muted-foreground/60 tabular-nums">{audiencia.numeroProcesso}</span>
+          <span className="text-mono-num text-muted-foreground/60">{audiencia.numeroProcesso}</span>
           {audiencia.trt && (
-            <span className="text-[8px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40">{audiencia.trt}</span>
+            <span className="text-micro-badge font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40">{audiencia.trt}</span>
           )}
         </div>
 
         {/* Parties */}
         {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
-          <p className="text-[10px] text-foreground/50 mb-4 truncate">
+          <p className="text-micro-caption text-foreground/60 mb-4 truncate">
             {audiencia.poloAtivoNome || "–"} <span className="text-muted-foreground/50">vs</span> {audiencia.poloPassivoNome || "–"}
           </p>
         )}
@@ -165,14 +165,14 @@ export function PostHearingFlow({
         {/* Result selector */}
         {!isFinalized && (
           <div className="mb-4">
-            <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">Resultado</span>
+            <span className="text-micro-caption text-muted-foreground/60 uppercase tracking-wider">Resultado</span>
             <div className="flex items-center gap-1.5 mt-1.5">
               {RESULT_OPTIONS.map((opt) => (
                 <button
                   key={opt.value}
                   onClick={() => handleSelectResult(opt.value)}
                   className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-medium border transition-all cursor-pointer",
+                    "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-micro-caption font-medium border transition-all cursor-pointer",
                     selectedResult === opt.value
                       ? "border-primary/30 bg-primary/8 text-primary"
                       : "border-border/15 text-muted-foreground/50 hover:text-foreground/70 hover:border-border/25",
@@ -189,8 +189,8 @@ export function PostHearingFlow({
         {/* Post-action checklist */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">Ações pós-audiência</span>
-            <span className="text-[9px] tabular-nums text-muted-foreground/55">{completedCount}/{postActions.length}</span>
+            <span className="text-micro-caption text-muted-foreground/60 uppercase tracking-wider">Ações pós-audiência</span>
+            <span className="text-micro-caption tabular-nums text-muted-foreground/60">{completedCount}/{postActions.length}</span>
           </div>
 
           {/* Progress bar */}
@@ -208,10 +208,10 @@ export function PostHearingFlow({
                 onClick={() => !action.done && handleActionClick(action.id)}
                 disabled={action.done}
                 className={cn(
-                  "w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[10px] transition-all",
+                  "w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-micro-caption transition-all",
                   action.done
                     ? "text-muted-foreground/55"
-                    : "text-foreground/60 hover:bg-foreground/[0.04] cursor-pointer",
+                    : "text-foreground/60 hover:bg-foreground/4or-pointer",
                 )}
               >
                 {action.done ? (

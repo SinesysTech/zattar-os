@@ -13,6 +13,7 @@ import { useMemo } from "react";
 import { BarChart3, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from '@/components/shared/glass-panel';
+import { Text } from "@/components/ui/typography";
 import type { Audiencia } from "../domain";
 
 export interface LoadHeatmapProps {
@@ -84,18 +85,18 @@ export function LoadHeatmap({ audiencias, responsavelNomes, className }: LoadHea
       <GlassPanel className="p-4">
         <div className="flex items-center gap-2 mb-3">
           <BarChart3 className="size-3 text-primary/40" />
-          <span className="text-[11px] font-medium text-muted-foreground/50">Distribuição por tipo</span>
-          <span className="text-[9px] tabular-nums text-muted-foreground/50 ml-auto">{audiencias.length} total</span>
+          <Text variant="caption" as="span" className="font-medium text-muted-foreground/60">Distribuição por tipo</Text>
+          <span className="text-micro-caption tabular-nums text-muted-foreground/60 ml-auto">{audiencias.length} total</span>
         </div>
 
         <div className="space-y-2">
           {typeDistribution.map((item) => (
             <div key={item.tipo}>
               <div className="flex items-baseline justify-between mb-0.5">
-                <span className="text-[10px] text-foreground/60 truncate max-w-[60%]">{item.tipo}</span>
+                <span className="text-micro-caption text-foreground/70 truncate max-w-[60%]">{item.tipo}</span>
                 <div className="flex items-baseline gap-1.5">
-                  <span className="text-[10px] font-bold tabular-nums">{item.count}</span>
-                  <span className="text-[8px] text-muted-foreground/50 tabular-nums">{item.percent}%</span>
+                  <span className="text-micro-caption font-bold tabular-nums">{item.count}</span>
+                  <span className="text-micro-badge text-muted-foreground/55 tabular-nums">{item.percent}%</span>
                 </div>
               </div>
               <div className="h-1 rounded-full bg-border/8 overflow-hidden">
@@ -113,15 +114,15 @@ export function LoadHeatmap({ audiencias, responsavelNomes, className }: LoadHea
       <GlassPanel className="p-4">
         <div className="flex items-center gap-2 mb-3">
           <Users className="size-3 text-primary/40" />
-          <span className="text-[11px] font-medium text-muted-foreground/50">Carga por advogado</span>
+          <Text variant="caption" as="span" className="font-medium text-muted-foreground/60">Carga por advogado</Text>
         </div>
 
         <div className="space-y-2">
           {responsavelLoad.map((item) => (
             <div key={item.id}>
               <div className="flex items-baseline justify-between mb-0.5">
-                <span className="text-[10px] text-foreground/60 truncate max-w-[60%]">{item.nome}</span>
-                <span className="text-[10px] font-bold tabular-nums">{item.count}</span>
+                <span className="text-micro-caption text-foreground/70 truncate max-w-[60%]">{item.nome}</span>
+                <span className="text-micro-caption font-bold tabular-nums">{item.count}</span>
               </div>
               <div className="h-1 rounded-full bg-border/8 overflow-hidden">
                 <div
@@ -137,8 +138,8 @@ export function LoadHeatmap({ audiencias, responsavelNomes, className }: LoadHea
 
           {semResponsavel > 0 && (
             <div className="flex items-center justify-between pt-1 border-t border-border/8">
-              <span className="text-[9px] text-warning/50">Sem responsável</span>
-              <span className="text-[10px] font-bold tabular-nums text-warning/60">{semResponsavel}</span>
+              <span className="text-micro-caption text-warning/60">Sem responsável</span>
+              <span className="text-micro-caption font-bold tabular-nums text-warning/60">{semResponsavel}</span>
             </div>
           )}
         </div>

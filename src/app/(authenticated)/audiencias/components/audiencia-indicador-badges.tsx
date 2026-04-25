@@ -142,7 +142,7 @@ export function AudienciaIndicadorBadges({
               <Layers size={ICON_SIZE} className="mr-1 inline-block" />
               Presença Híbrida
             </span>
-            <span className="text-[10px] opacity-80">{detailText}</span>
+            <span className="text-micro-caption opacity-80">{detailText}</span>
           </span>
         </SemanticBadge>,
       );

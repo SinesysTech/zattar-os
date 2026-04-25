@@ -33,6 +33,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { Text } from '@/components/ui/typography';
 
 import type { Audiencia } from '../domain';
 import {
@@ -146,7 +147,7 @@ function DayCell({
 
       {count >= 3 && (
         <div className="flex gap-1 mt-auto pt-1.5">
-          <span className="text-[10px] font-bold text-primary bg-primary/15 rounded-full px-1.5 py-0.5 inline-flex items-center justify-center min-w-4.5">
+          <span className="text-micro-caption font-bold text-primary bg-primary/15 rounded-full px-1.5 py-0.5 inline-flex items-center justify-center min-w-4.5">
             {count}
           </span>
         </div>
@@ -196,7 +197,7 @@ function HearingItem({ audiencia }: { audiencia: Audiencia }) {
           </span>
         </div>
         <span className={cn(
-          'text-[10px] font-semibold tracking-[0.03em] px-1.75 py-0.5 rounded-full border shrink-0',
+          'text-micro-caption font-semibold tracking-[0.03em] px-1.75 py-0.5 rounded-full border shrink-0',
           getStatusBadgeClass(audiencia.status),
         )}>
           {STATUS_AUDIENCIA_LABELS[audiencia.status]}
@@ -206,7 +207,7 @@ function HearingItem({ audiencia }: { audiencia: Audiencia }) {
       {/* Processo + grau */}
       <div className="flex items-center gap-1.5 mt-1.5 ml-4.5 min-w-0">
         {audiencia.grau && (
-          <span className="text-[9px] text-foreground/30 shrink-0">
+          <span className="text-micro-caption text-foreground/40 shrink-0">
             {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
           </span>
         )}
@@ -219,12 +220,12 @@ function HearingItem({ audiencia }: { audiencia: Audiencia }) {
       <div className="flex items-center gap-3 mt-1.5 ml-4.5 text-foreground/35">
         <div className="flex items-center gap-1">
           <ModalidadeIcon className="w-3 h-3" />
-          <span className="text-[11px]">{modalidadeLabel}</span>
+          <span className="text-caption">{modalidadeLabel}</span>
         </div>
         {audiencia.orgaoJulgadorOrigem && (
           <>
             <span className="text-foreground/15">·</span>
-            <span className="text-[11px] truncate">{audiencia.orgaoJulgadorOrigem}</span>
+            <span className="text-caption truncate">{audiencia.orgaoJulgadorOrigem}</span>
           </>
         )}
       </div>
@@ -321,7 +322,7 @@ export function AudienciasGlassMonth({
             ].map(({ color, label }) => (
               <div key={label} className="flex items-center gap-1.5">
                 <div className={cn('w-1.75 h-1.75 rounded-full', color)} />
-                <span className="text-[11px] text-foreground/45">{label}</span>
+                <Text variant="caption" as="span" className="text-foreground/55">{label}</Text>
               </div>
             ))}
           </div>

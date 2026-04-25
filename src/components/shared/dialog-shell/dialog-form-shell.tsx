@@ -69,8 +69,8 @@ interface DialogFormShellProps {
   hideFooter?: boolean;
   /**
    * Eixo de densidade do formulário.
-   * - `comfortable` (padrão): altura h-9, text-sm, gap-4, padding px-6 py-4.
-   * - `compact`: altura 36px, font 13px, gap ~13,5px, padding ~22,5×13,5px.
+   * - `comfortable` (padrão): altura h-9 (36px), text-sm (14px), gap-4 (16px), padding px-[var(--density-dialog-padding-x)] py-[var(--density-dialog-padding-y)].
+   * - `compact`: altura 32px, font 13px, gap 12px, padding 20×12px.
    *
    * Use `compact` em cadastros longos (8+ campos) para paridade com SaaS
    * denso (Linear/Notion/Stripe). Propagado via `data-density` e consumido
@@ -127,7 +127,7 @@ export function DialogFormShell({
           className
         )}
       >
-        <ResponsiveDialogHeader className="px-6 py-4 shrink-0 border-b border-border/20">
+        <ResponsiveDialogHeader className="px-(--density-dialog-padding-x) py-(--density-dialog-padding-y) shrink-0 border-b border-border/20">
           <ResponsiveDialogTitle className="text-card-title">
             {title}
           </ResponsiveDialogTitle>
@@ -163,7 +163,7 @@ export function DialogFormShell({
         </ResponsiveDialogBody>
 
         {!hideFooter && (
-          <ResponsiveDialogFooter className="px-6 py-4 border-t border-border/20 shrink-0">
+          <ResponsiveDialogFooter className="px-(--density-dialog-padding-x) py-(--density-dialog-padding-y) border-t border-border/20 shrink-0">
             <div className="flex w-full items-center justify-between gap-2">
               <Button
                 type="button"

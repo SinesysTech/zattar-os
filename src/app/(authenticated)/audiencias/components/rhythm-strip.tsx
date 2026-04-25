@@ -15,6 +15,7 @@ import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { CalendarHeatmap } from '@/app/(authenticated)/dashboard/widgets/primitives';
+import { Text } from '@/components/ui/typography';
 import type { Audiencia } from '../domain';
 
 // ─── Types ────────────────────────────────────────────────────────────────
@@ -55,22 +56,22 @@ export function RhythmStrip({ audiencias, className }: RhythmStripProps) {
     <GlassPanel className={cn('p-4', className)}>
       <div className="flex items-center gap-2 mb-3">
         <Zap className="size-3 text-primary/40" />
-        <span className="text-[11px] font-medium text-muted-foreground/50">Ritmo de audiências</span>
+        <Text variant="caption" as="span" className="font-medium text-muted-foreground/60">Ritmo de audiências</Text>
         {hasOverload && (
-          <span className="text-[8px] font-semibold px-1.5 py-px rounded-full bg-warning/10 text-warning ml-auto">
+          <span className="text-micro-badge font-semibold px-1.5 py-px rounded-full bg-warning/10 text-warning ml-auto">
             Pico: {maxInDay}/dia
           </span>
         )}
       </div>
       <CalendarHeatmap data={heatmapData} colorScale={hasOverload ? 'warning' : 'primary'} />
       <div className="flex items-center justify-between mt-2">
-        <span className="text-[8px] text-muted-foreground/40">Menos</span>
+        <span className="text-micro-badge text-muted-foreground/45">Menos</span>
         <div className="flex gap-0.5">
           {['bg-border/10', 'bg-primary/15', 'bg-primary/30', 'bg-primary/50', 'bg-primary/80'].map((c, i) => (
             <div key={i} className={cn('size-2.5 rounded-[2px]', c)} />
           ))}
         </div>
-        <span className="text-[8px] text-muted-foreground/40">Mais</span>
+        <span className="text-micro-badge text-muted-foreground/45">Mais</span>
       </div>
     </GlassPanel>
   );

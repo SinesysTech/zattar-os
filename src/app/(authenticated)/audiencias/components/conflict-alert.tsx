@@ -13,6 +13,7 @@ import { AlertTriangle, Clock, ArrowRight } from "lucide-react";
 import { format, parseISO, differenceInMinutes, areIntervalsOverlapping } from "date-fns";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from '@/components/shared/glass-panel';
+import { Text } from "@/components/ui/typography";
 import type { Audiencia } from "../domain";
 
 export interface ConflictAlertProps {
@@ -96,7 +97,7 @@ function TimelineBar({ audiencia, maxEnd, minStart }: { audiencia: Audiencia; ma
         className="absolute top-0.5 h-3.5 rounded bg-primary/20 border border-primary/15 transition-all duration-200 hover:bg-primary/30 cursor-default"
         style={{ left: `${left}%`, width: `${width}%`, minWidth: 20 }}
       >
-        <span className="absolute left-1.5 top-1/2 -translate-y-1/2 text-[7px] text-foreground/60 truncate max-w-full pr-1.5 font-medium">
+        <span className="absolute left-1.5 top-1/2 -translate-y-1/2 text-micro-badge text-foreground/60 truncate max-w-full pr-1.5 font-medium">
           {format(parseISO(audiencia.dataInicio), "HH:mm")}
         </span>
       </div>
@@ -117,9 +118,9 @@ export function ConflictAlert({ audiencias, dailyAverage = 2.5, className }: Con
       <div className="p-4">
         <div className="flex items-center gap-2 mb-3">
           <AlertTriangle className="size-3 text-destructive/50" />
-          <span className="text-[11px] font-medium text-muted-foreground/50">
+          <Text variant="caption" as="span" className="font-medium text-muted-foreground/60">
             {conflicts.length} {conflicts.length === 1 ? "alerta" : "alertas"}
-          </span>
+          </Text>
         </div>
 
         <div className="space-y-3">
@@ -141,7 +142,7 @@ export function ConflictAlert({ audiencias, dailyAverage = 2.5, className }: Con
                     <AlertTriangle className="size-2.5 text-warning/40" />
                   )}
                   <span className={cn(
-                    "text-[10px] font-medium",
+                    "text-micro-caption font-medium",
                     conflict.type === "overlap" ? "text-destructive/60" : "text-warning/60",
                   )}>
                     {conflict.message}
@@ -157,7 +158,7 @@ export function ConflictAlert({ audiencias, dailyAverage = 2.5, className }: Con
                     {conflict.overlapMinutes && conflict.overlapMinutes > 0 && (
                       <div className="flex items-center gap-1 mt-1">
                         <div className="flex-1 h-px bg-destructive/15" />
-                        <span className="text-[8px] text-destructive/40 tabular-nums px-1">
+                        <span className="text-micro-badge text-destructive/50 tabular-nums px-1">
                           ▲ {conflict.overlapMinutes}min sobreposição
                         </span>
                         <div className="flex-1 h-px bg-destructive/15" />
@@ -169,7 +170,7 @@ export function ConflictAlert({ audiencias, dailyAverage = 2.5, className }: Con
                 {conflict.suggestion && (
                   <div className="flex items-center gap-1 ml-4">
                     <ArrowRight className="size-2 text-muted-foreground/45" />
-                    <span className="text-[9px] text-muted-foreground/55 italic">{conflict.suggestion}</span>
+                    <span className="text-micro-caption text-muted-foreground/60 italic">{conflict.suggestion}</span>
                   </div>
                 )}
               </div>

@@ -153,7 +153,7 @@ export function AudienciaResponsavelPopover({
                 >
                   <Avatar size="xs" className="border size-5">
                     <AvatarImage src={usuario.avatarUrl || undefined} />
-                    <AvatarFallback className="text-[7px]">
+                    <AvatarFallback className="text-micro-badge">
                       {getInitials(getUsuarioNome(usuario))}
                     </AvatarFallback>
                   </Avatar>
@@ -181,7 +181,7 @@ export function ResponsavelTriggerContent({
 }: {
   responsavelId: number | null | undefined;
   usuarios: Usuario[];
-  size?: 'sm' | 'md';
+  size?: 'xs' | 'sm' | 'md';
 }) {
   const responsavel = responsavelId ? usuarios.find((u) => u.id === responsavelId) : null;
   const nome = responsavel ? getUsuarioNome(responsavel) : null;
@@ -189,15 +189,25 @@ export function ResponsavelTriggerContent({
   if (responsavel && nome) {
     return (
       <>
-        <Avatar size="xs" className={cn('shrink-0', size === 'sm' ? 'size-4' : 'size-7')}>
+        <Avatar
+          size="xs"
+          className={cn(
+            'shrink-0',
+            size === 'xs' ? 'size-3.5' : size === 'sm' ? 'size-4' : 'size-7'
+          )}
+        >
           <AvatarImage src={responsavel.avatarUrl || undefined} alt={nome} />
-          <AvatarFallback className={size === 'sm' ? 'text-[6px]' : 'text-[9px]'}>
+          <AvatarFallback className="text-micro-badge">
             {getInitials(nome)}
           </AvatarFallback>
         </Avatar>
         <span className={cn(
           'truncate',
-          size === 'sm' ? 'text-[9px] text-muted-foreground/55' : 'text-[13.5px] font-medium text-foreground',
+          size === 'xs'
+            ? 'text-micro-badge text-muted-foreground/60'
+            : size === 'sm'
+              ? 'text-micro-caption text-muted-foreground/60'
+              : 'text-label font-medium text-foreground',
         )}>
           {nome}
         </span>
@@ -209,15 +219,24 @@ export function ResponsavelTriggerContent({
     <>
       <div className={cn(
         'rounded-full bg-muted/40 flex items-center justify-center shrink-0',
-        size === 'sm' ? 'size-4' : 'size-7',
+        size === 'xs' ? 'size-3.5' : size === 'sm' ? 'size-4' : 'size-7',
       )}>
-        <User className={cn('text-muted-foreground/40', size === 'sm' ? 'size-2.5' : 'size-3.5')} />
+        <User
+          className={cn(
+            'text-muted-foreground/40',
+            size === 'xs' ? 'size-2' : size === 'sm' ? 'size-2.5' : 'size-3.5'
+          )}
+        />
       </div>
       <span className={cn(
         'italic',
-        size === 'sm' ? 'text-[9px] text-warning/60' : 'text-caption text-muted-foreground/50',
+        size === 'xs'
+          ? 'text-micro-badge text-warning/60'
+          : size === 'sm'
+            ? 'text-micro-caption text-warning/60'
+            : 'text-caption text-muted-foreground/60',
       )}>
-        {size === 'sm' ? 'Sem resp.' : 'Clique para atribuir'}
+        {size === 'xs' || size === 'sm' ? 'Sem resp.' : 'Clique para atribuir'}
       </span>
     </>
   );

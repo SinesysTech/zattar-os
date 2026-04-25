@@ -322,6 +322,7 @@ export const GLOW_EFFECTS = {
 
 /**
  * Sistema de espaçamento baseado em grid de 4px.
+ * Com html { font-size: 16px }, todos os rem resolvem em múltiplos exatos de 4px.
  * Use estes valores para margins, paddings e gaps.
  */
 export const SPACING = {
@@ -349,7 +350,30 @@ export const SPACING = {
 } as const;
 
 /**
+ * SPACING_TOKENS — Consolidação semântica de espaçamento.
+ * Fonte única para primitivas de layout (Stack, Inline, Inset).
+ */
+export const SPACING_TOKENS = {
+  'stack-tight': 'space-y-2',
+  'stack-default': 'space-y-4',
+  'stack-loose': 'space-y-6',
+  'stack-section': 'space-y-8',
+  'stack-field': 'space-y-4', // = --density-field-gap fallback
+  'inline-tight': 'gap-2',
+  'inline-default': 'gap-4',
+  'inline-loose': 'gap-6',
+  'inset-card': 'p-4 sm:p-6',
+  'inset-card-compact': 'p-3 sm:p-4',
+  'inset-dialog': 'p-6',
+  'inset-page': 'p-4 sm:p-6 lg:p-8',
+  'inset-section': 'p-4 sm:p-6',
+  'field-gap': 'gap-4',   // = --density-field-gap fallback
+  'section-gap': 'gap-6', // = --density-section-gap fallback
+} as const;
+
+/**
  * Classes Tailwind de espaçamento comuns.
+ * @deprecated Use SPACING_TOKENS ou layout primitives (Stack/Inline/Inset).
  */
 export const SPACING_CLASSES = {
   gap: {
@@ -384,7 +408,7 @@ export const SPACING_CLASSES = {
 
 /**
  * Tokens de espaçamento semântico para padrões de layout comuns.
- * Prefira SPACING_SEMANTIC sobre SPACING_CLASSES para layouts.
+ * @deprecated Use SPACING_TOKENS ou layout primitives (Stack/Inline/Inset).
  */
 export const SPACING_SEMANTIC = {
   page: {
@@ -434,6 +458,47 @@ export const SPACING_SEMANTIC = {
     footerGap: 'gap-2',
   },
 } as const;
+
+// =============================================================================
+// UNIFIED SIZING SCALE
+// =============================================================================
+
+/**
+ * SIZE_SCALE — Eixo de dimensionamento unificado para primitives.
+ * Derivado de --density-* tokens e escalas de icon/avatar.
+ */
+export const SIZE_SCALE = {
+  xs: {
+    controlH: 'var(--density-control-h)', // Quando compact = 2rem
+    controlPx: 'var(--density-control-px)', // Quando compact = 0.5rem
+    fontSize: 'var(--density-control-font-size)', // Quando compact = 13px
+    iconSize: 'size-5',
+    gap: 'gap-1',
+  },
+  sm: {
+    controlH: '2.25rem', // Comfortable default
+    controlPx: '0.75rem',
+    fontSize: '0.875rem',
+    iconSize: 'size-6',
+    gap: 'gap-2',
+  },
+  md: {
+    controlH: '2.5rem',
+    controlPx: '1rem',
+    fontSize: '1rem',
+    iconSize: 'size-8',
+    gap: 'gap-4',
+  },
+  lg: {
+    controlH: '3rem',
+    controlPx: '1.25rem',
+    fontSize: '1.125rem',
+    iconSize: 'size-10',
+    gap: 'gap-6',
+  },
+} as const;
+
+export type SizeScaleKey = keyof typeof SIZE_SCALE;
 
 // =============================================================================
 // TIPOGRAFIA
@@ -802,8 +867,10 @@ export const TOKENS = {
 
   // Layout & primitives
   spacing: SPACING,
+  spacingTokens: SPACING_TOKENS,
   spacingClasses: SPACING_CLASSES,
   spacingSemantic: SPACING_SEMANTIC,
+  sizeScale: SIZE_SCALE,
   typography: TYPOGRAPHY,
   textPatterns: TEXT_PATTERNS,
   opacityScale: OPACITY_SCALE,

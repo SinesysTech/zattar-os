@@ -87,7 +87,7 @@ function AudienciaContent({
       <div className="flex items-start justify-between gap-3 mb-1">
         <div className="flex-1 min-w-0">
           <div
-            className="text-[15px] font-semibold tabular-nums tracking-tight truncate"
+            className="text-label font-semibold tabular-nums tracking-tight truncate"
             title={audiencia.numeroProcesso}
           >
             {audiencia.numeroProcesso}

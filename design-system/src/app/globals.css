@@ -989,7 +989,7 @@
   }
 
   html.website-root-scale {
-    font-size: 16.2px;
+    font-size: 18px;
   }
 
   body {
@@ -1157,8 +1157,8 @@
    * ESCALA TIPOGRÁFICA UNIFICADA — DESIGN SYSTEM ZATTAR
    * =============================================================================
    *
-   * IMPORTANTE: html { font-size: 18px } infla todos os tamanhos rem.
-   * text-sm (0.875rem) → 15.75px real, text-base (1rem) → 18px real, etc.
+   * html { font-size: 16px } — 1rem = 16px, grid 4px perfeito.
+   * text-sm (0.875rem) = 14px, text-base (1rem) = 16px.
    *
    * REGRA: Headings e UI compacta usam px fixo para precisão.
    *        Body text e conteúdo longo usam rem para escalar com o root.
@@ -1208,7 +1208,7 @@
     @apply font-heading font-bold text-foreground;
   }
 
-  /* === PAGE & SECTION HEADINGS (px fixo — imunes ao root 18px) === */
+  /* === PAGE & SECTION HEADINGS (px fixo — precisão independente do root) === */
 
   /* Título principal da página: "Processos", "Partes", "Dashboard" */
   .text-page-title {
@@ -1307,7 +1307,7 @@
    * MICRO TYPOGRAPHY — DESIGN SYSTEM V2
    * =============================================================================
    * Tamanhos compactos extraídos de Processos, Audiências, Dashboard e Partes.
-   * Todos em px fixo (imunes ao root 18px).
+   * Todos em px fixo para precisão sub-rem.
    */
 
   /* Meta Label — labels de campo em maiúsculas (RESPONSÁVEL, LOCALIDADE, TRIBUNAL) */
@@ -1357,7 +1357,8 @@
      o layout bento e colunas estreitas.
      Nota: o website roda com html.website-root-scale (font-size 16.2px). */
   .text-marketing-hero {
-    font-size: clamp(2.25rem, 2.5vw + 1.75rem, 5rem); /* 36px → 80px */
+    font-size: clamp(2.25rem, 2.5vw + 1.75rem, 5rem);
+    /* 36px → 80px */
     line-height: 1;
     letter-spacing: -0.035em;
     @apply font-heading font-extrabold text-foreground;
@@ -1365,7 +1366,8 @@
 
   /* Seção de landing — H2 de seção, ex.: "Soluções jurídicas de alta precisão." */
   .text-marketing-section {
-    font-size: clamp(1.625rem, 1.5vw + 1rem, 3rem); /* 26px → 48px */
+    font-size: clamp(1.625rem, 1.5vw + 1rem, 3rem);
+    /* 26px → 48px */
     line-height: 1.1;
     letter-spacing: -0.025em;
     @apply font-heading font-bold text-foreground;
@@ -1374,7 +1376,8 @@
   /* Título de bloco dentro de seção de landing — H3 intermediário,
      ex.: "Defesa Assertiva.", "Recuperação de Ativos." */
   .text-marketing-title {
-    font-size: clamp(1.375rem, 0.75vw + 0.875rem, 2.125rem); /* 22px → 34px */
+    font-size: clamp(1.375rem, 0.75vw + 0.875rem, 2.125rem);
+    /* 22px → 34px */
     line-height: 1.15;
     letter-spacing: -0.015em;
     @apply font-heading font-bold text-foreground;
@@ -1385,7 +1388,8 @@
      Cor em 82% do foreground: contraste AA sobre fundo escuro (~7:1) e ainda
      diferencia hierarquicamente do heading (100%). */
   .text-marketing-lead {
-    font-size: clamp(0.9375rem, 0.3vw + 0.8125rem, 1.1875rem); /* 15px → 19px */
+    font-size: clamp(0.9375rem, 0.3vw + 0.8125rem, 1.1875rem);
+    /* 15px → 19px */
     line-height: 1.6;
     color: color-mix(in oklch, var(--foreground) 82%, transparent);
   }
@@ -1629,12 +1633,10 @@
 
   .skeleton {
     background-color: var(--skeleton);
-    background-image: linear-gradient(
-      90deg,
-      transparent 0%,
-      var(--skeleton-highlight) 50%,
-      transparent 100%
-    );
+    background-image: linear-gradient(90deg,
+        transparent 0%,
+        var(--skeleton-highlight) 50%,
+        transparent 100%);
     background-size: 200% 100%;
     background-repeat: no-repeat;
     background-position: -150% 0;
@@ -1642,8 +1644,13 @@
   }
 
   @keyframes skeleton-shimmer {
-    0% { background-position: -150% 0; }
-    100% { background-position: 150% 0; }
+    0% {
+      background-position: -150% 0;
+    }
+
+    100% {
+      background-position: 150% 0;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -1716,17 +1723,32 @@
   }
 
   @keyframes auth-breathe {
-    0%, 100% { opacity: 0.65; }
-    50% { opacity: 1; }
+
+    0%,
+    100% {
+      opacity: 0.65;
+    }
+
+    50% {
+      opacity: 1;
+    }
   }
 
   @keyframes auth-drift {
-    0%, 100% { transform: translate(-50%, -50%) translate(0, 0); }
-    50% { transform: translate(-50%, -50%) translate(30px, -15px); }
+
+    0%,
+    100% {
+      transform: translate(-50%, -50%) translate(0, 0);
+    }
+
+    50% {
+      transform: translate(-50%, -50%) translate(30px, -15px);
+    }
   }
 
   /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
+
     .auth-spotlight,
     .auth-spotlight-warm {
       animation: none;
@@ -2145,6 +2167,7 @@ body[data-theme-content-layout="centered"] .content-container {
   [data-wizard-public] *:focus-visible {
     --tw-ring-color: color-mix(in oklch, var(--primary) 25%, transparent);
   }
+
   [data-wizard-public] [data-slot="button"]:focus-visible,
   [data-wizard-public] [data-slot="select-trigger"]:focus-visible {
     outline: 2px solid color-mix(in oklch, var(--primary) 30%, transparent);
@@ -2159,18 +2182,22 @@ body[data-theme-content-layout="centered"] .content-container {
     scrollbar-width: thin;
     scrollbar-color: color-mix(in oklch, var(--outline-variant) 50%, transparent) transparent;
   }
+
   .scrollbar-glass::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
+
   .scrollbar-glass::-webkit-scrollbar-track {
     background: transparent;
   }
+
   .scrollbar-glass::-webkit-scrollbar-thumb {
     background-color: color-mix(in oklch, var(--outline-variant) 50%, transparent);
     border-radius: 9999px;
     transition: background-color 200ms;
   }
+
   .scrollbar-glass::-webkit-scrollbar-thumb:hover {
     background-color: color-mix(in oklch, var(--primary) 40%, transparent);
   }
@@ -2191,10 +2218,12 @@ body[data-theme-content-layout="centered"] .content-container {
     -webkit-backdrop-filter: blur(4px);
     transition: color 200ms, background-color 200ms, border-color 200ms, box-shadow 200ms;
   }
+
   .glass-field.glass-field:hover {
     border-color: var(--outline-variant);
     background-color: var(--surface-container-lowest);
   }
+
   .glass-field.glass-field:focus,
   .glass-field.glass-field:focus-visible {
     border-color: color-mix(in oklch, var(--primary) 40%, transparent);
@@ -2202,12 +2231,15 @@ body[data-theme-content-layout="centered"] .content-container {
     box-shadow: 0 0 0 2px color-mix(in oklch, var(--primary) 20%, transparent);
     outline: none;
   }
+
   .dark .glass-field.glass-field {
     background-color: color-mix(in oklch, var(--surface-container-low) 40%, transparent);
   }
+
   .dark .glass-field.glass-field:hover {
     background-color: color-mix(in oklch, var(--surface-container-low) 60%, transparent);
   }
+
   .dark .glass-field.glass-field:focus,
   .dark .glass-field.glass-field:focus-visible {
     background-color: color-mix(in oklch, var(--surface-container-low) 70%, transparent);
@@ -2441,9 +2473,13 @@ body[data-theme-content-layout="centered"] .content-container {
 }
 
 @keyframes typingBounce {
-  0%, 60%, 100% {
+
+  0%,
+  60%,
+  100% {
     transform: translateY(0);
   }
+
   30% {
     transform: translateY(-4px);
   }

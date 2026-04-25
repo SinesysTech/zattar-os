@@ -27,6 +27,8 @@ export interface DataShellProps extends React.HTMLAttributes<HTMLDivElement> {
   actionButton?: DataShellActionButton;
   /** Se true, aplica overflow-auto ao conteúdo para rolagem local (útil em diálogos ou contêineres de altura fixa) */
   scrollableContent?: boolean;
+  /** Densidade visual da shell */
+  density?: 'comfortable' | 'compact';
 }
 
 /**
@@ -83,6 +85,7 @@ export function DataShell({
   // actionButton is now passed directly to DataTableToolbar, not via cloneElement
   actionButton: _actionButton,
   scrollableContent = false,
+  density = 'comfortable',
   ...props
 }: DataShellProps) {
   return (
@@ -90,6 +93,7 @@ export function DataShell({
       role="region"
       aria-label={ariaLabel}
       data-slot="data-shell"
+      data-density={density}
       className={cn('w-full', className)}
       {...props}
     >

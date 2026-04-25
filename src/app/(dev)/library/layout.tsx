@@ -34,6 +34,7 @@ const NAV: NavSection[] = [
     title: 'Visual Diff',
     items: [
       { href: '/library/visual-diff/widgets', label: 'Widgets — Antes vs Depois', status: 'new' },
+      { href: '/library/visual-diff/expedientes-pulse', label: 'Expedientes — Cards de Status', status: 'new' },
     ],
   },
   {

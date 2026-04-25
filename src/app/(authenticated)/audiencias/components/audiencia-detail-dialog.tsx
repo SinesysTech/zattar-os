@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Text } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { AudienciaStatusBadge } from './audiencia-status-badge';
 import { AudienciaIndicadorBadges } from './audiencia-indicador-badges';
 import { AudienciaTimeline } from './audiencia-timeline';
@@ -409,9 +409,9 @@ export function AudienciaDetailDialog({
     audiencia && !isLoading && !error ? (
       <div className="mx-5 mt-3 rounded-xl border border-primary/15 bg-primary/5 p-4">
         <div className="mb-3.5 min-w-0">
-          <p className="text-[15px] font-semibold leading-tight text-foreground">
+          <Heading level="subsection" as="h4" className="leading-tight">
             {audiencia.tipoDescricao || 'Audiência'}
-          </p>
+          </Heading>
           {dataInicio && dataFim && (
             <Text variant="caption" as="p" className="mt-0.5 capitalize text-muted-foreground">
               {format(dataInicio, 'EEE, dd MMM yyyy', { locale: ptBR })}
@@ -527,7 +527,7 @@ export function AudienciaDetailDialog({
               <Button
                 size="sm"
                 asChild
-                className="h-7 gap-1.5 rounded-lg px-2.5 text-[11.5px]"
+                className="h-8 gap-1.5 rounded-lg px-3 text-caption"
               >
                 <a
                   href={audiencia.urlAudienciaVirtual}
@@ -542,7 +542,7 @@ export function AudienciaDetailDialog({
               <Button
                 size="sm"
                 disabled
-                className="h-7 gap-1.5 rounded-lg px-2.5 text-[11.5px]"
+                className="h-8 gap-1.5 rounded-lg px-3 text-caption"
               >
                 <Video className="size-3" />
                 Entrar na sala virtual
@@ -554,7 +554,7 @@ export function AudienciaDetailDialog({
               size="sm"
               variant="outline"
               asChild
-              className="h-7 gap-1.5 rounded-lg px-2.5 text-[11.5px]"
+              className="h-8 gap-1.5 rounded-lg px-3 text-caption"
             >
               <a href={pjeUrl} target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="size-3" />
@@ -566,7 +566,7 @@ export function AudienciaDetailDialog({
               size="sm"
               variant="outline"
               disabled
-              className="h-7 gap-1.5 rounded-lg px-2.5 text-[11.5px]"
+              className="h-8 gap-1.5 rounded-lg px-3 text-caption"
             >
               <ExternalLink className="size-3" />
               Abrir no PJe
@@ -593,7 +593,7 @@ export function AudienciaDetailDialog({
                   )}
                 </div>
                 <div className="flex items-center gap-1">
-                  <Button variant="ghost" size="sm" asChild className="h-7 px-2 text-[11px]">
+                  <Button variant="ghost" size="sm" asChild className="h-7 px-2 text-micro-caption">
                     <a href={audiencia.urlAtaAudiencia} target="_blank" rel="noopener noreferrer">
                       Baixar
                     </a>
@@ -696,7 +696,7 @@ export function AudienciaDetailDialog({
                       </Text>
                       {urlObrigatoriaFaltando && (
                         <span
-                          className="inline-flex items-center gap-1 rounded-full bg-warning/12 px-1.5 py-px text-[9px] font-semibold uppercase tracking-[0.08em] text-warning"
+                          className="inline-flex items-center gap-1 rounded-full bg-warning/12 px-1.5 py-px text-micro-badge font-semibold uppercase tracking-[0.08em] text-warning"
                           role="status"
                           aria-label="Campo obrigatório não preenchido"
                         >
@@ -789,7 +789,7 @@ export function AudienciaDetailDialog({
                       </Text>
                       {enderecoObrigatorioFaltando && (
                         <span
-                          className="inline-flex items-center gap-1 rounded-full bg-warning/12 px-1.5 py-px text-[9px] font-semibold uppercase tracking-[0.08em] text-warning"
+                          className="inline-flex items-center gap-1 rounded-full bg-warning/12 px-1.5 py-px text-micro-badge font-semibold uppercase tracking-[0.08em] text-warning"
                           role="status"
                           aria-label="Campo obrigatório não preenchido"
                         >

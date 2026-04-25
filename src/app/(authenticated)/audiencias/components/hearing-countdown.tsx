@@ -69,7 +69,7 @@ export function HearingCountdown({ targetDate, className, compact = false }: Hea
 
   if (compact) {
     return (
-      <span className={cn("text-[11px] tabular-nums font-semibold", urgencyColor, className)}>
+      <span className={cn("text-caption tabular-nums font-semibold", urgencyColor, className)}>
         {timeLeft.hours > 0 ? `${timeLeft.hours}h ` : ""}{timeLeft.minutes}min
       </span>
     );
@@ -81,11 +81,11 @@ export function HearingCountdown({ targetDate, className, compact = false }: Hea
         {timeLeft.hours > 0 && (
           <>
             <span className={cn("text-sm font-bold", urgencyColor)}>{pad(timeLeft.hours)}</span>
-            <span className="text-[9px] text-muted-foreground/55">:</span>
+            <span className="text-micro-caption text-muted-foreground/60">:</span>
           </>
         )}
         <span className={cn("text-sm font-bold", urgencyColor)}>{pad(timeLeft.minutes)}</span>
-        <span className="text-[9px] text-muted-foreground/55">:</span>
+        <span className="text-micro-caption text-muted-foreground/60">:</span>
         <span className={cn("text-sm font-bold", urgencyColor)}>{pad(timeLeft.seconds)}</span>
       </div>
     </div>

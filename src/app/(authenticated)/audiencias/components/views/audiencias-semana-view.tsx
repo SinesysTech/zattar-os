@@ -8,7 +8,7 @@
 
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   startOfWeek,
   endOfWeek,
@@ -24,9 +24,15 @@ import {
   ChevronRight,
   Video,
   Building2,
+  Clock3,
+  AlertTriangle,
+  CheckCircle2,
+  CalendarDays,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { GlassPanel } from '@/components/shared/glass-panel';
+import { Text } from '@/components/ui/typography';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { Audiencia } from '../../domain';
 import { StatusAudiencia, GRAU_TRIBUNAL_LABELS } from '../../domain';
 import { calcPrepItems, calcPrepScore } from '../prep-score';
@@ -61,6 +67,84 @@ function fmtTime(iso: string): string {
   }
 }
 
+function getDayKey(date: Date): string {
+  return format(date, 'yyyy-MM-dd');
+}
+
+function getAudienciaTiming(audiencia: Audiencia, now: Date) {
+  try {
+    const start = parseISO(audiencia.dataInicio);
+    const end = parseISO(audiencia.dataFim);
+    return {
+      isPast: end < now,
+      isOngoing: start <= now && end >= now,
+      isUpcoming: start > now,
+    };
+  } catch {
+    return {
+      isPast: false,
+      isOngoing: false,
+      isUpcoming: false,
+    };
+  }
+}
+
+function getDaySummary(audiencias: Audiencia[]) {
+  const now = new Date();
+  const ongoing = audiencias.filter((a) => getAudienciaTiming(a, now).isOngoing);
+  const upcoming = audiencias.filter(
+    (a) => a.status === StatusAudiencia.Marcada && getAudienciaTiming(a, now).isUpcoming,
+  );
+  const completed = audiencias.filter(
+    (a) => a.status === StatusAudiencia.Finalizada || a.status === StatusAudiencia.Cancelada || getAudienciaTiming(a, now).isPast,
+  );
+  const lowPrep = audiencias.filter(
+    (a) => a.status === StatusAudiencia.Marcada && calcPrepScore(calcPrepItems(a)) < 50,
+  );
+  const semResponsavel = audiencias.filter((a) => !a.responsavelId);
+  const semSala = audiencias.filter(
+    (a) => (a.modalidade === 'virtual' || a.modalidade === 'hibrida') && !a.urlAudienciaVirtual,
+  );
+  const avgPrep = audiencias.length > 0
+    ? Math.round(audiencias.reduce((acc, a) => acc + calcPrepScore(calcPrepItems(a)), 0) / audiencias.length)
+    : 0;
+
+  return {
+    total: audiencias.length,
+    ongoing,
+    upcoming,
+    completed,
+    lowPrep,
+    semResponsavel,
+    semSala,
+    avgPrep,
+    nextAudiencia: upcoming[0] ?? ongoing[0] ?? null,
+  };
+}
+
+function getGroupedAudiencias(audiencias: Audiencia[]) {
+  const now = new Date();
+  const emAndamento = audiencias.filter((a) => getAudienciaTiming(a, now).isOngoing);
+  const proximas = audiencias.filter(
+    (a) =>
+      a.status === StatusAudiencia.Marcada &&
+      !getAudienciaTiming(a, now).isOngoing &&
+      !getAudienciaTiming(a, now).isPast,
+  );
+  const encerradas = audiencias.filter(
+    (a) =>
+      a.status === StatusAudiencia.Finalizada ||
+      a.status === StatusAudiencia.Cancelada ||
+      getAudienciaTiming(a, now).isPast,
+  );
+
+  return [
+    { key: 'em-andamento', title: 'Em andamento', items: emAndamento, tone: 'success' as const },
+    { key: 'proximas', title: 'Próximas', items: proximas, tone: 'primary' as const },
+    { key: 'encerradas', title: 'Encerradas', items: encerradas, tone: 'muted' as const },
+  ].filter((group) => group.items.length > 0);
+}
+
 // ─── Component ────────────────────────────────────────────────────────────
 
 export function AudienciasSemanaView({
@@ -72,6 +156,7 @@ export function AudienciasSemanaView({
   usuarios,
   onResponsavelChange,
 }: AudienciasSemanaViewProps) {
+  const [selectedDay, setSelectedDay] = useState<string>('');
   const weekStart = useMemo(
     () => startOfWeek(currentDate, { locale: ptBR, weekStartsOn: 1 }),
     [currentDate],
@@ -90,7 +175,7 @@ export function AudienciasSemanaView({
   const audienciasByDay = useMemo(() => {
     const map = new Map<string, Audiencia[]>();
     weekDays.forEach((day) => {
-      const key = format(day, 'yyyy-MM-dd');
+      const key = getDayKey(day);
       const dayAudiencias = audiencias
         .filter((a) => {
           try {
@@ -104,6 +189,13 @@ export function AudienciasSemanaView({
     });
     return map;
   }, [audiencias, weekDays]);
+
+  useEffect(() => {
+    if (weekDays.length === 0) return;
+    const todayInWeek = weekDays.find((day) => isToday(day));
+    const nextSelected = todayInWeek ? getDayKey(todayInWeek) : getDayKey(weekDays[0]);
+    setSelectedDay(nextSelected);
+  }, [weekStart, weekDays]);
 
   const handlePrevWeek = () => {
     const d = new Date(currentDate);
@@ -134,7 +226,7 @@ export function AudienciasSemanaView({
         <button
           onClick={handleToday}
           className={cn(
-            'px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer',
+            'px-2.5 py-1 rounded-lg text-caption font-medium transition-colors cursor-pointer',
             isCurrentWeek ? 'bg-primary/12 text-primary' : 'bg-border/8 text-muted-foreground/50 hover:bg-border/15',
           )}
         >
@@ -146,61 +238,233 @@ export function AudienciasSemanaView({
         <span className="text-sm font-medium capitalize ml-1">{weekLabel}</span>
       </div>
 
-      {/* Week Grid — 5 colunas (seg-sex), items-start permite alturas independentes */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-start">
-        {weekDays.map((day) => {
-          const key = format(day, 'yyyy-MM-dd');
-          const dayAudiencias = audienciasByDay.get(key) ?? [];
-          const today = isToday(day);
+      <Tabs value={selectedDay} onValueChange={setSelectedDay} className="space-y-4">
+        <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto rounded-2xl bg-transparent p-0">
+          {weekDays.map((day) => {
+            const key = getDayKey(day);
+            const dayAudiencias = audienciasByDay.get(key) ?? [];
+            const lowPrepCount = dayAudiencias.filter(
+              (a) => a.status === StatusAudiencia.Marcada && calcPrepScore(calcPrepItems(a)) < 50,
+            ).length;
+            const ongoingCount = dayAudiencias.filter((a) => getAudienciaTiming(a, new Date()).isOngoing).length;
+            const today = isToday(day);
 
-          return (
-            <GlassPanel
-              key={key}
-              depth={today ? 2 : 1}
-              className="p-4 min-h-40"
-            >
-              {/* Day header */}
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
+            return (
+              <TabsTrigger
+                key={key}
+                value={key}
+                className={cn(
+                  'min-w-40 rounded-2xl border border-border/30 bg-card/55 px-4 py-3 text-left data-[state=active]:border-primary/25 data-[state=active]:bg-card',
+                  'flex flex-col items-start gap-1.5',
+                )}
+              >
+                <div className="flex w-full items-center justify-between gap-2">
                   <span className={cn(
-                    'text-[10px] font-semibold uppercase tracking-wider',
-                    today ? 'text-primary' : 'text-muted-foreground/55',
+                    'text-xs font-semibold uppercase tracking-wider',
+                    today ? 'text-primary' : 'text-muted-foreground/60',
                   )}>
-                    {format(day, 'EEE', { locale: ptBR })}
+                    {format(day, 'EEEE', { locale: ptBR })}
                   </span>
                   <span className={cn(
-                    'text-sm font-bold tabular-nums',
-                    today
-                      ? 'bg-primary text-primary-foreground size-6 rounded-full flex items-center justify-center text-[11px]'
-                      : 'text-foreground/80',
+                    'rounded-full px-2 py-0.5 text-micro-caption tabular-nums',
+                    today ? 'bg-primary/12 text-primary' : 'bg-muted/60 text-muted-foreground/70',
                   )}>
                     {format(day, 'd')}
                   </span>
                 </div>
-                {dayAudiencias.length > 0 && (
-                  <span className="text-[10px] tabular-nums text-muted-foreground/45 font-medium">
-                    {dayAudiencias.length}
+                <div className="flex items-center gap-2 text-xs text-muted-foreground/65">
+                  <span>{dayAudiencias.length} no dia</span>
+                  {ongoingCount > 0 && <span className="text-success">• {ongoingCount} em curso</span>}
+                </div>
+                {lowPrepCount > 0 ? (
+                  <span className="text-micro-caption text-warning/80">
+                    {lowPrepCount} com preparo baixo
+                  </span>
+                ) : (
+                  <span className="text-micro-caption text-muted-foreground/45">
+                    agenda organizada
                   </span>
                 )}
-              </div>
+              </TabsTrigger>
+            );
+          })}
+        </TabsList>
 
-              {/* Audiencias */}
-              {dayAudiencias.length === 0 ? (
-                <div className="flex-1 flex items-center justify-center py-6">
-                  <span className="text-xs text-muted-foreground/30">—</span>
+        {weekDays.map((day) => {
+          const key = getDayKey(day);
+          const dayAudiencias = audienciasByDay.get(key) ?? [];
+          const dayIsToday = isToday(day);
+          const daySummary = getDaySummary(dayAudiencias);
+          const groupedAudiencias = getGroupedAudiencias(dayAudiencias);
+          const nextAudiencia = daySummary.nextAudiencia;
+
+          return (
+            <TabsContent key={key} value={key} className="mt-0 space-y-4">
+              <GlassPanel depth={dayIsToday ? 2 : 1} className="p-4">
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <CalendarDays className="size-4 text-primary/70" />
+                      <Text variant="overline" className="text-muted-foreground/70">
+                        {dayIsToday ? 'Hoje' : 'Dia selecionado'}
+                      </Text>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold capitalize">
+                        {format(day, "EEEE, d 'de' MMMM", { locale: ptBR })}
+                      </h3>
+                      <p className="text-sm text-muted-foreground/60">
+                        {dayIsToday
+                          ? 'Acompanhamento operacional da pauta do dia.'
+                          : 'Visão do preparo, sequência e encerramento das audiências deste dia.'}
+                      </p>
+                    </div>
+                    {nextAudiencia && (
+                      <p className="text-sm text-muted-foreground/70">
+                        Próxima prioridade: <span className="font-medium text-foreground/85">{fmtTime(nextAudiencia.dataInicio)}</span> · {nextAudiencia.tipoDescricao || 'Audiência'} · {nextAudiencia.numeroProcesso}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 lg:w-105">
+                    <SummaryMetric
+                      icon={Clock3}
+                      label="Em andamento"
+                      value={daySummary.ongoing.length}
+                      tone="success"
+                    />
+                    <SummaryMetric
+                      icon={ChevronRight}
+                      label="Próximas"
+                      value={daySummary.upcoming.length}
+                      tone="primary"
+                    />
+                    <SummaryMetric
+                      icon={AlertTriangle}
+                      label="Pendências"
+                      value={daySummary.lowPrep.length + daySummary.semResponsavel.length + daySummary.semSala.length}
+                      tone="warning"
+                    />
+                    <SummaryMetric
+                      icon={CheckCircle2}
+                      label="Preparo médio"
+                      value={`${daySummary.avgPrep}%`}
+                      tone="muted"
+                    />
+                  </div>
                 </div>
+
+                {(daySummary.lowPrep.length > 0 || daySummary.semResponsavel.length > 0 || daySummary.semSala.length > 0) && (
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {daySummary.lowPrep.length > 0 && (
+                      <StatusPill>
+                        {daySummary.lowPrep.length} com preparo abaixo de 50%
+                      </StatusPill>
+                    )}
+                    {daySummary.semResponsavel.length > 0 && (
+                      <StatusPill>
+                        {daySummary.semResponsavel.length} sem responsável
+                      </StatusPill>
+                    )}
+                    {daySummary.semSala.length > 0 && (
+                      <StatusPill>
+                        {daySummary.semSala.length} sem link da sala virtual
+                      </StatusPill>
+                    )}
+                  </div>
+                )}
+              </GlassPanel>
+
+              {dayAudiencias.length === 0 ? (
+                <GlassPanel className="p-10 text-center">
+                  <p className="text-sm font-medium text-foreground/75">
+                    Nenhuma audiência neste dia útil.
+                  </p>
+                  <p className="mt-1 text-sm text-muted-foreground/55">
+                    Use as tabs para revisar outra pauta da semana.
+                  </p>
+                </GlassPanel>
               ) : (
-                <div className="space-y-2">
-                  {dayAudiencias.map((a) => (
-                    <WeekDayCard key={a.id} audiencia={a} onClick={() => onViewDetail(a)} responsavelNomes={responsavelNomes} usuarios={usuarios} onResponsavelChange={onResponsavelChange} />
+                <div className="space-y-4">
+                  {groupedAudiencias.map((group) => (
+                    <section key={group.key} className="space-y-2">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-2">
+                          <span className={cn(
+                            'size-2 rounded-full',
+                            group.tone === 'success' && 'bg-success',
+                            group.tone === 'primary' && 'bg-primary',
+                            group.tone === 'muted' && 'bg-muted-foreground/35',
+                          )} />
+                          <h4 className="text-sm font-semibold text-foreground/85">
+                            {group.title}
+                          </h4>
+                        </div>
+                        <span className="text-micro-caption tabular-nums text-muted-foreground/55">
+                          {group.items.length}
+                        </span>
+                      </div>
+                      <div className="space-y-2">
+                        {group.items.map((a) => (
+                          <WeekDayCard
+                            key={a.id}
+                            audiencia={a}
+                            onClick={() => onViewDetail(a)}
+                            responsavelNomes={responsavelNomes}
+                            usuarios={usuarios}
+                            onResponsavelChange={onResponsavelChange}
+                          />
+                        ))}
+                      </div>
+                    </section>
                   ))}
                 </div>
               )}
-            </GlassPanel>
+            </TabsContent>
           );
         })}
+      </Tabs>
+    </div>
+  );
+}
+
+function SummaryMetric({
+  icon: Icon,
+  label,
+  value,
+  tone,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  value: string | number;
+  tone: 'primary' | 'success' | 'warning' | 'muted';
+}) {
+  return (
+    <div className="rounded-2xl border border-border/30 bg-background/55 px-3 py-2.5">
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-micro-caption uppercase tracking-wider text-muted-foreground/55">
+          {label}
+        </span>
+        <Icon className={cn(
+          'size-3.5',
+          tone === 'primary' && 'text-primary/70',
+          tone === 'success' && 'text-success/70',
+          tone === 'warning' && 'text-warning/75',
+          tone === 'muted' && 'text-muted-foreground/55',
+        )} />
+      </div>
+      <div className="mt-1 text-lg font-semibold tabular-nums text-foreground/85">
+        {value}
       </div>
     </div>
+  );
+}
+
+function StatusPill({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="rounded-full border border-border/30 bg-background/60 px-2.5 py-1 text-micro-caption text-muted-foreground/70">
+      {children}
+    </span>
   );
 }
 
@@ -241,13 +505,17 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
         </span>
         <div className="flex items-center gap-1.5">
           {isOngoing && <span className="size-2 rounded-full bg-success animate-pulse" />}
-          {isFinalizada && <span className="text-[9px] font-semibold text-success px-1.5 py-0.5 rounded-full bg-success/15">OK</span>}
-          <span className={cn(
-            'text-[9px] font-bold tabular-nums px-1.5 py-0.5 rounded-full',
+          {isFinalizada && <span className="text-micro-caption font-semibold text-success px-1.5 py-0.5 rounded-full bg-success/15">OK</span>}
+          <Text
+            variant="micro-badge"
+            as="span"
+            className={cn(
+            'font-semibold tabular-nums px-1.5 py-0.5 rounded-full',
             prepStatus === 'good' ? 'bg-success/15 text-success' : prepStatus === 'warning' ? 'bg-warning/15 text-warning' : 'bg-destructive/15 text-destructive',
-          )}>
+          )}
+          >
             {prepScore}%
-          </span>
+          </Text>
         </div>
       </div>
 
@@ -258,18 +526,18 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
         </p>
         <div className="flex items-center gap-1 shrink-0">
           {isVirtual ? <Video className="size-2.5 text-info/60" /> : audiencia.modalidade === 'presencial' ? <Building2 className="size-2.5 text-warning/60" /> : null}
-          <span className="text-[9px] text-muted-foreground/55">
+          <span className="text-micro-caption text-muted-foreground/60">
             {audiencia.modalidade === 'virtual' ? 'Virtual' : audiencia.modalidade === 'presencial' ? 'Presencial' : audiencia.modalidade === 'hibrida' ? 'Híbrida' : ''}
           </span>
         </div>
         {audiencia.urlAudienciaVirtual && isVirtual && (
-          <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-info/15 text-info/70 shrink-0">Sala</span>
+          <span className="text-micro-caption font-semibold px-1.5 py-0.5 rounded bg-info/15 text-info/70 shrink-0">Sala</span>
         )}
       </div>
 
       {/* 3. Partes */}
       {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
-        <p className="text-[10px] text-muted-foreground/55 mt-1 wrap-break-word leading-snug">
+        <p className="text-micro-caption text-muted-foreground/65 mt-1 wrap-break-word leading-snug">
           {audiencia.poloAtivoNome || '—'} <span className="text-muted-foreground/35">vs</span> {audiencia.poloPassivoNome || '—'}
         </p>
       )}
@@ -278,12 +546,12 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
       {audiencia.numeroProcesso && (
         <div className="flex items-center gap-1.5 mt-1 min-w-0">
           {audiencia.trt && (
-            <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary/70 shrink-0">{audiencia.trt}</span>
+            <span className="text-micro-caption font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary/70 shrink-0">{audiencia.trt}</span>
           )}
           {audiencia.grau && (
-            <span className="text-[9px] text-muted-foreground/45 shrink-0">{GRAU_TRIBUNAL_LABELS[audiencia.grau]}</span>
+            <span className="text-micro-caption text-muted-foreground/50 shrink-0">{GRAU_TRIBUNAL_LABELS[audiencia.grau]}</span>
           )}
-          <span className="text-[10px] text-muted-foreground/60 tabular-nums truncate">
+          <span className="text-micro-caption text-muted-foreground/65 tabular-nums truncate">
             {audiencia.numeroProcesso}
           </span>
         </div>
@@ -291,14 +559,14 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
 
       {/* 5. Órgão jurisdicional */}
       {audiencia.orgaoJulgadorOrigem && (
-        <p className="text-[9px] text-muted-foreground/45 mt-0.5 truncate" title={audiencia.orgaoJulgadorOrigem}>
+        <p className="text-micro-caption text-muted-foreground/50 mt-0.5 truncate" title={audiencia.orgaoJulgadorOrigem}>
           {audiencia.orgaoJulgadorOrigem}
         </p>
       )}
 
       {/* 6. Observações (truncado) */}
       {audiencia.observacoes && (
-        <p className="text-[9px] text-muted-foreground/40 mt-1 truncate italic" title={audiencia.observacoes}>
+        <p className="text-micro-caption text-muted-foreground/45 mt-1 truncate italic" title={audiencia.observacoes}>
           {audiencia.observacoes}
         </p>
       )}
@@ -316,16 +584,16 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
             <ResponsavelTriggerContent
               responsavelId={audiencia.responsavelId}
               usuarios={usuarios}
-              size="sm"
+              size="xs"
             />
           </AudienciaResponsavelPopover>
         ) : (
           audiencia.responsavelId && responsavelNomes?.get(audiencia.responsavelId) ? (
-            <span className="text-[9px] text-muted-foreground/55">
+            <span className="text-micro-caption text-muted-foreground/60">
               {responsavelNomes.get(audiencia.responsavelId)}
             </span>
           ) : (
-            <span className="text-[9px] italic text-warning/60">Sem resp.</span>
+            <span className="text-micro-caption italic text-warning/60">Sem resp.</span>
           )
         )}
       </div>

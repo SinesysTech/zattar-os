@@ -69,17 +69,17 @@ function _FilterChip({
       type="button"
       onClick={onClick}
       className={cn(
-        'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
+        'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 font-medium transition-colors cursor-pointer',
         active
           ? 'border-primary/20 bg-primary/5 text-primary'
           : 'border-border/15 text-muted-foreground/60 hover:bg-muted/30'
       )}
     >
       {icon}
-      <span>{label}</span>
+      <span className="text-micro-caption">{label}</span>
       {count !== undefined && count > 0 && (
         <span className={cn(
-          'text-[9px] px-1 py-px rounded-full tabular-nums',
+          'text-micro-caption px-1 py-px rounded-full tabular-nums',
           active ? 'bg-primary/10' : 'bg-muted/50'
         )}>
           {count}
@@ -117,7 +117,7 @@ function FilterDropdownTrigger({
   return (
     <div
       className={cn(
-        'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
+        'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 font-medium transition-colors cursor-pointer',
         active
           ? 'border-primary/20 bg-primary/5 text-primary'
           : 'border-border/15 text-muted-foreground/60 hover:bg-muted/30',
@@ -125,7 +125,7 @@ function FilterDropdownTrigger({
       )}
     >
       {children}
-      <span>{label}</span>
+      <span className="text-micro-caption">{label}</span>
       {active && onClear ? (
         <span
           role="button"
@@ -196,14 +196,14 @@ function StatusFilter({
                 setOpen(false);
               }}
               className={cn(
-                'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
+                'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
                 selected === opt.value
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70'
               )}
             >
               <span>{opt.label}</span>
-              <span className="text-[9px] ml-auto tabular-nums opacity-50">{countMap[opt.value]}</span>
+              <span className="text-micro-caption ml-auto tabular-nums opacity-50">{countMap[opt.value]}</span>
               {selected === opt.value && <Check className="size-3" />}
             </button>
           ))}
@@ -255,7 +255,7 @@ function ResponsavelFilter({
             {selectedUser && (
               <Avatar size="xs" className="border size-4">
                 <AvatarImage src={selectedUser.avatarUrl || undefined} />
-                <AvatarFallback className="text-[6px]">
+                <AvatarFallback className="text-micro-badge">
                   {selectedUser.nomeExibicao.slice(0, 2).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
@@ -273,7 +273,7 @@ function ResponsavelFilter({
                 setOpen(false);
               }}
               className={cn(
-                'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
+                'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
                 selected === 'meus'
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70'
@@ -289,19 +289,19 @@ function ResponsavelFilter({
                 setOpen(false);
               }}
               className={cn(
-                'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
+                'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
                 selected === 'sem_responsavel'
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70'
               )}
             >
               <span>Sem responsável</span>
-              <span className="text-[9px] ml-auto tabular-nums opacity-50">{semResponsavelCount}</span>
+              <span className="text-micro-caption ml-auto tabular-nums opacity-50">{semResponsavelCount}</span>
               {selected === 'sem_responsavel' && <Check className="size-3" />}
             </button>
           </div>
           <div className="px-3 pt-2 pb-1.5">
-            <CommandInput placeholder="Buscar usuário..." className="h-8 text-xs rounded-lg" />
+            <CommandInput placeholder="Buscar usuário..." className="h-8 text-micro-caption rounded-lg" />
           </div>
           <CommandList className="max-h-44 px-1.5 pb-1.5">
             <CommandEmpty>
@@ -316,11 +316,11 @@ function ResponsavelFilter({
                     onChange(selected === usuario.id ? null : usuario.id);
                     setOpen(false);
                   }}
-                  className="gap-2 rounded-lg text-xs px-2 py-1.5"
+                  className="gap-2 rounded-lg text-micro-caption px-2 py-1.5"
                 >
-                  <Avatar size="xs" className="border size-5">
+                  <Avatar size="xs" className="border size-4">
                     <AvatarImage src={usuario.avatarUrl || undefined} />
-                    <AvatarFallback className="text-[7px]">
+                    <AvatarFallback className="text-micro-badge">
                       {usuario.nomeExibicao.slice(0, 2).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
@@ -384,7 +384,7 @@ function TRTFilter({
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-48')} align="start" side="bottom">
         <Command className="bg-transparent">
           <div className="px-3 pt-3 pb-1.5">
-            <CommandInput placeholder="Buscar TRT..." className="h-8 text-xs rounded-lg" />
+            <CommandInput placeholder="Buscar TRT..." className="h-8 text-micro-caption rounded-lg" />
           </div>
           <CommandList className="max-h-52 px-1.5 pb-1.5">
             <CommandEmpty>
@@ -396,7 +396,7 @@ function TRTFilter({
                   key={trt}
                   value={trt}
                   onSelect={() => handleToggle(trt)}
-                  className="gap-2 rounded-lg text-xs px-2 py-1.5"
+                  className="gap-2 rounded-lg text-micro-caption px-2 py-1.5"
                 >
                   <div className={cn(
                     'size-3.5 rounded border flex items-center justify-center',
@@ -461,7 +461,7 @@ function ModalidadeFilter({
                 setOpen(false);
               }}
               className={cn(
-                'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
+                'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
                 selected === opt.value
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70'

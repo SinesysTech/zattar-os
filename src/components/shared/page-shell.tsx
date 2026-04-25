@@ -41,6 +41,8 @@ interface PageShellProps {
   className?: string;
   /** Renderiza um badge antes do título */
   badge?: React.ReactNode;
+  /** Densidade visual da página */
+  density?: 'comfortable' | 'compact';
 }
 
 export function PageShell({
@@ -50,11 +52,15 @@ export function PageShell({
   children,
   className,
   badge,
+  density = 'comfortable',
 }: PageShellProps) {
   const hasHeader = title || description || actions || badge;
 
   return (
-    <main className={cn('flex-1 space-y-4', className)}>
+    <main
+      className={cn('flex-1 space-y-4', className)}
+      data-density={density}
+    >
       {hasHeader && (
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="space-y-1.5">

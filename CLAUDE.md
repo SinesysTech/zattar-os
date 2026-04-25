@@ -1,123 +1,147 @@
 # CLAUDE.md
 
-Este documento provê diretivas diretas e definitivas para ferramentas baseadas em CLI como o Claude Code ou Gemini.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Visão Geral do Projeto
+## Projeto
 
-**ZattarOS** (desenvolvido pela Synthropic) — Sistema corporativo para firmas legais. A base inteira usa linguagem de negócios em PT-BR.
-**Stack**: Next.js 16 (App Router + Turbopack), React 19, TypeScript 5, Supabase (RLS + pgvector), Redis, Tailwind CSS 4, shadcn/ui.
+**ZattarOS** (Synthropic) — sistema corporativo de gestão jurídica. Schema de banco, identificadores e termos de UI estão em **português**. Stack: Next.js 16 (App Router + Turbopack), React 19, TypeScript 5 estrito, Supabase (Postgres + RLS + pgvector), Redis, Tailwind 4, shadcn/ui (new-york).
 
-## Estilo de Comunicação
+Documentação complementar:
+- [`AGENTS.md`](./AGENTS.md) — visão concisa multi-plataforma.
+- [`docs/architecture/ARCHITECTURE.md`](./docs/architecture/ARCHITECTURE.md) — diagrama de camadas, Plate AI, RAG.
+- [`src/components/shared/AI_INSTRUCTIONS.md`](./src/components/shared/AI_INSTRUCTIONS.md) — padrões obrigatórios de UI (Glass / Neon Magistrate).
 
-**Código é implementação, conversa é negócio.** O usuário fala em linguagem natural de alto nível (o que quer que o sistema faça); você responde em linguagem natural sobre o que foi implementado. O código vive no diff — a conversa não precisa repetí-lo.
-
-**Regra absoluta — sem blocos de código em explicações, relatórios, resumos e conclusões**:
-
-- Ao **explicar** o que um módulo faz, o que foi alterado, como um fluxo funciona ou por que uma decisão foi tomada: descreva em prosa, citando **diretório, arquivo e papel** (ex: "a validação passou para `src/app/(authenticated)/expedientes/service.ts`, que agora delega ao repository em vez de montar o payload direto").
-- Ao **reportar** o fim de uma tarefa ou resumir o que foi feito: enumere as mudanças em prosa ou bullets conceituais — o que mudou, onde mudou, qual o efeito no comportamento. Nunca colar o trecho modificado como "prova".
-- Ao **concluir** (diagnóstico de bug, resultado de auditoria, veredito de revisão): descrever causa, efeito e remediação em linguagem de negócio/arquitetura, sem trechos literais.
-
-**O que continua permitido em blocos de código**:
-- Comandos de terminal que o usuário precisa executar (`npm run …`, `gh …`, `psql …`).
-- Literais curtos e isolados quando o valor importa mais que o contexto (um hash, um nome de env var, um UUID, um seletor CSS específico).
-- Diffs/trechos somente quando o usuário pedir explicitamente para revisar código.
-
-**O que é proibido em explicações**:
-- Reproduzir funções, componentes, SQL, JSX, JSON de configuração inteiros para "mostrar o que foi feito".
-- Blocos de código como substituto de prosa ("ficou assim:" seguido de 40 linhas).
-- Colar o conteúdo do diff no chat — o usuário já lê o diff no editor.
-
-O objetivo é leitura rápida: o usuário deve terminar a resposta sabendo **o que mudou, onde mora e qual o impacto** sem precisar processar sintaxe.
-
-## Comandos Chave
+## Comandos Essenciais
 
 ```bash
-npm run dev                          # Servidor local via Turbopack
-npm run type-check                   # Verificação de tipagem rígida
-npm run build:ci                     # Build CI com limite de RAM alto
-npm test                             # Todos os testes de unidade
-npm run test:e2e                     # Scrappers e fluxos end-to-end
-npm run check:architecture           # Valida violações arquiteturais do FSD
-npm run validate:exports             # Valida barreiras
-npm run audit:design-system          # Auditoria completa do DS (KPIs, cobertura, ofensores)
-npm run audit:design-system:save     # Salva snapshot em design-system/reports/
-npm run audit:design-system:ci       # CI mode — exit 1 se KPI bloqueador falhar
+# Dev
+npm run dev                       # Turbopack, NODE_OPTIONS=--max-old-space-size=8192
+npm run dev:webpack               # Fallback sem Turbopack
+
+# Validação
+npm run type-check                # tsc --noEmit
+npm run lint                      # ESLint, --max-warnings=0
+npm run check:architecture        # Bloqueia deep-imports e padrões legados (@/features, @/backend, @/core, @/app/_lib)
+npm run validate:exports          # Valida barrel files (index.ts) dos módulos
+npm run validate:design-system    # Audita uso de tokens em componentes
+
+# Build
+npm run build                     # check:architecture + webpack build (8GB heap)
+npm run build:ci                  # Turbopack, 6GB heap, sem PWA — usado em Cloudron/CI
+
+# Testes
+npm test                          # Jest 30 (dois projects: node + jsdom)
+npx jest <caminho/do/teste>       # Teste único (sempre por path, não há atalho global)
+npm run test:actions              # Apenas Server Actions
+npm run test:e2e                  # Playwright
+
+# MCP / IA
+npm run mcp:check                 # Verifica registry em src/lib/mcp/registry.ts
+npm run mcp:dev                   # Servidor MCP standalone (debug)
+npm run ai:reindex                # Reindexa embeddings no pgvector
+
+# Tipos do banco
+npm run db:types                  # Regenera src/types/database.types.ts
+npm run db:types:check            # Valida que types estão sincronizados com Supabase
 ```
 
-## Arquitetura de Módulos (FSD + Colocation)
+## Arquitetura: FSD Colocated
 
-Todos os domínios funcionais do ZattarOS residem sob a hierarquia de rotas em `src/app/(authenticated)`.
+Feature-Sliced Design **colocalizado com as rotas**. Cada módulo é uma rota dentro de `src/app/(authenticated)/{módulo}/` e contém toda a lógica daquele domínio.
 
-```text
-src/
-├── app/
-│   ├── (authenticated)/         # FSD Area (admin)
-│   │   ├── processos/           # Módulo `processos`
-│   │   │   ├── domain.ts        # Tipos/Schemas (Zod)
-│   │   │   ├── service.ts       # Lógica e regras
-│   │   │   ├── repository.ts    # Fetch de Dados
-│   │   │   ├── actions/         # Actions que invocam services (+ safe-action)
-│   │   │   ├── components/      # UI (React)
-│   │   │   ├── hooks/           # Interação UI/Logic
-│   │   │   ├── RULES.md         # Documento de Contexto
-│   │   │   ├── index.ts         # Exportação autorizada
-│   │   │   └── page.tsx         # Página e Rota Front-End
-│   └── (assinatura-digital)/    # Rota pública (wizard + assinatura por token)
-│       ├── _wizard/             # Steps do wizard de formulário público
-│       ├── formulario/          # Rota dinâmica pública
-│       └── assinatura/[token]/  # Rota de assinatura por token
-├── shared/                      # Domínios compartilhados entre rotas públicas e admin
-│   └── assinatura-digital/      # Store, types, services, actions, inputs, pdf, signature
-├── components/                  # UI Shared, Shadcn, Shells, Layouts
-├── lib/                         # Core infra (Supabase, MCP, redis, AI)
+### Estrutura obrigatória de cada módulo
+
+```
+src/app/(authenticated)/{módulo}/
+  domain.ts        # Zod schemas, tipos, enums, regras puras (sem I/O)
+  service.ts       # Casos de uso (orquestração + regras de negócio)
+  repository.ts    # Apenas Supabase queries (isolado)
+  actions/         # Server Actions exportáveis (consumidas por UI E MCP)
+  components/      # UI React específica do domínio
+  page.tsx         # Rota Next
+  index.ts         # Barrel — ÚNICA API pública
+  RULES.md         # Regras de negócio do módulo (obrigatório para IA)
 ```
 
-**Convenção `shared/`**: quando um domínio é consumido por mais de uma rota (ex: público em `(assinatura-digital)/` + admin em `(authenticated)/...`) e/ou por API routes (`src/app/api/...`), o código compartilhado (store, types, services, actions, utils, validations, inputs genéricos) vive em `src/shared/<dominio>/`. Componentes exclusivos de uma rota ficam colocados naquela rota (`_wizard/`, `components/`, etc.). **Evita cross-group imports público↔authenticated**.
+**A migração `src/features/` → `app/(authenticated)/` está completa.** Qualquer import de `@/features/`, `@/backend/`, `@/core/` ou `@/app/_lib/` é tratado como violação legada por `scripts/dev-tools/architecture/check-architecture-imports.js` e quebra o build.
 
-**Backlog arquitetural** — migrar as rotas admin de `src/app/(authenticated)/assinatura-digital/` (e outros módulos espelhados) para um sistema de permissões por perfil no painel. Objetivo: uma única rota por domínio, com visibilidade de ações (criar/editar/apagar template, etc.) condicionada a `user.role === 'admin'` em vez de segregação por path. Não iniciar antes de terminar o redesign do fluxo público + testes.
+### Fluxo de dados
 
-**Regras Absolutas**:
-1. **Nada de Cross-Deep Imports**: Componentes de `processos` não podem importar de `financeiro/components/...`. Exija `import { x } from "@/app/(authenticated)/financeiro"`.
-2. **Uso de Action-Wrapper**: Se for criar Server Actions, embrulhe o método sob `authenticatedAction` (`@/lib/safe-action`).
-3. **Padrões de Shell UI**: Use componentes casca obrigatórios: `PageShell`, `DataShell`, `DialogFormShell` exportados em `@/components/shared`.
+```
+UI / MCP → actions/ (authenticatedAction + Zod) → service.ts → repository.ts → Supabase
+                                                        ↓
+                                          after() → indexação RAG (pgvector)
+```
 
-**Módulos Intencionalmente Minimais**:
-Alguns módulos sob `(authenticated)/` são propositalmente embrionários (proxies, sistemas auto-descritivos, cálculos puros, FSD aninhado em `feature/`). **Não tente "consertá-los" criando arquivos vazios** — eles têm `README.md` próprio explicando o estado intencional. Consulte [docs/architecture/MINIMAL_MODULES.md](docs/architecture/MINIMAL_MODULES.md) para a lista completa e os critérios de promoção.
+Toda action retorna `ActionResult<T> = { success, data?, error?, errors?, message }` (`src/lib/safe-action.ts`).
 
-## Design System — "Glass Briefing"
+### Regras invioláveis
 
-O ZattarOS usa o DS **Glass Briefing** — glassmorphism sutil sobre fundação sólida, OKLCH ancorado em hue 281° (Zattar Purple), tipografia Montserrat+Inter. **Toda UI admin DEVE aderir.**
+1. **Sem deep-imports cross-módulo.** `import { x } from "@/app/(authenticated)/{módulo}"` só. Importar de `components/`, `actions/`, `service.ts`, etc. de outro módulo é violação. Auto-imports (módulo para si mesmo) são permitidos.
+2. **Server Actions sempre via `authenticatedAction`** (de `@/lib/safe-action`). Nomenclatura: `actionCriar`, `actionListar`, `actionAtualizar`, `actionDeletar`. As actions são dual-use (UI via `FormData` e MCP via JSON) — não assuma um dos dois.
+3. **UI envelopada nos shells de `@/components/shared/`**: `PageShell`, `DataShell` + `DataTable` + `DataTableToolbar` + `DataPagination`, `DialogFormShell`, `EmptyState`. Os componentes legados `TableToolbar`, `TableWithToolbar`, `ResponsiveTable` estão **deprecados**.
+4. **Sem cores hardcoded em badges.** Use `getSemanticBadgeVariant()` de `@/lib/design-system`.
+5. **Glass Briefing / Neon Magistrate é mandatório** em painéis principais: `<GlassPanel depth={1|2|3}>` em vez de `bg-card`, `<AnimatedNumber>` em estatísticas, `<Sparkline>` em métricas com tendência. Detalhes em `src/components/shared/AI_INSTRUCTIONS.md`.
+6. **Sem componente `Sheet`.** Detail panels e formulários sempre usam `DialogFormShell` (centralizado).
+7. **Naming**: arquivos/pastas `kebab-case`, componentes/tipos `PascalCase`, funções `camelCase`, constantes `UPPER_SNAKE_CASE`, banco `snake_case`.
+8. **`src/types/database.types.ts` é gerado** (`npm run db:types`). Nunca editar manualmente.
 
-### Fontes (única verdade)
+### Path aliases (tsconfig.json)
 
-| Fonte | Papel |
+`@/*` → `src/*`, e os específicos `@/app/*`, `@/components/*`, `@/lib/*`, `@/hooks/*`, `@/types/*`, `@/types/domain/*`, `@/types/contracts/*`.
+
+## MCP (Model Context Protocol)
+
+O MCP server expõe Server Actions como ferramentas para agentes:
+- Endpoint: `GET/POST /api/mcp` (SSE).
+- Registro: `src/lib/mcp/registry.ts` — adicionar nova ferramenta significa registrar a action ali.
+- Rate limit/auth: reutilizado em `/api/plate/ai` (editor com Plate + AI SDK).
+- `npm run mcp:check` valida o registry; **deve passar antes de comitar** se você tocou em actions.
+
+## Camadas globais (`src/lib/`)
+
+| Pasta | Papel |
 |---|---|
-| [src/app/globals.css](src/app/globals.css) | Tokens canônicos (226 CSS variables + classes `.glass-*`) |
-| [src/lib/design-system/](src/lib/design-system/) | Mirror TS: `tokens.ts`, `token-registry.ts`, `semantic-tones.ts`, `variants.ts` |
-| [design-system/README.md](design-system/README.md) | Contrato narrativo (manifesto, voice, visual foundations, iconography) |
-| [design-system/VISUAL-REVIEW.md](design-system/VISUAL-REVIEW.md) | Checklist de auditoria visual por widget |
-| [src/app/(dev)/library/](src/app/(dev)/library/) | Playground viva (tokens, badges, shells) — `npm run dev` + `/library` |
-| `npm run audit:design-system` | Enforcement automático + KPIs + grade atual |
+| `safe-action.ts` | `authenticatedAction`, `publicAction`, `ActionResult`. Wrapper único para todas as Server Actions. |
+| `auth/` | `authenticateRequest`, sessão, JWT, RLS context. |
+| `supabase/` | Clientes server/browser (`@supabase/ssr`), tipados via `database.types.ts`. |
+| `ai/` | `embedding`, `indexing`, `retrieval`, `obterContextoRAG`. |
+| `mcp/` | `registry`, `server`, rate-limit. |
+| `redis/` | Cache opcional (`ENABLE_REDIS_CACHE`). |
+| `design-system/` | Tokens, `getSemanticBadgeVariant`, helpers de cor/spacing. |
 
-### Regras absolutas (bloqueadas pelo audit)
+## Testes
 
-1. **Zero cor literal** — sempre CSS var (`bg-primary`, `text-muted-foreground`, `border-outline-variant`) ou token de `@/lib/design-system`. `bg-blue-500`, `#hex` e OKLCH inline são bloqueados.
-2. **Containers via `<GlassPanel depth={1|2|3}>`** — depth 1 (widget padrão), 2 (KPI), 3 (ênfase). Dialogs/modais usam classes `glass-dialog` + `glass-dialog-overlay`.
-3. **Tipografia via `<Heading level>` + `<Text variant>`** — compor `font-heading text-2xl` manualmente é bloqueado. Variantes semânticas: `page`, `section`, `card`, `kpi-value`, `label`, `meta-label`, `caption`, `overline`.
-4. **Shared antes de novo** — verificar `@/components/shared/` e `@/components/ui/` (PageShell, DataShell, DialogFormShell, GlassPanel, TabPills, IconContainer, SemanticBadge, Heading, Text, BrandMark) antes de criar componente.
-5. **Dark mode obrigatório** — CSS variables já têm override `.dark`. Sidebar é sempre escura em ambos os modos. Nunca criar lógica condicional manual.
+Jest 30 com **dois projects paralelos**:
+- `node` — `__tests__/**/*.test.ts` em `app/(authenticated)/` e `lib/` (services, repositories, actions).
+- `jsdom` — `*.test.tsx` em `components/`, `hooks/`, `providers/`, `lib/` (UI/hooks).
 
-Detalhes de namespace (event, portal, chat, chart, user palette, MD3 surfaces), padrões de opacidade, animação e cópia em PT-BR vivem em [design-system/README.md](design-system/README.md). Não duplicar aqui.
+Coverage alvo (manter): ≥80% global, ≥90% para `domain/`+`service/`, ≥95% para `lib/utils/`.
 
-## Base de Dados (Supabase)
+Mocks centralizados em `src/__mocks__/` (Supabase, `next/headers`, `next/cache`, `server-only`, Radix UI, Copilotkit). E2E via Playwright (`playwright.config.ts`).
 
-- Todas as tabelas têm **RLS**.
-- Os scripts SQL situam-se em `supabase/migrations/`.
-- `database.types.ts` é autogerado.
+## Workflow
 
-## RAG e Integração LLM Compartilhada
+- **Solo-dev: sem PR.** Commits vão direto na branch (`master`). Não rodar `gh pr create`.
+- **Higiene de staging antes de commit**: rodar `git status --short` antes de `git commit` — `git add <arquivo>` não limpa staging alheio.
+- **Causa raiz, não paliativo.** Não há "quick fix"; toda correção deve atacar a causa arquitetural correta.
+- **Mensagens de commit em português**, padrão Conventional Commits (`feat:`, `fix:`, `refactor:`, `chore:`).
 
-- Entidades cruciais ao negócio disparam hooks `after()` do backend que processam e invocam as bibliotecas internas contidas em `src/lib/ai/indexing`.
-- Todas as **Server Actions publicadas** podem ser engajadas como *Ferramentas de IA* (Tools via Model Context Protocol), permitindo que agentes manipulem processos em CLI e na Web UI.
+## Deploy (Cloudron)
 
-*(Para o manual estendido de comportamento do software, diagramas SSE/MCP e troubleshooting, leia `docs/architecture/AGENTS.md` e `docs/architecture/ARCHITECTURE.md` em profundidade).*
+- App principal (ZattarOS): `npm run deploy:cloudron` (build local + push) ou `:remote` (build em runner).
+- Strapi CMS dos Insights vive em `~/Projetos/zattar-strapi` (repo separado).
+- **Cloudron CLI lê o manifest do CWD** — sempre concatenar `cd projeto && cloudron <cmd>` no MESMO comando bash.
+- Build em container Linux usa `experimental.cpus=2` no `next.config.ts` para evitar OOM em "Collecting page data" / "Generating static pages". Não baixar `--max-old-space-size` do `build:ci` sem medir o pico real.
+
+## Variáveis de ambiente críticas
+
+Sem elas, actions falham em runtime: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY`, `SUPABASE_SECRET_KEY`, `SERVICE_API_KEY`, `CRON_SECRET`. IA precisa de `OPENAI_API_KEY` e/ou `AI_GATEWAY_API_KEY`. Lista completa em `.env.example`.
+
+## Arquivos de referência (gold standard)
+
+- Tabela + dialogs: `src/app/(authenticated)/partes/components/clientes/clientes-table-wrapper.tsx`
+- Padrão de header com botão primário: `src/app/(authenticated)/audiencias/audiencias-client.tsx:231` (`Button size="sm" rounded-xl + Plus size-3.5`).
+- Detail dialog (sem `Sheet`): `src/app/(authenticated)/expedientes/components/expediente-visualizar-dialog.tsx`.
+
+Em qualquer dúvida sobre regras de negócio de um módulo, ler primeiro o `RULES.md` daquele módulo.

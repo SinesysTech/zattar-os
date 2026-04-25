@@ -38,7 +38,7 @@
 5. **Mobile-honest** — Responsive real. Escondemos o que não cabe, nunca comprimimos até ilegibilidade.
 6. **Tipografia é arquitetura** — Montserrat para títulos, Inter para conteúdo.
 7. **Animação é feedback, não espetáculo** — 150–300ms, `transform`/`opacity` apenas. Respeitar `prefers-reduced-motion`.
-8. **Tokens > classes > hex** — Semantic tokens vencem utility classes vencem valores literais. Nunca o inverso.
+8. **Primitives > Tokens > Classes > Hex** — Componentes (primitives) vencem tokens semânticos vencem utility classes vencem valores literais. Nunca o inverso.
 
 ---
 
@@ -117,10 +117,32 @@
 - **Montserrat** (heading + display) — títulos, KPIs grandes. `var(--font-heading)`.
 - **Manrope** (headline) — headlines em seções especiais e no assistente Pedrinho. `var(--font-headline)`.
 - **Geist Mono** — código, números de processo, datas. `var(--font-mono)`.
-
 **Root font-size real no app**: `18px` (não 16!). Todos `rem` são inflados. Para preview web neste projeto, normalizamos em 16px; o CSS final em produção deve usar `html{font-size:18px}`.
 
-Enforcement: usar `<Heading level="page|section|card|subsection|widget">` e `<Text variant="kpi-value|meta-label|caption|label|overline|micro-badge|…">`. Compor `font-heading text-2xl` manualmente é bloqueado por `audit:design-system`.
+### Eixo de Densidade (Density Axis)
+O sistema suporta dois eixos de densidade visual, controlados via cascade CSS (`data-density` attribute):
+- **Comfortable** (default): Otimizado para leitura e dashboards. Altura de controles 36px (`--density-control-h: 2.25rem`).
+- **Compact**: Otimizado para dashboards de alta densidade e cadastros longos (8+ campos). Altura de controles 32px (`--density-control-h: 2rem`).
+
+Propagado automaticamente por:
+- `<PageShell density="comfortable|compact">`
+- `<DialogFormShell density="comfortable|compact">` (default `compact`)
+- `<DataShell density="comfortable|compact">`
+- `<FormShell density="comfortable|compact">`
+
+Enforcement: O uso de `data-density` é monitorado por `audit:design-system`.
+
+### Primitivas de Layout
+Para evitar o uso de classes `flex`, `gap` e `padding` ad-hoc, use as primitivas:
+- **`<Stack gap="tight|default|loose|section|field">`**: Layout vertical (`flex-col`) com gaps semânticos.
+- **`<Inline gap="tight|default|loose">`**: Layout horizontal (`flex-row`) com alinhamento center e gaps semânticos.
+- **`<Inset variant="card|card-compact|dialog|page|section">`**: Wrapper de padding semântico.
+
+Consomem a tabela centralizada `SPACING_TOKENS`.
+
+### Tipografia
+
+Enforcement: usar `<Heading level="page|section|card|subsection|widget">` e `<Text variant="body|body-lg|body-sm|caption|label|overline|micro-badge|helper|…">`. Compor `font-heading text-2xl` manualmente é bloqueado por `audit:design-system` e ESLint `no-raw-typography-spacing`.
 
 ### Espaçamento (grid 4px)
 - Scale: 4 · 8 · 12 · 16 · 24 · 32 · 48 · 64

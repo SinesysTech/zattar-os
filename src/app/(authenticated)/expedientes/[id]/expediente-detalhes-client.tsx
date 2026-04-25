@@ -26,7 +26,7 @@ import {
 
 import { AmbientBackdrop } from '@/components/shared/ambient-backdrop';
 import { GlassPanel } from '@/components/shared/glass-panel';
-import { Text } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -172,7 +172,11 @@ export function ExpedienteDetalhesClient({
       <div className="relative z-10 flex flex-col gap-8">
         {/* ============================= BREADCRUMB ============================ */}
         <div className="flex items-center justify-between gap-4 flex-wrap">
-          <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.18em] text-muted-foreground/60">
+          <Text
+            variant="micro-caption"
+            as="div"
+            className="flex items-center gap-2 uppercase tracking-[0.18em] text-muted-foreground/60"
+          >
             <Link
               href="/expedientes"
               className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors"
@@ -184,7 +188,7 @@ export function ExpedienteDetalhesClient({
             <span className="text-foreground/80 tabular-nums">
               #{expedienteId.toString().padStart(6, '0')}
             </span>
-          </div>
+          </Text>
           <div className="flex items-center gap-1.5">
             <Button variant="outline" size="sm" className="rounded-full h-8 px-3 text-xs gap-1.5">
               <Download className="size-3" />
@@ -300,33 +304,38 @@ function HeroBlock({
         <div className="relative grid grid-cols-1 lg:grid-cols-[auto_1px_1fr] gap-8 lg:gap-10">
           {/* Countdown editorial */}
           <div className="flex flex-col gap-3">
-            <span
-              className={cn(
-                'text-[10px] font-mono font-semibold uppercase tracking-[0.22em]',
-                style.accent,
-              )}
+            <Text
+              variant="overline"
+              className={cn('tracking-[0.22em]', style.accent)}
             >
               {style.label}
-            </span>
+            </Text>
             <div className="flex items-baseline gap-3">
               <span
                 className={cn(
-                  'font-heading font-black leading-[0.85] tracking-tighter tabular-nums',
+                  'font-black leading-[0.85] tracking-tighter tabular-nums',
                   'text-[7rem] md:text-[8.5rem] lg:text-[9.5rem]',
                   style.accent,
                 )}
               >
                 {heroNumber}
               </span>
-              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-foreground/75 self-end pb-4">
+              <Text
+                variant="overline"
+                className="tracking-[0.2em] text-foreground/75 self-end pb-4"
+              >
                 {heroUnit}
-              </span>
+              </Text>
             </div>
             {prazoFormatted && (
-              <div className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground/70">
+              <Text
+                variant="micro-caption"
+                as="div"
+                className="flex items-center gap-2 uppercase tracking-wider text-muted-foreground/70"
+              >
                 <Clock className="size-3" />
-                <span className="uppercase tracking-wider">{prazoFormatted}</span>
-              </div>
+                <span>{prazoFormatted}</span>
+              </Text>
             )}
           </div>
 
@@ -340,15 +349,15 @@ function HeroBlock({
           <div className="flex flex-col gap-5 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               {tipoLabel && (
-                <span
+                <Text
+                  variant="micro-badge"
                   className={cn(
-                    'inline-flex items-center rounded-full px-2.5 py-1',
-                    'font-mono text-[10px] font-semibold uppercase tracking-wider',
+                    'inline-flex items-center rounded-full px-2.5 py-1 uppercase tracking-wider',
                     'bg-primary/10 text-primary ring-1 ring-inset ring-primary/20',
                   )}
                 >
                   {tipoLabel}
-                </span>
+                </Text>
               )}
               {expediente.baixadoEm ? (
                 <StatusChip icon={CheckCircle2} label="Baixado" tone="success" />
@@ -361,18 +370,27 @@ function HeroBlock({
             </div>
 
             <div className="space-y-1.5">
-              <h1 className="font-heading font-black tracking-tight text-foreground leading-[1.05] text-3xl md:text-4xl lg:text-[2.75rem]">
+              <Heading
+                level="page"
+                className="font-black tracking-tight text-foreground leading-[1.05] text-3xl md:text-4xl lg:text-[2.75rem]"
+              >
                 {partyNames.autora || 'Parte autora ausente'}
-              </h1>
+              </Heading>
               <div className="flex items-center gap-3 py-0.5">
-                <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground/50">
+                <Text
+                  variant="micro-caption"
+                  className="uppercase tracking-[0.3em] text-muted-foreground/50"
+                >
                   versus
-                </span>
+                </Text>
                 <span className="h-px flex-1 bg-border/30" />
               </div>
-              <h2 className="font-heading font-bold tracking-tight text-foreground/80 leading-[1.1] text-2xl md:text-3xl lg:text-[2.25rem]">
+              <Heading
+                level="section"
+                className="font-bold tracking-tight text-foreground/80 leading-[1.1] text-2xl md:text-3xl lg:text-[2.25rem]"
+              >
                 {partyNames.re || 'Parte ré ausente'}
-              </h2>
+              </Heading>
             </div>
 
             <div className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-1">
@@ -387,9 +405,12 @@ function HeroBlock({
                 className="group inline-flex items-center gap-2"
                 title="Copiar número do processo"
               >
-                <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground/50 group-hover:text-muted-foreground transition-colors">
+                <Text
+                  variant="micro-badge"
+                  className="uppercase tracking-[0.22em] text-muted-foreground/50 group-hover:text-muted-foreground transition-colors"
+                >
                   Processo
-                </span>
+                </Text>
                 <span className="font-mono text-[13px] font-medium text-foreground/85 tabular-nums group-hover:text-foreground transition-colors">
                   {expediente.numeroProcesso}
                 </span>
@@ -398,14 +419,18 @@ function HeroBlock({
             </div>
 
             {(expediente.classeJudicial || expediente.descricaoOrgaoJulgador) && (
-              <div className="font-mono text-[11px] text-muted-foreground/70 space-y-0.5 pt-1">
+              <Text
+                variant="micro-caption"
+                as="div"
+                className="text-muted-foreground/70 space-y-0.5 pt-1"
+              >
                 {expediente.classeJudicial && (
                   <div>{expediente.classeJudicial}</div>
                 )}
                 {expediente.descricaoOrgaoJulgador && (
                   <div>{expediente.descricaoOrgaoJulgador}</div>
                 )}
-              </div>
+              </Text>
             )}
           </div>
         </div>
@@ -447,16 +472,17 @@ function EditorialTabs({
               <span className="inline-flex items-center gap-2">
                 {tab.label}
                 {tab.count !== undefined && (
-                  <span
+                  <Text
+                    variant="micro-caption"
                     className={cn(
-                      'font-mono text-[10px] tabular-nums rounded-full px-1.5 py-0.5',
+                      'tabular-nums rounded-full px-1.5 py-0.5',
                       isActive
                         ? 'bg-primary/12 text-primary'
                         : 'bg-muted/40 text-muted-foreground/60',
                     )}
                   >
                     {tab.count}
-                  </span>
+                  </Text>
                 )}
               </span>
               {isActive && (
@@ -518,9 +544,13 @@ function DadosTab({
           hint="Edite clicando no texto"
           accent="primary"
         >
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 mb-3">
+          <Text
+            variant="overline"
+            as="p"
+            className="tracking-[0.2em] text-muted-foreground/50 mb-3"
+          >
             Texto oficial publicado no PJE
-          </p>
+          </Text>
           <div className="relative pl-6 border-l-2 border-primary/30">
             <EditableTextCell
               value={expediente.descricaoArquivos}
@@ -540,9 +570,13 @@ function DadosTab({
           hint="Edite clicando no texto"
           accent="secondary"
         >
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 mb-3">
+          <Text
+            variant="overline"
+            as="p"
+            className="tracking-[0.2em] text-muted-foreground/50 mb-3"
+          >
             Resumo interno, estratégia, pontos de atenção
-          </p>
+          </Text>
           <div className="relative pl-6 border-l-2 border-foreground/15">
             <EditableTextCell
               value={expediente.observacoes}
@@ -635,7 +669,6 @@ function DadosTab({
           <CronologiaRow
             label="ID PJE"
             value={expediente.idPje?.toString() ?? '—'}
-            mono
           />
           <CronologiaRow
             label="Status"
@@ -679,13 +712,21 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
     <div className="space-y-1">
       <div className="flex items-end justify-between pb-3 border-b border-border/20">
         <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/60">
+          <Text
+            variant="overline"
+            as="p"
+            className="tracking-[0.22em] text-muted-foreground/60"
+          >
             Arquivos vinculados
-          </p>
-          <p className="font-heading text-xl font-bold text-foreground mt-1 tabular-nums">
+          </Text>
+          <Heading
+            level="card"
+            as="h3"
+            className="font-bold text-foreground mt-1 tabular-nums"
+          >
             {arquivos.length.toString().padStart(2, '0')}{' '}
             <span className="text-muted-foreground/50 font-normal">documentos</span>
-          </p>
+          </Heading>
         </div>
         <Button variant="outline" size="sm" className="rounded-full h-8 px-3 text-xs gap-1.5">
           <Plus className="size-3" />
@@ -700,24 +741,37 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
               type="button"
               className="w-full group flex items-center gap-5 py-5 text-left transition-colors hover:bg-muted/20 rounded-xl px-3 -mx-3"
             >
-              <span className="font-mono text-[10px] font-semibold text-muted-foreground/40 tabular-nums w-6">
+              <Text
+                variant="micro-caption"
+                className="font-semibold text-muted-foreground/40 tabular-nums w-6"
+              >
                 {(idx + 1).toString().padStart(2, '0')}
-              </span>
+              </Text>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-primary">
+                  <Text
+                    variant="micro-badge"
+                    className="uppercase tracking-[0.2em] text-primary"
+                  >
                     {CATEGORIA_LABELS[arq.categoria]}
-                  </span>
-                  <span className="font-mono text-[9px] uppercase tracking-wider text-muted-foreground/40">
+                  </Text>
+                  <Text
+                    variant="micro-badge"
+                    className="uppercase tracking-wider text-muted-foreground/40"
+                  >
                     · {arq.tipo}
-                  </span>
+                  </Text>
                 </div>
                 <p className="font-headline text-[15px] font-medium text-foreground truncate group-hover:text-primary transition-colors">
                   {arq.nome}
                 </p>
-                <p className="font-mono text-[11px] text-muted-foreground/55 mt-0.5">
+                <Text
+                  variant="micro-caption"
+                  as="p"
+                  className="text-muted-foreground/55 mt-0.5"
+                >
                   {formatSize(arq.tamanhoBytes)} · {format(parseISO(arq.criadoEm), 'dd MMM yyyy', { locale: ptBR })}
-                </p>
+                </Text>
               </div>
               <ArrowUpRight className="size-4 text-muted-foreground/40 group-hover:text-primary transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </button>
@@ -775,13 +829,19 @@ function HistoricoTab({
               )}
             />
             <div className="flex items-center gap-3 mb-1">
-              <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground/60">
+              <Text
+                variant="micro-badge"
+                className="uppercase tracking-[0.22em] text-muted-foreground/60"
+              >
                 {meta.tag}
-              </span>
+              </Text>
               <span className="h-px flex-1 bg-border/20 max-w-16" />
-              <span className="font-mono text-[10px] tabular-nums text-muted-foreground/50">
+              <Text
+                variant="micro-caption"
+                className="tabular-nums text-muted-foreground/50"
+              >
                 {format(parseISO(evt.data), "dd MMM · HH:mm", { locale: ptBR })}
-              </span>
+              </Text>
             </div>
             <p className="font-headline text-[15px] text-foreground/90 leading-relaxed">
               {evt.descricao}
@@ -794,9 +854,12 @@ function HistoricoTab({
                     {autor.nomeExibicao.slice(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <span className="font-mono text-[10px] text-muted-foreground/60">
+                <Text
+                  variant="micro-caption"
+                  className="text-muted-foreground/60"
+                >
                   por {autor.nomeExibicao}
-                </span>
+                </Text>
               </div>
             )}
           </li>
@@ -827,25 +890,31 @@ function EditorialBlock({
     <section className="group">
       <header className="flex items-end justify-between gap-4 pb-4 mb-5 border-b border-border/20">
         <div className="flex items-baseline gap-4 min-w-0">
-          <span
+          <Text
+            variant="overline"
             className={cn(
-              'font-mono text-[10px] font-semibold uppercase tracking-[0.22em] shrink-0',
-              accent === 'primary'
-                ? 'text-primary'
-                : 'text-muted-foreground/50',
+              'tracking-[0.22em] shrink-0',
+              accent === 'primary' ? 'text-primary' : 'text-muted-foreground/50',
             )}
           >
             {overline}
-          </span>
-          <h3 className="font-heading font-bold text-xl md:text-2xl tracking-tight text-foreground">
+          </Text>
+          <Heading
+            level="card"
+            as="h3"
+            className="font-bold text-xl md:text-2xl tracking-tight text-foreground"
+          >
             {title}
-          </h3>
+          </Heading>
         </div>
         {hint && (
-          <span className="inline-flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-wider text-muted-foreground/50 shrink-0">
+          <Text
+            variant="micro-badge"
+            className="inline-flex items-center gap-1.5 uppercase tracking-wider text-muted-foreground/50 shrink-0"
+          >
             <Pencil className="size-2.5" />
             {hint}
-          </span>
+          </Text>
         )}
       </header>
       {children}
@@ -869,38 +938,50 @@ function StatusChip({
     primary: 'bg-primary/10 text-primary ring-primary/20',
   };
   return (
-    <span
+    <Text
+      variant="micro-badge"
       className={cn(
         'inline-flex items-center gap-1 rounded-full px-2.5 py-1',
-        'font-mono text-[10px] font-semibold uppercase tracking-wider',
+        'font-semibold uppercase tracking-wider',
         'ring-1 ring-inset',
         tones[tone],
       )}
     >
       <Icon className="size-2.5" />
       {label}
-    </span>
+    </Text>
   );
 }
 
 function MetaPill({ label, value }: { label: string; value: string }) {
   return (
     <span className="inline-flex items-center gap-2">
-      <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground/50">
+      <Text
+        variant="micro-badge"
+        className="uppercase tracking-[0.22em] text-muted-foreground/50"
+      >
         {label}
-      </span>
-      <span className="font-mono text-[13px] font-medium text-foreground/85 tabular-nums">
+      </Text>
+      <Text
+        variant="caption"
+        as="span"
+        className="font-medium text-foreground/85 tabular-nums"
+      >
         {value}
-      </span>
+      </Text>
     </span>
   );
 }
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.22em] text-muted-foreground/55 mb-1.5">
+    <Text
+      variant="micro-badge"
+      as="p"
+      className="font-semibold uppercase tracking-[0.22em] text-muted-foreground/55 mb-1.5"
+    >
       {children}
-    </p>
+    </Text>
   );
 }
 
@@ -948,12 +1029,18 @@ function ResponsavelCard({
   return (
     <GlassPanel depth={3} className="p-5 rounded-2xl">
       <div className="flex items-center justify-between mb-4">
-        <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.24em] text-primary">
+        <Text
+          variant="overline"
+          className="tracking-[0.24em] text-primary"
+        >
           Responsável
-        </span>
-        <span className="font-mono text-[9px] uppercase tracking-wider text-muted-foreground/40">
+        </Text>
+        <Text
+          variant="micro-badge"
+          className="uppercase tracking-wider text-muted-foreground/40"
+        >
           reatribuir ↗
-        </span>
+        </Text>
       </div>
       <ExpedienteResponsavelPopover
         expedienteId={expedienteId}
@@ -975,9 +1062,13 @@ function ResponsavelCard({
                 {usuario.nomeExibicao}
               </p>
               {usuario.cargo && (
-                <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground/60 mt-0.5">
+                <Text
+                  variant="micro-caption"
+                  as="p"
+                  className="uppercase tracking-wider text-muted-foreground/60 mt-0.5"
+                >
                   {usuario.cargo}
-                </p>
+                </Text>
               )}
             </div>
           </div>
@@ -990,9 +1081,13 @@ function ResponsavelCard({
               <p className="font-heading font-bold text-warning/80 italic leading-tight">
                 Sem responsável
               </p>
-              <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground/50 mt-0.5">
+              <Text
+                variant="micro-caption"
+                as="p"
+                className="uppercase tracking-wider text-muted-foreground/50 mt-0.5"
+              >
                 clique para atribuir
-              </p>
+              </Text>
             </div>
           </div>
         )}
@@ -1010,9 +1105,12 @@ function SidebarSection({
 }) {
   return (
     <section>
-      <h4 className="font-mono text-[9px] font-semibold uppercase tracking-[0.24em] text-muted-foreground/55 mb-3">
+      <Heading
+        level="subsection"
+        className="text-meta-label tracking-[0.24em] text-muted-foreground/55 mb-3"
+      >
         {label}
-      </h4>
+      </Heading>
       <div className="space-y-1.5">{children}</div>
     </section>
   );
@@ -1023,30 +1121,31 @@ function CronologiaRow({
   value,
   emphasis,
   muted,
-  mono,
 }: {
   label: string;
   value: string;
   emphasis?: boolean;
   muted?: boolean;
-  mono?: boolean;
 }) {
   return (
     <div className="flex items-baseline justify-between gap-3 py-1">
-      <span className="text-[12px] text-muted-foreground/65 shrink-0">{label}</span>
-      <span
+      <Text variant="caption" as="span" className="text-muted-foreground/65 shrink-0">
+        {label}
+      </Text>
+      <Text
+        variant={emphasis ? 'caption' : muted ? 'micro-caption' : 'caption'}
+        as="span"
         className={cn(
-          'text-right tabular-nums leading-tight',
-          mono ? 'font-mono' : 'font-headline',
+          'text-right tabular-nums leading-tight font-headline',
           emphasis
-            ? 'font-bold text-foreground text-[13px]'
+            ? 'font-bold text-foreground'
             : muted
-              ? 'text-[11px] text-muted-foreground/60'
-              : 'text-[12.5px] text-foreground/80',
+              ? 'text-muted-foreground/60'
+              : 'text-foreground/80',
         )}
       >
         {value}
-      </span>
+      </Text>
     </div>
   );
 }
@@ -1071,7 +1170,7 @@ function FlagChip({
     >
       <div className="flex items-center gap-2">
         <Icon className="size-3" />
-        <span className="text-[12px]">{label}</span>
+        <Text variant="caption" as="span">{label}</Text>
       </div>
       <span
         className={cn(
@@ -1139,9 +1238,13 @@ function InlineTipoEditor({
       <PopoverContent className="w-72 p-0 rounded-2xl glass-dropdown overflow-hidden" align="start">
         <Command className="bg-transparent">
           <div className="px-3 pt-3 pb-1.5">
-            <p className="font-mono text-[9px] font-medium text-muted-foreground/50 uppercase tracking-[0.2em] mb-2">
+            <Text
+              variant="micro-badge"
+              as="p"
+              className="font-medium text-muted-foreground/50 uppercase tracking-[0.2em] mb-2"
+            >
               Escolher tipo
-            </p>
+            </Text>
             <CommandInput placeholder="Buscar tipo…" className="h-8 text-xs rounded-lg" />
           </div>
           <CommandList className="max-h-64 px-1.5 pb-1.5">

@@ -105,6 +105,8 @@ export interface FormShellProps<TFieldValues extends FieldValues = FieldValues> 
   defaultValues?: DefaultValues<TFieldValues>;
   /** Children to render inside the form (for custom fields) */
   children?: React.ReactNode;
+  /** Densidade visual do formulário */
+  density?: "comfortable" | "compact";
 }
 
 /**
@@ -142,6 +144,7 @@ export function FormShell<TFieldValues extends FieldValues = FieldValues>({
   form: externalForm,
   defaultValues,
   children,
+  density = "comfortable",
 }: FormShellProps<TFieldValues>) {
   // Create internal form if not provided
   const internalForm = useForm<TFieldValues, unknown, TFieldValues>({
@@ -290,6 +293,7 @@ export function FormShell<TFieldValues extends FieldValues = FieldValues>({
         className={cn("space-y-6", className)}
         data-testid="form-shell"
         data-loading={loading}
+        data-density={density}
       >
         <div className={gridClasses} data-testid="form-grid">
           {fields.map(renderField)}

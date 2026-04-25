@@ -255,11 +255,11 @@ export function AudienciaTimeline({
                 {entry.changes.map((change, i) => (
                   <li key={i} className="text-sm">
                     <span className="text-muted-foreground">{change.campo}:</span>{' '}
-                    <span className="font-mono text-xs line-through opacity-60">
+                    <span className="text-micro-caption tabular-nums line-through opacity-60">
                       {change.valorAnterior}
                     </span>
                     {' → '}
-                    <span className="font-mono text-xs font-medium">
+                    <span className="text-micro-caption tabular-nums font-medium">
                       {change.valorNovo}
                     </span>
                   </li>

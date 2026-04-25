@@ -20,6 +20,7 @@ import {
 import { parseISO } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { IconContainer } from '@/components/ui/icon-container';
+import { Text } from '@/components/ui/typography';
 import type { Audiencia } from '../domain';
 import { StatusAudiencia, GRAU_TRIBUNAL_LABELS } from '../domain';
 import { calcPrepItems, calcPrepScore } from './prep-score';
@@ -133,21 +134,21 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
 
       {/* Main info */}
       <div className="flex-1 min-w-0">
-        <p className="text-xs font-medium truncate">{audiencia.tipoDescricao || 'Audiência'}</p>
-        <p className="text-[10px] text-muted-foreground/30 truncate">
+        <Text variant="caption" as="p" className="font-medium truncate text-foreground/80">{audiencia.tipoDescricao || 'Audiência'}</Text>
+        <p className="text-micro-caption text-muted-foreground/45 truncate">
           {audiencia.poloAtivoNome || '—'} vs {audiencia.poloPassivoNome || '—'}
         </p>
         {audiencia.orgaoJulgadorOrigem && (
-          <p className="text-[9px] text-muted-foreground/25 truncate">{audiencia.orgaoJulgadorOrigem}</p>
+          <p className="text-micro-caption text-muted-foreground/40 truncate">{audiencia.orgaoJulgadorOrigem}</p>
         )}
         {audiencia.observacoes && (
-          <p className="text-[9px] text-muted-foreground/25 truncate italic" title={audiencia.observacoes}>{audiencia.observacoes}</p>
+          <p className="text-micro-caption text-muted-foreground/40 truncate italic" title={audiencia.observacoes}>{audiencia.observacoes}</p>
         )}
       </div>
 
       {/* Date/Time */}
       <div className="text-right shrink-0 hidden sm:block">
-        <p className="text-[10px] font-medium tabular-nums">
+        <p className="text-micro-caption font-medium tabular-nums">
           {(() => {
             try {
               return parseISO(audiencia.dataInicio).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
@@ -156,7 +157,7 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
             }
           })()}
         </p>
-        <p className="text-[9px] text-muted-foreground/40 tabular-nums">
+        <p className="text-micro-caption text-muted-foreground/50 tabular-nums">
           {fmtTime(audiencia.dataInicio)}
         </p>
       </div>
@@ -164,17 +165,17 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
       {/* Modalidade */}
       <div className="flex items-center gap-1 shrink-0 md:flex w-20">
         <ModalIcon className="size-2.5 text-muted-foreground/40" />
-        <span className="text-[9px] text-muted-foreground/50">{modalidadeLabel}</span>
+        <span className="text-micro-caption text-muted-foreground/60">{modalidadeLabel}</span>
       </div>
 
       {/* TRT + Grau */}
       {audiencia.trt && (
         <div className="flex items-center gap-1 shrink-0 md:flex">
-          <span className="text-[9px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40">
+          <span className="text-micro-caption font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40">
             {audiencia.trt}
           </span>
           {audiencia.grau && (
-            <span className="text-[9px] text-muted-foreground/35">{GRAU_TRIBUNAL_LABELS[audiencia.grau]}</span>
+            <span className="text-micro-caption text-muted-foreground/45">{GRAU_TRIBUNAL_LABELS[audiencia.grau]}</span>
           )}
         </div>
       )}
@@ -196,7 +197,7 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
             <span className={cn(
-              'font-bold tabular-nums text-[8px]',
+              'font-bold tabular-nums text-micro-badge',
               prepStatus === 'good' ? 'text-success' : prepStatus === 'warning' ? 'text-warning' : 'text-destructive',
             )}>
               {prepScore}%
@@ -207,7 +208,7 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
 
       {/* Countdown or status */}
       <span className={cn(
-        'text-[9px] shrink-0 w-16 text-right tabular-nums font-medium',
+        'text-micro-caption shrink-0 w-16 text-right tabular-nums font-medium',
         isFinalizada ? 'text-success/50' :
         isCancelada ? 'text-destructive/50' :
         !isPast ? (timeUntil.totalMs <= 60 * 60 * 1000 ? 'text-warning/60' : 'text-muted-foreground/40') :

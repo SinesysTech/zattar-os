@@ -93,9 +93,9 @@ function getScoreStatus(score: number): "good" | "warning" | "danger" {
 }
 
 const SIZE_CONFIG = {
-  sm: { ring: 36, stroke: 4, text: "text-[9px]" },
-  md: { ring: 48, stroke: 5, text: "text-[11px]" },
-  lg: { ring: 64, stroke: 6, text: "text-sm" },
+  sm: { ring: 34, stroke: 4, text: "text-micro-caption" },
+  md: { ring: 44, stroke: 5, text: "text-caption" },
+  lg: { ring: 56, stroke: 6, text: "text-label" },
 } as const;
 
 export function PrepScore({ audiencia, className, showBreakdown = false, size = "md" }: PrepScoreProps) {
@@ -149,8 +149,8 @@ export function PrepScore({ audiencia, className, showBreakdown = false, size = 
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
           <Text
-            variant="kpi-value"
-            className={cn("font-bold tabular-nums leading-none", cfg.text, statusTextColors[status])}
+            variant="label"
+            className={cn("font-semibold tabular-nums leading-none", cfg.text, statusTextColors[status])}
           >
             {score}%
           </Text>
@@ -169,7 +169,7 @@ export function PrepScore({ audiencia, className, showBreakdown = false, size = 
               )}
               <span
                 className={cn(
-                  "text-[10px] truncate",
+                  "text-micro-caption truncate",
                   item.done ? "text-muted-foreground/50 line-through" : "text-foreground/70",
                 )}
               >
@@ -199,7 +199,7 @@ export function PrepScoreBadge({ audiencia, className }: { audiencia: Audiencia;
 
   return (
     <span className={cn(
-      "inline-flex items-center gap-0.5 px-1.5 py-px rounded-full text-[8px] font-semibold tabular-nums shrink-0",
+      "inline-flex items-center gap-0.5 px-1.5 py-px rounded-full text-micro-badge font-semibold tabular-nums shrink-0",
       badgeStyles[status],
       className,
     )}>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Density Axis</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .axis-title { font-family: var(--font-heading); font-size: 14px; font-weight: 600; margin-bottom: 20px; color: var(--primary); text-transform: uppercase; letter-spacing: 0.1em; }
+  
+  .control-demo { display: flex; flex-direction: column; gap: var(--density-field-gap); background: var(--muted)/10; padding: 20px; rounded: 12px; border: 1px dashed var(--border); }
+  
+  .input-demo { 
+    height: var(--density-control-h); 
+    padding-inline: var(--density-control-px); 
+    font-size: var(--density-control-font-size);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--background);
+    display: flex;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .label-demo {
+    font-size: var(--density-label-font-size);
+    font-weight: 500;
+    color: var(--foreground);
+    margin-bottom: 4px;
+  }
+
+  .button-demo {
+    height: var(--density-control-h);
+    padding-inline: calc(var(--density-control-px) * 1.5);
+    font-size: var(--density-control-font-size);
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  [data-density="compact"] {
+    --density-control-h: 2rem;
+    --density-control-px: 0.5rem;
+    --density-control-font-size: 13px;
+    --density-label-font-size: 12px;
+    --density-field-gap: 0.75rem;
+  }
+
+  :root {
+    --density-control-h: 2.25rem;
+    --density-control-px: 0.75rem;
+    --density-control-font-size: 0.875rem;
+    --density-label-font-size: 0.875rem;
+    --density-field-gap: 1rem;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="eyebrow">DENSITY AXIS</div>
+  <div class="comparison">
+    <!-- Comfortable -->
+    <div>
+      <div class="axis-title">Comfortable (Default)</div>
+      <div class="control-demo">
+        <div>
+          <div class="label-demo">Nome do Processo</div>
+          <div class="input-demo">0001234-56.2024.5.01.0001</div>
+        </div>
+        <div>
+          <div class="label-demo">Tribunal</div>
+          <div class="input-demo">TRT da 1ª Região</div>
+        </div>
+        <button class="button-demo">Salvar Alterações</button>
+      </div>
+    </div>
+
+    <!-- Compact -->
+    <div data-density="compact">
+      <div class="axis-title">Compact</div>
+      <div class="control-demo">
+        <div>
+          <div class="label-demo">Nome do Processo</div>
+          <div class="input-demo">0001234-56.2024.5.01.0001</div>
+        </div>
+        <div>
+          <div class="label-demo">Tribunal</div>
+          <div class="input-demo">TRT da 1ª Região</div>
+        </div>
+        <button class="button-demo">Salvar Alterações</button>
+      </div>
+    </div>
+  </div>
+  
+  <div style="margin-top: 30px; font-size: 12px; color: var(--muted-foreground); line-height: 1.6;">
+    <p>O eixo de densidade é controlado via atributo <code>data-density="compact"</code> em shells ou containers.</p>
+    <p>Afeta altura de inputs (36px vs 32px), tamanho de fonte (14px vs 13px), gaps entre campos (16px vs 12px) e paddings de modais.</p>
+  </div>
+</div>
+</body>
+</html>

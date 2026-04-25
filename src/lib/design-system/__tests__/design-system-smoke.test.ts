@@ -426,6 +426,34 @@ describe('Design System Smoke Tests — Análise Estática', () => {
   });
 
   // =========================================================================
+  // 22.2 — Existência de variáveis CSS de densidade em globals.css
+  // =========================================================================
+  describe('Req 22.2: Existência de variáveis CSS de densidade em globals.css', () => {
+    const cssContent = safeRead(GLOBALS_CSS);
+
+    const DENSITY_VARS = [
+      '--density-control-h',
+      '--density-control-px',
+      '--density-control-font-size',
+      '--density-label-font-size',
+      '--density-field-gap',
+      '--density-dialog-padding-x',
+      '--density-dialog-padding-y',
+      '--density-section-gap',
+    ];
+
+    for (const varName of DENSITY_VARS) {
+      it(`globals.css define ${varName}`, () => {
+        expect(cssContent).toContain(varName);
+      });
+    }
+
+    it('globals.css possui mapeamento de densidade no bloco @theme', () => {
+      expect(cssContent).toMatch(/--density-control-h:\s*var\(--density-control-h\)/);
+    });
+  });
+
+  // =========================================================================
   // 22.3 / 7.1 — Existência de layout.tsx com PageShell em cada módulo
   // com página renderizável
   // =========================================================================

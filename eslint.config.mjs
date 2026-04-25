@@ -7,6 +7,7 @@ import nextPlugin from "@next/eslint-plugin-next";
 import unusedImports from "eslint-plugin-unused-imports";
 import noHardcodedSecrets from "./eslint-rules/no-hardcoded-secrets.js";
 import noHslVarTokens from "./eslint-rules/no-hsl-var-tokens.js";
+import noRawTypographySpacing from "./eslint-rules/no-raw-typography-spacing.js";
 
 const eslintConfig = defineConfig([
   {
@@ -79,6 +80,7 @@ const eslintConfig = defineConfig([
         rules: {
           "no-hardcoded-secrets": noHardcodedSecrets,
           "no-hsl-var-tokens": noHslVarTokens,
+          "no-raw-typography-spacing": noRawTypographySpacing,
         },
       },
     },
@@ -88,6 +90,20 @@ const eslintConfig = defineConfig([
       // antes desta sessão. Não é estilo, é bug visual confirmado.
       // Aplica em TODO o codebase, sem exclusões.
       "custom/no-hsl-var-tokens": "error",
+      "custom/no-raw-typography-spacing": "error",
+    },
+  },
+  // Exceções para componentes base do design system e shared shells
+  {
+    files: [
+      "src/components/shared/**/*.tsx",
+      "src/components/ui/**/*.tsx",
+      "src/lib/design-system/**/*.tsx",
+      "src/app/website/**/*.tsx",
+      "design-system/**/*.tsx",
+    ],
+    rules: {
+      "custom/no-raw-typography-spacing": "off",
     },
   },
   // Exceções para arquivos de exemplo e documentação

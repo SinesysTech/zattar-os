@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Layout Primitives</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  .primitive-box { border: 1px solid var(--border); border-radius: 12px; padding: 16px; background: var(--card); }
+  .item { height: 40px; background: var(--primary)/10; border: 1px solid var(--primary)/20; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 11px; color: var(--primary); }
+  .item-inline { width: 80px; }
+  
+  .stack-tight { gap: 8px; display: flex; flex-direction: column; }
+  .stack-default { gap: 16px; display: flex; flex-direction: column; }
+  .stack-loose { gap: 24px; display: flex; flex-direction: column; }
+  
+  .inline-tight { gap: 8px; display: flex; align-items: center; }
+  .inline-default { gap: 16px; display: flex; align-items: center; }
+  .inline-loose { gap: 24px; display: flex; align-items: center; }
+
+  .inset-card { padding: 24px; border: 2px solid var(--primary)/15; border-radius: 16px; }
+
+  h4 { font-family: var(--font-heading); font-size: 13px; margin: 0 0 12px 0; color: var(--muted-foreground); text-transform: uppercase; letter-spacing: 0.1em; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="eyebrow">LAYOUT PRIMITIVES</div>
+  
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+    <!-- Stack -->
+    <div>
+      <h4>&lt;Stack gap="default"&gt;</h4>
+      <div class="primitive-box stack-default">
+        <div class="item">Item 1</div>
+        <div class="item">Item 2</div>
+        <div class="item">Item 3</div>
+      </div>
+      <p style="font-size: 11px; color: var(--muted-foreground); margin-top: 10px;">Gaps: tight (8px), default (16px), loose (24px), section (32px).</p>
+    </div>
+
+    <!-- Inline -->
+    <div>
+      <h4>&lt;Inline gap="tight"&gt;</h4>
+      <div class="primitive-box inline-tight">
+        <div class="item item-inline">A</div>
+        <div class="item item-inline">B</div>
+        <div class="item item-inline">C</div>
+      </div>
+      <p style="font-size: 11px; color: var(--muted-foreground); margin-top: 10px;">Gaps: tight (8px), default (16px), loose (24px).</p>
+    </div>
+  </div>
+
+  <div style="margin-top: 40px;">
+    <h4>&lt;Inset variant="card"&gt;</h4>
+    <div class="inset-card">
+      <div class="item">Conteúdo interno preservando paddings semânticos</div>
+    </div>
+    <p style="font-size: 11px; color: var(--muted-foreground); margin-top: 10px;">Variantes: card, card-compact, dialog, page, section.</p>
+  </div>
+</div>
+</body>
+</html>

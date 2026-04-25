@@ -131,7 +131,7 @@ export function Combobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={cn("w-full justify-between h-9 px-3 [div[data-slot=data-table-toolbar]_&]:bg-white", className)}
+          className={cn("w-full justify-between h-[var(--density-control-h)] px-[var(--density-control-px)] [div[data-slot=data-table-toolbar]_&]:bg-white", className)}
           disabled={disabled}
         >
           <div className="flex flex-wrap gap-1 flex-1 min-w-0 items-center overflow-hidden">

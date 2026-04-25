@@ -96,7 +96,10 @@ const Table = React.forwardRef<HTMLDivElement, TableProps>(
 );
 Table.displayName = 'Typography.Table';
 
-// Namespace exportado
+/**
+ * @deprecated Use `<Heading>` or `<Text>` components instead.
+ * These legacy components will be removed in a future version.
+ */
 export const Typography = {
   H1,
   H2,
@@ -114,6 +117,7 @@ export const Typography = {
 };
 
 // Exportações individuais para uso direto
+/** @deprecated Use `<Heading>` or `<Text>` components instead. */
 export { H1, H2, H3, H4, P, Blockquote, List, InlineCode, Lead, Large, Small, Muted, Table };
 
 // =============================================================================
@@ -165,6 +169,10 @@ const TEXT_VARIANTS = {
   'micro-caption': { className: 'text-micro-caption', tag: 'span' as const },
   'micro-badge': { className: 'text-micro-badge', tag: 'span' as const },
   overline: { className: 'text-overline', tag: 'span' as const },
+  body: { className: 'text-body', tag: 'p' as const },
+  'body-lg': { className: 'text-body-lg', tag: 'p' as const },
+  'body-sm': { className: 'text-body-sm', tag: 'p' as const },
+  helper: { className: 'text-helper', tag: 'span' as const },
   // Parágrafo lead de landing — apenas para src/app/website/*
   'marketing-lead': { className: 'text-marketing-lead', tag: 'p' as const },
   // Overline marketing — label uppercase presente em seções de landing

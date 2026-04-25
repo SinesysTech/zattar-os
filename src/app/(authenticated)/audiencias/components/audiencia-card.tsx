@@ -6,6 +6,8 @@ import { FileText } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import { Stack, Inline } from '@/components/ui/stack';
+import { Text } from '@/components/ui/typography';
 import { AudienciaStatusBadge } from './audiencia-status-badge';
 import { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
 
@@ -34,11 +36,11 @@ export function AudienciaCard({ audiencia, compact = false, onClick }: Audiencia
       <GlassPanel depth={1} className={cn(
         'group relative z-10 w-full overflow-hidden rounded-md',
         'transition-all duration-200 ease-in-out hover:shadow-lg',
-        compact ? 'h-auto py-1' : 'py-2',
+        compact ? 'h-auto' : '',
       )}>
-        <div className={cn('flex flex-col gap-1', compact ? 'p-2 text-xs' : 'p-3 text-sm')}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5">
+        <Stack gap="tight" className={cn(compact ? 'p-2' : 'p-3')}>
+        <Inline justify="between">
+          <Inline gap="tight">
             {/* Indicador de Ata */}
             {hasAta && (
               <Tooltip>
@@ -50,29 +52,32 @@ export function AudienciaCard({ audiencia, compact = false, onClick }: Audiencia
                 <TooltipContent>Ata disponível</TooltipContent>
               </Tooltip>
             )}
-            <span className={cn('font-semibold', compact ? 'text-xs' : 'text-sm')}>
+            <Text variant={compact ? 'micro-caption' : 'caption'} className="font-semibold">
               {format(dataInicio, 'HH:mm', { locale: ptBR })} - {format(dataFim, 'HH:mm', { locale: ptBR })}
-            </span>
-          </div>
+            </Text>
+          </Inline>
           <AudienciaStatusBadge status={audiencia.status} compact={compact} />
-        </div>
-        <div className={cn('font-medium', compact ? 'text-xs truncate' : 'text-sm')}>
+        </Inline>
+        
+        <Text variant={compact ? 'micro-caption' : 'caption'} className={cn('font-medium', compact && 'truncate')}>
           {audiencia.numeroProcesso}
-        </div>
-        <div className="flex items-center gap-2">
+        </Text>
+
+        <Inline gap="tight">
           {audiencia.tipoDescricao && (
-            <span className={cn('text-muted-foreground', compact ? 'text-xs' : 'text-sm')}>
+            <Text variant={compact ? 'micro-caption' : 'caption'} className="text-muted-foreground">
               {audiencia.tipoDescricao}
-            </span>
+            </Text>
           )}
           {audiencia.modalidade && <AudienciaModalidadeBadge modalidade={audiencia.modalidade} compact={compact} />}
-        </div>
+        </Inline>
+
         {!compact && audiencia.observacoes && (
-          <p className="mt-1 text-xs text-muted-foreground line-clamp-2">
+          <Text variant="micro-caption" className="text-muted-foreground line-clamp-2">
             {audiencia.observacoes}
-          </p>
+          </Text>
         )}
-        </div>
+        </Stack>
       </GlassPanel>
     </div>
   );
