@@ -3,17 +3,20 @@ import { notFound } from 'next/navigation';
 import { CapturaResult, type CapturaResultData, CapturaErrosFormatados, CapturaRawLogs } from '@/app/(authenticated)/captura';
 import { buscarCapturaLog, buscarLogsBrutoPorCapturaId } from '@/app/(authenticated)/captura/server';
 import { Heading, Text } from '@/components/ui/typography';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CapturaStatusSemanticBadge } from '@/components/ui/semantic-badge';
+import { GlassPanel, WidgetContainer } from '@/components/shared/glass-panel';
+import { DetailSectionCard } from '@/components/shared';
+import { IconContainer } from '@/components/ui/icon-container';
 import {
   ArrowLeft,
-  Clock,
-  CheckCircle2,
-  XCircle,
-  Loader2,
+  Activity,
+  CalendarClock,
+  CalendarCheck,
   Timer,
+  FileJson,
+  ScrollText,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -22,25 +25,6 @@ interface PageProps {
   params: Promise<{
     id: string;
   }>;
-}
-
-const STATUS_ICONS: Record<string, { icon: typeof CheckCircle2; label: string; className?: string }> = {
-  completed: { icon: CheckCircle2, label: 'Concluida' },
-  failed: { icon: XCircle, label: 'Falhou' },
-  in_progress: { icon: Loader2, label: 'Em Progresso', className: 'animate-spin' },
-  pending: { icon: Clock, label: 'Pendente' },
-};
-
-function StatusBadge({ status }: { status: string }) {
-  const config = STATUS_ICONS[status];
-  if (!config) return <Badge variant="outline">{status}</Badge>;
-
-  const Icon = config.icon;
-  return (
-    <CapturaStatusSemanticBadge value={status}>
-      <Icon className={`mr-1 h-3 w-3 ${config.className ?? ''}`} /> {config.label}
-    </CapturaStatusSemanticBadge>
-  );
 }
 
 function calcularDuracao(inicio: string, fim: string | null): string | null {
@@ -80,67 +64,96 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
 
   return (
     <>
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <Heading level="page">{`Detalhes da Captura #${captura.id}`}</Heading>
-        <div className="flex items-center gap-2 shrink-0">
-          <Button variant="outline" size="sm" asChild>
-            <Link href="/captura/historico">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Voltar
-            </Link>
-          </Button>
-        </div>
-      </div>
-      {/* Informacoes da Captura */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Informacoes da Captura</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-            <div className="space-y-1">
-              <Text variant="label" className="text-muted-foreground">Status</Text>
-              <div><StatusBadge status={captura.status} /></div>
-            </div>
-            <div className="space-y-1">
-              <Text variant="label" className="text-muted-foreground">Iniciado em</Text>
-              <p className="text-sm">{new Date(captura.iniciado_em).toLocaleString('pt-BR')}</p>
-            </div>
-            <div className="space-y-1">
-              <Text variant="label" className="text-muted-foreground">Concluido em</Text>
-              <p className="text-sm">
-                {captura.concluido_em ? new Date(captura.concluido_em).toLocaleString('pt-BR') : '-'}
-              </p>
-            </div>
-            {duracao && (
-              <div className="space-y-1">
-                <Text variant="label" className="text-muted-foreground">Duracao</Text>
-                <p className="text-sm flex items-center gap-1">
-                  <Timer className="h-3.5 w-3.5 text-muted-foreground" />
-                  {duracao}
-                </p>
-              </div>
-            )}
+      {/* Header da página */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3">
+          <IconContainer size="md" className="bg-primary/10">
+            <Activity className="size-4 text-primary" />
+          </IconContainer>
+          <div>
+            <Heading level="page">{`Captura #${captura.id}`}</Heading>
+            <Text variant="caption" className="text-muted-foreground">
+              {captura.tipo_captura}
+            </Text>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+        <Button variant="outline" size="sm" asChild className="shrink-0">
+          <Link href="/captura/historico">
+            <ArrowLeft className="mr-2 size-3.5" />
+            Voltar
+          </Link>
+        </Button>
+      </div>
 
-      {/* Resultado / Erros */}
+      {/* KPI Strip */}
+      <GlassPanel depth={1} className="p-4">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          {/* Status */}
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center gap-1.5">
+              <Activity className="size-3 text-muted-foreground/50" />
+              <Text variant="overline" className="text-muted-foreground">
+                Status
+              </Text>
+            </div>
+            <CapturaStatusSemanticBadge value={captura.status} className="w-fit" />
+          </div>
+
+          {/* Iniciado em */}
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center gap-1.5">
+              <CalendarClock className="size-3 text-muted-foreground/50" />
+              <Text variant="overline" className="text-muted-foreground">
+                Iniciado em
+              </Text>
+            </div>
+            <Text variant="body-sm" className="font-mono tabular-nums">
+              {new Date(captura.iniciado_em).toLocaleString('pt-BR')}
+            </Text>
+          </div>
+
+          {/* Concluído em */}
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center gap-1.5">
+              <CalendarCheck className="size-3 text-muted-foreground/50" />
+              <Text variant="overline" className="text-muted-foreground">
+                Concluído em
+              </Text>
+            </div>
+            <Text variant="body-sm" className="font-mono tabular-nums">
+              {captura.concluido_em
+                ? new Date(captura.concluido_em).toLocaleString('pt-BR')
+                : <span className="text-muted-foreground/50">—</span>}
+            </Text>
+          </div>
+
+          {/* Duração */}
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center gap-1.5">
+              <Timer className="size-3 text-muted-foreground/50" />
+              <Text variant="overline" className="text-muted-foreground">
+                Duração
+              </Text>
+            </div>
+            <Text variant="body-sm" className="font-mono tabular-nums">
+              {duracao ?? <span className="text-muted-foreground/50">—</span>}
+            </Text>
+          </div>
+        </div>
+      </GlassPanel>
+
+      {/* Resultado (quando completed) */}
       {isCompleted && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Resultado</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <CapturaResult
-              success={true}
-              data={captura.resultado as CapturaResultData}
-              captureId={captura.id}
-            />
-          </CardContent>
-        </Card>
+        <WidgetContainer title="Resultado">
+          <CapturaResult
+            success={true}
+            data={captura.resultado as CapturaResultData}
+            captureId={captura.id}
+          />
+        </WidgetContainer>
       )}
 
+      {/* Erros (quando failed) */}
       {isFailed && captura.erro && (
         <CapturaErrosFormatados erro={captura.erro} />
       )}
@@ -148,15 +161,19 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
       {/* Tabs: Logs Detalhados + Dados Brutos */}
       <Tabs defaultValue="logs" className="w-full">
         <TabsList>
-          <TabsTrigger value="logs">
+          <TabsTrigger value="logs" className="gap-1.5">
+            <ScrollText className="size-3.5" />
             Logs Detalhados
             {rawLogs.length > 0 && (
-              <Badge variant="secondary" className="ml-2 text-[10px] px-1.5 py-0">
+              <Badge variant="secondary" className="ml-1 text-[10px] px-1.5 py-0">
                 {rawLogs.length}
               </Badge>
             )}
           </TabsTrigger>
-          <TabsTrigger value="dados-brutos">Dados Brutos</TabsTrigger>
+          <TabsTrigger value="dados-brutos" className="gap-1.5">
+            <FileJson className="size-3.5" />
+            Dados Brutos
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="logs" className="mt-4">
@@ -164,15 +181,27 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
         </TabsContent>
 
         <TabsContent value="dados-brutos" className="mt-4">
-          {captura.resultado ? (
-            <pre className="p-4 rounded-lg bg-muted overflow-auto max-h-125 text-xs">
-              {JSON.stringify(captura.resultado, null, 2)}
-            </pre>
-          ) : (
-            <div className="rounded-md border p-6 text-center text-sm text-muted-foreground">
-              Nenhum dado disponivel.
+          <div className="flex flex-col">
+            <div className="flex items-center gap-2 mb-2.5 px-0.5">
+              <FileJson className="size-3.5 text-primary shrink-0" aria-hidden="true" />
+              <h4 className="text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.08em]">
+                Payload JSON da execução
+              </h4>
             </div>
-          )}
+            <DetailSectionCard className="p-0 overflow-hidden">
+              {captura.resultado ? (
+                <pre className="p-4 overflow-auto max-h-[500px] text-xs font-mono leading-relaxed">
+                  {JSON.stringify(captura.resultado, null, 2)}
+                </pre>
+              ) : (
+                <div className="p-6 text-center">
+                  <Text variant="caption" className="text-muted-foreground/60">
+                    Nenhum dado disponível.
+                  </Text>
+                </div>
+              )}
+            </DetailSectionCard>
+          </div>
         </TabsContent>
       </Tabs>
     </>

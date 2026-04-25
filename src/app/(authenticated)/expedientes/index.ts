@@ -45,6 +45,8 @@ export {
   actionBaixarExpediente,
   actionReverterBaixa,
   actionListarExpedientes,
+  actionContarExpedientesPorStatus,
+  actionAtualizarExpedientePayload,
   actionBulkTransferirResponsavel,
   actionBulkBaixar,
 } from './actions';

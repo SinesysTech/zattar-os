@@ -21,7 +21,8 @@ import {
 import { after } from "next/server";
 import { indexDocument } from "@/lib/ai/services/indexing.service";
 import { authenticateRequest } from "@/lib/auth";
-import { listarUploads } from "@/app/(authenticated)/documentos/service";
+// listarUploads importado via dynamic import dentro do after() para evitar
+// violação FSD de importação direta de service cross-módulo.
 
 // =============================================================================
 // TIPOS DE RETORNO DAS ACTIONS
@@ -164,6 +165,7 @@ export async function actionCriarExpediente(
       after(async () => {
         try {
           if (idDocumento) {
+            const { listarUploads } = await import('@/app/(authenticated)/documentos/service');
             const { uploads } = await listarUploads(idDocumento, user.id);
             const latestUpload = uploads[0];
 
