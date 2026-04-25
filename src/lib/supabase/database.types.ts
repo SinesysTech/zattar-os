@@ -8879,6 +8879,17 @@ export type Database = {
         }
         Returns: Json
       }
+      baixar_expediente_atomic: {
+        Args: {
+          p_baixado_em?: string
+          p_expediente_id: number
+          p_justificativa?: string
+          p_protocolo_id?: string
+          p_resultado_decisao?: string
+          p_usuario_id: number
+        }
+        Returns: Json
+      }
       bulk_atribuir_responsavel_expedientes: {
         Args: {
           p_expediente_ids: number[]
@@ -9087,6 +9098,10 @@ export type Database = {
           p_usuario_id: number
         }
         Returns: undefined
+      }
+      reverter_baixa_expediente_atomic: {
+        Args: { p_expediente_id: number; p_usuario_id: number }
+        Returns: Json
       }
       user_can_access_chat_room: {
         Args: { p_sala_id: number; p_usuario_id: number }
