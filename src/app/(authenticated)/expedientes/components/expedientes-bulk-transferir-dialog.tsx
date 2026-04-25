@@ -93,11 +93,15 @@ export function ExpedientesBulkTransferirDialog({
 
   const generalError = !formState.success ? (formState.error || formState.message) : null;
 
+  const motivoDisabled = !responsavelId || responsavelId === 'null'
+    ? 'Selecione um responsável para habilitar'
+    : undefined;
   const footerButtons = (
     <Button
       type="submit"
       disabled={isPending || !responsavelId || responsavelId === 'null'}
       form="bulk-transferir-form"
+      title={motivoDisabled}
     >
       {isPending && <LoadingSpinner className="mr-2" />}
       Transferir {expedienteIds.length} {expedienteIds.length === 1 ? 'expediente' : 'expedientes'}

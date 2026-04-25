@@ -96,7 +96,19 @@ export async function buscarConfigTribunal(
 
 
 /**
- * Salva log de captura (placeholder - implementar conforme necessário)
+ * Persiste um log de captura em `public.capturas_log`.
+ *
+ * A tabela tem enums `tipo_captura` (pendentes|audiencias|acervo_geral|
+ * arquivados|partes|comunica_cnj|combinada|pericias) e `status_captura`
+ * (pending|in_progress|completed|failed). O caller passa `tipo` como string
+ * e ele deve casar com o enum — se não casar, o Postgres rejeita e o insert
+ * falha (capturado localmente, não propaga).
+ *
+ * `tribunalId` é aceito para compat com o call-site atual mas não é persistido —
+ * não há coluna correspondente (tribunal está dentro de `resultado`).
+ *
+ * Log não é crítico: se o insert falhar, emite console.warn e retorna sem
+ * lançar. O fluxo de captura não deve parar por falha de audit.
  */
 export async function salvarLogCaptura(params: {
     tribunalId: string;
@@ -105,7 +117,28 @@ export async function salvarLogCaptura(params: {
     resultado: unknown;
     erro?: string;
     duracaoMs: number;
+    advogadoId?: number | null;
 }): Promise<void> {
-    // TODO: Implementar persistência de logs
-    console.log('📝 Log de captura:', params);
+    const supabase = createServiceClient();
+
+    const concluidoEm = new Date();
+    const iniciadoEm = new Date(concluidoEm.getTime() - Math.max(0, params.duracaoMs));
+
+    const { error } = await supabase.from('capturas_log').insert({
+        tipo_captura: params.tipo,
+        advogado_id: params.advogadoId ?? null,
+        credencial_ids: [params.credencialId],
+        status: params.erro ? 'failed' : 'completed',
+        resultado: params.resultado ?? null,
+        erro: params.erro ?? null,
+        iniciado_em: iniciadoEm.toISOString(),
+        concluido_em: concluidoEm.toISOString(),
+    });
+
+    if (error) {
+        console.warn(
+            `[capturas_log] Falha ao persistir log de captura (${params.tipo}/${params.tribunalId}):`,
+            error.message
+        );
+    }
 }

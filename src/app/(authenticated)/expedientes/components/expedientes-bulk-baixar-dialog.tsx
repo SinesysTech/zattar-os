@@ -82,11 +82,15 @@ export function ExpedientesBulkBaixarDialog({
 
   const generalError = !formState.success ? (formState.error || formState.message) : null;
 
+  const motivoDisabled = !justificativa.trim()
+    ? 'Informe a justificativa para habilitar'
+    : undefined;
   const footerButtons = (
     <Button
       type="submit"
       disabled={isPending || !justificativa.trim()}
       form="bulk-baixar-form"
+      title={motivoDisabled}
     >
       {isPending && <LoadingSpinner className="mr-2" />}
       Baixar {expedienteIds.length} {expedienteIds.length === 1 ? 'expediente' : 'expedientes'}
