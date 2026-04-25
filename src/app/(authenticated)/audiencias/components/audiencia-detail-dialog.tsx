@@ -6,7 +6,7 @@ import {
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { toast } from 'sonner';
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
+import { DialogDetailShell } from '@/components/shared/dialog-shell';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -54,6 +54,15 @@ const MODALIDADE_ICONS: Record<ModalidadeAudiencia, React.ComponentType<{ classN
 // SECTION HELPERS
 // =============================================================================
 
+/**
+ * Cabeçalho de seção dentro do detail dialog.
+ *
+ * Hierarquia tipográfica: usa `Heading level="subsection"` (16px semibold),
+ * o mesmo token das subseções de página — isso restaura a continuidade
+ * narrativa entre a página e o dialog (ambos sinalizam "nova seção" no
+ * mesmo peso visual). Antes colapsava em `Text variant="overline"` (11px
+ * uppercase) e competia com os field labels, achatando a hierarquia.
+ */
 function SectionHeader({
   icon: Icon,
   label,
@@ -64,11 +73,11 @@ function SectionHeader({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="mb-2 flex items-center gap-2">
-      <Icon className="size-3 text-primary/80" />
-      <Text variant="overline" as="h4" className="text-muted-foreground">
+    <div className="mb-2.5 flex items-center gap-2">
+      <Icon className="size-4 text-primary/80" />
+      <Heading level="subsection" as="h3" className="text-foreground">
         {label}
-      </Text>
+      </Heading>
       {action && <div className="ml-auto">{action}</div>}
     </div>
   );
@@ -349,695 +358,680 @@ export function AudienciaDetailDialog({
   const modalidadePopoverDisabled = savingModalidade || !canEditGeneral;
   const presencaDisabled = savingPresenca || !canEditGeneral;
 
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        showCloseButton={false}
-        className={cn(
-          'flex max-h-[90vh] w-[95vw] flex-col overflow-hidden p-0 gap-0 [scrollbar-width:thin] transition-[max-width] duration-300 ease-out md:flex-row',
-          ataOpen ? 'sm:max-w-xl md:max-w-275' : 'sm:max-w-lg md:max-w-xl'
-        )}
-      >
-        <DialogDescription className="sr-only">Detalhes da audiência</DialogDescription>
+  // ───────────────────────────────────────────────────────────────────────
+  // Slots do DialogDetailShell — composição declarativa da capa + hero + split.
+  // ───────────────────────────────────────────────────────────────────────
 
-        {/* ═══ COLUNA PRINCIPAL ═══ */}
-        <div
-          className={cn(
-            'flex min-w-0 flex-1 flex-col',
-            ataOpen && 'border-border/50 md:border-r'
+  const titleNode = (
+    <>
+      {poloAtivo}
+      <span className="mx-1.5 font-medium text-muted-foreground/70">×</span>
+      {poloPassivo}
+    </>
+  );
+
+  const metaNode = audiencia ? (
+    <Text
+      variant="micro-caption"
+      as="div"
+      className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-muted-foreground"
+    >
+      <span>{audiencia.numeroProcesso}</span>
+      {audiencia.classeJudicialDescricao && (
+        <>
+          <MetaDot />
+          <span>{audiencia.classeJudicialDescricao}</span>
+        </>
+      )}
+      <MetaDot />
+      <span>
+        {TRT_NOMES[audiencia.trt] || audiencia.trt} · {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
+      </span>
+      {orgaoJulgador && (
+        <>
+          <MetaDot />
+          <span>{orgaoJulgador}</span>
+        </>
+      )}
+      {audiencia.dataAutuacao && (
+        <>
+          <MetaDot />
+          <span>
+            Autuado em{' '}
+            {format(parseISO(audiencia.dataAutuacao), 'dd MMM yyyy', { locale: ptBR })}
+          </span>
+        </>
+      )}
+    </Text>
+  ) : undefined;
+
+  const heroNode =
+    audiencia && !isLoading && !error ? (
+      <div className="mx-5 mt-3 rounded-xl border border-primary/15 bg-primary/5 px-4 py-3">
+        <div className="mb-3 min-w-0">
+          <Heading level="widget" className="leading-tight text-foreground">
+            {audiencia.tipoDescricao || 'Audiência'}
+          </Heading>
+          {dataInicio && dataFim && (
+            <Text variant="caption" as="p" className="mt-0.5 capitalize text-muted-foreground">
+              {format(dataInicio, 'EEE, dd MMM yyyy', { locale: ptBR })}
+              {' · '}
+              <span className="tabular-nums">
+                {format(dataInicio, 'HH:mm')} – {format(dataFim, 'HH:mm')}
+              </span>
+            </Text>
           )}
-        >
-          {/* HEADER · Capa do processo */}
-          <div className="shrink-0 border-b border-border/40 px-5 pt-4 pb-3">
-            <div className="mb-1 flex items-center justify-between gap-3">
-              <DialogTitle className="min-w-0 flex-1 truncate -tracking-[0.01em] text-foreground">
-                {poloAtivo}
-                <span className="mx-1.5 font-medium text-muted-foreground/70">×</span>
-                {poloPassivo}
-              </DialogTitle>
-              {audiencia && <AudienciaStatusBadge status={audiencia.status} />}
-              <button
-                type="button"
-                onClick={() => onOpenChange(false)}
-                className="inline-flex size-7 shrink-0 items-center justify-center rounded-md text-muted-foreground/60 transition-colors hover:bg-muted/60 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                aria-label="Fechar"
-              >
-                <X className="size-3.5" />
-              </button>
-            </div>
+        </div>
 
-            {audiencia && (
-              <Text
-                variant="micro-caption"
-                as="div"
-                className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-muted-foreground"
-              >
-                <span>{audiencia.numeroProcesso}</span>
-                {audiencia.classeJudicialDescricao && (
-                  <>
-                    <MetaDot />
-                    <span>{audiencia.classeJudicialDescricao}</span>
-                  </>
-                )}
-                <MetaDot />
-                <span>
-                  {TRT_NOMES[audiencia.trt] || audiencia.trt} · {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
-                </span>
-                {orgaoJulgador && (
-                  <>
-                    <MetaDot />
-                    <span>{orgaoJulgador}</span>
-                  </>
-                )}
-                {audiencia.dataAutuacao && (
-                  <>
-                    <MetaDot />
-                    <span>
-                      Autuado em{' '}
-                      {format(parseISO(audiencia.dataAutuacao), 'dd MMM yyyy', { locale: ptBR })}
-                    </span>
-                  </>
-                )}
-              </Text>
-            )}
+        <div className="mb-3 flex flex-wrap gap-x-5 gap-y-2.5 border-b border-border/40 pb-3">
+          {/* Modalidade — label overline 11px é deliberado (chip de metadata) */}
+          <div className="flex flex-col gap-1">
+            <Text variant="overline" className="text-muted-foreground/75">
+              Modalidade
+            </Text>
+            <Popover
+              open={modalidadePopoverOpen && !modalidadePopoverDisabled}
+              onOpenChange={(v) => !modalidadePopoverDisabled && setModalidadePopoverOpen(v)}
+            >
+              <PopoverTrigger asChild>
+                <button
+                  type="button"
+                  disabled={modalidadePopoverDisabled}
+                  title={
+                    !canEditGeneral
+                      ? 'Você não tem permissão para editar audiências'
+                      : undefined
+                  }
+                  className={cn(
+                    'inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card pl-2 pr-2 py-0.5 text-[12px] font-medium text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60',
+                    !modalidadePopoverDisabled && 'cursor-pointer hover:border-border hover:bg-muted/60',
+                    modalidadePopoverDisabled && 'cursor-not-allowed'
+                  )}
+                >
+                  {savingModalidade ? (
+                    <LoadingSpinner size="sm" className="text-muted-foreground" />
+                  ) : (
+                    <>
+                      {audiencia.modalidade &&
+                        React.createElement(MODALIDADE_ICONS[audiencia.modalidade], {
+                          className: 'size-3 text-primary',
+                        })}
+                      <span>
+                        {audiencia.modalidade
+                          ? MODALIDADE_LABELS[audiencia.modalidade]
+                          : 'Definir'}
+                      </span>
+                      {!modalidadePopoverDisabled && (
+                        <ChevronDown className="size-3 text-muted-foreground/60" />
+                      )}
+                    </>
+                  )}
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-44 rounded-xl p-1.5 glass-dropdown" align="start">
+                <Text
+                  variant="overline"
+                  as="p"
+                  className="px-2 pt-1 pb-1.5 text-muted-foreground/60"
+                >
+                  Modalidade
+                </Text>
+                {(Object.values(ModalidadeAudiencia) as ModalidadeAudiencia[]).map((m) => {
+                  const Icon = MODALIDADE_ICONS[m];
+                  return (
+                    <button
+                      key={m}
+                      type="button"
+                      onClick={() => handleChangeModalidade(m)}
+                      className="flex w-full cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-[12px] transition-colors hover:bg-muted/60"
+                    >
+                      <Icon className="size-3.5 text-muted-foreground" />
+                      <span>{MODALIDADE_LABELS[m]}</span>
+                      {audiencia.modalidade === m && (
+                        <Check className="ml-auto size-3 text-primary" />
+                      )}
+                    </button>
+                  );
+                })}
+              </PopoverContent>
+            </Popover>
           </div>
 
-          {/* BLOCO DA AUDIÊNCIA · meio */}
-          {audiencia && !isLoading && !error && (
-            <div className="mx-5 mt-3 shrink-0 rounded-xl border border-primary/15 bg-primary/5 px-4 py-3">
-              <div className="mb-3 min-w-0">
-                <Heading level="widget" className="leading-tight text-foreground">
-                  {audiencia.tipoDescricao || 'Audiência'}
-                </Heading>
-                {dataInicio && dataFim && (
-                  <Text variant="caption" as="p" className="mt-0.5 capitalize text-muted-foreground">
-                    {format(dataInicio, 'EEE, dd MMM yyyy', { locale: ptBR })}
-                    {' · '}
-                    <span className="tabular-nums">
-                      {format(dataInicio, 'HH:mm')} – {format(dataFim, 'HH:mm')}
-                    </span>
-                  </Text>
-                )}
-              </div>
+          {/* Responsável */}
+          <div className="flex flex-col gap-1">
+            <Text variant="overline" className="text-muted-foreground/75">
+              Responsável
+            </Text>
+            <AudienciaResponsavelPopover
+              audienciaId={audiencia.id}
+              responsavelId={audiencia.responsavelId}
+              usuarios={usuarios}
+              disabled={!canAssign}
+              onSuccess={(a) => {
+                if (a) setLocalAudiencia(a);
+              }}
+            >
+              <ResponsavelTriggerContent
+                responsavelId={audiencia.responsavelId}
+                usuarios={usuarios}
+                size="sm"
+              />
+            </AudienciaResponsavelPopover>
+          </div>
+        </div>
 
-              <div className="mb-3 flex flex-wrap gap-x-5 gap-y-2.5 border-b border-border/40 pb-3">
-                {/* Modalidade */}
-                <div className="flex flex-col gap-1">
-                  <Text variant="overline" className="text-muted-foreground/75">
-                    Modalidade
-                  </Text>
-                  <Popover
-                    open={modalidadePopoverOpen && !modalidadePopoverDisabled}
-                    onOpenChange={(v) => !modalidadePopoverDisabled && setModalidadePopoverOpen(v)}
+        {/* Ações */}
+        <div className="flex flex-wrap gap-1.5">
+          {(isVirtual || isHibrida) && (
+            audiencia.urlAudienciaVirtual ? (
+              <a
+                href={audiencia.urlAudienciaVirtual}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-md bg-primary px-2.5 py-1 text-[11px] font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+              >
+                <Video className="size-3" />
+                Entrar na sala virtual
+              </a>
+            ) : (
+              <span className="inline-flex cursor-not-allowed items-center gap-1.5 rounded-md bg-primary/50 px-2.5 py-1 text-[11px] font-medium text-primary-foreground/60">
+                <Video className="size-3" />
+                Entrar na sala virtual
+              </span>
+            )
+          )}
+          {isPje ? (
+            <a
+              href={pjeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-md border border-border/60 bg-card px-2.5 py-1 text-[11px] font-medium text-foreground transition-colors hover:border-border hover:bg-muted/60"
+            >
+              <ExternalLink className="size-3" />
+              Abrir no PJe
+            </a>
+          ) : (
+            <span className="inline-flex cursor-not-allowed items-center gap-1.5 rounded-md border border-border/40 bg-card px-2.5 py-1 text-[11px] font-medium text-muted-foreground/40">
+              <ExternalLink className="size-3" />
+              Abrir no PJe
+            </span>
+          )}
+        </div>
+      </div>
+    ) : undefined;
+
+  const splitAta =
+    ataOpen && audiencia?.urlAtaAudiencia
+      ? {
+          open: true,
+          content: (
+            <>
+              <div className="flex items-center justify-between px-4 py-3 border-b border-border/40 bg-card">
+                <div className="flex items-center gap-2 text-label font-semibold">
+                  <FileText className="size-3.5 text-success" />
+                  Ata{' '}
+                  {dataInicio && (
+                    <Text variant="caption" as="span" className="font-medium">
+                      · {format(dataInicio, 'dd MMM yyyy', { locale: ptBR })}
+                    </Text>
+                  )}
+                </div>
+                <div className="flex items-center gap-1">
+                  <Button variant="ghost" size="sm" asChild className="h-7 px-2 text-[11px]">
+                    <a href={audiencia.urlAtaAudiencia} target="_blank" rel="noopener noreferrer">
+                      Baixar
+                    </a>
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="size-7"
+                    onClick={() => setAtaOpen(false)}
+                    aria-label="Fechar PDF"
                   >
-                    <PopoverTrigger asChild>
+                    <X className="size-4" />
+                  </Button>
+                </div>
+              </div>
+              <div className="flex-1 overflow-hidden">
+                <iframe
+                  src={audiencia.urlAtaAudiencia}
+                  title="Ata da Audiência"
+                  className="w-full h-full border-0"
+                />
+              </div>
+            </>
+          ),
+        }
+      : undefined;
+
+  return (
+    <DialogDetailShell
+      open={open}
+      onOpenChange={onOpenChange}
+      title={titleNode}
+      titleAccessory={audiencia ? <AudienciaStatusBadge status={audiencia.status} /> : undefined}
+      meta={metaNode}
+      description="Detalhes da audiência"
+      maxWidth="xl"
+      splitMaxWidth="5xl"
+      hero={heroNode}
+      split={splitAta}
+      footer={
+        <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
+          Fechar
+        </Button>
+      }
+    >
+      {isLoading && (
+        <div className="flex items-center justify-center py-10">
+          <LoadingSpinner className="size-6 text-muted-foreground" />
+        </div>
+      )}
+      {error && !isLoading && (
+        <div className="flex flex-col items-center justify-center gap-2 py-10 text-center">
+          <AlertCircle className="size-6 text-destructive" />
+          <Text variant="caption" className="text-destructive">{error}</Text>
+        </div>
+      )}
+
+      {audiencia && !isLoading && !error && (
+        <div className="space-y-3.5">
+          {/* ATA · só quando existe */}
+          {hasAta && (
+            <div>
+              <SectionHeader icon={FileText} label="Ata da Audiência" />
+              <button
+                type="button"
+                onClick={() => setAtaOpen((v) => !v)}
+                className="flex w-full cursor-pointer items-center gap-3 rounded-xl border border-success/25 bg-success/8 p-2.5 text-left transition-colors hover:bg-success/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <span className="inline-flex size-7 shrink-0 items-center justify-center rounded-lg bg-success/18 text-success">
+                  <FileText className="size-3.5" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <Text variant="label" as="div" className="text-foreground">
+                    Ata assinada · PDF
+                  </Text>
+                  <Text variant="micro-caption" as="div" className="text-muted-foreground">
+                    Clique para {ataOpen ? 'fechar' : 'ler ao lado'}
+                  </Text>
+                </div>
+                <ChevronRight
+                  className={cn(
+                    'size-4 text-muted-foreground transition-transform',
+                    ataOpen && 'rotate-90'
+                  )}
+                />
+              </button>
+            </div>
+          )}
+
+          {/* LOCAL / ACESSO — condicional por modalidade */}
+          <div>
+            <SectionHeader icon={Building2} label="Local / Acesso" />
+            <SectionCard>
+              {(isVirtual || isHibrida) && (
+                <div className={isHibrida ? 'mb-3 pb-3 border-b border-border/40' : ''}>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div className="flex items-center gap-1.5">
+                      <Text variant="label" as="span" className="text-foreground">
+                        Link da sala virtual
+                      </Text>
+                      {urlObrigatoriaFaltando && (
+                        <span
+                          className="inline-flex items-center gap-1 rounded-full bg-warning/12 px-1.5 py-px text-[9px] font-semibold uppercase tracking-[0.08em] text-warning"
+                          role="status"
+                          aria-label="Campo obrigatório não preenchido"
+                        >
+                          <AlertCircle className="size-2.5" />
+                          Obrigatório
+                        </span>
+                      )}
+                    </div>
+                    {!editingUrl && canEditUrl && (
                       <button
                         type="button"
-                        disabled={modalidadePopoverDisabled}
+                        onClick={handleStartEditUrl}
+                        className="flex cursor-pointer items-center gap-1 text-micro-caption font-semibold uppercase tracking-wider text-primary/70 transition-colors hover:text-primary"
+                      >
+                        <Pencil className="size-2.5" />
+                        {audiencia.urlAudienciaVirtual ? 'Editar' : 'Adicionar'}
+                      </button>
+                    )}
+                  </div>
+                  {editingUrl ? (
+                    <div className="flex items-center gap-2">
+                      <Input
+                        type="url"
+                        placeholder="https://..."
+                        value={urlDraft}
+                        onChange={(e) => setUrlDraft(e.target.value)}
+                        className="h-8 text-xs flex-1"
+                        autoFocus
+                      />
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="size-7 shrink-0"
+                        onClick={handleSaveUrl}
+                        disabled={savingUrl}
+                      >
+                        {savingUrl ? (
+                          <LoadingSpinner size="sm" />
+                        ) : (
+                          <Check className="size-3.5 text-success" />
+                        )}
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="size-7 shrink-0"
+                        onClick={() => setEditingUrl(false)}
+                      >
+                        <X className="size-3.5 text-muted-foreground" />
+                      </Button>
+                    </div>
+                  ) : audiencia.urlAudienciaVirtual ? (
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Video className="size-3.5 text-muted-foreground/60 shrink-0" />
+                      <a
+                        href={audiencia.urlAudienciaVirtual}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[13px] text-primary truncate hover:underline"
+                      >
+                        {audiencia.urlAudienciaVirtual}
+                      </a>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="size-7 shrink-0"
+                        onClick={() => handleCopyUrl(audiencia.urlAudienciaVirtual!)}
+                      >
+                        {copiedUrl ? (
+                          <Check className="size-3.5 text-success" />
+                        ) : (
+                          <Copy className="size-3.5" />
+                        )}
+                      </Button>
+                    </div>
+                  ) : (
+                    <Text variant="caption" className="text-muted-foreground/60 italic">
+                      Nenhum link cadastrado
+                    </Text>
+                  )}
+                </div>
+              )}
+
+              {(isPresencial || isHibrida) && (
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div className="flex items-center gap-1.5">
+                      <Text variant="label" as="span" className="text-foreground">
+                        Endereço presencial
+                      </Text>
+                      {enderecoObrigatorioFaltando && (
+                        <span
+                          className="inline-flex items-center gap-1 rounded-full bg-warning/12 px-1.5 py-px text-[9px] font-semibold uppercase tracking-[0.08em] text-warning"
+                          role="status"
+                          aria-label="Campo obrigatório não preenchido"
+                        >
+                          <AlertCircle className="size-2.5" />
+                          Obrigatório
+                        </span>
+                      )}
+                    </div>
+                    {!editingEndereco && canEditGeneral && (
+                      <button
+                        type="button"
+                        onClick={handleStartEditEndereco}
+                        className="flex cursor-pointer items-center gap-1 text-micro-caption font-semibold uppercase tracking-wider text-primary/70 transition-colors hover:text-primary"
+                      >
+                        <Pencil className="size-2.5" />
+                        {audiencia.enderecoPresencial ? 'Editar' : 'Adicionar'}
+                      </button>
+                    )}
+                  </div>
+                  {editingEndereco ? (
+                    <div className="space-y-2">
+                      <div className="grid grid-cols-[1fr_80px] gap-2">
+                        <Input
+                          placeholder="Logradouro"
+                          value={enderecoDraft.logradouro}
+                          onChange={(e) =>
+                            setEnderecoDraft((d) => ({ ...d, logradouro: e.target.value }))
+                          }
+                          className="h-8 text-xs"
+                          autoFocus
+                        />
+                        <Input
+                          placeholder="Nº"
+                          value={enderecoDraft.numero}
+                          onChange={(e) =>
+                            setEnderecoDraft((d) => ({ ...d, numero: e.target.value }))
+                          }
+                          className="h-8 text-xs"
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <Input
+                          placeholder="Complemento"
+                          value={enderecoDraft.complemento || ''}
+                          onChange={(e) =>
+                            setEnderecoDraft((d) => ({ ...d, complemento: e.target.value }))
+                          }
+                          className="h-8 text-xs"
+                        />
+                        <Input
+                          placeholder="Bairro"
+                          value={enderecoDraft.bairro}
+                          onChange={(e) =>
+                            setEnderecoDraft((d) => ({ ...d, bairro: e.target.value }))
+                          }
+                          className="h-8 text-xs"
+                        />
+                      </div>
+                      <div className="grid grid-cols-[1fr_60px_100px] gap-2">
+                        <Input
+                          placeholder="Cidade"
+                          value={enderecoDraft.cidade}
+                          onChange={(e) =>
+                            setEnderecoDraft((d) => ({ ...d, cidade: e.target.value }))
+                          }
+                          className="h-8 text-xs"
+                        />
+                        <Input
+                          placeholder="UF"
+                          maxLength={2}
+                          value={enderecoDraft.uf}
+                          onChange={(e) =>
+                            setEnderecoDraft((d) => ({
+                              ...d,
+                              uf: e.target.value.toUpperCase(),
+                            }))
+                          }
+                          className="h-8 text-xs"
+                        />
+                        <Input
+                          placeholder="CEP"
+                          value={enderecoDraft.cep}
+                          onChange={(e) =>
+                            setEnderecoDraft((d) => ({ ...d, cep: e.target.value }))
+                          }
+                          className="h-8 text-xs"
+                        />
+                      </div>
+                      <div className="flex justify-end gap-1.5 mt-1">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => setEditingEndereco(false)}
+                          className="h-7 text-xs"
+                        >
+                          Cancelar
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={handleSaveEndereco}
+                          disabled={savingEndereco}
+                          className="h-7 text-xs"
+                        >
+                          {savingEndereco && (
+                            <LoadingSpinner size="sm" className="mr-1" />
+                          )}
+                          Salvar
+                        </Button>
+                      </div>
+                    </div>
+                  ) : audiencia.enderecoPresencial ? (
+                    <Text variant="caption" className="text-foreground/90 leading-relaxed">
+                      {audiencia.enderecoPresencial.logradouro},{' '}
+                      {audiencia.enderecoPresencial.numero}
+                      {audiencia.enderecoPresencial.complemento &&
+                        ` — ${audiencia.enderecoPresencial.complemento}`}
+                      <br />
+                      <span className="text-muted-foreground">
+                        {audiencia.enderecoPresencial.bairro},{' '}
+                        {audiencia.enderecoPresencial.cidade} —{' '}
+                        {audiencia.enderecoPresencial.uf}
+                        {audiencia.enderecoPresencial.cep &&
+                          ` · CEP ${audiencia.enderecoPresencial.cep}`}
+                      </span>
+                    </Text>
+                  ) : (
+                    <Text variant="caption" className="text-muted-foreground/60 italic">
+                      Nenhum endereço cadastrado
+                    </Text>
+                  )}
+                </div>
+              )}
+
+              {/* Híbrida: quem é presencial? */}
+              {isHibrida && (
+                <div className="mt-3 pt-3 border-t border-border/40">
+                  <Text variant="label" as="span" className="text-foreground block mb-2">
+                    Quem participa presencialmente?
+                  </Text>
+                  <div className="inline-flex gap-1 p-1 rounded-lg bg-muted/60 border border-border/40">
+                    {(
+                      [
+                        { v: PresencaHibrida.Advogado, label: 'Advogados' },
+                        { v: PresencaHibrida.Cliente, label: 'Clientes' },
+                      ] as const
+                    ).map(({ v, label }) => (
+                      <button
+                        key={v}
+                        type="button"
+                        disabled={presencaDisabled}
+                        onClick={() => handleChangePresencaHibrida(v)}
                         title={
                           !canEditGeneral
                             ? 'Você não tem permissão para editar audiências'
                             : undefined
                         }
                         className={cn(
-                          'inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card pl-2 pr-2 py-0.5 text-[12px] font-medium text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60',
-                          !modalidadePopoverDisabled && 'cursor-pointer hover:border-border hover:bg-muted/60',
-                          modalidadePopoverDisabled && 'cursor-not-allowed'
+                          'rounded-md px-3 py-1 text-[11px] font-medium transition-colors',
+                          audiencia.presencaHibrida === v
+                            ? 'bg-card text-foreground shadow-sm'
+                            : 'text-muted-foreground hover:text-foreground',
+                          presencaDisabled && 'cursor-not-allowed opacity-60'
                         )}
                       >
-                        {savingModalidade ? (
-                          <LoadingSpinner size="sm" className="text-muted-foreground" />
-                        ) : (
-                          <>
-                            {audiencia.modalidade &&
-                              React.createElement(MODALIDADE_ICONS[audiencia.modalidade], {
-                                className: 'size-3 text-primary',
-                              })}
-                            <span>
-                              {audiencia.modalidade
-                                ? MODALIDADE_LABELS[audiencia.modalidade]
-                                : 'Definir'}
-                            </span>
-                            {!modalidadePopoverDisabled && (
-                              <ChevronDown className="size-3 text-muted-foreground/60" />
-                            )}
-                          </>
-                        )}
+                        {label}
                       </button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-44 rounded-xl p-1.5 glass-dropdown" align="start">
-                      <Text
-                        variant="overline"
-                        as="p"
-                        className="px-2 pt-1 pb-1.5 text-muted-foreground/60"
-                      >
-                        Modalidade
-                      </Text>
-                      {(Object.values(ModalidadeAudiencia) as ModalidadeAudiencia[]).map((m) => {
-                        const Icon = MODALIDADE_ICONS[m];
-                        return (
-                          <button
-                            key={m}
-                            type="button"
-                            onClick={() => handleChangeModalidade(m)}
-                            className="flex w-full cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-[12px] transition-colors hover:bg-muted/60"
-                          >
-                            <Icon className="size-3.5 text-muted-foreground" />
-                            <span>{MODALIDADE_LABELS[m]}</span>
-                            {audiencia.modalidade === m && (
-                              <Check className="ml-auto size-3 text-primary" />
-                            )}
-                          </button>
-                        );
-                      })}
-                    </PopoverContent>
-                  </Popover>
+                    ))}
+                  </div>
+                  <p className="text-[11px] text-muted-foreground/80 mt-2 leading-relaxed">
+                    Os demais participam por videoconferência.
+                  </p>
                 </div>
+              )}
+            </SectionCard>
+          </div>
 
-                {/* Responsável */}
-                <div className="flex flex-col gap-1">
-                  <Text variant="overline" className="text-muted-foreground/75">
-                    Responsável
-                  </Text>
-                  <AudienciaResponsavelPopover
-                    audienciaId={audiencia.id}
-                    responsavelId={audiencia.responsavelId}
-                    usuarios={usuarios}
-                    disabled={!canAssign}
-                    onSuccess={(a) => {
-                      if (a) setLocalAudiencia(a);
-                    }}
-                  >
-                    <ResponsavelTriggerContent
-                      responsavelId={audiencia.responsavelId}
-                      usuarios={usuarios}
-                      size="sm"
-                    />
-                  </AudienciaResponsavelPopover>
-                </div>
-              </div>
-
-              {/* Ações */}
-              <div className="flex flex-wrap gap-1.5">
-                {(isVirtual || isHibrida) && (
-                  audiencia.urlAudienciaVirtual ? (
-                    <a
-                      href={audiencia.urlAudienciaVirtual}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 rounded-md bg-primary px-2.5 py-1 text-[11px] font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-                    >
-                      <Video className="size-3" />
-                      Entrar na sala virtual
-                    </a>
-                  ) : (
-                    <span className="inline-flex cursor-not-allowed items-center gap-1.5 rounded-md bg-primary/50 px-2.5 py-1 text-[11px] font-medium text-primary-foreground/60">
-                      <Video className="size-3" />
-                      Entrar na sala virtual
-                    </span>
-                  )
-                )}
-                {isPje ? (
-                  <a
-                    href={pjeUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-md border border-border/60 bg-card px-2.5 py-1 text-[11px] font-medium text-foreground transition-colors hover:border-border hover:bg-muted/60"
-                  >
-                    <ExternalLink className="size-3" />
-                    Abrir no PJe
-                  </a>
-                ) : (
-                  <span className="inline-flex cursor-not-allowed items-center gap-1.5 rounded-md border border-border/40 bg-card px-2.5 py-1 text-[11px] font-medium text-muted-foreground/40">
-                    <ExternalLink className="size-3" />
-                    Abrir no PJe
-                  </span>
-                )}
-              </div>
+          {/* INDICADORES */}
+          {hasIndicadores && (
+            <div>
+              <SectionHeader icon={Clock} label="Indicadores" />
+              <SectionCard>
+                <AudienciaIndicadorBadges
+                  audiencia={audiencia}
+                  show={['segredo_justica', 'juizo_digital', 'designada', 'documento_ativo']}
+                />
+              </SectionCard>
             </div>
           )}
 
-          {/* BODY scrollável */}
-          <div className="flex-1 overflow-y-auto px-5 py-3.5 [scrollbar-width:thin]">
-            {isLoading && (
-              <div className="flex items-center justify-center py-10">
-                <LoadingSpinner className="size-6 text-muted-foreground" />
-              </div>
-            )}
-            {error && !isLoading && (
-              <div className="flex flex-col items-center justify-center gap-2 py-10 text-center">
-                <AlertCircle className="size-6 text-destructive" />
-                <Text variant="caption" className="text-destructive">{error}</Text>
-              </div>
-            )}
-
-            {audiencia && !isLoading && !error && (
-              <div className="space-y-3.5">
-                {/* ATA · só quando existe */}
-                {hasAta && (
-                  <div>
-                    <SectionHeader icon={FileText} label="Ata da Audiência" />
-                    <button
-                      type="button"
-                      onClick={() => setAtaOpen((v) => !v)}
-                      className="flex w-full cursor-pointer items-center gap-3 rounded-xl border border-success/25 bg-success/8 p-2.5 text-left transition-colors hover:bg-success/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    >
-                      <span className="inline-flex size-7 shrink-0 items-center justify-center rounded-lg bg-success/18 text-success">
-                        <FileText className="size-3.5" />
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <Text variant="label" as="div" className="text-foreground">
-                          Ata assinada · PDF
-                        </Text>
-                        <Text variant="micro-caption" as="div" className="text-muted-foreground">
-                          Clique para {ataOpen ? 'fechar' : 'ler ao lado'}
-                        </Text>
-                      </div>
-                      <ChevronRight
-                        className={cn(
-                          'size-4 text-muted-foreground transition-transform',
-                          ataOpen && 'rotate-90'
-                        )}
-                      />
-                    </button>
-                  </div>
-                )}
-
-                {/* LOCAL / ACESSO — condicional por modalidade */}
-                <div>
-                  <SectionHeader icon={Building2} label="Local / Acesso" />
-                  <SectionCard>
-                    {(isVirtual || isHibrida) && (
-                      <div className={isHibrida ? 'mb-3 pb-3 border-b border-border/40' : ''}>
-                        <div className="flex items-center justify-between mb-1.5">
-                          <div className="flex items-center gap-1.5">
-                            <Text variant="overline" className="text-muted-foreground">
-                              Link da sala virtual
-                            </Text>
-                            {urlObrigatoriaFaltando && (
-                              <span
-                                className="inline-flex items-center gap-1 rounded-full bg-warning/12 px-1.5 py-px text-[9px] font-semibold uppercase tracking-[0.08em] text-warning"
-                                role="status"
-                                aria-label="Campo obrigatório não preenchido"
-                              >
-                                <AlertCircle className="size-2.5" />
-                                Obrigatório
-                              </span>
-                            )}
-                          </div>
-                          {!editingUrl && canEditUrl && (
-                            <button
-                              type="button"
-                              onClick={handleStartEditUrl}
-                              className="flex cursor-pointer items-center gap-1 text-micro-caption font-semibold uppercase tracking-wider text-primary/70 transition-colors hover:text-primary"
-                            >
-                              <Pencil className="size-2.5" />
-                              {audiencia.urlAudienciaVirtual ? 'Editar' : 'Adicionar'}
-                            </button>
-                          )}
-                        </div>
-                        {editingUrl ? (
-                          <div className="flex items-center gap-2">
-                            <Input
-                              type="url"
-                              placeholder="https://..."
-                              value={urlDraft}
-                              onChange={(e) => setUrlDraft(e.target.value)}
-                              className="h-8 text-xs flex-1"
-                              autoFocus
-                            />
-                            <Button
-                              size="icon"
-                              variant="ghost"
-                              className="size-7 shrink-0"
-                              onClick={handleSaveUrl}
-                              disabled={savingUrl}
-                            >
-                              {savingUrl ? (
-                                <LoadingSpinner size="sm" />
-                              ) : (
-                                <Check className="size-3.5 text-success" />
-                              )}
-                            </Button>
-                            <Button
-                              size="icon"
-                              variant="ghost"
-                              className="size-7 shrink-0"
-                              onClick={() => setEditingUrl(false)}
-                            >
-                              <X className="size-3.5 text-muted-foreground" />
-                            </Button>
-                          </div>
-                        ) : audiencia.urlAudienciaVirtual ? (
-                          <div className="flex items-center gap-2 min-w-0">
-                            <Video className="size-3.5 text-muted-foreground/60 shrink-0" />
-                            <a
-                              href={audiencia.urlAudienciaVirtual}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-[13px] text-primary truncate hover:underline"
-                            >
-                              {audiencia.urlAudienciaVirtual}
-                            </a>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="size-7 shrink-0"
-                              onClick={() => handleCopyUrl(audiencia.urlAudienciaVirtual!)}
-                            >
-                              {copiedUrl ? (
-                                <Check className="size-3.5 text-success" />
-                              ) : (
-                                <Copy className="size-3.5" />
-                              )}
-                            </Button>
-                          </div>
-                        ) : (
-                          <Text variant="caption" className="text-muted-foreground/60 italic">
-                            Nenhum link cadastrado
-                          </Text>
-                        )}
-                      </div>
-                    )}
-
-                    {(isPresencial || isHibrida) && (
-                      <div>
-                        <div className="flex items-center justify-between mb-1.5">
-                          <div className="flex items-center gap-1.5">
-                            <Text variant="overline" className="text-muted-foreground">
-                              Endereço presencial
-                            </Text>
-                            {enderecoObrigatorioFaltando && (
-                              <span
-                                className="inline-flex items-center gap-1 rounded-full bg-warning/12 px-1.5 py-px text-[9px] font-semibold uppercase tracking-[0.08em] text-warning"
-                                role="status"
-                                aria-label="Campo obrigatório não preenchido"
-                              >
-                                <AlertCircle className="size-2.5" />
-                                Obrigatório
-                              </span>
-                            )}
-                          </div>
-                          {!editingEndereco && canEditGeneral && (
-                            <button
-                              type="button"
-                              onClick={handleStartEditEndereco}
-                              className="flex cursor-pointer items-center gap-1 text-micro-caption font-semibold uppercase tracking-wider text-primary/70 transition-colors hover:text-primary"
-                            >
-                              <Pencil className="size-2.5" />
-                              {audiencia.enderecoPresencial ? 'Editar' : 'Adicionar'}
-                            </button>
-                          )}
-                        </div>
-                        {editingEndereco ? (
-                          <div className="space-y-2">
-                            <div className="grid grid-cols-[1fr_80px] gap-2">
-                              <Input
-                                placeholder="Logradouro"
-                                value={enderecoDraft.logradouro}
-                                onChange={(e) =>
-                                  setEnderecoDraft((d) => ({ ...d, logradouro: e.target.value }))
-                                }
-                                className="h-8 text-xs"
-                                autoFocus
-                              />
-                              <Input
-                                placeholder="Nº"
-                                value={enderecoDraft.numero}
-                                onChange={(e) =>
-                                  setEnderecoDraft((d) => ({ ...d, numero: e.target.value }))
-                                }
-                                className="h-8 text-xs"
-                              />
-                            </div>
-                            <div className="grid grid-cols-2 gap-2">
-                              <Input
-                                placeholder="Complemento"
-                                value={enderecoDraft.complemento || ''}
-                                onChange={(e) =>
-                                  setEnderecoDraft((d) => ({ ...d, complemento: e.target.value }))
-                                }
-                                className="h-8 text-xs"
-                              />
-                              <Input
-                                placeholder="Bairro"
-                                value={enderecoDraft.bairro}
-                                onChange={(e) =>
-                                  setEnderecoDraft((d) => ({ ...d, bairro: e.target.value }))
-                                }
-                                className="h-8 text-xs"
-                              />
-                            </div>
-                            <div className="grid grid-cols-[1fr_60px_100px] gap-2">
-                              <Input
-                                placeholder="Cidade"
-                                value={enderecoDraft.cidade}
-                                onChange={(e) =>
-                                  setEnderecoDraft((d) => ({ ...d, cidade: e.target.value }))
-                                }
-                                className="h-8 text-xs"
-                              />
-                              <Input
-                                placeholder="UF"
-                                maxLength={2}
-                                value={enderecoDraft.uf}
-                                onChange={(e) =>
-                                  setEnderecoDraft((d) => ({
-                                    ...d,
-                                    uf: e.target.value.toUpperCase(),
-                                  }))
-                                }
-                                className="h-8 text-xs"
-                              />
-                              <Input
-                                placeholder="CEP"
-                                value={enderecoDraft.cep}
-                                onChange={(e) =>
-                                  setEnderecoDraft((d) => ({ ...d, cep: e.target.value }))
-                                }
-                                className="h-8 text-xs"
-                              />
-                            </div>
-                            <div className="flex justify-end gap-1.5 mt-1">
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => setEditingEndereco(false)}
-                                className="h-7 text-xs"
-                              >
-                                Cancelar
-                              </Button>
-                              <Button
-                                size="sm"
-                                onClick={handleSaveEndereco}
-                                disabled={savingEndereco}
-                                className="h-7 text-xs"
-                              >
-                                {savingEndereco && (
-                                  <LoadingSpinner size="sm" className="mr-1" />
-                                )}
-                                Salvar
-                              </Button>
-                            </div>
-                          </div>
-                        ) : audiencia.enderecoPresencial ? (
-                          <Text variant="caption" className="text-foreground/90 leading-relaxed">
-                            {audiencia.enderecoPresencial.logradouro},{' '}
-                            {audiencia.enderecoPresencial.numero}
-                            {audiencia.enderecoPresencial.complemento &&
-                              ` — ${audiencia.enderecoPresencial.complemento}`}
-                            <br />
-                            <span className="text-muted-foreground">
-                              {audiencia.enderecoPresencial.bairro},{' '}
-                              {audiencia.enderecoPresencial.cidade} —{' '}
-                              {audiencia.enderecoPresencial.uf}
-                              {audiencia.enderecoPresencial.cep &&
-                                ` · CEP ${audiencia.enderecoPresencial.cep}`}
-                            </span>
-                          </Text>
-                        ) : (
-                          <Text variant="caption" className="text-muted-foreground/60 italic">
-                            Nenhum endereço cadastrado
-                          </Text>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Híbrida: quem é presencial? */}
-                    {isHibrida && (
-                      <div className="mt-3 pt-3 border-t border-border/40">
-                        <Text variant="overline" as="span" className="text-muted-foreground block mb-2">
-                          Quem participa presencialmente?
-                        </Text>
-                        <div className="inline-flex gap-1 p-1 rounded-lg bg-muted/60 border border-border/40">
-                          {(
-                            [
-                              { v: PresencaHibrida.Advogado, label: 'Advogados' },
-                              { v: PresencaHibrida.Cliente, label: 'Clientes' },
-                            ] as const
-                          ).map(({ v, label }) => (
-                            <button
-                              key={v}
-                              type="button"
-                              disabled={presencaDisabled}
-                              onClick={() => handleChangePresencaHibrida(v)}
-                              title={
-                                !canEditGeneral
-                                  ? 'Você não tem permissão para editar audiências'
-                                  : undefined
-                              }
-                              className={cn(
-                                'rounded-md px-3 py-1 text-[11px] font-medium transition-colors',
-                                audiencia.presencaHibrida === v
-                                  ? 'bg-card text-foreground shadow-sm'
-                                  : 'text-muted-foreground hover:text-foreground',
-                                presencaDisabled && 'cursor-not-allowed opacity-60'
-                              )}
-                            >
-                              {label}
-                            </button>
-                          ))}
-                        </div>
-                        <p className="text-[11px] text-muted-foreground/80 mt-2 leading-relaxed">
-                          Os demais participam por videoconferência.
-                        </p>
-                      </div>
-                    )}
-                  </SectionCard>
-                </div>
-
-                {/* INDICADORES */}
-                {hasIndicadores && (
-                  <div>
-                    <SectionHeader icon={Clock} label="Indicadores" />
-                    <SectionCard>
-                      <AudienciaIndicadorBadges
-                        audiencia={audiencia}
-                        show={['segredo_justica', 'juizo_digital', 'designada', 'documento_ativo']}
-                      />
-                    </SectionCard>
-                  </div>
-                )}
-
-                {/* OBSERVAÇÕES — inline edit */}
-                <div>
-                  <SectionHeader
-                    icon={MessageSquare}
-                    label="Observações"
-                    action={
-                      !editingObs && canEditGeneral && (
-                        <button
-                          type="button"
-                          onClick={handleStartEditObs}
-                          className="text-[10px] font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center gap-1"
-                        >
-                          <Pencil className="size-2.5" />
-                          {audiencia.observacoes ? 'Editar' : 'Adicionar'}
-                        </button>
-                      )
-                    }
+          {/* OBSERVAÇÕES — inline edit */}
+          <div>
+            <SectionHeader
+              icon={MessageSquare}
+              label="Observações"
+              action={
+                !editingObs && canEditGeneral && (
+                  <button
+                    type="button"
+                    onClick={handleStartEditObs}
+                    className="text-[10px] font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center gap-1"
+                  >
+                    <Pencil className="size-2.5" />
+                    {audiencia.observacoes ? 'Editar' : 'Adicionar'}
+                  </button>
+                )
+              }
+            />
+            <SectionCard>
+              {editingObs ? (
+                <div className="space-y-2">
+                  <Textarea
+                    placeholder="Anotações sobre a audiência..."
+                    value={obsDraft}
+                    onChange={(e) => setObsDraft(e.target.value)}
+                    rows={3}
+                    className="text-[13px]"
+                    autoFocus
                   />
-                  <SectionCard>
-                    {editingObs ? (
-                      <div className="space-y-2">
-                        <Textarea
-                          placeholder="Anotações sobre a audiência..."
-                          value={obsDraft}
-                          onChange={(e) => setObsDraft(e.target.value)}
-                          rows={3}
-                          className="text-[13px]"
-                          autoFocus
-                        />
-                        <div className="flex justify-end gap-1.5">
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => setEditingObs(false)}
-                            className="h-7 text-xs"
-                          >
-                            Cancelar
-                          </Button>
-                          <Button
-                            size="sm"
-                            onClick={handleSaveObs}
-                            disabled={savingObs}
-                            className="h-7 text-xs"
-                          >
-                            {savingObs && <LoadingSpinner size="sm" className="mr-1" />}
-                            Salvar
-                          </Button>
-                        </div>
-                      </div>
-                    ) : audiencia.observacoes ? (
-                      <Text variant="caption" className="text-foreground/90 leading-relaxed whitespace-pre-wrap">
-                        {audiencia.observacoes}
-                      </Text>
-                    ) : (
-                      <Text variant="caption" className="text-muted-foreground/60 italic">
-                        Nenhuma observação registrada
-                      </Text>
-                    )}
-                  </SectionCard>
+                  <div className="flex justify-end gap-1.5">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setEditingObs(false)}
+                      className="h-7 text-xs"
+                    >
+                      Cancelar
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={handleSaveObs}
+                      disabled={savingObs}
+                      className="h-7 text-xs"
+                    >
+                      {savingObs && <LoadingSpinner size="sm" className="mr-1" />}
+                      Salvar
+                    </Button>
+                  </div>
                 </div>
-
-                {/* HISTÓRICO */}
-                <div>
-                  <SectionHeader icon={Clock} label="Histórico de Alterações" />
-                  <AudienciaTimeline audienciaId={audiencia.id} audiencia={audiencia} />
-                </div>
-              </div>
-            )}
+              ) : audiencia.observacoes ? (
+                <Text variant="caption" className="text-foreground/90 leading-relaxed whitespace-pre-wrap">
+                  {audiencia.observacoes}
+                </Text>
+              ) : (
+                <Text variant="caption" className="text-muted-foreground/60 italic">
+                  Nenhuma observação registrada
+                </Text>
+              )}
+            </SectionCard>
           </div>
 
-          {/* FOOTER */}
-          <div className="flex shrink-0 items-center justify-end border-t border-border/40 bg-card/40 px-5 py-2.5">
-            <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
-              Fechar
-            </Button>
+          {/* HISTÓRICO */}
+          <div>
+            <SectionHeader icon={Clock} label="Histórico de Alterações" />
+            <AudienciaTimeline audienciaId={audiencia.id} audiencia={audiencia} />
           </div>
         </div>
-
-        {/* ═══ COLUNA PDF (split view) ═══ */}
-        {ataOpen && audiencia?.urlAtaAudiencia && (
-          <aside className="w-full md:w-1/2 shrink-0 flex flex-col bg-muted/30 overflow-hidden border-t md:border-t-0 border-border/50 max-h-[50vh] md:max-h-none">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-border/40 bg-card">
-              <div className="flex items-center gap-2 text-label font-semibold">
-                <FileText className="size-3.5 text-success" />
-                Ata{' '}
-                {dataInicio && (
-                  <Text variant="caption" as="span" className="font-medium">
-                    · {format(dataInicio, 'dd MMM yyyy', { locale: ptBR })}
-                  </Text>
-                )}
-              </div>
-              <div className="flex items-center gap-1">
-                <Button variant="ghost" size="sm" asChild className="h-7 px-2 text-[11px]">
-                  <a href={audiencia.urlAtaAudiencia} target="_blank" rel="noopener noreferrer">
-                    Baixar
-                  </a>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="size-7"
-                  onClick={() => setAtaOpen(false)}
-                  aria-label="Fechar PDF"
-                >
-                  <X className="size-4" />
-                </Button>
-              </div>
-            </div>
-            <div className="flex-1 overflow-hidden">
-              <iframe
-                src={audiencia.urlAtaAudiencia}
-                title="Ata da Audiência"
-                className="w-full h-full border-0"
-              />
-            </div>
-          </aside>
-        )}
-      </DialogContent>
-    </Dialog>
+      )}
+    </DialogDetailShell>
   );
 }
 

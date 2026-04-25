@@ -263,11 +263,34 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: process.env.SKIP_TYPE_CHECK === "true",
   },
   // Fetch logging desabilitado - use DEBUG_SUPABASE=true para logs legíveis
-  // logging: {
-  //   fetches: {
-  //     fullUrl: true,
-  //   },
-  // },
+  //
+  // `browserToTerminal: false` desativa o bridge de console do cliente para o
+  // terminal em dev (Next 16.2+; antes experimental.browserDebugInfoInTerminal).
+  //
+  // Motivo: o @supabase/auth-js emite `NavigatorLockAcquireTimeoutError` com a
+  // mensagem "Lock ... was released because another request stole it" como
+  // parte do fluxo normal de recuperação do Navigator LockManager
+  // (node_modules/@supabase/auth-js/src/lib/locks.ts:291-293; comentário do
+  // próprio SDK classifica como "typed error so callers can handle/filter").
+  // Os gatilhos são internos ao SDK (auto-refresh tick, visibilitychange,
+  // múltiplas abas, StrictMode em dev) e inevitáveis pela camada de aplicação
+  // — o UserProvider em src/providers/user-provider.tsx já deduplica chamadas
+  // client-side de auth com cooldown de 2s. O filtro em
+  // src/lib/supabase/client.ts tenta interceptar via {capture:true} +
+  // preventDefault, mas o bridge do Next instala listener antes do código
+  // de aplicação e encaminha o evento ao terminal de qualquer forma.
+  //
+  // Trade-off consciente: console.error/warn e unhandled rejections do
+  // browser não aparecem mais no terminal em dev. Continuam 100% visíveis
+  // no DevTools do browser. Em produção o bridge não é usado (dev-only),
+  // então não há impacto em observabilidade de prod.
+  //
+  // Para reverter (se sentir falta do encaminhamento): mudar para
+  // `browserToTerminal: 'error'` (só errors) ou `true` (tudo). Nenhum desses
+  // valores filtra a mensagem específica do lock — é all-or-nothing por nível.
+  logging: {
+    browserToTerminal: false,
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
