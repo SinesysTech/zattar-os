@@ -68,20 +68,37 @@ Subset autorizado de `BadgeCategory` para este módulo (fonte: [variants.ts](../
 - Número do processo em cards e tabelas: `font-mono text-xs` (tabular-nums) — padrão já aplicado em `columns.tsx` e `expedientes-glass-list.tsx`.
 - Título de página: `PageShell` cuida do `.text-page-title`. Não declarar heading manualmente.
 - Prazos críticos (vencidos): usar `SemanticBadge` com `expediente_status`, **não** colorir o texto diretamente.
+- Listagem (GlassRow): tipografia inline seguindo padrão canônico (`text-label`, `text-caption`, `text-micro-caption`, `text-micro-badge`) — **não** usar os componentes `<Heading>` / `<Text>` nos rows (o padrão majoritário do sistema é inline).
 
 ---
 
 ## Divergências específicas do módulo (backlog do módulo)
 
-Itens identificados na auditoria inicial. Todos endereçados nesta rodada.
+Itens identificados nas duas rodadas de auditoria. Todos endereçados.
 
-### 1. `expedientes-glass-list.tsx` não aplicava glass — RESOLVIDO (Opção B)
+### 1. `expedientes-glass-list.tsx` divergia do padrão canônico de lista — RESOLVIDO
 
-O componente tinha "glass" no nome mas usava apenas `bg-card` + `border-border/60`. **Migrado** para `GLASS_DEPTH[1]` (`.glass-widget`) em `GlassRow` e `ListSkeleton`, honrando o nome e alinhando ao sistema de profundidade do Master.
+Auditoria comparativa vs. `audiencias`, `pericias`, `captura`, `contratos`, `documentos` identificou divergências em **tipografia, densidade e organização** — tornando a lista de expedientes visualmente destoante do resto do sistema.
 
-- Arquivo: `src/app/(authenticated)/expedientes/components/expedientes-glass-list.tsx`
-- Import adicionado: `import { GLASS_DEPTH } from '@/lib/design-system'`
-- Hover ajustado para `hover:border-border/50` (o glass já usa `border-border/20`).
+**Divergências originais detectadas:**
+
+| Eixo | Expedientes (antes) | Padrão majoritário |
+|---|---|---|
+| Wrapper | `GLASS_DEPTH[1]` (glass-widget bg-transparent) | `border border-border/60 bg-card` inline |
+| Título do row | `<Heading level="card">` (~14px, tag h3) | `text-label font-semibold` inline (audiencias) |
+| Textos secundários | `<Text variant="caption">` componentizado | `text-caption` inline |
+| Coluna temporal | Fixa em 200px (`grid-cols-[200px_...]`) | `w-22` (~88px) como audiencias |
+| Layout | Grid 4-colunas com expansão ao hover | Flex 2-seções com footer fixo |
+| Edição de campos | `ExpedienteTextEditor` em área `group-hover:grid hidden` | Edição sempre visível no footer |
+
+**Refatoração aplicada** (`src/app/(authenticated)/expedientes/components/expedientes-glass-list.tsx`):
+
+1. Wrapper migrado para `'group w-full text-left rounded-2xl border border-border/60 bg-card p-4'` + hover `hover:border-border hover:shadow-[...] hover:-translate-y-px` (idêntico a audiencias).
+2. Removidos `GLASS_DEPTH`, `URGENCY_DOT`, `<Heading>`, `<Text>` — mantido apenas `URGENCY_BORDER` e `URGENCY_COUNTDOWN` (compatíveis com pericias).
+3. Layout `flex items-start gap-4` com coluna temporal `w-22 shrink-0` (data fatal + label "Fatal" + countdown/vencido).
+4. Main info em 3 linhas compactas: L1 (tipo como `h3 text-label font-semibold` + flags), L2 (partes com `×`), L3 (classe · processo · TRT · grau · órgão · ciência).
+5. Footer sempre visível (`mt-2.5 pt-2.5 border-t border-border/50`) com ícones `FileText`/`MessageSquare`, descrição e observações editáveis lado a lado, responsável e botão concluir.
+6. Expansão ao hover **removida**. Arquivo reduzido de 513 → 372 linhas.
 
 ### 2. Diálogos de visualização usando `DialogFormShell` — MANTIDOS (exceção autorizada)
 
@@ -93,12 +110,6 @@ Análise detalhada confirmou que **ambos têm mutação inline embutida**:
 Por isso caem na exceção autorizada do Master (*"se o diálogo tem ações de mutação... mantém-se `DialogFormShell`"*) e **permanecem como `DialogFormShell`**. Nenhuma ação requerida.
 
 Regra derivada para o módulo: se futuramente surgir um diálogo **puramente read-only** (sem popovers de edição nem ações de mutação), usar `DialogDetailShell` + `DetailSection`.
-
-### 3. Borda `border-border/20` no separador interno — RESOLVIDO
-
-O separador do bloco de expansão no card (ao hover) foi elevado de `border-border/20` → `border-border/40` para garantir visibilidade em light mode.
-
-- Arquivo: `src/app/(authenticated)/expedientes/components/expedientes-glass-list.tsx` (separador `border-t` entre card e área de descrição/observações).
 
 ---
 

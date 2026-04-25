@@ -1,0 +1,323 @@
+# Frontend Architecture (Next.js App Router)
+
+<cite>
+**Referenced Files in This Document**
+- [next.config.ts](file://next.config.ts)
+- [tailwind.config.ts](file://tailwind.config.ts)
+- [src/app/layout.tsx](file://src/app/layout.tsx)
+- [src/app/layout-client.tsx](file://src/app/layout-client.tsx)
+- [src/middleware/security-headers.ts](file://src/middleware/security-headers.ts)
+- [src/providers/user-provider.tsx](file://src/providers/user-provider.tsx)
+- [src/app/(authenticated)/layout.tsx](file://src/app/(authenticated)/layout.tsx)
+- [src/app/(auth)/layout.tsx](file://src/app/(auth)/layout.tsx)
+- [src/app/sw.ts](file://src/app/sw.ts)
+- [public/manifest.json](file://public/manifest.json)
+- [src/lib/pwa-utils.ts](file://src/lib/pwa-utils.ts)
+</cite>
+
+## Table of Contents
+1. [Introduction](#introduction)
+2. [Project Structure](#project-structure)
+3. [Core Components](#core-components)
+4. [Architecture Overview](#architecture-overview)
+5. [Detailed Component Analysis](#detailed-component-analysis)
+6. [Dependency Analysis](#dependency-analysis)
+7. [Performance Considerations](#performance-considerations)
+8. [Troubleshooting Guide](#troubleshooting-guide)
+9. [Conclusion](#conclusion)
+
+## Introduction
+This document describes the frontend architecture of a Next.js 16 application using the App Router. It covers routing with protected routes using parentheses grouping, layout hierarchy, shared components, Supabase Auth integration, server-side rendering and static generation, progressive enhancement, global styling with Tailwind CSS 4 and shadcn/ui, performance optimizations including image optimization, code splitting, and PWA capabilities.
+
+## Project Structure
+The frontend follows Next.js App Router conventions with route groups for logical separation:
+- Route groups: (authenticated), (auth), (ajuda), (assinatura-digital), (dev), portal, servicos, website
+- Root layouts define global metadata, fonts, CSP nonce injection, and client-side providers
+- Middleware enforces security headers and nonce generation
+- Providers manage authentication state and permissions
+- PWA is implemented via Serwist with a custom service worker and manifest
+
+```mermaid
+graph TB
+subgraph "App Router"
+Root["src/app/layout.tsx"]
+RootClient["src/app/layout-client.tsx"]
+AuthGroup["src/app/(auth)/layout.tsx"]
+AuthenticatedGroup["src/app/(authenticated)/layout.tsx"]
+SW["src/app/sw.ts"]
+end
+subgraph "Providers"
+UserProvider["src/providers/user-provider.tsx"]
+end
+subgraph "Middleware"
+SecHeaders["src/middleware/security-headers.ts"]
+end
+subgraph "Styling"
+TailwindCfg["tailwind.config.ts"]
+end
+subgraph "PWA"
+Manifest["public/manifest.json"]
+PWAUtils["src/lib/pwa-utils.ts"]
+end
+Root --> RootClient
+RootClient --> UserProvider
+AuthenticatedGroup --> UserProvider
+AuthGroup --> RootClient
+SW --> Manifest
+SecHeaders --> Root
+TailwindCfg --> Root
+PWAUtils --> SW
+```
+
+**Diagram sources**
+- [src/app/layout.tsx:61-82](file://src/app/layout.tsx#L61-L82)
+- [src/app/layout-client.tsx:12-45](file://src/app/layout-client.tsx#L12-L45)
+- [src/app/(auth)/layout.tsx](file://src/app/(auth)/layout.tsx#L14-L39)
+- [src/app/(authenticated)/layout.tsx](file://src/app/(authenticated)/layout.tsx#L14-L57)
+- [src/providers/user-provider.tsx:77-417](file://src/providers/user-provider.tsx#L77-L417)
+- [src/middleware/security-headers.ts:285-302](file://src/middleware/security-headers.ts#L285-L302)
+- [tailwind.config.ts:22-41](file://tailwind.config.ts#L22-L41)
+- [src/app/sw.ts:52-70](file://src/app/sw.ts#L52-L70)
+- [public/manifest.json:1-74](file://public/manifest.json#L1-L74)
+- [src/lib/pwa-utils.ts:56-76](file://src/lib/pwa-utils.ts#L56-L76)
+
+**Section sources**
+- [src/app/layout.tsx:61-82](file://src/app/layout.tsx#L61-L82)
+- [src/app/layout-client.tsx:12-45](file://src/app/layout-client.tsx#L12-L45)
+- [src/app/(auth)/layout.tsx](file://src/app/(auth)/layout.tsx#L14-L39)
+- [src/app/(authenticated)/layout.tsx](file://src/app/(authenticated)/layout.tsx#L14-L57)
+- [src/middleware/security-headers.ts:285-302](file://src/middleware/security-headers.ts#L285-L302)
+- [tailwind.config.ts:22-41](file://tailwind.config.ts#L22-L41)
+- [src/app/sw.ts:52-70](file://src/app/sw.ts#L52-L70)
+- [public/manifest.json:1-74](file://public/manifest.json#L1-L74)
+- [src/lib/pwa-utils.ts:56-76](file://src/lib/pwa-utils.ts#L56-L76)
+
+## Core Components
+- Global layout and metadata: defines fonts, manifest, icons, viewport, and injects CSP nonce via middleware
+- Client-side root wrapper: initializes theme provider, toast notifications, command menu, and version guard
+- Authentication provider: centralized user, permissions, and session management with deduplicated auth checks
+- Security middleware: builds CSP and other security headers, injects nonce into HTML and headers
+- PWA service worker: custom runtime caching excluding Server Actions, APIs, and RSC payloads
+- Tailwind v4 configuration: minimal config with animate plugin and custom max-width utilities
+
+Key implementation references:
+- Root layout and metadata: [src/app/layout.tsx:36-59](file://src/app/layout.tsx#L36-L59)
+- Client-side initialization: [src/app/layout-client.tsx:19-42](file://src/app/layout-client.tsx#L19-L42)
+- User provider internals and public routes: [src/providers/user-provider.tsx:67-123](file://src/providers/user-provider.tsx#L67-L123)
+- Security headers and nonce: [src/middleware/security-headers.ts:285-302](file://src/middleware/security-headers.ts#L285-L302)
+- Service worker runtime caching: [src/app/sw.ts:19-50](file://src/app/sw.ts#L19-L50)
+- Tailwind config: [tailwind.config.ts:22-41](file://tailwind.config.ts#L22-L41)
+
+**Section sources**
+- [src/app/layout.tsx:36-59](file://src/app/layout.tsx#L36-L59)
+- [src/app/layout-client.tsx:19-42](file://src/app/layout-client.tsx#L19-L42)
+- [src/providers/user-provider.tsx:67-123](file://src/providers/user-provider.tsx#L67-L123)
+- [src/middleware/security-headers.ts:285-302](file://src/middleware/security-headers.ts#L285-L302)
+- [src/app/sw.ts:19-50](file://src/app/sw.ts#L19-L50)
+- [tailwind.config.ts:22-41](file://tailwind.config.ts#L22-L41)
+
+## Architecture Overview
+The architecture integrates Supabase Auth for authentication, Next.js App Router for routing and layouts, middleware for security, and Serwist for PWA. The layout composition pattern uses a server-side root layout with a client-side wrapper. Protected routes are enforced by the authentication provider and middleware.
+
+```mermaid
+sequenceDiagram
+participant Browser as "Browser"
+participant Next as "Next.js App Router"
+participant MW as "Middleware"
+participant Layout as "Root Layout"
+participant Client as "Root Client Wrapper"
+participant Auth as "UserProvider"
+participant Supabase as "Supabase Auth"
+Browser->>MW : Request page
+MW->>MW : Build CSP + generate nonce
+MW-->>Browser : Headers with x-nonce
+Browser->>Next : Request with headers
+Next->>Layout : Render server-side layout
+Layout-->>Browser : HTML with CSPNonceMeta
+Browser->>Client : Hydrate client-side
+Client->>Auth : Initialize user session
+Auth->>Supabase : getUser() with deduplication
+Supabase-->>Auth : User data or error
+Auth-->>Client : Provide user context
+Client-->>Browser : App with theme, toasts, menus
+```
+
+**Diagram sources**
+- [src/middleware/security-headers.ts:285-302](file://src/middleware/security-headers.ts#L285-L302)
+- [src/app/layout.tsx:61-82](file://src/app/layout.tsx#L61-L82)
+- [src/app/layout-client.tsx:19-42](file://src/app/layout-client.tsx#L19-L42)
+- [src/providers/user-provider.tsx:182-207](file://src/providers/user-provider.tsx#L182-L207)
+
+## Detailed Component Analysis
+
+### Routing and Layout Hierarchy
+- Route groups: (authenticated) and (auth) isolate protected and public flows
+- Root server layout sets metadata, fonts, manifest, and injects CSP nonce
+- Client wrapper initializes theme, toasts, command menu, and guards
+- Authenticated layout prefetches user and permissions server-side, passing to client wrapper
+- Auth layout applies cinematic design for login and related pages
+
+```mermaid
+graph LR
+A["src/app/layout.tsx"] --> B["src/app/layout-client.tsx"]
+C["src/app/(authenticated)/layout.tsx"] --> B
+D["src/app/(auth)/layout.tsx"] --> B
+B --> E["src/providers/user-provider.tsx"]
+```
+
+**Diagram sources**
+- [src/app/layout.tsx:61-82](file://src/app/layout.tsx#L61-L82)
+- [src/app/layout-client.tsx:12-45](file://src/app/layout-client.tsx#L12-L45)
+- [src/app/(authenticated)/layout.tsx](file://src/app/(authenticated)/layout.tsx#L14-L57)
+- [src/app/(auth)/layout.tsx](file://src/app/(auth)/layout.tsx#L14-L39)
+- [src/providers/user-provider.tsx:77-417](file://src/providers/user-provider.tsx#L77-L417)
+
+**Section sources**
+- [src/app/layout.tsx:61-82](file://src/app/layout.tsx#L61-L82)
+- [src/app/layout-client.tsx:12-45](file://src/app/layout-client.tsx#L12-L45)
+- [src/app/(authenticated)/layout.tsx](file://src/app/(authenticated)/layout.tsx#L14-L57)
+- [src/app/(auth)/layout.tsx](file://src/app/(auth)/layout.tsx#L14-L39)
+
+### Authentication and Protected Routes
+- Public routes list excludes automatic logout for specific paths
+- UserProvider deduplicates getUser() calls and handles lock/abort errors gracefully
+- On auth state changes, provider validates via getUser() and refetches user data
+- Authenticated layout performs SSR prefetch of user and permissions
+
+```mermaid
+flowchart TD
+Start(["Auth State Change"]) --> CheckSession["Has session token?"]
+CheckSession --> |No| Invalidate["Clear auth state<br/>Redirect to login"]
+CheckSession --> |Yes| Dedup["Deduplicated getUser()"]
+Dedup --> Verified{"User verified?"}
+Verified --> |No| Invalidate
+Verified --> |Yes| FetchData["Fetch /api/auth/me"]
+FetchData --> Success{"Success?"}
+Success --> |Yes| UpdateCtx["Update context state"]
+Success --> |No| Invalidate
+Invalidate --> End(["Done"])
+UpdateCtx --> End
+```
+
+**Diagram sources**
+- [src/providers/user-provider.tsx:320-367](file://src/providers/user-provider.tsx#L320-L367)
+- [src/providers/user-provider.tsx:212-290](file://src/providers/user-provider.tsx#L212-L290)
+- [src/app/(authenticated)/layout.tsx](file://src/app/(authenticated)/layout.tsx#L18-L50)
+
+**Section sources**
+- [src/providers/user-provider.tsx:67-123](file://src/providers/user-provider.tsx#L67-L123)
+- [src/providers/user-provider.tsx:320-367](file://src/providers/user-provider.tsx#L320-L367)
+- [src/providers/user-provider.tsx:212-290](file://src/providers/user-provider.tsx#L212-L290)
+- [src/app/(authenticated)/layout.tsx](file://src/app/(authenticated)/layout.tsx#L18-L50)
+
+### Shared Components and Consistency
+- Theme provider and toasts are initialized in the client wrapper for consistent UX
+- Command menu and active theme provider enable quick actions and theme switching
+- Server action version guard helps maintain compatibility across deployments
+- Auth layout provides a consistent branded experience for login pages
+
+**Section sources**
+- [src/app/layout-client.tsx:24-42](file://src/app/layout-client.tsx#L24-L42)
+- [src/app/(auth)/layout.tsx](file://src/app/(auth)/layout.tsx#L14-L39)
+
+### Global Styling System (Tailwind CSS 4 and shadcn/ui)
+- Tailwind v4 configuration enables animations and exposes custom max-width utilities
+- Design tokens are defined via CSS @theme inline in global stylesheet
+- Plugins include tailwindcss-animate for shadcn/ui transitions
+- Fonts are loaded via Next/font with variable classes applied at root
+
+**Section sources**
+- [tailwind.config.ts:22-41](file://tailwind.config.ts#L22-L41)
+- [src/app/layout.tsx:7-34](file://src/app/layout.tsx#L7-L34)
+
+### Progressive Enhancement and PWA
+- Service worker built with Serwist, skipping cache for APIs, Server Actions, and RSC payloads
+- Precache entries include offline route with revision-based cache busting
+- Manifest defines app identity, start URL, display mode, icons, and shortcuts
+- PWA utilities provide secure context checks, installation detection, and update mechanisms
+
+```mermaid
+flowchart TD
+SWInit["Service Worker Init"] --> ExcludeAPIs["Exclude /api/* and *_actions* from cache"]
+ExcludeAPIs --> DefaultCache["Use default runtime cache for other assets"]
+DefaultCache --> Fallback["Fallback to /offline for documents"]
+Fallback --> UpdateMsg["Listen for CLEAR_CACHE / SKIP_WAITING"]
+```
+
+**Diagram sources**
+- [src/app/sw.ts:19-68](file://src/app/sw.ts#L19-L68)
+- [public/manifest.json:1-74](file://public/manifest.json#L1-L74)
+- [src/lib/pwa-utils.ts:56-76](file://src/lib/pwa-utils.ts#L56-L76)
+
+**Section sources**
+- [src/app/sw.ts:19-68](file://src/app/sw.ts#L19-L68)
+- [public/manifest.json:1-74](file://public/manifest.json#L1-L74)
+- [src/lib/pwa-utils.ts:56-76](file://src/lib/pwa-utils.ts#L56-L76)
+
+## Dependency Analysis
+- next.config.ts configures:
+  - Standalone output and custom cache handler for production
+  - Server external packages and transpile ESM-only packages
+  - Image optimization with AVIF/WebP and remote patterns
+  - Redirects and rewrites for app module routing
+  - PWA via Serwist with service worker and precache entries
+  - Bundle analyzer toggle and performance-related flags
+- Tailwind config depends on global CSS for tokens and enables animate plugin
+- Middleware depends on security-headers module for CSP and permissions policy
+- Providers depend on Supabase client for auth operations
+- PWA relies on manifest and service worker for offline and installability
+
+```mermaid
+graph TB
+NextCfg["next.config.ts"] --> PWA["Serwist PWA"]
+NextCfg --> Images["Image Optimization"]
+NextCfg --> Rewrites["Rewrites & Redirects"]
+TailwindCfg["tailwind.config.ts"] --> Styles["Global Styles"]
+SecHeaders["security-headers.ts"] --> Headers["Security Headers"]
+UserProv["user-provider.tsx"] --> Supabase["Supabase Client"]
+SW["sw.ts"] --> Manifest["manifest.json"]
+```
+
+**Diagram sources**
+- [next.config.ts:79-434](file://next.config.ts#L79-L434)
+- [tailwind.config.ts:22-41](file://tailwind.config.ts#L22-L41)
+- [src/middleware/security-headers.ts:232-280](file://src/middleware/security-headers.ts#L232-L280)
+- [src/providers/user-provider.tsx:26-93](file://src/providers/user-provider.tsx#L26-L93)
+- [src/app/sw.ts:52-70](file://src/app/sw.ts#L52-L70)
+- [public/manifest.json:1-74](file://public/manifest.json#L1-L74)
+
+**Section sources**
+- [next.config.ts:79-434](file://next.config.ts#L79-L434)
+- [tailwind.config.ts:22-41](file://tailwind.config.ts#L22-L41)
+- [src/middleware/security-headers.ts:232-280](file://src/middleware/security-headers.ts#L232-L280)
+- [src/providers/user-provider.tsx:26-93](file://src/providers/user-provider.tsx#L26-L93)
+- [src/app/sw.ts:52-70](file://src/app/sw.ts#L52-L70)
+- [public/manifest.json:1-74](file://public/manifest.json#L1-L74)
+
+## Performance Considerations
+- Image optimization: AVIF and WebP formats with remote patterns for Unsplash and Strapi
+- Code splitting: Turbopack with reduced concurrency for build stability; modularizeImports and optimizePackageImports for tree-shaking
+- Static generation: SSR prefetch in authenticated layout with graceful handling for static generation errors
+- Bundle analysis: optional analyzer for identifying optimization opportunities
+- PWA caching: runtime cache excludes APIs and Server Actions to avoid stale endpoints
+
+**Section sources**
+- [next.config.ts:294-313](file://next.config.ts#L294-L313)
+- [next.config.ts:165-251](file://next.config.ts#L165-L251)
+- [src/app/(authenticated)/layout.tsx](file://src/app/(authenticated)/layout.tsx#L7-L12)
+- [src/app/sw.ts:19-43](file://src/app/sw.ts#L19-L43)
+
+## Troubleshooting Guide
+- CSP violations: verify nonce propagation from middleware to HTML and inline scripts/styles
+- Auth logout loops: ensure public routes list matches actual login and password reset pages
+- Service worker stale endpoints: confirm runtime caching excludes /api and Server Actions
+- PWA not installing: check secure context and service worker registration
+
+**Section sources**
+- [src/middleware/security-headers.ts:285-302](file://src/middleware/security-headers.ts#L285-L302)
+- [src/providers/user-provider.tsx:67-73](file://src/providers/user-provider.tsx#L67-L73)
+- [src/app/sw.ts:19-43](file://src/app/sw.ts#L19-L43)
+- [src/lib/pwa-utils.ts:56-76](file://src/lib/pwa-utils.ts#L56-L76)
+
+## Conclusion
+The frontend leverages Next.js 16’s App Router to organize routes into logical groups, enforce security via middleware, and provide a consistent user experience through shared components and global styling. Supabase Auth is integrated centrally with deduplication and robust error handling. Performance is optimized through image formats, code splitting, and PWA caching strategies, while the manifest and service worker enable progressive enhancement and offline readiness.
