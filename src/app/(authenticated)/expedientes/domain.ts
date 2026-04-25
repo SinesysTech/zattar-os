@@ -146,6 +146,14 @@ export const createExpedienteSchema = z.object({
   processoId: z.number().optional(),
   descricaoOrgaoJulgador: z.string().optional(),
   classeJudicial: z.string().optional(),
+  /**
+   * CONTRATO: `numero` é NOT NULL no banco (public.expedientes.numero bigint).
+   * Na prática vem preenchido a partir de `acervo.numero` via vínculo processoId.
+   * Este schema aceita string opcional apenas porque o INSERT direto sem processoId
+   * é raro e a cadeia atual (captura PJe) garante que o campo chega populado. Um
+   * INSERT manual sem processoId nem numero será rejeitado pelo DB. Ao promover
+   * este campo para obrigatório, lembre de ajustar os callers e o dialog.
+   */
   numero: z.string().optional(),
   segredoJustica: z.boolean().optional(),
   codigoStatusProcesso: z.string().optional(),

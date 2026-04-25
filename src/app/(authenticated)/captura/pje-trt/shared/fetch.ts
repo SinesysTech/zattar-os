@@ -20,6 +20,7 @@
  */
 
 import type { Page } from 'playwright';
+import type { ZodType } from 'zod';
 
 /**
  * Função: fetchPJEAPI<T>
@@ -146,21 +147,30 @@ const RETRYABLE_STATUS_CODES = new Set([429, 500, 502, 503, 504]);
 /** Cache de origin por Page para evitar evaluate repetido */
 const originCache = new WeakMap<Page, string>();
 
-export interface FetchPJEOptions {
+export interface FetchPJEOptions<T = unknown> {
   /** Número máximo de retentativas (padrão: 3) */
   maxRetries?: number;
   /** Delay base em ms para backoff exponencial (padrão: 500) */
   baseDelay?: number;
+  /**
+   * Schema Zod opcional para validar o shape da resposta. Se a API do PJE
+   * mudar (campos renomeados, estrutura alterada), a validação falha
+   * imediatamente em vez de deixar o erro se propagar silenciosamente
+   * para as camadas superiores. Callers existentes continuam funcionando
+   * sem schema — migração é gradual.
+   */
+  schema?: ZodType<T>;
 }
 
 export async function fetchPJEAPI<T>(
   page: Page,
   endpoint: string,
   params?: Record<string, string | number | boolean>,
-  options?: FetchPJEOptions
+  options?: FetchPJEOptions<T>
 ): Promise<T> {
   const maxRetries = options?.maxRetries ?? 3;
   const baseDelay = options?.baseDelay ?? 500;
+  const schema = options?.schema;
 
   // Cache de origin — nunca muda durante a sessão
   let baseUrl = originCache.get(page);
@@ -234,6 +244,21 @@ export async function fetchPJEAPI<T>(
       // Validar resposta não-vazia
       if (result.data === null || result.data === undefined) {
         throw new Error(`HTTP ${result.status}: Resposta vazia para ${endpoint}`);
+      }
+
+      // Validação opcional via schema Zod — detecta early que a API do PJe
+      // mudou antes do erro se alastrar pelas camadas superiores.
+      if (schema) {
+        const parsed = schema.safeParse(result.data);
+        if (!parsed.success) {
+          throw new Error(
+            `Schema validation falhou para ${endpoint}: ${parsed.error.issues
+              .slice(0, 3)
+              .map((i) => `${i.path.join('.')} ${i.message}`)
+              .join('; ')}`
+          );
+        }
+        return parsed.data;
       }
 
       return result.data as T;

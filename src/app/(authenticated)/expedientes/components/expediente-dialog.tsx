@@ -142,6 +142,7 @@ export function ExpedienteDialog({
   const [usuarios, setUsuarios] = React.useState<Usuario[]>([]);
 
   const [loadingProcessos, setLoadingProcessos] = React.useState(false);
+  const [processosError, setProcessosError] = React.useState<string | null>(null);
   const [loadingTipos, setLoadingTipos] = React.useState(false);
   const [loadingUsuarios, setLoadingUsuarios] = React.useState(false);
 
@@ -193,6 +194,7 @@ export function ExpedienteDialog({
   const buscarProcessos = React.useCallback(
     async (trt: CodigoTribunal, grau: GrauTribunal) => {
       setLoadingProcessos(true);
+      setProcessosError(null);
       try {
         const result = await actionListarAcervoPaginado({
           trt,
@@ -235,6 +237,9 @@ export function ExpedienteDialog({
       } catch (err) {
         console.error('Erro ao buscar processos:', err);
         setProcessos([]);
+        setProcessosError(
+          err instanceof Error ? err.message : 'Erro desconhecido'
+        );
         toast.error('Falha ao carregar processos', {
           description: 'Verifique a conexão e tente novamente.',
         });
@@ -612,6 +617,26 @@ export function ExpedienteDialog({
                     Carregando processos...
                   </span>
                 </div>
+              ) : processosError ? (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription className="flex items-center justify-between gap-3">
+                    <span>Falha ao carregar processos. {processosError}</span>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        buscarProcessos(
+                          trtValue as CodigoTribunal,
+                          grauValue as GrauTribunal,
+                        )
+                      }
+                    >
+                      Tentar novamente
+                    </Button>
+                  </AlertDescription>
+                </Alert>
               ) : processos.length === 0 ? (
                 <Alert>
                   <AlertCircle className="h-4 w-4" />

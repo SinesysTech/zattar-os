@@ -87,7 +87,7 @@ function SectionCard({ children, className }: { children: React.ReactNode; class
   return (
     <div
       className={cn(
-        'rounded-xl border border-border/30 bg-muted/40 px-3.5 py-3',
+        'glass-widget rounded-xl border border-border/40 p-4',
         className
       )}
     >
@@ -407,13 +407,13 @@ export function AudienciaDetailDialog({
 
   const heroNode =
     audiencia && !isLoading && !error ? (
-      <div className="mx-5 mt-3 rounded-xl border border-primary/15 bg-primary/5 px-4 py-3">
-        <div className="mb-3 min-w-0">
-          <Heading level="widget" className="leading-tight text-foreground">
+      <div className="rounded-xl border border-primary/15 bg-primary/5 p-4">
+        <div className="mb-4 min-w-0">
+          <Heading level="subsection" as="h2" className="leading-tight text-foreground">
             {audiencia.tipoDescricao || 'Audiência'}
           </Heading>
           {dataInicio && dataFim && (
-            <Text variant="caption" as="p" className="mt-0.5 capitalize text-muted-foreground">
+            <Text variant="caption" as="p" className="mt-1 capitalize text-muted-foreground">
               {format(dataInicio, 'EEE, dd MMM yyyy', { locale: ptBR })}
               {' · '}
               <span className="tabular-nums">
@@ -423,10 +423,10 @@ export function AudienciaDetailDialog({
           )}
         </div>
 
-        <div className="mb-3 flex flex-wrap gap-x-5 gap-y-2.5 border-b border-border/40 pb-3">
-          {/* Modalidade — label overline 11px é deliberado (chip de metadata) */}
-          <div className="flex flex-col gap-1">
-            <Text variant="overline" className="text-muted-foreground/75">
+        <div className="mb-4 grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-4">
+          {/* Modalidade */}
+          <div className="flex flex-col gap-1.5">
+            <Text variant="meta-label" className="text-muted-foreground/80">
               Modalidade
             </Text>
             <Popover
@@ -443,7 +443,7 @@ export function AudienciaDetailDialog({
                       : undefined
                   }
                   className={cn(
-                    'inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card pl-2 pr-2 py-0.5 text-[12px] font-medium text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60',
+                    'inline-flex w-fit items-center gap-1.5 rounded-full border border-border/60 bg-card pl-2.5 pr-2 py-1 text-micro-caption font-medium text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60',
                     !modalidadePopoverDisabled && 'cursor-pointer hover:border-border hover:bg-muted/60',
                     modalidadePopoverDisabled && 'cursor-not-allowed'
                   )}
@@ -483,7 +483,7 @@ export function AudienciaDetailDialog({
                       key={m}
                       type="button"
                       onClick={() => handleChangeModalidade(m)}
-                      className="flex w-full cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-[12px] transition-colors hover:bg-muted/60"
+                      className="flex w-full cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-micro-caption transition-colors hover:bg-muted/60"
                     >
                       <Icon className="size-3.5 text-muted-foreground" />
                       <span>{MODALIDADE_LABELS[m]}</span>
@@ -498,8 +498,8 @@ export function AudienciaDetailDialog({
           </div>
 
           {/* Responsável */}
-          <div className="flex flex-col gap-1">
-            <Text variant="overline" className="text-muted-foreground/75">
+          <div className="flex flex-col gap-1.5">
+            <Text variant="meta-label" className="text-muted-foreground/80">
               Responsável
             </Text>
             <AudienciaResponsavelPopover
@@ -521,40 +521,38 @@ export function AudienciaDetailDialog({
         </div>
 
         {/* Ações */}
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap gap-2">
           {(isVirtual || isHibrida) && (
             audiencia.urlAudienciaVirtual ? (
-              <a
-                href={audiencia.urlAudienciaVirtual}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-md bg-primary px-2.5 py-1 text-[11px] font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-              >
-                <Video className="size-3" />
-                Entrar na sala virtual
-              </a>
+              <Button size="sm" asChild>
+                <a
+                  href={audiencia.urlAudienciaVirtual}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Video className="size-3.5" />
+                  Entrar na sala virtual
+                </a>
+              </Button>
             ) : (
-              <span className="inline-flex cursor-not-allowed items-center gap-1.5 rounded-md bg-primary/50 px-2.5 py-1 text-[11px] font-medium text-primary-foreground/60">
-                <Video className="size-3" />
+              <Button size="sm" disabled>
+                <Video className="size-3.5" />
                 Entrar na sala virtual
-              </span>
+              </Button>
             )
           )}
           {isPje ? (
-            <a
-              href={pjeUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-md border border-border/60 bg-card px-2.5 py-1 text-[11px] font-medium text-foreground transition-colors hover:border-border hover:bg-muted/60"
-            >
-              <ExternalLink className="size-3" />
-              Abrir no PJe
-            </a>
+            <Button size="sm" variant="outline" asChild>
+              <a href={pjeUrl} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="size-3.5" />
+                Abrir no PJe
+              </a>
+            </Button>
           ) : (
-            <span className="inline-flex cursor-not-allowed items-center gap-1.5 rounded-md border border-border/40 bg-card px-2.5 py-1 text-[11px] font-medium text-muted-foreground/40">
-              <ExternalLink className="size-3" />
+            <Button size="sm" variant="outline" disabled>
+              <ExternalLink className="size-3.5" />
               Abrir no PJe
-            </span>
+            </Button>
           )}
         </div>
       </div>
