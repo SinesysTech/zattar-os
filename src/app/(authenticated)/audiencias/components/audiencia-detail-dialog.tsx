@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Heading, Text } from '@/components/ui/typography';
+import { Text } from '@/components/ui/typography';
 import { AudienciaStatusBadge } from './audiencia-status-badge';
 import { AudienciaIndicadorBadges } from './audiencia-indicador-badges';
 import { AudienciaTimeline } from './audiencia-timeline';
@@ -57,11 +57,11 @@ const MODALIDADE_ICONS: Record<ModalidadeAudiencia, React.ComponentType<{ classN
 /**
  * Cabeçalho de seção dentro do detail dialog.
  *
- * Hierarquia tipográfica: usa `Heading level="subsection"` (16px semibold),
- * o mesmo token das subseções de página — isso restaura a continuidade
- * narrativa entre a página e o dialog (ambos sinalizam "nova seção" no
- * mesmo peso visual). Antes colapsava em `Text variant="overline"` (11px
- * uppercase) e competia com os field labels, achatando a hierarquia.
+ * Padrão canônico do sistema: `Text variant="overline"` (11px uppercase).
+ * Todos os dialogs de detalhe (obrigações, documentos, nova-audiência)
+ * usam overline para section headers, criando uma escala clara onde o
+ * conteúdo do card (labels 13–14px) é sempre mais proeminente que o
+ * título da seção, reduzindo competição visual com o hero/title.
  */
 function SectionHeader({
   icon: Icon,
@@ -74,10 +74,10 @@ function SectionHeader({
 }) {
   return (
     <div className="mb-2.5 flex items-center gap-2">
-      <Icon className="size-4 text-primary/80" />
-      <Heading level="subsection" as="h3" className="text-foreground">
+      <Icon className="size-3.5 text-primary" />
+      <Text variant="overline" className="text-muted-foreground">
         {label}
-      </Heading>
+      </Text>
       {action && <div className="ml-auto">{action}</div>}
     </div>
   );
@@ -87,7 +87,7 @@ function SectionCard({ children, className }: { children: React.ReactNode; class
   return (
     <div
       className={cn(
-        'glass-widget rounded-xl border border-border/40 p-4',
+        'rounded-[14px] border border-border/30 bg-muted/40 p-[14px_16px]',
         className
       )}
     >
@@ -372,7 +372,7 @@ export function AudienciaDetailDialog({
 
   const metaNode = audiencia ? (
     <Text
-      variant="micro-caption"
+      variant="caption"
       as="div"
       className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-muted-foreground"
     >
@@ -407,13 +407,13 @@ export function AudienciaDetailDialog({
 
   const heroNode =
     audiencia && !isLoading && !error ? (
-      <div className="rounded-xl border border-primary/15 bg-primary/5 p-4">
-        <div className="mb-4 min-w-0">
-          <Heading level="subsection" as="h2" className="leading-tight text-foreground">
+      <div className="mx-5 mt-3 rounded-xl border border-primary/15 bg-primary/5 p-4">
+        <div className="mb-3.5 min-w-0">
+          <p className="text-[15px] font-semibold leading-tight text-foreground">
             {audiencia.tipoDescricao || 'Audiência'}
-          </Heading>
+          </p>
           {dataInicio && dataFim && (
-            <Text variant="caption" as="p" className="mt-1 capitalize text-muted-foreground">
+            <Text variant="caption" as="p" className="mt-0.5 capitalize text-muted-foreground">
               {format(dataInicio, 'EEE, dd MMM yyyy', { locale: ptBR })}
               {' · '}
               <span className="tabular-nums">
@@ -423,10 +423,10 @@ export function AudienciaDetailDialog({
           )}
         </div>
 
-        <div className="mb-4 grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-4">
+        <div className="mb-3.5 grid grid-cols-2 gap-x-5 gap-y-2.5 border-b border-border/40 pb-3.5 sm:grid-cols-4">
           {/* Modalidade */}
-          <div className="flex flex-col gap-1.5">
-            <Text variant="meta-label" className="text-muted-foreground/80">
+          <div className="flex flex-col gap-1">
+            <Text variant="label" className="text-muted-foreground/80">
               Modalidade
             </Text>
             <Popover
@@ -498,8 +498,8 @@ export function AudienciaDetailDialog({
           </div>
 
           {/* Responsável */}
-          <div className="flex flex-col gap-1.5">
-            <Text variant="meta-label" className="text-muted-foreground/80">
+          <div className="flex flex-col gap-1">
+            <Text variant="label" className="text-muted-foreground/80">
               Responsável
             </Text>
             <AudienciaResponsavelPopover
@@ -521,36 +521,54 @@ export function AudienciaDetailDialog({
         </div>
 
         {/* Ações */}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5">
           {(isVirtual || isHibrida) && (
             audiencia.urlAudienciaVirtual ? (
-              <Button size="sm" asChild>
+              <Button
+                size="sm"
+                asChild
+                className="h-7 gap-1.5 rounded-lg px-2.5 text-[11.5px]"
+              >
                 <a
                   href={audiencia.urlAudienciaVirtual}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Video className="size-3.5" />
+                  <Video className="size-3" />
                   Entrar na sala virtual
                 </a>
               </Button>
             ) : (
-              <Button size="sm" disabled>
-                <Video className="size-3.5" />
+              <Button
+                size="sm"
+                disabled
+                className="h-7 gap-1.5 rounded-lg px-2.5 text-[11.5px]"
+              >
+                <Video className="size-3" />
                 Entrar na sala virtual
               </Button>
             )
           )}
           {isPje ? (
-            <Button size="sm" variant="outline" asChild>
+            <Button
+              size="sm"
+              variant="outline"
+              asChild
+              className="h-7 gap-1.5 rounded-lg px-2.5 text-[11.5px]"
+            >
               <a href={pjeUrl} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="size-3.5" />
+                <ExternalLink className="size-3" />
                 Abrir no PJe
               </a>
             </Button>
           ) : (
-            <Button size="sm" variant="outline" disabled>
-              <ExternalLink className="size-3.5" />
+            <Button
+              size="sm"
+              variant="outline"
+              disabled
+              className="h-7 gap-1.5 rounded-lg px-2.5 text-[11.5px]"
+            >
+              <ExternalLink className="size-3" />
               Abrir no PJe
             </Button>
           )}
@@ -634,7 +652,7 @@ export function AudienciaDetailDialog({
       )}
 
       {audiencia && !isLoading && !error && (
-        <div className="space-y-3.5">
+        <div className="space-y-5">
           {/* ATA · só quando existe */}
           {hasAta && (
             <div>
@@ -673,7 +691,7 @@ export function AudienciaDetailDialog({
                 <div className={isHibrida ? 'mb-3 pb-3 border-b border-border/40' : ''}>
                   <div className="flex items-center justify-between mb-1.5">
                     <div className="flex items-center gap-1.5">
-                      <Text variant="label" as="span" className="text-foreground">
+                      <Text variant="caption" as="span" className="text-muted-foreground">
                         Link da sala virtual
                       </Text>
                       {urlObrigatoriaFaltando && (
@@ -737,7 +755,7 @@ export function AudienciaDetailDialog({
                         href={audiencia.urlAudienciaVirtual}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[13px] text-primary truncate hover:underline"
+                        className="text-caption text-primary truncate hover:underline"
                       >
                         {audiencia.urlAudienciaVirtual}
                       </a>
@@ -766,7 +784,7 @@ export function AudienciaDetailDialog({
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
                     <div className="flex items-center gap-1.5">
-                      <Text variant="label" as="span" className="text-foreground">
+                      <Text variant="caption" as="span" className="text-muted-foreground">
                         Endereço presencial
                       </Text>
                       {enderecoObrigatorioFaltando && (
@@ -908,7 +926,7 @@ export function AudienciaDetailDialog({
               {/* Híbrida: quem é presencial? */}
               {isHibrida && (
                 <div className="mt-3 pt-3 border-t border-border/40">
-                  <Text variant="label" as="span" className="text-foreground block mb-2">
+                  <Text variant="caption" as="span" className="mb-2 block text-muted-foreground">
                     Quem participa presencialmente?
                   </Text>
                   <div className="inline-flex gap-1 p-1 rounded-lg bg-muted/60 border border-border/40">
@@ -929,7 +947,7 @@ export function AudienciaDetailDialog({
                             : undefined
                         }
                         className={cn(
-                          'rounded-md px-3 py-1 text-[11px] font-medium transition-colors',
+                          'rounded-md px-3 py-1 text-overline transition-colors',
                           audiencia.presencaHibrida === v
                             ? 'bg-card text-foreground shadow-sm'
                             : 'text-muted-foreground hover:text-foreground',
@@ -940,7 +958,7 @@ export function AudienciaDetailDialog({
                       </button>
                     ))}
                   </div>
-                  <p className="text-[11px] text-muted-foreground/80 mt-2 leading-relaxed">
+                  <p className="text-micro-caption mt-2 leading-relaxed text-muted-foreground/80">
                     Os demais participam por videoconferência.
                   </p>
                 </div>
@@ -971,7 +989,7 @@ export function AudienciaDetailDialog({
                   <button
                     type="button"
                     onClick={handleStartEditObs}
-                    className="text-[10px] font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center gap-1"
+                    className="text-micro-caption font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center gap-1"
                   >
                     <Pencil className="size-2.5" />
                     {audiencia.observacoes ? 'Editar' : 'Adicionar'}
@@ -987,7 +1005,7 @@ export function AudienciaDetailDialog({
                     value={obsDraft}
                     onChange={(e) => setObsDraft(e.target.value)}
                     rows={3}
-                    className="text-[13px]"
+                    className="text-sm"
                     autoFocus
                   />
                   <div className="flex justify-end gap-1.5">
@@ -1011,9 +1029,9 @@ export function AudienciaDetailDialog({
                   </div>
                 </div>
               ) : audiencia.observacoes ? (
-                <Text variant="caption" className="text-foreground/90 leading-relaxed whitespace-pre-wrap">
+                <p className="text-body-sm leading-relaxed whitespace-pre-wrap">
                   {audiencia.observacoes}
-                </Text>
+                </p>
               ) : (
                 <Text variant="caption" className="text-muted-foreground/60 italic">
                   Nenhuma observação registrada
