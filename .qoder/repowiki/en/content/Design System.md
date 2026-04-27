@@ -11,31 +11,40 @@
 - [spacing-section.tsx](file://src/app/(authenticated)/design-system/_components/spacing-section.tsx)
 - [page-client.tsx](file://src/app/(authenticated)/ajuda/design-system/playground/page-client.tsx)
 - [page.tsx](file://src/app/(authenticated)/design-system/page.tsx)
+- [typography.tsx](file://src/components/ui/typography.tsx)
+- [globals.css](file://src/app/globals.css)
+- [tokens.ts](file://src/lib/design-system/tokens.ts)
 </cite>
 
 ## Update Summary
 **Changes Made**
-- Updated to reflect the new hierarchical design system architecture with MASTER.md as central authority
-- Added comprehensive documentation for page-specific override mechanism
-- Enhanced coverage of design system governance and migration strategies
-- Updated component specifications to reflect the new override system
-- Expanded design system playground documentation with migration examples
+- Updated to reflect major design system typography improvements with new semantic text classes
+- Added comprehensive documentation for text-kpi-value, text-meta-label, text-overline, text-caption, text-micro-badge classes
+- Enhanced accessibility compliance documentation with WCAG AAA standards and focus-visible states
+- Updated MASTER.md with comprehensive typography guidelines and anti-pattern prevention
+- Expanded design system playground with typography testing capabilities
+- Added detailed typography migration guidance and accessibility compliance validation
 
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [Hierarchical Design System Architecture](#hierarchical-design-system-architecture)
 3. [Master Authority and Page-Specific Overrides](#master-authority-and-page-specific-overrides)
 4. [Migration Strategy with Design System Escape Comments](#migration-strategy-with-design-system-escape-comments)
-5. [Component Library Integration](#component-library-integration)
-6. [Semantic Badge System](#semantic-badge-system)
-7. [Design System Playground](#design-system-playground)
-8. [Page-Specific Implementation Examples](#page-specific-implementation-examples)
-9. [Quality Assurance and Migration Tracking](#quality-assurance-and-migration-tracking)
-10. [Integration and Maintenance](#integration-and-maintenance)
-11. [Conclusion](#conclusion)
+5. [Enhanced Typography System](#enhanced-typography-system)
+6. [New Semantic Text Classes](#new-semantic-text-classes)
+7. [Accessibility Compliance Improvements](#accessibility-compliance-improvements)
+8. [Component Library Integration](#component-library-integration)
+9. [Semantic Badge System](#semantic-badge-system)
+10. [Design System Playground](#design-system-playground)
+11. [Page-Specific Implementation Examples](#page-specific-implementation-examples)
+12. [Quality Assurance and Migration Tracking](#quality-assurance-and-migration-tracking)
+13. [Integration and Maintenance](#integration-and-maintenance)
+14. [Conclusion](#conclusion)
 
 ## Introduction
 The ZattarOS Design System represents a comprehensive visual and interaction framework built on shadcn/ui components with semantic badge architecture. The system has evolved to operate on a hierarchical structure where the MASTER.md file serves as the central authority for design system rules, page-specific documentation files provide targeted overrides, and design-system-escape comments guide developers through systematic migration from raw Tailwind CSS classes to standardized components.
+
+**Updated** The system now features major typography improvements with new semantic text classes, enhanced accessibility compliance with WCAG AAA standards, and comprehensive anti-pattern prevention measures.
 
 This architecture ensures consistency across the legal management platform while allowing for module-specific adaptations through a well-defined override mechanism.
 
@@ -56,10 +65,10 @@ The MASTER.md file serves as the central governing document containing 175 lines
 The master file organizes rules into logical categories:
 - Identity and visual foundation
 - Color palette and semantic tokens
-- Typography standards and font usage
+- **Enhanced** Typography standards and font usage with comprehensive semantic text classes
 - Component specifications and layout patterns
 - Layout and spacing guidelines
-- Anti-patterns and prohibited practices
+- **Enhanced** Anti-patterns and prohibited practices with accessibility compliance
 - Pre-delivery checklist for quality assurance
 
 ### Page-Specific Override Layer
@@ -73,12 +82,12 @@ Individual module documentation files in the `design-system/zattaros/pages/` dir
 
 **Override Documentation Pattern**
 Each page-specific file follows a standardized structure:
-- Project and generation metadata
-- Important override warnings
+- Project metadata and generation timestamps
+- Important override warnings and authority declarations
 - Page-specific rules with clear deviations
 - Component specifications for the module
 - Recommendations and best practices
-- Pre-delivery checklist tailored to the module
+- Module-specific pre-delivery checklist
 
 ### Implementation Layer
 The actual implementation layer consists of React components, TypeScript files, and design system utilities that developers use to build the application interface.
@@ -169,6 +178,163 @@ The escape comments categorize migration needs:
 - **Component Testing**: Validation of migrated components in different contexts
 - **Accessibility Compliance**: Verification of accessible implementations
 - **Performance Impact**: Assessment of migration effects on application performance
+
+## Enhanced Typography System
+
+The ZattarOS Design System features a comprehensive typography system with semantic text classes that provide precise control over typographic elements across the platform.
+
+### Typography Architecture and Governance
+
+**Semantic Typography Framework**
+The system provides a structured approach to typography through semantic variants:
+- **Typed Typography Components**: `<Heading>` and `<Text>` components with semantic variants
+- **Design System Tokens**: Canonical CSS classes for typography (`text-kpi-value`, `text-meta-label`, etc.)
+- **Responsive Typography**: Clamp-based scaling for optimal readability across devices
+- **Accessibility-First**: WCAG AAA compliance with proper contrast ratios and readable sizes
+
+**Typography Governance**
+- **Canonical Specifications**: All typography follows master file specifications
+- **Variant Control**: Limited typography variants to maintain consistency
+- **Accessibility Standards**: All typography meets WCAG AAA requirements
+- **Performance Optimization**: Efficient rendering through semantic class usage
+
+### Typography Component Usage Patterns
+
+**Heading Component**
+```typescript
+import { Heading } from '@/components/ui/typography';
+
+// Usage examples
+<Heading level="page">Main Page Title</Heading>
+<Heading level="section">Section Title</Heading>
+<Heading level="card">Card Title</Heading>
+```
+
+**Text Component**
+```typescript
+import { Text } from '@/components/ui/typography';
+
+// Usage examples
+<Text variant="kpi-value">24px bold value</Text>
+<Text variant="meta-label">11px uppercase label</Text>
+<Text variant="caption">13px auxiliary text</Text>
+<Text variant="micro-badge">9px badge text</Text>
+```
+
+**Migration Path**
+- **Legacy Typography**: Raw Tailwind classes and custom typography
+- **Transition Typography**: Hybrid approaches during migration
+- **Final Typography**: Fully standardized design system typography
+
+## New Semantic Text Classes
+
+The design system introduces comprehensive semantic text classes that replace raw Tailwind typography classes, providing better maintainability and accessibility.
+
+### Text Class Hierarchy and Governance
+
+**Canonical Typography Classes**
+The system defines precise semantic classes for different text purposes:
+- **KPI Values**: `text-kpi-value` (24px, bold, tabular-nums)
+- **Meta Labels**: `text-meta-label` (11px, semibold, uppercase, tracking 0.14em)
+- **Overline Labels**: `text-overline` (11px, semibold, uppercase, tracking 0.08em)
+- **Caption Text**: `text-caption` (13px, muted-foreground)
+- **Micro Badge Text**: `text-micro-badge` (9px, font-medium)
+- **Mono Numbers**: `text-mono-num` (10px, font-mono, tabular-nums)
+- **Micro Captions**: `text-micro-caption` (10px, tertiary timestamps)
+
+**Class Governance**
+- **Centralized Definition**: All classes defined in `src/app/globals.css`
+- **Semantic Clarity**: Each class serves a specific design purpose
+- **Accessibility Compliance**: All classes meet WCAG AAA standards
+- **Responsive Behavior**: Proper scaling across device sizes
+
+### Text Class Usage and Migration
+
+**Migration Examples**
+```typescript
+// Before migration - raw Tailwind classes
+<h1 className="text-2xl font-bold">Main Title</h1>
+<p className="text-sm text-gray-500">Subtitle</p>
+<span className="text-xs uppercase tracking-wider">Label</span>
+
+// After migration - semantic text classes
+<Heading level="page">Main Title</Heading>
+<Text variant="caption">Subtitle</Text>
+<Text variant="meta-label">Label</Text>
+```
+
+**Governance Benefits**
+- **Consistency**: All text elements follow standardized visual patterns
+- **Maintainability**: Centralized updates affect all text usage
+- **Accessibility**: Consistent color contrast and semantic meaning
+- **Performance**: Optimized rendering through semantic class usage
+
+**Text Usage Patterns**
+- **Domain-Specific**: Each module uses appropriate text classes
+- **Consistent Styling**: All elements within a category share visual treatment
+- **Semantic Clarity**: Text classes clearly communicate purpose and meaning
+- **Responsive Design**: Text classes adapt to different screen sizes and contexts
+
+## Accessibility Compliance Improvements
+
+The design system now emphasizes comprehensive accessibility compliance with WCAG AAA standards, ensuring inclusive design for all users.
+
+### Accessibility Architecture and Standards
+
+**WCAG AAA Compliance Framework**
+The system implements strict accessibility standards:
+- **Contrast Ratios**: Minimum 7:1 for all text elements
+- **Focus States**: Visible focus rings with 3-4px outline
+- **Keyboard Navigation**: Full keyboard accessibility for all interactive elements
+- **Screen Reader Support**: Proper ARIA attributes and semantic HTML
+- **Motion Sensitivity**: Respect for `prefers-reduced-motion` preferences
+
+**Accessibility Governance**
+- **Compliance Standards**: All components meet WCAG AAA requirements
+- **Testing Framework**: Automated accessibility validation
+- **User Experience**: Inclusive design patterns for diverse users
+- **Legal Compliance**: Meeting accessibility requirements for legal services
+
+### Accessibility Implementation Patterns
+
+**Focus Management**
+```typescript
+// Proper focus states
+<button className="focus-visible:outline-2 focus-visible:outline-primary">
+  Clickable Element
+</button>
+
+// Form accessibility
+<input 
+  aria-invalid={hasError}
+  aria-describedby={`${fieldId}-error`}
+/>
+```
+
+**Screen Reader Support**
+```typescript
+// Proper ARIA attributes
+<button 
+  aria-label="Delete item"
+  aria-describedby="item-description"
+>
+  <TrashIcon />
+</button>
+```
+
+**Motion Sensitivity**
+```typescript
+// Respect reduced motion preferences
+<button className="motion-safe:animate-pulse">
+  Animated Element
+</button>
+```
+
+**Accessibility Validation**
+- **Automated Testing**: Regular accessibility compliance checks
+- **Manual Review**: Human validation of accessibility implementations
+- **User Testing**: Real user testing with accessibility needs
+- **Continuous Improvement**: Ongoing accessibility enhancements
 
 ## Component Library Integration
 
@@ -293,6 +459,12 @@ The playground includes comprehensive testing capabilities:
 - **Performance Benchmarking**: Load testing and optimization validation
 - **Cross-Browser Compatibility**: Multi-browser and multi-device testing
 
+**Typography Testing and Validation**
+- **Semantic Text Classes**: Testing of new text classes (kpi-value, meta-label, etc.)
+- **Accessibility Compliance**: Validation of WCAG AAA typography standards
+- **Responsive Typography**: Testing across different screen sizes and breakpoints
+- **Migration Guidance**: Real-time suggestions for typography migration
+
 ## Page-Specific Implementation Examples
 
 ### Expedientes Module Deep Dive
@@ -305,6 +477,13 @@ The expedientes module demonstrates advanced design system implementation with c
 - **Badge Category Governance**: Centralized badge category usage with domain-specific mappings
 - **Layout Pattern Governance**: Strict adherence to module-specific density and layout requirements
 - **Component Composition**: Clear guidelines for component hierarchy and relationships
+
+**Typography Implementation and Migration**
+- **KPI Values**: Migration from raw classes to `text-kpi-value` semantic class
+- **Meta Labels**: Implementation of `text-meta-label` for uppercase field labels
+- **Overline Labels**: Usage of `text-overline` for section headers within cards
+- **Caption Text**: Migration to `text-caption` for auxiliary information
+- **Micro Badge Text**: Implementation of `text-micro-badge` for small status indicators
 
 **Component Composition and Migration**
 - **QueueCard Implementation**: Complex card component with migration guidance
@@ -330,6 +509,21 @@ The module shows practical migration from raw classes with comprehensive validat
 </div>
 ```
 
+**Typography Migration Examples**
+```typescript
+// Number formatting in cards
+// Before: text-[10px] font-mono text-muted-foreground tabular-nums
+// After: text-mono-num
+
+// Section headers within cards
+// Before: text-[11px] uppercase tracking-[0.14em] font-semibold
+// After: text-meta-label
+
+// Counter badges
+// Before: text-[9px] font-medium
+// After: text-micro-badge
+```
+
 **Governance and Compliance**
 - **Audit Results**: Comprehensive compliance reporting with automated scanning
 - **Override Validation**: Verification that page-specific rules are properly implemented
@@ -347,8 +541,8 @@ The captura module shows systematic migration from raw Tailwind classes with cle
 - **Color Strategy Governance**: Centralized color strategy documentation
 - **Effect Recommendations**: Governed recommendations for visual effects
 
-**Component Integration and Migration**
-- **Semantic Badge Usage**: Integration with centralized badge system
+**Typography Integration and Migration**
+- **Semantic Text Classes**: Integration with new typography system
 - **Component Composition**: Governance of component relationships and usage
 - **Migration Tracking**: Clear documentation of migration progress
 - **Quality Assurance**: Validation of design system compliance
@@ -384,6 +578,12 @@ The design system includes comprehensive quality assurance processes to ensure c
 - **Reduction in Design Debt**: Quantified improvement in codebase quality
 - **Improved Maintainability Scores**: Evidence of better code organization
 - **Enhanced User Experience Metrics**: Measurable UX improvements
+
+**Typography Migration Metrics**
+- **Semantic Text Class Adoption**: Tracking of new text class usage
+- **Typography Anti-Pattern Elimination**: Reduction in raw typography classes
+- **Accessibility Compliance Improvement**: Measured accessibility enhancements
+- **Migration Progress Visualization**: Clear metrics for typography migration
 
 ## Integration and Maintenance
 
@@ -423,9 +623,17 @@ The design system architecture supports scalable maintenance and evolution throu
 - **Developer Feedback Integration**: Governed feedback incorporation
 - **Continuous Improvement Processes**: Structured evolution of design system
 
+**Typography Maintenance and Governance**
+- **Semantic Text Class Updates**: Centralized typography token management
+- **Accessibility Compliance Monitoring**: Ongoing accessibility validation
+- **Migration Progress Tracking**: Quantified typography adoption metrics
+- **Developer Education**: Training on new typography system
+
 ## Conclusion
 
 The ZattarOS Design System represents a comprehensive approach to design system governance that balances centralized authority with module-specific flexibility. Through the implementation of MASTER.md as the central authority, systematic page-specific override mechanisms, and design-system-escape comments, the system provides a robust foundation for maintaining design integrity while accommodating the unique requirements of different application modules.
+
+**Updated** The system now features major typography improvements with new semantic text classes, enhanced accessibility compliance with WCAG AAA standards, and comprehensive anti-pattern prevention measures. The introduction of classes like `text-kpi-value`, `text-meta-label`, `text-overline`, `text-caption`, and `text-micro-badge` provides precise control over typographic elements while maintaining consistency across the platform.
 
 The hierarchical architecture ensures that all modules follow consistent design principles while allowing for targeted adaptations through documented overrides. The comprehensive audit and validation processes guarantee high-quality implementations across all modules, while the playground environment facilitates testing and validation of design system implementations.
 
@@ -434,3 +642,5 @@ The integration with shadcn/ui components ensures scalability and maintainabilit
 Through this architecture, the design system supports both current development needs and future evolution, providing a solid foundation for the continued growth of the ZattarOS platform. The emphasis on trust, authority, and accessibility creates a professional foundation suitable for legal services, while the comprehensive anti-pattern prevention and quality assurance processes ensure high-quality implementations across all modules.
 
 The governance model established through MASTER.md and page-specific overrides ensures that design decisions are well-documented, consistently applied, and easily maintained over time. This approach enables the design system to evolve with the platform's needs while maintaining the consistency and quality that developers and users expect.
+
+The enhanced typography system with semantic text classes, comprehensive accessibility compliance, and systematic migration guidance positions the ZattarOS Design System as a leader in accessible, maintainable, and scalable design systems for legal technology applications.

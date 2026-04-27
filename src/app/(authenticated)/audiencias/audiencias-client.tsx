@@ -29,6 +29,8 @@ import { Button } from '@/components/ui/button';
 
 import {
   StatusAudiencia,
+  GrauTribunal,
+  ModalidadeAudiencia,
   calcPrepItems,
   calcPrepScore,
   MissionKpiStrip,
@@ -45,7 +47,7 @@ import {
 import { AudienciasUltimaCapturaCard } from '@/app/(authenticated)/audiencias/components/audiencias-ultima-captura-card';
 import { actionObterResumoUltimaCapturaAudiencias } from '@/app/(authenticated)/audiencias/actions';
 import type { ResumoUltimaCapturaAudiencias } from '@/app/(authenticated)/audiencias/domain';
-import type { Audiencia, TipoAudiencia, AudienciasViewMode } from '@/app/(authenticated)/audiencias';
+import type { Audiencia, TipoAudiencia, AudienciasViewMode, CodigoTribunal } from '@/app/(authenticated)/audiencias';
 import type { AudienciasFilterBarFilters } from '@/app/(authenticated)/audiencias/components';
 import { Heading, Text } from '@/components/ui/typography';
 import { Stack, Inline } from '@/components/ui/stack';
@@ -97,7 +99,7 @@ export interface AudienciasClientProps {
 export function AudienciasClient({
   initialView = 'quadro',
   initialUsuarios = [],
-  initialTiposAudiencia: _initialTiposAudiencia = [],
+  initialTiposAudiencia = [],
   currentUserId = 0,
 }: AudienciasClientProps) {
   const router = useRouter();
@@ -130,6 +132,8 @@ export function AudienciasClient({
     responsavel: null,
     trt: [],
     modalidade: null,
+    grau: [],
+    tipoAudienciaId: [],
   });
   const [isNovaAudienciaOpen, setIsNovaAudienciaOpen] = useState(false);
 
@@ -151,11 +155,52 @@ export function AudienciasClient({
   // Fetch sem filtro de status — filtragem client-side para manter KPIs e
   // contadores de tabs precisos independente da aba ativa.
 
+  // ── Data Fetching ────────────────────────────────────────────────────
+  // Filtros de JOIN (responsável, TRT, modalidade, grau, tipo) vão para o
+  // servidor. Status fica client-side para preservar contadores das tabs.
+
+  // Responsavel: UI usa 'meus' | 'sem_responsavel' | number | null.
+  // Mapear para o contrato do repository: (number | 'null')[].
+  const responsavelIdParam = useMemo<(number | 'null')[] | undefined>(() => {
+    if (filters.responsavel === 'sem_responsavel') return ['null'];
+    if (filters.responsavel === 'meus') {
+      return currentUserId > 0 ? [currentUserId] : undefined;
+    }
+    if (typeof filters.responsavel === 'number') return [filters.responsavel];
+    return undefined;
+  }, [filters.responsavel, currentUserId]);
+
+  const modalidadeParam = useMemo<ModalidadeAudiencia[] | undefined>(
+    () => (filters.modalidade ? [filters.modalidade as ModalidadeAudiencia] : undefined),
+    [filters.modalidade],
+  );
+
+  const trtParam = useMemo<CodigoTribunal[] | undefined>(
+    () => (filters.trt.length > 0 ? (filters.trt as CodigoTribunal[]) : undefined),
+    [filters.trt],
+  );
+
+  const grauParam = useMemo<GrauTribunal[] | undefined>(
+    () => (filters.grau.length > 0 ? filters.grau : undefined),
+    [filters.grau],
+  );
+
+  const tipoAudienciaIdParam = useMemo<number[] | undefined>(
+    () => (filters.tipoAudienciaId.length > 0 ? filters.tipoAudienciaId : undefined),
+    [filters.tipoAudienciaId],
+  );
+
   const { audiencias: allAudiencias, isLoading, error, total: serverTotal, refetch } = useAudienciasUnified({
     viewMode,
     currentDate,
     search: search || undefined,
     capturaId: capturaIdFromUrl,
+    responsavelId: responsavelIdParam,
+    modalidade: modalidadeParam,
+    trt: trtParam,
+    grau: grauParam,
+    tipoAudienciaId: tipoAudienciaIdParam,
+    // status NAO enviado — filtragem client-side mantém contadores das tabs.
   });
 
   useEffect(() => {
@@ -192,27 +237,12 @@ export function AudienciasClient({
   const totalMarcadas = filterCounts.marcadas;
   const totalFinalizadas = filterCounts.finalizadas;
 
-  // Audiências filtradas pelos filtros ativos
+  // Audiências filtradas pelos filtros ativos (apenas status client-side;
+  // demais filtros já foram aplicados no servidor).
   const audiencias = useMemo(() => {
-    let filtered = allAudiencias;
-    if (filters.status) {
-      filtered = filtered.filter((a) => a.status === filters.status);
-    }
-    if (filters.responsavel === 'sem_responsavel') {
-      filtered = filtered.filter((a) => !a.responsavelId);
-    } else if (filters.responsavel === 'meus') {
-      filtered = filtered.filter((a) => a.responsavelId === currentUserId);
-    } else if (typeof filters.responsavel === 'number') {
-      filtered = filtered.filter((a) => a.responsavelId === filters.responsavel);
-    }
-    if (filters.trt.length > 0) {
-      filtered = filtered.filter((a) => a.trt && filters.trt.includes(a.trt));
-    }
-    if (filters.modalidade) {
-      filtered = filtered.filter((a) => a.modalidade === filters.modalidade);
-    }
-    return filtered;
-  }, [allAudiencias, filters, currentUserId]);
+    if (!filters.status) return allAudiencias;
+    return allAudiencias.filter((a) => a.status === filters.status);
+  }, [allAudiencias, filters.status]);
 
   // Low prep warnings (sempre sobre marcadas, independente da tab)
   const lowPrepAudiencias = useMemo(
@@ -303,6 +333,7 @@ export function AudienciasClient({
             id: u.id,
             nomeExibicao: u.nomeExibicao || u.nomeCompleto || `Usuário ${u.id}`,
           }))}
+          tiposAudiencia={initialTiposAudiencia}
           currentUserId={currentUserId}
           counts={filterCounts}
         />

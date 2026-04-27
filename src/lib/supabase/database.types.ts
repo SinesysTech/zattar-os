@@ -8545,6 +8545,7 @@ export type Database = {
           tipo_descricao: string | null
           trt: Database["public"]["Enums"]["codigo_tribunal"] | null
           trt_origem: string | null
+          ultima_captura_id: number | null
           updated_at: string | null
           url_ata_audiencia: string | null
           url_audiencia_virtual: string | null
@@ -8605,6 +8606,13 @@ export type Database = {
             columns: ["tipo_audiencia_id"]
             isOneToOne: false
             referencedRelation: "tipo_audiencia"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "audiencias_ultima_captura_id_fkey"
+            columns: ["ultima_captura_id"]
+            isOneToOne: false
+            referencedRelation: "capturas_log"
             referencedColumns: ["id"]
           },
         ]

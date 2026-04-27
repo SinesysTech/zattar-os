@@ -34,6 +34,7 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { CountBadge } from '@/components/ui/semantic-badge';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { Text } from '@/components/ui/typography';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -243,7 +244,7 @@ export function AudienciasSemanaView({
       </div>
 
       <Tabs value={selectedDay} onValueChange={setSelectedDay} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-        <TabsList className={cn(/* design-system-escape: p-1 → padrão TabsList */ "h-auto w-full justify-start overflow-x-auto")}>
+        <TabsList className="w-full justify-start overflow-x-auto">
           {weekDays.map((day) => {
             const key = getDayKey(day);
             const dayAudiencias = audienciasByDay.get(key) ?? [];
@@ -253,39 +254,15 @@ export function AudienciasSemanaView({
             const today = isToday(day);
 
             return (
-              <TabsTrigger
-                key={key}
-                value={key}
-                className={cn(
-                  /* design-system-escape: gap-0.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'flex flex-col items-center gap-0.5 rounded-xl px-3 py-2 min-w-16',
-                )}
-              >
-                <span className={cn(
-                  'text-overline capitalize',
-                  today ? 'text-primary' : 'text-muted-foreground/55',
-                )}>
-                  {format(day, 'EEE', { locale: ptBR })}
+              <TabsTrigger key={key} value={key} className={cn(/* design-system-escape: gap-1.5 → sem token DS equiv. */ "gap-1.5")}>
+                <span className={cn('capitalize', today && /* design-system-escape: font-semibold → ênfase visual de dia atual */ 'font-semibold text-primary')}>
+                  {format(day, 'EEE d', { locale: ptBR })}
                 </span>
-                <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
-                  <span className={cn(
-                    /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-caption font-semibold tabular-nums',
-                    today ? 'text-primary' : 'text-foreground/80',
-                  )}>
-                    {format(day, 'd')}
-                  </span>
-                  {dayAudiencias.length > 0 && (
-                    <span className={cn(
-                      /* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ 'text-micro-badge tabular-nums rounded-full px-1.5 py-px',
-                      lowPrepCount > 0
-                        ? 'bg-warning/15 text-warning'
-                        : today
-                          ? 'bg-primary/12 text-primary'
-                          : 'bg-muted/60 text-muted-foreground/60',
-                    )}>
-                      {dayAudiencias.length}
-                    </span>
-                  )}
-                </div>
+                {dayAudiencias.length > 0 && (
+                  <CountBadge className={lowPrepCount > 0 ? 'bg-warning/15 text-warning' : undefined}>
+                    {dayAudiencias.length}
+                  </CountBadge>
+                )}
               </TabsTrigger>
             );
           })}
@@ -454,7 +431,7 @@ function SummaryMetric({
           tone === 'muted' && 'text-muted-foreground/55',
         )} />
       </div>
-      <div className={cn(/* design-system-escape: leading-none sem token DS; tracking-tight sem token DS */ "mt-1 text-kpi-value leading-none tracking-tight text-foreground/85")}>
+      <div className="mt-1 text-[18px] font-bold leading-none tracking-tight tabular-nums text-foreground/85">
         {value}
       </div>
     </div>

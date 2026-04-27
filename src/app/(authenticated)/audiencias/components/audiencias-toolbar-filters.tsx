@@ -1,5 +1,11 @@
 'use client';
 
+/**
+ * @deprecated Helpers para a antiga toolbar de filtros. Substituído por
+ * [AudienciasFilterBar](./audiencias-filter-bar.tsx). Não usar em novas telas;
+ * preservado apenas para compatibilidade com imports legados.
+ */
+
 import type { FilterConfig, ComboboxOption } from '@/components/ui/table-toolbar-filter-config';
 import type { FilterGroup } from '@/components/ui/table-toolbar';
 import type { AudienciasFilters } from '../domain';

@@ -36,12 +36,12 @@ export interface UseAudienciasUnifiedParams {
   viewMode: AudienciasViewMode;
   currentDate: Date;
   search?: string;
-  status?: StatusAudiencia;
-  modalidade?: ModalidadeAudiencia;
-  trt?: CodigoTribunal;
-  grau?: GrauTribunal;
-  responsavelId?: number;
-  tipoAudienciaId?: number;
+  status?: StatusAudiencia[];
+  modalidade?: ModalidadeAudiencia[];
+  trt?: CodigoTribunal[];
+  grau?: GrauTribunal[];
+  responsavelId?: (number | 'null')[];
+  tipoAudienciaId?: number[];
   capturaId?: number;
 }
 
@@ -110,6 +110,10 @@ export function useAudienciasUnified(params: UseAudienciasUnifiedParams): UseAud
     [viewMode, currentDate],
   );
 
+  // Só envia array se houver pelo menos um item (evita filtro vazio no repository)
+  const nonEmpty = <T,>(arr?: T[]): T[] | undefined =>
+    arr && arr.length > 0 ? arr : undefined;
+
   // Chave estável para detectar se os parâmetros realmente mudaram
   const paramsKey = useMemo(
     () => JSON.stringify({
@@ -139,12 +143,12 @@ export function useAudienciasUnified(params: UseAudienciasUnifiedParams): UseAud
         pagina: 1,
         limite: 10000,
         busca: searchDebounced || undefined,
-        status: status || undefined,
-        modalidade: modalidade || undefined,
-        trt: trt || undefined,
-        grau: grau || undefined,
-        responsavelId: responsavelId || undefined,
-        tipoAudienciaId: tipoAudienciaId || undefined,
+        status: nonEmpty(status),
+        modalidade: nonEmpty(modalidade),
+        trt: nonEmpty(trt),
+        grau: nonEmpty(grau),
+        responsavelId: nonEmpty(responsavelId),
+        tipoAudienciaId: nonEmpty(tipoAudienciaId),
         // Quando capturaId ativo, ignora o range de datas para trazer todos
         // os registros daquela captura independente de período.
         dataInicioInicio: capturaId ? undefined : dateRange.start?.toISOString(),

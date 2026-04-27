@@ -153,7 +153,12 @@ export async function findAllAudiencias(params: ListarAudienciasParams): Promise
         if (params.responsavelId === 'null' || params.semResponsavel) {
           query = query.is('responsavel_id', null);
         } else if (Array.isArray(params.responsavelId)) {
-          const ids = params.responsavelId.filter(id => id !== 'null');
+          // Coercão defensiva: garantir que IDs sejam numéricos antes do join,
+          // prevenindo qualquer string não numérica no fragmento SQL do .or().
+          const ids = params.responsavelId
+            .filter((id) => id !== 'null')
+            .map((id) => Number(id))
+            .filter((n) => Number.isFinite(n));
           const hasNull = params.responsavelId.includes('null');
 
           if (hasNull && ids.length > 0) {

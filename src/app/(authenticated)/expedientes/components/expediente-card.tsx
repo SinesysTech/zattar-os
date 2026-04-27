@@ -282,14 +282,14 @@ function IdentidadeProcessual({ expediente }: { expediente: Expediente }) {
         >
           <p
             className={cn(
-              /* design-system-escape: font-semibold das partes — peso visual canônico para identificação */ 'truncate text-caption font-semibold text-foreground/90',
+              /* design-system-escape: text-xs/font-semibold/text-foreground — mirror exato do QueueCard original; text-caption (13px) causava regressão visual */ 'truncate text-xs font-semibold text-foreground',
             )}
           >
             {partes.autora || '—'}
           </p>
           <p
             className={cn(
-              /* design-system-escape: font-semibold das partes — peso visual canônico para identificação */ 'truncate text-caption font-semibold text-foreground/90',
+              /* design-system-escape: text-xs/font-semibold/text-foreground — mirror exato do QueueCard original; text-caption (13px) causava regressão visual */ 'truncate text-xs font-semibold text-foreground',
             )}
           >
             <span className="mr-1 text-[9px] font-normal text-muted-foreground/50">vs</span>
@@ -486,11 +486,22 @@ export function ExpedienteCard({
             tiposExpedientesData={tiposExpedientesData}
             rightSlot={
               expediente.dataPrazoLegalParte ? (
-                <span className={cn('text-mono-num shrink-0', URGENCY_TEXT[urgency])}>
+                <span
+                  className={cn(
+                    /* design-system-escape: font-mono/text-[10px]/tabular-nums — mirror exato do QueueCard original; text-mono-num conflitava em cascata com URGENCY_TEXT no Tailwind v4 */ 'shrink-0 font-mono text-[10px] tabular-nums',
+                    URGENCY_TEXT[urgency],
+                  )}
+                >
                   {diasLabel}
                 </span>
               ) : (
-                <span className="text-mono-num shrink-0 text-muted-foreground/35">—</span>
+                <span
+                  className={cn(
+                    /* design-system-escape: font-mono/text-[10px]/tabular-nums — label de "sem prazo" no canto direito do header comfortable */ 'shrink-0 font-mono text-[10px] tabular-nums text-muted-foreground/35',
+                  )}
+                >
+                  —
+                </span>
               )
             }
             onSuccess={onSuccess}

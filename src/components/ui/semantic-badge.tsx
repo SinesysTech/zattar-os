@@ -187,3 +187,33 @@ export function ExpedienteTipoSemanticBadge({
 export function CapturaStatusSemanticBadge({ value, ...props }: SpecializedBadgeProps) {
   return <SemanticBadge category="captura_status" value={value} {...props} />;
 }
+
+/**
+ * Badge para contagens numéricas em tabs, pills e indicadores de quantidade.
+ * Usa tom neutro (secondary soft) — não carrega semântica de domínio.
+ *
+ * @example
+ * <TabsTrigger value="marcadas">
+ *   Marcadas <CountBadge>{counts.marcadas}</CountBadge>
+ * </TabsTrigger>
+ */
+export function CountBadge({
+  children,
+  className,
+  size = 'xs',
+  ...props
+}: Omit<React.ComponentProps<typeof Badge>, 'variant' | 'tone'> & {
+  size?: 'xs' | 'sm' | 'md';
+}) {
+  return (
+    <Badge
+      variant="secondary"
+      tone="soft"
+      size={size}
+      className={cn('tabular-nums', className)}
+      {...props}
+    >
+      {children}
+    </Badge>
+  );
+}

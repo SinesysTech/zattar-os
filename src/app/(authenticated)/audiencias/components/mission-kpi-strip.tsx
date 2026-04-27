@@ -138,7 +138,7 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
               <p className={cn(/* design-system-escape: leading-none/tracking-tight para apertar o KPI numérico junto ao caption */ "text-kpi-value leading-none tracking-tight")}>
                 <AnimatedNumber value={stats.totalSemana} />
               </p>
-              <span className="text-micro-caption text-muted-foreground/45">audiências</span>
+              <span className="text-micro-caption text-muted-foreground/60">audiências</span>
             </div>
           </div>
           <IconContainer size="md" className="bg-primary/8">
@@ -176,11 +176,11 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
         {/* Detalhe do tribunal + modalidade */}
         <div className="mt-2.5">
           {stats.nextDetail ? (
-            <span className="text-micro-caption text-muted-foreground/60 truncate block">
+            <span className="text-caption text-muted-foreground/65 truncate block">
               {stats.nextDetail}
             </span>
           ) : (
-            <span className="text-micro-caption text-muted-foreground/40">Nenhuma agendada</span>
+            <span className="text-caption text-muted-foreground/45">Nenhuma agendada</span>
           )}
         </div>
       </GlassPanel>
@@ -194,7 +194,7 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
               <p className={cn(/* design-system-escape: leading-none/tracking-tight para apertar o KPI numérico junto ao caption */ "text-kpi-value leading-none tracking-tight")}>
                 <AnimatedNumber value={stats.realizadasMes} />
               </p>
-              <span className="text-micro-caption text-muted-foreground/45">/ {stats.relevantesMes} mês</span>
+              <span className="text-micro-caption text-muted-foreground/60">/ {stats.relevantesMes} mês</span>
             </div>
           </div>
           <IconContainer size="md" className="bg-success/8">
@@ -224,7 +224,7 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
               <p className={cn(/* design-system-escape: leading-none/tracking-tight para apertar o KPI numérico junto ao caption */ "text-kpi-value leading-none tracking-tight tabular-nums")}>
                 {stats.avgPrep}%
               </p>
-              <span className="text-micro-caption text-muted-foreground/45">média</span>
+              <span className="text-micro-caption text-muted-foreground/60">média</span>
             </div>
           </div>
           <IconContainer size="md" className="bg-primary/8">

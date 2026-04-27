@@ -12,10 +12,12 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { CountBadge } from '@/components/ui/semantic-badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
-import { StatusAudiencia } from '../domain';
+import { StatusAudiencia, GrauTribunal, GRAU_TRIBUNAL_LABELS } from '../domain';
+import type { TipoAudiencia } from '../domain';
 
 // ── Types ──────────────────────────────────────────────────────────────
 
@@ -30,12 +32,15 @@ export interface AudienciasFilters {
   responsavel: 'meus' | 'sem_responsavel' | number | null;
   trt: string[];
   modalidade: 'virtual' | 'presencial' | 'hibrida' | null;
+  grau: GrauTribunal[];
+  tipoAudienciaId: number[];
 }
 
 interface AudienciasFilterBarProps {
   filters: AudienciasFilters;
   onChange: (filters: AudienciasFilters) => void;
   usuarios: Usuario[];
+  tiposAudiencia: TipoAudiencia[];
   currentUserId: number;
   counts: {
     total: number;
@@ -74,7 +79,7 @@ function FilterDropdownTrigger({
       )}
     >
       {children}
-      <span className="text-micro-caption">{label}</span>
+      <span className="text-caption">{label}</span>
       {active && onClear ? (
         <span
           role="button"
@@ -109,18 +114,22 @@ function StatusTabsFilter({
       value={selected ?? 'todas'}
       onValueChange={(v) => onChange(v === 'todas' ? null : (v as StatusAudiencia))}
     >
-      <TabsList className="h-8">
-        <TabsTrigger value="todas" className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv. */ "text-micro-caption gap-1.5 h-7 px-2.5")}>
-          Todas <span className="tabular-nums text-muted-foreground/60">{counts.total}</span>
+      <TabsList>
+        <TabsTrigger value="todas">
+          Todas
+          <CountBadge>{counts.total}</CountBadge>
         </TabsTrigger>
-        <TabsTrigger value={StatusAudiencia.Marcada} className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv. */ "text-micro-caption gap-1.5 h-7 px-2.5")}>
-          Marcadas <span className="tabular-nums text-muted-foreground/60">{counts.marcadas}</span>
+        <TabsTrigger value={StatusAudiencia.Marcada}>
+          Marcadas
+          <CountBadge>{counts.marcadas}</CountBadge>
         </TabsTrigger>
-        <TabsTrigger value={StatusAudiencia.Finalizada} className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv. */ "text-micro-caption gap-1.5 h-7 px-2.5")}>
-          Finalizadas <span className="tabular-nums text-muted-foreground/60">{counts.finalizadas}</span>
+        <TabsTrigger value={StatusAudiencia.Finalizada}>
+          Finalizadas
+          <CountBadge>{counts.finalizadas}</CountBadge>
         </TabsTrigger>
-        <TabsTrigger value={StatusAudiencia.Cancelada} className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv. */ "text-micro-caption gap-1.5 h-7 px-2.5")}>
-          Canceladas <span className="tabular-nums text-muted-foreground/60">{counts.canceladas}</span>
+        <TabsTrigger value={StatusAudiencia.Cancelada}>
+          Canceladas
+          <CountBadge>{counts.canceladas}</CountBadge>
         </TabsTrigger>
       </TabsList>
     </Tabs>
@@ -393,10 +402,158 @@ function ModalidadeFilter({
 
 // ── Main Export ─────────────────────────────────────────────────────────
 
+// ── Grau Filter ────────────────────────────────────────────────────────
+
+const GRAU_OPTIONS: readonly { value: GrauTribunal; label: string }[] = [
+  { value: GrauTribunal.PrimeiroGrau, label: GRAU_TRIBUNAL_LABELS[GrauTribunal.PrimeiroGrau] },
+  { value: GrauTribunal.SegundoGrau, label: GRAU_TRIBUNAL_LABELS[GrauTribunal.SegundoGrau] },
+  { value: GrauTribunal.TribunalSuperior, label: GRAU_TRIBUNAL_LABELS[GrauTribunal.TribunalSuperior] },
+];
+
+function GrauFilter({
+  selected,
+  onChange,
+}: {
+  selected: GrauTribunal[];
+  onChange: (graus: GrauTribunal[]) => void;
+}) {
+  const [open, setOpen] = React.useState(false);
+
+  const label = selected.length === 0
+    ? 'Grau'
+    : selected.length === 1
+      ? GRAU_OPTIONS.find((g) => g.value === selected[0])?.label ?? 'Grau'
+      : `${selected.length} graus`;
+
+  const handleToggle = (grau: GrauTribunal) => {
+    const next = selected.includes(grau)
+      ? selected.filter((g) => g !== grau)
+      : [...selected, grau];
+    onChange(next);
+  };
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button type="button">
+          <FilterDropdownTrigger
+            label={label}
+            active={selected.length > 0}
+            onClear={selected.length > 0 ? () => onChange([]) : undefined}
+            open={open}
+          />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className={cn(POPOVER_CLASSES, 'w-52')} align="start" side="bottom">
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-0.5 sem token DS */ "p-2 space-y-0.5")}>
+          {GRAU_OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => handleToggle(opt.value)}
+              className={cn(
+                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
+                selected.includes(opt.value)
+                  ? 'bg-primary/8 text-primary'
+                  : 'hover:bg-muted/30 text-muted-foreground/70'
+              )}
+            >
+              <div className={cn(
+                'size-3.5 rounded border flex items-center justify-center',
+                selected.includes(opt.value)
+                  ? 'bg-primary border-primary'
+                  : 'border-border/30'
+              )}>
+                {selected.includes(opt.value) && <Check className="size-2.5 text-primary-foreground" />}
+              </div>
+              <span>{opt.label}</span>
+            </button>
+          ))}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+// ── Tipo de Audiência Filter ──────────────────────────────────────────
+
+function TipoAudienciaFilter({
+  selected,
+  onChange,
+  tiposAudiencia,
+}: {
+  selected: number[];
+  onChange: (ids: number[]) => void;
+  tiposAudiencia: TipoAudiencia[];
+}) {
+  const [open, setOpen] = React.useState(false);
+
+  const label = selected.length === 0
+    ? 'Tipo'
+    : selected.length === 1
+      ? tiposAudiencia.find((t) => t.id === selected[0])?.descricao ?? 'Tipo'
+      : `${selected.length} tipos`;
+
+  const handleToggle = (id: number) => {
+    const next = selected.includes(id)
+      ? selected.filter((x) => x !== id)
+      : [...selected, id];
+    onChange(next);
+  };
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button type="button">
+          <FilterDropdownTrigger
+            label={label}
+            active={selected.length > 0}
+            onClear={selected.length > 0 ? () => onChange([]) : undefined}
+            open={open}
+          />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className={cn(POPOVER_CLASSES, 'w-64')} align="start" side="bottom">
+        <Command className="bg-transparent">
+          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
+            <CommandInput placeholder="Buscar tipo..." className="h-8 text-micro-caption rounded-lg" />
+          </div>
+          <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-52 px-1.5 pb-1.5")}>
+            <CommandEmpty>
+              <Text variant="caption" as="span" className="text-muted-foreground/40">Não encontrado</Text>
+            </CommandEmpty>
+            <CommandGroup>
+              {tiposAudiencia.map((tipo) => (
+                <CommandItem
+                  key={tipo.id}
+                  value={tipo.descricao}
+                  onSelect={() => handleToggle(tipo.id)}
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-micro-caption px-2 py-1.5")}
+                >
+                  <div className={cn(
+                    'size-3.5 rounded border flex items-center justify-center',
+                    selected.includes(tipo.id)
+                      ? 'bg-primary border-primary'
+                      : 'border-border/30'
+                  )}>
+                    {selected.includes(tipo.id) && <Check className="size-2.5 text-primary-foreground" />}
+                  </div>
+                  <span className="truncate">{tipo.descricao}</span>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
 export function AudienciasFilterBar({
   filters,
   onChange,
   usuarios,
+  tiposAudiencia,
   currentUserId,
   counts,
 }: AudienciasFilterBarProps) {
@@ -421,6 +578,15 @@ export function AudienciasFilterBar({
       <ModalidadeFilter
         selected={filters.modalidade}
         onChange={(modalidade) => onChange({ ...filters, modalidade })}
+      />
+      <GrauFilter
+        selected={filters.grau}
+        onChange={(grau) => onChange({ ...filters, grau })}
+      />
+      <TipoAudienciaFilter
+        selected={filters.tipoAudienciaId}
+        onChange={(tipoAudienciaId) => onChange({ ...filters, tipoAudienciaId })}
+        tiposAudiencia={tiposAudiencia}
       />
     </div>
   );

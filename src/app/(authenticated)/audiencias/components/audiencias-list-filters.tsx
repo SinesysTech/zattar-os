@@ -1,5 +1,12 @@
 'use client';
 
+/**
+ * @deprecated Substituído por [AudienciasFilterBar](./audiencias-filter-bar.tsx),
+ * que integra filtros de JOIN (status, responsável, TRT, modalidade, grau,
+ * tipo) empurrando-os ao servidor via `useAudienciasUnified`. Não usar em
+ * novas telas; preservado apenas para compatibilidade com imports legados.
+ */
+
 import * as React from 'react';
 import { FilterPopoverMulti, type FilterOption } from '@/app/(authenticated)/partes';
 

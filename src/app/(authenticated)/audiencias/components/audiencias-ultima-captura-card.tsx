@@ -32,10 +32,10 @@ function MetricColumn({
 }) {
   return (
     <div className="flex-1 min-w-0">
-      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
+      <p className="text-meta-label text-muted-foreground/50 truncate">
         {label}
       </p>
-      <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none mt-1 text-foreground")}>
+      <p className="text-kpi-value leading-none mt-1 text-foreground font-display">
         <AnimatedNumber value={value} />
       </p>
       <div className="mt-2 h-1 rounded-full bg-muted/30 overflow-hidden">
@@ -82,7 +82,7 @@ export function AudienciasUltimaCapturaCard({
   if (!resumo) {
     return (
       <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5 opacity-50")}>
-        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50")}>
+        <p className="text-meta-label text-muted-foreground/50">
           ÚLTIMA CAPTURA
         </p>
         <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/60 mt-1")}>Nenhuma captura de audiências realizada</p>
@@ -127,10 +127,10 @@ export function AudienciasUltimaCapturaCard({
             <Mic2 className="size-4 text-warning/70" />
           </IconContainer>
           <div className="min-w-0">
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60")}>
+            <p className="text-meta-label text-muted-foreground/60">
               ÚLTIMA CAPTURA
             </p>
-            <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[10px] text-warning/70 leading-tight")}>{tempoRelativo}</p>
+            <p className="text-micro-caption text-warning/70 leading-tight">{tempoRelativo}</p>
           </div>
         </div>
         <ArrowRight className="size-3 text-warning/50 shrink-0 mt-1" />
