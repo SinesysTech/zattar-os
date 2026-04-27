@@ -387,6 +387,7 @@ export async function pendentesManifestacaoCapture(
         advogadoId: advogadoDb.id,
         trt: params.config.codigo,
         grau: params.config.grau,
+        capturaLogId: params.capturaLogId,
       });
 
       console.log(

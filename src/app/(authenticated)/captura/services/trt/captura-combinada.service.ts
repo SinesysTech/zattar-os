@@ -802,6 +802,7 @@ export async function capturaCombinada(
           advogadoId: advogadoDb.id,
           trt: params.config.codigo,
           grau: params.config.grau,
+          capturaLogId: params.capturaLogId,
         });
 
         console.log(`   ✅ Expedientes persistidos:`, {

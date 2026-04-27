@@ -326,6 +326,7 @@ export async function executarAgendamento(
                   config: tribunalConfig,
                   filtroPrazo: filtro,
                   capturarDocumentos: true,
+                  capturaLogId: logId ?? undefined,
                 });
 
                 resultadosPendentes.push({ filtroPrazo: filtro, resultado: captura });
@@ -437,6 +438,7 @@ export async function executarAgendamento(
             resultado = await capturaCombinada({
               credential: credCompleta.credenciais,
               config: tribunalConfig,
+              capturaLogId: logId ?? undefined,
             });
 
             await registrarRawLog({

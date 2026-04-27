@@ -12,6 +12,7 @@ import type { CredenciaisTRT, ConfigTRT, FiltroPrazoPendentes } from '../../type
 export interface CapturaTRTParams {
   credential: CredenciaisTRT;
   config: ConfigTRT;
+  capturaLogId?: number;
 }
 
 /**

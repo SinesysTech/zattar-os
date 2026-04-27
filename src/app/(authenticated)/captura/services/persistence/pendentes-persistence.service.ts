@@ -27,6 +27,7 @@ export interface SalvarPendentesParams {
   advogadoId: number;
   trt: CodigoTRT;
   grau: GrauTRT;
+  capturaLogId?: number;
 }
 
 /**
@@ -105,7 +106,7 @@ export async function salvarPendentes(
   params: SalvarPendentesParams
 ): Promise<SalvarPendentesResult> {
   const supabase = createServiceClient();
-  const { processos, advogadoId, trt, grau } = params;
+  const { processos, advogadoId, trt, grau, capturaLogId } = params;
 
   if (processos.length === 0) {
     return {
@@ -184,6 +185,7 @@ export async function salvarPendentes(
         data_criacao_expediente: parseDate(processo.dataCriacaoExpediente),
         prazo_vencido: processo.prazoVencido ?? false,
         sigla_orgao_julgador: processo.siglaOrgaoJulgador?.trim() ?? null,
+        ultima_captura_id: capturaLogId ?? null,
       };
 
       // Lookup no cache batch (ou fallback para query individual se cache vazio)
