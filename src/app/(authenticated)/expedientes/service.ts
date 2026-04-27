@@ -10,6 +10,7 @@ import {
   baixaExpedienteSchema,
   ListarExpedientesParams,
   Expediente,
+  ResumoUltimaCaptura,
 } from './domain';
 import * as repository from './repository';
 import type { ExpedienteInsertInput, ExpedienteUpdateInput } from './repository';
@@ -263,6 +264,10 @@ export async function bulkBaixar(
   } catch (error) {
     return err(appError('DATABASE_ERROR', 'Erro ao baixar expedientes em massa.', undefined, error instanceof Error ? error : undefined));
   }
+}
+
+export async function obterResumoUltimaCaptura(): Promise<Result<ResumoUltimaCaptura | null>> {
+  return repository.obterResumoUltimaCaptura();
 }
 
 export async function atualizarTipoDescricao(
