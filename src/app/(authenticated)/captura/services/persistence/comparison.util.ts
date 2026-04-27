@@ -36,10 +36,16 @@ export function removerCamposControle(obj: PlainObject): PlainObject {
   return rest;
 }
 
+export interface ValorAlterado {
+  campo: string;
+  antes: unknown;
+  depois: unknown;
+}
+
 export function compararObjetos(
   novo: PlainObject,
   existente: PlainObject
-): { saoIdenticos: boolean; camposAlterados: string[] } {
+): { saoIdenticos: boolean; camposAlterados: string[]; valoresAlterados: ValorAlterado[] } {
   const novoLimpo = removerCamposControle(novo);
   const existenteLimpo = removerCamposControle(existente);
 
@@ -49,15 +55,18 @@ export function compararObjetos(
   ]);
 
   const camposAlterados: string[] = [];
+  const valoresAlterados: ValorAlterado[] = [];
   for (const key of chaves) {
     if (!deepEqual(novoLimpo[key], existenteLimpo[key])) {
       camposAlterados.push(key);
+      valoresAlterados.push({ campo: key, antes: existenteLimpo[key], depois: novoLimpo[key] });
     }
   }
 
   return {
     saoIdenticos: camposAlterados.length === 0,
     camposAlterados,
+    valoresAlterados,
   };
 }
 

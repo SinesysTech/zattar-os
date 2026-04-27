@@ -50,6 +50,9 @@ export {
 export { AudienciasFilterBar } from './audiencias-filter-bar';
 export type { AudienciasFilters as AudienciasFilterBarFilters } from './audiencias-filter-bar';
 
+// Stats card (última captura)
+export { AudienciasUltimaCapturaCard } from './audiencias-ultima-captura-card';
+
 // Views (Glass Briefing)
 export {
   AudienciasSemanaView,

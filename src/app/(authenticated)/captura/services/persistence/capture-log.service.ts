@@ -3,6 +3,12 @@
 
 export type TipoEntidade = 'acervo' | 'audiencias' | 'expedientes' | 'auth' | 'partes' | 'timeline' | 'pericias';
 
+export interface ValorAlteradoLog {
+  campo: string;
+  antes: unknown;
+  depois: unknown;
+}
+
 export interface LogRegistroNaoAtualizado {
   tipo: 'nao_atualizado';
   entidade: TipoEntidade;
@@ -21,6 +27,7 @@ export interface LogRegistroAtualizado {
   grau: string;
   numero_processo: string;
   campos_alterados: string[];
+  valores_alterados?: ValorAlteradoLog[];
 }
 
 export interface LogRegistroInserido {
@@ -95,7 +102,8 @@ class CaptureLogService {
     trt: string,
     grau: string,
     numeroProcesso: string,
-    camposAlterados: string[]
+    camposAlterados: string[],
+    valoresAlterados?: ValorAlteradoLog[]
   ): void {
     this.logs.push({
       tipo: 'atualizado',
@@ -105,6 +113,7 @@ class CaptureLogService {
       grau,
       numero_processo: numeroProcesso,
       campos_alterados: camposAlterados,
+      ...(valoresAlterados ? { valores_alterados: valoresAlterados } : {}),
     });
   }
 

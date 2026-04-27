@@ -281,7 +281,7 @@ export function AudienciasMissionView({
           <button onClick={handleNext} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer")}>
             <ChevronRight className="size-4" />
           </button>
-          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium capitalize ml-1")}>{dateLabel}</span>
+          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium capitalize ml-1")}>{dateLabel}</span>
         </div>
       )}
 
@@ -434,8 +434,8 @@ export function AudienciasMissionView({
           ) : (
             <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 text-center")}>
               <Gavel className="size-8 text-muted-foreground/45 mb-3" />
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/50")}>Nenhuma audiência encontrada</p>
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/55 mt-1")}>
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium text-muted-foreground/50")}>Nenhuma audiência encontrada</p>
+              <p className="text-micro-caption text-muted-foreground/55 mt-1">
                 {search ? 'Tente ajustar a busca' : 'Tente ajustar os filtros'}
               </p>
             </div>

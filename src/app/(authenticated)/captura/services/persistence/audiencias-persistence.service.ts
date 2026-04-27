@@ -34,6 +34,12 @@ export interface SalvarAudienciasParams {
    * Usado por captura-combinada que já tem esse mapeamento.
    */
   mapeamentoIds?: Map<number, number>;
+  /**
+   * ID do registro em capturas_log para esta execução.
+   * Estampado em ultima_captura_id de cada audiência processada.
+   * Excluído do compararObjetos para não gerar falsos-positivos de "atualizado".
+   */
+  capturaLogId?: number;
 }
 
 /**
@@ -117,7 +123,7 @@ export async function salvarAudiencias(
   params: SalvarAudienciasParams
 ): Promise<SalvarAudienciasResult> {
   const supabase = createServiceClient();
-  const { audiencias, advogadoId, trt, grau, atas, mapeamentoIds } = params;
+  const { audiencias, advogadoId, trt, grau, atas, mapeamentoIds, capturaLogId } = params;
 
   if (audiencias.length === 0) {
     return {
@@ -395,7 +401,9 @@ export async function salvarAudiencias(
         }
 
         // Inserir
-        const { error } = await supabase.from("audiencias").insert(dadosNovos);
+        const { error } = await supabase
+          .from("audiencias")
+          .insert({ ...dadosNovos, ultima_captura_id: capturaLogId ?? null });
 
         if (error) {
           throw error;
@@ -446,6 +454,17 @@ export async function salvarAudiencias(
         );
 
         if (comparacao.saoIdenticos) {
+          // Dados não mudaram, mas ainda estampamos ultima_captura_id para
+          // indicar que essa audiência foi vista nesta captura.
+          if (capturaLogId) {
+            await supabase
+              .from("audiencias")
+              .update({ ultima_captura_id: capturaLogId })
+              .eq("id_pje", audiencia.id)
+              .eq("trt", trt)
+              .eq("grau", grau)
+              .eq("numero_processo", numeroProcesso);
+          }
           naoAtualizados++;
           captureLogService.logNaoAtualizado(
             entidade,
@@ -463,6 +482,7 @@ export async function salvarAudiencias(
             .from("audiencias")
             .update({
               ...dadosParaAtualizar,
+              ultima_captura_id: capturaLogId ?? null,
               dados_anteriores: dadosAnteriores,
             })
             .eq("id_pje", audiencia.id)
@@ -481,7 +501,8 @@ export async function salvarAudiencias(
             trt,
             grau,
             numeroProcesso,
-            comparacao.camposAlterados
+            comparacao.camposAlterados,
+            comparacao.valoresAlterados,
           );
         }
       }

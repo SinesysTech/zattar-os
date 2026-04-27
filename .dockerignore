@@ -78,11 +78,14 @@ dev_data/
 .cursorignore
 .claude/
 .codex/
-.agent/
+.agents/
 .gemini/
 .kiro/
 .opencode/
 .shared/
+.qoder/
+.superpowers/
+.worktrees/
 *.swp
 *.swo
 *~

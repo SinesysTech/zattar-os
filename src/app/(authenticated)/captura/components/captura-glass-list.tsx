@@ -17,18 +17,30 @@ import {
   Trash2,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import { toast } from 'sonner';
 
 import { cn } from '@/lib/utils';
 import { CapturaStatusSemanticBadge } from '@/components/ui/semantic-badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/shared/empty-state';
 import { GlassPanel } from '@/components/shared/glass-panel';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import type { CapturaLog, TipoCaptura, StatusCaptura } from '../types';
 import type { CapturaKpiData } from './captura-kpi-strip';
 import { useCapturasLog } from '../hooks/use-capturas-log';
 import { useAdvogadosMap } from '../hooks/use-advogados-map';
 import { useCredenciaisMap } from '../hooks/use-credenciais-map';
 import { CapturaEscopoBadge } from './captura-escopo-badge';
+import { actionDeletarCapturaLog } from '../actions';
 
 // =============================================================================
 // TIPOS
@@ -176,10 +188,12 @@ function GlassRow({
   captura,
   credenciaisMap,
   onView,
+  onDeleteRequest,
 }: {
   captura: CapturaLog;
   credenciaisMap: Map<number, { tribunal: string; grau: string }>;
   onView: () => void;
+  onDeleteRequest: (captura: CapturaLog) => void;
 }) {
   const TipoIcon = getTipoIcon(captura.tipo_captura);
   const { data, hora } = formatarDataHoraSeparado(captura.iniciado_em);
@@ -252,7 +266,7 @@ function GlassRow({
           </button>
           <button
             type="button"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => { e.stopPropagation(); onDeleteRequest(captura); }}
             className="size-7 rounded-md flex items-center justify-center text-muted-foreground/45 hover:bg-destructive/10 hover:text-destructive transition-colors"
             aria-label="Excluir"
           >
@@ -365,8 +379,10 @@ export function CapturaGlassList({
   onView,
 }: CapturaGlassListProps) {
   const [pagina, setPagina] = useState(1);
+  const [capturaToDelete, setCapturaToDelete] = useState<CapturaLog | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const { capturas, paginacao, isLoading } = useCapturasLog({
+  const { capturas, paginacao, isLoading, refetch } = useCapturasLog({
     pagina,
     limite: 20,
     tipo_captura: (filters?.tipo as TipoCaptura) || undefined,
@@ -375,6 +391,20 @@ export function CapturaGlassList({
 
   const { advogadosMap } = useAdvogadosMap();
   const { credenciaisMap } = useCredenciaisMap();
+
+  const handleConfirmDelete = async () => {
+    if (!capturaToDelete) return;
+    setIsDeleting(true);
+    const result = await actionDeletarCapturaLog(capturaToDelete.id);
+    setIsDeleting(false);
+    setCapturaToDelete(null);
+    if (result.success) {
+      toast.success('Registro de captura excluído.');
+      await refetch();
+    } else {
+      toast.error(result.error || 'Erro ao excluir registro de captura.');
+    }
+  };
 
   const resolveTribunais = React.useCallback(
     (captura: CapturaLog): string[] => {
@@ -441,23 +471,47 @@ export function CapturaGlassList({
   }
 
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
-        {filtered.map((captura) => (
-          <GlassRow
-            key={captura.id}
-            captura={captura}
-            credenciaisMap={credenciaisMap}
-            onView={() => onView?.(captura)}
+    <>
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+          {filtered.map((captura) => (
+            <GlassRow
+              key={captura.id}
+              captura={captura}
+              credenciaisMap={credenciaisMap}
+              onView={() => onView?.(captura)}
+              onDeleteRequest={setCapturaToDelete}
+            />
+          ))}
+        {paginacao && paginacao.totalPaginas > 1 && (
+          <PaginationBar
+            paginacao={paginacao}
+            pagina={pagina}
+            onPrev={() => setPagina((p) => Math.max(1, p - 1))}
+            onNext={() => setPagina((p) => Math.min(paginacao.totalPaginas, p + 1))}
           />
-        ))}
-      {paginacao && paginacao.totalPaginas > 1 && (
-        <PaginationBar
-          paginacao={paginacao}
-          pagina={pagina}
-          onPrev={() => setPagina((p) => Math.max(1, p - 1))}
-          onNext={() => setPagina((p) => Math.min(paginacao.totalPaginas, p + 1))}
-        />
-      )}
-    </div>
+        )}
+      </div>
+
+      <AlertDialog open={!!capturaToDelete} onOpenChange={(open) => { if (!open) setCapturaToDelete(null); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir registro de captura?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Essa ação não pode ser desfeita. O registro de captura será excluído permanentemente do histórico.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmDelete}
+              disabled={isDeleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {isDeleting ? 'Excluindo...' : 'Excluir'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }

@@ -11,6 +11,7 @@
 export {
     actionCapturarTimeline,
     actionRelinkBackblaze,
+    actionDeletarCapturaLog,
 } from './timeline-actions';
 
 export type { ActionResponse } from './types';

@@ -185,7 +185,9 @@ export async function salvarPendentes(
         data_criacao_expediente: parseDate(processo.dataCriacaoExpediente),
         prazo_vencido: processo.prazoVencido ?? false,
         sigla_orgao_julgador: processo.siglaOrgaoJulgador?.trim() ?? null,
-        ultima_captura_id: capturaLogId ?? null,
+        // ultima_captura_id é excluído propositalmente do payload de comparação:
+        // muda a cada captura e causaria falso-positivo de "atualizado" em todos
+        // os expedientes processados. É estampado separadamente abaixo.
       };
 
       // Lookup no cache batch (ou fallback para query individual se cache vazio)
@@ -198,7 +200,9 @@ export async function salvarPendentes(
 
       if (!registroExistente) {
         // Inserir
-        const { error } = await supabase.from("expedientes").insert(dadosNovos);
+        const { error } = await supabase
+          .from("expedientes")
+          .insert({ ...dadosNovos, ultima_captura_id: capturaLogId ?? null });
 
         if (error) {
           throw error;
@@ -220,6 +224,17 @@ export async function salvarPendentes(
         );
 
         if (comparacao.saoIdenticos) {
+          // Dados PJE não mudaram, mas ainda estampamos ultima_captura_id para
+          // indicar que esse expediente foi visto nesta captura.
+          if (capturaLogId) {
+            await supabase
+              .from("expedientes")
+              .update({ ultima_captura_id: capturaLogId })
+              .eq("id_pje", processo.id)
+              .eq("trt", trt)
+              .eq("grau", grau)
+              .eq("numero_processo", numeroProcesso);
+          }
           naoAtualizados++;
           captureLogService.logNaoAtualizado(
             entidade,
@@ -242,6 +257,7 @@ export async function salvarPendentes(
             .from("expedientes")
             .update({
               ...dadosNovos,
+              ultima_captura_id: capturaLogId ?? null,
               dados_anteriores: dadosAnteriores,
             })
             .eq("id_pje", processo.id)
@@ -274,7 +290,8 @@ export async function salvarPendentes(
             trt,
             grau,
             numeroProcesso,
-            comparacao.camposAlterados
+            comparacao.camposAlterados,
+            comparacao.valoresAlterados,
           );
         }
       }

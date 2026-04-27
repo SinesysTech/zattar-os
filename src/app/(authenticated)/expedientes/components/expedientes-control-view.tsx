@@ -10,15 +10,12 @@ import {
   ExternalLink,
   X,
   SearchX,
-  Copy,
-  Check,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { Button } from '@/components/ui/button';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Heading } from '@/components/ui/typography';
-import { UrgencyDot } from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { GRAU_TRIBUNAL_LABELS, type Expediente, getExpedientePartyNames } from '../domain';
 import {
   ExpedienteResponsavelPopover,
@@ -32,7 +29,7 @@ import {
   ExpedientePrazoPopover,
   PrazoTriggerContent,
 } from './expediente-prazo-popover';
-import { ExpedienteTextEditor } from './expediente-text-editor';
+import { ExpedienteCard } from './expediente-card';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -60,8 +57,6 @@ export interface ExpedientesControlViewProps {
   onSuccess?: () => void;
 }
 
-type UrgencyLevel = 'critico' | 'alto' | 'medio' | 'baixo' | 'ok';
-
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function normalizarData(dataISO: string | null | undefined): Date | null {
@@ -77,41 +72,6 @@ function calcularDiasRestantes(expediente: Expediente): number | null {
   const hojeZerado = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
   return Math.round((prazo.getTime() - hojeZerado.getTime()) / 86400000);
 }
-
-function getExpedienteUrgencyLevel(
-  expediente: Expediente,
-  diasRestantes: number | null,
-): UrgencyLevel {
-  if (expediente.baixadoEm) return 'ok';
-  if (expediente.prazoVencido || (diasRestantes !== null && diasRestantes < 0)) return 'critico';
-  if (diasRestantes === 0) return 'alto';
-  if (diasRestantes !== null && diasRestantes <= 3) return 'medio';
-  return 'baixo';
-}
-
-function getDiasLabel(diasRestantes: number | null, prazoVencido: boolean): string {
-  if (diasRestantes === null) return 'Sem prazo';
-  if (prazoVencido || diasRestantes < 0) return `${Math.abs(diasRestantes)}d vencido`;
-  if (diasRestantes === 0) return 'Vence hoje';
-  if (diasRestantes === 1) return 'Vence amanhã';
-  return `${diasRestantes}d restantes`;
-}
-
-const URGENCY_TEXT_CLASS: Record<UrgencyLevel, string> = {
-  critico: /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-destructive/80 font-semibold',
-  alto: /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-warning/80 font-semibold',
-  medio: 'text-primary/70',
-  baixo: 'text-muted-foreground/45',
-  ok: 'text-success/60',
-};
-
-const URGENCY_BORDER: Record<UrgencyLevel, string> = {
-  critico: 'border-l-[3px] border-l-destructive/70',
-  alto: 'border-l-[3px] border-l-warning/70',
-  medio: 'border-l-[3px] border-l-primary/50',
-  baixo: 'border-l-[3px] border-l-border/30',
-  ok: 'border-l-[3px] border-l-success/40',
-};
 
 // ─── InfoRow ─────────────────────────────────────────────────────────────────
 
@@ -144,252 +104,6 @@ function EditableInfoRow({
       </span>
       <div className="flex justify-end">{children}</div>
     </div>
-  );
-}
-
-// ─── Inline Copy Button ─────────────────────────────────────────────────────
-
-function InlineCopy({ text, label }: { text: string; label: string }) {
-  const [copied, setCopied] = React.useState(false);
-
-  const handleCopy = React.useCallback((e: React.MouseEvent | React.KeyboardEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    navigator.clipboard.writeText(text).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    }).catch(() => {});
-  }, [text]);
-
-  const onKeyDown = React.useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.stopPropagation();
-      e.preventDefault();
-      handleCopy(e);
-    }
-  }, [handleCopy]);
-
-  return (
-    <button
-      type="button"
-      onClick={handleCopy}
-      onKeyDown={onKeyDown}
-      title={copied ? 'Copiado!' : label}
-      className="inline-flex items-center justify-center size-4 rounded hover:bg-muted/50 transition-colors shrink-0 opacity-0 group-hover:opacity-100 focus:opacity-100 group-focus-within:opacity-100 cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-primary/50"
-    >
-      {copied ? (
-        <Check className="size-2.5 text-success" />
-      ) : (
-        <Copy className="size-2.5 text-muted-foreground/50" />
-      )}
-    </button>
-  );
-}
-
-// ─── QueueCard ────────────────────────────────────────────────────────────────
-
-function QueueCard({
-  expediente,
-  usuariosData,
-  tiposExpedientesData,
-  selected,
-  onSelect,
-  onBaixar,
-  onViewDetail,
-  onSuccess,
-}: {
-  expediente: Expediente;
-  usuariosData: UsuarioData[];
-  tiposExpedientesData: TipoExpedienteData[];
-  selected: boolean;
-  onSelect: () => void;
-  onBaixar?: (e: React.MouseEvent | React.KeyboardEvent) => void;
-  onViewDetail?: (e: React.MouseEvent | React.KeyboardEvent) => void;
-  onSuccess?: () => void;
-}) {
-  const diasRestantes = calcularDiasRestantes(expediente);
-  const urgencyLevel = getExpedienteUrgencyLevel(expediente, diasRestantes);
-  const diasLabel = getDiasLabel(diasRestantes, expediente.prazoVencido);
-  const grauLabel = GRAU_TRIBUNAL_LABELS[expediente.grau] ?? expediente.grau;
-  const partes = getExpedientePartyNames(expediente);
-
-  return (
-    <GlassPanel
-      depth={1}
-      className={cn(
-        /* design-system-escape: p-0 → usar <Inset> */ 'group w-full cursor-pointer text-left transition-all duration-200 p-0',
-        'border-border/40 hover:border-primary/30 hover:bg-accent/50 hover:shadow-md',
-        URGENCY_BORDER[urgencyLevel],
-        selected && 'border-primary/40 bg-primary/5 ring-1 ring-primary/20',
-      )}
-    >
-      <div
-        role="button"
-        tabIndex={0}
-        onClick={onSelect}
-        onKeyDown={(e: React.KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(); } }}
-        className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 focus:outline-none")}
-      >
-      {/* Header row */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex min-w-0 items-center gap-2")}>
-          <UrgencyDot level={urgencyLevel} />
-          <ExpedienteTipoPopover
-            expedienteId={expediente.id}
-            tipoExpedienteId={expediente.tipoExpedienteId}
-            tiposExpedientes={tiposExpedientesData}
-            onSuccess={onSuccess}
-          >
-            <TipoTriggerContent
-              tipoExpedienteId={expediente.tipoExpedienteId}
-              tiposExpedientes={tiposExpedientesData}
-              size="md"
-              showIcon={false}
-            />
-          </ExpedienteTipoPopover>
-        </div>
-        <ExpedientePrazoPopover
-          expedienteId={expediente.id}
-          dataPrazoLegalParte={expediente.dataPrazoLegalParte}
-          onSuccess={onSuccess}
-          align="end"
-        >
-          <span className={cn('shrink-0 font-mono text-[10px] tabular-nums', URGENCY_TEXT_CLASS[urgencyLevel])}>
-            {diasLabel}
-          </span>
-        </ExpedientePrazoPopover>
-      </div>
-
-      {/* Identificação do Processo (Seção 2) */}
-      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 pt-3 border-t border-border/10")}>
-        {/* Partes — autora e ré em linhas separadas para não truncar em bloco */}
-        {(partes.autora || partes.re) && (
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-start gap-1.5 min-w-0 mb-1.5 focus-within:ring-0")}>
-            <div className="min-w-0 flex-1">
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-foreground truncate")}>
-                {partes.autora || '—'}
-              </p>
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-foreground truncate")}>
-                <span className="text-[9px] font-normal text-muted-foreground/50 mr-1">vs</span>
-                {partes.re || '—'}
-              </p>
-            </div>
-            <InlineCopy
-              text={`${partes.autora || ''} vs ${partes.re || ''}`}
-              label="Copiar parte"
-            />
-          </div>
-        )}
-
-        {/* TRT · Grau · Processo (linha compacta de identificação legal) */}
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 min-w-0")}>
-          <span className="text-mono-num truncate">
-            {[expediente.trt, grauLabel, expediente.numeroProcesso].filter(Boolean).join(' · ')}
-          </span>
-          <InlineCopy text={expediente.numeroProcesso || ''} label="Copiar número do processo" />
-        </div>
-
-        {/* Vara / órgão julgador — mesma família da linha de identificação */}
-        {(expediente.descricaoOrgaoJulgador || expediente.siglaOrgaoJulgador) && (
-          <p className="mt-0.5 text-mono-num truncate">
-            {expediente.descricaoOrgaoJulgador || expediente.siglaOrgaoJulgador}
-          </p>
-        )}
-      </div>
-
-      {/* Corpo: Resumo e Observações — visível apenas quando há conteúdo */}
-      {(expediente.descricaoArquivos || expediente.observacoes) && (
-        <div
-          className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "mt-3 space-y-2")}
-          onClick={(e) => e.stopPropagation()}
-          onKeyDown={(e) => e.stopPropagation()}
-        >
-          {expediente.descricaoArquivos && (
-            <div>
-              <p className="text-overline mb-1">Descrição</p>
-              <ExpedienteTextEditor
-                expedienteId={expediente.id}
-                field="descricaoArquivos"
-                value={expediente.descricaoArquivos}
-                emptyPlaceholder="Sem descrição — clique para adicionar"
-                onSuccess={onSuccess}
-              />
-            </div>
-          )}
-          {expediente.observacoes && (
-            <div>
-              <p className="text-overline mb-1">Observações</p>
-              <ExpedienteTextEditor
-                expedienteId={expediente.id}
-                field="observacoes"
-                value={expediente.observacoes}
-                emptyPlaceholder="Sem observações — clique para adicionar"
-                onSuccess={onSuccess}
-              />
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Footer: ações fixas + responsável (Seção 4) */}
-      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; gap-1.5 gap sem token DS */ "mt-3 pt-3 border-t border-border/10 flex items-center gap-1.5")}>
-        {/* Ações sempre visíveis — esquerda */}
-        <div
-          className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}
-          onClick={(e) => e.stopPropagation()}
-          onKeyDown={(e) => e.stopPropagation()}
-        >
-          {onBaixar && (
-            <button
-              type="button"
-              onClick={(e) => { e.stopPropagation(); onBaixar(e); }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.stopPropagation(); e.preventDefault(); onBaixar(e);
-                }
-              }}
-              className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex h-6 items-center gap-1 rounded-md bg-primary/10 px-2 text-[10px] font-medium text-primary/80 transition-colors hover:bg-primary/20 cursor-pointer")}
-            >
-              <CheckCircle2 className="size-3" />
-              Baixar
-            </button>
-          )}
-          {onViewDetail && (
-            <button
-              type="button"
-              onClick={(e) => { e.stopPropagation(); onViewDetail(e); }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.stopPropagation(); e.preventDefault(); onViewDetail(e);
-                }
-              }}
-              className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex h-6 items-center gap-1 rounded-md border border-border/20 px-2 text-[10px] font-medium text-muted-foreground/60 transition-colors hover:border-border/40 hover:text-muted-foreground/80 cursor-pointer")}
-            >
-              <ExternalLink className="size-3" />
-              Detalhes
-            </button>
-          )}
-        </div>
-
-        {/* Responsável — direita */}
-        <div className="ml-auto">
-          <ExpedienteResponsavelPopover
-            expedienteId={expediente.id}
-            responsavelId={expediente.responsavelId}
-            usuarios={usuariosData}
-            onSuccess={onSuccess}
-            align="end"
-          >
-            <ResponsavelTriggerContent
-              responsavelId={expediente.responsavelId}
-              usuarios={usuariosData}
-              size="sm"
-            />
-          </ExpedienteResponsavelPopover>
-        </div>
-      </div>
-      </div>
-    </GlassPanel>
   );
 }
 
@@ -704,31 +418,18 @@ export function ExpedientesControlView({
               : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
           )}>
             {items.map((exp) => (
-              <QueueCard
+              <ExpedienteCard
                 key={exp.id}
                 expediente={exp}
+                density="comfortable"
                 usuariosData={usuariosData}
                 tiposExpedientesData={tiposExpedientesData}
                 selected={selected?.id === exp.id}
                 onSelect={() =>
                   setSelected((prev) => (prev?.id === exp.id ? null : exp))
                 }
-                onBaixar={
-                  onBaixar
-                    ? (e) => {
-                        e.stopPropagation();
-                        onBaixar(exp);
-                      }
-                    : undefined
-                }
-                onViewDetail={
-                  onViewDetail
-                    ? (e) => {
-                        e.stopPropagation();
-                        onViewDetail(exp);
-                      }
-                    : undefined
-                }
+                onBaixar={onBaixar}
+                onViewDetail={onViewDetail}
                 onSuccess={onSuccess}
               />
             ))}

@@ -121,9 +121,17 @@ Array de objetos `LogEntry` (de `capture-log.service.ts`):
 ```typescript
 type LogEntry =
   | { tipo: 'erro', entidade: TipoEntidade, erro: string, contexto?: object }
-  | { tipo: 'inserido', entidade: TipoEntidade, id_pje: number, ... }
-  | { tipo: 'atualizado', entidade: TipoEntidade, campos_alterados: string[], ... }
-  | { tipo: 'nao_atualizado', entidade: TipoEntidade, motivo: 'registro_identico', ... };
+  | { tipo: 'inserido', entidade: TipoEntidade, id_pje: number, trt, grau, numero_processo }
+  | {
+      tipo: 'atualizado',
+      entidade: TipoEntidade,
+      campos_alterados: string[],
+      // Presente a partir de abr/2026 — logs anteriores têm apenas campos_alterados
+      valores_alterados?: Array<{ campo: string; antes: unknown; depois: unknown }>,
+      id_pje, trt, grau, numero_processo
+    }
+  | { tipo: 'nao_atualizado', entidade: TipoEntidade, motivo: 'registro_identico', ... }
+  | { tipo: 'conflito', entidade: TipoEntidade, motivo: 'occ_stale_updated_at', ... };
 ```
 
 ## Fluxo de Captura de Partes

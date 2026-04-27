@@ -36,7 +36,9 @@ type ExpedienteRow = {
   numero: number;
   segredo_justica: boolean;
   codigo_status_processo: string | null;
-  prioridade_processual: boolean;
+  // Schema tem `integer DEFAULT 0` (legado) — Supabase devolve number, não boolean.
+  // Conversão para boolean acontece em converterParaExpediente.
+  prioridade_processual: number;
   nome_parte_autora: string | null;
   qtde_parte_autora: number | null;
   nome_parte_re: string | null;
@@ -100,7 +102,9 @@ function converterParaExpediente(data: ExpedienteRow | ExpedienteRowComOrigem): 
     numero: data.numero,
     segredoJustica: data.segredo_justica,
     codigoStatusProcesso: data.codigo_status_processo,
-    prioridadeProcessual: data.prioridade_processual,
+    // prioridade_processual é integer no schema (DEFAULT 0), não boolean —
+    // sem coerção, JSX `{x && <Y/>}` renderiza literalmente "0" quando x === 0.
+    prioridadeProcessual: Boolean(data.prioridade_processual),
     nomeParteAutora: data.nome_parte_autora,
     qtdeParteAutora: data.qtde_parte_autora,
     nomeParteRe: data.nome_parte_re,

@@ -4,7 +4,7 @@
 import { createServiceClient } from "@/lib/supabase/service-client";
 import type { Processo } from "../../types/types";
 import type { CodigoTRT, GrauTRT } from "../../types/trt-types";
-import { compararObjetos, removerCamposControle } from "./comparison.util";
+import { compararObjetos, removerCamposControle, type ValorAlterado } from "./comparison.util";
 import { captureLogService, extrairMensagemErro, type TipoEntidade } from "./capture-log.service";
 
 /**
@@ -267,6 +267,7 @@ export async function salvarAcervo(
             grau,
             numeroProcesso,
             comparacao.camposAlterados,
+            comparacao.valoresAlterados,
           );
         }
       }
@@ -430,6 +431,7 @@ export async function salvarAcervoBatch(
     dados: ReturnType<typeof processoParaDadosBanco>;
     existente: Record<string, unknown>;
     camposAlterados: string[];
+    valoresAlterados: ValorAlterado[];
   }> = [];
   let naoAtualizados = 0;
   let erros = 0;
@@ -460,6 +462,7 @@ export async function salvarAcervoBatch(
             dados: dadosNovos,
             existente,
             camposAlterados: comparacao.camposAlterados,
+            valoresAlterados: comparacao.valoresAlterados,
           });
         }
       }
@@ -534,7 +537,7 @@ export async function salvarAcervoBatch(
     console.log(`   🔄 [salvarAcervoBatch] Fase 4: Atualizando ${paraAtualizar.length} registros...`);
 
     for (let i = 0; i < paraAtualizar.length; i++) {
-      const { dados, existente, camposAlterados } = paraAtualizar[i];
+      const { dados, existente, camposAlterados, valoresAlterados } = paraAtualizar[i];
 
       try {
         const dadosAnteriores = removerCamposControle(existente);
@@ -559,6 +562,7 @@ export async function salvarAcervoBatch(
           grau,
           dados.numero_processo,
           camposAlterados,
+          valoresAlterados,
         );
       } catch (error) {
         erros++;

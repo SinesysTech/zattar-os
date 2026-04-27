@@ -138,6 +138,7 @@ export function HubPanel({
   sections,
   recents,
   accountBar,
+  anchorRect,
 }: {
   onClose: () => void
   onNavigate: (item: HubNavItem) => void
@@ -145,6 +146,7 @@ export function HubPanel({
   sections: { label: string; items: HubNavItem[] }[]
   recents: string[]
   accountBar?: React.ReactNode
+  anchorRect: DOMRect | null
 }) {
   const [search, setSearch] = useState("")
   const [focusedIndex, setFocusedIndex] = useState(-1)
@@ -226,8 +228,17 @@ export function HubPanel({
       <div
         ref={panelRef}
         onKeyDown={handleKeyDown}
+        style={
+          anchorRect
+            ? {
+                top: anchorRect.bottom + 8,
+                left: anchorRect.left,
+                maxHeight: `calc(100vh - ${anchorRect.bottom + 24}px)`,
+              }
+            : { visibility: "hidden" }
+        }
         className="
-          fixed top-3 left-1/2 -translate-x-1/2 z-100 w-110 max-h-[calc(100vh-80px)]
+          fixed z-100 w-110
           overflow-hidden rounded-2xl flex flex-col
           bg-popover/95 backdrop-blur-2xl
           border border-border/50
@@ -424,6 +435,8 @@ export function HubPanel({
 
 export function CommandHub() {
   const [isOpen, setIsOpen] = useState(false)
+  const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null)
   const router = useRouter()
   const pathname = usePathname()
   const { data, temPermissao, isLoading } = usePermissoes()
@@ -447,23 +460,43 @@ export function CommandHub() {
     [addRecent, router]
   )
 
+  const toggleMenu = useCallback(() => {
+    if (buttonRef.current) {
+      setAnchorRect(buttonRef.current.getBoundingClientRect())
+    }
+    setIsOpen((prev) => !prev)
+  }, [])
+
   // Global shortcut: ⌘ + /
   useEffect(() => {
     function handleGlobalKey(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key === "/") {
         e.preventDefault()
-        setIsOpen((prev) => !prev)
+        toggleMenu()
       }
     }
     window.addEventListener("keydown", handleGlobalKey)
     return () => window.removeEventListener("keydown", handleGlobalKey)
-  }, [])
+  }, [toggleMenu])
+
+  // Recompute anchor on resize while open
+  useEffect(() => {
+    if (!isOpen) return
+    function handleResize() {
+      if (buttonRef.current) {
+        setAnchorRect(buttonRef.current.getBoundingClientRect())
+      }
+    }
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [isOpen])
 
   return (
     <>
       {/* Logo Trigger — transição animada entre logo Z e ícone de menu */}
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        ref={buttonRef}
+        onClick={toggleMenu}
         className={`
           relative flex items-center justify-center
           size-12 rounded-xl cursor-pointer overflow-hidden
@@ -521,6 +554,7 @@ export function CommandHub() {
           activeUrl={pathname || ""}
           sections={sections}
           recents={recents}
+          anchorRect={anchorRect}
         />
       )}
     </>

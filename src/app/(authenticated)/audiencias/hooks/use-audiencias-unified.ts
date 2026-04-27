@@ -42,6 +42,7 @@ export interface UseAudienciasUnifiedParams {
   grau?: GrauTribunal;
   responsavelId?: number;
   tipoAudienciaId?: number;
+  capturaId?: number;
 }
 
 export interface UseAudienciasUnifiedResult {
@@ -92,7 +93,7 @@ function getDateRange(viewMode: AudienciasViewMode, currentDate: Date) {
 const isClient = typeof window !== 'undefined';
 
 export function useAudienciasUnified(params: UseAudienciasUnifiedParams): UseAudienciasUnifiedResult {
-  const { viewMode, currentDate, search, status, modalidade, trt, grau, responsavelId, tipoAudienciaId } = params;
+  const { viewMode, currentDate, search, status, modalidade, trt, grau, responsavelId, tipoAudienciaId, capturaId } = params;
   const [audiencias, setAudiencias] = useState<Audiencia[]>([]);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -115,9 +116,9 @@ export function useAudienciasUnified(params: UseAudienciasUnifiedParams): UseAud
       start: dateRange.start?.toISOString() ?? null,
       end: dateRange.end?.toISOString() ?? null,
       search: searchDebounced,
-      status, modalidade, trt, grau, responsavelId, tipoAudienciaId,
+      status, modalidade, trt, grau, responsavelId, tipoAudienciaId, capturaId,
     }),
-    [dateRange, searchDebounced, status, modalidade, trt, grau, responsavelId, tipoAudienciaId],
+    [dateRange, searchDebounced, status, modalidade, trt, grau, responsavelId, tipoAudienciaId, capturaId],
   );
 
   const fetchData = useCallback(async () => {
@@ -144,8 +145,11 @@ export function useAudienciasUnified(params: UseAudienciasUnifiedParams): UseAud
         grau: grau || undefined,
         responsavelId: responsavelId || undefined,
         tipoAudienciaId: tipoAudienciaId || undefined,
-        dataInicioInicio: dateRange.start?.toISOString(),
-        dataInicioFim: dateRange.end?.toISOString(),
+        // Quando capturaId ativo, ignora o range de datas para trazer todos
+        // os registros daquela captura independente de período.
+        dataInicioInicio: capturaId ? undefined : dateRange.start?.toISOString(),
+        dataInicioFim: capturaId ? undefined : dateRange.end?.toISOString(),
+        capturaId: capturaId || undefined,
       });
 
       // Se outra chamada já foi disparada, descartar este resultado

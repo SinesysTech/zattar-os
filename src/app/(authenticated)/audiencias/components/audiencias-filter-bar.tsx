@@ -12,6 +12,7 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import { StatusAudiencia } from '../domain';
@@ -48,58 +49,6 @@ interface AudienciasFilterBarProps {
 // ── Shared ─────────────────────────────────────────────────────────────
 
 const POPOVER_CLASSES = /* design-system-escape: p-0 → usar <Inset> */ 'rounded-2xl glass-dropdown overflow-hidden p-0';
-
-function _FilterChip({
-  label,
-  active,
-  onClear,
-  onClick,
-  count,
-  icon,
-}: {
-  label: string;
-  active: boolean;
-  onClear?: () => void;
-  onClick?: () => void;
-  count?: number;
-  icon?: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 font-medium transition-colors cursor-pointer',
-        active
-          ? 'border-primary/20 bg-primary/5 text-primary'
-          : 'border-border/15 text-muted-foreground/60 hover:bg-muted/30'
-      )}
-    >
-      {icon}
-      <span className="text-micro-caption">{label}</span>
-      {count !== undefined && count > 0 && (
-        <span className={cn(
-          /* design-system-escape: px-1 padding direcional sem Inset equiv. */ 'text-micro-caption px-1 py-px rounded-full tabular-nums',
-          active ? 'bg-primary/10' : 'bg-muted/50'
-        )}>
-          {count}
-        </span>
-      )}
-      {active && onClear && (
-        <span
-          role="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onClear();
-          }}
-          className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-0.5 rounded-full p-0.5 hover:bg-primary/10 transition-colors")}
-        >
-          <X className="size-2.5" />
-        </span>
-      )}
-    </button>
-  );
-}
 
 function FilterDropdownTrigger({
   label,
@@ -144,72 +93,37 @@ function FilterDropdownTrigger({
   );
 }
 
-// ── Status Filter ─────────────────────────────────────────────────────
+// ── Status Filter (Tabs inline) ───────────────────────────────────────
 
-const STATUS_OPTIONS = [
-  { value: StatusAudiencia.Marcada, label: 'Marcada' },
-  { value: StatusAudiencia.Finalizada, label: 'Finalizada' },
-  { value: StatusAudiencia.Cancelada, label: 'Cancelada' },
-] as const;
-
-function StatusFilter({
+function StatusTabsFilter({
   selected,
   onChange,
   counts,
 }: {
   selected: StatusAudiencia | null;
   onChange: (v: StatusAudiencia | null) => void;
-  counts: { marcadas: number; finalizadas: number; canceladas: number };
+  counts: { total: number; marcadas: number; finalizadas: number; canceladas: number };
 }) {
-  const [open, setOpen] = React.useState(false);
-
-  const label = selected
-    ? STATUS_OPTIONS.find((o) => o.value === selected)?.label ?? 'Status'
-    : 'Status';
-
-  const countMap: Record<string, number> = {
-    [StatusAudiencia.Marcada]: counts.marcadas,
-    [StatusAudiencia.Finalizada]: counts.finalizadas,
-    [StatusAudiencia.Cancelada]: counts.canceladas,
-  };
-
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <button type="button">
-          <FilterDropdownTrigger
-            label={label}
-            active={!!selected}
-            onClear={selected ? () => onChange(null) : undefined}
-            open={open}
-          />
-        </button>
-      </PopoverTrigger>
-      <PopoverContent className={cn(POPOVER_CLASSES, 'w-44')} align="start" side="bottom">
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-0.5 sem token DS */ "p-2 space-y-0.5")}>
-          {STATUS_OPTIONS.map((opt) => (
-            <button
-              key={opt.value}
-              type="button"
-              onClick={() => {
-                onChange(selected === opt.value ? null : opt.value);
-                setOpen(false);
-              }}
-              className={cn(
-                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
-                selected === opt.value
-                  ? 'bg-primary/8 text-primary'
-                  : 'hover:bg-muted/30 text-muted-foreground/70'
-              )}
-            >
-              <span>{opt.label}</span>
-              <span className="text-micro-caption ml-auto tabular-nums opacity-50">{countMap[opt.value]}</span>
-              {selected === opt.value && <Check className="size-3" />}
-            </button>
-          ))}
-        </div>
-      </PopoverContent>
-    </Popover>
+    <Tabs
+      value={selected ?? 'todas'}
+      onValueChange={(v) => onChange(v === 'todas' ? null : (v as StatusAudiencia))}
+    >
+      <TabsList className="h-8">
+        <TabsTrigger value="todas" className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv. */ "text-micro-caption gap-1.5 h-7 px-2.5")}>
+          Todas <span className="tabular-nums text-muted-foreground/60">{counts.total}</span>
+        </TabsTrigger>
+        <TabsTrigger value={StatusAudiencia.Marcada} className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv. */ "text-micro-caption gap-1.5 h-7 px-2.5")}>
+          Marcadas <span className="tabular-nums text-muted-foreground/60">{counts.marcadas}</span>
+        </TabsTrigger>
+        <TabsTrigger value={StatusAudiencia.Finalizada} className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv. */ "text-micro-caption gap-1.5 h-7 px-2.5")}>
+          Finalizadas <span className="tabular-nums text-muted-foreground/60">{counts.finalizadas}</span>
+        </TabsTrigger>
+        <TabsTrigger value={StatusAudiencia.Cancelada} className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv. */ "text-micro-caption gap-1.5 h-7 px-2.5")}>
+          Canceladas <span className="tabular-nums text-muted-foreground/60">{counts.canceladas}</span>
+        </TabsTrigger>
+      </TabsList>
+    </Tabs>
   );
 }
 
@@ -488,7 +402,7 @@ export function AudienciasFilterBar({
 }: AudienciasFilterBarProps) {
   return (
     <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
-      <StatusFilter
+      <StatusTabsFilter
         selected={filters.status}
         onChange={(status) => onChange({ ...filters, status })}
         counts={counts}

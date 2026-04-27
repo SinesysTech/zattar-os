@@ -7,6 +7,7 @@ import {
   updateAudienciaSchema,
   ListarAudienciasParams,
   StatusAudiencia,
+  type ResumoUltimaCapturaAudiencias,
 } from "./domain";
 import * as repo from "./repository";
 
@@ -311,4 +312,8 @@ export async function buscarAudienciasPorNumeroProcesso(
   if (!result.success) return result;
 
   return { success: true, data: result.data };
+}
+
+export async function obterResumoUltimaCapturaAudiencias(): Promise<Result<ResumoUltimaCapturaAudiencias | null>> {
+  return repo.obterResumoUltimaCaptura();
 }

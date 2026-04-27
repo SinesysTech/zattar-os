@@ -6,6 +6,7 @@ import {
   EnderecoPresencial,
   ListarAudienciasParams,
   StatusAudiencia,
+  type ResumoUltimaCapturaAudiencias,
 } from './domain';
 import {
   getAudienciaColumnsFull,
@@ -174,6 +175,7 @@ export async function findAllAudiencias(params: ListarAudienciasParams): Promise
         if (params.dataInicioFim) query = query.lte('data_inicio', params.dataInicioFim);
         if (params.dataFimInicio) query = query.gte('data_fim', params.dataFimInicio);
         if (params.dataFimFim) query = query.lte('data_fim', params.dataFimFim);
+        if (params.capturaId) query = query.eq('ultima_captura_id', params.capturaId);
 
         const page = params.pagina || 1;
         const limit = params.limite || 10;
@@ -753,4 +755,61 @@ export async function buscarAudienciasPorCpf(
     },
     audiencias,
   };
+}
+
+// =============================================================================
+// RESUMO DE CAPTURA
+// =============================================================================
+
+export async function obterResumoUltimaCaptura(): Promise<Result<ResumoUltimaCapturaAudiencias | null>> {
+  try {
+    const db = createDbClient();
+
+    const { data: captura, error: capturaError } = await db
+      .from('capturas_log')
+      .select('id, tipo_captura, iniciado_em, concluido_em')
+      .eq('status', 'completed')
+      .eq('tipo_captura', 'audiencias')
+      .order('concluido_em', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (capturaError) {
+      return err(appError('DATABASE_ERROR', capturaError.message));
+    }
+    if (!captura) return ok(null);
+
+    const [totalResult, criadosResult] = await Promise.all([
+      db
+        .from('audiencias')
+        .select('id', { count: 'exact', head: true })
+        .eq('ultima_captura_id', captura.id),
+      db
+        .from('audiencias')
+        .select('id', { count: 'exact', head: true })
+        .eq('ultima_captura_id', captura.id)
+        .gte('created_at', captura.iniciado_em),
+    ]);
+
+    const total = totalResult.count ?? 0;
+    const totalCriados = criadosResult.count ?? 0;
+
+    return ok({
+      capturaId: captura.id,
+      tipoCaptura: captura.tipo_captura,
+      concluidoEm: captura.concluido_em,
+      totalCriados,
+      totalAtualizados: total - totalCriados,
+      total,
+    });
+  } catch (error) {
+    return err(
+      appError(
+        'DATABASE_ERROR',
+        'Erro ao obter resumo da última captura de audiências.',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
 }

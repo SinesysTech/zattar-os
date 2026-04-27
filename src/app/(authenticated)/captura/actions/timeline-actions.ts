@@ -5,6 +5,7 @@ import { authenticateRequest as getCurrentUser } from '@/lib/auth';
 import { checkPermission } from '@/lib/auth/authorization';
 import { capturarTimeline, type CapturaTimelineParams } from '../services/timeline/timeline-capture.service';
 import { relinkBackblazeDocumentos } from '../services/timeline/timeline-relink.service';
+import { deletarCapturaLog } from '../services/persistence/captura-log-persistence.service';
 
 import type { ActionResponse } from './types';
 
@@ -105,5 +106,29 @@ export async function actionRelinkBackblaze(
   } catch (error) {
     console.error('[actionRelinkBackblaze] Error:', error);
     return createErrorResponse(error, 'Erro ao re-vincular documentos do Backblaze');
+  }
+}
+
+/**
+ * Exclui um registro de histórico de captura.
+ */
+export async function actionDeletarCapturaLog(id: number): Promise<ActionResponse> {
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return { success: false, error: 'Não autenticado' };
+    }
+
+    const hasPermission = await checkPermission(user.id, 'captura', 'gerenciar_historico');
+    if (!hasPermission) {
+      return { success: false, error: 'Sem permissão para excluir registro de captura' };
+    }
+
+    await deletarCapturaLog(id);
+    revalidatePath('/captura');
+
+    return { success: true };
+  } catch (error) {
+    return createErrorResponse(error, 'Erro ao excluir registro de captura');
   }
 }

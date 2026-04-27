@@ -7,13 +7,24 @@
 - [audiencias-client.tsx](file://src/app/(authenticated)/audiencias/audiencias-client.tsx)
 - [audiencia-form.tsx](file://src/app/(authenticated)/audiencias/components/audiencia-form.tsx)
 - [audiencia-detail-dialog.tsx](file://src/app/(authenticated)/audiencias/components/audiencia-detail-dialog.tsx)
+- [mission-kpi-strip.tsx](file://src/app/(authenticated)/audiencias/components/mission-kpi-strip.tsx)
+- [audiencias-semana-view.tsx](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx)
+- [audiencias-mes-view.tsx](file://src/app/(authenticated)/audiencias/components/views/audiencias-mes-view.tsx)
 - [domain.ts](file://src/app/(authenticated)/audiencias/domain.ts)
 - [service.ts](file://src/app/(authenticated)/audiencias/service.ts)
 - [trt-driver.ts](file://src/app/(authenticated)/captura/drivers/pje/trt-driver.ts)
 - [briefing-helpers.ts](file://src/app/(authenticated)/calendar/briefing-helpers.ts)
 - [data.ts](file://src/app/(authenticated)/agenda/mock/data.ts)
+- [typography.tsx](file://src/components/ui/typography.tsx)
 - [logs.txt](file://scripts/results/api-audiencias/logs.txt)
 </cite>
+
+## Update Summary
+**Changes Made**
+- Enhanced design system compliance across audiências components with proper typography and semantic markup
+- Updated MissionKpiStrip component with improved design system typography usage
+- Enhanced AudienciasSemanaView with proper design system semantic markup and typography variants
+- Improved component accessibility with proper heading hierarchy and semantic HTML elements
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -21,16 +32,19 @@
 3. [Core Components](#core-components)
 4. [Architecture Overview](#architecture-overview)
 5. [Detailed Component Analysis](#detailed-component-analysis)
-6. [Dependency Analysis](#dependency-analysis)
-7. [Performance Considerations](#performance-considerations)
-8. [Troubleshooting Guide](#troubleshooting-guide)
-9. [Conclusion](#conclusion)
+6. [Design System Compliance](#design-system-compliance)
+7. [Dependency Analysis](#dependency-analysis)
+8. [Performance Considerations](#performance-considerations)
+9. [Troubleshooting Guide](#troubleshooting-guide)
+10. [Conclusion](#conclusion)
 
 ## Introduction
 
 The Audiência Management system is a comprehensive court hearing scheduling platform designed to streamline legal process management within the judicial system. This system provides automated scheduling capabilities, real-time calendar integration, intelligent reminder systems, and seamless synchronization with PJE-TRT (Tribunal Regional do Trabalho) systems.
 
 The platform manages the complete lifecycle of court hearings, from initial scheduling through completion, while maintaining strict legal compliance requirements. It integrates advanced features including automated audiência data capture, intelligent resource allocation, and sophisticated participant management systems.
+
+**Updated** Enhanced design system compliance with proper typography usage and semantic markup throughout the audiências components, ensuring accessibility and consistent visual hierarchy.
 
 ## Project Structure
 
@@ -43,6 +57,8 @@ UI[User Interface Components]
 Forms[Audiência Forms]
 Dialogs[Detail Dialogs]
 Calendar[Calendar Integration]
+KPI[KPI Components]
+Views[View Components]
 end
 subgraph "Application Layer"
 Actions[Server Actions]
@@ -63,6 +79,8 @@ UI --> Actions
 Forms --> Actions
 Dialogs --> Actions
 Calendar --> Actions
+KPI --> Actions
+Views --> Actions
 Actions --> Services
 Services --> Repository
 Repository --> Database
@@ -183,7 +201,7 @@ Action-->>Client : Success Message
 
 ### Frontend Components and User Interface
 
-The user interface follows a modern glass-morphism design pattern with comprehensive view modes and filtering capabilities:
+The user interface follows a modern glass-morphism design pattern with comprehensive view modes and filtering capabilities, now enhanced with proper design system typography:
 
 ```mermaid
 classDiagram
@@ -210,6 +228,18 @@ class AudienciaDetailDialog {
 +handleSaveUrl()
 +handleSaveEndereco()
 }
+class MissionKpiStrip {
++audiencias : Audiencia[]
++className : string
++stats : object
+}
+class AudienciasSemanaView {
++audiencias : Audiencia[]
++currentDate : Date
++onDateChange : function
++onViewDetail : function
++selectedDay : string
+}
 class Domain {
 +StatusAudiencia : enum
 +ModalidadeAudiencia : enum
@@ -219,6 +249,8 @@ class Domain {
 }
 AudienciasClient --> AudienciaForm : "opens"
 AudienciasClient --> AudienciaDetailDialog : "opens"
+AudienciasClient --> MissionKpiStrip : "renders"
+AudienciasClient --> AudienciasSemanaView : "renders"
 AudienciaForm --> Domain : "uses"
 AudienciaDetailDialog --> Domain : "uses"
 ```
@@ -227,12 +259,16 @@ AudienciaDetailDialog --> Domain : "uses"
 - [audiencias-client.tsx:93-360](file://src/app/(authenticated)/audiencias/audiencias-client.tsx#L93-L360)
 - [audiencia-form.tsx:91-495](file://src/app/(authenticated)/audiencias/components/audiencia-form.tsx#L91-L495)
 - [audiencia-detail-dialog.tsx:114-800](file://src/app/(authenticated)/audiencias/components/audiencia-detail-dialog.tsx#L114-L800)
+- [mission-kpi-strip.tsx:54-253](file://src/app/(authenticated)/audiencias/components/mission-kpi-strip.tsx#L54-L253)
+- [audiencias-semana-view.tsx:154-430](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx#L154-L430)
 
 **Section sources**
 - [07_audiencias.sql:1-159](file://supabase/schemas/07_audiencias.sql#L1-L159)
 - [audiencias-actions.ts:1-498](file://src/app/(authenticated)/audiencias/actions/audiencias-actions.ts#L1-L498)
 - [audiencia-form.tsx:1-495](file://src/app/(authenticated)/audiencias/components/audiencia-form.tsx#L1-L495)
 - [audiencia-detail-dialog.tsx:1-800](file://src/app/(authenticated)/audiencias/components/audiencia-detail-dialog.tsx#L1-L800)
+- [mission-kpi-strip.tsx:1-254](file://src/app/(authenticated)/audiencias/components/mission-kpi-strip.tsx#L1-L254)
+- [audiencias-semana-view.tsx:1-671](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx#L1-L671)
 - [domain.ts:1-692](file://src/app/(authenticated)/audiencias/domain.ts#L1-L692)
 
 ## Architecture Overview
@@ -245,6 +281,7 @@ subgraph "Presentation Layer"
 A1[Next.js App Router]
 A2[Client Components]
 A3[Server Actions]
+A4[Design System Typography]
 end
 subgraph "Business Logic Layer"
 B1[Service Layer]
@@ -278,6 +315,7 @@ D1 --> D2
 - [audiencias-client.tsx:1-360](file://src/app/(authenticated)/audiencias/audiencias-client.tsx#L1-L360)
 - [audiencias-actions.ts:1-498](file://src/app/(authenticated)/audiencias/actions/audiencias-actions.ts#L1-L498)
 - [service.ts:1-315](file://src/app/(authenticated)/audiencias/service.ts#L1-L315)
+- [typography.tsx:152-204](file://src/components/ui/typography.tsx#L152-L204)
 
 ### Calendar Integration Architecture
 
@@ -436,7 +474,7 @@ The system supports three distinct modalities with specific location requirement
 |------------|------------------------|-------------|---------|
 | Virtual | URL válida | Online | Link único |
 | Presencial | Endereço completo | Tribunal | Presencial |
-| Híbrida | Ambos os requisitos | Misto | Virtual + Presencial |
+| Híbrida | Ambos os requisitos | Misto | Virtual + Presencial
 
 **Section sources**
 - [audiencia-form.tsx:376-416](file://src/app/(authenticated)/audiencias/components/audiencia-form.tsx#L376-L416)
@@ -471,6 +509,89 @@ Driver->>PJE : Send Acknowledgment
 - [trt-driver.ts:45-80](file://src/app/(authenticated)/captura/drivers/pje/trt-driver.ts#L45-L80)
 - [logs.txt:1-23](file://scripts/results/api-audiencias/logs.txt#L1-L23)
 
+## Design System Compliance
+
+**Updated** The audiências components have been enhanced with comprehensive design system compliance, featuring proper typography usage and semantic markup throughout the interface.
+
+### Typography Implementation
+
+The system now utilizes a comprehensive typography system with typed components that ensure consistent styling and accessibility:
+
+```mermaid
+graph TB
+subgraph "Typography System"
+TS[Typography Base]
+H[Heading Components]
+T[Text Components]
+TV[Text Variants]
+HL[Heading Levels]
+end
+subgraph "Audiência Components"
+MK[MissionKpiStrip]
+ASV[AudienciasSemanaView]
+AK[Accessibility]
+end
+TS --> H
+TS --> T
+T --> TV
+H --> HL
+MK --> TS
+ASV --> TS
+AK --> TS
+```
+
+**Diagram sources**
+- [typography.tsx:152-204](file://src/components/ui/typography.tsx#L152-L204)
+- [mission-kpi-strip.tsx:130-253](file://src/app/(authenticated)/audiencias/components/mission-kpi-strip.tsx#L130-L253)
+- [audiencias-semana-view.tsx:309-429](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx#L309-L429)
+
+### Semantic Markup and Accessibility
+
+The components now implement proper semantic HTML structure with accessible heading hierarchies:
+
+| Component | Semantic Elements | Accessibility Features |
+|-----------|-------------------|----------------------|
+| MissionKpiStrip | `<div>` containers with proper spacing | Screen reader friendly labels, keyboard navigation |
+| AudienciasSemanaView | `<h3>`, `<h4>`, `<span>` elements | Proper heading levels, ARIA labels, focus management |
+| WeekDayCard | `<button>`, `<div>` with role attributes | Clickable semantics, keyboard activation, focus indicators |
+
+### Design System Typography Usage
+
+The audiências components now consistently use the design system typography variants:
+
+```mermaid
+flowchart LR
+subgraph "Typography Variants Used"
+TV1[text-kpi-value]
+TV2[text-label]
+TV3[text-caption]
+TV4[text-micro-caption]
+TV5[text-overline]
+TV6[text-meta-label]
+end
+subgraph "Component Implementation"
+MK1[MissionKpiStrip]
+ASV1[AudienciasSemanaView]
+WDC1[WeekDayCard]
+end
+TV1 --> MK1
+TV2 --> ASV1
+TV3 --> WDC1
+TV4 --> MK1
+TV5 --> ASV1
+TV6 --> MK1
+```
+
+**Diagram sources**
+- [typography.tsx:163-180](file://src/components/ui/typography.tsx#L163-L180)
+- [mission-kpi-strip.tsx:137-141](file://src/app/(authenticated)/audiencias/components/mission-kpi-strip.tsx#L137-L141)
+- [audiencias-semana-view.tsx:400-406](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx#L400-L406)
+
+**Section sources**
+- [typography.tsx:1-205](file://src/components/ui/typography.tsx#L1-L205)
+- [mission-kpi-strip.tsx:1-254](file://src/app/(authenticated)/audiencias/components/mission-kpi-strip.tsx#L1-L254)
+- [audiencias-semana-view.tsx:1-671](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx#L1-L671)
+
 ## Dependency Analysis
 
 The system exhibits excellent modularity with clear dependency boundaries and minimal coupling between components:
@@ -482,41 +603,53 @@ A[Next.js Framework]
 B[Zod Validation]
 C[React Hook Form]
 D[Supabase Client]
+E[Design System Typography]
 end
 subgraph "UI Dependencies"
-E[Lucide Icons]
-F[Date-fns]
-G[Radix UI]
-H[Shadcn/ui]
+F[Lucide Icons]
+G[Date-fns]
+H[Radix UI]
+I[Shadcn/ui]
+J[GlassPanel Components]
+K[IconContainer Components]
 end
 subgraph "Data Dependencies"
-I[PostgreSQL]
-J[Supabase RLS]
-K[JSONB Support]
-L[Full-Text Search]
+L[PostgreSQL]
+M[Supabase RLS]
+N[JSONB Support]
+O[Full-Text Search]
 end
 subgraph "External Dependencies"
-M[PJE-TRT APIs]
-N[Google Calendar API]
-O[Outlook Calendar API]
-P[Authentication Providers]
+P[PJE-TRT APIs]
+Q[Google Calendar API]
+R[Outlook Calendar API]
+S[Authentication Providers]
 end
 A --> B
 A --> C
 A --> D
-D --> I
-D --> J
-I --> K
-I --> L
-A --> M
-A --> N
-A --> O
+A --> E
+D --> L
+D --> M
+L --> N
+L --> O
 A --> P
+A --> Q
+A --> R
+A --> S
+E --> F
+E --> G
+E --> H
+E --> I
+E --> J
+E --> K
 ```
 
 **Diagram sources**
 - [audiencias-actions.ts:1-21](file://src/app/(authenticated)/audiencias/actions/audiencias-actions.ts#L1-L21)
 - [audiencia-form.tsx:1-38](file://src/app/(authenticated)/audiencias/components/audiencia-form.tsx#L1-L38)
+- [mission-kpi-strip.tsx:13-26](file://src/app/(authenticated)/audiencias/components/mission-kpi-strip.tsx#L13-L26)
+- [audiencias-semana-view.tsx:36-43](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx#L36-L43)
 
 ### Authorization and Permission System
 
@@ -580,6 +713,11 @@ The system implements several performance optimization strategies:
 - **Cause**: API connectivity or authentication issues
 - **Solution**: Check driver implementation and API credentials
 
+#### Design System Compliance Issues
+- **Issue**: Typography inconsistencies or accessibility problems
+- **Cause**: Direct CSS classes instead of design system components
+- **Solution**: Replace manual styling with proper Typography components and semantic markup
+
 **Section sources**
 - [audiencias-actions.ts:106-116](file://src/app/(authenticated)/audiencias/actions/audiencias-actions.ts#L106-L116)
 - [service.ts:53-62](file://src/app/(authenticated)/audiencias/service.ts#L53-L62)
@@ -588,12 +726,15 @@ The system implements several performance optimization strategies:
 
 The Audiência Management system represents a comprehensive solution for court hearing scheduling and management within the Brazilian judicial system. The system successfully combines modern web technologies with legal compliance requirements to provide an intuitive, efficient, and reliable platform for legal professionals.
 
+**Updated** Key enhancements include comprehensive design system compliance with proper typography usage, semantic markup implementation, and improved accessibility throughout the audiências components. The system now features consistent design language with proper heading hierarchies, accessible interactive elements, and standardized visual components.
+
 Key strengths of the system include:
 
 - **Comprehensive Legal Compliance**: Built-in adherence to PJE-TRT requirements and legal scheduling standards
 - **Advanced Integration Capabilities**: Seamless integration with multiple calendar providers and external legal systems
 - **Robust Data Management**: Sophisticated database schema supporting complex legal relationships and audit trails
-- **User-Friendly Interface**: Modern, responsive design with multiple view modes and filtering capabilities
+- **Enhanced User Experience**: Modern, responsive design with proper typography and semantic markup for improved accessibility
+- **Design System Consistency**: Unified design language across all audiências components with proper component composition
 - **Performance Optimization**: Carefully designed architecture supporting scalability and efficient data access
 
-The system provides a solid foundation for managing court hearings while maintaining the highest standards of legal accuracy and compliance. Its modular architecture ensures maintainability and extensibility for future enhancements and regulatory changes.
+The system provides a solid foundation for managing court hearings while maintaining the highest standards of legal accuracy, design system compliance, and user experience. Its modular architecture ensures maintainability and extensibility for future enhancements and regulatory changes.

@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { usePermissoes } from "@/providers/user-provider"
@@ -15,6 +15,8 @@ import { AccountBar } from "@/components/layout/header/account-bar"
 
 export function ModulesMenuButton() {
   const [isOpen, setIsOpen] = useState(false)
+  const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null)
   const router = useRouter()
   const pathname = usePathname()
   const { data, temPermissao, isLoading } = usePermissoes()
@@ -38,33 +40,53 @@ export function ModulesMenuButton() {
     [addRecent, router]
   )
 
+  const toggleMenu = useCallback(() => {
+    if (buttonRef.current) {
+      setAnchorRect(buttonRef.current.getBoundingClientRect())
+    }
+    setIsOpen((prev) => !prev)
+  }, [])
+
   // Global shortcut: ⌘ + /
   useEffect(() => {
     function handleGlobalKey(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key === "/") {
         e.preventDefault()
-        setIsOpen((prev) => !prev)
+        toggleMenu()
       }
     }
     window.addEventListener("keydown", handleGlobalKey)
     return () => window.removeEventListener("keydown", handleGlobalKey)
-  }, [])
+  }, [toggleMenu])
+
+  // Recompute anchor on resize while open (mantém o painel ancorado se o layout mudar)
+  useEffect(() => {
+    if (!isOpen) return
+    function handleResize() {
+      if (buttonRef.current) {
+        setAnchorRect(buttonRef.current.getBoundingClientRect())
+      }
+    }
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [isOpen])
 
   return (
     <>
       <button
-        onClick={() => setIsOpen((prev) => !prev)}
+        ref={buttonRef}
+        onClick={toggleMenu}
         aria-label="Menu de módulos"
         title="Menu de módulos (⌘/)"
         className={cn(
           "group/modules relative flex items-center justify-center",
           "size-9 rounded-xl cursor-pointer",
-          "border transition-all duration-200 ease-out",
+          "bg-card/50 border border-border/30",
           "active:scale-95",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+          "transition-all duration-200 ease-out",
           isOpen
             ? "bg-primary/10 border-primary/30 shadow-[0_0_16px_oklch(var(--primary)/0.15)]"
-            : "bg-card/50 border-border/30 hover:bg-primary/8 hover:border-primary/25 hover:shadow-[0_0_16px_oklch(var(--primary)/0.12)]"
+            : "hover:bg-primary/8 hover:border-primary/25 hover:shadow-[0_0_16px_oklch(var(--primary)/0.12)]"
         )}
       >
         {/* Glow on hover */}
@@ -120,6 +142,7 @@ export function ModulesMenuButton() {
           sections={sections}
           recents={recents}
           accountBar={<AccountBar />}
+          anchorRect={anchorRect}
         />
       )}
     </>

@@ -115,6 +115,7 @@ export type Operacao =
   | 'executar_pendentes'
   | 'visualizar_historico'
   | 'gerenciar_credenciais'
+  | 'gerenciar_historico'
   // Operações específicas de comunica_cnj
   | 'consultar'
   | 'capturar';
@@ -279,6 +280,7 @@ export const MATRIZ_PERMISSOES: Record<Recurso, Operacao[]> = {
     'executar_pendentes',
     'visualizar_historico',
     'gerenciar_credenciais',
+    'gerenciar_historico',
   ],
 
   // Comunica CNJ - Diário Oficial (6 permissões)

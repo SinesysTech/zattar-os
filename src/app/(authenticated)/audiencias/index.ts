@@ -84,6 +84,7 @@ export {
   actionBuscarAudienciasPorCPF,
   actionBuscarAudienciasPorCNPJ,
   actionBuscarAudienciasPorNumeroProcesso,
+  actionObterResumoUltimaCapturaAudiencias,
 } from "./actions";
 
 export type { ActionResult } from "./actions";
@@ -131,6 +132,7 @@ export type {
   CodigoTribunal,
   EnderecoPresencial,
   Audiencia,
+  ResumoUltimaCapturaAudiencias,
   AudienciaSortBy,
   ListarAudienciasParams,
   // Backend types

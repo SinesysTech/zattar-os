@@ -12,7 +12,7 @@
 
 import { cn } from '@/lib/utils';
 import { useState, useMemo, useCallback, useEffect } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useAgentContext } from '@copilotkit/react-core/v2';
 import {
   CalendarDays,
@@ -42,6 +42,9 @@ import {
   useAudienciasUnified,
   AudienciasFilterBar,
 } from '@/app/(authenticated)/audiencias';
+import { AudienciasUltimaCapturaCard } from '@/app/(authenticated)/audiencias/components/audiencias-ultima-captura-card';
+import { actionObterResumoUltimaCapturaAudiencias } from '@/app/(authenticated)/audiencias/actions';
+import type { ResumoUltimaCapturaAudiencias } from '@/app/(authenticated)/audiencias/domain';
 import type { Audiencia, TipoAudiencia, AudienciasViewMode } from '@/app/(authenticated)/audiencias';
 import type { AudienciasFilterBarFilters } from '@/app/(authenticated)/audiencias/components';
 import { Heading, Text } from '@/components/ui/typography';
@@ -99,6 +102,7 @@ export function AudienciasClient({
 }: AudienciasClientProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   // ── View State ──────────────────────────────────────────────────────────
 
@@ -133,6 +137,16 @@ export function AudienciasClient({
   const [selectedAudiencia, setSelectedAudiencia] = useState<Audiencia | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
 
+  // Última captura
+  const [ultimaCaptura, setUltimaCaptura] = useState<ResumoUltimaCapturaAudiencias | null>(null);
+  const [ultimaCapturaLoading, setUltimaCapturaLoading] = useState(true);
+
+  // capturaId vindo da URL (navegação a partir do card)
+  const capturaIdFromUrl = useMemo(() => {
+    const raw = searchParams.get('capturaId');
+    return raw ? Number(raw) : undefined;
+  }, [searchParams]);
+
   // ── Data Fetching ───────────────────────────────────────────────────────
   // Fetch sem filtro de status — filtragem client-side para manter KPIs e
   // contadores de tabs precisos independente da aba ativa.
@@ -141,7 +155,21 @@ export function AudienciasClient({
     viewMode,
     currentDate,
     search: search || undefined,
+    capturaId: capturaIdFromUrl,
   });
+
+  useEffect(() => {
+    let cancelado = false;
+    setUltimaCapturaLoading(true);
+    (async () => {
+      const result = await actionObterResumoUltimaCapturaAudiencias();
+      if (!cancelado) {
+        setUltimaCaptura(result.success && result.data ? result.data : null);
+        setUltimaCapturaLoading(false);
+      }
+    })();
+    return () => { cancelado = true; };
+  }, []);
 
   // ── Derived Data ────────────────────────────────────────────────────────
 
@@ -219,6 +247,10 @@ export function AudienciasClient({
     setIsDetailOpen(true);
   }, []);
 
+  const handleUltimaCapturaClick = useCallback((capturaId: number) => {
+    router.push(`${VIEW_ROUTES.lista}?capturaId=${capturaId}`);
+  }, [router]);
+
   // ── Render ──────────────────────────────────────────────────────────────
 
   return (
@@ -228,7 +260,7 @@ export function AudienciasClient({
         <Inline align="end" justify="between">
           <Stack gap="tight">
             <Heading level="page">Audiências</Heading>
-            <Text variant="helper" className="text-muted-foreground/50">
+            <Text variant="caption" as="p" className="mt-0.5">
               {subtitle}
             </Text>
           </Stack>
@@ -241,6 +273,13 @@ export function AudienciasClient({
 
       {/* ── KPI Strip ──────────────────────────────────────── */}
       <MissionKpiStrip audiencias={allAudiencias} />
+
+      {/* ── Última Captura ─────────────────────────────────── */}
+      <AudienciasUltimaCapturaCard
+        resumo={ultimaCaptura}
+        isLoading={ultimaCapturaLoading}
+        onClick={handleUltimaCapturaClick}
+      />
 
       {/* ── Insight Banners ────────────────────────────────── */}
       {!isLoading && lowPrepAudiencias.length > 0 && (

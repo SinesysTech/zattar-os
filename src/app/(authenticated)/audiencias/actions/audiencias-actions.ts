@@ -10,6 +10,7 @@ import {
   StatusAudiencia,
   updateAudienciaSchema,
   Audiencia,
+  type ResumoUltimaCapturaAudiencias,
 } from '../domain';
 import { PaginatedResponse } from '@/types';
 import { authenticateRequest as getCurrentUser } from '@/lib/auth/session';
@@ -494,4 +495,16 @@ export async function actionAtualizarAudienciaPayload(
     data: result.data,
     message: 'Audiência atualizada com sucesso.',
   };
+}
+
+export async function actionObterResumoUltimaCapturaAudiencias(): Promise<ActionResult<ResumoUltimaCapturaAudiencias | null>> {
+  const auth = await autorizar('listar');
+  if (!auth.ok) return auth.result as ActionResult<ResumoUltimaCapturaAudiencias | null>;
+
+  const result = await service.obterResumoUltimaCapturaAudiencias();
+
+  if (!result.success) {
+    return { success: false, error: result.error.message, message: result.error.message };
+  }
+  return { success: true, data: result.data, message: 'Resumo obtido com sucesso.' };
 }

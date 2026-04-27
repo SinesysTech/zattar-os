@@ -120,20 +120,22 @@ function DashboardHeader({
   onOpenBriefing: () => void
 }) {
   return (
-    <div className="flex h-16 shrink-0 items-center gap-4 px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 pt-2 z-40">
-      {/* Esquerda: logo Z → Dashboard */}
-      <DashboardLogoButton />
-
-      {/* Centro: apenas o ícone do menu (conta e ações integradas no painel) */}
-      <div className="flex-1" />
+    <div className="relative flex h-16 shrink-0 items-center px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 pt-2 z-40">
+      {/* Esquerda: botão de menu */}
       <ModulesMenuButton />
-      <div className="flex-1" />
+
+      {/* Centro: ícone Z → Dashboard (absoluto para centrar independente dos flancos) */}
+      <div className="absolute left-1/2 -translate-x-1/2">
+        <DashboardLogoButton />
+      </div>
 
       {/* Direita: Pedrinho toggle */}
-      <PedrinhoHeaderToggle
-        onOpenCommand={onOpenCommand}
-        onOpenBriefing={onOpenBriefing}
-      />
+      <div className="ml-auto">
+        <PedrinhoHeaderToggle
+          onOpenCommand={onOpenCommand}
+          onOpenBriefing={onOpenBriefing}
+        />
+      </div>
     </div>
   )
 }

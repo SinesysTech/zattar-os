@@ -402,7 +402,8 @@ export async function salvarPericias(
             trt,
             grau,
             numeroProcesso,
-            comparacao.camposAlterados
+            comparacao.camposAlterados,
+            comparacao.valoresAlterados,
           );
         }
       }

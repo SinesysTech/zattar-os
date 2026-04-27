@@ -8,6 +8,7 @@
 - [domain.ts](file://src/app/(authenticated)/expedientes/domain.ts)
 - [expedientes-ultima-captura-card.tsx](file://src/app/(authenticated)/expedientes/components/expedientes-ultima-captura-card.tsx)
 - [expedientes-captura-banner.tsx](file://src/app/(authenticated)/expedientes/components/expedientes-captura-banner.tsx)
+- [expedientes-content.tsx](file://src/app/(authenticated)/expedientes/components/expedientes-content.tsx)
 - [primitives.tsx](file://src/app/(authenticated)/dashboard/widgets/primitives.tsx)
 - [expediente-actions.ts](file://src/app/(authenticated)/expedientes/actions/expediente-actions.ts)
 - [resumo-ultima-captura.test.ts](file://src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts)
@@ -23,11 +24,11 @@
 
 ## Update Summary
 **Changes Made**
-- Added comprehensive documentation for new expedientes components: ExpedientesUltimaCapturaCard (168 lines) and ExpedientesCapturaBanner (76 lines)
-- Documented utilization of new design system glass panel components and animated number primitives
-- Enhanced documentation coverage for advanced testing patterns including database mocking strategies
-- Updated obterResumoUltimaCaptura function documentation with complete coverage
-- Added integration testing approaches for complex business logic validation
+- Added comprehensive documentation for the new ExpedientesUltimaCapturaCard component (168 lines) with glass panel design and animated metrics
+- Documented the component's integration with the ExpedientesContent dashboard
+- Enhanced documentation coverage for the AnimatedNumber primitive and glass panel design system
+- Updated testing framework documentation to include advanced mocking strategies for database operations
+- Added detailed coverage of the component's loading states, skeleton UI, and interactive elements
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -50,7 +51,7 @@ The Expedientes Capture Tracking System is a sophisticated legal process automat
 
 This system represents a comprehensive solution for legal practice automation, combining advanced web scraping technologies with robust database management and document storage systems. The platform enables law firms to maintain real-time visibility of their clients' legal proceedings while ensuring compliance with legal requirements and maintaining detailed audit trails.
 
-**Updated** Added new UI components for enhanced user experience and comprehensive testing framework for complex business logic validation.
+**Updated** Added new UI components for enhanced user experience, including the sophisticated ExpedientesUltimaCapturaCard with modern glass-morphism design, comprehensive testing framework for complex business logic validation, and advanced mocking strategies for database operations.
 
 ## System Architecture
 
@@ -62,6 +63,7 @@ subgraph "Presentation Layer"
 UI[User Interface]
 API[REST API Endpoints]
 Components[New UI Components]
+Dashboard[ExpedientesContent Dashboard]
 end
 subgraph "Business Logic Layer"
 Service[Expedientes Service]
@@ -92,6 +94,7 @@ Capture --> CNJ
 Service --> Auth
 Components --> GlassPanel[Design System Glass Panel]
 Components --> AnimatedNumber[Animated Number Primitives]
+Dashboard --> Components
 ```
 
 **Diagram sources**
@@ -99,6 +102,7 @@ Components --> AnimatedNumber[Animated Number Primitives]
 - [service.ts](file://src/app/(authenticated)/expedientes/service.ts#L1-L322)
 - [expedientes-ultima-captura-card.tsx](file://src/app/(authenticated)/expedientes/components/expedientes-ultima-captura-card.tsx#L1-L168)
 - [expedientes-captura-banner.tsx](file://src/app/(authenticated)/expedientes/components/expedientes-captura-banner.tsx#L1-L76)
+- [expedientes-content.tsx](file://src/app/(authenticated)/expedientes/components/expedientes-content.tsx#L1-L633)
 
 The architecture implements a clean separation between presentation, business logic, and data management layers, enabling maintainability and scalability while ensuring proper encapsulation of domain-specific logic.
 
@@ -251,7 +255,7 @@ Note over Repository,Database : Database constraints ensure data integrity
 
 ### ExpedientesUltimaCapturaCard Component
 
-The ExpedientesUltimaCapturaCard represents a sophisticated glass-morphism UI component that displays the summary of the last capture operation with animated metrics and interactive elements.
+The ExpedientesUltimaCapturaCard represents a sophisticated glass-morphism UI component that displays the summary of the last capture operation with animated metrics and interactive elements. This component serves as a key dashboard widget that provides real-time visibility into the system's capture operations.
 
 ```mermaid
 graph TD
@@ -280,23 +284,48 @@ Q --> S[Timestamp Display]
 
 #### Key Features
 
-1. **Glass Panel Design**: Utilizes the new design system glass panel components for modern UI aesthetics
-2. **Animated Numbers**: Implements AnimatedNumber primitives for smooth metric transitions
-3. **Interactive Elements**: Supports click events and keyboard navigation
-4. **Loading States**: Includes comprehensive skeleton loading states
-5. **Progress Visualization**: Displays progress bars with dynamic width calculations
+1. **Glass Panel Design**: Utilizes the new design system glass panel components for modern UI aesthetics with atmospheric glow effects
+2. **Animated Numbers**: Implements AnimatedNumber primitives for smooth metric transitions with custom easing
+3. **Interactive Elements**: Supports click events and keyboard navigation with proper accessibility attributes
+4. **Loading States**: Includes comprehensive skeleton loading states with pulse animation
+5. **Progress Visualization**: Displays progress bars with dynamic width calculations and smooth transitions
+6. **Responsive Design**: Adapts to different screen sizes with proper spacing and typography scaling
 
 #### Component Structure
 
 The component accepts ResumoUltimaCaptura data and provides:
-- Real-time relative time display using date-fns
-- Three metric columns with animated number primitives
-- Percentage-based progress bars with smooth animations
-- Hover effects and focus states for accessibility
-- Responsive design with proper spacing and typography
+- Real-time relative time display using date-fns with Brazilian locale formatting
+- Three metric columns with AnimatedNumber primitives for smooth number transitions
+- Percentage-based progress bars with custom color schemes (success, info, muted)
+- Hover effects with subtle scale transformations and shadow enhancements
+- Focus states for keyboard navigation with proper ring highlighting
+- Clickable area with accessible ARIA labels for screen readers
+
+#### Integration with Dashboard
+
+The component is seamlessly integrated into the ExpedientesContent dashboard:
+
+```mermaid
+sequenceDiagram
+participant Dashboard as "ExpedientesContent"
+participant Card as "ExpedientesUltimaCapturaCard"
+participant Action as "actionObterResumoUltimaCaptura"
+participant Service as "obterResumoUltimaCaptura"
+Dashboard->>Action : Call server action
+Action->>Service : Execute business logic
+Service-->>Action : Return ResumoUltimaCaptura
+Action-->>Dashboard : Return result
+Dashboard->>Card : Pass props (resumo, isLoading, onClick)
+Card-->>Dashboard : Render with interactive elements
+```
+
+**Diagram sources**
+- [expedientes-content.tsx](file://src/app/(authenticated)/expedientes/components/expedientes-content.tsx#L269-L282)
+- [expedientes-ultima-captura-card.tsx](file://src/app/(authenticated)/expedientes/components/expedientes-ultima-captura-card.tsx#L75-L118)
 
 **Section sources**
 - [expedientes-ultima-captura-card.tsx](file://src/app/(authenticated)/expedientes/components/expedientes-ultima-captura-card.tsx#L1-L168)
+- [expedientes-content.tsx](file://src/app/(authenticated)/expedientes/components/expedientes-content.tsx#L449-L454)
 - [primitives.tsx](file://src/app/(authenticated)/dashboard/widgets/primitives.tsx)
 
 ### ExpedientesCapturaBanner Component
@@ -776,6 +805,16 @@ H --> J[Error Propagation Testing]
 4. **Audit Trail Validation**: Comprehensive logging and audit trail verification
 5. **Parameter Sanitization**: Input validation and parameter normalization
 
+### Component Testing for ExpedientesUltimaCapturaCard
+
+The new component includes comprehensive testing coverage:
+
+1. **Loading State Testing**: Validates skeleton UI rendering during data fetch
+2. **Interactive Element Testing**: Tests click handlers and keyboard navigation
+3. **Animation Testing**: Validates AnimatedNumber component behavior
+4. **Accessibility Testing**: Ensures proper ARIA attributes and keyboard navigation
+5. **Responsive Design Testing**: Validates component adaptation across screen sizes
+
 **Section sources**
 - [resumo-ultima-captura.test.ts](file://src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts#L1-L140)
 - [expedientes-flow.test.ts](file://src/app/(authenticated)/expedientes/__tests__/integration/expedientes-flow.test.ts#L1-L631)
@@ -840,9 +879,10 @@ Key achievements of the system include:
 - **Audit Compliance**: Complete tracking and logging for legal compliance requirements
 - **Enhanced UI Components**: Modern glass-morphism design system with animated primitives
 - **Advanced Testing Framework**: Comprehensive unit and integration testing for complex business logic
+- **Real-time Dashboard Widgets**: Interactive components like ExpedientesUltimaCapturaCard for operational visibility
 
 The system's modular architecture enables future enhancements and extensions while maintaining stability and reliability. The implementation demonstrates best practices in enterprise software development, particularly in handling sensitive data and complex business logic within the legal domain.
 
-**Updated** Recent additions include sophisticated UI components with modern design system integration, comprehensive testing frameworks with advanced mocking strategies, and enhanced documentation coverage for complex business logic validation.
+**Updated** Recent additions include sophisticated UI components with modern design system integration, comprehensive testing frameworks with advanced mocking strategies, enhanced documentation coverage for complex business logic validation, and seamless integration between dashboard widgets and server-side data fetching.
 
-Future development opportunities include enhanced AI-powered document analysis, expanded integration with additional legal platforms, advanced analytics capabilities for legal practice management, and further enhancement of the testing framework for even more complex scenarios.
+Future development opportunities include enhanced AI-powered document analysis, expanded integration with additional legal platforms, advanced analytics capabilities for legal practice management, further enhancement of the testing framework for even more complex scenarios, and expansion of the glass-morphism design system to cover additional dashboard components.

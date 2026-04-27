@@ -4,14 +4,22 @@
 **Referenced Files in This Document**
 - [CloudronManifest.json](file://CloudronManifest.json)
 - [Dockerfile.cloudron](file://Dockerfile.cloudron)
-- [cloudron/CLI-REFERENCE.md](file://cloudron/CLI-REFERENCE.md)
-- [cloudron/start.sh](file://cloudron/start.sh)
+- [Dockerfile](file://Dockerfile)
+- [start.sh](file://start.sh)
+- [cache-handler.js](file://cache-handler.js)
 - [scripts/cloudron-deploy.sh](file://scripts/cloudron-deploy.sh)
 - [scripts/cloudron-deploy-local.sh](file://scripts/cloudron-deploy-local.sh)
 - [package.json](file://package.json)
 - [next.config.ts](file://next.config.ts)
-- [cache-handler.js](file://cache-handler.js)
 </cite>
+
+## Update Summary
+**Changes Made**
+- Updated Docker configuration section to reflect corrected file path references in Dockerfile.cloudron
+- Enhanced Dockerfile.cloudron documentation with improved build and runtime environment setup details
+- Added comprehensive coverage of multi-stage build process and Node.js version management
+- Expanded cache persistence and symlink configuration documentation
+- Updated deployment pipeline documentation with corrected file references
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -31,7 +39,7 @@ This document explains how to package and deploy the Zattar OS application on th
 ## Project Structure
 The Cloudron packaging and deployment rely on a small set of focused files:
 - Cloudron manifest defines app metadata, ports, health checks, and addons.
-- Dockerfile.cloudron defines a multi-stage build and runtime image tailored for Cloudron’s base image and Node.js upgrade.
+- Dockerfile.cloudron defines a multi-stage build and runtime image tailored for Cloudron's base image and Node.js upgrade.
 - start.sh bridges Cloudron environment variables to the Next.js application and starts the server.
 - Two deployment scripts orchestrate remote and local builds, updates, and environment configuration.
 - Next.js configuration enables a production-optimized standalone output and a custom cache handler for persistence.
@@ -42,7 +50,7 @@ graph TB
 subgraph "Cloudron Packaging"
 CM["CloudronManifest.json"]
 DF["Dockerfile.cloudron"]
-SS["cloudron/start.sh"]
+SS["start.sh"]
 end
 subgraph "Deployment Scripts"
 DR["scripts/cloudron-deploy.sh"]
@@ -64,7 +72,7 @@ NC --> CH
 **Diagram sources**
 - [CloudronManifest.json:1-31](file://CloudronManifest.json#L1-L31)
 - [Dockerfile.cloudron:1-96](file://Dockerfile.cloudron#L1-L96)
-- [cloudron/start.sh:1-128](file://cloudron/start.sh#L1-L128)
+- [start.sh:1-128](file://start.sh#L1-L128)
 - [scripts/cloudron-deploy.sh:1-490](file://scripts/cloudron-deploy.sh#L1-L490)
 - [scripts/cloudron-deploy-local.sh:1-484](file://scripts/cloudron-deploy-local.sh#L1-L484)
 - [next.config.ts:79-95](file://next.config.ts#L79-L95)
@@ -73,7 +81,7 @@ NC --> CH
 **Section sources**
 - [CloudronManifest.json:1-31](file://CloudronManifest.json#L1-L31)
 - [Dockerfile.cloudron:1-96](file://Dockerfile.cloudron#L1-L96)
-- [cloudron/start.sh:1-128](file://cloudron/start.sh#L1-L128)
+- [start.sh:1-128](file://start.sh#L1-L128)
 - [scripts/cloudron-deploy.sh:1-490](file://scripts/cloudron-deploy.sh#L1-L490)
 - [scripts/cloudron-deploy-local.sh:1-484](file://scripts/cloudron-deploy-local.sh#L1-L484)
 - [next.config.ts:79-95](file://next.config.ts#L79-L95)
@@ -82,7 +90,7 @@ NC --> CH
 ## Core Components
 - CloudronManifest.json: Defines app identity, health check endpoint, HTTP port, optional addons (localstorage, redis, sendmail), memory limit, and metadata.
 - Dockerfile.cloudron: Multi-stage build with pinned Node.js version, dependency installation, Next.js build, and a Cloudron base image stage that upgrades Node.js to 22.
-- cloudron/start.sh: Runtime entrypoint that maps Cloudron environment variables to Next.js-compatible variables, sets runtime options, and starts the standalone server.
+- start.sh: Runtime entrypoint that maps Cloudron environment variables to Next.js-compatible variables, sets runtime options, and starts the standalone server.
 - scripts/cloudron-deploy.sh: Orchestrates remote build via Cloudron Build Service, app update, and environment variable configuration.
 - scripts/cloudron-deploy-local.sh: Alternative pipeline using local Docker builds and pushes to the Cloudron registry.
 - next.config.ts: Production-optimized output mode and custom cache handler configuration.
@@ -91,14 +99,14 @@ NC --> CH
 **Section sources**
 - [CloudronManifest.json:1-31](file://CloudronManifest.json#L1-L31)
 - [Dockerfile.cloudron:1-96](file://Dockerfile.cloudron#L1-L96)
-- [cloudron/start.sh:1-128](file://cloudron/start.sh#L1-L128)
+- [start.sh:1-128](file://start.sh#L1-L128)
 - [scripts/cloudron-deploy.sh:1-490](file://scripts/cloudron-deploy.sh#L1-L490)
 - [scripts/cloudron-deploy-local.sh:1-484](file://scripts/cloudron-deploy-local.sh#L1-L484)
 - [next.config.ts:79-95](file://next.config.ts#L79-L95)
 - [cache-handler.js:1-140](file://cache-handler.js#L1-L140)
 
 ## Architecture Overview
-The deployment architecture integrates Cloudron’s packaging model with a Next.js standalone server and persistent caches.
+The deployment architecture integrates Cloudron's packaging model with a Next.js standalone server and persistent caches.
 
 ```mermaid
 graph TB
@@ -116,7 +124,7 @@ ADD["Addons: Redis, Sendmail, Localstorage"]
 end
 subgraph "Container Runtime"
 IMG["Dockerfile.cloudron"]
-START["cloudron/start.sh"]
+START["start.sh"]
 NEXT["Next.js Standalone Server"]
 CACHE["Persistent Cache (/app/data/cache)"]
 end
@@ -134,10 +142,9 @@ APP --> NEXT
 ```
 
 **Diagram sources**
-- [cloudron/CLI-REFERENCE.md:1-180](file://cloudron/CLI-REFERENCE.md#L1-L180)
 - [CloudronManifest.json:1-31](file://CloudronManifest.json#L1-L31)
 - [Dockerfile.cloudron:1-96](file://Dockerfile.cloudron#L1-L96)
-- [cloudron/start.sh:1-128](file://cloudron/start.sh#L1-L128)
+- [start.sh:1-128](file://start.sh#L1-L128)
 - [scripts/cloudron-deploy.sh:1-490](file://scripts/cloudron-deploy.sh#L1-L490)
 - [scripts/cloudron-deploy-local.sh:1-484](file://scripts/cloudron-deploy-local.sh#L1-L484)
 
@@ -150,26 +157,50 @@ APP --> NEXT
 - Optional SSO flag included.
 
 Key implications:
-- The health check path is aligned with the container’s exposed port and the start script’s runtime behavior.
+- The health check path is aligned with the container's exposed port and the start script's runtime behavior.
 - Addon variables are mapped automatically by the start script to environment variables consumed by the application.
 
 **Section sources**
 - [CloudronManifest.json:1-31](file://CloudronManifest.json#L1-L31)
 
 ### Dockerfile.cloudron
-- Stage 1: Alpine-based dependency installation with pinned Node.js version and environment flags to reduce build noise.
-- Stage 2: Build stage copying node_modules and application, preparing static assets and standalone server.
-- Stage 3: Cloudron base image with Node.js upgrade to 22, symlink cache to persistent directory, and healthcheck.
-- Exposes port 3000 and runs the start script as the container entrypoint.
+**Updated** Enhanced with corrected file path references and improved build process
 
-Optimization highlights:
-- Uses a standalone Next.js output for faster startup and smaller runtime footprint.
-- Persists cache under /app/data for long-term cache continuity across redeployments.
+The Dockerfile.cloudron implements a sophisticated three-stage build process designed specifically for Cloudron's runtime environment:
+
+#### Stage 1: Dependencies (Alpine for Fast Build)
+- Uses node:22-alpine base image for optimal build performance
+- Installs libc6-compat for glibc compatibility
+- Copies package.json and package-lock.json for dependency resolution
+- Uses npm ci with legacy peer dependencies and offline preferences for deterministic builds
+
+#### Stage 2: Builder
+- Reuses dependencies from stage 1
+- Copies entire application codebase
+- Prepares PDF.js worker files in public/pdfjs directory
+- Executes npm run build:ci with optimized environment variables:
+  - NEXT_TELEMETRY_DISABLED=1 (disables Next.js telemetry)
+  - NEXT_BUILD_LINT_DISABLED=1 (skips linting during build)
+  - SKIP_TYPE_CHECK=true (skips type checking)
+  - PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 (optimizes build time)
+
+#### Stage 3: Cloudron Runner
+- Base: cloudron/base:4.2.0 with Node.js 18 upgrade to 22
+- **Enhanced Node.js Management**: Uses n utility to upgrade from Node.js 18 to 22, with binary replacement in the priority PATH location
+- **Symlink Strategy**: Creates persistent cache symlink from /app/data/cache/next to .next/cache for long-term persistence
+- **Directory Preparation**: Sets up /app/data/cache/next, /app/data/logs, and /app/data/tmp with proper ownership
+- **Health Check**: Includes HEALTHCHECK instruction for monitoring and local development
+
+**Key Improvements**:
+- Corrected file path references for cache persistence
+- Enhanced symlink creation for build-time cache directory
+- Improved Node.js version management with proper PATH handling
+- Streamlined dependency installation and build process
 
 **Section sources**
 - [Dockerfile.cloudron:1-96](file://Dockerfile.cloudron#L1-L96)
 
-### Start Script (cloudron/start.sh)
+### Start Script (start.sh)
 Responsibilities:
 - Prepare persistent directories in /app/data and set ownership.
 - Map Cloudron environment variables to Next.js-friendly variables:
@@ -181,16 +212,16 @@ Responsibilities:
 
 Operational notes:
 - Ensures runtime variables are set before starting the server.
-- Aligns with manifest’s memory limit and port configuration.
+- Aligns with manifest's memory limit and port configuration.
 
 **Section sources**
-- [cloudron/start.sh:1-128](file://cloudron/start.sh#L1-L128)
+- [start.sh:1-128](file://start.sh#L1-L128)
 
 ### Remote Build Pipeline (scripts/cloudron-deploy.sh)
 Workflow:
 - Validates prerequisites (.env.local presence, CLI availability).
 - Generates a temporary .env.production containing build-time variables (NEXT_PUBLIC_*, STRAPI_*).
-- Automatically configures the Cloudron CLI’s build service and repository in ~/.cloudron.json to ensure the correct builder is used.
+- Automatically configures the Cloudron CLI's build service and repository in ~/.cloudron.json to ensure the correct builder is used.
 - Creates a temporary symlink to Dockerfile.cloudron for the build.
 - Executes cloudron build with repository targeting the private registry.
 - Cleans up symlink and temporary environment file.
@@ -234,21 +265,6 @@ Integration with Cloudron:
 - [next.config.ts:79-95](file://next.config.ts#L79-L95)
 - [cache-handler.js:1-140](file://cache-handler.js#L1-L140)
 
-### Cloudron CLI Reference
-- Authentication: interactive login and token-based non-interactive usage.
-- Build: remote build via Build Service and local Docker build alternatives.
-- Update: update to last built image or a specific image.
-- Environment: set/unset/get/list environment variables.
-- Other commands: list apps, logs, exec, status.
-- Configuration: ~/.cloudron.json stores build service, apps, and cloudron servers.
-
-Practical guidance:
-- Always pass --server to avoid operating against the wrong Cloudron instance.
-- Use jq to programmatically adjust ~/.cloudron.json when switching builders or repositories.
-
-**Section sources**
-- [cloudron/CLI-REFERENCE.md:1-180](file://cloudron/CLI-REFERENCE.md#L1-L180)
-
 ## Dependency Analysis
 The deployment pipeline depends on:
 - Cloudron CLI for orchestration and environment management.
@@ -269,18 +285,16 @@ ADDONS --> START
 ```
 
 **Diagram sources**
-- [cloudron/CLI-REFERENCE.md:1-180](file://cloudron/CLI-REFERENCE.md#L1-L180)
 - [CloudronManifest.json:1-31](file://CloudronManifest.json#L1-L31)
 - [Dockerfile.cloudron:1-96](file://Dockerfile.cloudron#L1-L96)
-- [cloudron/start.sh:1-128](file://cloudron/start.sh#L1-L128)
+- [start.sh:1-128](file://start.sh#L1-L128)
 - [next.config.ts:79-95](file://next.config.ts#L79-L95)
 - [cache-handler.js:1-140](file://cache-handler.js#L1-L140)
 
 **Section sources**
-- [cloudron/CLI-REFERENCE.md:1-180](file://cloudron/CLI-REFERENCE.md#L1-L180)
 - [CloudronManifest.json:1-31](file://CloudronManifest.json#L1-L31)
 - [Dockerfile.cloudron:1-96](file://Dockerfile.cloudron#L1-L96)
-- [cloudron/start.sh:1-128](file://cloudron/start.sh#L1-L128)
+- [start.sh:1-128](file://start.sh#L1-L128)
 - [next.config.ts:79-95](file://next.config.ts#L79-L95)
 - [cache-handler.js:1-140](file://cache-handler.js#L1-L140)
 
@@ -289,13 +303,13 @@ ADDONS --> START
 - Custom cache handler: persists cache to disk for improved performance across redeployments.
 - Build worker limits: reduced concurrency in Docker builds to fit within Cloudron builder memory constraints.
 - Node.js heap sizing: derived from Cloudron memory limit to leave headroom for the OS.
+- Multi-stage builds: optimize layer caching and reduce final image size.
 
 Recommendations:
 - Monitor cache sizes and prune periodically if needed.
 - Keep build workers low in constrained environments to avoid OOM.
 - Use the local build pipeline when the remote builder is memory-constrained.
-
-[No sources needed since this section provides general guidance]
+- Leverage symlink strategy for persistent cache across deployments.
 
 ## Troubleshooting Guide
 Common issues and resolutions:
@@ -313,17 +327,18 @@ Common issues and resolutions:
 - Cache not persisting:
   - Confirm the cache handler is active and /app/data/cache exists and is writable.
   - Check for permission issues or missing directories.
+- Node.js version compatibility:
+  - Verify Node.js 22 is properly installed and accessible in the Cloudron base image.
+  - Check symlink creation for persistent cache directory.
 
 **Section sources**
 - [scripts/cloudron-deploy.sh:221-247](file://scripts/cloudron-deploy.sh#L221-L247)
 - [scripts/cloudron-deploy-local.sh:247-273](file://scripts/cloudron-deploy-local.sh#L247-L273)
-- [cloudron/start.sh:21-33](file://cloudron/start.sh#L21-L33)
+- [start.sh:21-33](file://start.sh#L21-L33)
 - [cache-handler.js:16-33](file://cache-handler.js#L16-L33)
 
 ## Conclusion
-The Zattar OS Cloudron packaging and deployment pipeline leverages a clear manifest, a robust multi-stage Docker build, and two complementary deployment scripts. The start script bridges Cloudron’s environment to Next.js, while the CLI reference provides a comprehensive operational guide. Together, these components enable reliable, reproducible deployments with persistent caching and addon integration.
-
-[No sources needed since this section summarizes without analyzing specific files]
+The Zattar OS Cloudron packaging and deployment pipeline leverages a clear manifest, a robust multi-stage Docker build, and two complementary deployment scripts. The start script bridges Cloudron's environment to Next.js, while the CLI reference provides a comprehensive operational guide. Together, these components enable reliable, reproducible deployments with persistent caching and addon integration.
 
 ## Appendices
 
@@ -347,11 +362,10 @@ The Zattar OS Cloudron packaging and deployment pipeline leverages a clear manif
 **Section sources**
 - [scripts/cloudron-deploy.sh:7-120](file://scripts/cloudron-deploy.sh#L7-L120)
 - [scripts/cloudron-deploy-local.sh:64-114](file://scripts/cloudron-deploy-local.sh#L64-L114)
-- [cloudron/CLI-REFERENCE.md:160-180](file://cloudron/CLI-REFERENCE.md#L160-L180)
 
 ### Relationship Between Cloudron Platform and Legal Management System Architecture
 - Cloudron provides the hosting infrastructure, persistent storage, and addon services (Redis, Sendmail, Localstorage) that the legal management system relies on.
-- The system’s Next.js standalone server benefits from Cloudron’s runtime guarantees, health checks, and addon variable mapping.
+- The system's Next.js standalone server benefits from Cloudron's runtime guarantees, health checks, and addon variable mapping.
 - Scaling considerations:
   - Adjust Cloudron memory limit in the manifest to influence Node.js heap sizing.
   - Use Redis for session caching and rate limiting.
@@ -363,5 +377,4 @@ The Zattar OS Cloudron packaging and deployment pipeline leverages a clear manif
 
 **Section sources**
 - [CloudronManifest.json:28-29](file://CloudronManifest.json#L28-L29)
-- [cloudron/start.sh:102-108](file://cloudron/start.sh#L102-L108)
-- [cloudron/CLI-REFERENCE.md:110-124](file://cloudron/CLI-REFERENCE.md#L110-L124)
+- [start.sh:102-108](file://start.sh#L102-L108)

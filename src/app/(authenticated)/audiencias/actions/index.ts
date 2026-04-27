@@ -21,6 +21,7 @@ export {
   actionBuscarAudienciaPorId,
   actionCriarAudienciaPayload,
   actionAtualizarAudienciaPayload,
+  actionObterResumoUltimaCapturaAudiencias,
 } from './audiencias-actions';
 
 export type { ActionResult } from './types';

@@ -9,7 +9,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CapturaStatusSemanticBadge } from '@/components/ui/semantic-badge';
 import { GlassPanel, WidgetContainer } from '@/components/shared/glass-panel';
 import { DetailSectionCard } from '@/components/shared';
-import { IconContainer } from '@/components/ui/icon-container';
 import {
   ArrowLeft,
   Activity,
@@ -64,23 +63,18 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
 
       {/* Header da página */}
       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between relative")}>
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
-          <IconContainer size="md" className="bg-primary/10">
-            <Activity className="size-4 text-primary" />
-          </IconContainer>
-          <div>
-            <Heading level="page">{tipoFormatado}</Heading>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-0.5")}>
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wide sem token DS */ "text-[11px] font-medium text-muted-foreground/50 uppercase tracking-wide")}>
-                Captura #{captura.id}
-              </p>
-              {isInProgress && (
-                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "inline-flex items-center gap-1 text-[10px] font-medium text-info uppercase tracking-wider")}>
-                  <span className="h-1.5 w-1.5 rounded-full bg-info animate-pulse" />
-                  em andamento
-                </span>
-              )}
-            </div>
+        <div>
+          <Heading level="page">{tipoFormatado}</Heading>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-0.5")}>
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wide sem token DS */ "text-[11px] font-medium text-muted-foreground uppercase tracking-wide")}>
+              Captura #{captura.id}
+            </p>
+            {isInProgress && (
+              <span className={cn(/* design-system-escape: gap-1 gap sem token DS; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "inline-flex items-center gap-1 text-[10px] font-medium text-info uppercase tracking-wider")}>
+                <span className="h-1.5 w-1.5 rounded-full bg-info animate-pulse" />
+                em andamento
+              </span>
+            )}
           </div>
         </div>
         <Button variant="outline" size="sm" asChild className="shrink-0">

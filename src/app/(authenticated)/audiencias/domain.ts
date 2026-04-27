@@ -83,6 +83,7 @@ export interface Audiencia {
   dadosAnteriores: Record<string, unknown> | null;
   ataAudienciaId: number | null;
   urlAtaAudiencia: string | null;
+  ultimaCapturaId: number | null;
   createdAt: string;
   updatedAt: string;
 
@@ -212,7 +213,25 @@ export type ListarAudienciasParams = {
   dataFimFim?: string;
   ordenarPor?: AudienciaSortBy;
   ordem?: 'asc' | 'desc';
+  capturaId?: number;
 };
+
+// =============================================================================
+// RESUMO DE CAPTURA
+// =============================================================================
+
+/**
+ * Resumo estatístico da última captura de audiências concluída.
+ * Alimenta o card de stats na página de audiências.
+ */
+export interface ResumoUltimaCapturaAudiencias {
+  capturaId: number;
+  tipoCaptura: string;
+  concluidoEm: string;
+  totalCriados: number;
+  totalAtualizados: number;
+  total: number;
+}
 
 // Labels and Constants
 export const STATUS_AUDIENCIA_LABELS: Record<StatusAudiencia, string> = {
@@ -671,6 +690,7 @@ export function getAudienciaColumnsFull(): string {
     dados_anteriores,
     ata_audiencia_id,
     url_ata_audiencia,
+    ultima_captura_id,
     created_at,
     updated_at
   `.trim().replace(/\s+/g, ' ');
