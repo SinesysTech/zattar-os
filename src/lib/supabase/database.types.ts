@@ -1225,6 +1225,7 @@ export type Database = {
           status_descricao: string | null
           tipo_audiencia_id: number | null
           trt: Database["public"]["Enums"]["codigo_tribunal"]
+          ultima_captura_id: number | null
           updated_at: string
           url_ata_audiencia: string | null
           url_audiencia_virtual: string | null
@@ -1270,6 +1271,7 @@ export type Database = {
           status_descricao?: string | null
           tipo_audiencia_id?: number | null
           trt: Database["public"]["Enums"]["codigo_tribunal"]
+          ultima_captura_id?: number | null
           updated_at?: string
           url_ata_audiencia?: string | null
           url_audiencia_virtual?: string | null
@@ -1315,6 +1317,7 @@ export type Database = {
           status_descricao?: string | null
           tipo_audiencia_id?: number | null
           trt?: Database["public"]["Enums"]["codigo_tribunal"]
+          ultima_captura_id?: number | null
           updated_at?: string
           url_ata_audiencia?: string | null
           url_audiencia_virtual?: string | null
@@ -1375,6 +1378,13 @@ export type Database = {
             columns: ["tipo_audiencia_id"]
             isOneToOne: false
             referencedRelation: "tipo_audiencia"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "audiencias_ultima_captura_id_fkey"
+            columns: ["ultima_captura_id"]
+            isOneToOne: false
+            referencedRelation: "capturas_log"
             referencedColumns: ["id"]
           },
         ]
@@ -8895,7 +8905,7 @@ export type Database = {
           p_expediente_id: number
           p_justificativa?: string
           p_protocolo_id?: string
-          p_resultado_decisao?: string
+          p_resultado_decisao?: Database["public"]["Enums"]["resultado_decisao_enum"]
           p_usuario_id: number
         }
         Returns: Json
