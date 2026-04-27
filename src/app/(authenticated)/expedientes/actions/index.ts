@@ -17,6 +17,7 @@ export {
   actionReverterBaixa,
   actionListarExpedientes,
   actionContarExpedientesPorStatus,
+  actionObterResumoUltimaCaptura,
 } from './expediente-actions';
 
 export type { ActionResult } from './types';

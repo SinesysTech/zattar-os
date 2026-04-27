@@ -49,6 +49,7 @@ export {
   actionAtualizarExpedientePayload,
   actionBulkTransferirResponsavel,
   actionBulkBaixar,
+  actionObterResumoUltimaCaptura,
 } from './actions';
 
 export type { ActionResult } from './actions';
@@ -62,6 +63,7 @@ export type {
   ListarExpedientesParams,
   ExpedientesFilters,
   UrgencyLevel,
+  ResumoUltimaCaptura,
 } from './domain';
 
 export {
