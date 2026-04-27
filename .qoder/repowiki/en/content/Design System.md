@@ -14,16 +14,19 @@
 - [typography.tsx](file://src/components/ui/typography.tsx)
 - [globals.css](file://src/app/globals.css)
 - [tokens.ts](file://src/lib/design-system/tokens.ts)
+- [semantic-badge.tsx](file://src/components/ui/semantic-badge.tsx)
+- [badge.tsx](file://src/components/ui/badge.tsx)
+- [audiencias-filter-bar.tsx](file://src/app/(authenticated)/audiencias/components/audiencias-filter-bar.tsx)
+- [audiencias-semana-view.tsx](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx)
 </cite>
 
 ## Update Summary
 **Changes Made**
-- Updated to reflect major design system typography improvements with new semantic text classes
-- Added comprehensive documentation for text-kpi-value, text-meta-label, text-overline, text-caption, text-micro-badge classes
-- Enhanced accessibility compliance documentation with WCAG AAA standards and focus-visible states
-- Updated MASTER.md with comprehensive typography guidelines and anti-pattern prevention
-- Expanded design system playground with typography testing capabilities
-- Added detailed typography migration guidance and accessibility compliance validation
+- Updated to reflect Applied Changes: Added new CountBadge component to the semantic badge system for consistent count display across tabs and badges
+- Enhanced semantic badge system documentation with CountBadge component details
+- Added comprehensive usage examples and implementation patterns for CountBadge
+- Updated badge component architecture to include CountBadge specialization
+- Expanded design system playground with CountBadge testing capabilities
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -34,17 +37,18 @@
 6. [New Semantic Text Classes](#new-semantic-text-classes)
 7. [Accessibility Compliance Improvements](#accessibility-compliance-improvements)
 8. [Component Library Integration](#component-library-integration)
-9. [Semantic Badge System](#semantic-badge-system)
-10. [Design System Playground](#design-system-playground)
-11. [Page-Specific Implementation Examples](#page-specific-implementation-examples)
-12. [Quality Assurance and Migration Tracking](#quality-assurance-and-migration-tracking)
-13. [Integration and Maintenance](#integration-and-maintenance)
-14. [Conclusion](#conclusion)
+9. [Enhanced Semantic Badge System](#enhanced-semantic-badge-system)
+10. [CountBadge Component](#countbadge-component)
+11. [Design System Playground](#design-system-playground)
+12. [Page-Specific Implementation Examples](#page-specific-implementation-examples)
+13. [Quality Assurance and Migration Tracking](#quality-assurance-and-migration-tracking)
+14. [Integration and Maintenance](#integration-and-maintenance)
+15. [Conclusion](#conclusion)
 
 ## Introduction
 The ZattarOS Design System represents a comprehensive visual and interaction framework built on shadcn/ui components with semantic badge architecture. The system has evolved to operate on a hierarchical structure where the MASTER.md file serves as the central authority for design system rules, page-specific documentation files provide targeted overrides, and design-system-escape comments guide developers through systematic migration from raw Tailwind CSS classes to standardized components.
 
-**Updated** The system now features major typography improvements with new semantic text classes, enhanced accessibility compliance with WCAG AAA standards, and comprehensive anti-pattern prevention measures.
+**Updated** The system now features major typography improvements with new semantic text classes, enhanced accessibility compliance with WCAG AAA standards, comprehensive anti-pattern prevention measures, and a new CountBadge component for consistent count display across tabs and badges.
 
 This architecture ensures consistency across the legal management platform while allowing for module-specific adaptations through a well-defined override mechanism.
 
@@ -375,9 +379,9 @@ Components support multiple variants for different contexts:
 - **Transition Components**: Hybrid approaches during migration
 - **Final Components**: Fully standardized design system components
 
-## Semantic Badge System
+## Enhanced Semantic Badge System
 
-The semantic badge system provides consistent status communication across the platform through categorized variants with centralized governance.
+The semantic badge system provides consistent status communication across the platform through categorized variants with centralized governance. The system has been enhanced with a new CountBadge component for specialized count display functionality.
 
 ### Badge Category System and Governance
 
@@ -394,6 +398,66 @@ Badge categories are organized by domain and purpose:
 - **Status Categories**: `expediente_status`, `audiencia_status`, `captura_status` (soft tone)
 - **Domain Categories**: `expediente_tipo`, `parte`, `polo` (category-specific)
 - **Project Categories**: `project_status`, `task_status`, `priority` (soft tone)
+
+### CountBadge Component
+
+**New CountBadge Component**
+The CountBadge component is a specialized badge designed specifically for displaying numeric counts in tabs, pills, and quantity indicators. It provides a consistent visual pattern for count displays across the application.
+
+**Component Architecture**
+```typescript
+export function CountBadge({
+  children,
+  className,
+  size = 'xs',
+  ...props
+}: Omit<React.ComponentProps<typeof Badge>, 'variant' | 'tone'> & {
+  size?: 'xs' | 'sm' | 'md';
+}) {
+  return (
+    <Badge
+      variant="secondary"
+      tone="soft"
+      size={size}
+      className={cn('tabular-nums', className)}
+      {...props}
+    >
+      {children}
+    </Badge>
+  );
+}
+```
+
+**Design Philosophy**
+- **Neutral Semantics**: Uses secondary soft tone to avoid domain-specific associations
+- **Tabular Numbers**: Ensures consistent width for numeric displays
+- **Size Flexibility**: Supports xs, sm, and md sizes for different contexts
+- **Consistent Styling**: Provides uniform appearance across all count displays
+
+**Usage Patterns**
+- **Tab Counts**: Displaying item counts in navigation tabs
+- **Pill Counts**: Showing quantities in pill-shaped indicators
+- **Quantity Indicators**: Presenting numerical values in compact badges
+- **Status Counts**: Displaying counts for filtered results
+
+**Integration Examples**
+```typescript
+// Tab trigger with count badge
+<TabsTrigger value="marcadas">
+  Marcadas <CountBadge>{counts.marcadas}</CountBadge>
+</TabsTrigger>
+
+// Day tab with count badge
+<CountBadge className={lowPrepCount > 0 ? 'bg-warning/15 text-warning' : undefined}>
+  {dayAudiencias.length}
+</CountBadge>
+```
+
+**Migration Benefits**
+- **Consistency**: All count displays follow standardized visual patterns
+- **Maintainability**: Centralized count display logic across the application
+- **Accessibility**: Consistent color contrast and semantic meaning for counts
+- **Performance**: Optimized rendering through specialized component design
 
 ### Badge Variant Mapping and Migration
 
@@ -464,6 +528,12 @@ The playground includes comprehensive testing capabilities:
 - **Accessibility Compliance**: Validation of WCAG AAA typography standards
 - **Responsive Typography**: Testing across different screen sizes and breakpoints
 - **Migration Guidance**: Real-time suggestions for typography migration
+
+**CountBadge Testing and Validation**
+- **Component State Testing**: Testing of CountBadge variants and sizes
+- **Integration Scenarios**: Validating CountBadge usage in tabs and badges
+- **Accessibility Compliance**: Ensuring CountBadge meets accessibility standards
+- **Performance Optimization**: Testing CountBadge rendering performance
 
 ## Page-Specific Implementation Examples
 
@@ -547,6 +617,36 @@ The captura module shows systematic migration from raw Tailwind classes with cle
 - **Migration Tracking**: Clear documentation of migration progress
 - **Quality Assurance**: Validation of design system compliance
 
+### Audiências Module Implementation
+
+**CountBadge Integration and Usage**
+The audiências module demonstrates comprehensive CountBadge integration with clear usage patterns and governance:
+
+**Tab Count Implementation**
+```typescript
+<TabsTrigger value="todas">
+  Todas
+  <CountBadge>{counts.total}</CountBadge>
+</TabsTrigger>
+<TabsTrigger value={StatusAudiencia.Marcada}>
+  Marcadas
+  <CountBadge>{counts.marcadas}</CountBadge>
+</TabsTrigger>
+```
+
+**Dynamic Count Styling**
+```typescript
+<CountBadge className={lowPrepCount > 0 ? 'bg-warning/15 text-warning' : undefined}>
+  {dayAudiencias.length}
+</CountBadge>
+```
+
+**CountBadge Governance**
+- **Consistent Usage**: All count displays use CountBadge component
+- **Size Standardization**: Appropriate size selection based on context
+- **Styling Guidelines**: Dynamic styling for different count states
+- **Accessibility Compliance**: Proper contrast and semantic meaning
+
 ## Quality Assurance and Migration Tracking
 
 The design system includes comprehensive quality assurance processes to ensure consistent implementation and track migration progress.
@@ -584,6 +684,12 @@ The design system includes comprehensive quality assurance processes to ensure c
 - **Typography Anti-Pattern Elimination**: Reduction in raw typography classes
 - **Accessibility Compliance Improvement**: Measured accessibility enhancements
 - **Migration Progress Visualization**: Clear metrics for typography migration
+
+**CountBadge Migration Metrics**
+- **CountBadge Component Adoption**: Tracking of CountBadge usage across modules
+- **Count Display Standardization**: Evidence of consistent count presentation
+- **Badge System Enhancement**: Improved semantic badge architecture
+- **Developer Productivity**: Measured improvement in count display implementation
 
 ## Integration and Maintenance
 
@@ -629,11 +735,17 @@ The design system architecture supports scalable maintenance and evolution throu
 - **Migration Progress Tracking**: Quantified typography adoption metrics
 - **Developer Education**: Training on new typography system
 
+**CountBadge Maintenance and Governance**
+- **Component Usage Analytics**: Tracking CountBadge adoption across modules
+- **Performance Monitoring**: Ensuring efficient CountBadge rendering
+- **Accessibility Compliance**: Regular validation of CountBadge accessibility
+- **Developer Education**: Training on CountBadge usage patterns and best practices
+
 ## Conclusion
 
 The ZattarOS Design System represents a comprehensive approach to design system governance that balances centralized authority with module-specific flexibility. Through the implementation of MASTER.md as the central authority, systematic page-specific override mechanisms, and design-system-escape comments, the system provides a robust foundation for maintaining design integrity while accommodating the unique requirements of different application modules.
 
-**Updated** The system now features major typography improvements with new semantic text classes, enhanced accessibility compliance with WCAG AAA standards, and comprehensive anti-pattern prevention measures. The introduction of classes like `text-kpi-value`, `text-meta-label`, `text-overline`, `text-caption`, and `text-micro-badge` provides precise control over typographic elements while maintaining consistency across the platform.
+**Updated** The system now features major typography improvements with new semantic text classes, enhanced accessibility compliance with WCAG AAA standards, comprehensive anti-pattern prevention measures, and a new CountBadge component for consistent count display across tabs and badges. The introduction of CountBadge provides specialized functionality for numeric count displays, enhancing the semantic badge system with dedicated component architecture.
 
 The hierarchical architecture ensures that all modules follow consistent design principles while allowing for targeted adaptations through documented overrides. The comprehensive audit and validation processes guarantee high-quality implementations across all modules, while the playground environment facilitates testing and validation of design system implementations.
 
@@ -643,4 +755,4 @@ Through this architecture, the design system supports both current development n
 
 The governance model established through MASTER.md and page-specific overrides ensures that design decisions are well-documented, consistently applied, and easily maintained over time. This approach enables the design system to evolve with the platform's needs while maintaining the consistency and quality that developers and users expect.
 
-The enhanced typography system with semantic text classes, comprehensive accessibility compliance, and systematic migration guidance positions the ZattarOS Design System as a leader in accessible, maintainable, and scalable design systems for legal technology applications.
+The enhanced typography system with semantic text classes, comprehensive accessibility compliance, systematic migration guidance, and the new CountBadge component position the ZattarOS Design System as a leader in accessible, maintainable, and scalable design systems for legal technology applications. The CountBadge component specifically addresses the need for consistent count display across tabs, badges, and quantity indicators, providing developers with a reliable, accessible solution for numeric count presentation.
