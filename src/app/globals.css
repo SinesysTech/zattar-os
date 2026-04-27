@@ -1647,7 +1647,7 @@
      Usa font-sans (Inter) para manter coerência de glifos numéricos entre
      cards (Montserrat tem "1" com base/haste distinta que destoa do "0"/"7"). */
   .text-kpi-value {
-    font-size: 22px;
+    font-size: 20px;
     @apply font-bold tabular-nums;
   }
 
