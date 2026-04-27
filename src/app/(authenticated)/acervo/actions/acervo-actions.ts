@@ -458,3 +458,30 @@ export async function actionRecapturarTimeline(
     return createErrorResponse(error, "Erro ao recapturar timeline");
   }
 }
+
+export async function actionBuscarProcessosParaSelector(params: {
+  trt: string;
+  grau: string;
+  busca?: string;
+  limite?: number;
+}): Promise<ActionResponse> {
+  try {
+    const user = await getCurrentUser();
+    if (!user) return { success: false, error: "Não autenticado" };
+
+    const hasPermission = await checkPermission(user.id, "acervo", "visualizar");
+    if (!hasPermission) return { success: false, error: "Sem permissão para visualizar acervo" };
+
+    const { buscarProcessosParaSelector } = await import("../repository");
+    const processos = await buscarProcessosParaSelector(
+      params.trt,
+      params.grau,
+      params.busca,
+      params.limite
+    );
+    return { success: true, data: processos };
+  } catch (error) {
+    console.error("[actionBuscarProcessosParaSelector] Error:", error);
+    return createErrorResponse(error, "Erro ao buscar processos");
+  }
+}

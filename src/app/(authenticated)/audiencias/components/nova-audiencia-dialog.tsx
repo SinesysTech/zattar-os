@@ -22,7 +22,7 @@ import {
 import { cn } from '@/lib/utils';
 import { Stack, Inline } from '@/components/ui/stack';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
-import { actionListarAcervoPaginado } from '@/app/(authenticated)/acervo';
+import { actionBuscarProcessosParaSelector } from '@/app/(authenticated)/acervo';
 import { actionListarUsuarios } from '@/app/(authenticated)/usuarios';
 import {
   actionCriarAudienciaPayload,
@@ -179,18 +179,15 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
   const buscarProcessos = React.useCallback(async (trtParam: string, grauParam: string) => {
     setLoadingProcessos(true);
     try {
-      const result = await actionListarAcervoPaginado({
+      const result = await actionBuscarProcessosParaSelector({
         trt: trtParam,
-        grau: grauParam as 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior',
-        limite: 2000,
-        ordenar_por: 'numero_processo',
-        ordem: 'asc',
+        grau: grauParam,
+        limite: 200,
       });
 
       if (!result.success) throw new Error(result.error || 'Erro ao buscar processos');
 
-      const processosResponse = result.data as { processos?: Processo[] } | undefined;
-      setProcessos(processosResponse?.processos ?? []);
+      setProcessos((result.data as Processo[]) ?? []);
     } catch (err) {
       console.error('Erro ao buscar processos:', err);
       setError('Erro ao carregar processos');

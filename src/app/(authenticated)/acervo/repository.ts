@@ -13,6 +13,7 @@ import {
   getAcervoColumnsBasic,
   getAcervoColumnsFull,
   getAcervoColumnsClienteCpf,
+  getAcervoColumnsForSelector,
 } from './domain';
 import type {
   Acervo,
@@ -749,4 +750,45 @@ export async function buscarProcessosClientePorCpf(
 export async function refreshViewProcessosClienteCpf(): Promise<void> {
   const supabase = createServiceClient();
   await supabase.rpc('refresh_processos_cliente_por_cpf');
+}
+
+export interface ProcessoParaSelector {
+  id: number;
+  numero_processo: string;
+  nome_parte_autora: string | null;
+  nome_parte_re: string | null;
+  trt: string;
+  grau: string;
+}
+
+export async function buscarProcessosParaSelector(
+  trt: string,
+  grau: string,
+  busca?: string,
+  limite = 200
+): Promise<ProcessoParaSelector[]> {
+  const supabase = createServiceClient();
+
+  let query = supabase
+    .from('acervo')
+    .select(getAcervoColumnsForSelector())
+    .eq('trt', trt)
+    .eq('grau', grau)
+    .limit(Math.min(limite, 500));
+
+  if (busca?.trim()) {
+    const termo = busca.trim();
+    query = query.or(
+      `numero_processo.ilike.%${termo}%,nome_parte_autora.ilike.%${termo}%,nome_parte_re.ilike.%${termo}%`
+    );
+  }
+
+  query = query.order('numero_processo', { ascending: true });
+
+  const { data, error } = await query;
+  if (error) {
+    console.error('buscarProcessosParaSelector error:', error);
+    return [];
+  }
+  return (data ?? []) as ProcessoParaSelector[];
 }

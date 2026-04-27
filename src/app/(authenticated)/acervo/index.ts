@@ -77,6 +77,7 @@ export {
   actionExportarAcervoCSV,
   actionObterTimelinePorId,
   actionRecapturarTimeline,
+  actionBuscarProcessosParaSelector,
 } from './actions/acervo-actions';
 
 // =============================================================================

@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/select';
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
-import { actionListarAcervoPaginado } from '@/app/(authenticated)/acervo';
+import { actionBuscarProcessosParaSelector } from '@/app/(authenticated)/acervo';
 import { actionListarUsuarios } from '@/app/(authenticated)/usuarios';
 import {
   actionAtualizarAudienciaPayload,
@@ -184,18 +184,15 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
   const buscarProcessos = React.useCallback(async (trtParam: string, grauParam: string) => {
     setLoadingProcessos(true);
     try {
-      const result = await actionListarAcervoPaginado({
+      const result = await actionBuscarProcessosParaSelector({
         trt: trtParam,
-        grau: grauParam as 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior',
-        limite: 2000,
-        ordenar_por: 'numero_processo',
-        ordem: 'asc',
+        grau: grauParam,
+        limite: 200,
       });
 
       if (!result.success) throw new Error(result.error || 'Erro ao buscar processos');
 
-      const processosResponse = result.data as { processos?: Processo[] } | undefined;
-      let processosRetornados = processosResponse?.processos ?? [];
+      let processosRetornados = (result.data as Processo[]) ?? [];
 
       // Se não vier na lista, tenta mockar apenas para exibição
       if (audiencia && !processosRetornados.find(p => p.id === audiencia.processoId)) {

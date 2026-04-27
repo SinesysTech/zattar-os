@@ -590,6 +590,14 @@ export function getAcervoColumnsBasic(): string {
 }
 
 /**
+ * Colunas mínimas para seletores/comboboxes — evita timeout em queries de lookup.
+ * Não inclui count; retorna apenas o necessário para exibir o label.
+ */
+export function getAcervoColumnsForSelector(): string {
+  return 'id, numero_processo, nome_parte_autora, nome_parte_re, trt, grau';
+}
+
+/**
  * Colunas completas incluindo timeline_jsonb
  * Usado apenas quando timeline é necessária
  */
