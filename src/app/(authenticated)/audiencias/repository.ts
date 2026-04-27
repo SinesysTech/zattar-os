@@ -402,24 +402,38 @@ export async function findAudienciasByProcessoId(
   }
 }
 
-export async function processoExists(processoId: number): Promise<Result<boolean>> {
+export interface ProcessoParaAudiencia {
+  trt: string;
+  grau: string;
+  numero_processo: string;
+  advogado_id: number;
+}
+
+export async function findProcessoParaAudiencia(processoId: number): Promise<Result<ProcessoParaAudiencia | null>> {
   try {
     const db = createDbClient();
     const { data, error } = await db
       .from('acervo')
-      .select('id')
+      .select('trt, grau, numero_processo, advogado_id')
       .eq('id', processoId)
       .single();
-    if (error && error.code !== 'PGRST116') { // PGRST116 = no rows found
-      console.error('Error checking processo existence:', error);
-      return err(appError('DATABASE_ERROR', 'Erro ao verificar processo.', { code: error.code }));
+    if (error) {
+      if (error.code === 'PGRST116') return ok(null);
+      console.error('Error finding processo para audiencia:', error);
+      return err(appError('DATABASE_ERROR', 'Erro ao buscar processo.', { code: error.code }));
     }
-    return ok(!!data);
+    return ok(data as ProcessoParaAudiencia | null);
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : String(e);
-    console.error('Unexpected error checking processo existence:', e);
-    return err(appError('DATABASE_ERROR', 'Erro inesperado ao verificar processo.', { originalError: message }));
+    console.error('Unexpected error finding processo para audiencia:', e);
+    return err(appError('DATABASE_ERROR', 'Erro inesperado ao buscar processo.', { originalError: message }));
   }
+}
+
+export async function processoExists(processoId: number): Promise<Result<boolean>> {
+  const result = await findProcessoParaAudiencia(processoId);
+  if (!result.success) return result as Result<boolean>;
+  return ok(result.data !== null);
 }
 
 export async function tipoAudienciaExists(tipoId: number): Promise<Result<boolean>> {

@@ -18,7 +18,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Plus, List, LayoutGrid, Kanban, SlidersHorizontal } from 'lucide-react';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { Button } from '@/components/ui/button';
 import { InsightBanner } from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { SearchInput } from '@/components/dashboard/search-input';
@@ -123,9 +123,9 @@ export function ContratosContent({
       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
         <div>
           <Heading level="page">Contratos</Heading>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground mt-0.5")}>
+          <Text variant="caption" as="p" className="mt-0.5">
             {stats?.ativos ?? 0} ativos &middot; {totalContratos} total
-          </p>
+          </Text>
         </div>
         <Button size="sm" className="rounded-xl" onClick={() => setCreateOpen(true)}>
           <Plus className="size-3.5" />

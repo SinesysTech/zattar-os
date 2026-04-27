@@ -7,6 +7,8 @@ import {
   updateAudienciaSchema,
   ListarAudienciasParams,
   StatusAudiencia,
+  CodigoTribunal,
+  GrauTribunal,
   type ResumoUltimaCapturaAudiencias,
 } from "./domain";
 import * as repo from "./repository";
@@ -35,8 +37,8 @@ export async function criarAudiencia(
   try {
     const { processoId, tipoAudienciaId } = validation.data;
 
-    const processoExistsResult = await repo.processoExists(processoId);
-    if (!processoExistsResult.success || !processoExistsResult.data) {
+    const processoResult = await repo.findProcessoParaAudiencia(processoId);
+    if (!processoResult.success || !processoResult.data) {
       return err(appError("VALIDATION_ERROR", "Processo não encontrado."));
     }
 
@@ -49,7 +51,15 @@ export async function criarAudiencia(
       }
     }
 
-    const result = await repo.saveAudiencia(validation.data);
+    const { trt, grau, numero_processo, advogado_id } = processoResult.data;
+    const result = await repo.saveAudiencia({
+      ...validation.data,
+      trt: trt as CodigoTribunal,
+      grau: grau as GrauTribunal,
+      numeroProcesso: numero_processo,
+      advogadoId: advogado_id,
+      status: StatusAudiencia.Marcada,
+    });
     return result;
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : String(e);

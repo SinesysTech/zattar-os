@@ -87,11 +87,10 @@ interface NovaAudienciaDialogProps {
 interface Processo {
   id: number;
   numero_processo: string;
-  polo_ativo_nome: string;
-  polo_passivo_nome: string;
+  nome_parte_autora: string;
+  nome_parte_re: string;
   trt: string;
   grau: string;
-  orgao_julgador_id: number;
 }
 
 interface TipoAudiencia {
@@ -214,10 +213,10 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
     }
   }, []);
 
-  const buscarSalas = React.useCallback(async (trt: string, grau: string, orgaoJulgadorId: number) => {
+  const buscarSalas = React.useCallback(async (trt: string, grau: string) => {
     setLoadingSalas(true);
     try {
-      const result = await actionListarSalasAudiencia({ trt, grau, orgao_julgador_id: orgaoJulgadorId });
+      const result = await actionListarSalasAudiencia({ trt, grau });
       if (!result.success) throw new Error(result.error || 'Erro ao buscar salas de audiência');
       setSalas((result.data as unknown as SalaAudiencia[]) || []);
     } catch (err) {
@@ -278,10 +277,10 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trt, grau]);
 
-  // Buscar salas quando processo for selecionado (precisa do orgao_julgador_id)
+  // Buscar salas quando processo for selecionado
   React.useEffect(() => {
     if (processoSelecionado) {
-      buscarSalas(processoSelecionado.trt, processoSelecionado.grau, processoSelecionado.orgao_julgador_id);
+      buscarSalas(processoSelecionado.trt, processoSelecionado.grau);
     } else {
       setSalas([]);
       setSalaAudienciaId('');
@@ -416,8 +415,8 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
   const processosOptions: ComboboxOption[] = React.useMemo(() => {
     return processos.map((p) => ({
       value: p.id.toString(),
-      label: `${p.numero_processo} - ${p.polo_ativo_nome} vs ${p.polo_passivo_nome}`,
-      searchText: `${p.numero_processo} ${p.polo_ativo_nome} ${p.polo_passivo_nome}`,
+      label: `${p.numero_processo} - ${p.nome_parte_autora} vs ${p.nome_parte_re}`,
+      searchText: `${p.numero_processo} ${p.nome_parte_autora} ${p.nome_parte_re}`,
     }));
   }, [processos]);
 

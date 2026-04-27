@@ -22,6 +22,10 @@ export { BrandMark } from './brand-mark';
 export { GlassPanel, WidgetContainer } from './glass-panel';
 export type { GlassPanelProps, WidgetContainerProps } from './glass-panel';
 
+// Pulse KPI Card — padrão reutilizável de strip de métricas operacionais
+export { PulseKpiCard, PulseKpiBar, PulseKpiGrid } from './pulse-kpi-card';
+export type { PulseKpiCardProps, PulseKpiBarProps, PulseKpiGridProps } from './pulse-kpi-card';
+
 // =============================================================================
 // DATA SHELL - Padrão obrigatório para tabelas
 // =============================================================================

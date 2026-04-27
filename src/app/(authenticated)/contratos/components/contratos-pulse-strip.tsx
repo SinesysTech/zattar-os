@@ -1,17 +1,11 @@
 'use client';
 
-/**
- * ContratosPulseStrip — KPI strip com 4 metricas de contratos
- * ============================================================================
- * Cards com AnimatedNumber, Sparkline, barra de proporcao e destaque condicional.
- *
- * Inspiracao: ExpedientesPulseStrip
- * ============================================================================
- */
-
 import { FileCheck, DollarSign, Clock, TrendingUp } from 'lucide-react';
-import { GlassPanel } from '@/components/shared/glass-panel';
-import { IconContainer } from '@/components/ui/icon-container';
+import {
+  PulseKpiCard,
+  PulseKpiBar,
+  PulseKpiGrid,
+} from '@/components/shared/pulse-kpi-card';
 import {
   AnimatedNumber,
   Sparkline,
@@ -43,144 +37,67 @@ export function ContratosPulseStrip({
   const pctAtivos = total > 0 ? Math.round((ativos / total) * 100) : 0;
   const pctVencendo = total > 0 ? Math.round((vencendo30d / total) * 100) : 0;
   const pctNovos = total > 0 ? Math.round((novosMes / total) * 100) : 0;
+  const isVencendoAlert = vencendo30d > 0;
 
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 lg:grid-cols-4 gap-3")}>
+    <PulseKpiGrid>
       {/* ── Ativos ─────────────────────────────────────────────────── */}
-      <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
-          <div className="min-w-0">
-            <p className="text-meta-label text-muted-foreground/50 truncate">
-              Ativos
-            </p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ "font-display text-2xl font-bold tabular-nums leading-none tracking-tight")}>
-                <AnimatedNumber value={ativos} />
-              </p>
-            </div>
-          </div>
-          <IconContainer size="md" className="bg-primary/8">
-            <FileCheck className="size-4 text-primary/60" />
-          </IconContainer>
-        </div>
-
-        {/* Barra de proporcao */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
-          <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
-            <div
-              className="h-full rounded-full transition-all duration-700 bg-primary/25"
-              style={{ width: `${pctAtivos}%` }}
-            />
-          </div>
-          <span className="text-micro-badge tabular-nums text-muted-foreground/50 shrink-0">
-            {pctAtivos}%
-          </span>
-        </div>
-      </GlassPanel>
+      <PulseKpiCard
+        label="Ativos"
+        icon={FileCheck}
+        iconColor="text-primary/60"
+        iconBg="bg-primary/8"
+        footer={<PulseKpiBar pct={pctAtivos} color="bg-primary/25" />}
+      >
+        <AnimatedNumber value={ativos} />
+      </PulseKpiCard>
 
       {/* ── Valor Total ────────────────────────────────────────────── */}
-      <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
-          <div className="min-w-0">
-            <p className="text-meta-label text-muted-foreground/50 truncate">
-              Valor Total
-            </p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ "font-display text-2xl font-bold tabular-nums leading-none tracking-tight")}>
-                {fmtMoeda(valorTotal)}
-              </p>
-            </div>
+      <PulseKpiCard
+        label="Valor Total"
+        icon={DollarSign}
+        iconColor="text-primary/60"
+        iconBg="bg-primary/8"
+        footer={
+          <div className="mt-2.5 flex items-center justify-center">
+            {trendMensal && trendMensal.length >= 2 ? (
+              <Sparkline data={trendMensal} width={120} height={24} />
+            ) : (
+              <div className="h-6" />
+            )}
           </div>
-          <IconContainer size="md" className="bg-primary/8">
-            <DollarSign className="size-4 text-primary/60" />
-          </IconContainer>
-        </div>
-
-        {/* Sparkline em vez de barra de proporcao */}
-        <div className="mt-2.5 flex items-center justify-center">
-          {trendMensal && trendMensal.length >= 2 ? (
-            <Sparkline data={trendMensal} width={120} height={24} />
-          ) : (
-            <div className="h-6" />
-          )}
-        </div>
-      </GlassPanel>
+        }
+      >
+        {fmtMoeda(valorTotal)}
+      </PulseKpiCard>
 
       {/* ── Vencendo 30d ───────────────────────────────────────────── */}
-      <GlassPanel
-        depth={vencendo30d > 0 ? 2 : 1}
-        className={cn(
-          /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ 'px-4 py-3.5',
-          vencendo30d > 0 && 'border-warning/15',
-        )}
+      <PulseKpiCard
+        label="Vencendo 30d"
+        icon={Clock}
+        iconColor={cn('text-warning/60')}
+        iconBg="bg-warning/8"
+        iconHighlightBorder={isVencendoAlert ? 'border border-warning/20' : undefined}
+        highlight={isVencendoAlert}
+        highlightBorderColor="border-warning/15"
+        footer={<PulseKpiBar pct={pctVencendo} color="bg-warning/25" />}
       >
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
-          <div className="min-w-0">
-            <p className="text-meta-label text-muted-foreground/50 truncate">
-              Vencendo 30d
-            </p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(
-                /* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ 'font-display text-2xl font-bold tabular-nums leading-none tracking-tight',
-                vencendo30d > 0 && 'text-warning/80',
-              )}>
-                <AnimatedNumber value={vencendo30d} />
-              </p>
-            </div>
-          </div>
-          <IconContainer size="md" className={cn(
-            'bg-warning/8',
-            vencendo30d > 0 && 'border border-warning/20',
-          )}>
-            <Clock className="size-4 text-warning/60" />
-          </IconContainer>
-        </div>
+        <AnimatedNumber
+          value={vencendo30d}
+          className={isVencendoAlert ? 'text-warning/80' : ''}
+        />
+      </PulseKpiCard>
 
-        {/* Barra de proporcao */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
-          <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
-            <div
-              className="h-full rounded-full transition-all duration-700 bg-warning/25"
-              style={{ width: `${pctVencendo}%` }}
-            />
-          </div>
-          <span className="text-micro-badge tabular-nums text-muted-foreground/50 shrink-0">
-            {pctVencendo}%
-          </span>
-        </div>
-      </GlassPanel>
-
-      {/* ── Novos/Mes ──────────────────────────────────────────────── */}
-      <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
-          <div className="min-w-0">
-            <p className="text-meta-label text-muted-foreground/50 truncate">
-              Novos/Mes
-            </p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ "font-display text-2xl font-bold tabular-nums leading-none tracking-tight")}>
-                <AnimatedNumber value={novosMes} />
-              </p>
-            </div>
-          </div>
-          <IconContainer size="md" className="bg-success/8">
-            <TrendingUp className="size-4 text-success/60" />
-          </IconContainer>
-        </div>
-
-        {/* Barra de proporcao */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
-          <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
-            <div
-              className="h-full rounded-full transition-all duration-700 bg-success/25"
-              style={{ width: `${pctNovos}%` }}
-            />
-          </div>
-          <span className="text-micro-badge tabular-nums text-muted-foreground/50 shrink-0">
-            {pctNovos}%
-          </span>
-        </div>
-      </GlassPanel>
-    </div>
+      {/* ── Novos/Mês ──────────────────────────────────────────────── */}
+      <PulseKpiCard
+        label="Novos/Mês"
+        icon={TrendingUp}
+        iconColor="text-success/60"
+        iconBg="bg-success/8"
+        footer={<PulseKpiBar pct={pctNovos} color="bg-success/25" />}
+      >
+        <AnimatedNumber value={novosMes} />
+      </PulseKpiCard>
+    </PulseKpiGrid>
   );
 }
