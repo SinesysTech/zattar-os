@@ -129,9 +129,13 @@ export function CapturaClient() {
   };
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 relative">
+      {/* Atmospheric glow */}
+      <div className="absolute -top-8 right-8 w-64 h-48 bg-primary/[0.04] rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-4 right-32 w-32 h-32 bg-info/[0.03] rounded-full blur-3xl pointer-events-none" />
+
       {/* Header */}
-      <div className="flex items-end justify-between gap-4">
+      <div className="flex items-end justify-between gap-4 relative">
         <div>
           <Heading level="page">Captura</Heading>
           <p className="text-sm text-muted-foreground/50 mt-0.5">

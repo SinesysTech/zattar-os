@@ -163,7 +163,7 @@ export default function TribunaisPage() {
             {tribunaisFiltrados.map((tribunal) => (
               <div
                 key={tribunal.id}
-                className="cursor-pointer hover:scale-[1.01] hover:shadow-lg transition-all duration-200"
+                className="cursor-pointer hover:scale-[1.01] hover:shadow-lg transition-all duration-300 ease-out"
                 onClick={() => handleEdit(tribunal)}
               >
               <GlassPanel

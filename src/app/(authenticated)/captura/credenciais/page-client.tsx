@@ -481,7 +481,7 @@ export default function CredenciaisPage() {
               </div>
             ) : (
               credenciaisFiltradas.map((credencial) => (
-                <GlassPanel key={credencial.id} depth={2} className="p-4">
+                <GlassPanel key={credencial.id} depth={2} className="p-4 transition-all duration-300 ease-out hover:shadow-md hover:-translate-y-px">
                   {/* Tribunal + Grau header */}
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-9 h-9 rounded-[0.625rem] bg-primary/8 flex items-center justify-center shrink-0">

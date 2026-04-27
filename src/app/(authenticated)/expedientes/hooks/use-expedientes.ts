@@ -39,6 +39,7 @@ export interface BuscarExpedientesParams {
   segredoJustica?: boolean;
   prioridadeProcessual?: boolean;
   juizoDigital?: boolean;
+  capturaId?: number;
 }
 
 export interface UseExpedientesOptions {
@@ -96,6 +97,7 @@ export const useExpedientes = (
       segredoJustica: params.segredoJustica,
       prioridadeProcessual: params.prioridadeProcessual,
       juizoDigital: params.juizoDigital,
+      capturaId: params.capturaId,
     }),
     [
       params.pagina,
@@ -116,6 +118,7 @@ export const useExpedientes = (
       params.segredoJustica,
       params.prioridadeProcessual,
       params.juizoDigital,
+      params.capturaId,
     ]
   );
 
@@ -149,6 +152,7 @@ export const useExpedientes = (
         segredoJustica: paramsEstaveis.segredoJustica,
         prioridadeProcessual: paramsEstaveis.prioridadeProcessual,
         juizoDigital: paramsEstaveis.juizoDigital,
+        capturaId: paramsEstaveis.capturaId,
       };
 
       const result = await actionListarExpedientes(actionParams);

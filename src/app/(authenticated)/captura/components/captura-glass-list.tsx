@@ -191,9 +191,14 @@ function GlassRow({
       onClick={onView}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onView(); } }}
       className={cn(
-        'w-full text-left rounded-2xl border border-border/40 p-4 cursor-pointer bg-card',
-        'transition-all duration-180 ease-out',
-        'hover:bg-accent/40 hover:border-border/60 hover:scale-[1.0025] hover:-translate-y-px hover:shadow-lg',
+        'w-full text-left rounded-2xl border p-4 cursor-pointer glass-widget bg-transparent',
+        'transition-all duration-200 ease-out',
+        'hover:scale-[1.0025] hover:-translate-y-px hover:shadow-lg',
+        captura.status === 'failed'
+          ? 'border-destructive/20 hover:border-destructive/35'
+          : captura.status === 'in_progress'
+            ? 'border-info/20 hover:border-info/35'
+            : 'border-border/20 hover:border-border/40',
       )}
     >
       <div className="grid grid-cols-[90px_1fr_200px_120px_80px_56px] gap-3 items-center">

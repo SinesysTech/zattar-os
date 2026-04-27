@@ -26,11 +26,14 @@ import { actionContarExpedientesPorStatus } from '../actions';
 import type { Expediente } from '../domain';
 import { getExpedientePartyNames } from '../domain';
 import { ExpedientesPulseStrip } from './expedientes-pulse-strip';
+import { ExpedientesUltimaCapturaCard } from './expedientes-ultima-captura-card';
 import {
   ExpedientesFilterBar,
   type ExpedientesFilterBarFilters,
   type ExpedientesStatus,
 } from './expedientes-filter-bar';
+import type { ResumoUltimaCaptura } from '../domain';
+import { actionObterResumoUltimaCaptura } from '../actions';
 import { Heading, Text } from '@/components/ui/typography';
 
 // ─── Lazy-loaded views e dialogs ──────────────────────────────────────────────
@@ -141,6 +144,7 @@ function parseStatusFromUrl(raw: string | null): ExpedientesStatus {
 function filtersFromSearchParams(
   params: URLSearchParams
 ): ExpedientesFilterBarFilters {
+  const capturaIdRaw = params.get('capturaId');
   return {
     status: parseStatusFromUrl(params.get('status')),
     trt: params.get('trt'),
@@ -148,6 +152,7 @@ function filtersFromSearchParams(
     origem: params.get('origem'),
     responsavel: params.get('responsavel'),
     tipo: params.get('tipo'),
+    capturaId: capturaIdRaw ? Number(capturaIdRaw) : undefined,
   };
 }
 
@@ -163,6 +168,7 @@ function filtersToSearchString(
   if (filters.origem) params.set('origem', filters.origem);
   if (filters.responsavel) params.set('responsavel', filters.responsavel);
   if (filters.tipo) params.set('tipo', filters.tipo);
+  if (filters.capturaId) params.set('capturaId', String(filters.capturaId));
   return params.toString();
 }
 
@@ -189,6 +195,10 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
   const [selectedExpediente, setSelectedExpediente] = useState<Expediente | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [baixarExpediente, setBaixarExpediente] = useState<Expediente | null>(null);
+
+  // Última captura
+  const [ultimaCaptura, setUltimaCaptura] = useState<ResumoUltimaCaptura | null>(null);
+  const [ultimaCapturaLoading, setUltimaCapturaLoading] = useState(true);
 
   // Sync view mode with URL
   useEffect(() => {

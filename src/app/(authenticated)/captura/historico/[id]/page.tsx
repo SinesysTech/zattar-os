@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 
 import { CapturaResult, type CapturaResultData, CapturaErrosFormatados, CapturaRawLogs } from '@/app/(authenticated)/captura';
 import { buscarCapturaLog, buscarLogsBrutoPorCapturaId } from '@/app/(authenticated)/captura/server';
-import { Heading, Text } from '@/components/ui/typography';
+import { Heading } from '@/components/ui/typography';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CapturaStatusSemanticBadge } from '@/components/ui/semantic-badge';
@@ -64,17 +64,21 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
 
   return (
     <>
+      {/* Atmospheric glow */}
+      <div className="fixed -top-8 right-16 w-64 h-48 bg-primary/[0.04] rounded-full blur-3xl pointer-events-none" />
+      <div className="fixed top-16 right-48 w-32 h-32 bg-info/[0.03] rounded-full blur-3xl pointer-events-none" />
+
       {/* Header da página */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between relative">
         <div className="flex items-center gap-3">
           <IconContainer size="md" className="bg-primary/10">
             <Activity className="size-4 text-primary" />
           </IconContainer>
           <div>
             <Heading level="page">{`Captura #${captura.id}`}</Heading>
-            <Text variant="caption" className="text-muted-foreground">
-              {captura.tipo_captura}
-            </Text>
+            <p className="text-[11px] font-medium text-muted-foreground/50 mt-0.5 uppercase tracking-wide">
+              {captura.tipo_captura.replace(/_/g, ' ')}
+            </p>
           </div>
         </div>
         <Button variant="outline" size="sm" asChild className="shrink-0">
@@ -92,52 +96,57 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center gap-1.5">
               <Activity className="size-3 text-muted-foreground/50" />
-              <Text variant="overline" className="text-muted-foreground">
+              <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
                 Status
-              </Text>
+              </p>
             </div>
-            <CapturaStatusSemanticBadge value={captura.status} className="w-fit" />
+            <div className="relative w-fit">
+              {captura.status === 'in_progress' && (
+                <span className="absolute inset-0 rounded-full bg-info/20 animate-pulse" />
+              )}
+              <CapturaStatusSemanticBadge value={captura.status} className="relative w-fit" />
+            </div>
           </div>
 
           {/* Iniciado em */}
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center gap-1.5">
               <CalendarClock className="size-3 text-muted-foreground/50" />
-              <Text variant="overline" className="text-muted-foreground">
+              <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
                 Iniciado em
-              </Text>
+              </p>
             </div>
-            <Text variant="body-sm" className="font-mono tabular-nums">
+            <p className="text-sm tabular-nums text-foreground/80">
               {new Date(captura.iniciado_em).toLocaleString('pt-BR')}
-            </Text>
+            </p>
           </div>
 
           {/* Concluído em */}
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center gap-1.5">
               <CalendarCheck className="size-3 text-muted-foreground/50" />
-              <Text variant="overline" className="text-muted-foreground">
+              <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
                 Concluído em
-              </Text>
+              </p>
             </div>
-            <Text variant="body-sm" className="font-mono tabular-nums">
+            <p className="text-sm tabular-nums text-foreground/80">
               {captura.concluido_em
                 ? new Date(captura.concluido_em).toLocaleString('pt-BR')
-                : <span className="text-muted-foreground/50">—</span>}
-            </Text>
+                : <span className="text-muted-foreground/40">—</span>}
+            </p>
           </div>
 
           {/* Duração */}
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center gap-1.5">
               <Timer className="size-3 text-muted-foreground/50" />
-              <Text variant="overline" className="text-muted-foreground">
+              <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
                 Duração
-              </Text>
+              </p>
             </div>
-            <Text variant="body-sm" className="font-mono tabular-nums">
-              {duracao ?? <span className="text-muted-foreground/50">—</span>}
-            </Text>
+            <p className="text-sm tabular-nums font-display font-semibold text-foreground/80">
+              {duracao ?? <span className="text-muted-foreground/40 font-normal">—</span>}
+            </p>
           </div>
         </div>
       </GlassPanel>
@@ -195,9 +204,9 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
                 </pre>
               ) : (
                 <div className="p-6 text-center">
-                  <Text variant="caption" className="text-muted-foreground/60">
+                  <p className="text-[11px] text-muted-foreground/60">
                     Nenhum dado disponível.
-                  </Text>
+                  </p>
                 </div>
               )}
             </DetailSectionCard>

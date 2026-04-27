@@ -21,6 +21,7 @@ export interface ExpedientesFilterBarFilters {
   origem: string | null;
   responsavel: string | null;
   tipo: string | null;
+  capturaId?: number;
 }
 
 interface ExpedientesFilterBarProps {

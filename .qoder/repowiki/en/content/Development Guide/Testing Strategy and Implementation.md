@@ -12,7 +12,18 @@
 - [src/__mocks__/env-setup.js](file://src/__mocks__/env-setup.js)
 - [src/testing/factories.ts](file://src/testing/factories.ts)
 - [src/app/__tests__/layout.test.tsx](file://src/app/__tests__/layout.test.tsx)
+- [src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts](file://src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts)
+- [src/app/(authenticated)/expedientes/repository.ts](file://src/app/(authenticated)/expedientes/repository.ts)
+- [src/app/(authenticated)/expedientes/service.ts](file://src/app/(authenticated)/expedientes/service.ts)
+- [src/app/(authenticated)/expedientes/domain.ts](file://src/app/(authenticated)/expedientes/domain.ts)
 </cite>
+
+## Update Summary
+**Changes Made**
+- Added comprehensive unit testing documentation for the `obterResumoUltimaCaptura` function
+- Updated component testing patterns to include advanced mocking strategies
+- Enhanced database testing approaches with sequential mock patterns
+- Expanded integration testing patterns to cover complex business logic validation
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -20,14 +31,17 @@
 3. [Core Components](#core-components)
 4. [Architecture Overview](#architecture-overview)
 5. [Detailed Component Analysis](#detailed-component-analysis)
-6. [Dependency Analysis](#dependency-analysis)
-7. [Performance Considerations](#performance-considerations)
-8. [Troubleshooting Guide](#troubleshooting-guide)
-9. [Conclusion](#conclusion)
-10. [Appendices](#appendices)
+6. [Advanced Testing Patterns](#advanced-testing-patterns)
+7. [Dependency Analysis](#dependency-analysis)
+8. [Performance Considerations](#performance-considerations)
+9. [Troubleshooting Guide](#troubleshooting-guide)
+10. [Conclusion](#conclusion)
+11. [Appendices](#appendices)
 
 ## Introduction
 This document defines the testing strategy and implementation for ZattarOS across unit, integration, and end-to-end (E2E) testing. It explains the Jest configuration, test file organization, and testing patterns used in the codebase. It also covers component testing with React Testing Library, server action testing, database testing approaches, Playwright configuration for E2E testing, test data management, and mocking strategies. Practical examples are provided via file references to guide writing tests for different component types, testing asynchronous operations, and validating real-time features. Finally, it documents best practices, coverage expectations, and CI testing workflows.
+
+**Updated** Added comprehensive unit testing suite documentation for the `obterResumoUltimaCaptura` function, including advanced mocking patterns and business logic validation.
 
 ## Project Structure
 Testing in ZattarOS is organized around three layers:
@@ -42,6 +56,8 @@ JCFG["Jest Config<br/>jest.config.js"]
 SETUP["Global Setup<br/>src/testing/setup.ts"]
 JDOM["DOM Globals Setup<br/>src/__mocks__/jest-dom-setup.ts"]
 ENV["Env Defaults<br/>src/__mocks__/env-setup.js"]
+RESUMO["Unit Tests<br/>resumo-ultima-captura.test.ts"]
+ENDTOEND["Advanced Mocking<br/>Sequential Mock Pattern"]
 end
 subgraph "Integration Tests"
 IG["Guide<br/>src/testing/INTEGRATION_TESTING_GUIDE.md"]
@@ -59,6 +75,7 @@ IG --> IH
 IG --> SH
 IG --> FAC
 PCFG --> JCFG
+RESUMO --> ENDTOEND
 ```
 
 **Diagram sources**
@@ -71,6 +88,7 @@ PCFG --> JCFG
 - [src/testing/supabase-test-helpers.ts:1-17](file://src/testing/supabase-test-helpers.ts#L1-L17)
 - [src/testing/factories.ts:1-17](file://src/testing/factories.ts#L1-L17)
 - [playwright.config.ts:1-46](file://playwright.config.ts#L1-L46)
+- [src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts:1-140](file://src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts#L1-L140)
 
 **Section sources**
 - [jest.config.js:1-119](file://jest.config.js#L1-L119)
@@ -82,6 +100,7 @@ PCFG --> JCFG
 - [src/testing/factories.ts:1-17](file://src/testing/factories.ts#L1-L17)
 - [src/__mocks__/jest-dom-setup.ts:1-36](file://src/__mocks__/jest-dom-setup.ts#L1-L36)
 - [src/__mocks__/env-setup.js:1-14](file://src/__mocks__/env-setup.js#L1-L14)
+- [src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts:1-140](file://src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts#L1-L140)
 
 ## Core Components
 - Jest configuration supports:
@@ -112,6 +131,7 @@ D --> E["CI Gate"]
 subgraph "Jest Layer"
 B1["Node Env<br/>server logic"]
 B2["jsdom Env<br/>React components"]
+B3["Advanced Mocking<br/>Sequential Mock Pattern"]
 end
 subgraph "Integration Layer"
 I1["Supabase Mocks"]
@@ -124,6 +144,7 @@ E2["Multi-Browser Devices"]
 end
 B --> B1
 B --> B2
+B --> B3
 C --> I1
 C --> I2
 C --> I3
@@ -136,6 +157,7 @@ D --> E2
 - [src/testing/INTEGRATION_TESTING_GUIDE.md:15-32](file://src/testing/INTEGRATION_TESTING_GUIDE.md#L15-L32)
 - [src/testing/integration-helpers.ts:17-92](file://src/testing/integration-helpers.ts#L17-L92)
 - [playwright.config.ts:17-44](file://playwright.config.ts#L17-L44)
+- [src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts:4-22](file://src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts#L4-L22)
 
 ## Detailed Component Analysis
 
@@ -238,7 +260,7 @@ H --> I
 ### Component Testing with React Testing Library
 - jsdom project enables DOM rendering and React Testing Library assertions.
 - Global setup ensures Next.js navigation mocks and Web APIs are available.
-- Example component test exists under the app’s test directory.
+- Example component test exists under the app's test directory.
 
 ```mermaid
 sequenceDiagram
@@ -351,14 +373,91 @@ PW-->>PW : Retain traces on failure
 - [src/testing/integration-helpers.ts:102-133](file://src/testing/integration-helpers.ts#L102-L133)
 - [src/testing/setup.ts:113-118](file://src/testing/setup.ts#L113-L118)
 
+## Advanced Testing Patterns
+
+### Comprehensive Unit Testing Suite for Business Logic Functions
+The `obterResumoUltimaCaptura` function demonstrates advanced unit testing patterns with comprehensive coverage of edge cases, error handling, and business logic validation.
+
+#### Sequential Mock Pattern
+The test suite implements a sophisticated sequential mock pattern that simulates database query chains with controlled responses:
+
+```mermaid
+flowchart TD
+A["Sequential Mock Creation"] --> B["Mock Chain Object"]
+B --> C["Database Operations"]
+C --> D["Controlled Results"]
+D --> E["Sequential Execution"]
+E --> F["Business Logic Validation"]
+```
+
+**Diagram sources**
+- [src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts:4-22](file://src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts#L4-L22)
+
+#### Edge Case Coverage
+The test suite covers critical edge cases:
+- **Empty State**: No completed captures found returns null safely
+- **Count Null Handling**: Database null values properly handled as zeros
+- **Business Logic Validation**: Created vs updated calculations based on timestamps
+- **Error Propagation**: Database errors properly converted to application errors
+
+#### Mock Factory Implementation
+The sequential mock factory provides:
+- **Chained Method Calls**: Simulates Supabase query builder pattern
+- **Sequential Results**: Different responses for each database operation
+- **Flexible Configuration**: Customizable results for different test scenarios
+- **Call Tracking**: Verifies correct method calls and parameters
+
+**Section sources**
+- [src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts:1-140](file://src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts#L1-L140)
+- [src/app/(authenticated)/expedientes/repository.ts:758-810](file://src/app/(authenticated)/expedientes/repository.ts#L758-L810)
+- [src/app/(authenticated)/expedientes/service.ts:268-271](file://src/app/(authenticated)/expedientes/service.ts#L268-L271)
+- [src/app/(authenticated)/expedientes/domain.ts:304-311](file://src/app/(authenticated)/expedientes/domain.ts#L304-L311)
+
+### Business Logic Validation Patterns
+The test suite validates complex business logic through multiple scenarios:
+
+#### Scenario-Based Testing
+- **Normal Operation**: Successful capture with expected counts
+- **Edge Cases**: Null values, empty results, partial data
+- **Error Conditions**: Database failures, connection timeouts
+- **Complex Calculations**: Derived metrics from raw data
+
+#### Data Flow Validation
+The tests verify the complete data flow from database queries to business logic calculations:
+
+```mermaid
+sequenceDiagram
+participant Test as "Test Case"
+participant Repo as "Repository"
+participant DB as "Database"
+participant Service as "Service Layer"
+Test->>Repo : Call obterResumoUltimaCaptura
+Repo->>DB : Query completed captures
+DB-->>Repo : Return capture data
+Repo->>DB : Count total expedientes
+Repo->>DB : Count created expedientes
+DB-->>Repo : Return counts
+Repo->>Service : Calculate derived metrics
+Service-->>Test : Return validated result
+```
+
+**Diagram sources**
+- [src/app/(authenticated)/expedientes/repository.ts:759-809](file://src/app/(authenticated)/expedientes/repository.ts#L759-L809)
+- [src/app/(authenticated)/expedientes/service.ts:269-271](file://src/app/(authenticated)/expedientes/service.ts#L269-L271)
+
+**Section sources**
+- [src/app/(authenticated)/expedientes/repository.ts:758-810](file://src/app/(authenticated)/expedientes/repository.ts#L758-L810)
+- [src/app/(authenticated)/expedientes/service.ts:268-271](file://src/app/(authenticated)/expedientes/service.ts#L268-L271)
+
 ### Practical Examples and Patterns
 - Writing unit tests for hooks and providers using jsdom environment and React Testing Library.
 - Writing integration tests for service-layer flows with mocked repositories and Supabase client.
 - Writing E2E tests for user journeys across desktop and mobile browsers with Playwright.
 - Testing async operations with proper awaits and promise-based assertions.
 - Validating real-time features by asserting reactive updates after state changes.
+- Implementing advanced mocking patterns for complex business logic validation.
 
-[No sources needed since this section provides general guidance]
+**Updated** Added comprehensive examples for sequential mock patterns and business logic validation.
 
 ## Dependency Analysis
 Testing dependencies are decoupled via module mappers and global setup, minimizing circular dependencies and enabling isolated test runs.
@@ -372,6 +471,9 @@ IG["INTEGRATION_TESTING_GUIDE.md"] --> IH["integration-helpers.ts"]
 IG --> SH["supabase-test-helpers.ts"]
 IG --> FAC["factories.ts"]
 PW["playwright.config.ts"] --> Jest
+RESUMO["resumo-ultima-captura.test.ts"] --> Repo["repository.ts"]
+RESUMO --> Service["service.ts"]
+RESUMO --> Domain["domain.ts"]
 ```
 
 **Diagram sources**
@@ -384,19 +486,25 @@ PW["playwright.config.ts"] --> Jest
 - [src/testing/supabase-test-helpers.ts:1-17](file://src/testing/supabase-test-helpers.ts#L1-L17)
 - [src/testing/factories.ts:1-17](file://src/testing/factories.ts#L1-L17)
 - [playwright.config.ts:1-46](file://playwright.config.ts#L1-L46)
+- [src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts:1-140](file://src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts#L1-L140)
+- [src/app/(authenticated)/expedientes/repository.ts:758-810](file://src/app/(authenticated)/expedientes/repository.ts#L758-L810)
+- [src/app/(authenticated)/expedientes/service.ts:268-271](file://src/app/(authenticated)/expedientes/service.ts#L268-L271)
+- [src/app/(authenticated)/expedientes/domain.ts:304-311](file://src/app/(authenticated)/expedientes/domain.ts#L304-L311)
 
 **Section sources**
 - [jest.config.js:12-119](file://jest.config.js#L12-L119)
 - [src/testing/INTEGRATION_TESTING_GUIDE.md:1-530](file://src/testing/INTEGRATION_TESTING_GUIDE.md#L1-L530)
 - [playwright.config.ts:1-46](file://playwright.config.ts#L1-L46)
+- [src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts:1-140](file://src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts#L1-L140)
 
 ## Performance Considerations
 - Prefer mocking external services to avoid flaky network-bound tests.
 - Use factory builders for bulk data to reduce duplication and speed up tests.
 - Keep test suites focused and isolated to minimize teardown overhead.
 - Leverage parallelism in Playwright projects judiciously while controlling timeouts.
+- Implement efficient sequential mock patterns to avoid excessive test setup complexity.
 
-[No sources needed since this section provides general guidance]
+**Updated** Added performance considerations for advanced mocking patterns.
 
 ## Troubleshooting Guide
 - Missing Web APIs in jsdom:
@@ -409,21 +517,28 @@ PW["playwright.config.ts"] --> Jest
   - Increase timeout or adjust device emulation; confirm dev server reuse policy.
 - Conditional Supabase tests:
   - Use helpers to skip tests when credentials are not available.
+- Advanced mocking issues:
+  - Verify sequential mock patterns match expected database query sequences.
+  - Check that mock chain methods return consistent types across calls.
+
+**Updated** Added troubleshooting guidance for advanced mocking patterns.
 
 **Section sources**
 - [src/testing/setup.ts:39-86](file://src/testing/setup.ts#L39-L86)
 - [src/__mocks__/env-setup.js:8-13](file://src/__mocks__/env-setup.js#L8-L13)
 - [src/testing/supabase-test-helpers.ts:3-14](file://src/testing/supabase-test-helpers.ts#L3-L14)
 - [playwright.config.ts:9-22](file://playwright.config.ts#L9-L22)
+- [src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts:4-22](file://src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts#L4-L22)
 
 ## Conclusion
-ZattarOS employs a layered testing strategy with Jest for unit and integration tests and Playwright for E2E validation. The configuration supports dual environments, robust global setup, and reusable integration helpers. By following the AAA pattern, leveraging factories and builders, and mocking external services, teams can write reliable, maintainable tests across components, server actions, and real-time features. Coverage targets and CI workflows should emphasize critical business flows and user journeys.
+ZattarOS employs a layered testing strategy with Jest for unit and integration tests and Playwright for E2E validation. The configuration supports dual environments, robust global setup, and reusable integration helpers. The addition of comprehensive unit testing for business logic functions like `obterResumoUltimaCaptura` demonstrates advanced testing patterns including sequential mocking, edge case coverage, and business logic validation. By following the AAA pattern, leveraging factories and builders, implementing sophisticated mocking strategies, and mocking external services, teams can write reliable, maintainable tests across components, server actions, and complex business logic scenarios. Coverage targets and CI workflows should emphasize critical business flows and user journeys while maintaining high-quality unit test coverage for core business functions.
 
-[No sources needed since this section summarizes without analyzing specific files]
+**Updated** Enhanced conclusion to reflect the comprehensive unit testing capabilities and advanced patterns demonstrated in the codebase.
 
 ## Appendices
 - Example test files:
   - Component test: [layout.test.tsx](file://src/app/__tests__/layout.test.tsx)
+  - Business logic unit test: [resumo-ultima-captura.test.ts](file://src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts)
 - Integration testing guide and helpers:
   - [INTEGRATION_TESTING_GUIDE.md](file://src/testing/INTEGRATION_TESTING_GUIDE.md)
   - [integration-helpers.ts](file://src/testing/integration-helpers.ts)
@@ -434,3 +549,9 @@ ZattarOS employs a layered testing strategy with Jest for unit and integration t
   - [playwright.config.ts](file://playwright.config.ts)
   - [jest-dom-setup.ts](file://src/__mocks__/jest-dom-setup.ts)
   - [env-setup.js](file://src/__mocks__/env-setup.js)
+- Business logic components:
+  - [repository.ts](file://src/app/(authenticated)/expedientes/repository.ts)
+  - [service.ts](file://src/app/(authenticated)/expedientes/service.ts)
+  - [domain.ts](file://src/app/(authenticated)/expedientes/domain.ts)
+
+**Updated** Added references to the comprehensive unit testing suite and related business logic components.
