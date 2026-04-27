@@ -34,6 +34,7 @@ export {
   // Partes Contrarias
   PartesContrariasTableWrapper,
   ParteContrariaForm,
+  PromoverTransitoriaDialog,
   // Terceiros
   TerceirosTableWrapper,
   TerceiroForm,

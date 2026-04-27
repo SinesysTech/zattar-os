@@ -16,7 +16,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
-import { PromoverTransitoriaDialog } from '@/app/(authenticated)/partes/components/partes-contrarias/promover-transitoria-dialog';
+import { PromoverTransitoriaDialog } from '@/app/(authenticated)/partes';
 import {
   actionListarTransitoriasPendentes,
   type ParteContrariaTransitoria,

@@ -14,7 +14,7 @@ import { AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Heading, Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
-import { PromoverTransitoriaDialog } from '@/app/(authenticated)/partes/components/partes-contrarias/promover-transitoria-dialog';
+import { PromoverTransitoriaDialog } from '@/app/(authenticated)/partes';
 import {
   actionListarTransitoriasPorContrato,
   type ParteContrariaTransitoria,

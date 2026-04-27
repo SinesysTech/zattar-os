@@ -19,7 +19,7 @@ import {
   ViewToggle,
   type ViewToggleOption,
 } from "@/components/dashboard/view-toggle";
-import { StatCard } from "@/app/(authenticated)/dashboard/components/widgets/stat-card";
+import { StatCard } from "@/app/(authenticated)/dashboard";
 import { Button } from "@/components/ui/button";
 import type { DocumentosStats } from '@/shared/assinatura-digital/services/documentos.service';
 import type { DocumentoListItem } from '@/shared/assinatura-digital/adapters/documento-card-adapter';

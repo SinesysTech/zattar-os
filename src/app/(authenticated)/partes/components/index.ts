@@ -20,6 +20,7 @@ export {
 export {
   PartesContrariasTableWrapper,
   ParteContrariaForm,
+  PromoverTransitoriaDialog,
 } from "./partes-contrarias";
 
 // Terceiros components
