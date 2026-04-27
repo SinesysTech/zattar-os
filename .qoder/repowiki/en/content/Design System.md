@@ -2,473 +2,411 @@
 
 <cite>
 **Referenced Files in This Document**
-- [README.md](file://design-system/README.md)
-- [SKILL.md](file://design-system/SKILL.md)
-- [VISUAL-REVIEW.md](file://design-system/VISUAL-REVIEW.md)
-- [extensions.md](file://design-system/extensions.md)
-- [colors_and_type.css](file://design-system/colors_and_type.css)
-- [globals.css](file://design-system/src/app/globals.css)
-- [tokens.ts](file://design-system/src/lib/design-system/tokens.ts)
-- [variants.ts](file://design-system/src/lib/design-system/variants.ts)
-- [typography.tsx](file://design-system/src/components/ui/typography.tsx)
-- [button.tsx](file://design-system/src/components/ui/button.tsx)
-- [badge.tsx](file://design-system/src/components/ui/badge.tsx)
-- [glass-panel.tsx](file://design-system/src/components/shared/glass-panel.tsx)
-- [brand-mark.tsx](file://design-system/src/components/shared/brand-mark.tsx)
+- [MASTER.md](file://design-system/zattaros/MASTER.md)
+- [captura.md](file://design-system/zattaros/pages/captura.md)
+- [expedientes.md](file://design-system/zattaros/pages/expedientes.md)
+- [page-client.tsx](file://src/app/(authenticated)/ajuda/design-system/playground/page-client.tsx)
+- [variants.ts](file://src/lib/design-system/variants.ts)
+- [expedientes-control-view.tsx](file://src/app/(authenticated)/expedientes/components/expedientes-control-view.tsx)
+- [colors-section.tsx](file://src/app/(authenticated)/design-system/_components/colors-section.tsx)
+- [spacing-section.tsx](file://src/app/(authenticated)/design-system/_components/spacing-section.tsx)
+- [globals.css](file://src/app/globals.css)
+- [page.tsx](file://src/app/(ajuda)/ajuda/design-system/componentes/page.tsx)
 </cite>
+
+## Update Summary
+**Changes Made**
+- Updated to reflect comprehensive design system adoption with migration from raw Tailwind CSS classes to ZattarOS Design System components
+- Added documentation for design-system-escape comments implementation for systematic migration guidance
+- Enhanced coverage of semantic badge system and component architecture
+- Updated component specifications to reflect shadcn/ui integration
+- Expanded design system playground documentation with migration examples
 
 ## Table of Contents
 1. [Introduction](#introduction)
-2. [Project Structure](#project-structure)
-3. [Core Components](#core-components)
-4. [Architecture Overview](#architecture-overview)
-5. [Detailed Component Analysis](#detailed-component-analysis)
-6. [Dependency Analysis](#dependency-analysis)
-7. [Performance Considerations](#performance-considerations)
-8. [Troubleshooting Guide](#troubleshooting-guide)
-9. [Conclusion](#conclusion)
-10. [Appendices](#appendices)
+2. [Design System Architecture](#design-system-architecture)
+3. [Migration Strategy with Design System Escape Comments](#migration-strategy-with-design-system-escape-comments)
+4. [Component Library Integration](#component-library-integration)
+5. [Semantic Badge System](#semantic-badge-system)
+6. [Design System Playground](#design-system-playground)
+7. [Page-Specific Implementation Examples](#page-specific-implementation-examples)
+8. [Quality Assurance and Migration Tracking](#quality-assurance-and-migration-tracking)
+9. [Integration and Maintenance](#integration-and-maintenance)
+10. [Conclusion](#conclusion)
 
 ## Introduction
-This document describes the ZattarOS Design System, a comprehensive visual and interaction framework for the legal management platform. It covers design tokens, component library, visual guidelines, theming, and Tailwind CSS 4 integration. It also documents shadcn/ui usage patterns, custom component development, design token hierarchy, color systems, typography scales, spacing guidelines, component composition patterns, accessibility compliance, responsive design principles, and practical examples for maintainability and design-to-development handoff.
+The ZattarOS Design System represents a comprehensive visual and interaction framework built on shadcn/ui components with semantic badge architecture. This system has evolved to provide systematic migration guidance through design-system-escape comments while maintaining design consistency across the legal management platform.
 
-## Project Structure
-The design system is organized around:
-- Canonical specification and guidelines in the design-system README and SKILL
-- Foundation tokens and CSS in globals.css and colors_and_type.css
-- Typed token registry and semantic mapping in tokens.ts and variants.ts
-- UI primitives and shared components in src/components
-- Preview assets and UI kits for prototyping in design-system/preview and design-system/ui_kits
+The design system now operates on a hierarchical structure where the MASTER.md file provides foundational rules, page-specific documentation files override or supplement these rules when they exist, and design-system-escape comments guide developers through the migration process from raw Tailwind CSS classes to standardized components.
 
-```mermaid
-graph TB
-subgraph "Design System Docs"
-A["README.md"]
-B["SKILL.md"]
-C["VISUAL-REVIEW.md"]
-D["extensions.md"]
-end
-subgraph "Foundation"
-E["colors_and_type.css"]
-F["globals.css"]
-end
-subgraph "Typed Tokens"
-G["tokens.ts"]
-H["variants.ts"]
-end
-subgraph "Components"
-I["typography.tsx"]
-J["button.tsx"]
-K["badge.tsx"]
-L["glass-panel.tsx"]
-M["brand-mark.tsx"]
-end
-A --> E
-A --> F
-A --> G
-A --> H
-A --> I
-A --> J
-A --> K
-A --> L
-A --> M
-B --> E
-B --> F
-B --> G
-B --> H
-B --> I
-B --> J
-B --> K
-B --> L
-B --> M
-C --> I
-C --> J
-C --> K
-C --> L
-D --> F
+## Design System Architecture
+The ZattarOS Design System is built on a three-tier architecture that ensures consistency while enabling systematic migration.
+
+### Master File Architecture
+The MASTER.md file serves as the central authority for design system rules, containing 205 lines of essential guidelines that establish the foundation for all page implementations.
+
+**Global Rules Framework**
+The master file establishes fundamental design principles through structured categories:
+
+**Color Palette System**
+- Primary brand colors with semantic roles (Primary, Secondary, CTA/Accent)
+- Background and text color specifications
+- CSS variable declarations for consistent theming
+- Color notes explaining design philosophy
+
+**Typography Foundation**
+- Heading and body font specifications
+- Mood and personality guidelines for legal services
+- Google Fonts integration requirements
+- CSS import instructions for font loading
+
+**Spacing and Layout Standards**
+- Comprehensive spacing token definitions (xs to 3xl)
+- Usage guidelines for different contexts
+- Responsive breakpoint considerations
+
+**Shadow System**
+- Depth-based shadow specifications
+- Usage patterns for different UI elements
+- Performance considerations for visual effects
+
+### Component Specification Library
+The master file provides canonical component specifications that serve as the reference for all UI elements:
+
+**Button System**
+- Primary and secondary button variations
+- Hover states and interaction patterns
+- Accessibility considerations
+- Transition timing and easing
+
+**Card Components**
+- Card styling and elevation patterns
+- Hover effects and depth transitions
+- Interactive state management
+
+**Form Elements**
+- Input field styling and focus states
+- Validation and error handling patterns
+- Consistent spacing and alignment
+
+**Modal System**
+- Overlay styling and backdrop effects
+- Modal positioning and sizing constraints
+- Responsive behavior patterns
+
+## Migration Strategy with Design System Escape Comments
+The design system implements a systematic migration approach using design-system-escape comments to guide developers from raw Tailwind CSS classes to standardized components.
+
+### Design System Escape Comment Implementation
+Design-system-escape comments are strategically placed throughout the codebase to provide migration guidance:
+
+```typescript
+// Example of design-system-escape comment usage
+<div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "container mx-auto px-6 py-4")}>
 ```
 
-**Diagram sources**
-- [README.md:1-341](file://design-system/README.md#L1-L341)
-- [SKILL.md:1-45](file://design-system/SKILL.md#L1-L45)
-- [VISUAL-REVIEW.md:1-203](file://design-system/VISUAL-REVIEW.md#L1-L203)
-- [extensions.md:1-377](file://design-system/extensions.md#L1-L377)
-- [colors_and_type.css:1-474](file://design-system/colors_and_type.css#L1-L474)
-- [globals.css:1-800](file://design-system/src/app/globals.css#L1-L800)
-- [tokens.ts:1-800](file://design-system/src/lib/design-system/tokens.ts#L1-L800)
-- [variants.ts:1-800](file://design-system/src/lib/design-system/variants.ts#L1-L800)
-- [typography.tsx:1-193](file://design-system/src/components/ui/typography.tsx#L1-L193)
-- [button.tsx:1-71](file://design-system/src/components/ui/button.tsx#L1-L71)
-- [badge.tsx:1-141](file://design-system/src/components/ui/badge.tsx#L1-L141)
-- [glass-panel.tsx:1-103](file://design-system/src/components/shared/glass-panel.tsx#L1-L103)
-- [brand-mark.tsx:1-153](file://design-system/src/components/shared/brand-mark.tsx#L1-L153)
+These comments serve multiple purposes:
+- **Migration Guidance**: Direct developers to use semantic tokens instead of hardcoded values
+- **Component Reference**: Point to appropriate component alternatives
+- **Documentation Trail**: Create audit trails for migration progress
+- **Team Communication**: Standardize communication about design system adoption
 
-**Section sources**
-- [README.md:281-324](file://design-system/README.md#L281-L324)
-- [SKILL.md:11-27](file://design-system/SKILL.md#L11-L27)
+### Migration Categories
+The escape comments categorize migration needs:
 
-## Core Components
-This section outlines the foundational elements of the design system.
+**Typography Migration**
+- `text-2xl → migrar para <Heading level="...">`
+- `font-bold → className de <Text>/<Heading>`
+- `text-sm → migrar para <Text variant="body-sm">`
 
-- Design tokens hierarchy and enforcement
-  - Reference tokens (OKLCH anchors, brand scales)
-  - Semantic tokens (shadcn-compatible, MD3 surface hierarchy)
-  - Component tokens (widget, tab pill, card entity, etc.)
-  - Enforcement via audit scripts and ESLint rules
+**Layout Migration**
+- `px-6 padding direcional sem Inset equiv.` → Use container utilities
+- `gap-3 gap sem token DS` → Use semantic spacing tokens
+- `space-y-8 → migrar para <Stack gap="section">` → Use Stack component
 
-- Color system
-  - Primary brand anchor at hue 281° (Zattar Purple)
-  - Action accent at hue 45° (orange)
-  - Status colors (success, warning, info, destructive)
-  - Sidebar always dark in both themes
-  - User-selectable palette (18 colors) for tags, labels, events
-  - Event colors mapped to palette slots for legal domain semantics
+**Component Migration**
+- `cursor-pointer on all clickable elements` → Use Button component
+- `font-medium → className de <Text>/<Heading>` → Use Text component
 
-- Typography system
-  - Inter for body/sans, Montserrat for headings/display, Manrope for special headlines, Geist Mono for numeric/monospace
-  - Semantic typography classes (.text-page-title, .text-kpi-value, .text-meta-label, etc.)
-  - Font-size grid aligned to 4px spacing units
+### Migration Tracking
+The design system tracks migration progress through:
+- **Audit Reports**: Automated scanning for legacy classes
+- **Escape Comment Count**: Quantifying migration progress
+- **Component Adoption Metrics**: Tracking shadcn/ui usage
+- **Consistency Score**: Measuring design system adherence
 
-- Spacing and layout
-  - Grid-based spacing (4px steps) with semantic groups (page, section, card, dialog, form, table)
-  - Density axis controlled via data-density attribute cascading through shells
-  - Page max-width and detail panel fixed width
+## Component Library Integration
+The ZattarOS Design System is built on shadcn/ui components, providing a comprehensive library of reusable UI elements.
 
-- Glass system
-  - Depth variants: glass-widget, glass-kpi, glass-card, glass-dialog, glass-dropdown
-  - Depth 3 for maximum emphasis with backdrop blur and primary tint border
-  - Ambient shadow utility and surface tokens
+### Component Categories
+The component library includes several categories:
 
-- Component primitives
-  - Typography components with typed levels and variants
-  - Button variants (default, destructive, outline, glass-outline, marketing-outline, secondary, ghost, link) and sizes
-  - Badge variants (default, secondary, destructive, outline, success, info, warning, neutral, accent) with soft/solid tones
-  - GlassPanel with depth 1–3 and WidgetContainer header pattern
-  - BrandMark with auto/light/dark variants and collapsible behavior
+**Form Elements**
+- Input fields with validation states
+- Text areas and select components
+- Checkbox and radio button groups
+- DatePicker and time pickers
 
-**Section sources**
-- [globals.css:23-228](file://design-system/src/app/globals.css#L23-L228)
-- [colors_and_type.css:12-166](file://design-system/colors_and_type.css#L12-L166)
-- [tokens.ts:30-800](file://design-system/src/lib/design-system/tokens.ts#L30-L800)
-- [typography.tsx:123-193](file://design-system/src/components/ui/typography.tsx#L123-L193)
-- [button.tsx:7-46](file://design-system/src/components/ui/button.tsx#L7-L46)
-- [badge.tsx:9-121](file://design-system/src/components/ui/badge.tsx#L9-L121)
-- [glass-panel.tsx:28-64](file://design-system/src/components/shared/glass-panel.tsx#L28-L64)
-- [brand-mark.tsx:38-76](file://design-system/src/components/shared/brand-mark.tsx#L38-L76)
+**Navigation Components**
+- Navigation menus and breadcrumbs
+- Pagination controls
+- Tab systems and accordions
+- Sidebar navigation
 
-## Architecture Overview
-The design system architecture follows a strict token hierarchy and enforces usage patterns through code and CSS.
+**Feedback Components**
+- Toast notifications and alerts
+- Loading spinners and skeletons
+- Progress indicators
+- Empty state illustrations
 
-```mermaid
-graph TB
-subgraph "Reference Tokens"
-RT1["Brand anchors<br/>Primary, Highlight"]
-RT2["Neutrals<br/>Background, Foreground, Muted"]
-RT3["User Palette<br/>18 colors"]
-end
-subgraph "Semantic Tokens"
-ST1["Shadcn UI<br/>background, foreground, primary, secondary, muted, destructive, border, input, ring"]
-ST2["Status Colors<br/>success, warning, info, destructive"]
-ST3["MD3 Surface<br/>surface hierarchy"]
-ST4["Portal Tokens<br/>portal-bg, portal-primary, etc."]
-end
-subgraph "Component Tokens"
-CT1["Widget Tokens<br/>radius, padding, gap"]
-CT2["Tab Pill Tokens<br/>radius, padding"]
-CT3["Card Entity Tokens<br/>avatar sizing"]
-end
-subgraph "CSS Foundation"
-CF1["@theme inline<br/>Tailwind v4"]
-CF2["Light/Dark Mode<br/>:root + .dark"]
-CF3["Glass Variants<br/>glass-widget/kpi/dialog"]
-end
-subgraph "Typed Registry"
-TR1["tokens.ts<br/>COLOR_TOKENS, PALETTE, STATUS_COLORS"]
-TR2["variants.ts<br/>Badge semantic mapping"]
-end
-RT1 --> ST1
-RT2 --> ST2
-RT3 --> ST2
-ST1 --> CT1
-ST2 --> CT2
-ST3 --> CT3
-CF1 --> ST1
-CF2 --> ST2
-CF3 --> CT1
-TR1 --> ST1
-TR2 --> ST2
+**Layout Components**
+- Cards with various styles
+- Grid systems and responsive layouts
+- Modals and dialogs
+- Split panes and resizable layouts
+
+### Component Usage Patterns
+Components follow consistent usage patterns:
+
+**Import Structure**
+```typescript
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 ```
 
-**Diagram sources**
-- [globals.css:23-228](file://design-system/src/app/globals.css#L23-L228)
-- [tokens.ts:64-200](file://design-system/src/lib/design-system/tokens.ts#L64-L200)
-- [variants.ts:19-113](file://design-system/src/lib/design-system/variants.ts#L19-L113)
-- [colors_and_type.css:12-166](file://design-system/colors_and_type.css#L12-L166)
+**Variant System**
+Components support multiple variants for different contexts:
+- Default, secondary, outline, ghost, destructive
+- Small, medium, large, icon sizes
+- Custom styling through className prop
 
-**Section sources**
-- [extensions.md:1-377](file://design-system/extensions.md#L1-L377)
-- [tokens.ts:781-800](file://design-system/src/lib/design-system/tokens.ts#L781-L800)
+**Accessibility Features**
+- Proper ARIA attributes
+- Keyboard navigation support
+- Focus management
+- Screen reader compatibility
 
-## Detailed Component Analysis
+## Semantic Badge System
+The semantic badge system provides consistent status communication across the platform through categorized variants.
 
-### Design Tokens and Theming
-- Token coverage and audit
-  - 226 tokens documented in extensions.md
-  - Audit scripts enforce usage of semantic tokens and prevent raw CSS values
-  - ESLint rules prevent manual typography and spacing overrides
+### Badge Category System
+The system defines multiple badge categories for different domains:
 
-- Tailwind CSS 4 integration
-  - @theme inline defines token mapping to Tailwind utilities
-  - data-density attribute cascades density tokens across shells
-  - Theme presets and runtime radius adjustments supported
+**Process-related Badges**
+- `expediente_status`: Pending, Downloaded, Overdue
+- `status`: Active, Archived, Finalized
+- `priority`: Low, Medium, High, Urgent
 
-- Color system
-  - Primary brand token drives CTAs and focus states
-  - Status tokens consistently map to semantic variants
-  - User palette supports dynamic tagging and labeling
+**Institutional Badges**
+- `tribunal`: TRT1-24, TST, STJ, STF
+- `grau`: First Instance, Second Instance, Higher Court
+- `parte`: Plaintiff, Defendant, Third Party
 
-- Typography and spacing
-  - Semantic typography classes enforce consistent scale and weights
-  - Grid-based spacing ensures proportional layouts across breakpoints
+**Domain-specific Badges**
+- `audiencia_status`: Scheduled, Completed, Cancelled
+- `captura_status`: Pending, In Progress, Completed
+- `expediente_tipo`: Various types with color-coded variants
 
-```mermaid
-flowchart TD
-Start(["Token Request"]) --> CheckRegistry["Check typed registry<br/>tokens.ts"]
-CheckRegistry --> Found{"Found?"}
-Found --> |Yes| UseSemantic["Use semantic token<br/>bg-semantic, text-semantic"]
-Found --> |No| UseComponent["Use component token<br/>widget padding/radius"]
-UseSemantic --> ApplyCSS["Apply via Tailwind v4<br/>@theme inline"]
-UseComponent --> ApplyCSS
-ApplyCSS --> End(["Rendered UI"])
-```
+### Badge Variant Mapping
+Each category maps to specific visual variants:
 
-**Diagram sources**
-- [tokens.ts:64-120](file://design-system/src/lib/design-system/tokens.ts#L64-L120)
-- [globals.css:23-228](file://design-system/src/app/globals.css#L23-L228)
-
-**Section sources**
-- [extensions.md:1-377](file://design-system/extensions.md#L1-L377)
-- [tokens.ts:328-437](file://design-system/src/lib/design-system/tokens.ts#L328-L437)
-- [globals.css:23-228](file://design-system/src/app/globals.css#L23-L228)
-
-### Typography Components
-- Heading and Text components
-  - Typed levels and variants ensure consistent hierarchy and style
-  - Polymorphic support allows custom element tags
-  - Marketing variants reserved for website pages
-
-```mermaid
-classDiagram
-class Typography {
-+H1
-+H2
-+H3
-+H4
-+P
-+Blockquote
-+List
-+InlineCode
-+Lead
-+Large
-+Small
-+Muted
-+Table
+```typescript
+export function getSemanticBadgeVariant(
+  category: BadgeCategory,
+  key: string | number | null | undefined
+): BadgeVisualVariant {
+  // Implementation handles category-specific mapping
 }
-class Heading {
-+level : HeadingLevel
-+as? : Element
-+children : ReactNode
-}
-class Text {
-+variant : TextVariant
-+as? : Element
-+children : ReactNode
-}
-Typography --> Heading : "exports"
-Typography --> Text : "exports"
 ```
 
-**Diagram sources**
-- [typography.tsx:100-193](file://design-system/src/components/ui/typography.tsx#L100-L193)
+**Tone Selection**
+- Soft tone for status and type categories
+- Solid tone for institutional and identity categories
 
-**Section sources**
-- [typography.tsx:123-193](file://design-system/src/components/ui/typography.tsx#L123-L193)
-- [colors_and_type.css:216-370](file://design-system/colors_and_type.css#L216-L370)
+**Color Consistency**
+- TRT1-24 use alternating color schemes
+- Status badges use semantic color meanings
+- Institutional badges use neutral tones
 
-### Button Component
-- Variants and sizes
-  - Default, destructive, outline, glass-outline, marketing-outline, secondary, ghost, link
-  - Sizes: default, sm, lg, icon, icon-sm, icon-lg
-  - Consistent height and focus states using ring tokens
+## Design System Playground
+The design system playground provides an interactive environment for testing and validating component implementations.
 
-- Accessibility and interaction
-  - Focus-visible rings and aria-invalid handling
-  - SVG sizing normalization
+### Playground Features
+The playground includes comprehensive testing capabilities:
 
-```mermaid
-sequenceDiagram
-participant Dev as "Developer"
-participant Btn as "Button"
-participant CSS as "globals.css"
-participant Tokens as "tokens.ts"
-Dev->>Btn : Render <Button variant="glass-outline" size="default"/>
-Btn->>CSS : Apply buttonVariants classes
-CSS->>Tokens : Resolve semantic tokens (primary, surface-container-lowest)
-Tokens-->>CSS : OKLCH values
-CSS-->>Btn : Final styles (blur, border, transitions)
-Btn-->>Dev : Rendered button
+**Component State Testing**
+- Default, hover, disabled, loading states
+- Theme switching between light and dark modes
+- Responsive behavior testing
+- Accessibility state verification
+
+**Migration Validation**
+- Legacy class detection and replacement suggestions
+- Component replacement recommendations
+- Design token usage validation
+- Accessibility compliance checking
+
+**Real-time Feedback**
+- Immediate visual feedback for component changes
+- Automated validation of design system adherence
+- Migration progress tracking
+- Error detection and correction suggestions
+
+### Playground Implementation
+The playground demonstrates best practices:
+
+**Component Organization**
+- Logical grouping by component type
+- Comprehensive state coverage
+- Real-world usage scenarios
+- Edge case handling
+
+**Testing Methodology**
+- Automated state testing
+- Manual validation workflows
+- Performance benchmarking
+- Cross-browser compatibility testing
+
+## Page-Specific Implementation Examples
+
+### Expedientes Module Deep Dive
+The expedientes module showcases complex operational dashboard patterns with detailed implementation guidance.
+
+**Mission Control Pattern**
+The expedientes module demonstrates advanced design system implementation:
+
+```typescript
+// Example of semantic badge usage
+<SemanticBadge 
+  category="expediente_status" 
+  key={expediente.status}
+  variant={getSemanticBadgeVariant('expediente_status', expediente.status)}
+/>
 ```
 
-**Diagram sources**
-- [button.tsx:7-46](file://design-system/src/components/ui/button.tsx#L7-L46)
-- [globals.css:23-228](file://design-system/src/app/globals.css#L23-L228)
-- [tokens.ts:781-800](file://design-system/src/lib/design-system/tokens.ts#L781-L800)
+**Component Composition**
+- QueueCard for urgent case management
+- DetailPanel for contextual information
+- SectionHeader for grouping
+- Inline editing capabilities
 
-**Section sources**
-- [button.tsx:1-71](file://design-system/src/components/ui/button.tsx#L1-L71)
-- [tokens.ts:781-800](file://design-system/src/lib/design-system/tokens.ts#L781-L800)
+**Migration Examples**
+The module shows practical migration from raw classes:
 
-### Badge Component and Semantic Mapping
-- Badge variants and tones
-  - Variants: default, secondary, destructive, outline, success, info, warning, neutral, accent
-  - Tones: soft (low intensity) and solid (high intensity)
-  - Compound variants derive from semantic tokens
+```typescript
+// Before migration
+<div className="flex items-center gap-3">
+  <Badge variant="outline">23 Processos</Badge>
+  <Badge variant="default">Urgente</Badge>
+</div>
 
-- Semantic mapping
-  - variants.ts maps domain values (tribunal, status, audiencia_status, expediente_tipo, etc.) to badge variants
-  - Normalization handles spaces and case differences
-
-```mermaid
-flowchart TD
-Input["Domain Value<br/>e.g., 'TRT1', 'ATIVO', 'Marcada'"] --> Normalize["Normalize value<br/>remove spaces, uppercase"]
-Normalize --> Category["Select category<br/>tribunal/status/audiencia_status/etc."]
-Category --> Map["Map to variant<br/>variants.ts lookup"]
-Map --> Tone["Select tone<br/>soft/solid by category"]
-Tone --> Render["Render Badge<br/>compound variant classes"]
+// After migration  
+<div className="flex items-center gap-3">
+  <Badge variant="outline">23 Processos</Badge>
+  <Badge variant={getSemanticBadgeVariant('priority', 'urgent')}>
+    Urgente
+  </Badge>
+</div>
 ```
 
-**Diagram sources**
-- [variants.ts:750-800](file://design-system/src/lib/design-system/variants.ts#L750-L800)
-- [badge.tsx:9-121](file://design-system/src/components/ui/badge.tsx#L9-L121)
+### Captura Module Implementation
+The capture system demonstrates design system adoption with specialized documentation.
 
-**Section sources**
-- [variants.ts:19-113](file://design-system/src/lib/design-system/variants.ts#L19-L113)
-- [variants.ts:750-800](file://design-system/src/lib/design-system/variants.ts#L750-L800)
-- [badge.tsx:1-141](file://design-system/src/components/ui/badge.tsx#L1-L141)
+**Dashboard Layout Migration**
+The captura module shows systematic migration from raw Tailwind classes:
 
-### GlassPanel and Widget Containers
-- GlassPanel depth system
-  - Depth 1: glass-widget (container)
-  - Depth 2: glass-kpi (KPIs)
-  - Depth 3: primary tint with backdrop blur (emphasis)
-- WidgetContainer
-  - Header with icon, title, subtitle, and action slot
-  - Built on GlassPanel with consistent padding and typography
+```typescript
+// Legacy approach
+<div className="container mx-auto px-6 py-4">
+  <div className="flex items-center justify-between">
+    <h1 className="text-2xl font-bold">Captura</h1>
+  </div>
+</div>
 
-```mermaid
-classDiagram
-class GlassPanel {
-+depth : 1 | 2 | 3
-+className? : string
-+children? : ReactNode
-}
-class WidgetContainer {
-+title : string
-+icon? : LucideIcon
-+subtitle? : string
-+action? : ReactNode
-+depth : 1 | 2 | 3
-}
-WidgetContainer --> GlassPanel : "uses"
+// Design system approach
+<div className="container mx-auto">
+  <div className="flex items-center justify-between py-4">
+    <Heading level="h1">Captura</Heading>
+  </div>
+</div>
 ```
 
-**Diagram sources**
-- [glass-panel.tsx:28-103](file://design-system/src/components/shared/glass-panel.tsx#L28-L103)
+**Component Integration**
+- SemanticBadge for status indicators
+- Button variants for actions
+- Card components for information display
+- Input components for data entry
 
-**Section sources**
-- [glass-panel.tsx:1-103](file://design-system/src/components/shared/glass-panel.tsx#L1-L103)
-- [tokens.ts:567-590](file://design-system/src/lib/design-system/tokens.ts#L567-L590)
+## Quality Assurance and Migration Tracking
+The design system includes comprehensive quality assurance processes to ensure consistent implementation.
 
-### BrandMark Component
-- Auto/light/dark variants
-- Collapsible behavior for sidebar icon mode
-- Responsive sizing and optional link wrapping
+### Audit and Validation
+**Automated Scanning**
+- Legacy class detection in CSS files
+- Component usage validation
+- Design token compliance checking
+- Accessibility compliance verification
 
-**Section sources**
-- [brand-mark.tsx:1-153](file://design-system/src/components/shared/brand-mark.tsx#L1-L153)
+**Manual Review Processes**
+- Peer code review for design system adherence
+- User experience validation
+- Performance impact assessment
+- Cross-platform compatibility testing
 
-## Dependency Analysis
-The design system maintains low coupling and high cohesion:
-- tokens.ts and variants.ts centralize semantic mappings and token definitions
-- globals.css and colors_and_type.css provide the canonical CSS foundation
-- Components consume typed tokens and semantic classes, avoiding raw values
-- Audit and ESLint rules enforce adherence to the design system
+### Migration Metrics
+**Progress Tracking**
+- Percentage of components migrated
+- Reduction in legacy CSS classes
+- Increase in semantic badge usage
+- Improvement in accessibility scores
 
-```mermaid
-graph LR
-Tokens["tokens.ts"] --> Globals["globals.css"]
-Variants["variants.ts"] --> Components["UI Components"]
-Globals --> Components
-Components --> Audit["Audit Scripts"]
-Globals --> Audit
-Tokens --> Audit
-```
+**Quality Indicators**
+- Consistency in component usage
+- Reduction in design debt
+- Improved maintainability scores
+- Enhanced user experience metrics
 
-**Diagram sources**
-- [tokens.ts:1-800](file://design-system/src/lib/design-system/tokens.ts#L1-L800)
-- [variants.ts:1-800](file://design-system/src/lib/design-system/variants.ts#L1-L800)
-- [globals.css:1-800](file://design-system/src/app/globals.css#L1-L800)
+## Integration and Maintenance
+The design system architecture supports scalable maintenance and evolution.
 
-**Section sources**
-- [extensions.md:1-377](file://design-system/extensions.md#L1-L377)
-- [VISUAL-REVIEW.md:1-203](file://design-system/VISUAL-REVIEW.md#L1-L203)
+### Documentation Workflow
+**Master File Updates**
+- Centralized rule management in MASTER.md
+- Version control for design system evolution
+- Backward compatibility considerations
+- Migration guides for breaking changes
 
-## Performance Considerations
-- CSS variables and Tailwind v4 reduce style recalculation and enable efficient theme switching
-- Glass effects rely on backdrop-filter; floating overlays disable backdrop-filter to preserve readability
-- Minimal JavaScript in components reduces hydration overhead; focus on semantic tokens and CSS
-- Grid-based spacing and consistent typography minimize layout thrashing
+**Page-Specific Documentation**
+- Specialized knowledge capture per module
+- Context-specific implementation guidance
+- Quick reference for developers
+- Onboarding material for new team members
 
-## Troubleshooting Guide
-Common issues and resolutions:
-- Using raw OKLCH values instead of semantic tokens
-  - Resolution: Replace with tokens.ts COLOR_TOKENS keys or component tokens
-- Violating typography and spacing rules
-  - Resolution: Use Heading/Text components and SPACING/SPACING_SEMANTIC tokens
-- Inconsistent badge variants
-  - Resolution: Use getSemanticBadgeVariant from variants.ts and ensure normalized values
-- Glass panel readability problems
-  - Resolution: Use appropriate depth (1–3) and avoid backdrop-filter in floating overlays
-- Visual regression after bulk token migration
-  - Resolution: Use VISUAL-REVIEW checklist and harness pages to compare before/after
+### Development Process Integration
+**Design-to-Development Handoff**
+- Clear component specifications
+- Consistent naming conventions
+- Standardized implementation patterns
+- Automated validation checks
 
-**Section sources**
-- [VISUAL-REVIEW.md:1-203](file://design-system/VISUAL-REVIEW.md#L1-L203)
-- [SKILL.md:28-37](file://design-system/SKILL.md#L28-L37)
+**Quality Assurance Pipeline**
+- Pre-delivery checklists
+- Automated accessibility testing
+- Visual regression detection
+- Performance monitoring
+
+**Maintenance Strategies**
+- Regular design system audits
+- Component usage analytics
+- Developer feedback integration
+- Continuous improvement processes
 
 ## Conclusion
-The ZattarOS Design System establishes a robust, auditable, and scalable foundation for building consistent, accessible, and visually coherent legal management interfaces. By enforcing a strict token hierarchy, leveraging Tailwind CSS 4, integrating shadcn/ui patterns, and providing typed registries and semantic mapping, teams can confidently develop features while maintaining design integrity across admin, portal, and website surfaces.
+The ZattarOS Design System represents a comprehensive approach to design system adoption that balances consistency with practical migration strategies. Through the implementation of design-system-escape comments, systematic migration guidance, and semantic badge architecture, the system provides a robust foundation for maintaining design integrity while accommodating the unique requirements of different application modules.
 
-## Appendices
+The integration with shadcn/ui components ensures scalability and maintainability, while the playground environment facilitates testing and validation of design system implementations. The comprehensive audit and validation processes guarantee high-quality implementations across all modules.
 
-### Practical Examples and Customization Options
-- Applying density axis
-  - Wrap shells with data-density="compact" or "comfortable" to adjust control heights and spacing
-- Theming customization
-  - Use theme presets and runtime radius adjustments via data attributes
-- Component composition patterns
-  - Typography: use Heading and Text with typed levels/variants
-  - Buttons: choose variants and sizes aligned with user intent
-  - Badges: select variant and tone based on domain semantics
-  - Glass panels: pick depth according to visual emphasis needs
-- Design-to-development handoff
-  - Use preview assets and UI kits for rapid prototyping
-  - Follow manifestos and SKILL guidance for consistent branding and iconography
+By focusing on essential guidelines in the master file and delegating specialized knowledge to dedicated page documentation, the system achieves optimal balance between standardization and flexibility. This approach ensures that developers have access to comprehensive implementation guidance while maintaining the ability to adapt designs for specific use cases.
 
-**Section sources**
-- [README.md:122-134](file://design-system/README.md#L122-L134)
-- [SKILL.md:18-37](file://design-system/SKILL.md#L18-L37)
-- [typography.tsx:123-193](file://design-system/src/components/ui/typography.tsx#L123-L193)
-- [button.tsx:1-71](file://design-system/src/components/ui/button.tsx#L1-L71)
-- [badge.tsx:1-141](file://design-system/src/components/ui/badge.tsx#L1-L141)
-- [glass-panel.tsx:1-103](file://design-system/src/components/shared/glass-panel.tsx#L1-L103)
+The system's emphasis on trust, authority, and accessibility creates a professional foundation suitable for legal services, while the comprehensive anti-pattern prevention and quality assurance processes ensure high-quality implementations across all modules. Through this architecture, the design system supports both current development needs and future evolution, providing a solid foundation for the continued growth of the ZattarOS platform.

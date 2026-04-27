@@ -20,7 +20,23 @@
 - [expedientes.tsx](file://src/app/(authenticated)/ajuda/content/expedientes.tsx)
 - [data.ts](file://src/app/(authenticated)/agenda/mock/data.ts)
 - [mock-data.ts](file://src/app/(authenticated)/agenda/components/mock-data.ts)
+- [capture-log.service.ts](file://src/app/(authenticated)/captura/services/persistence/capture-log.service.ts)
+- [errors.ts](file://src/app/(authenticated)/captura/services/partes/errors.ts)
+- [distributed-lock.ts](file://src/lib/utils/locks/distributed-lock.ts)
+- [server-action-error-handler.ts](file://src/lib/server-action-error-handler.ts)
+- [errors.ts](file://src/shared/partes/errors.ts)
+- [partes-form-actions.ts](file://src/app/(authenticated)/partes/actions/partes-form-actions.ts)
+- [MASTER.md](file://design-system/zattaros/MASTER.md)
 </cite>
+
+## Update Summary
+**Changes Made**
+- Enhanced error handling capabilities in capture system with conflict detection for concurrent operations
+- Improved error categorization with structured error types and semantic codes
+- Added distributed locking mechanism for concurrent operation protection
+- Implemented comprehensive logging system for capture operations with conflict tracking
+- Enhanced UI error handling with automatic version mismatch detection and recovery
+- Improved visual hierarchy and professional UI standards in design system
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -28,14 +44,15 @@
 3. [Core Components](#core-components)
 4. [Architecture Overview](#architecture-overview)
 5. [Detailed Component Analysis](#detailed-component-analysis)
-6. [Dependency Analysis](#dependency-analysis)
-7. [Performance Considerations](#performance-considerations)
-8. [Troubleshooting Guide](#troubleshooting-guide)
-9. [Conclusion](#conclusion)
-10. [Appendices](#appendices)
+6. [Enhanced Error Handling System](#enhanced-error-handling-system)
+7. [Dependency Analysis](#dependency-analysis)
+8. [Performance Considerations](#performance-considerations)
+9. [Troubleshooting Guide](#troubleshooting-guide)
+10. [Conclusion](#conclusion)
+11. [Appendices](#appendices)
 
 ## Introduction
-This document describes the Legal Process Management System with a focus on unified legal case tracking and management. It explains the Processo entity model, the ProcessoUnificado view for multi-instance tracking, and the timeline/movimentations system. It documents automated data capture from PJE-TRT systems, data synchronization workflows, and unified process aggregation. It also covers status management, workflow automation, and audit trails, along with practical examples of process creation, updates, filtering, and reporting. Finally, it addresses the relationship between legal processes, expedientes (proceedings), and court scheduling, and outlines integration with external legal APIs, data validation rules, and compliance requirements for the Brazilian legal system.
+This document describes the Legal Process Management System with a focus on unified legal case tracking and management. It explains the Processo entity model, the ProcessoUnificado view for multi-instance tracking, and the timeline/movimentations system. It documents automated data capture from PJE-TRT systems, data synchronization workflows, and unified process aggregation. It also covers status management, workflow automation, and audit trails, along with practical examples of process creation, updates, filtering, and reporting. The system now features enhanced error handling capabilities with conflict detection for concurrent operations, improved error categorization, and better visual hierarchy in UI components.
 
 ## Project Structure
 The system is organized around:
@@ -43,9 +60,11 @@ The system is organized around:
 - Database schema with core tables and a unified view
 - Timeline aggregation service for multi-instance processes
 - Calendar integration for audiências and expedientes
-- Automated data capture and synchronization scripts
+- Automated data capture and synchronization scripts with enhanced error handling
 - Audit logging for compliance and traceability
 - API routes for tribunal configuration and data capture
+- Distributed locking mechanism for concurrent operation protection
+- Structured error handling with semantic categorization
 
 ```mermaid
 graph TB
@@ -58,6 +77,13 @@ subgraph "Database Layer"
 DB1["Acervo Table<br/>04_acervo.sql"]
 DB2["Processo Partes<br/>17_processo_partes.sql"]
 DB3["Audit Logs<br/>14_logs_alteracao.sql"]
+DB4["Locks Table<br/>distributed-lock.ts"]
+end
+subgraph "Enhanced Error Handling"
+EH1["Capture Log Service<br/>capture-log.service.ts"]
+EH2["Structured Errors<br/>errors.ts"]
+EH3["Distributed Locks<br/>distributed-lock.ts"]
+EH4["Server Action Handler<br/>server-action-error-handler.ts"]
 end
 subgraph "Integration Layer"
 API1["Captura Scripts<br/>scripts/captura/index.ts"]
@@ -68,18 +94,25 @@ subgraph "UI Layer"
 UI1["Calendar Service<br/>service.ts"]
 UI2["Expedientes Help<br/>expedientes.tsx"]
 UI3["Agenda Mock Data<br/>data.ts / mock-data.ts"]
+UI4["Design System<br/>MASTER.md"]
 end
 D1 --> DB1
 D2 --> DB1
 D3 --> DB1
 DB1 --> DB2
 DB3 --> D1
+DB4 --> EH3
+EH1 --> API1
+EH2 --> EH1
+EH3 --> API1
+EH4 --> UI1
 API1 --> DB1
 API2 --> DB1
 API3 --> DB1
 UI1 --> DB1
 UI2 --> DB1
 UI3 --> DB1
+UI4 --> UI1
 ```
 
 **Diagram sources**
@@ -92,6 +125,10 @@ UI3 --> DB1
 - [index.ts:1-234](file://scripts/sincronizacao/index.ts#L1-L234)
 - [route.ts:130-171](file://src/app/api/captura/tribunais/route.ts#L130-L171)
 - [service.ts](file://src/app/(authenticated)/calendar/service.ts#L88-L127)
+- [capture-log.service.ts](file://src/app/(authenticated)/captura/services/persistence/capture-log.service.ts#L65-L234)
+- [errors.ts](file://src/app/(authenticated)/captura/services/partes/errors.ts#L9-L109)
+- [distributed-lock.ts:25-147](file://src/lib/utils/locks/distributed-lock.ts#L25-L147)
+- [server-action-error-handler.ts:21-53](file://src/lib/server-action-error-handler.ts#L21-L53)
 
 **Section sources**
 - [domain.ts](file://src/app/(authenticated)/processos/domain.ts#L1-L674)
@@ -109,7 +146,10 @@ UI3 --> DB1
 - ProcessoPartes: N:N relationship between processes and parties (clients, adverse parties, third parties), enabling unified party tracking.
 - Audit trail: Centralized logs for ownership changes and other business events.
 - Calendar integration: Unified calendar events for audiências and expedientes, including scheduling and reminders.
-- Data capture and sync: Scripts for capturing PJE-TRT data and synchronizing entities and relationships.
+- Data capture and sync: Scripts for capturing PJE-TRT data and synchronizing entities and relationships with enhanced error handling.
+- **Enhanced Error Handling**: Structured error types with semantic categorization, conflict detection for concurrent operations, and comprehensive logging.
+- **Distributed Locking**: Mechanism to prevent concurrent operations on the same resources.
+- **Server Action Error Handling**: Automatic detection and recovery from version mismatch errors.
 
 **Section sources**
 - [domain.ts](file://src/app/(authenticated)/processos/domain.ts#L75-L118)
@@ -120,25 +160,34 @@ UI3 --> DB1
 - [service.ts](file://src/app/(authenticated)/calendar/service.ts#L88-L127)
 - [index.ts:1-177](file://scripts/captura/index.ts#L1-L177)
 - [index.ts:1-234](file://scripts/sincronizacao/index.ts#L1-L234)
+- [capture-log.service.ts](file://src/app/(authenticated)/captura/services/persistence/capture-log.service.ts#L65-L234)
+- [errors.ts](file://src/app/(authenticated)/captura/services/partes/errors.ts#L9-L109)
+- [distributed-lock.ts:25-147](file://src/lib/utils/locks/distributed-lock.ts#L25-L147)
+- [server-action-error-handler.ts:21-53](file://src/lib/server-action-error-handler.ts#L21-L53)
 
 ## Architecture Overview
-The system follows a layered architecture:
+The system follows a layered architecture with enhanced error handling:
 - Domain layer defines entities, enums, and validation rules for legal processes.
 - Database layer persists core entities and exposes a materialized view for unified process display.
-- Integration layer orchestrates automated capture and synchronization with PJE-TRT systems.
-- UI layer consumes unified views and calendar services to present audiências and expedientes.
+- Integration layer orchestrates automated capture and synchronization with PJE-TRT systems using distributed locks and structured error handling.
+- UI layer consumes unified views and calendar services to present audiências and expedientes with improved visual hierarchy.
 - Audit layer ensures compliance and traceability of ownership and process changes.
+- Error handling layer provides comprehensive error categorization, conflict detection, and recovery mechanisms.
 
 ```mermaid
 graph TB
 FE["Frontend UI<br/>Calendar + Process Views"] --> API["API Routes<br/>Captura + Tribunal Config"]
 API --> CAP["Capture Scripts<br/>PJE-TRT Integration"]
 API --> SYNC["Sync Scripts<br/>Entity Correlation"]
+CAP --> LOCK["Distributed Locks<br/>Prevent Concurrency Issues"]
+CAP --> LOGS["Capture Log Service<br/>Structured Logging"]
 CAP --> DB["PostgreSQL/Supabase<br/>Tables + MV"]
 SYNC --> DB
 DB --> MV["Materialized View<br/>Acervo Unificado"]
 FE --> MV
-FE --> LOGS["Audit Logs<br/>Change Tracking"]
+FE --> LOGS
+FE --> ERR["Error Handling<br/>Structured Errors + Recovery"]
+ERR --> HANDLER["Server Action Handler<br/>Version Mismatch Detection"]
 ```
 
 **Diagram sources**
@@ -148,6 +197,10 @@ FE --> LOGS["Audit Logs<br/>Change Tracking"]
 - [index.ts:1-234](file://scripts/sincronizacao/index.ts#L1-L234)
 - [05_acervo_unificado_view.sql:44-151](file://supabase/schemas/05_acervo_unificado_view.sql#L44-L151)
 - [14_logs_alteracao.sql:6-16](file://supabase/schemas/14_logs_alteracao.sql#L6-L16)
+- [capture-log.service.ts](file://src/app/(authenticated)/captura/services/persistence/capture-log.service.ts#L65-L234)
+- [errors.ts](file://src/app/(authenticated)/captura/services/partes/errors.ts#L9-L109)
+- [distributed-lock.ts:25-147](file://src/lib/utils/locks/distributed-lock.ts#L25-L147)
+- [server-action-error-handler.ts:21-53](file://src/lib/server-action-error-handler.ts#L21-L53)
 
 ## Detailed Component Analysis
 
@@ -367,7 +420,8 @@ The capture and synchronization scripts orchestrate:
 - Development/test scripts for PJE/TRT data capture (acervo, audiências, partes, pendentes, timeline)
 - Synchronization scripts for users, entities, and process-party correlation
 - API routes for tribunal configuration and access parameters
-- Error handling strategies and retry/backoff patterns
+- **Enhanced Error Handling**: Structured error types with semantic categorization, conflict detection, and comprehensive logging
+- **Distributed Locking**: Prevents concurrent operations on the same resources during capture
 - Performance considerations: parallel tasks, rate limiting, and batch processing
 
 ```mermaid
@@ -376,12 +430,16 @@ Dev["Development Scripts<br/>scripts/captura/index.ts"] --> API["API Routes<br/>
 Sync["Sync Scripts<br/>scripts/sincronizacao/index.ts"] --> DB["PostgreSQL/Supabase"]
 API --> DB
 Dev --> DB
+Dev --> LOCK["Distributed Locks<br/>Prevent Concurrency"]
+Dev --> LOGS["Capture Log Service<br/>Structured Logging"]
 ```
 
 **Diagram sources**
 - [index.ts:1-177](file://scripts/captura/index.ts#L1-L177)
 - [index.ts:1-234](file://scripts/sincronizacao/index.ts#L1-L234)
 - [route.ts:130-171](file://src/app/api/captura/tribunais/route.ts#L130-L171)
+- [distributed-lock.ts:25-147](file://src/lib/utils/locks/distributed-lock.ts#L25-L147)
+- [capture-log.service.ts](file://src/app/(authenticated)/captura/services/persistence/capture-log.service.ts#L65-L234)
 
 **Section sources**
 - [index.ts:1-177](file://scripts/captura/index.ts#L1-L177)
@@ -421,6 +479,163 @@ timestamptz created_at
 - [audit-log.service.ts:1-50](file://src/lib/domain/audit/services/audit-log.service.ts#L1-L50)
 - [spec.md:1-28](file://openspec/specs/audit-atividades/spec.md#L1-L28)
 
+## Enhanced Error Handling System
+
+### Structured Error Types
+The system now uses structured error types with semantic categorization for better error handling and user experience:
+
+```mermaid
+classDiagram
+class CapturaPartesError {
+<<base>>
++string code
++string message
++Record~string, unknown~ context
++toJSON()
+}
+class ValidationError {
++string code = "VALIDATION_ERROR"
+}
+class PersistenceError {
++string code = "PERSISTENCE_ERROR"
++operation : "insert" | "update" | "delete" | "upsert"
++entity : string
+}
+class PJEAPIError {
++string code = "PJE_API_ERROR"
++statusCode? : number
+}
+class LockError {
++string code = "LOCK_ERROR"
++lockKey : string
+}
+class TimeoutError {
++string code = "TIMEOUT_ERROR"
++timeoutMs : number
+}
+class ConfigurationError {
++string code = "CONFIGURATION_ERROR"
+}
+CapturaPartesError <|-- ValidationError
+CapturaPartesError <|-- PersistenceError
+CapturaPartesError <|-- PJEAPIError
+CapturaPartesError <|-- LockError
+CapturaPartesError <|-- TimeoutError
+CapturaPartesError <|-- ConfigurationError
+```
+
+**Diagram sources**
+- [errors.ts](file://src/app/(authenticated)/captura/services/partes/errors.ts#L9-L109)
+
+### Conflict Detection and Distributed Locking
+The system implements distributed locking to prevent concurrent operations on the same resources:
+
+```mermaid
+sequenceDiagram
+participant Client as "Client Request"
+participant Lock as "DistributedLock"
+participant DB as "Database"
+participant Service as "Capture Service"
+Client->>Lock : "withDistributedLock(key, fn)"
+Lock->>DB : "tryAcquire()"
+DB-->>Lock : "Lock acquired or failed"
+alt Lock acquired
+Lock->>Service : "execute fn()"
+Service->>DB : "perform operation"
+Service->>Lock : "release()"
+Lock->>DB : "delete lock record"
+DB-->>Service : "success"
+Service-->>Client : "result"
+else Lock failed
+Lock->>Client : "throw LockError"
+end
+```
+
+**Diagram sources**
+- [distributed-lock.ts:133-147](file://src/lib/utils/locks/distributed-lock.ts#L133-L147)
+
+### Comprehensive Logging System
+The capture log service provides structured logging for all operations with conflict detection:
+
+```mermaid
+classDiagram
+class CaptureLogService {
+-LogEntry[] logs
++logNaoAtualizado()
++logAtualizado()
++logInserido()
++logConflito()
++logErro()
++getLogs()
++consumirLogs()
++getEstatisticas()
++limpar()
++imprimirResumo()
+}
+class LogEntry {
+<<interface>>
++tipo : string
+}
+class LogRegistroNaoAtualizado {
++tipo : "nao_atualizado"
++entidade : string
++id_pje : number
++trt : string
++grau : string
++numero_processo : string
++motivo : "registro_identico"
+}
+class LogRegistroConflito {
++tipo : "conflito"
++entidade : string
++id_pje : number
++trt : string
++grau : string
++numero_processo : string
++motivo : "occ_stale_updated_at"
+}
+class LogErro {
++tipo : "erro"
++entidade : string
++erro : string
++contexto? : Record~string, unknown~
+}
+CaptureLogService --> LogEntry
+LogEntry <|-- LogRegistroNaoAtualizado
+LogEntry <|-- LogRegistroConflito
+LogEntry <|-- LogErro
+```
+
+**Diagram sources**
+- [capture-log.service.ts](file://src/app/(authenticated)/captura/services/persistence/capture-log.service.ts#L65-L234)
+
+### Server Action Error Handling
+The system includes automatic error handling for server action version mismatches:
+
+```mermaid
+flowchart TD
+A["Server Action Error"] --> B{"isServerActionVersionMismatch?"}
+B --> |Yes| C["Show toast notification"]
+C --> D{"autoReload?"}
+D --> |Yes| E["setTimeout reload"]
+D --> |No| F["Show reload button"]
+B --> |No| G["Return false"]
+E --> H["Return handled"]
+F --> H
+G --> I["Throw error"]
+```
+
+**Diagram sources**
+- [server-action-error-handler.ts:21-53](file://src/lib/server-action-error-handler.ts#L21-L53)
+
+**Section sources**
+- [capture-log.service.ts](file://src/app/(authenticated)/captura/services/persistence/capture-log.service.ts#L65-L234)
+- [errors.ts](file://src/app/(authenticated)/captura/services/partes/errors.ts#L9-L109)
+- [distributed-lock.ts:25-147](file://src/lib/utils/locks/distributed-lock.ts#L25-L147)
+- [server-action-error-handler.ts:21-53](file://src/lib/server-action-error-handler.ts#L21-L53)
+- [errors.ts:190-251](file://src/shared/partes/errors.ts#L190-L251)
+- [partes-form-actions.ts](file://src/app/(authenticated)/partes/actions/partes-form-actions.ts#L57-L75)
+
 ## Dependency Analysis
 Key dependencies and relationships:
 - ProcessoUnificado depends on acervo instances and window functions to determine the current degree.
@@ -428,6 +643,9 @@ Key dependencies and relationships:
 - ProcessoPartes depends on acervo and supports polymorphic party relationships.
 - Calendar service depends on audiências and expedientes entities.
 - Audit logs depend on users and are indexed for fast retrieval.
+- **Enhanced Error Handling**: Capture log service depends on structured error types and distributed locks.
+- **Distributed Locking**: Used by capture services to prevent concurrent operations.
+- **Server Action Error Handling**: Provides automatic recovery from version mismatch errors.
 
 ```mermaid
 graph LR
@@ -437,6 +655,9 @@ A --> D["ProcessoPartes"]
 E["Audiências"] --> F["Calendar Service"]
 G["Expedientes"] --> F
 H["Logs Alteração"] --> I["Audit Log Service"]
+J["Capture Log Service"] --> K["Structured Errors"]
+L["Distributed Locks"] --> J
+M["Server Action Handler"] --> N["Version Mismatch Detection"]
 ```
 
 **Diagram sources**
@@ -445,6 +666,10 @@ H["Logs Alteração"] --> I["Audit Log Service"]
 - [17_processo_partes.sql:6-69](file://supabase/schemas/17_processo_partes.sql#L6-L69)
 - [service.ts](file://src/app/(authenticated)/calendar/service.ts#L88-L127)
 - [audit-log.service.ts:1-50](file://src/lib/domain/audit/services/audit-log.service.ts#L1-L50)
+- [capture-log.service.ts](file://src/app/(authenticated)/captura/services/persistence/capture-log.service.ts#L65-L234)
+- [errors.ts](file://src/app/(authenticated)/captura/services/partes/errors.ts#L9-L109)
+- [distributed-lock.ts:25-147](file://src/lib/utils/locks/distributed-lock.ts#L25-L147)
+- [server-action-error-handler.ts:21-53](file://src/lib/server-action-error-handler.ts#L21-L53)
 
 **Section sources**
 - [05_acervo_unificado_view.sql:44-151](file://supabase/schemas/05_acervo_unificado_view.sql#L44-L151)
@@ -452,6 +677,10 @@ H["Logs Alteração"] --> I["Audit Log Service"]
 - [17_processo_partes.sql:6-69](file://supabase/schemas/17_processo_partes.sql#L6-L69)
 - [service.ts](file://src/app/(authenticated)/calendar/service.ts#L88-L127)
 - [audit-log.service.ts:1-50](file://src/lib/domain/audit/services/audit-log.service.ts#L1-L50)
+- [capture-log.service.ts](file://src/app/(authenticated)/captura/services/persistence/capture-log.service.ts#L65-L234)
+- [errors.ts](file://src/app/(authenticated)/captura/services/partes/errors.ts#L9-L109)
+- [distributed-lock.ts:25-147](file://src/lib/utils/locks/distributed-lock.ts#L25-L147)
+- [server-action-error-handler.ts:21-53](file://src/lib/server-action-error-handler.ts#L21-L53)
 
 ## Performance Considerations
 - Materialized view refresh: Prefer concurrent refresh when possible; fall back to normal refresh if needed.
@@ -460,8 +689,9 @@ H["Logs Alteração"] --> I["Audit Log Service"]
 - Parallelization: Capture and sync scripts leverage parallel tasks to improve throughput.
 - Rate limiting: Apply delays between document captures and handle rate limits gracefully.
 - Disk I/O optimization: Use column selection helpers and avoid unnecessary JSONB parsing.
-
-[No sources needed since this section provides general guidance]
+- **Enhanced Error Handling**: Structured logging minimizes performance impact while providing comprehensive debugging information.
+- **Distributed Locking**: Prevents wasted CPU cycles from concurrent operations on the same resources.
+- **Server Action Error Handling**: Automatic recovery reduces user frustration and improves system reliability.
 
 ## Troubleshooting Guide
 Common issues and resolutions:
@@ -471,16 +701,19 @@ Common issues and resolutions:
 - Duplicate key violations: Use upsert semantics or deduplicate before insertion; verify constraints and foreign keys.
 - Foreign key constraint violations: Ensure referenced entities exist before linking; run dependency synchronization first.
 - Materialized view refresh failures: Ensure unique index exists; use concurrent refresh when possible.
+- **Capture Conflicts**: Use distributed locks to prevent concurrent operations on the same resources.
+- **Structured Errors**: Leverage semantic error codes for precise error handling and user feedback.
+- **Version Mismatch**: Server action handler automatically detects and recovers from deployment version conflicts.
 
 **Section sources**
 - [index.ts:142-153](file://scripts/captura/index.ts#L142-L153)
 - [index.ts:208-221](file://scripts/sincronizacao/index.ts#L208-L221)
 - [route.ts:135-148](file://src/app/api/captura/tribunais/route.ts#L135-L148)
+- [distributed-lock.ts:133-147](file://src/lib/utils/locks/distributed-lock.ts#L133-L147)
+- [server-action-error-handler.ts:21-53](file://src/lib/server-action-error-handler.ts#L21-L53)
 
 ## Conclusion
-The Legal Process Management System provides a robust foundation for unified legal case tracking across multiple instances and degrees. Its domain models, materialized view, timeline unification, and calendar integration deliver a comprehensive solution for managing legal processes, audiências, and expedientes. Automated capture and synchronization scripts, combined with centralized audit logging, ensure data integrity, compliance, and operational efficiency within the Brazilian legal system.
-
-[No sources needed since this section summarizes without analyzing specific files]
+The Legal Process Management System provides a robust foundation for unified legal case tracking across multiple instances and degrees. Its domain models, materialized view, timeline unification, and calendar integration deliver a comprehensive solution for managing legal processes, audiências, and expedientes. The enhanced error handling system with conflict detection, structured error types, distributed locking, and comprehensive logging ensures reliable operation under concurrent loads. The improved visual hierarchy and professional UI standards in the design system provide an excellent user experience. Together, these features ensure data integrity, compliance, operational efficiency, and a superior user experience within the Brazilian legal system.
 
 ## Appendices
 
@@ -507,6 +740,12 @@ The Legal Process Management System provides a robust foundation for unified leg
 - Audit Trail:
   - Retrieve activity logs for any entity to track ownership changes and other events.
 
+- **Enhanced Error Handling**:
+  - Use structured error types with semantic codes for precise error handling.
+  - Implement distributed locks to prevent concurrent operations on the same resources.
+  - Leverage comprehensive logging for debugging and monitoring.
+  - Utilize server action error handler for automatic version mismatch recovery.
+
 **Section sources**
 - [domain.ts](file://src/app/(authenticated)/processos/domain.ts#L360-L393)
 - [domain.ts](file://src/app/(authenticated)/processos/domain.ts#L289-L345)
@@ -514,3 +753,7 @@ The Legal Process Management System provides a robust foundation for unified leg
 - [timeline-unificada.ts](file://src/app/(authenticated)/acervo/timeline-unificada.ts#L169-L178)
 - [service.ts](file://src/app/(authenticated)/calendar/service.ts#L88-L127)
 - [audit-log.service.ts:28-47](file://src/lib/domain/audit/services/audit-log.service.ts#L28-L47)
+- [capture-log.service.ts](file://src/app/(authenticated)/captura/services/persistence/capture-log.service.ts#L65-L234)
+- [errors.ts](file://src/app/(authenticated)/captura/services/partes/errors.ts#L9-L109)
+- [distributed-lock.ts:25-147](file://src/lib/utils/locks/distributed-lock.ts#L25-L147)
+- [server-action-error-handler.ts:21-53](file://src/lib/server-action-error-handler.ts#L21-L53)

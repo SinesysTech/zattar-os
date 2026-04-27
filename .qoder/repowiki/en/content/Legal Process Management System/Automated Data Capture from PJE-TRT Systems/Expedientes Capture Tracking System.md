@@ -5,6 +5,13 @@
 - [expedientes.md](file://docs/expedientes.md)
 - [repository.ts](file://src/app/(authenticated)/expedientes/repository.ts)
 - [service.ts](file://src/app/(authenticated)/expedientes/service.ts)
+- [domain.ts](file://src/app/(authenticated)/expedientes/domain.ts)
+- [expedientes-ultima-captura-card.tsx](file://src/app/(authenticated)/expedientes/components/expedientes-ultima-captura-card.tsx)
+- [expedientes-captura-banner.tsx](file://src/app/(authenticated)/expedientes/components/expedientes-captura-banner.tsx)
+- [primitives.tsx](file://src/app/(authenticated)/dashboard/widgets/primitives.tsx)
+- [expediente-actions.ts](file://src/app/(authenticated)/expedientes/actions/expediente-actions.ts)
+- [resumo-ultima-captura.test.ts](file://src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts)
+- [expedientes-flow.test.ts](file://src/app/(authenticated)/expedientes/__tests__/integration/expedientes-flow.test.ts)
 - [pendentes-manifestacao.service.ts](file://src/app/(authenticated)/captura/services/trt/pendentes-manifestacao.service.ts)
 - [acervo-geral.service.ts](file://src/app/(authenticated)/captura/services/trt/acervo-geral.service.ts)
 - [audiencias.service.ts](file://src/app/(authenticated)/captura/services/trt/audiencias.service.ts)
@@ -14,24 +21,36 @@
 - [20260427090510_add_ultima_captura_id_to_expedientes.sql](file://supabase/migrations/20260427090510_add_ultima_captura_id_to_expedientes.sql)
 </cite>
 
+## Update Summary
+**Changes Made**
+- Added comprehensive documentation for new expedientes components: ExpedientesUltimaCapturaCard (168 lines) and ExpedientesCapturaBanner (76 lines)
+- Documented utilization of new design system glass panel components and animated number primitives
+- Enhanced documentation coverage for advanced testing patterns including database mocking strategies
+- Updated obterResumoUltimaCaptura function documentation with complete coverage
+- Added integration testing approaches for complex business logic validation
+
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [System Architecture](#system-architecture)
 3. [Core Components](#core-components)
-4. [Capture Pipeline](#capture-pipeline)
-5. [Data Management](#data-management)
-6. [Integration Points](#integration-points)
-7. [Performance Considerations](#performance-considerations)
-8. [Error Handling](#error-handling)
-9. [Security Model](#security-model)
-10. [Monitoring and Tracking](#monitoring-and-tracking)
-11. [Conclusion](#conclusion)
+4. [New UI Components](#new-ui-components)
+5. [Capture Pipeline](#capture-pipeline)
+6. [Data Management](#data-management)
+7. [Integration Points](#integration-points)
+8. [Performance Considerations](#performance-considerations)
+9. [Error Handling](#error-handling)
+10. [Security Model](#security-model)
+11. [Testing Framework](#testing-framework)
+12. [Monitoring and Tracking](#monitoring-and-tracking)
+13. [Conclusion](#conclusion)
 
 ## Introduction
 
 The Expedientes Capture Tracking System is a sophisticated legal process automation platform designed to streamline the management of judicial proceedings for law firms. The system integrates with the PJe-TRT (Tribunal Regional do Trabalho) platform to automatically capture, process, and track pending manifest processes, creating a unified database of legal proceedings with comprehensive metadata and document management capabilities.
 
 This system represents a comprehensive solution for legal practice automation, combining advanced web scraping technologies with robust database management and document storage systems. The platform enables law firms to maintain real-time visibility of their clients' legal proceedings while ensuring compliance with legal requirements and maintaining detailed audit trails.
+
+**Updated** Added new UI components for enhanced user experience and comprehensive testing framework for complex business logic validation.
 
 ## System Architecture
 
@@ -42,11 +61,13 @@ graph TB
 subgraph "Presentation Layer"
 UI[User Interface]
 API[REST API Endpoints]
+Components[New UI Components]
 end
 subgraph "Business Logic Layer"
 Service[Expedientes Service]
 Capture[Capture Services]
 Persistence[Persistence Services]
+Actions[Server Actions]
 end
 subgraph "Data Layer"
 Repository[Repository Layer]
@@ -62,18 +83,22 @@ UI --> API
 API --> Service
 Service --> Capture
 Service --> Persistence
+Service --> Actions
 Persistence --> Repository
 Repository --> Database
 Repository --> Storage
 Capture --> PJE
 Capture --> CNJ
 Service --> Auth
+Components --> GlassPanel[Design System Glass Panel]
+Components --> AnimatedNumber[Animated Number Primitives]
 ```
 
 **Diagram sources**
 - [repository.ts](file://src/app/(authenticated)/expedientes/repository.ts#L1-L800)
 - [service.ts](file://src/app/(authenticated)/expedientes/service.ts#L1-L322)
-- [pendentes-manifestacao.service.ts](file://src/app/(authenticated)/captura/services/trt/pendentes-manifestacao.service.ts#L1-L526)
+- [expedientes-ultima-captura-card.tsx](file://src/app/(authenticated)/expedientes/components/expedientes-ultima-captura-card.tsx#L1-L168)
+- [expedientes-captura-banner.tsx](file://src/app/(authenticated)/expedientes/components/expedientes-captura-banner.tsx#L1-L76)
 
 The architecture implements a clean separation between presentation, business logic, and data management layers, enabling maintainability and scalability while ensuring proper encapsulation of domain-specific logic.
 
@@ -130,6 +155,14 @@ class Expediente {
 +string createdAt
 +string updatedAt
 }
+class ResumoUltimaCaptura {
++number capturaId
++string tipoCaptura
++string concluidoEm
++number totalCriados
++number totalAtualizados
++number total
+}
 class ExpedienteRow {
 <<database>>
 +number id
@@ -177,10 +210,12 @@ class ExpedienteRow {
 +string updated_at
 }
 Expediente --> ExpedienteRow : "maps to"
+Expediente --> ResumoUltimaCaptura : "tracked by"
 ```
 
 **Diagram sources**
 - [repository.ts](file://src/app/(authenticated)/expedientes/repository.ts#L26-L153)
+- [domain.ts](file://src/app/(authenticated)/expedientes/domain.ts#L304-L311)
 
 ### Service Layer Architecture
 
@@ -210,6 +245,102 @@ Note over Repository,Database : Database constraints ensure data integrity
 **Section sources**
 - [repository.ts](file://src/app/(authenticated)/expedientes/repository.ts#L1-L800)
 - [service.ts](file://src/app/(authenticated)/expedientes/service.ts#L1-L322)
+- [domain.ts](file://src/app/(authenticated)/expedientes/domain.ts#L1-L314)
+
+## New UI Components
+
+### ExpedientesUltimaCapturaCard Component
+
+The ExpedientesUltimaCapturaCard represents a sophisticated glass-morphism UI component that displays the summary of the last capture operation with animated metrics and interactive elements.
+
+```mermaid
+graph TD
+A[ExpedientesUltimaCapturaCard] --> B[GlassPanel Container]
+B --> C[Header Section]
+C --> D[Radar Icon]
+C --> E[Relative Time Display]
+B --> F[Metric Columns]
+F --> G[Created Items]
+F --> H[Updated Items]
+F --> I[Total Items]
+G --> J[AnimatedNumber Component]
+H --> K[AnimatedNumber Component]
+I --> L[AnimatedNumber Component]
+B --> M[Progress Bars]
+M --> N[Bar for Created Items]
+M --> O[Bar for Updated Items]
+M --> P[Bar for Total Items]
+B --> Q[Footer Information]
+Q --> R[Capture ID Badge]
+Q --> S[Timestamp Display]
+```
+
+**Diagram sources**
+- [expedientes-ultima-captura-card.tsx](file://src/app/(authenticated)/expedientes/components/expedientes-ultima-captura-card.tsx#L75-L168)
+
+#### Key Features
+
+1. **Glass Panel Design**: Utilizes the new design system glass panel components for modern UI aesthetics
+2. **Animated Numbers**: Implements AnimatedNumber primitives for smooth metric transitions
+3. **Interactive Elements**: Supports click events and keyboard navigation
+4. **Loading States**: Includes comprehensive skeleton loading states
+5. **Progress Visualization**: Displays progress bars with dynamic width calculations
+
+#### Component Structure
+
+The component accepts ResumoUltimaCaptura data and provides:
+- Real-time relative time display using date-fns
+- Three metric columns with animated number primitives
+- Percentage-based progress bars with smooth animations
+- Hover effects and focus states for accessibility
+- Responsive design with proper spacing and typography
+
+**Section sources**
+- [expedientes-ultima-captura-card.tsx](file://src/app/(authenticated)/expedientes/components/expedientes-ultima-captura-card.tsx#L1-L168)
+- [primitives.tsx](file://src/app/(authenticated)/dashboard/widgets/primitives.tsx)
+
+### ExpedientesCapturaBanner Component
+
+The ExpedientesCapturaBanner provides contextual information about active capture filters with dismissible functionality and navigation options.
+
+```mermaid
+graph LR
+A[ExpedientesCapturaBanner] --> B[Status Container]
+B --> C[Icon Element]
+B --> D[Information Content]
+D --> E[Title Text]
+D --> F[Statistics Display]
+F --> G[Total Count]
+F --> H[New Items Count]
+F --> I[Updated Items Count]
+F --> J[Completion Timestamp]
+D --> K[Navigation Link]
+B --> L[Dismiss Button]
+L --> M[X Icon]
+```
+
+**Diagram sources**
+- [expedientes-captura-banner.tsx](file://src/app/(authenticated)/expedientes/components/expedientes-captura-banner.tsx#L21-L76)
+
+#### Key Features
+
+1. **Contextual Status**: Displays current capture filter status
+2. **Statistics Display**: Shows total items, new items, and updated items
+3. **Timestamp Formatting**: Uses date-fns for localized timestamp display
+4. **Navigation Integration**: Links to capture history page
+5. **Dismiss Functionality**: Allows users to remove active filters
+
+#### Component Structure
+
+The banner component provides:
+- Capture ID badge display
+- Item statistics with color-coded indicators
+- Formatted completion timestamp
+- Navigation link to capture history
+- Dismiss button with proper accessibility attributes
+
+**Section sources**
+- [expedientes-captura-banner.tsx](file://src/app/(authenticated)/expedientes/components/expedientes-captura-banner.tsx#L1-L76)
 
 ## Capture Pipeline
 
@@ -582,6 +713,73 @@ The system implements secure document management for legal PDFs:
 - [repository.ts](file://src/app/(authenticated)/expedientes/repository.ts#L552-L594)
 - [timeline-capture.service.ts](file://src/app/(authenticated)/captura/services/timeline/timeline-capture.service.ts#L308-L331)
 
+## Testing Framework
+
+### Advanced Unit Testing Patterns
+
+The system implements sophisticated testing patterns for complex business logic validation:
+
+```mermaid
+sequenceDiagram
+participant Test as "Unit Test"
+participant MockDB as "Database Mock"
+participant Service as "Service Layer"
+Test->>MockDB : Setup Sequential Mock
+MockDB->>Service : Call obterResumoUltimaCaptura()
+Service->>MockDB : Query Captura Log
+MockDB-->>Service : Return Captura Data
+Service->>MockDB : Query Count (Total)
+MockDB-->>Service : Return Count Data
+Service->>MockDB : Query Count (Created)
+MockDB-->>Service : Return Count Data
+Service-->>Test : Return Result
+Test->>Test : Validate Assertions
+```
+
+**Diagram sources**
+- [resumo-ultima-captura.test.ts](file://src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts#L30-L140)
+
+#### Database Mocking Strategies
+
+The testing framework employs advanced mocking techniques:
+
+1. **Sequential Mock Implementation**: Creates mock chains with controlled sequential results
+2. **Promise.all Parallel Testing**: Tests concurrent database operations
+3. **Error Propagation Testing**: Validates error handling across different scenarios
+4. **Count Null Handling**: Tests edge cases with null database counts
+
+#### Integration Testing Approaches
+
+The system implements comprehensive integration testing for complex business logic:
+
+```mermaid
+graph TD
+A[Integration Test Suite] --> B[Creation Flow Tests]
+B --> C[Process Validation Delegation]
+B --> D[Type Validation Delegation]
+A --> E[Baixa Flow Tests]
+E --> F[Atomic RPC Operations]
+E --> G[Audit Trail Validation]
+A --> H[Responsável Flow Tests]
+H --> I[RPC Parameter Validation]
+H --> J[Error Propagation Testing]
+```
+
+**Diagram sources**
+- [expedientes-flow.test.ts](file://src/app/(authenticated)/expedientes/__tests__/integration/expedientes-flow.test.ts#L33-L631)
+
+#### Test Coverage Areas
+
+1. **Business Logic Validation**: Complex workflows with multiple service/repository interactions
+2. **Database Constraint Testing**: Foreign key constraint validation and error propagation
+3. **RPC Atomic Operations**: Transaction safety and rollback scenarios
+4. **Audit Trail Validation**: Comprehensive logging and audit trail verification
+5. **Parameter Sanitization**: Input validation and parameter normalization
+
+**Section sources**
+- [resumo-ultima-captura.test.ts](file://src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts#L1-L140)
+- [expedientes-flow.test.ts](file://src/app/(authenticated)/expedientes/__tests__/integration/expedientes-flow.test.ts#L1-L631)
+
 ## Monitoring and Tracking
 
 ### Capture Execution Tracking
@@ -640,7 +838,11 @@ Key achievements of the system include:
 - **Performance Optimization**: Efficient batch processing and memory management for large-scale operations
 - **Robust Error Handling**: Comprehensive error management with recovery and retry mechanisms
 - **Audit Compliance**: Complete tracking and logging for legal compliance requirements
+- **Enhanced UI Components**: Modern glass-morphism design system with animated primitives
+- **Advanced Testing Framework**: Comprehensive unit and integration testing for complex business logic
 
 The system's modular architecture enables future enhancements and extensions while maintaining stability and reliability. The implementation demonstrates best practices in enterprise software development, particularly in handling sensitive data and complex business logic within the legal domain.
 
-Future development opportunities include enhanced AI-powered document analysis, expanded integration with additional legal platforms, and advanced analytics capabilities for legal practice management.
+**Updated** Recent additions include sophisticated UI components with modern design system integration, comprehensive testing frameworks with advanced mocking strategies, and enhanced documentation coverage for complex business logic validation.
+
+Future development opportunities include enhanced AI-powered document analysis, expanded integration with additional legal platforms, advanced analytics capabilities for legal practice management, and further enhancement of the testing framework for even more complex scenarios.

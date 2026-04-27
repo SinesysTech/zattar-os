@@ -266,6 +266,21 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
     };
   }, [refreshCounter]);
 
+  useEffect(() => {
+    let cancelado = false;
+    setUltimaCapturaLoading(true);
+    (async () => {
+      const result = await actionObterResumoUltimaCaptura();
+      if (!cancelado) {
+        setUltimaCaptura(result.success && result.data ? result.data : null);
+        setUltimaCapturaLoading(false);
+      }
+    })();
+    return () => {
+      cancelado = true;
+    };
+  }, [refreshCounter]);
+
   const globalCounts = useMemo(
     () => ({
       todos: statusCounts.pendentes + statusCounts.baixados,
@@ -396,6 +411,10 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
     setRefreshCounter((c) => c + 1);
   }, [refetch]);
 
+  const handleUltimaCapturaClick = useCallback((capturaId: number) => {
+    router.push(`${VIEW_ROUTES.lista}?capturaId=${capturaId}`);
+  }, [router]);
+
   return (
     <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
 
@@ -427,7 +446,14 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
         />
       )}
 
-      {/* 3. Insight Banners */}
+      {/* 3. Última Captura */}
+      <ExpedientesUltimaCapturaCard
+        resumo={ultimaCaptura}
+        isLoading={ultimaCapturaLoading}
+        onClick={handleUltimaCapturaClick}
+      />
+
+      {/* 4. Insight Banners */}
       <div role="status" aria-live="polite" aria-atomic="true" className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 empty:hidden")}>
         {!isLoading && showVencidosBanner && (
           <InsightBanner type="alert">
@@ -442,7 +468,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
         )}
       </div>
 
-      {/* 4. View Controls — sempre visível conforme Glass Briefing */}
+      {/* 5. View Controls — sempre visível conforme Glass Briefing */}
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
         <ExpedientesFilterBar
           filters={filters}
@@ -465,7 +491,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
         </div>
       </div>
 
-      {/* 5. Content Switcher */}
+      {/* 6. Content Switcher */}
       <main className="min-h-0 transition-opacity duration-300">
         {isLoading && (
           <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")} aria-busy="true" aria-label="Carregando expedientes">

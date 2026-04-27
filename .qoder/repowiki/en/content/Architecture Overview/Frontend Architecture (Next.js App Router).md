@@ -13,7 +13,20 @@
 - [src/app/sw.ts](file://src/app/sw.ts)
 - [public/manifest.json](file://public/manifest.json)
 - [src/lib/pwa-utils.ts](file://src/lib/pwa-utils.ts)
+- [src/app/(authenticated)/captura/components/captura-kpi-strip.tsx](file://src/app/(authenticated)/captura/components/captura-kpi-strip.tsx)
+- [src/components/shared/glass-panel.tsx](file://src/components/shared/glass-panel.tsx)
+- [src/app/(authenticated)/dashboard/widgets/primitives.tsx](file://src/app/(authenticated)/dashboard/widgets/primitives.tsx)
+- [src/app/(authenticated)/captura/captura-client.tsx](file://src/app/(authenticated)/captura/captura-client.tsx)
+- [src/app/(authenticated)/captura/components/captura-glass-cards.tsx](file://src/app/(authenticated)/captura/components/captura-glass-cards.tsx)
+- [src/app/(authenticated)/captura/historico/[id]/page.tsx](file://src/app/(authenticated)/captura/historico/[id]/page.tsx)
 </cite>
+
+## Update Summary
+**Changes Made**
+- Enhanced capture dashboard components section to document the new CapturaKpiStrip implementation
+- Updated component architecture to reflect the migration from PulseStrip to GlassPanel/AnimatedNumber approach
+- Added detailed documentation for the new responsive grid layout and animated progress bars
+- Updated design system integration showing GlassPanel and AnimatedNumber usage patterns
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -210,15 +223,67 @@ UpdateCtx --> End
 - [src/providers/user-provider.tsx:212-290](file://src/providers/user-provider.tsx#L212-L290)
 - [src/app/(authenticated)/layout.tsx](file://src/app/(authenticated)/layout.tsx#L18-L50)
 
+### Enhanced Capture Dashboard Components
+**Updated** The capture dashboard has been significantly enhanced with a completely rewritten KPI component system that replaces the previous PulseStrip approach with modern design system components.
+
+#### CapturaKpiStrip Implementation
+The new CapturaKpiStrip component features:
+- **Responsive Grid Layout**: 2 columns on mobile, 4 columns on larger screens using `grid grid-cols-2 lg:grid-cols-4`
+- **GlassPanel Integration**: Uses the new GlassPanel component with depth variants for visual hierarchy
+- **AnimatedNumber Components**: Implements smooth number animations using the AnimatedNumber primitive
+- **Progress Bars**: Animated progress bars with percentage calculations and smooth transitions
+- **Percentage Calculations**: Real-time percentage calculations for progress and failure rates
+
+#### Component Architecture
+```mermaid
+graph TB
+subgraph "Capture Dashboard Components"
+CapturaClient["CapturaClient"]
+CapturaKpiStrip["CapturaKpiStrip"]
+GlassPanel["GlassPanel"]
+AnimatedNumber["AnimatedNumber"]
+end
+subgraph "Data Flow"
+KpiData["CapturaKpiData"]
+PctCalc["Percentage Calculations"]
+end
+CapturaClient --> CapturaKpiStrip
+CapturaKpiStrip --> GlassPanel
+CapturaKpiStrip --> AnimatedNumber
+CapturaKpiStrip --> PctCalc
+PctCalc --> KpiData
+```
+
+**Diagram sources**
+- [src/app/(authenticated)/captura/captura-client.tsx:94-100](file://src/app/(authenticated)/captura/captura-client.tsx#L94-L100)
+- [src/app/(authenticated)/captura/components/captura-kpi-strip.tsx:23-31](file://src/app/(authenticated)/captura/components/captura-kpi-strip.tsx#L23-L31)
+- [src/components/shared/glass-panel.tsx:46-64](file://src/components/shared/glass-panel.tsx#L46-L64)
+- [src/app/(authenticated)/dashboard/widgets/primitives.tsx:365-402](file://src/app/(authenticated)/dashboard/widgets/primitives.tsx#L365-L402)
+
+#### Key Features
+- **Smooth Animations**: AnimatedNumber provides smooth counting animations from 0 to target values
+- **Visual Hierarchy**: GlassPanel depth variants (1, 2, 3) create proper visual hierarchy
+- **Responsive Design**: Grid layout adapts to different screen sizes
+- **Real-time Updates**: Percentage calculations update dynamically based on captured data
+- **Consistent Styling**: Uses design system tokens and consistent spacing patterns
+
+**Section sources**
+- [src/app/(authenticated)/captura/components/captura-kpi-strip.tsx:1-156](file://src/app/(authenticated)/captura/components/captura-kpi-strip.tsx#L1-L156)
+- [src/components/shared/glass-panel.tsx:1-103](file://src/components/shared/glass-panel.tsx#L1-L103)
+- [src/app/(authenticated)/dashboard/widgets/primitives.tsx:365-402](file://src/app/(authenticated)/dashboard/widgets/primitives.tsx#L365-L402)
+- [src/app/(authenticated)/captura/captura-client.tsx:93-100](file://src/app/(authenticated)/captura/captura-client.tsx#L93-L100)
+
 ### Shared Components and Consistency
 - Theme provider and toasts are initialized in the client wrapper for consistent UX
 - Command menu and active theme provider enable quick actions and theme switching
 - Server action version guard helps maintain compatibility across deployments
 - Auth layout provides a consistent branded experience for login pages
+- **Updated** GlassPanel component provides consistent glass effect across all dashboard components
 
 **Section sources**
 - [src/app/layout-client.tsx:24-42](file://src/app/layout-client.tsx#L24-L42)
 - [src/app/(auth)/layout.tsx](file://src/app/(auth)/layout.tsx#L14-L39)
+- [src/components/shared/glass-panel.tsx:1-103](file://src/components/shared/glass-panel.tsx#L1-L103)
 
 ### Global Styling System (Tailwind CSS 4 and shadcn/ui)
 - Tailwind v4 configuration enables animations and exposes custom max-width utilities
@@ -266,6 +331,7 @@ Fallback --> UpdateMsg["Listen for CLEAR_CACHE / SKIP_WAITING"]
 - Middleware depends on security-headers module for CSP and permissions policy
 - Providers depend on Supabase client for auth operations
 - PWA relies on manifest and service worker for offline and installability
+- **Updated** Capture dashboard components depend on GlassPanel and AnimatedNumber primitives
 
 ```mermaid
 graph TB
@@ -276,6 +342,8 @@ TailwindCfg["tailwind.config.ts"] --> Styles["Global Styles"]
 SecHeaders["security-headers.ts"] --> Headers["Security Headers"]
 UserProv["user-provider.tsx"] --> Supabase["Supabase Client"]
 SW["sw.ts"] --> Manifest["manifest.json"]
+CapturaKpi["CapturaKpiStrip"] --> GlassPanel["GlassPanel"]
+CapturaKpi --> AnimatedNumber["AnimatedNumber"]
 ```
 
 **Diagram sources**
@@ -285,6 +353,9 @@ SW["sw.ts"] --> Manifest["manifest.json"]
 - [src/providers/user-provider.tsx:26-93](file://src/providers/user-provider.tsx#L26-L93)
 - [src/app/sw.ts:52-70](file://src/app/sw.ts#L52-L70)
 - [public/manifest.json:1-74](file://public/manifest.json#L1-L74)
+- [src/app/(authenticated)/captura/components/captura-kpi-strip.tsx:6-8](file://src/app/(authenticated)/captura/components/captura-kpi-strip.tsx#L6-L8)
+- [src/components/shared/glass-panel.tsx:19](file://src/components/shared/glass-panel.tsx#L19)
+- [src/app/(authenticated)/dashboard/widgets/primitives.tsx:365](file://src/app/(authenticated)/dashboard/widgets/primitives.tsx#L365)
 
 **Section sources**
 - [next.config.ts:79-434](file://next.config.ts#L79-L434)
@@ -293,6 +364,9 @@ SW["sw.ts"] --> Manifest["manifest.json"]
 - [src/providers/user-provider.tsx:26-93](file://src/providers/user-provider.tsx#L26-L93)
 - [src/app/sw.ts:52-70](file://src/app/sw.ts#L52-L70)
 - [public/manifest.json:1-74](file://public/manifest.json#L1-L74)
+- [src/app/(authenticated)/captura/components/captura-kpi-strip.tsx:6-8](file://src/app/(authenticated)/captura/components/captura-kpi-strip.tsx#L6-L8)
+- [src/components/shared/glass-panel.tsx:19](file://src/components/shared/glass-panel.tsx#L19)
+- [src/app/(authenticated)/dashboard/widgets/primitives.tsx:365](file://src/app/(authenticated)/dashboard/widgets/primitives.tsx#L365)
 
 ## Performance Considerations
 - Image optimization: AVIF and WebP formats with remote patterns for Unsplash and Strapi
@@ -300,24 +374,31 @@ SW["sw.ts"] --> Manifest["manifest.json"]
 - Static generation: SSR prefetch in authenticated layout with graceful handling for static generation errors
 - Bundle analysis: optional analyzer for identifying optimization opportunities
 - PWA caching: runtime cache excludes APIs and Server Actions to avoid stale endpoints
+- **Updated** Component performance: GlassPanel and AnimatedNumber components are optimized for smooth animations and efficient rendering
 
 **Section sources**
 - [next.config.ts:294-313](file://next.config.ts#L294-L313)
 - [next.config.ts:165-251](file://next.config.ts#L165-L251)
 - [src/app/(authenticated)/layout.tsx](file://src/app/(authenticated)/layout.tsx#L7-L12)
 - [src/app/sw.ts:19-43](file://src/app/sw.ts#L19-L43)
+- [src/app/(authenticated)/captura/components/captura-kpi-strip.tsx:23-31](file://src/app/(authenticated)/captura/components/captura-kpi-strip.tsx#L23-L31)
 
 ## Troubleshooting Guide
 - CSP violations: verify nonce propagation from middleware to HTML and inline scripts/styles
 - Auth logout loops: ensure public routes list matches actual login and password reset pages
 - Service worker stale endpoints: confirm runtime caching excludes /api and Server Actions
 - PWA not installing: check secure context and service worker registration
+- **Updated** KPI component issues: verify GlassPanel depth values and AnimatedNumber props are correctly configured
+- **Updated** Responsive layout problems: check grid column classes and media query breakpoints
 
 **Section sources**
 - [src/middleware/security-headers.ts:285-302](file://src/middleware/security-headers.ts#L285-L302)
 - [src/providers/user-provider.tsx:67-73](file://src/providers/user-provider.tsx#L67-L73)
 - [src/app/sw.ts:19-43](file://src/app/sw.ts#L19-L43)
 - [src/lib/pwa-utils.ts:56-76](file://src/lib/pwa-utils.ts#L56-L76)
+- [src/app/(authenticated)/captura/components/captura-kpi-strip.tsx:34](file://src/app/(authenticated)/captura/components/captura-kpi-strip.tsx#L34)
 
 ## Conclusion
-The frontend leverages Next.js 16’s App Router to organize routes into logical groups, enforce security via middleware, and provide a consistent user experience through shared components and global styling. Supabase Auth is integrated centrally with deduplication and robust error handling. Performance is optimized through image formats, code splitting, and PWA caching strategies, while the manifest and service worker enable progressive enhancement and offline readiness.
+The frontend leverages Next.js 16's App Router to organize routes into logical groups, enforce security via middleware, and provide a consistent user experience through shared components and global styling. Supabase Auth is integrated centrally with deduplication and robust error handling. Performance is optimized through image formats, code splitting, and PWA caching strategies, while the manifest and service worker enable progressive enhancement and offline readiness.
+
+**Updated** The capture dashboard components demonstrate the evolution toward modern design system patterns, with the new CapturaKpiStrip replacing the legacy PulseStrip approach through the integration of GlassPanel and AnimatedNumber components, providing enhanced visual hierarchy, smooth animations, and responsive layouts that improve both user experience and maintainability.
