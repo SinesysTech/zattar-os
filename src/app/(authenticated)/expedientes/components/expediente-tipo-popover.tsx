@@ -148,10 +148,12 @@ export function TipoTriggerContent({
   tipoExpedienteId,
   tiposExpedientes,
   size = 'sm',
+  showIcon = true,
 }: {
   tipoExpedienteId: number | null | undefined;
   tiposExpedientes: TipoExpedienteOption[];
   size?: 'sm' | 'md';
+  showIcon?: boolean;
 }) {
   const tipo = tipoExpedienteId
     ? tiposExpedientes.find((t) => t.id === tipoExpedienteId)
@@ -161,10 +163,12 @@ export function TipoTriggerContent({
   if (nome) {
     return (
       <>
-        <Tag className={cn(
-          'shrink-0 text-muted-foreground/50',
-          size === 'sm' ? 'size-3' : 'size-3.5',
-        )} />
+        {showIcon && (
+          <Tag className={cn(
+            'shrink-0 text-muted-foreground/50',
+            size === 'sm' ? 'size-3' : 'size-3.5',
+          )} />
+        )}
         <span className={cn(
           'truncate',
           size === 'sm' ? 'text-[11px] font-medium text-foreground' : 'text-sm font-medium text-foreground',
@@ -177,10 +181,12 @@ export function TipoTriggerContent({
 
   return (
     <>
-      <Tag className={cn(
-        'shrink-0 text-muted-foreground/30',
-        size === 'sm' ? 'size-3' : 'size-3.5',
-      )} />
+      {showIcon && (
+        <Tag className={cn(
+          'shrink-0 text-muted-foreground/30',
+          size === 'sm' ? 'size-3' : 'size-3.5',
+        )} />
+      )}
       <span className={cn(
         'italic',
         size === 'sm' ? 'text-[11px] text-muted-foreground/50' : 'text-sm text-muted-foreground/50',

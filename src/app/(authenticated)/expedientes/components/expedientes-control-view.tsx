@@ -124,8 +124,8 @@ function InfoRow({
 }) {
   return (
     <div className="flex items-start justify-between gap-3">
-      <span className="shrink-0 text-[9px] text-muted-foreground/55 uppercase tracking-wider">{label}</span>
-      <span className="text-right text-[11px] font-medium">{value}</span>
+      <span className="shrink-0 text-overline">{label}</span>
+      <span className="text-right text-caption font-medium">{value}</span>
     </div>
   );
 }
@@ -139,7 +139,7 @@ function EditableInfoRow({
 }) {
   return (
     <div className="flex items-start justify-between gap-3">
-      <span className="shrink-0 text-[9px] text-muted-foreground/55 uppercase tracking-wider pt-1">
+      <span className="shrink-0 text-overline pt-1">
         {label}
       </span>
       <div className="flex justify-end">{children}</div>
@@ -244,6 +244,7 @@ function QueueCard({
               tipoExpedienteId={expediente.tipoExpedienteId}
               tiposExpedientes={tiposExpedientesData}
               size="md"
+              showIcon={false}
             />
           </ExpedienteTipoPopover>
         </div>
@@ -253,7 +254,7 @@ function QueueCard({
           onSuccess={onSuccess}
           align="end"
         >
-          <span className={cn('shrink-0 text-[10px] tabular-nums', URGENCY_TEXT_CLASS[urgencyLevel])}>
+          <span className={cn('shrink-0 font-mono text-[10px] tabular-nums', URGENCY_TEXT_CLASS[urgencyLevel])}>
             {diasLabel}
           </span>
         </ExpedientePrazoPopover>
@@ -261,14 +262,18 @@ function QueueCard({
 
       {/* Identificação do Processo (Seção 2) */}
       <div className="mt-3 pt-3 border-t border-border/10">
-        {/* Partes (autora vs ré) */}
+        {/* Partes — autora e ré em linhas separadas para não truncar em bloco */}
         {(partes.autora || partes.re) && (
-          <div className="flex items-center gap-1.5 min-w-0 mb-1.5 focus-within:ring-0">
-            <p className="text-sm font-medium text-foreground truncate">
-              <span>{partes.autora || '—'}</span>
-              <span className="mx-1.5 font-normal text-muted-foreground/60">vs</span>
-              <span>{partes.re || '—'}</span>
-            </p>
+          <div className="flex items-start gap-1.5 min-w-0 mb-1.5 focus-within:ring-0">
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-semibold text-foreground truncate">
+                {partes.autora || '—'}
+              </p>
+              <p className="text-xs font-semibold text-foreground truncate">
+                <span className="text-[9px] font-normal text-muted-foreground/50 mr-1">vs</span>
+                {partes.re || '—'}
+              </p>
+            </div>
             <InlineCopy
               text={`${partes.autora || ''} vs ${partes.re || ''}`}
               label="Copiar parte"
@@ -276,92 +281,64 @@ function QueueCard({
           </div>
         )}
 
-        {/* Número do processo */}
+        {/* TRT · Grau · Processo (linha compacta de identificação legal) */}
         <div className="flex items-center gap-1.5 min-w-0">
-          <span className="text-[11px] text-muted-foreground/70 truncate">
-            Nº {expediente.numeroProcesso}
+          <span className="text-mono-num truncate">
+            {[expediente.trt, grauLabel, expediente.numeroProcesso].filter(Boolean).join(' · ')}
           </span>
           <InlineCopy text={expediente.numeroProcesso || ''} label="Copiar número do processo" />
         </div>
 
-        {/* Órgão jurisdicional */}
+        {/* Vara / órgão julgador — mesma família da linha de identificação */}
         {(expediente.descricaoOrgaoJulgador || expediente.siglaOrgaoJulgador) && (
-          <p className="mt-0.5 text-[11px] text-muted-foreground/55">
+          <p className="mt-0.5 text-mono-num truncate">
             {expediente.descricaoOrgaoJulgador || expediente.siglaOrgaoJulgador}
           </p>
         )}
       </div>
 
-      {/* Corpo: Resumo e Observações editáveis (Seção 3) */}
-      <div
-        className="mt-3 space-y-2"
-        onClick={(e) => e.stopPropagation()}
-        onKeyDown={(e) => e.stopPropagation()}
-      >
-        <div>
-          <p className="text-[9px] font-medium text-muted-foreground/50 uppercase tracking-wider mb-1">
-            Descrição
-          </p>
-          <ExpedienteTextEditor
-            expedienteId={expediente.id}
-            field="descricaoArquivos"
-            value={expediente.descricaoArquivos}
-            emptyPlaceholder="Sem descrição — clique para adicionar"
-            onSuccess={onSuccess}
-          />
-        </div>
-        <div>
-          <p className="text-[9px] font-medium text-muted-foreground/50 uppercase tracking-wider mb-1">
-            Observações
-          </p>
-          <ExpedienteTextEditor
-            expedienteId={expediente.id}
-            field="observacoes"
-            value={expediente.observacoes}
-            emptyPlaceholder="Sem observações — clique para adicionar"
-            onSuccess={onSuccess}
-          />
-        </div>
-      </div>
-
-      {/* Badges + responsavel (Seção 4) */}
-      <div className="mt-3 pt-3 border-t border-border/10 flex items-center gap-1.5">
-        {expediente.trt && (
-          <SemanticBadge
-            category="tribunal"
-            value={expediente.trt}
-            className="px-1.5 text-[9px]"
-          >
-            {expediente.trt}
-          </SemanticBadge>
-        )}
-        <SemanticBadge
-          category="grau"
-          value={expediente.grau}
-          className="px-1.5 text-[9px]"
+      {/* Corpo: Resumo e Observações — visível apenas quando há conteúdo */}
+      {(expediente.descricaoArquivos || expediente.observacoes) && (
+        <div
+          className="mt-3 space-y-2"
+          onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.stopPropagation()}
         >
-          {grauLabel}
-        </SemanticBadge>
-        <div className="ml-auto">
-          <ExpedienteResponsavelPopover
-            expedienteId={expediente.id}
-            responsavelId={expediente.responsavelId}
-            usuarios={usuariosData}
-            onSuccess={onSuccess}
-            align="end"
-          >
-            <ResponsavelTriggerContent
-              responsavelId={expediente.responsavelId}
-              usuarios={usuariosData}
-              size="sm"
-            />
-          </ExpedienteResponsavelPopover>
+          {expediente.descricaoArquivos && (
+            <div>
+              <p className="text-overline mb-1">Descrição</p>
+              <ExpedienteTextEditor
+                expedienteId={expediente.id}
+                field="descricaoArquivos"
+                value={expediente.descricaoArquivos}
+                emptyPlaceholder="Sem descrição — clique para adicionar"
+                onSuccess={onSuccess}
+              />
+            </div>
+          )}
+          {expediente.observacoes && (
+            <div>
+              <p className="text-overline mb-1">Observações</p>
+              <ExpedienteTextEditor
+                expedienteId={expediente.id}
+                field="observacoes"
+                value={expediente.observacoes}
+                emptyPlaceholder="Sem observações — clique para adicionar"
+                onSuccess={onSuccess}
+              />
+            </div>
+          )}
         </div>
-      </div>
+      )}
 
-      {/* Hover actions */}
-      {(onBaixar || onViewDetail) && (
-        <div className="mt-2.5 hidden items-center gap-1.5 group-hover:flex">
+      {/* Footer: ações fixas + responsável (Seção 4) */}
+      <div className="mt-3 pt-3 border-t border-border/10 flex items-center gap-1.5">
+        {/* Ações sempre visíveis — esquerda */}
+        <div
+          className="flex items-center gap-1"
+          onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.stopPropagation()}
+        >
           {onBaixar && (
             <button
               type="button"
@@ -374,7 +351,7 @@ function QueueCard({
               className="flex h-6 items-center gap-1 rounded-md bg-primary/10 px-2 text-[10px] font-medium text-primary/80 transition-colors hover:bg-primary/20 cursor-pointer"
             >
               <CheckCircle2 className="size-3" />
-              Concluir
+              Baixar
             </button>
           )}
           {onViewDetail && (
@@ -393,7 +370,24 @@ function QueueCard({
             </button>
           )}
         </div>
-      )}
+
+        {/* Responsável — direita */}
+        <div className="ml-auto">
+          <ExpedienteResponsavelPopover
+            expedienteId={expediente.id}
+            responsavelId={expediente.responsavelId}
+            usuarios={usuariosData}
+            onSuccess={onSuccess}
+            align="end"
+          >
+            <ResponsavelTriggerContent
+              responsavelId={expediente.responsavelId}
+              usuarios={usuariosData}
+              size="sm"
+            />
+          </ExpedienteResponsavelPopover>
+        </div>
+      </div>
       </div>
     </GlassPanel>
   );
@@ -414,11 +408,9 @@ function SectionHeader({
 }) {
   return (
     <div className="flex items-center gap-2 mb-3">
-      <Icon className={cn('size-4', accentClass)} />
-      <Heading level="subsection" as="h3" className="text-xs font-medium uppercase tracking-wider text-muted-foreground/50">
-        {label}
-      </Heading>
-      <span className="text-[10px] tabular-nums text-muted-foreground/40">{count}</span>
+      <Icon className={cn('size-3.5', accentClass)} />
+      <h3 className="text-overline">{label}</h3>
+      <span className="text-mono-num text-muted-foreground/40">{count}</span>
     </div>
   );
 }
@@ -461,7 +453,7 @@ function DetailPanel({
               size="md"
             />
           </ExpedienteTipoPopover>
-          <p className="mt-0.5 tabular-nums text-[11px] text-muted-foreground/55">
+          <p className="mt-0.5 text-mono-num">
             {expediente.numeroProcesso}
           </p>
         </div>

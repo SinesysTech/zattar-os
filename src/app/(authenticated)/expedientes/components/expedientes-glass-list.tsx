@@ -200,65 +200,39 @@ function GlassRow({
 
           {/* L2 — Partes */}
           {(partes.autora || partes.re) && (
-            <div className="mt-0.5 text-caption text-foreground/85 leading-snug flex flex-wrap items-baseline">
-              {partes.autora && (
-                <span className="font-medium">{partes.autora}</span>
-              )}
+            <div className="mt-0.5 text-caption font-semibold text-foreground/85 leading-snug flex flex-wrap items-baseline gap-x-1">
+              {partes.autora && <span>{partes.autora}</span>}
               {partes.autora && partes.re && (
-                <span className="mx-1.5 text-muted-foreground/60 font-medium">
-                  ×
-                </span>
+                <span className="text-[9px] font-normal text-muted-foreground/50">vs</span>
               )}
-              {partes.re && (
-                <span className="font-medium">{partes.re}</span>
-              )}
+              {partes.re && <span>{partes.re}</span>}
             </div>
           )}
 
-          {/* L3 — Classe · número · tribunal · grau · órgão · ciência */}
-          <div className="mt-1 flex flex-wrap items-center gap-1.5">
+          {/* L3 — Identificação legal unificada em mono (mesma linguagem do Mission Control) */}
+          <div className="mt-1 text-mono-num flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+            {expediente.trt && <span>{expediente.trt}</span>}
+            {expediente.trt && <span className="text-muted-foreground/30">·</span>}
+            <span>{grauLabel}</span>
             {expediente.classeJudicial && (
               <>
-                <span className="text-caption text-muted-foreground/75">
-                  {expediente.classeJudicial}
-                </span>
-                <span className="w-0.75 h-0.75 rounded-full bg-muted-foreground/30 shrink-0" />
+                <span className="text-muted-foreground/30">·</span>
+                <span>{expediente.classeJudicial}</span>
               </>
             )}
-            <span className="text-caption text-muted-foreground tabular-nums">
-              {expediente.numeroProcesso}
-            </span>
-            <SemanticBadge
-              category="tribunal"
-              value={expediente.trt}
-              className="text-micro-caption"
-            >
-              {expediente.trt}
-            </SemanticBadge>
-            <SemanticBadge
-              category="grau"
-              value={expediente.grau}
-              className="text-micro-caption"
-            >
-              {grauLabel}
-            </SemanticBadge>
+            <span className="text-muted-foreground/30">·</span>
+            <span className="tabular-nums">{expediente.numeroProcesso}</span>
             {orgao && (
               <>
-                <span className="w-0.75 h-0.75 rounded-full bg-muted-foreground/30 shrink-0" />
-                <span
-                  className="text-caption text-muted-foreground/55 truncate"
-                  title={orgao}
-                >
-                  {orgao}
-                </span>
+                <span className="text-muted-foreground/30">·</span>
+                <span className="truncate max-w-48" title={orgao}>{orgao}</span>
               </>
             )}
             {expediente.dataCienciaParte && (
               <>
-                <span className="w-0.75 h-0.75 rounded-full bg-muted-foreground/30 shrink-0" />
-                <span className="text-micro-caption text-muted-foreground/60">
-                  Ciência{' '}
-                  {format(parseISO(expediente.dataCienciaParte), 'dd/MM/yyyy')}
+                <span className="text-muted-foreground/30">·</span>
+                <span>
+                  Ciência {format(parseISO(expediente.dataCienciaParte), 'dd/MM/yyyy')}
                 </span>
               </>
             )}
@@ -312,7 +286,7 @@ function GlassRow({
               </ExpedienteResponsavelPopover>
             </div>
 
-            {/* Concluir */}
+            {/* Baixar */}
             {onBaixar && !expediente.baixadoEm && (
               <button
                 type="button"
@@ -321,16 +295,16 @@ function GlassRow({
                   onBaixar(expediente);
                 }}
                 onKeyDown={(e) => e.stopPropagation()}
-                aria-label="Concluir expediente"
-                title="Concluir expediente"
+                aria-label="Baixar expediente"
                 className={cn(
-                  'inline-flex size-7 items-center justify-center rounded-md shrink-0',
-                  'text-success/80 hover:text-success hover:bg-success/10',
-                  'transition-colors duration-150 cursor-pointer',
+                  'flex h-6 shrink-0 items-center gap-1 rounded-md px-2',
+                  'text-[10px] font-medium text-primary/80 bg-primary/10',
+                  'hover:bg-primary/20 transition-colors duration-150 cursor-pointer',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
                 )}
               >
-                <CheckCircle2 className="size-4" />
+                <CheckCircle2 className="size-3" />
+                Baixar
               </button>
             )}
           </div>

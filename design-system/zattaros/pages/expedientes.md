@@ -65,10 +65,96 @@ Subset autorizado de `BadgeCategory` para este módulo (fonte: [variants.ts](../
 
 ## Tipografia específica
 
-- Número do processo em cards e tabelas: `font-mono text-xs` (tabular-nums) — padrão já aplicado em `columns.tsx` e `expedientes-glass-list.tsx`.
+- Número do processo em cards e tabelas: `.text-mono-num` (Geist Mono, 10px, tabular-nums) — **classe canônica**, não `text-[11px]` nem `font-mono text-xs` avulso.
 - Título de página: `PageShell` cuida do `.text-page-title`. Não declarar heading manualmente.
 - Prazos críticos (vencidos): usar `SemanticBadge` com `expediente_status`, **não** colorir o texto diretamente.
-- Listagem (GlassRow): tipografia inline seguindo padrão canônico (`text-label`, `text-caption`, `text-micro-caption`, `text-micro-badge`) — **não** usar os componentes `<Heading>` / `<Text>` nos rows (o padrão majoritário do sistema é inline).
+- Labels ALL-CAPS de seção dentro de cards (ex: "Descrição", "Observações"): `.text-overline` — não usar `text-[9px] uppercase` avulso.
+- Contadores de seção (ex: "3" ao lado de "Vencidos"): `.text-mono-num` — não usar `text-[10px] tabular-nums` avulso.
+- Textos auxiliares (órgão, informações secundárias): `.text-caption` (13px) — não usar `text-[11px]` avulso.
+- Listagem (GlassRow): tipografia inline seguindo padrão canônico (`text-label`, `text-caption`, `text-micro-badge`) — **não** usar os componentes `<Heading>` / `<Text>` nos rows.
+
+---
+
+## Quadro / Mission Control — padrão canônico
+
+**Arquivo:** [`expedientes-control-view.tsx`](../../../src/app/(authenticated)/expedientes/components/expedientes-control-view.tsx)
+
+A view `quadro` agrupa expedientes por urgência em um grid de cards operacionais. É a superfície de maior densidade do módulo.
+
+### Subcomponentes
+
+| Componente | Responsabilidade |
+|---|---|
+| `QueueCard` | Card individual de expediente — identificação, urgência, corpo e ações |
+| `SectionHeader` | Cabeçalho de grupo por urgência (ícone + label + contador) |
+| `DetailPanel` | Painel lateral de detalhes (desktop, `lg:` only) — edição inline de campos-chave |
+
+### Hierarquia de informação do QueueCard
+
+```
+┌─ Header ─────────────────────────────────────────────────────┐
+│  UrgencyDot   Tipo (sem ícone, showIcon=false)  prazo (mono) │
+├─ Identificação ──────────────────────────────────────────────┤
+│  Parte Autora vs Parte Ré  (text-sm font-semibold)           │
+│  TRT2 · 1º Grau · 0000000-00.0000.0.00.0000  (text-mono-num)│
+│  Vara / Órgão julgador  (text-caption)                       │
+├─ Corpo — condicional: só se há conteúdo ─────────────────────┤
+│  DESCRIÇÃO  (text-overline)                                  │
+│  [texto editável inline]                                     │
+│  OBSERVAÇÕES  (text-overline)                                │
+│  [texto editável inline]                                     │
+├─ Footer — sempre visível ────────────────────────────────────┤
+│  [Baixar]  [Detalhes]                        [Avatar usuário]│
+└──────────────────────────────────────────────────────────────┘
+```
+
+### Regras específicas do QueueCard
+
+1. **Corpo vazio = seção oculta.** A seção de descrição/observações só renderiza quando `expediente.descricaoArquivos` ou `expediente.observacoes` tem valor. Não exibir placeholder de "Sem descrição — clique para adicionar" no card — isso quebra a densidade compact. A edição acontece via `DetailPanel` ou dialog completo.
+
+2. **Urgência via border-left + UrgencyDot, nunca via cor de texto isolada.** A cor do prazo countdown usa `URGENCY_TEXT_CLASS` (tokens semânticos: `text-destructive/80`, `text-warning/80`, etc.), mas como reforço — nunca como único indicador.
+
+3. **Linha de identificação legal unificada.** TRT, grau e número do processo ficam em **uma única linha** `.text-mono-num` no formato `TRT2 · 1º Grau · 0000000-00.0000.0.00.0000`. A vara/órgão fica na linha seguinte (`.text-caption`). Não usar "Nº" como prefixo; não usar badges para TRT/grau no QueueCard.
+
+4. **Partes com peso semântico primário.** `font-semibold` (não `font-medium`) nas partes, pois são a identificação primária do card quando não há tipo definido.
+
+5. **Tipo sem ícone no QueueCard.** `TipoTriggerContent` aceita `showIcon={false}` — usar sempre assim no header do QueueCard. O ícone Tag é adequado apenas em contextos de edição (DetailPanel, dialog).
+
+6. **SectionHeader usa `<h3>` direto, nunca `<Heading>`.** O componente Heading tem estilos próprios que seriam sobrescritos — usar `<h3 className="text-overline">` para seções de agrupamento operacional.
+
+7. **Contador de seção mono.** O número ao lado do label de urgência (ex: "3" em "Vencidos 3") usa `.text-mono-num`.
+
+8. **Footer sempre visível com ações fixas.** Botões "Baixar" e "Detalhes" ficam sempre visíveis no footer esquerdo — sem `group-hover:flex`. Avatar do responsável fica sempre visível na extremidade direita. Não usar badges de TRT/grau no footer do QueueCard.
+
+9. **DetailPanel** usa `GlassPanel depth={2}` e é sticky (`top-4`). Exibido apenas em `lg:`. Em mobile, as ações "Baixar" e "Detalhes" estão fixas no footer do card.
+
+### Agrupamento por urgência
+
+| Seção | Condição | Cor de acento |
+|---|---|---|
+| Vencidos | `prazoVencido || diasRestantes < 0` | `text-destructive` |
+| Vence hoje | `diasRestantes === 0` | `text-warning` |
+| Próximos 3 dias | `diasRestantes <= 3` | `text-primary` |
+| No prazo | `diasRestantes > 3` | `text-muted-foreground/60` |
+| Sem prazo | `diasRestantes === null` | `text-muted-foreground/40` |
+
+Seções sem itens são filtradas (`.filter(s => s.items.length > 0)`).
+
+### Layout responsivo
+
+- **Sem seleção:** `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`
+- **Com item selecionado:** `grid-cols-1 sm:grid-cols-2` (dá espaço ao DetailPanel)
+- **DetailPanel:** `lg:grid-cols-[1fr_380px]`, hidden em mobile
+
+### Anti-padrões específicos do Quadro
+
+- Mostrar seções "Descrição" e "Observações" mesmo quando vazias — quebra a densidade compact
+- Usar `<Heading level="subsection">` e sobrescrever todos os estilos via `className` — usar `<h3>` direto
+- Usar `text-[Xpx]` avulso onde existe classe canônica (`.text-overline`, `.text-mono-num`, `.text-caption`)
+- Exibir badges de TRT e grau no footer do QueueCard — a informação já aparece na linha de identificação legal
+- Usar `group-hover:flex` para ocultar ações primárias ("Baixar", "Detalhes") — ações de alto uso devem ser sempre visíveis
+- Renderizar ícone Tag no header do QueueCard — usar `showIcon={false}` em `TipoTriggerContent` no contexto de card
+- Separar TRT, grau e número do processo em campos distintos no card — devem compor uma única linha `.text-mono-num`
 
 ---
 
