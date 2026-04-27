@@ -21,9 +21,9 @@ jest.mock('@radix-ui/react-tooltip', () => ({
     Root: ({ children }: any) => <>{children}</>,
     Trigger: React.forwardRef(({ children, ...props }: any, ref: any) => <button ref={ref} data-slot="tooltip-trigger" {...props}>{children}</button>),
     Content: React.forwardRef(({ children, className, side, ...props }: any, ref: any) => (
-        <div ref={ref} data-slot="tooltip-content" data-side={side} className={`bg-primary text-primary-foreground animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 w-fit rounded-md px-3 py-1.5 text-xs text-balance ${className || ''}`} {...props}>
+        <div ref={ref} data-slot="tooltip-content" data-side={side} className={`bg-popover text-popover-foreground border border-border/60 shadow-md animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 w-fit rounded-md px-3 py-1.5 text-xs text-balance ${className || ''}`} {...props}>
             {children}
-            <span className="bg-primary fill-primary z-50 size-2.5 translate-y-[calc(-50%-2px)] rotate-45 rounded-[2px]" />
+            <span className="bg-popover fill-popover z-50 size-2.5 translate-y-[calc(-50%-2px)] rotate-45 rounded-[2px] border-r border-b border-border/60" />
         </div>
     )),
     Portal: ({ children }: any) => <>{children}</>,
@@ -148,8 +148,8 @@ describe('Tooltip - Property-Based Tests', () => {
 
                         // Verifica classes da seta
                         if (arrow) {
-                            expect(arrow.classList.contains('bg-primary')).toBe(true);
-                            expect(arrow.classList.contains('fill-primary')).toBe(true);
+                            expect(arrow.classList.contains('bg-popover')).toBe(true);
+                            expect(arrow.classList.contains('fill-popover')).toBe(true);
                             expect(arrow.classList.contains('rotate-45')).toBe(true);
                         }
                     });
