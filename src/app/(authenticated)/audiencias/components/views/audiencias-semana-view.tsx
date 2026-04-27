@@ -24,10 +24,14 @@ import {
   ChevronRight,
   Video,
   Building2,
+  Sparkles,
   Clock3,
   AlertTriangle,
   CheckCircle2,
   CalendarDays,
+  MessageSquare,
+  Lock,
+  ExternalLink,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { GlassPanel } from '@/components/shared/glass-panel';
@@ -235,18 +239,17 @@ export function AudienciasSemanaView({
         <button onClick={handleNextWeek} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer")}>
           <ChevronRight className="size-4" />
         </button>
-        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium capitalize ml-1")}>{weekLabel}</span>
+        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium capitalize ml-1")}>{weekLabel}</span>
       </div>
 
       <Tabs value={selectedDay} onValueChange={setSelectedDay} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-        <TabsList className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-0 → usar <Inset> */ "h-auto w-full justify-start gap-2 overflow-x-auto rounded-2xl bg-transparent p-0")}>
+        <TabsList className={cn(/* design-system-escape: p-1 → padrão TabsList */ "h-auto w-full justify-start overflow-x-auto")}>
           {weekDays.map((day) => {
             const key = getDayKey(day);
             const dayAudiencias = audienciasByDay.get(key) ?? [];
             const lowPrepCount = dayAudiencias.filter(
               (a) => a.status === StatusAudiencia.Marcada && calcPrepScore(calcPrepItems(a)) < 50,
             ).length;
-            const ongoingCount = dayAudiencias.filter((a) => getAudienciaTiming(a, new Date()).isOngoing).length;
             const today = isToday(day);
 
             return (
@@ -254,37 +257,35 @@ export function AudienciasSemanaView({
                 key={key}
                 value={key}
                 className={cn(
-                  /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ 'min-w-40 rounded-2xl border border-border/30 bg-card/55 px-4 py-3 text-left data-[state=active]:border-primary/25 data-[state=active]:bg-card',
-                  /* design-system-escape: gap-1.5 gap sem token DS */ 'flex flex-col items-start gap-1.5',
+                  /* design-system-escape: gap-0.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'flex flex-col items-center gap-0.5 rounded-xl px-3 py-2 min-w-16',
                 )}
               >
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex w-full items-center justify-between gap-2")}>
+                <span className={cn(
+                  'text-overline capitalize',
+                  today ? 'text-primary' : 'text-muted-foreground/55',
+                )}>
+                  {format(day, 'EEE', { locale: ptBR })}
+                </span>
+                <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
                   <span className={cn(
-                    /* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ 'text-xs font-semibold uppercase tracking-wider',
-                    today ? 'text-primary' : 'text-muted-foreground/60',
-                  )}>
-                    {format(day, 'EEEE', { locale: ptBR })}
-                  </span>
-                  <span className={cn(
-                    /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'rounded-full px-2 py-0.5 text-micro-caption tabular-nums',
-                    today ? 'bg-primary/12 text-primary' : 'bg-muted/60 text-muted-foreground/70',
+                    /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-caption font-semibold tabular-nums',
+                    today ? 'text-primary' : 'text-foreground/80',
                   )}>
                     {format(day, 'd')}
                   </span>
+                  {dayAudiencias.length > 0 && (
+                    <span className={cn(
+                      /* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ 'text-micro-badge tabular-nums rounded-full px-1.5 py-px',
+                      lowPrepCount > 0
+                        ? 'bg-warning/15 text-warning'
+                        : today
+                          ? 'bg-primary/12 text-primary'
+                          : 'bg-muted/60 text-muted-foreground/60',
+                    )}>
+                      {dayAudiencias.length}
+                    </span>
+                  )}
                 </div>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-2 text-xs text-muted-foreground/65")}>
-                  <span>{dayAudiencias.length} no dia</span>
-                  {ongoingCount > 0 && <span className="text-success">• {ongoingCount} em curso</span>}
-                </div>
-                {lowPrepCount > 0 ? (
-                  <span className="text-micro-caption text-warning/80">
-                    {lowPrepCount} com preparo baixo
-                  </span>
-                ) : (
-                  <span className="text-micro-caption text-muted-foreground/45">
-                    agenda organizada
-                  </span>
-                )}
               </TabsTrigger>
             );
           })}
@@ -310,17 +311,17 @@ export function AudienciasSemanaView({
                       </Text>
                     </div>
                     <div>
-                      <h3 className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "text-lg font-semibold capitalize")}>
+                      <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-label font-semibold capitalize")}>
                         {format(day, "EEEE, d 'de' MMMM", { locale: ptBR })}
                       </h3>
-                      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/60")}>
+                      <p className="text-caption text-muted-foreground/60">
                         {dayIsToday
                           ? 'Acompanhamento operacional da pauta do dia.'
                           : 'Visão do preparo, sequência e encerramento das audiências deste dia.'}
                       </p>
                     </div>
                     {nextAudiencia && (
-                      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/70")}>
+                      <p className="text-caption text-muted-foreground/70">
                         Próxima prioridade: <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/85")}>{fmtTime(nextAudiencia.dataInicio)}</span> · {nextAudiencia.tipoDescricao || 'Audiência'} · {nextAudiencia.numeroProcesso}
                       </p>
                     )}
@@ -377,10 +378,10 @@ export function AudienciasSemanaView({
 
               {dayAudiencias.length === 0 ? (
                 <GlassPanel className={cn(/* design-system-escape: p-10 → usar <Inset> */ "p-10 text-center")}>
-                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-foreground/75")}>
+                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium text-foreground/75")}>
                     Nenhuma audiência neste dia útil.
                   </p>
-                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-1 text-sm text-muted-foreground/55")}>
+                  <p className="mt-1 text-caption text-muted-foreground/55">
                     Use as tabs para revisar outra pauta da semana.
                   </p>
                 </GlassPanel>
@@ -396,7 +397,7 @@ export function AudienciasSemanaView({
                             group.tone === 'primary' && 'bg-primary',
                             group.tone === 'muted' && 'bg-muted-foreground/35',
                           )} />
-                          <h4 className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold text-foreground/85")}>
+                          <h4 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-caption font-semibold text-foreground/85")}>
                             {group.title}
                           </h4>
                         </div>
@@ -453,7 +454,7 @@ function SummaryMetric({
           tone === 'muted' && 'text-muted-foreground/55',
         )} />
       </div>
-      <div className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "mt-1 text-lg font-semibold tabular-nums text-foreground/85")}>
+      <div className={cn(/* design-system-escape: leading-none sem token DS; tracking-tight sem token DS */ "mt-1 text-kpi-value leading-none tracking-tight text-foreground/85")}>
         {value}
       </div>
     </div>
@@ -468,21 +469,44 @@ function StatusPill({ children }: { children: React.ReactNode }) {
   );
 }
 
-// ─── Internal: Week Day Card ──────────────────────────────────────────────
+// ─── Internal: Week Day Card (GlassRow) ──────────────────────────────────
 
-function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onResponsavelChange }: { audiencia: Audiencia; onClick: () => void; responsavelNomes?: Map<number, string>; usuarios?: Usuario[]; onResponsavelChange?: () => void }) {
+const MODALIDADE_ICON: Record<string, React.ComponentType<{ className?: string }>> = {
+  virtual: Video,
+  presencial: Building2,
+  hibrida: Sparkles,
+};
+
+const MODALIDADE_LABEL: Record<string, string> = {
+  virtual: 'Virtual',
+  presencial: 'Presencial',
+  hibrida: 'Híbrida',
+};
+
+function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onResponsavelChange }: {
+  audiencia: Audiencia;
+  onClick: () => void;
+  responsavelNomes?: Map<number, string>;
+  usuarios?: Usuario[];
+  onResponsavelChange?: () => void;
+}) {
   const now = new Date();
   let isPast = false;
   let isOngoing = false;
-  const isFinalizada = audiencia.status === StatusAudiencia.Finalizada;
   try {
     isPast = parseISO(audiencia.dataFim) < now;
     isOngoing = parseISO(audiencia.dataInicio) <= now && parseISO(audiencia.dataFim) >= now;
   } catch { /* skip */ }
 
+  const isFinalizada = audiencia.status === StatusAudiencia.Finalizada;
+  const isCancelada = audiencia.status === StatusAudiencia.Cancelada;
   const prepScore = calcPrepScore(calcPrepItems(audiencia));
   const prepStatus = prepScore >= 80 ? 'good' : prepScore >= 50 ? 'warning' : 'danger';
-  const isVirtual = audiencia.modalidade === 'virtual' || audiencia.modalidade === 'hibrida';
+  const modalidade = audiencia.modalidade ?? null;
+  const ModalidadeIcon = modalidade ? MODALIDADE_ICON[modalidade] : null;
+  const hasVirtualRoom = (modalidade === 'virtual' || modalidade === 'hibrida') && audiencia.urlAudienciaVirtual;
+  const grauLabel = audiencia.grau ? GRAU_TRIBUNAL_LABELS[audiencia.grau] : null;
+  const orgao = audiencia.orgaoJulgadorOrigem;
 
   return (
     <div
@@ -491,111 +515,155 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
       onClick={onClick}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); } }}
       className={cn(
-        /* design-system-escape: p-3 → usar <Inset> */ 'w-full text-left p-3 rounded-xl border transition-all duration-200 cursor-pointer',
-        'bg-card/80 border-border/40 hover:border-border/60 hover:shadow-sm hover:scale-[1.01]',
-        'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
-        (isPast || isFinalizada) && 'opacity-60',
-        isOngoing && 'ring-1 ring-success/30 border-success/25 bg-success/3',
+        /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'group w-full text-left rounded-2xl border border-border/60 bg-card p-4 cursor-pointer',
+        'transition-all duration-180 ease-out',
+        'hover:border-border hover:shadow-[0_4px_14px_rgba(0,0,0,0.06)] hover:-translate-y-px',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+        isOngoing && 'border-l-2 border-l-success ring-1 ring-success/20 bg-success/3',
+        (isPast || isFinalizada) && !isOngoing && 'opacity-55',
+        isCancelada && !isOngoing && 'opacity-45',
       )}
     >
-      {/* 1. Hora + Status */}
-      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center justify-between gap-1")}>
-        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs tabular-nums font-semibold text-foreground/80")}>
-          {fmtTime(audiencia.dataInicio)} – {fmtTime(audiencia.dataFim)}
-        </span>
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
-          {isOngoing && <span className="size-2 rounded-full bg-success animate-pulse" />}
-          {isFinalizada && <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-micro-caption font-semibold text-success px-1.5 py-0.5 rounded-full bg-success/15")}>OK</span>}
-          <Text
-            variant="micro-badge"
-            as="span"
-            className={cn(
-            /* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'font-semibold tabular-nums px-1.5 py-0.5 rounded-full',
-            prepStatus === 'good' ? 'bg-success/15 text-success' : prepStatus === 'warning' ? 'bg-warning/15 text-warning' : 'bg-destructive/15 text-destructive',
-          )}
-          >
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start gap-4")}>
+
+        {/* TEMPORAL: hora + prep score (coluna fixa à esquerda) */}
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; pt-0.5 padding direcional sem Inset equiv. */ "flex flex-col items-center gap-1.5 w-22 shrink-0 pt-0.5")}>
+          <div className="text-center">
+            <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-caption font-semibold text-foreground leading-tight whitespace-nowrap tabular-nums")}>
+              {fmtTime(audiencia.dataInicio)}
+            </div>
+            <div className="text-micro-caption text-muted-foreground/30">–</div>
+            <div className="text-caption text-muted-foreground/60 tabular-nums">
+              {fmtTime(audiencia.dataFim)}
+            </div>
+          </div>
+          <div className={cn(
+            /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'text-micro-badge font-semibold tabular-nums rounded-md px-1.5 py-0.5',
+            prepStatus === 'good'
+              ? 'bg-success/15 text-success'
+              : prepStatus === 'warning'
+                ? 'bg-warning/15 text-warning'
+                : 'bg-destructive/15 text-destructive',
+          )}>
             {prepScore}%
-          </Text>
+          </div>
+          {isOngoing && <span className="size-2 rounded-full bg-success animate-pulse" />}
         </div>
-      </div>
 
-      {/* 2. Tipo + Modalidade (mesma linha) */}
-      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mt-1.5 min-w-0")}>
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; leading-snug sem token DS */ "text-xs font-medium text-foreground wrap-break-word leading-snug truncate")}>
-          {audiencia.tipoDescricao || 'Audiência'}
-        </p>
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 shrink-0")}>
-          {isVirtual ? <Video className="size-2.5 text-info/60" /> : audiencia.modalidade === 'presencial' ? <Building2 className="size-2.5 text-warning/60" /> : null}
-          <span className="text-micro-caption text-muted-foreground/60">
-            {audiencia.modalidade === 'virtual' ? 'Virtual' : audiencia.modalidade === 'presencial' ? 'Presencial' : audiencia.modalidade === 'hibrida' ? 'Híbrida' : ''}
-          </span>
-        </div>
-        {audiencia.urlAudienciaVirtual && isVirtual && (
-          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-micro-caption font-semibold px-1.5 py-0.5 rounded bg-info/15 text-info/70 shrink-0")}>Sala</span>
-        )}
-      </div>
+        {/* MAIN INFO */}
+        <div className="flex-1 min-w-0">
 
-      {/* 3. Partes */}
-      {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
-        <p className={cn(/* design-system-escape: leading-snug sem token DS */ "text-micro-caption text-muted-foreground/65 mt-1 wrap-break-word leading-snug")}>
-          {audiencia.poloAtivoNome || '—'} <span className="text-muted-foreground/35">vs</span> {audiencia.poloPassivoNome || '—'}
-        </p>
-      )}
+          {/* L1 — Tipo como título + badges/flags à direita */}
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ 'text-label font-semibold text-foreground leading-tight truncate')}>
+              {audiencia.tipoDescricao || 'Audiência'}
+            </h3>
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "ml-auto flex items-center gap-1.5 shrink-0")}>
+              {modalidade && (
+                <span className={cn(
+                  /* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-micro-caption font-semibold',
+                  modalidade === 'virtual'
+                    ? 'bg-info/10 border border-info/25 text-info'
+                    : modalidade === 'presencial'
+                      ? 'bg-warning/10 border border-warning/25 text-warning'
+                      : 'bg-primary/10 border border-primary/25 text-primary',
+                )}>
+                  {ModalidadeIcon && <ModalidadeIcon className="w-2.5 h-2.5" />}
+                  {MODALIDADE_LABEL[modalidade]}
+                </span>
+              )}
+              {hasVirtualRoom && (
+                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-info/10 border border-info/25 text-info rounded-md px-1.5 py-0.5 text-micro-caption font-semibold")}>
+                  <ExternalLink className="w-2.5 h-2.5" />
+                  Sala
+                </span>
+              )}
+              {audiencia.segredoJustica && (
+                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-warning/10 border border-warning/25 text-warning rounded-md px-1.5 py-0.5 text-micro-caption font-semibold")}>
+                  <Lock className="w-2.5 h-2.5" />
+                  Segredo
+                </span>
+              )}
+              {isFinalizada && (
+                <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "text-micro-caption font-semibold text-success px-1.5 py-0.5 rounded-full bg-success/15")}>
+                  OK
+                </span>
+              )}
+            </div>
+          </div>
 
-      {/* 4. TRT badge + Grau + Número do processo (mesma linha) */}
-      {audiencia.numeroProcesso && (
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mt-1 min-w-0")}>
-          {audiencia.trt && (
-            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-micro-caption font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary/70 shrink-0")}>{audiencia.trt}</span>
+          {/* L2 — Partes */}
+          {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
+            <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-snug sem token DS */ "mt-0.5 text-caption font-semibold text-foreground/85 leading-snug flex flex-wrap items-baseline gap-x-1")}>
+              {audiencia.poloAtivoNome && <span>{audiencia.poloAtivoNome}</span>}
+              {audiencia.poloAtivoNome && audiencia.poloPassivoNome && (
+                <span className="text-[9px] font-normal text-muted-foreground/50">vs</span>
+              )}
+              {audiencia.poloPassivoNome && <span>{audiencia.poloPassivoNome}</span>}
+            </div>
           )}
-          {audiencia.grau && (
-            <span className="text-micro-caption text-muted-foreground/50 shrink-0">{GRAU_TRIBUNAL_LABELS[audiencia.grau]}</span>
-          )}
-          <span className="text-micro-caption text-muted-foreground/65 tabular-nums truncate">
-            {audiencia.numeroProcesso}
-          </span>
-        </div>
-      )}
 
-      {/* 5. Órgão jurisdicional */}
-      {audiencia.orgaoJulgadorOrigem && (
-        <p className="text-micro-caption text-muted-foreground/50 mt-0.5 truncate" title={audiencia.orgaoJulgadorOrigem}>
-          {audiencia.orgaoJulgadorOrigem}
-        </p>
-      )}
+          {/* L3 — Identificação legal unificada em mono */}
+          <div className="mt-1 text-mono-num flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+            {audiencia.trt && <span>{audiencia.trt}</span>}
+            {audiencia.trt && <span className="text-muted-foreground/30">·</span>}
+            {grauLabel && <span>{grauLabel}</span>}
+            {grauLabel && audiencia.numeroProcesso && (
+              <span className="text-muted-foreground/30">·</span>
+            )}
+            {audiencia.numeroProcesso && (
+              <span className="tabular-nums">{audiencia.numeroProcesso}</span>
+            )}
+            {orgao && (
+              <>
+                <span className="text-muted-foreground/30">·</span>
+                <span className="truncate max-w-48" title={orgao}>{orgao}</span>
+              </>
+            )}
+          </div>
 
-      {/* 6. Observações (truncado) */}
-      {audiencia.observacoes && (
-        <p className="text-micro-caption text-muted-foreground/45 mt-1 truncate italic" title={audiencia.observacoes}>
-          {audiencia.observacoes}
-        </p>
-      )}
-
-      {/* 9. Responsável — footer, alinhado à direita */}
-      <div className="flex justify-end mt-2">
-        {usuarios ? (
-          <AudienciaResponsavelPopover
-            audienciaId={audiencia.id}
-            responsavelId={audiencia.responsavelId}
-            usuarios={usuarios}
-            onSuccess={onResponsavelChange}
-            align="end"
+          {/* FOOTER — observações + responsável */}
+          <div
+            className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "mt-2.5 pt-2.5 border-t border-border/50 flex items-center gap-3")}
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
           >
-            <ResponsavelTriggerContent
-              responsavelId={audiencia.responsavelId}
-              usuarios={usuarios}
-              size="xs"
-            />
-          </AudienciaResponsavelPopover>
-        ) : (
-          audiencia.responsavelId && responsavelNomes?.get(audiencia.responsavelId) ? (
-            <span className="text-micro-caption text-muted-foreground/60">
-              {responsavelNomes.get(audiencia.responsavelId)}
-            </span>
-          ) : (
-            <span className="text-micro-caption italic text-warning/60">Sem resp.</span>
-          )
-        )}
+            {audiencia.observacoes && (
+              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 min-w-0 flex-1")}>
+                <MessageSquare className="w-3 h-3 shrink-0 text-muted-foreground/60" />
+                <span className="text-caption text-muted-foreground/65 line-clamp-1 flex-1">
+                  {audiencia.observacoes}
+                </span>
+              </div>
+            )}
+
+            <div className="shrink-0 ml-auto">
+              {usuarios ? (
+                <AudienciaResponsavelPopover
+                  audienciaId={audiencia.id}
+                  responsavelId={audiencia.responsavelId}
+                  usuarios={usuarios}
+                  onSuccess={onResponsavelChange}
+                  align="end"
+                >
+                  <ResponsavelTriggerContent
+                    responsavelId={audiencia.responsavelId}
+                    usuarios={usuarios}
+                    size="sm"
+                  />
+                </AudienciaResponsavelPopover>
+              ) : (
+                audiencia.responsavelId && responsavelNomes?.get(audiencia.responsavelId) ? (
+                  <span className="text-micro-caption text-muted-foreground/60">
+                    {responsavelNomes.get(audiencia.responsavelId)}
+                  </span>
+                ) : (
+                  <span className="text-micro-caption italic text-warning/60">Sem resp.</span>
+                )
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

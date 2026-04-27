@@ -390,13 +390,9 @@ export function ObservacoesCell({ expediente, onSuccessAction }: { expediente: E
 export function ExpedienteActions({
   expediente,
   onSuccessAction,
-  usuarios,
-  tiposExpedientes,
 }: {
   expediente: Expediente;
   onSuccessAction: () => void;
-  usuarios: Usuario[];
-  tiposExpedientes: TipoExpediente[];
 }) {
   const [showVisualizar, setShowVisualizar] = React.useState(false);
   const [showBaixar, setShowBaixar] = React.useState(false);
@@ -640,8 +636,6 @@ export const columns: ColumnDef<Expediente>[] = [
           <ExpedienteActions
             expediente={row.original}
             onSuccessAction={meta?.onSuccessAction}
-            usuarios={meta?.usuarios}
-            tiposExpedientes={meta?.tiposExpedientes}
           />
         </div>
       );

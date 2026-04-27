@@ -11,12 +11,12 @@ import { AppBadge as Badge } from '@/components/ui/app-badge';
 import {
   CheckCircle2,
   XCircle,
-  FileEdit,
   FilePlus,
   FileX,
   AlertTriangle,
   GitMerge,
   ScrollText,
+  ArrowRight,
 } from 'lucide-react';
 import type { CapturaRawLog } from '@/app/(authenticated)/captura';
 import type {
@@ -24,6 +24,7 @@ import type {
   LogRegistroInserido,
   LogRegistroAtualizado,
   LogErro,
+  ValorAlteradoLog,
 } from '../services/persistence/capture-log.service';
 import {
   formatarGrau,
@@ -43,6 +44,56 @@ function calcularEstatisticas(logs: LogEntry[]) {
   };
 }
 
+function formatarValor(valor: unknown): string {
+  if (valor === null || valor === undefined) return '—';
+  if (typeof valor === 'boolean') return valor ? 'Sim' : 'Não';
+  if (typeof valor === 'string') {
+    // Datas ISO
+    if (/^\d{4}-\d{2}-\d{2}T/.test(valor)) {
+      try {
+        return new Date(valor).toLocaleString('pt-BR');
+      } catch {
+        return valor;
+      }
+    }
+    if (/^\d{4}-\d{2}-\d{2}$/.test(valor)) {
+      try {
+        return new Date(valor + 'T00:00:00').toLocaleDateString('pt-BR');
+      } catch {
+        return valor;
+      }
+    }
+    return valor || '—';
+  }
+  return String(valor);
+}
+
+function ValoresDiff({ valores }: { valores: ValorAlteradoLog[] }) {
+  return (
+    <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "mt-2 space-y-1.5")}>
+      {valores.map((v, i) => (
+        <div
+          key={i}
+          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex flex-wrap items-start gap-x-2 gap-y-0.5 rounded-md bg-info/[0.04] border border-info/10 px-3 py-2")}
+        >
+          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; min-w arbitrária para alinhar diff lado a lado */ "text-[11px] font-medium text-foreground/70 shrink-0 min-w-[120px]")}>
+            {formatarCampoAlterado(v.campo)}
+          </span>
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 flex-wrap")}>
+            <span className="text-[11px] text-muted-foreground line-through decoration-muted-foreground/40">
+              {formatarValor(v.antes)}
+            </span>
+            <ArrowRight className="size-3 text-muted-foreground/50 shrink-0" />
+            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-foreground/80")}>
+              {formatarValor(v.depois)}
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function LogStats({ logs }: { logs: LogEntry[] }) {
   const stats = calcularEstatisticas(logs);
 
@@ -56,7 +107,7 @@ function LogStats({ logs }: { logs: LogEntry[] }) {
         </div>
       </div>
       <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-2.5 → usar <Inset> */ "flex items-center gap-2.5 rounded-lg border bg-info/5 border-info/20 p-2.5")}>
-        <FileEdit className="h-4 w-4 text-info shrink-0" />
+        <ArrowRight className="h-4 w-4 text-info shrink-0" />
         <div>
           <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground uppercase tracking-wider")}>Atualizados</p>
           <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold tabular-nums")}>{stats.atualizados}</p>
@@ -97,7 +148,7 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
   const atualizados = logs.filter((l): l is LogRegistroAtualizado => l.tipo === 'atualizado');
 
   return (
-    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "mt-3 space-y-3")}>
+    <div className={cn(/* design-system-escape: space-y-4 sem token DS */ "mt-3 space-y-4")}>
       {erros.length > 0 && (
         <div>
           <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-semibold text-destructive uppercase tracking-wider mb-2")}>
@@ -107,10 +158,10 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
             {erros.map((log, i) => (
               <div
                 key={i}
-                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2.5 → usar <Inset>; text-xs → migrar para <Text variant="caption"> */ "flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/[0.06] p-2.5 text-xs")}
+                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2.5 → usar <Inset> */ "flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/[0.06] p-2.5")}
               >
                 <XCircle className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />
-                <div className="min-w-0">
+                <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "min-w-0 text-xs")}>
                   <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>{formatarEntidade(log.entidade)}</span>
                   <span className="text-muted-foreground ml-1.5">— {log.erro}</span>
                 </div>
@@ -123,22 +174,24 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
       {inseridos.length > 0 && (
         <div>
           <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-semibold text-success uppercase tracking-wider mb-2")}>
-            Processos inseridos ({inseridos.length})
+            Processos incluídos ({inseridos.length})
           </p>
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-wrap gap-1")}>
+          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
             {inseridos.slice(0, 30).map((log, i) => (
-              <Badge
+              <div
                 key={i}
-                variant="outline"
-                className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0 font-mono bg-success/5 border-success/20")}
+                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 rounded-md bg-success/[0.04] border border-success/15 px-2.5 py-1.5")}
               >
-                {log.numero_processo || `PJE #${log.id_pje}`}
-              </Badge>
+                <CheckCircle2 className="h-3 w-3 text-success shrink-0" />
+                <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/80")}>
+                  {log.numero_processo || `Processo PJE ${log.id_pje}`}
+                </span>
+              </div>
             ))}
             {inseridos.length > 30 && (
-              <Badge variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0")}>
-                +{inseridos.length - 30} mais
-              </Badge>
+              <p className={cn(/* design-system-escape: pl-1 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground pl-1")}>
+                +{inseridos.length - 30} registros adicionais
+              </p>
             )}
           </div>
         </div>
@@ -149,20 +202,23 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
           <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-semibold text-info uppercase tracking-wider mb-2")}>
             Processos atualizados ({atualizados.length})
           </p>
-          <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+          <div className={cn(/* design-system-escape: space-y-2 sem token DS */ "space-y-2")}>
             {atualizados.slice(0, 15).map((log, i) => (
               <div
                 key={i}
-                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-start gap-2 text-xs rounded-md bg-info/[0.04] border border-info/10 px-2.5 py-2")}
+                className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "rounded-md border border-border/60 bg-muted/20 px-3 py-2.5")}
               >
-                <span className="font-mono text-foreground/80 shrink-0">
-                  {log.numero_processo || `PJE #${log.id_pje}`}
-                </span>
-                {log.campos_alterados.length > 0 && (
-                  <span className="text-muted-foreground">
-                    — {log.campos_alterados.map(formatarCampoAlterado).join(', ')}
-                  </span>
-                )}
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-foreground/90 mb-1")}>
+                  {log.numero_processo || `Processo PJE ${log.id_pje}`}
+                </p>
+
+                {log.valores_alterados && log.valores_alterados.length > 0 ? (
+                  <ValoresDiff valores={log.valores_alterados} />
+                ) : log.campos_alterados.length > 0 ? (
+                  <p className="text-[11px] text-muted-foreground">
+                    Campos alterados: {log.campos_alterados.map(formatarCampoAlterado).join(', ')}
+                  </p>
+                ) : null}
               </div>
             ))}
             {atualizados.length > 15 && (
@@ -229,7 +285,7 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
           const isError = rawLog.status === 'error';
 
           const resumo: string[] = [];
-          if (stats.inseridos > 0) resumo.push(`${stats.inseridos} inserido${stats.inseridos !== 1 ? 's' : ''}`);
+          if (stats.inseridos > 0) resumo.push(`${stats.inseridos} incluído${stats.inseridos !== 1 ? 's' : ''}`);
           if (stats.atualizados > 0) resumo.push(`${stats.atualizados} atualizado${stats.atualizados !== 1 ? 's' : ''}`);
           if (stats.naoAtualizados > 0) resumo.push(`${stats.naoAtualizados} sem alteração`);
           if (stats.erros > 0) resumo.push(`${stats.erros} erro${stats.erros !== 1 ? 's' : ''}`);
@@ -241,7 +297,7 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
               className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "rounded-lg border px-4 cursor-pointer hover:border-border/80 transition-colors duration-150")}
             >
               <AccordionTrigger className={cn(/* design-system-escape: py-3 padding direcional sem Inset equiv. */ "py-3 hover:no-underline")}>
-                <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "flex flex-1 items-center gap-2.5 text-sm min-w-0")}>
+                <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex flex-1 items-center gap-2.5 text-sm min-w-0")}>
                   {isError ? (
                     <XCircle className="h-4 w-4 text-destructive shrink-0" />
                   ) : (
@@ -273,9 +329,9 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
                 <div className={cn(/* design-system-escape: space-y-3 sem token DS; pb-3 padding direcional sem Inset equiv. */ "space-y-3 pb-3")}>
                   {/* Erro principal do raw log */}
                   {rawLog.erro && (
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset>; text-xs → migrar para <Text variant="caption"> */ "flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/[0.06] p-3 text-xs")}>
+                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset> */ "flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/[0.06] p-3")}>
                       <XCircle className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />
-                      <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-foreground leading-relaxed")}>{rawLog.erro}</p>
+                      <p className={cn(/* design-system-escape: leading-relaxed sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-foreground leading-relaxed")}>{rawLog.erro}</p>
                     </div>
                   )}
 
@@ -290,7 +346,7 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
                   {/* Metadados */}
                   <div className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-muted-foreground pt-2.5 border-t")}>
                     <span>
-                      Credencial <span className="font-mono">#{rawLog.credencial_id}</span>
+                      Credencial #{rawLog.credencial_id}
                     </span>
                     <span>Registrado em {new Date(rawLog.criado_em).toLocaleString('pt-BR')}</span>
                   </div>

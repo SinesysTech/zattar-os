@@ -33,17 +33,14 @@ import {
   buscarCliente,
   listarClientes,
   desativarCliente,
-  reativarEAtualizarCliente,
   criarParteContraria,
   atualizarParteContraria,
   buscarParteContraria,
   listarPartesContrarias,
-  reativarEAtualizarParteContraria,
   criarTerceiro,
   atualizarTerceiro,
   buscarTerceiro,
   listarTerceiros,
-  reativarEAtualizarTerceiro,
 } from '../service';
 import { isInactiveDuplicateAppError } from '../errors';
 import type { AppError } from '@/types';

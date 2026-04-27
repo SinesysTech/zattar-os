@@ -200,8 +200,11 @@ const eslintConfig = defineConfig([
   },
   // Governança do Design System: impedir uso direto do Badge em módulos de feature.
   // Use SemanticBadge / wrappers semânticos para manter consistência.
+  // Exceção: a página interna de showcase do Design System exibe o Badge bruto
+  // como demonstração de variantes — uso legítimo, não é feature code.
   {
     files: ["src/app/(authenticated)/**"],
+    ignores: ["src/app/(authenticated)/design-system/**"],
     rules: {
       "no-restricted-imports": [
         "error",
@@ -246,6 +249,9 @@ const eslintConfig = defineConfig([
       "**/*.test.{ts,tsx}",
       "**/*.spec.{ts,tsx}",
       "src/app/(dev)/**",
+      // Página interna de showcase do Design System — exibe tokens e
+      // paletas OKLCH como demonstração visual (mesmo papel de (dev)/library/**).
+      "src/app/(authenticated)/design-system/**",
     ],
     rules: {
       // ERROR — bloqueia build. Promovido de `warn` após refatoração

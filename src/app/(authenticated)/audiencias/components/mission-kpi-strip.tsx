@@ -17,7 +17,6 @@ import { parseISO, isSameWeek, isSameMonth } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { IconContainer } from '@/components/ui/icon-container';
-import { Text } from '@/components/ui/typography';
 import {
   Sparkline,
   AnimatedNumber,
@@ -131,14 +130,12 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
   return (
     <div className={`grid grid-cols-2 lg:grid-cols-4 gap-3 ${className ?? ''}`}>
       {/* ── Semana ─────────────────────────────────────── */}
-      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <Text variant="micro-caption" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "font-medium uppercase tracking-wider text-muted-foreground/60")}>
-              Semana
-            </Text>
+            <p className="text-meta-label">Semana</p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
+              <p className={cn(/* design-system-escape: leading-none/tracking-tight para apertar o KPI numérico junto ao caption */ "text-kpi-value leading-none tracking-tight")}>
                 <AnimatedNumber value={stats.totalSemana} />
               </p>
               <span className="text-micro-caption text-muted-foreground/45">audiências</span>
@@ -162,14 +159,12 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
       </GlassPanel>
 
       {/* ── Próxima ────────────────────────────────────── */}
-      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <Text variant="micro-caption" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "font-medium uppercase tracking-wider text-muted-foreground/60")}>
-              Próxima
-            </Text>
+            <p className="text-meta-label">Próxima</p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
+              <p className={cn(/* design-system-escape: leading-none/tracking-tight para apertar o KPI numérico junto ao caption */ "text-kpi-value leading-none tracking-tight tabular-nums")}>
                 {stats.nextLabel}
               </p>
             </div>
@@ -191,14 +186,12 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
       </GlassPanel>
 
       {/* ── Realizadas ─────────────────────────────────── */}
-      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <Text variant="micro-caption" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "font-medium uppercase tracking-wider text-muted-foreground/60")}>
-              Realizadas
-            </Text>
+            <p className="text-meta-label">Realizadas</p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
+              <p className={cn(/* design-system-escape: leading-none/tracking-tight para apertar o KPI numérico junto ao caption */ "text-kpi-value leading-none tracking-tight")}>
                 <AnimatedNumber value={stats.realizadasMes} />
               </p>
               <span className="text-micro-caption text-muted-foreground/45">/ {stats.relevantesMes} mês</span>
@@ -223,14 +216,12 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
       </GlassPanel>
 
       {/* ── Preparo ────────────────────────────────────── */}
-      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <Text variant="micro-caption" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "font-medium uppercase tracking-wider text-muted-foreground/60")}>
-              Preparo
-            </Text>
+            <p className="text-meta-label">Preparo</p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
+              <p className={cn(/* design-system-escape: leading-none/tracking-tight para apertar o KPI numérico junto ao caption */ "text-kpi-value leading-none tracking-tight tabular-nums")}>
                 {stats.avgPrep}%
               </p>
               <span className="text-micro-caption text-muted-foreground/45">média</span>

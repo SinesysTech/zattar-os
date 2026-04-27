@@ -131,7 +131,6 @@ import {
 } from './errors';
 import {
   validarInput,
-  verificarDuplicidadeDocumento,
   verificarDuplicidadeDocumentoComSoftDelete,
 } from './utils';
 
