@@ -3991,6 +3991,7 @@ export type Database = {
           sigla_orgao_julgador: string | null
           tipo_expediente_id: number | null
           trt: Database["public"]["Enums"]["codigo_tribunal"]
+          ultima_captura_id: number | null
           updated_at: string
         }
         Insert: {
@@ -4037,6 +4038,7 @@ export type Database = {
           sigla_orgao_julgador?: string | null
           tipo_expediente_id?: number | null
           trt: Database["public"]["Enums"]["codigo_tribunal"]
+          ultima_captura_id?: number | null
           updated_at?: string
         }
         Update: {
@@ -4083,6 +4085,7 @@ export type Database = {
           sigla_orgao_julgador?: string | null
           tipo_expediente_id?: number | null
           trt?: Database["public"]["Enums"]["codigo_tribunal"]
+          ultima_captura_id?: number | null
           updated_at?: string
         }
         Relationships: [
@@ -4119,6 +4122,13 @@ export type Database = {
             columns: ["tipo_expediente_id"]
             isOneToOne: false
             referencedRelation: "tipos_expedientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "expedientes_ultima_captura_id_fkey"
+            columns: ["ultima_captura_id"]
+            isOneToOne: false
+            referencedRelation: "capturas_log"
             referencedColumns: ["id"]
           },
         ]

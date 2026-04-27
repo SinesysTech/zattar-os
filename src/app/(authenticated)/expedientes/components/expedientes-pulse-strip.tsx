@@ -99,11 +99,11 @@ export function ExpedientesPulseStrip({
                   {metric.label}
                 </p>
                 <div className="flex items-baseline gap-1.5 mt-1">
-                  <p className={cn(
-                    'text-kpi-value leading-none tracking-tight',
-                    metric.highlight && metric.value > 0 && 'text-destructive/80',
-                  )}>
-                    <AnimatedNumber value={metric.value} />
+                  <p className="text-kpi-value font-bold leading-none tracking-tight">
+                    <AnimatedNumber
+                      value={metric.value}
+                      className={metric.highlight && metric.value > 0 ? 'text-destructive' : ''}
+                    />
                   </p>
                 </div>
               </div>
