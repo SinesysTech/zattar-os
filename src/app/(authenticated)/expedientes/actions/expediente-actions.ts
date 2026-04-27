@@ -593,13 +593,14 @@ export async function actionObterResumoUltimaCaptura(): Promise<ActionResult<Res
   try {
     const result = await obterResumoUltimaCaptura();
     if (!result.success) {
-      return { success: false, error: result.error.message };
+      return { success: false, error: result.error.message, message: result.error.message };
     }
-    return { success: true, data: result.data };
+    return { success: true, data: result.data, message: "Resumo obtido com sucesso" };
   } catch (error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao obter resumo da última captura.",
     };
   }
 }
