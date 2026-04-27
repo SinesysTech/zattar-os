@@ -62,6 +62,7 @@ type ExpedienteRow = {
   arquivo_key: string | null;
   observacoes: string | null;
   origem: OrigemExpediente;
+  ultima_captura_id: number | null;
   resultado_decisao: string | null;
   created_at: string;
   updated_at: string;
@@ -125,6 +126,7 @@ function converterParaExpediente(data: ExpedienteRow | ExpedienteRowComOrigem): 
     arquivoKey: data.arquivo_key,
     observacoes: data.observacoes,
     origem: data.origem,
+    ultimaCapturaId: data.ultima_captura_id,
     resultadoDecisao: data.resultado_decisao as ResultadoDecisao | null,
     createdAt: data.created_at,
     updatedAt: data.updated_at,

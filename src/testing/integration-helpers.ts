@@ -84,6 +84,7 @@ export const mockExpediente = (overrides?: Partial<Expediente>): Expediente => {
     arquivoKey: null,
     observacoes: null,
     origem: 'manual' as OrigemExpediente,
+    ultimaCapturaId: null,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     ...restOverrides,

@@ -113,6 +113,7 @@ export interface Expediente {
   arquivoKey: string | null;
   observacoes: string | null;
   origem: OrigemExpediente;
+  ultimaCapturaId: number | null;
   resultadoDecisao: ResultadoDecisao | null;
   createdAt: string;
   updatedAt: string;
@@ -257,6 +258,7 @@ export type ListarExpedientesParams = {
   origem?: OrigemExpediente;
   resultadoDecisao?: ResultadoDecisao;
   prioridadeProcessual?: boolean;
+  capturaId?: number;
 };
 
 /**
@@ -293,6 +295,19 @@ export function getExpedienteUrgencyLevel(exp: { baixadoEm?: string | null; data
   if (dias === 0) return 'alto';
   if (dias <= 3) return 'medio';
   return 'baixo';
+}
+
+// =============================================================================
+// RESUMO DE CAPTURA
+// =============================================================================
+
+export interface ResumoUltimaCaptura {
+  capturaId: number;
+  tipoCaptura: string;
+  concluidoEm: string;
+  totalCriados: number;
+  totalAtualizados: number;
+  total: number;
 }
 
 // (EOF)
