@@ -12,6 +12,7 @@ import {
   GrauTribunal,
   OrigemExpediente,
   ResultadoDecisao,
+  ResumoUltimaCaptura,
 } from "./domain";
 
 // =============================================================================
@@ -366,6 +367,7 @@ export async function findAllExpedientes(
       query = query.gte("data_arquivamento", params.dataArquivamentoInicio);
     if (params.dataArquivamentoFim) query = query.lte("data_arquivamento", params.dataArquivamentoFim);
     if (params.origem) query = query.eq("origem", params.origem);
+    if (params.capturaId !== undefined) query = query.eq("ultima_captura_id", params.capturaId);
     if (params.resultadoDecisao) query = query.eq("resultado_decisao", params.resultadoDecisao);
     if (params.prioridadeProcessual !== undefined)
       query = query.eq("prioridade_processual", params.prioridadeProcessual);
@@ -743,6 +745,62 @@ export async function updateResponsavel(
       appError(
         "DATABASE_ERROR",
         "Erro ao atualizar responsável.",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+// =============================================================================
+// RESUMO DE CAPTURA
+// =============================================================================
+
+export async function obterResumoUltimaCaptura(): Promise<Result<ResumoUltimaCaptura | null>> {
+  try {
+    const db = createDbClient();
+
+    const { data: captura, error: capturaError } = await db
+      .from("capturas_log")
+      .select("id, tipo_captura, iniciado_em, concluido_em")
+      .eq("status", "completed")
+      .order("concluido_em", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (capturaError) {
+      return err(appError("DATABASE_ERROR", capturaError.message));
+    }
+    if (!captura) return ok(null);
+
+    const [totalResult, criadosResult] = await Promise.all([
+      db
+        .from(TABLE_EXPEDIENTES)
+        .select("id", { count: "exact", head: true })
+        .eq("ultima_captura_id", captura.id),
+      db
+        .from(TABLE_EXPEDIENTES)
+        .select("id", { count: "exact", head: true })
+        .eq("ultima_captura_id", captura.id)
+        .gte("created_at", captura.iniciado_em),
+    ]);
+
+    const total = totalResult.count ?? 0;
+    const totalCriados = criadosResult.count ?? 0;
+
+    return ok({
+      capturaId: captura.id,
+      tipoCaptura: captura.tipo_captura,
+      concluidoEm: captura.concluido_em,
+      totalCriados,
+      totalAtualizados: total - totalCriados,
+      total,
+    });
+  } catch (error) {
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao obter resumo da última captura.",
         undefined,
         error instanceof Error ? error : undefined
       )
