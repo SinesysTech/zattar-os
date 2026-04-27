@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -76,7 +77,7 @@ export function ObrigacoesRecentesCard() {
           <Skeleton className="h-6 w-48" />
         </CardHeader>
         <CardContent>
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             {[1, 2, 3, 4, 5].map((i) => (
               <Skeleton key={i} className="h-12 w-full" />
             ))}
@@ -93,7 +94,7 @@ export function ObrigacoesRecentesCard() {
           <CardTitle>Obrigações Recentes</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">Erro ao carregar obrigações: {error}</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Erro ao carregar obrigações: {error}</p>
         </CardContent>
       </GlassPanel>
     );
@@ -106,7 +107,7 @@ export function ObrigacoesRecentesCard() {
           <CardTitle>Obrigações Recentes</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">Nenhuma obrigação encontrada.</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Nenhuma obrigação encontrada.</p>
         </CardContent>
       </GlassPanel>
     );
@@ -114,7 +115,7 @@ export function ObrigacoesRecentesCard() {
 
   return (
     <GlassPanel className="col-span-full">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <CardHeader className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
         <CardTitle>Obrigações Recentes</CardTitle>
         <Button variant="ghost" size="sm" asChild>
           <Link href="/obrigacoes">
@@ -137,7 +138,7 @@ export function ObrigacoesRecentesCard() {
           <TableBody>
             {obrigacoesOrdenadas.map((ob) => (
               <TableRow key={ob.id}>
-                <TableCell className="font-medium">
+                <TableCell className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
                   <div>{getTipoLabel(ob)}</div>
                 </TableCell>
                 <TableCell>

@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -25,7 +26,7 @@ import { generateSlug, type AssinaturaDigitalSegmento, type AssinaturaDigitalTem
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
 const SELECT_CLASS =
-  'flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50';
+  /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ 'flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50';
 
 const createFormularioSchema = z.object({
   nome: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres'),
@@ -249,14 +250,14 @@ export function FormularioCreateDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4 py-4">
+          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-4 padding direcional sem Inset equiv. */ "space-y-4 py-4")}>
             {Object.keys(errors).length > 0 && (
-              <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-3 text-sm text-destructive")}>
                 Corrija os erros no formulário antes de continuar.
               </div>
             )}
 
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label htmlFor="nome">
                 Nome <span className="text-destructive">*</span>
               </Label>
@@ -267,11 +268,11 @@ export function FormularioCreateDialog({
                 disabled={isSubmitting}
               />
               {errors.nome && (
-                <p className="text-sm text-destructive">{errors.nome.message}</p>
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.nome.message}</p>
               )}
             </div>
 
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label htmlFor="slug">
                 Slug <span className="text-destructive">*</span>
               </Label>
@@ -283,11 +284,11 @@ export function FormularioCreateDialog({
                 readOnly
               />
               {errors.slug && (
-                <p className="text-sm text-destructive">{errors.slug.message}</p>
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.slug.message}</p>
               )}
             </div>
 
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label>
                 Segmento <span className="text-destructive">*</span>
               </Label>
@@ -300,11 +301,11 @@ export function FormularioCreateDialog({
                 disabled={isSubmitting}
               />
               {errors.segmento_id && (
-                <p className="text-sm text-destructive">{errors.segmento_id.message}</p>
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.segmento_id.message}</p>
               )}
             </div>
 
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label htmlFor="descricao">Descrição</Label>
               <Textarea
                 id="descricao"
@@ -313,11 +314,11 @@ export function FormularioCreateDialog({
                 disabled={isSubmitting}
               />
               {errors.descricao && (
-                <p className="text-sm text-destructive">{errors.descricao.message}</p>
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.descricao.message}</p>
               )}
             </div>
 
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label>Templates</Label>
               <Combobox
                 options={templateOptions}
@@ -329,14 +330,14 @@ export function FormularioCreateDialog({
               />
               {/* Preview dos templates selecionados */}
               {templateIds.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 pt-1">
+                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; pt-1 padding direcional sem Inset equiv. */ "flex flex-wrap gap-1.5 pt-1")}>
                   {templateIds.map((templateUuid) => {
                     const template = templates.find(t => t.template_uuid === templateUuid);
                     return (
                       <Badge
                         key={templateUuid}
                         variant="secondary"
-                        className="gap-1 pr-1"
+                        className={cn(/* design-system-escape: gap-1 gap sem token DS; pr-1 padding direcional sem Inset equiv. */ "gap-1 pr-1")}
                       >
                         <span className="truncate max-w-37.5">
                           {template?.nome || templateUuid}
@@ -344,7 +345,7 @@ export function FormularioCreateDialog({
                         <button
                           type="button"
                           onClick={() => setTemplateIds(templateIds.filter(id => id !== templateUuid))}
-                          className="ml-0.5 rounded-full p-0.5 hover:bg-muted-foreground/20"
+                          className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-0.5 rounded-full p-0.5 hover:bg-muted-foreground/20")}
                           disabled={isSubmitting}
                         >
                           <X className="h-3 w-3" />
@@ -358,7 +359,7 @@ export function FormularioCreateDialog({
             </div>
 
             {/* Tipo de formulário */}
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label htmlFor="tipo_formulario">Tipo de Formulário</Label>
               <select
                 id="tipo_formulario"
@@ -382,12 +383,12 @@ export function FormularioCreateDialog({
 
             {/* Campos de configuração de contrato */}
             {tipoFormulario === 'contrato' && (
-              <div className="space-y-4 rounded-md border p-4">
-                <p className="text-sm font-medium text-muted-foreground">
+              <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; p-4 → migrar para <Inset variant="card-compact"> */ "space-y-4 rounded-md border p-4")}>
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground")}>
                   Configuração do Contrato
                 </p>
 
-                <div className="space-y-2">
+                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                   <Label htmlFor="tipo_contrato_id">
                     Tipo de Contrato <span className="text-destructive">*</span>
                   </Label>
@@ -407,13 +408,13 @@ export function FormularioCreateDialog({
                     ))}
                   </select>
                   {errors.contrato_config?.tipo_contrato_id && (
-                    <p className="text-sm text-destructive">
+                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
                       {errors.contrato_config.tipo_contrato_id.message}
                     </p>
                   )}
                 </div>
 
-                <div className="space-y-2">
+                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                   <Label htmlFor="tipo_cobranca_id">
                     Tipo de Cobrança <span className="text-destructive">*</span>
                   </Label>
@@ -433,13 +434,13 @@ export function FormularioCreateDialog({
                     ))}
                   </select>
                   {errors.contrato_config?.tipo_cobranca_id && (
-                    <p className="text-sm text-destructive">
+                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
                       {errors.contrato_config.tipo_cobranca_id.message}
                     </p>
                   )}
                 </div>
 
-                <div className="space-y-2">
+                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                   <Label htmlFor="papel_cliente">
                     Papel do Cliente <span className="text-destructive">*</span>
                   </Label>
@@ -454,13 +455,13 @@ export function FormularioCreateDialog({
                     <option value="re">Ré</option>
                   </select>
                   {errors.contrato_config?.papel_cliente && (
-                    <p className="text-sm text-destructive">
+                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
                       {errors.contrato_config.papel_cliente.message}
                     </p>
                   )}
                 </div>
 
-                <div className="space-y-2">
+                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                   <Label htmlFor="pipeline_id">
                     Pipeline <span className="text-destructive">*</span>
                   </Label>
@@ -484,7 +485,7 @@ export function FormularioCreateDialog({
                     ))}
                   </select>
                   {errors.contrato_config?.pipeline_id && (
-                    <p className="text-sm text-destructive">
+                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
                       {errors.contrato_config.pipeline_id.message}
                     </p>
                   )}
@@ -492,7 +493,7 @@ export function FormularioCreateDialog({
               </div>
             )}
 
-            <div className="flex items-center space-x-2">
+            <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
               <Switch
                 id="foto_necessaria"
                 checked={watch('foto_necessaria')}
@@ -504,7 +505,7 @@ export function FormularioCreateDialog({
               </Label>
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
               <Switch
                 id="geolocation_necessaria"
                 checked={watch('geolocation_necessaria')}
@@ -516,7 +517,7 @@ export function FormularioCreateDialog({
               </Label>
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
               <Switch
                 id="ativo"
                 checked={watch('ativo')}

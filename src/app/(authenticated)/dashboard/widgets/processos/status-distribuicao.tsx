@@ -7,6 +7,7 @@
  *   - role=admin: data.metricas + data.processos.porStatus
  */
 
+import { cn } from '@/lib/utils';
 import { PieChart } from 'lucide-react';
 import {
   WidgetContainer,
@@ -38,7 +39,7 @@ export function WidgetStatusDistribuicao() {
         subtitle="Total de processos ativos"
         depth={1}
       >
-        <p className="text-xs text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
           Nao foi possivel carregar os dados processuais.
         </p>
       </WidgetContainer>
@@ -77,21 +78,21 @@ export function WidgetStatusDistribuicao() {
       subtitle="Total de processos ativos"
       depth={1}
     >
-      <div className="flex items-center gap-5">
+      <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5")}>
         <MiniDonut
           segments={segments}
           size={88}
           strokeWidth={11}
           centerLabel={fmtNum(total)}
         />
-        <div className="flex flex-col justify-center gap-2.5 flex-1 min-w-0">
+        <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex flex-col justify-center gap-2.5 flex-1 min-w-0")}>
           {segments.map((seg) => (
-            <div key={seg.label} className="flex items-center gap-2">
+            <div key={seg.label} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <ToneDot tone={seg.tone} color={!seg.tone ? seg.color : undefined} aria-label={seg.label} />
               <span className="text-[10px] text-muted-foreground/60 truncate flex-1">
                 {seg.label}
               </span>
-              <span className="text-[10px] font-medium tabular-nums">
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums")}>
                 {fmtNum(seg.value)}
               </span>
               <span className="text-[9px] text-muted-foreground/60 w-7 text-right tabular-nums">

@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import {
   Dialog,
@@ -128,20 +129,20 @@ export function AlterarSenhaDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4 py-4">
+          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-4 padding direcional sem Inset equiv. */ "space-y-4 py-4")}>
             {error && (
-              <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-3 text-sm text-destructive")}>
                 {error}
               </div>
             )}
 
             {successMessage && (
-              <div className="rounded-md bg-success/15 p-3 text-sm text-success border border-success/15">
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-success/15 p-3 text-sm text-success border border-success/15")}>
                 {successMessage}
               </div>
             )}
 
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label htmlFor="senhaAtual">Senha Atual *</Label>
               <div className="relative">
                 <Input
@@ -153,7 +154,7 @@ export function AlterarSenhaDialog({
                   placeholder="Digite sua senha atual"
                   required
                   disabled={isLoading || !!successMessage}
-                  className="pr-10"
+                  className={cn(/* design-system-escape: pr-10 padding direcional sem Inset equiv. */ "pr-10")}
                 />
                 <button
                   type="button"
@@ -170,7 +171,7 @@ export function AlterarSenhaDialog({
               </div>
             </div>
 
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label htmlFor="novaSenha">Nova Senha *</Label>
               <div className="relative">
                 <Input
@@ -182,7 +183,7 @@ export function AlterarSenhaDialog({
                   placeholder="Digite sua nova senha"
                   required
                   disabled={isLoading || !!successMessage}
-                  className="pr-10"
+                  className={cn(/* design-system-escape: pr-10 padding direcional sem Inset equiv. */ "pr-10")}
                 />
                 <button
                   type="button"
@@ -202,7 +203,7 @@ export function AlterarSenhaDialog({
               </Text>
             </div>
 
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label htmlFor="confirmarSenha">Confirmar Nova Senha *</Label>
               <div className="relative">
                 <Input
@@ -214,7 +215,7 @@ export function AlterarSenhaDialog({
                   placeholder="Digite novamente sua nova senha"
                   required
                   disabled={isLoading || !!successMessage}
-                  className="pr-10"
+                  className={cn(/* design-system-escape: pr-10 padding direcional sem Inset equiv. */ "pr-10")}
                 />
                 <button
                   type="button"

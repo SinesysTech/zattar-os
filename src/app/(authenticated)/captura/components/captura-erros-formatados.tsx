@@ -1,9 +1,9 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { cn } from '@/lib/utils';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
-import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { XCircle, AlertTriangle, Clock, Wifi } from 'lucide-react';
+import { formatarGrau, formatarFiltro } from '../utils/format-captura';
 
 interface ErroCaptura {
   trt: string;
@@ -18,6 +18,13 @@ interface ErroAgrupado {
   tribunal: string;
   erros: ErroCaptura[];
 }
+
+const TIPO_ERRO_LABELS: Record<ErroCaptura['tipo'], string> = {
+  timeout: 'Timeout',
+  auth: 'Autenticação',
+  network: 'Rede',
+  outro: 'Outro',
+};
 
 function classificarErro(mensagem: string): ErroCaptura['tipo'] {
   const msg = mensagem.toLowerCase();
@@ -50,7 +57,6 @@ function parsearErros(erro: string): ErroCaptura[] {
     });
   }
 
-  // Se não conseguiu parsear, retorna o erro como item único
   if (erros.length === 0 && erro.trim()) {
     erros.push({
       trt: 'Desconhecido',
@@ -70,32 +76,13 @@ function agruparPorTribunal(erros: ErroCaptura[]): ErroAgrupado[] {
 
   for (const erro of erros) {
     const chave = erro.trt;
-    if (!mapa.has(chave)) {
-      mapa.set(chave, []);
-    }
+    if (!mapa.has(chave)) mapa.set(chave, []);
     mapa.get(chave)!.push(erro);
   }
 
   return Array.from(mapa.entries())
     .map(([tribunal, erros]) => ({ tribunal, erros }))
     .sort((a, b) => a.tribunal.localeCompare(b.tribunal));
-}
-
-function formatarGrau(grau: string): string {
-  switch (grau) {
-    case 'primeiro_grau': return '1\u00ba Grau';
-    case 'segundo_grau': return '2\u00ba Grau';
-    case 'tribunal_superior': return 'Tribunal Superior';
-    default: return grau;
-  }
-}
-
-function formatarFiltro(filtro: string): string {
-  switch (filtro) {
-    case 'sem_prazo': return 'Sem Prazo';
-    case 'no_prazo': return 'No Prazo';
-    default: return filtro;
-  }
 }
 
 function IconeErro({ tipo }: { tipo: ErroCaptura['tipo'] }) {
@@ -115,78 +102,84 @@ export function CapturaErrosFormatados({ erro }: CapturaErrosFormatadosProps) {
   const errosParsed = parsearErros(erro);
   const grupos = agruparPorTribunal(errosParsed);
 
-  // Resumo por tipo de erro
   const contagemPorTipo = errosParsed.reduce((acc, e) => {
     acc[e.tipo] = (acc[e.tipo] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
 
   return (
-    <Alert variant="destructive">
-      <XCircle className="h-4 w-4" />
-      <AlertTitle>Erros na Captura</AlertTitle>
-      <AlertDescription>
-        <div className="mt-2 space-y-4">
-          {/* Resumo */}
-          <div className="flex flex-wrap gap-2">
-            <Badge variant="destructive">{errosParsed.length} erro{errosParsed.length !== 1 ? 's' : ''}</Badge>
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      {/* Cabeçalho de erros */}
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/[0.06] p-4")}>
+        <XCircle className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 min-w-0 w-full")}>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold text-destructive")}>
+            {errosParsed.length} erro{errosParsed.length !== 1 ? 's' : ''} na captura
+          </p>
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-wrap gap-1.5")}>
             {contagemPorTipo.timeout && (
-              <SemanticBadge category="error_type" value="timeout">
-                <Clock className="mr-1 h-3 w-3" /> {contagemPorTipo.timeout} timeout{contagemPorTipo.timeout !== 1 ? 's' : ''}
-              </SemanticBadge>
+              <Badge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv.; gap-1 gap sem token DS */ "text-[10px] px-1.5 py-0 gap-1 border-warning/30 bg-warning/5 text-warning-foreground")}>
+                <Clock className="h-3 w-3 text-warning" />
+                {contagemPorTipo.timeout} timeout{contagemPorTipo.timeout !== 1 ? 's' : ''}
+              </Badge>
             )}
             {contagemPorTipo.auth && (
-              <SemanticBadge category="error_type" value="auth">
-                <AlertTriangle className="mr-1 h-3 w-3" /> {contagemPorTipo.auth} autenticacao
-              </SemanticBadge>
+              <Badge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv.; gap-1 gap sem token DS */ "text-[10px] px-1.5 py-0 gap-1 border-destructive/30 bg-destructive/5")}>
+                <AlertTriangle className="h-3 w-3 text-destructive" />
+                {contagemPorTipo.auth} autenticação
+              </Badge>
             )}
             {contagemPorTipo.network && (
-              <SemanticBadge category="error_type" value="network">
-                <Wifi className="mr-1 h-3 w-3" /> {contagemPorTipo.network} rede
-              </SemanticBadge>
+              <Badge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv.; gap-1 gap sem token DS */ "text-[10px] px-1.5 py-0 gap-1 border-warning/30 bg-warning/5")}>
+                <Wifi className="h-3 w-3 text-warning" />
+                {contagemPorTipo.network} conexão de rede
+              </Badge>
             )}
           </div>
-
-          {/* Erros agrupados por tribunal */}
-          <div className="space-y-3">
-            {grupos.map((grupo) => (
-              <div key={grupo.tribunal} className="rounded-md border border-destructive dark:border-destructive bg-background/50 p-3">
-                <div className="mb-2 font-medium text-sm text-foreground">
-                  {grupo.tribunal}
-                  <span className="ml-2 text-muted-foreground font-normal">
-                    ({grupo.erros.length} erro{grupo.erros.length !== 1 ? 's' : ''})
-                  </span>
-                </div>
-                <div className="space-y-1.5">
-                  {grupo.erros.map((erro, i) => (
-                    <div key={i} className="flex items-start gap-2 text-xs">
-                      <IconeErro tipo={erro.tipo} />
-                      <div className="min-w-0 flex-1">
-                        <span className="inline-flex items-center gap-1.5">
-                          {erro.grau && (
-                            <Badge variant="secondary" className="text-[10px] px-1.5 py-0 font-normal">
-                              {formatarGrau(erro.grau)}
-                            </Badge>
-                          )}
-                          {erro.filtro && (
-                            <Badge variant="outline" className="text-[10px] px-1.5 py-0 font-normal">
-                              {formatarFiltro(erro.filtro)}
-                            </Badge>
-                          )}
-                          {erro.credencialId && (
-                            <span className="text-muted-foreground">ID {erro.credencialId}</span>
-                          )}
-                        </span>
-                        <p className="mt-0.5 text-muted-foreground leading-relaxed">{erro.mensagem}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
-      </AlertDescription>
-    </Alert>
+      </div>
+
+      {/* Erros agrupados por tribunal */}
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        {grupos.map((grupo) => (
+          <div key={grupo.tribunal} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg border p-3")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mb-2.5 flex items-center gap-2")}>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold text-foreground")}>{grupo.tribunal}</p>
+              <Badge variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0 font-normal")}>
+                {grupo.erros.length} erro{grupo.erros.length !== 1 ? 's' : ''}
+              </Badge>
+            </div>
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              {grupo.erros.map((e, i) => (
+                <div key={i} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex items-start gap-2 text-xs")}>
+                  <IconeErro tipo={e.tipo} />
+                  <div className="min-w-0 flex-1">
+                    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-wrap items-center gap-1.5 mb-1")}>
+                      {e.grau && (
+                        <Badge variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0 font-normal")}>
+                          {formatarGrau(e.grau)}
+                        </Badge>
+                      )}
+                      {e.filtro && (
+                        <Badge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0 font-normal")}>
+                          {formatarFiltro(e.filtro)}
+                        </Badge>
+                      )}
+                      {e.credencialId && (
+                        <span className="text-muted-foreground font-mono">#{e.credencialId}</span>
+                      )}
+                      <Badge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0 font-normal text-muted-foreground")}>
+                        {TIPO_ERRO_LABELS[e.tipo]}
+                      </Badge>
+                    </div>
+                    <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-muted-foreground leading-relaxed")}>{e.mensagem}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

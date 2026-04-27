@@ -245,7 +245,7 @@ export function PangeaPageContent() {
   // Guard: permissões
   if (loadingPerms) {
     return (
-      <div className="flex items-center gap-2 text-muted-foreground">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-muted-foreground")}>
         <LoadingSpinner />
         <span>Carregando permissões…</span>
       </div>
@@ -260,7 +260,7 @@ export function PangeaPageContent() {
 
   if (!canList) {
     return (
-      <div className="rounded-lg border bg-card p-6">
+      <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "rounded-lg border bg-card p-6")}>
         <Typography.H3>Acesso negado</Typography.H3>
         <Typography.Muted className="mt-2">
           Você não tem permissão para acessar o módulo Pangea.
@@ -270,10 +270,10 @@ export function PangeaPageContent() {
   }
 
   return (
-    <div className="space-y-6">
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         {/* Hero minimalista */}
-        <div className="flex flex-col items-center text-center gap-8 py-10">
+        <div className={cn(/* design-system-escape: gap-8 gap sem token DS; py-10 padding direcional sem Inset equiv. */ "flex flex-col items-center text-center gap-8 py-10")}>
           <Image
             src="/assets/pangea.png"
             alt="Pangea — Banco Nacional de Precedentes"
@@ -290,7 +290,7 @@ export function PangeaPageContent() {
                 placeholder="Pesquisar precedentes"
                 aria-label="Pesquisar precedentes"
                 className={cn(
-                  'h-12 md:h-14 rounded-full pr-14 md:pr-16 text-base md:text-lg bg-card'
+                  /* design-system-escape: pr-14 padding direcional sem Inset equiv.; md:pr-16 sem equivalente DS; text-base → migrar para <Text variant="body">; md:text-lg sem equivalente DS */ 'h-12 md:h-14 rounded-full pr-14 md:pr-16 text-base md:text-lg bg-card'
                 )}
               />
               <Button
@@ -308,10 +308,10 @@ export function PangeaPageContent() {
               </Button>
             </div>
 
-            <div className="mt-3 flex items-center justify-center gap-3">
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "mt-3 flex items-center justify-center gap-3")}>
               <button
                 type="button"
-                className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground underline underline-offset-4"
+                className={cn(/* design-system-escape: gap-1 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground underline underline-offset-4")}
                 aria-controls="pangea-advanced-filters"
                 aria-expanded={advancedOpen}
                 onClick={() => setAdvancedOpen((v) => !v)}
@@ -346,40 +346,40 @@ export function PangeaPageContent() {
         {/* Filtros avançados (painel) */}
         <Collapsible open={advancedOpen} onOpenChange={setAdvancedOpen}>
           <CollapsibleContent id="pangea-advanced-filters" className="mt-2">
-            <div className="rounded-xl border bg-card p-4 md:p-6 space-y-6">
+            <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; md:p-6 sem equivalente DS; space-y-6 → migrar para <Stack gap="loose"> */ "rounded-xl border bg-card p-4 md:p-6 space-y-6")}>
               <div className="flex items-center justify-between">
-                <Typography.Muted className="text-sm">Ajuste os filtros para refinar a busca</Typography.Muted>
+                <Typography.Muted className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Ajuste os filtros para refinar a busca</Typography.Muted>
                 <button
                   type="button"
                   onClick={handleReset}
                   disabled={isLoading}
-                  className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-4 disabled:opacity-50"
+                  className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground hover:text-foreground underline underline-offset-4 disabled:opacity-50")}
                 >
                   Limpar filtros
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
+              <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
                   <Label>Trecho exato</Label>
                   <Input
                     placeholder='Use aspas ou ";" para múltiplos trechos'
                     {...form.register('trechoExato')}
                   />
                 </div>
-                <div className="space-y-1.5">
+                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
                   <Label>Número (nr)</Label>
                   <Input {...form.register('nr')} />
                 </div>
-                <div className="space-y-1.5">
+                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
                   <Label>Todas as palavras</Label>
                   <Input {...form.register('todasPalavras')} />
                 </div>
-                <div className="space-y-1.5">
+                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
                   <Label>Quaisquer palavras</Label>
                   <Input {...form.register('quaisquerPalavras')} />
                 </div>
-                <div className="space-y-1.5">
+                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
                   <Label>Sem as palavras</Label>
                   <Input {...form.register('semPalavras')} />
                 </div>
@@ -387,8 +387,8 @@ export function PangeaPageContent() {
 
               <Separator />
 
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-                <div className="space-y-1.5 md:col-span-4">
+              <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-12 gap-4")}>
+                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5 md:col-span-4")}>
                   <Label>Órgãos</Label>
                   <Popover open={orgaosOpen} onOpenChange={setOrgaosOpen}>
                     <PopoverTrigger asChild>
@@ -400,7 +400,7 @@ export function PangeaPageContent() {
                         disabled={loadingOrgaos}
                       >
                         {loadingOrgaos ? (
-                          <span className="flex items-center gap-2">
+                          <span className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                             <LoadingSpinner size="sm" />
                             Carregando…
                           </span>
@@ -412,7 +412,7 @@ export function PangeaPageContent() {
                         <ChevronDown className="ml-2 h-3 w-3 shrink-0 opacity-50" />
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="p-0 w-105" align="start">
+                    <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "p-0 w-105")} align="start">
                       <Command>
                         <CommandInput
                           placeholder="Buscar órgão…"
@@ -430,7 +430,7 @@ export function PangeaPageContent() {
                                   key={o.codigo}
                                   value={`${o.codigo} ${o.nome}`}
                                   onSelect={() => handleToggleOrgao(o.codigo)}
-                                  className="py-1.5"
+                                  className={cn(/* design-system-escape: py-1.5 padding direcional sem Inset equiv. */ "py-1.5")}
                                 >
                                   <Check
                                     className={cn(
@@ -438,8 +438,8 @@ export function PangeaPageContent() {
                                       checked ? 'opacity-100' : 'opacity-0'
                                     )}
                                   />
-                                  <span className="font-medium text-sm shrink-0">{o.codigo}</span>
-                                  <span className="ml-1.5 text-muted-foreground text-sm truncate">
+                                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm"> */ "font-medium text-sm shrink-0")}>{o.codigo}</span>
+                                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "ml-1.5 text-muted-foreground text-sm truncate")}>
                                     {o.nome}
                                   </span>
                                 </CommandItem>
@@ -452,7 +452,7 @@ export function PangeaPageContent() {
                   </Popover>
                 </div>
 
-                <div className="space-y-1.5 md:col-span-4">
+                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5 md:col-span-4")}>
                   <Label>Espécies</Label>
                   <Popover>
                     <PopoverTrigger asChild>
@@ -469,7 +469,7 @@ export function PangeaPageContent() {
                         <ChevronDown className="ml-2 h-3 w-3 shrink-0 opacity-50" />
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="p-0 w-105" align="start">
+                    <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "p-0 w-105")} align="start">
                       <Command>
                         <CommandInput placeholder="Filtrar espécies…" className="h-9" />
                         <CommandList className="max-h-75">
@@ -482,7 +482,7 @@ export function PangeaPageContent() {
                                   key={tipo}
                                   value={`${tipo} ${PANGEA_TIPO_LABELS[tipo]}`}
                                   onSelect={() => handleToggleTipo(tipo)}
-                                  className="py-1.5"
+                                  className={cn(/* design-system-escape: py-1.5 padding direcional sem Inset equiv. */ "py-1.5")}
                                 >
                                   <Check
                                     className={cn(
@@ -490,8 +490,8 @@ export function PangeaPageContent() {
                                       checked ? 'opacity-100' : 'opacity-0'
                                     )}
                                   />
-                                  <span className="font-medium text-sm shrink-0">{tipo}</span>
-                                  <span className="ml-1.5 text-muted-foreground text-sm truncate">
+                                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm"> */ "font-medium text-sm shrink-0")}>{tipo}</span>
+                                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "ml-1.5 text-muted-foreground text-sm truncate")}>
                                     {PANGEA_TIPO_LABELS[tipo]}
                                   </span>
                                 </CommandItem>
@@ -504,7 +504,7 @@ export function PangeaPageContent() {
                   </Popover>
                 </div>
 
-                <div className="space-y-1.5 md:col-span-4">
+                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5 md:col-span-4")}>
                   <Label>Data de atualização</Label>
                   <DateRangePicker
                     value={dateRange}
@@ -513,7 +513,7 @@ export function PangeaPageContent() {
                   />
                 </div>
 
-                <div className="space-y-1.5 md:col-span-4">
+                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5 md:col-span-4")}>
                   <Label>Ordenação</Label>
                   <Select
                     value={form.watch('ordenacao') ?? 'Text'}
@@ -532,7 +532,7 @@ export function PangeaPageContent() {
                   </Select>
                 </div>
 
-                <div className="flex items-center gap-2 md:col-span-4 pt-7">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-7 padding direcional sem Inset equiv. */ "flex items-center gap-2 md:col-span-4 pt-7")}>
                   <Switch checked={cancelados} onCheckedChange={setCancelados} id="cancelados" />
                   <Label htmlFor="cancelados">Exibir cancelados</Label>
                 </div>

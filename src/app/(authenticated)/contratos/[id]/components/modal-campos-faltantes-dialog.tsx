@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { AlertTriangle } from 'lucide-react';
 import {
@@ -55,7 +56,7 @@ export function ModalCamposFaltantesDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="glass-dialog max-w-lg">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <AlertTriangle className="size-5 text-warning" />
             Alguns dados do cliente estão incompletos
           </DialogTitle>
@@ -65,9 +66,9 @@ export function ModalCamposFaltantesDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4 max-h-100rflow-y-auto pr-2">
+        <form onSubmit={handleSubmit} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; pr-2 padding direcional sem Inset equiv. */ "space-y-4 max-h-100rflow-y-auto pr-2")}>
           {camposFaltantes.map((campo) => (
-            <div key={campo.chave} className="space-y-1">
+            <div key={campo.chave} className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
               <Label htmlFor={campo.chave}>{campo.label}</Label>
               <Input
                 id={campo.chave}

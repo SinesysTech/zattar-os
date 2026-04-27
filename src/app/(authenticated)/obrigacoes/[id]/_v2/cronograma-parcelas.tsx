@@ -74,13 +74,13 @@ export function CronogramaParcelas({ parcelas, onSelecionar }: CronogramaParcela
       : 0;
 
   return (
-    <GlassPanel depth={1} className="p-5">
-      <div className="flex items-start justify-between gap-3 mb-5">
+    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3 mb-5")}>
         <div>
           <Text variant="meta-label" className="text-muted-foreground/60">
             Cronograma
           </Text>
-          <Text variant="caption" className="text-foreground/85 font-medium mt-0.5">
+          <Text variant="caption" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-foreground/85 font-medium mt-0.5")}>
             {efetivadas} de {parcelasOrdenadas.length} parcelas efetivadas
           </Text>
         </div>
@@ -89,9 +89,9 @@ export function CronogramaParcelas({ parcelas, onSelecionar }: CronogramaParcela
         </IconContainer>
       </div>
 
-      <div className="relative overflow-x-auto pb-2 -mx-1 px-1">
+      <div className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv.; -mx-1 sem equivalente DS; px-1 padding direcional sem Inset equiv. */ "relative overflow-x-auto pb-2 -mx-1 px-1")}>
         <div
-          className="relative flex items-start justify-between gap-2 min-w-fit"
+          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "relative flex items-start justify-between gap-2 min-w-fit")}
           style={{ minWidth: parcelasOrdenadas.length * 96 }}
         >
           {/* linha de fundo */}
@@ -128,7 +128,7 @@ export function CronogramaParcelas({ parcelas, onSelecionar }: CronogramaParcela
                 type="button"
                 onClick={() => onSelecionar?.(parcela)}
                 className={cn(
-                  'relative flex flex-col items-center gap-2 min-w-[84px] group rounded-lg px-1 py-1',
+                  /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-1 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'relative flex flex-col items-center gap-2 min-w-[84px] group rounded-lg px-1 py-1',
                   'cursor-pointer hover:bg-primary/5 transition-colors duration-200',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40',
                 )}
@@ -147,7 +147,7 @@ export function CronogramaParcelas({ parcelas, onSelecionar }: CronogramaParcela
                     )}
                   />
                 </span>
-                <div className="text-center space-y-0.5">
+                <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "text-center space-y-0.5")}>
                   <Text
                     variant="meta-label"
                     className="text-muted-foreground/60"
@@ -156,7 +156,7 @@ export function CronogramaParcelas({ parcelas, onSelecionar }: CronogramaParcela
                   </Text>
                   <Text
                     variant="caption"
-                    className="font-medium text-foreground/85 tabular-nums block"
+                    className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/85 tabular-nums block")}
                   >
                     {format(venc, 'dd MMM', { locale: ptBR })}
                   </Text>

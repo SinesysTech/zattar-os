@@ -7,6 +7,7 @@
  * Padrão: 4 filtros primários na toolbar + este popover para filtros avançados.
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { Filter, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -103,21 +104,21 @@ export function MaisFiltrosReceberPopover({
           <Filter className="h-4 w-4" />
           Mais Filtros
           {hasActiveFilters && (
-            <AppBadge variant="secondary" className="ml-1 rounded-sm px-1.5 font-normal">
+            <AppBadge variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "ml-1 rounded-sm px-1.5 font-normal")}>
               {activeFiltersCount}
             </AppBadge>
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-4" align="start">
-        <div className="space-y-4">
+      <PopoverContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "w-80 p-4")} align="start">
+        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           <div className="flex items-center justify-between">
             <Typography.H4>Filtros Avançados</Typography.H4>
             {hasActiveFilters && (
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-7 px-2 text-xs"
+                className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "h-7 px-2 text-xs")}
                 onClick={handleClearAll}
               >
                 <X className="mr-1 h-3 w-3" />
@@ -127,8 +128,8 @@ export function MaisFiltrosReceberPopover({
           </div>
 
           {/* Tipo (Recorrente/Avulsa) */}
-          <div className="space-y-1.5">
-            <Label className="text-xs text-muted-foreground">Tipo</Label>
+          <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+            <Label className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Tipo</Label>
             <Select
               value={tipoRecorrente || 'all'}
               onValueChange={(val) => onTipoRecorrenteChange(val === 'all' ? '' : val)}
@@ -148,8 +149,8 @@ export function MaisFiltrosReceberPopover({
           </div>
 
           {/* Origem */}
-          <div className="space-y-1.5">
-            <Label className="text-xs text-muted-foreground">Origem</Label>
+          <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+            <Label className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Origem</Label>
             <Select
               value={origem || 'all'}
               onValueChange={(val) => onOrigemChange(val === 'all' ? '' : val)}
@@ -169,8 +170,8 @@ export function MaisFiltrosReceberPopover({
           </div>
 
           {/* Conta Contábil */}
-          <div className="space-y-1.5">
-            <Label className="text-xs text-muted-foreground">Conta Contábil</Label>
+          <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+            <Label className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Conta Contábil</Label>
             <FiltroContaContabil
               value={contaContabilId}
               onChange={onContaContabilIdChange}
@@ -181,8 +182,8 @@ export function MaisFiltrosReceberPopover({
           </div>
 
           {/* Centro de Custo */}
-          <div className="space-y-1.5">
-            <Label className="text-xs text-muted-foreground">Centro de Custo</Label>
+          <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+            <Label className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Centro de Custo</Label>
             <FiltroCentroCusto
               value={centroCustoId}
               onChange={onCentroCustoIdChange}

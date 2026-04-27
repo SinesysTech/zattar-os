@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import React, { useEffect, useState, useCallback, useRef, Suspense, lazy } from "react";
 import { useDyteClient, DyteProvider } from "@dytesdk/react-web-core";
 import { actionEntrarNaChamada, actionSairDaChamada, actionSalvarTranscricao } from "../actions/chamadas-actions";
@@ -436,13 +437,13 @@ export function CallWindowContent({
       )}
 
       {error && (
-        <div className="flex flex-col items-center justify-center h-full gap-4 p-8 text-center bg-video-surface">
-          <div className="bg-destructive/10 p-4 rounded-full">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full gap-4 p-8 text-center bg-video-surface")}>
+          <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "bg-destructive/10 p-4 rounded-full")}>
             <RotateCcw className="w-12 h-12 text-destructive" />
           </div>
           <Heading level="card" className="text-video-text">Erro na Chamada</Heading>
           <p className="text-video-muted max-w-sm">{error}</p>
-          <div className="flex gap-4 mt-4">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4 mt-4")}>
             <Button
               variant="outline"
               onClick={() => window.close()}

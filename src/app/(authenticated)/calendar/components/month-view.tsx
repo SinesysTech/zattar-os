@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import React, { useEffect, useMemo, useState } from "react";
 import {
   addDays,
@@ -92,7 +93,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
     <div data-slot="month-view" className="contents">
       <div className="border-border/70 grid grid-cols-7 border-b">
         {weekdays.map((day) => (
-          <div key={day} className="text-muted-foreground/70 py-2 text-center text-sm">
+          <div key={day} className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground/70 py-2 text-center text-sm")}>
             {day}
           </div>
         ))}
@@ -131,7 +132,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                       startTime.setHours(DefaultStartHour, 0, 0);
                       onEventCreate(startTime);
                     }}>
-                    <div className="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
+                    <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm")}>
                       {format(day, "d")}
                     </div>
                     <div
@@ -190,7 +191,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                         <Popover modal>
                           <PopoverTrigger asChild>
                             <button
-                              className="focus-visible:border-ring focus-visible:ring-ring/50 text-muted-foreground hover:text-foreground hover:bg-muted/50 mt-(--event-gap) flex h-(--event-height) w-full items-center overflow-hidden px-1 text-left text-[10px] backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] sm:px-2 sm:text-xs"
+                              className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; sm:px-2 sem equivalente DS; sm:text-xs sem equivalente DS */ "focus-visible:border-ring focus-visible:ring-ring/50 text-muted-foreground hover:text-foreground hover:bg-muted/50 mt-(--event-gap) flex h-(--event-height) w-full items-center overflow-hidden px-1 text-left text-[10px] backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] sm:px-2 sm:text-xs")}
                               onClick={(e) => e.stopPropagation()}>
                               <span>
                                 + {remainingCount} <span className="max-sm:sr-only">mais</span>
@@ -199,15 +200,15 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                           </PopoverTrigger>
                           <PopoverContent
                             align="center"
-                            className="max-w-52 p-3"
+                            className={cn(/* design-system-escape: p-3 → usar <Inset> */ "max-w-52 p-3")}
                             style={
                               {
                                 "--event-height": `${EventHeight}px`
                               } as React.CSSProperties
                             }>
-                            <div className="space-y-2">
-                              <div className="text-sm font-medium">{capitalizeFirst(format(day, "EEE d", { locale: ptBR }))}</div>
-                              <div className="space-y-1">
+                            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                              <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{capitalizeFirst(format(day, "EEE d", { locale: ptBR }))}</div>
+                              <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
                                 {sortEvents(allEvents).map((event) => {
                                   const eventStart = new Date(event.start);
                                   const eventEnd = new Date(event.end);

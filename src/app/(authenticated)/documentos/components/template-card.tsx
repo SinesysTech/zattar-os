@@ -4,6 +4,7 @@
  * Card para exibição de template
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { FileText, Globe, Lock, User, MoreVertical, Pencil, Trash2, Clock } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -44,14 +45,14 @@ export function TemplateCard({
 
   return (
     <Card className="flex flex-col hover:shadow-md transition-shadow">
-      <CardHeader className="pb-2">
+      <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
         <div className="flex items-start justify-between">
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <FileText className="h-5 w-5 text-muted-foreground" />
-            <div className="space-y-1">
-              <CardTitle className="text-base line-clamp-1">{template.titulo}</CardTitle>
+            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+              <CardTitle className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base line-clamp-1")}>{template.titulo}</CardTitle>
               {template.categoria && (
-                <Badge variant="secondary" className="text-xs">
+                <Badge variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                   {template.categoria}
                 </Badge>
               )}
@@ -83,7 +84,7 @@ export function TemplateCard({
         </div>
       </CardHeader>
 
-      <CardContent className="flex-1 pb-2">
+      <CardContent className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "flex-1 pb-2")}>
         {template.descricao && (
           <CardDescription className="line-clamp-2">
             {template.descricao}
@@ -91,10 +92,10 @@ export function TemplateCard({
         )}
       </CardContent>
 
-      <CardFooter className="flex flex-col items-stretch gap-3 pt-0">
+      <CardFooter className={cn(/* design-system-escape: gap-3 gap sem token DS; pt-0 padding direcional sem Inset equiv. */ "flex flex-col items-stretch gap-3 pt-0")}>
         {/* Meta info */}
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <div className="flex items-center gap-1">
+        <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex items-center justify-between text-xs text-muted-foreground")}>
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
             {template.visibilidade === 'publico' ? (
               <>
                 <Globe className="h-3 w-3" />
@@ -107,15 +108,15 @@ export function TemplateCard({
               </>
             )}
           </div>
-          <div className="flex items-center gap-1">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
             <User className="h-3 w-3" />
             <span>{template.criador?.nomeCompleto || 'Usuário'}</span>
           </div>
         </div>
 
         {/* Stats */}
-        <div className="flex items-center justify-between text-xs text-muted-foreground border-t pt-2">
-          <span className="flex items-center gap-1">
+        <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between text-xs text-muted-foreground border-t pt-2")}>
+          <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
             <Clock className="h-3 w-3" />
             {formatDate(template.updated_at)}
           </span>

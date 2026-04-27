@@ -35,21 +35,21 @@ export function PrepProgress({
   const colors = progressColor(percent);
 
   return (
-    <div className={cn("space-y-1", className)}>
+    <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1", className)}>
       {/* Header: label + percentage */}
       {(label || size === "md") && (
         <div className="flex items-center justify-between">
           {label && (
             <span className="text-[11px] text-muted-foreground/70 truncate">{label}</span>
           )}
-          <span className={cn("text-[10px] font-mono font-semibold tabular-nums", colors.text)}>
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-mono font-semibold tabular-nums", colors.text)}>
             {percent}%
           </span>
         </div>
       )}
 
       {/* Bar */}
-      <div className="flex items-center gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
         {!label && size === "sm" && (
           <span className="text-[9px] text-muted-foreground/50">Preparo:</span>
         )}
@@ -60,7 +60,7 @@ export function PrepProgress({
           />
         </div>
         {!label && size === "sm" && (
-          <span className={cn("text-[9px] font-mono font-semibold tabular-nums", colors.text)}>
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[9px] font-mono font-semibold tabular-nums", colors.text)}>
             {percent}%
           </span>
         )}

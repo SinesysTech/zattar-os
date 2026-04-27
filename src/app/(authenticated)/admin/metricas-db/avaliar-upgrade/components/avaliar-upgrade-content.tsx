@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useEffect, useState, useTransition } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AppBadge as Badge } from "@/components/ui/app-badge";
@@ -113,7 +114,7 @@ export function AvaliarUpgradeContent() {
 
   if (isPending || !recommendation || !metricsSnapshot) {
     return (
-      <div className="flex items-center justify-center py-12">
+      <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "flex items-center justify-center py-12")}>
         <LoadingSpinner className="size-8 text-muted-foreground" />
       </div>
     );
@@ -128,17 +129,17 @@ export function AvaliarUpgradeContent() {
   const computeTier = metricsSnapshot.diskIO?.compute_tier ?? "unknown";
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       {/* Métricas Atuais */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-3")}>
         <Card>
           <CardHeader>
             <CardTitle>Cache Hit Rate</CardTitle>
             <CardDescription>Média de cache</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">{cacheHitRate.toFixed(2)}%</div>
-            <p className="mt-1 text-xs text-muted-foreground">Esperado: &gt;99%</p>
+            <div className={cn(/* design-system-escape: text-3xl → migrar para <Heading level="display-*">; font-bold → className de <Text>/<Heading> */ "text-3xl font-bold")}>{cacheHitRate.toFixed(2)}%</div>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "mt-1 text-xs text-muted-foreground")}>Esperado: &gt;99%</p>
           </CardContent>
         </Card>
 
@@ -148,8 +149,8 @@ export function AvaliarUpgradeContent() {
             <CardDescription>Consumo de I/O</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">{diskIOBudget.toFixed(0)}%</div>
-            <p className="mt-1 text-xs text-muted-foreground">Crítico: &gt;90%</p>
+            <div className={cn(/* design-system-escape: text-3xl → migrar para <Heading level="display-*">; font-bold → className de <Text>/<Heading> */ "text-3xl font-bold")}>{diskIOBudget.toFixed(0)}%</div>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "mt-1 text-xs text-muted-foreground")}>Crítico: &gt;90%</p>
           </CardContent>
         </Card>
 
@@ -159,8 +160,8 @@ export function AvaliarUpgradeContent() {
             <CardDescription>Tier atual</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold capitalize">{computeTier}</div>
-            <p className="mt-1 text-xs text-muted-foreground">RAM: {COMPUTE_TIERS.find(t => t.name.toLowerCase() === computeTier.toLowerCase())?.ram_gb ?? "?"}GB</p>
+            <div className={cn(/* design-system-escape: text-3xl → migrar para <Heading level="display-*">; font-bold → className de <Text>/<Heading> */ "text-3xl font-bold capitalize")}>{computeTier}</div>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "mt-1 text-xs text-muted-foreground")}>RAM: {COMPUTE_TIERS.find(t => t.name.toLowerCase() === computeTier.toLowerCase())?.ram_gb ?? "?"}GB</p>
           </CardContent>
         </Card>
       </div>
@@ -178,10 +179,10 @@ export function AvaliarUpgradeContent() {
             </Badge>
           </div>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <ul className="list-inside list-disc space-y-2">
+        <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <ul className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "list-inside list-disc space-y-2")}>
             {recommendation.reasons.map((reason, index) => (
-              <li key={index} className="text-sm">{reason}</li>
+              <li key={index} className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{reason}</li>
             ))}
           </ul>
 
@@ -220,7 +221,7 @@ export function AvaliarUpgradeContent() {
                   key={tier.name}
                   className={tier.name.toLowerCase() === recommendation.recommended_tier ? "bg-accent" : ""}
                 >
-                  <TableCell className="font-medium">
+                  <TableCell className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
                     {tier.name}
                     {tier.name.toLowerCase() === computeTier.toLowerCase() && (
                       <Badge variant="outline" className="ml-2">Atual</Badge>
@@ -245,10 +246,10 @@ export function AvaliarUpgradeContent() {
         <CardHeader>
           <CardTitle>Próximos Passos</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           {recommendation.should_upgrade ? (
             <>
-              <ol className="list-inside list-decimal space-y-2 text-sm">
+              <ol className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "list-inside list-decimal space-y-2 text-sm")}>
                 <li>Acessar <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Supabase Dashboard</a> → Settings → Compute</li>
                 <li>Selecionar tier recomendado: <strong className="capitalize">{recommendation.recommended_tier}</strong></li>
                 <li>Agendar upgrade para horário de baixo tráfego (ex: 3h da manhã)</li>
@@ -259,12 +260,12 @@ export function AvaliarUpgradeContent() {
               </ol>
             </>
           ) : (
-            <p className="text-sm text-muted-foreground">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
               ✅ Sistema operando dentro dos parâmetros esperados. Continuar monitorando métricas semanalmente via dashboard.
             </p>
           )}
 
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label htmlFor="justificativa">Justificativa / Observações (opcional)</Label>
             <Textarea
               id="justificativa"

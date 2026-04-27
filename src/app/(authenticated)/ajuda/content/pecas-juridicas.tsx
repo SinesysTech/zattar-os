@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
@@ -20,10 +21,10 @@ import {
 
 export default function PecasJuridicasDoc() {
   return (
-    <div className="space-y-10">
+    <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
       <div>
         <Heading level="page">Peças Jurídicas</Heading>
-        <p className="text-muted-foreground text-lg">
+        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-muted-foreground text-lg")}>
           Gere petições, contestações, recursos e outros documentos jurídicos automaticamente a partir de modelos com placeholders inteligentes.
         </p>
       </div>
@@ -45,7 +46,7 @@ export default function PecasJuridicasDoc() {
       <DocSection title="Entendendo os Placeholders">
         <p className="text-muted-foreground mb-4">
           Placeholders são variáveis inseridas no texto do modelo no formato{' '}
-          <code className="bg-muted px-1 py-0.5 rounded text-sm font-mono">{'{{nome_variavel}}'}</code>.
+          <code className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "bg-muted px-1 py-0.5 rounded text-sm font-mono")}>{'{{nome_variavel}}'}</code>.
           No momento da geração, o sistema substitui automaticamente cada placeholder pelo dado correspondente.
         </p>
         <DocActionList
@@ -94,7 +95,7 @@ export default function PecasJuridicasDoc() {
         />
         <DocTip>
           No editor de modelos, use o menu de inserção de placeholders (ícone de chaves{' '}
-          <code className="bg-muted px-1 py-0.5 rounded text-sm font-mono">{'{}'}</code>) para ver a lista
+          <code className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "bg-muted px-1 py-0.5 rounded text-sm font-mono")}>{'{}'}</code>) para ver a lista
           completa de variáveis disponíveis e inseri-las sem precisar digitá-las manualmente.
         </DocTip>
       </DocSection>

@@ -326,15 +326,15 @@ export function ContaPagarFormDialog({
         </Button>
       }
     >
-      <form ref={formRef} onSubmit={handleSubmit((data) => onSubmit(data as unknown as ContaPagarFormData))} className="space-y-4">
+      <form ref={formRef} onSubmit={handleSubmit((data) => onSubmit(data as unknown as ContaPagarFormData))} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         {Object.keys(errors).length > 0 && (
-          <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+          <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-3 text-sm text-destructive")}>
             Corrija os erros no formulário antes de continuar.
           </div>
         )}
 
         {/* Descrição */}
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label htmlFor="descricao">
             Descrição <span className="text-destructive">*</span>
           </Label>
@@ -345,14 +345,14 @@ export function ContaPagarFormDialog({
             disabled={isSubmitting}
           />
           {errors.descricao && (
-            <p className="text-sm text-destructive">{errors.descricao.message}</p>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.descricao.message}</p>
           )}
         </div>
 
         {/* Grid: Valor e Data de Vencimento */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
           {/* Valor */}
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label htmlFor="valor">
               Valor <span className="text-destructive">*</span>
             </Label>
@@ -368,12 +368,12 @@ export function ContaPagarFormDialog({
               disabled={isSubmitting}
             />
             {errors.valor && (
-              <p className="text-sm text-destructive">{errors.valor.message}</p>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.valor.message}</p>
             )}
           </div>
 
           {/* Data de Vencimento */}
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label>
               Data de Vencimento <span className="text-destructive">*</span>
             </Label>
@@ -395,7 +395,7 @@ export function ContaPagarFormDialog({
                   )}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
+              <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto p-0")} align="start">
                 <Calendar
                   mode="single"
                   selected={watch('dataVencimento')}
@@ -406,15 +406,15 @@ export function ContaPagarFormDialog({
               </PopoverContent>
             </Popover>
             {errors.dataVencimento && (
-              <p className="text-sm text-destructive">{errors.dataVencimento.message}</p>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.dataVencimento.message}</p>
             )}
           </div>
         </div>
 
         {/* Grid: Categoria e Forma de Pagamento */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
           {/* Categoria */}
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label>Categoria</Label>
             <Select
               value={watch('categoria') || ''}
@@ -435,7 +435,7 @@ export function ContaPagarFormDialog({
           </div>
 
           {/* Forma de Pagamento */}
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label>Forma de Pagamento</Label>
             <Select
               value={watch('formaPagamento') || ''}
@@ -459,9 +459,9 @@ export function ContaPagarFormDialog({
         </div>
 
         {/* Grid: Conta Bancária e Fornecedor */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
           {/* Conta Bancária */}
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label>Conta Bancária</Label>
             <Select
               value={watch('contaBancariaId')?.toString() || ''}
@@ -484,7 +484,7 @@ export function ContaPagarFormDialog({
           </div>
 
           {/* Fornecedor */}
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label>Fornecedor</Label>
             <Select
               value={watch('clienteId')?.toString() || ''}
@@ -508,9 +508,9 @@ export function ContaPagarFormDialog({
         </div>
 
         {/* Grid: Plano de Contas e Centro de Custo */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
           {/* Plano de Contas */}
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label>
               Conta Contábil {hasContasContabeis && <span className="text-destructive">*</span>}
             </Label>
@@ -533,12 +533,12 @@ export function ContaPagarFormDialog({
               </SelectContent>
             </Select>
             {errors.contaContabilId && (
-              <p className="text-sm text-destructive">{errors.contaContabilId.message}</p>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.contaContabilId.message}</p>
             )}
           </div>
 
           {/* Centro de Custo */}
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label>Centro de Custo</Label>
             <Select
               value={watch('centroCustoId')?.toString() || ''}
@@ -562,7 +562,7 @@ export function ContaPagarFormDialog({
         </div>
 
         {/* Número do Documento */}
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label htmlFor="documento">Número do Documento</Label>
           <Input
             id="documento"
@@ -573,13 +573,13 @@ export function ContaPagarFormDialog({
         </div>
 
         {/* Recorrência */}
-        <div className="space-y-4 rounded-lg border p-4">
+        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; p-4 → migrar para <Inset variant="card-compact"> */ "space-y-4 rounded-lg border p-4")}>
           <div className="flex items-center justify-between">
             <div>
-              <Label htmlFor="recorrente" className="text-base font-medium">
+              <Label htmlFor="recorrente" className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-medium → className de <Text>/<Heading> */ "text-base font-medium")}>
                 Conta Recorrente
               </Label>
-              <p className="text-sm text-muted-foreground">
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                 Gera contas automaticamente em intervalos regulares
               </p>
             </div>
@@ -597,7 +597,7 @@ export function ContaPagarFormDialog({
           </div>
 
           {recorrente && (
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label>
                 Frequência <span className="text-destructive">*</span>
               </Label>
@@ -620,14 +620,14 @@ export function ContaPagarFormDialog({
                 </SelectContent>
               </Select>
               {errors.frequenciaRecorrencia && (
-                <p className="text-sm text-destructive">{errors.frequenciaRecorrencia.message}</p>
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.frequenciaRecorrencia.message}</p>
               )}
             </div>
           )}
         </div>
 
         {/* Observações */}
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label htmlFor="observacoes">Observações</Label>
           <Textarea
             id="observacoes"
@@ -637,7 +637,7 @@ export function ContaPagarFormDialog({
             rows={3}
           />
           {errors.observacoes && (
-            <p className="text-sm text-destructive">{errors.observacoes.message}</p>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.observacoes.message}</p>
           )}
         </div>
       </form>

@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { Briefcase, ListTodo, Clock, TrendingUp } from "lucide-react";
 import {
   Card,
@@ -48,7 +49,7 @@ export function SummaryCards({ data }: SummaryCardsProps) {
   ];
 
   return (
-    <div className="*:data-[slot=card]:from-primary/10 grid gap-4 *:data-[slot=card]:bg-gradient-to-t md:grid-cols-2 lg:grid-cols-4">
+    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "*:data-[slot=card]:from-primary/10 grid gap-4 *:data-[slot=card]:bg-gradient-to-t md:grid-cols-2 lg:grid-cols-4")}>
       {cards.map((card) => (
         <Card key={card.title}>
           <CardHeader>
@@ -64,7 +65,7 @@ export function SummaryCards({ data }: SummaryCardsProps) {
             </CardAction>
           </CardHeader>
           <CardContent>
-            <div className="font-display text-2xl lg:text-3xl">
+            <div className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; lg:text-3xl sem equivalente DS */ "font-display text-2xl lg:text-3xl")}>
               {card.value}
             </div>
           </CardContent>

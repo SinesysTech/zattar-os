@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { DataPagination, DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
@@ -223,7 +224,7 @@ function criarColunas(
       size: 140,
       meta: { align: 'left' },
       cell: ({ row }) => (
-        <span className="text-sm">{formatarTipoCaptura(row.getValue('tipo_captura'))}</span>
+        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{formatarTipoCaptura(row.getValue('tipo_captura'))}</span>
       ),
     },
     {
@@ -239,7 +240,7 @@ function criarColunas(
         const advogadoId = row.getValue('advogado_id') as number | null;
         const nomeAdvogado = advogadoId ? advogadosMap.get(advogadoId) : null;
         return (
-          <span className="text-sm">
+          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
             {nomeAdvogado || '-'}
           </span>
         );
@@ -258,7 +259,7 @@ function criarColunas(
 
         // Validar que credencial_ids existe e é um array válido
         if (!credencialIds || !Array.isArray(credencialIds) || credencialIds.length === 0) {
-          return <span className="text-sm text-muted-foreground">-</span>;
+          return <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>-</span>;
         }
 
         // Mapear credencial_ids para { tribunal, grau }
@@ -283,27 +284,27 @@ function criarColunas(
         if (tribunaisUnicos.length === 0) {
           // Se não encontrou nenhum tribunal, pode ser que as credenciais ainda estejam carregando
           if (credenciaisMap.size === 0) {
-            return <span className="text-sm text-muted-foreground">Carregando...</span>;
+            return <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Carregando...</span>;
           }
-          return <span className="text-sm text-muted-foreground">-</span>;
+          return <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>-</span>;
         }
 
         return (
-          <div className="flex flex-wrap gap-1">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-wrap gap-1")}>
             {tribunaisUnicos.slice(0, 3).map((info, idx) => {
               const grau = info.grau || 'primeiro_grau';
               return (
                 <TribunalSemanticBadge
                   key={`${info.tribunal}-${grau}-${idx}`}
                   value={info.tribunal}
-                  className="text-xs"
+                  className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}
                 >
                   {info.tribunal} {formatarGrauCurto(grau)}
                 </TribunalSemanticBadge>
               );
             })}
             {tribunaisUnicos.length > 3 && (
-              <Badge variant="secondary" className="text-xs">
+              <Badge variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                 +{tribunaisUnicos.length - 3}
               </Badge>
             )}
@@ -333,7 +334,7 @@ function criarColunas(
         const iniciadoEm = row.getValue('iniciado_em') as string | null;
         const concluidoEm = row.original.concluido_em;
         return (
-          <div className="flex flex-col text-sm">
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex flex-col text-sm")}>
             <span>
               <span className="text-muted-foreground">Início:</span> {formatarDataHora(iniciadoEm)}
             </span>
@@ -360,7 +361,7 @@ function criarColunas(
         const credencialIds = row.original.credencial_ids;
 
         if (!erro) {
-          return <span className="text-sm text-muted-foreground">-</span>;
+          return <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>-</span>;
         }
 
         // Prioridade 1: Extrair tribunais com erro do campo resultado
@@ -375,7 +376,7 @@ function criarColunas(
         if (tribunaisComErro.length === 0) {
           if (!credencialIds || !Array.isArray(credencialIds) || credencialIds.length === 0) {
             return (
-              <Badge variant="destructive" className="text-xs">
+              <Badge variant="destructive" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                 1 erro
               </Badge>
             );
@@ -393,7 +394,7 @@ function criarColunas(
 
           if (tribunaisInfo.length === 0) {
             return (
-              <Badge variant="destructive" className="text-xs">
+              <Badge variant="destructive" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                 1 erro
               </Badge>
             );
@@ -417,7 +418,7 @@ function criarColunas(
 
         if (tribunaisUnicos.length === 0) {
           return (
-            <Badge variant="destructive" className="text-xs">
+            <Badge variant="destructive" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
               1 erro
             </Badge>
           );
@@ -437,21 +438,21 @@ function criarColunas(
         });
 
         return (
-          <div className="flex flex-wrap gap-1">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-wrap gap-1")}>
             {Array.from(contagem.values()).slice(0, 2).map((info, idx) => {
               const grau = info.grau || 'primeiro_grau';
               return (
                 <Badge
                   key={`${info.tribunal}-${grau}-${idx}`}
                   variant="destructive"
-                  className="text-xs"
+                  className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}
                 >
                   {info.tribunal} {formatarGrauCurto(grau)}
                 </Badge>
               );
             })}
             {contagem.size > 2 && (
-              <Badge variant="destructive" className="text-xs">
+              <Badge variant="destructive" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                 +{contagem.size - 2}
               </Badge>
             )}
@@ -469,7 +470,7 @@ function criarColunas(
       cell: ({ row }) => {
         const captura = row.original;
         return (
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <Button
               variant="ghost"
               size="icon" aria-label="Visualizar"
@@ -635,14 +636,14 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
                 : undefined
             }
             actionSlot={
-              <div className="flex items-center gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 {selectedCount > 0 && (
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button
                         variant="outline"
                         size="sm"
-                        className="h-9 gap-2 bg-card text-destructive hover:text-destructive"
+                        className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "h-9 gap-2 bg-card text-destructive hover:text-destructive")}
                         disabled={isDeletingBulk}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -736,7 +737,7 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
             }
           />
         ) : (
-          <div className="p-6" />
+          <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")} />
         )
       }
       footer={

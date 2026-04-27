@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -117,23 +118,23 @@ export function FormularioDuplicateDialog({
           <DialogTitle>Duplicar Formulário</DialogTitle>
           <DialogDescription>
             Crie uma cópia do formulário &ldquo;{formulario.nome}&rdquo;.
-            <div className="mt-2 space-y-1">
-              <div className="flex items-center gap-2">
-                <Label className="text-sm font-medium">Segmento:</Label>
+            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "mt-2 space-y-1")}>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                <Label className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Segmento:</Label>
                 <Badge variant="outline">{formulario.segmento?.nome || "N/A"}</Badge>
               </div>
-              <div className="flex items-center gap-2">
-                <Label className="text-sm font-medium">Templates:</Label>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                <Label className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Templates:</Label>
                 <Badge variant="outline">{formulario.template_ids?.length || 0}</Badge>
               </div>
-              <div className="flex items-center gap-2">
-                <Label className="text-sm font-medium">Foto necessária:</Label>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                <Label className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Foto necessária:</Label>
                 <Badge variant={formulario.foto_necessaria ? "default" : "secondary"}>
                   {formulario.foto_necessaria ? "Sim" : "Não"}
                 </Badge>
               </div>
-              <div className="flex items-center gap-2">
-                <Label className="text-sm font-medium">Geolocalização necessária:</Label>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                <Label className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Geolocalização necessária:</Label>
                 <Badge variant={formulario.geolocation_necessaria ? "default" : "secondary"}>
                   {formulario.geolocation_necessaria ? "Sim" : "Não"}
                 </Badge>
@@ -142,7 +143,7 @@ export function FormularioDuplicateDialog({
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             <FormField
               control={form.control}
               name="nome"

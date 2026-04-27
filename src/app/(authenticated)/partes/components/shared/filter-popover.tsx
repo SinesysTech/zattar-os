@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -55,13 +56,13 @@ export function FilterPopover({
           <PlusCircle className="h-4 w-4" />
           {label}
           {isFiltered && selected && (
-            <AppBadge variant="secondary" className="ml-1 rounded-sm px-1.5 font-normal">
+            <AppBadge variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "ml-1 rounded-sm px-1.5 font-normal")}>
               {selected.label}
             </AppBadge>
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-56 p-0" align="start">
+      <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-56 p-0")} align="start">
         <Command>
           <CommandInput placeholder={placeholder || label} className="h-9" />
           <CommandList>
@@ -78,9 +79,9 @@ export function FilterPopover({
                       setOpen(false);
                     }}
                   >
-                    <div className="flex items-center space-x-3 py-1">
+                    <div className={cn(/* design-system-escape: space-x-3 sem token DS; py-1 padding direcional sem Inset equiv. */ "flex items-center space-x-3 py-1")}>
                       <Checkbox checked={isSelected} className="pointer-events-none" />
-                      <Text variant="label" as="span" className="leading-none">{option.label}</Text>
+                      <Text variant="label" as="span" className={cn(/* design-system-escape: leading-none sem token DS */ "leading-none")}>{option.label}</Text>
                     </div>
                   </CommandItem>
                 );

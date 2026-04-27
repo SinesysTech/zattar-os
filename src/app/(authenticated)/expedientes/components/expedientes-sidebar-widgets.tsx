@@ -59,11 +59,11 @@ export function RiskScoreGauge(props: RiskScoreGaugeProps) {
   const label = getScoreLabel(score);
 
   return (
-    <GlassPanel depth={1} className="p-5">
-      <div className="flex items-center justify-between gap-3">
+    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
         <div>
-          <p className="text-[10px] uppercase tracking-wider text-muted-foreground/45">Saude</p>
-          <Heading level="widget" className="mt-1 text-sm">Score operacional</Heading>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/45")}>Saude</p>
+          <Heading level="widget" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-1 text-sm")}>Score operacional</Heading>
         </div>
         <ShieldCheck className="size-4 text-muted-foreground/45" />
       </div>
@@ -71,7 +71,7 @@ export function RiskScoreGauge(props: RiskScoreGaugeProps) {
       <div className="mt-4 flex flex-col items-center">
         <GaugeMeter value={score} max={100} status={status} size={120} />
         <p className={cn(
-          'mt-2 text-center text-[11px] font-medium',
+          /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'mt-2 text-center text-[11px] font-medium',
           status === 'good' && 'text-success/70',
           status === 'warning' && 'text-warning/70',
           status === 'danger' && 'text-destructive/70',
@@ -122,16 +122,16 @@ export function AgingFunnel({
   const maximo = Math.max(...Object.values(valores), 1);
 
   return (
-    <GlassPanel depth={1} className="p-5">
-      <div className="flex items-center justify-between gap-3">
+    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
         <div>
-          <p className="text-[10px] uppercase tracking-wider text-muted-foreground/45">Distribuicao</p>
-          <Heading level="widget" className="mt-1 text-sm">Funil de prazos</Heading>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/45")}>Distribuicao</p>
+          <Heading level="widget" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-1 text-sm")}>Funil de prazos</Heading>
         </div>
         <TrendingDown className="size-4 text-muted-foreground/45" />
       </div>
 
-      <div className="mt-4 space-y-2.5">
+      <div className={cn(/* design-system-escape: space-y-2.5 sem token DS */ "mt-4 space-y-2.5")}>
         {FAIXAS.map((faixa) => {
           const valor = valores[faixa.key];
           const pct = maximo > 0 ? (valor / maximo) * 100 : 0;
@@ -147,9 +147,9 @@ export function AgingFunnel({
                 !onFaixaClick && 'cursor-default',
               )}
             >
-              <div className="flex items-center justify-between gap-3 mb-1">
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3 mb-1")}>
                 <span className="text-[11px] text-muted-foreground/70 truncate">{faixa.label}</span>
-                <span className="text-[11px] font-semibold tabular-nums">{valor}</span>
+                <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[11px] font-semibold tabular-nums")}>{valor}</span>
               </div>
               <div className="h-1.5 rounded-full bg-border/10 overflow-hidden">
                 <div
@@ -207,16 +207,16 @@ export function ActivityHeatmap({ baixasPorDia }: ActivityHeatmapProps) {
   const mediaDiaria = dias.length > 0 ? (totalBaixas / dias.length).toFixed(1) : '0';
 
   return (
-    <GlassPanel depth={1} className="p-5">
-      <div className="flex items-center justify-between gap-3">
+    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
         <div>
-          <p className="text-[10px] uppercase tracking-wider text-muted-foreground/45">Atividade</p>
-          <Heading level="widget" className="mt-1 text-sm">Baixas 35 dias</Heading>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/45")}>Atividade</p>
+          <Heading level="widget" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-1 text-sm")}>Baixas 35 dias</Heading>
         </div>
         <Activity className="size-4 text-muted-foreground/45" />
       </div>
 
-      <div className="mt-4 grid grid-cols-7 gap-1">
+      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "mt-4 grid grid-cols-7 gap-1")}>
         {dias.map((dia) => {
           const valor = baixasPorDia.get(dia) ?? 0;
           return (

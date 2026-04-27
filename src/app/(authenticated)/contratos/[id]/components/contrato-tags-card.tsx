@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Tags } from 'lucide-react';
 
 import { WidgetContainer } from '@/components/shared/glass-panel';
@@ -37,7 +38,7 @@ export function ContratoTagsCard({
 
   return (
     <WidgetContainer title="Informações" icon={Tags}>
-      <div className="flex flex-wrap gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2")}>
         {/* Tipo de Contrato */}
         <Badge variant={tipoContratoVariant}>
           {tipoContratoLabel}

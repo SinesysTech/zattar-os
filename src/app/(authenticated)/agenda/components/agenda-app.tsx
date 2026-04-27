@@ -12,6 +12,7 @@
 
 "use client";
 
+import { cn } from '@/lib/utils';
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   addDays,
@@ -360,12 +361,12 @@ export default function AgendaApp({ initialEvents }: AgendaAppProps) {
 
   // ── Render ────────────────────────────────────────────────────────
   return (
-    <div className="space-y-5 pb-12">
+    <div className={cn(/* design-system-escape: space-y-5 sem token DS; pb-12 padding direcional sem Inset equiv. */ "space-y-5 pb-12")}>
       {/* ── 1. Header ── */}
-      <div className="flex items-end justify-between gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
         <div>
           <Heading level="page">Agenda</Heading>
-          <p className="text-sm text-muted-foreground/50 mt-0.5">
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 mt-0.5")}>
             {label} · {eventCount} evento{eventCount !== 1 ? "s" : ""}
           </p>
         </div>
@@ -379,7 +380,7 @@ export default function AgendaApp({ initialEvents }: AgendaAppProps) {
       <AgendaKpiStrip data={kpiData} />
 
       {/* ── 3. View Controls — padrão Audiências / Expedientes / Partes ── */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
         <AgendaFilterBar
           onPrev={handlePrev}
           onNext={handleNext}
@@ -387,7 +388,7 @@ export default function AgendaApp({ initialEvents }: AgendaAppProps) {
           activeSources={sourceFilter as unknown as Set<AgendaSource>}
           onToggleSource={toggleSource}
         />
-        <div className="flex items-center gap-2 flex-1 justify-end">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
           <SearchInput
             value={search}
             onChange={setSearch}

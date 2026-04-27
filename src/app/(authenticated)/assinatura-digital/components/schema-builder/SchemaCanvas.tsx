@@ -71,7 +71,7 @@ function SortableFieldItem({ field, sectionId, isSelected, onSelect, onDuplicate
       ref={setNodeRef}
       style={style}
       className={cn(
-        "group flex items-center gap-2 rounded-lg border bg-card px-2.5 py-2 transition-all",
+        /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "group flex items-center gap-2 rounded-lg border bg-card px-2.5 py-2 transition-all",
         isSelected ? "border-primary ring-1 ring-primary/20" : "border-transparent hover:border-border",
         isDragging && "opacity-50"
       )}
@@ -88,21 +88,21 @@ function SortableFieldItem({ field, sectionId, isSelected, onSelect, onDuplicate
       {React.createElement(getFieldIcon(field.type), { className: "size-3.5 text-muted-foreground shrink-0" })}
 
       <div className="flex-1 min-w-0">
-        <div className="text-xs font-medium truncate">{field.label}</div>
+        <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium truncate")}>{field.label}</div>
         {(field.validation?.required || field.conditional || (field.options && field.options.length > 0)) && (
-          <div className="flex gap-1 mt-1 flex-wrap">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1 mt-1 flex-wrap")}>
             {field.validation?.required && (
-              <Badge variant="destructive" className="text-[10px] px-1.5 py-0">
+              <Badge variant="destructive" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0")}>
                 Obrigatório
               </Badge>
             )}
             {field.conditional && (
-              <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+              <Badge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0")}>
                 Condicional
               </Badge>
             )}
             {field.options && field.options.length > 0 && (
-              <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+              <Badge variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0")}>
                 {field.options.length} opções
               </Badge>
             )}
@@ -110,7 +110,7 @@ function SortableFieldItem({ field, sectionId, isSelected, onSelect, onDuplicate
         )}
       </div>
 
-      <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity")}>
         <TooltipProvider delayDuration={0}>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -188,14 +188,14 @@ function DroppableSectionCard({
       )}
       onClick={() => onSectionSelect(section.id)}
     >
-      <div className="flex items-start justify-between gap-2 px-3 pt-3 pb-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "flex items-start justify-between gap-2 px-3 pt-3 pb-2")}>
         <div className="flex-1 min-w-0">
-          <Heading level="subsection" className="text-xs">{section.title}</Heading>
+          <Heading level="subsection" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>{section.title}</Heading>
           {section.description && (
             <p className="text-[11px] text-muted-foreground mt-0.5">{section.description}</p>
           )}
         </div>
-        <div className="flex items-center gap-0.5 shrink-0">
+        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center gap-0.5 shrink-0")}>
           <TooltipProvider delayDuration={0}>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -229,9 +229,9 @@ function DroppableSectionCard({
         </div>
       </div>
 
-      <div className="px-3 pb-3 space-y-1">
+      <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pb-3 padding direcional sem Inset equiv.; space-y-1 sem token DS */ "px-3 pb-3 space-y-1")}>
         {fields.length === 0 ? (
-          <div className="border border-dashed rounded-lg p-4 text-center">
+          <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "border border-dashed rounded-lg p-4 text-center")}>
             <AlertCircle className="size-5 text-muted-foreground/50 mx-auto mb-1" />
             <p className="text-[11px] text-muted-foreground">Arraste campos da paleta para adicionar</p>
           </div>
@@ -268,12 +268,12 @@ export default function SchemaCanvas({
   onSectionDelete
 }: SchemaCanvasProps) {
   return (
-    <div className="space-y-3">
+    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
       {schema.sections.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed py-12 gap-3">
+        <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "flex flex-col items-center justify-center rounded-xl border border-dashed py-12 gap-3")}>
           <AlertCircle className="size-8 text-muted-foreground/60" />
-          <div className="text-center space-y-1">
-            <p className="text-xs font-medium text-muted-foreground">Nenhuma seção criada</p>
+          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "text-center space-y-1")}>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-muted-foreground")}>Nenhuma seção criada</p>
             <p className="text-[11px] text-muted-foreground/70">
               Clique abaixo para começar a construir o formulário
             </p>
@@ -303,7 +303,7 @@ export default function SchemaCanvas({
 
           <button
             onClick={onSectionAdd}
-            className="w-full rounded-xl border border-dashed py-3 text-sm text-muted-foreground hover:border-primary/50 hover:text-foreground hover:bg-accent/50 transition-colors cursor-pointer"
+            className={cn(/* design-system-escape: py-3 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "w-full rounded-xl border border-dashed py-3 text-sm text-muted-foreground hover:border-primary/50 hover:text-foreground hover:bg-accent/50 transition-colors cursor-pointer")}
           >
             <Plus className="size-4 inline-block mr-1.5 -mt-0.5" />
             Adicionar Seção

@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import { MessageSquare, UserPlus, Users, Search, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { Heading } from "@/components/ui/typography";
@@ -33,29 +34,29 @@ const SUGGESTION_CARDS = [
 
 export function ChatEmptyState() {
   return (
-    <div className="hidden md:flex h-full w-full items-center justify-center p-8">
-      <div className="flex flex-col items-center gap-6 max-w-[420px] w-full">
+    <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "hidden md:flex h-full w-full items-center justify-center p-8")}>
+      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "flex flex-col items-center gap-6 max-w-[420px] w-full")}>
         {/* Icon + Copy */}
-        <div className="flex flex-col items-center gap-3">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col items-center gap-3")}>
           <div className="size-16 rounded-[1.25rem] bg-primary/[0.08] flex items-center justify-center mb-2">
             <MessageSquare className="size-7 text-primary/50" />
           </div>
-          <div className="flex flex-col items-center gap-1.5">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col items-center gap-1.5")}>
             <Heading level="section" className="text-foreground">
               Suas conversas
             </Heading>
-            <p className="text-[0.8rem] text-muted-foreground/50 text-center text-balance leading-relaxed">
+            <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[0.8rem] text-muted-foreground/50 text-center text-balance leading-relaxed")}>
               Selecione uma conversa para começar ou inicie uma nova.
             </p>
           </div>
         </div>
 
         {/* Suggestion Cards — 2x2 grid per mock */}
-        <div className="w-full grid grid-cols-2 gap-2.5">
+        <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "w-full grid grid-cols-2 gap-2.5")}>
           {SUGGESTION_CARDS.map(({ icon, title, description, colorClass }) => (
             <button
               key={title}
-              className="flex items-start gap-2.5 p-3.5 rounded-[0.875rem] bg-foreground/[0.03] border border-foreground/[0.06] text-left hover:bg-foreground/[0.05] hover:border-primary/[0.12] hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(0,0,0,0.15)] transition-all duration-250 cursor-pointer group"
+              className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-3.5 → usar <Inset> */ "flex items-start gap-2.5 p-3.5 rounded-[0.875rem] bg-foreground/[0.03] border border-foreground/[0.06] text-left hover:bg-foreground/[0.05] hover:border-primary/[0.12] hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(0,0,0,0.15)] transition-all duration-250 cursor-pointer group")}
               onClick={() => toast("Em breve", { description: title })}
             >
               <div
@@ -64,10 +65,10 @@ export function ChatEmptyState() {
                 {icon}
               </div>
               <div className="min-w-0">
-                <p className="text-[0.7rem] font-semibold text-foreground mb-0.5">
+                <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[0.7rem] font-semibold text-foreground mb-0.5")}>
                   {title}
                 </p>
-                <p className="text-[0.6rem] text-muted-foreground/45 leading-snug">
+                <p className={cn(/* design-system-escape: leading-snug sem token DS */ "text-[0.6rem] text-muted-foreground/45 leading-snug")}>
                   {description}
                 </p>
               </div>

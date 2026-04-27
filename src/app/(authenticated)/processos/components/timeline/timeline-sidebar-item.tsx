@@ -97,10 +97,10 @@ export function TimelineSidebarItem({
       )}
 
       {/* Grid: coluna do ícone + linha | coluna do conteúdo */}
-      <div className="grid grid-cols-[48px_1fr] w-full px-2 py-3">
+      <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "grid grid-cols-[48px_1fr] w-full px-2 py-3")}>
 
         {/* Coluna esquerda: linha superior + ícone + linha inferior */}
-        <div className="flex flex-col items-center gap-1">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col items-center gap-1")}>
           {/* Linha conectora superior (transparente no primeiro item — topo da cadeia temporal) */}
           <div
             className={cn('w-px h-2', isFirst ? 'bg-transparent' : 'bg-border')}
@@ -130,9 +130,9 @@ export function TimelineSidebarItem({
         </div>
 
         {/* Coluna direita: badge + data + título */}
-        <div className="flex flex-col justify-center pb-1">
+        <div className={cn(/* design-system-escape: pb-1 padding direcional sem Inset equiv. */ "flex flex-col justify-center pb-1")}>
           {/* Linha 1: badge de tipo + grau + data */}
-          <div className="flex items-center gap-2 mb-1">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-1")}>
             <TimelineTypeBadge
               label={meta.badgeLabel}
               bgClass={meta.badgeBgClass}
@@ -140,12 +140,12 @@ export function TimelineSidebarItem({
               borderClass={meta.badgeBorderClass}
             />
             {isNew && (
-              <span className="text-[8px] font-bold uppercase bg-primary/10 text-primary/70 px-1.5 py-0.5 rounded-full shrink-0">
+              <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[8px] font-bold uppercase bg-primary/10 text-primary/70 px-1.5 py-0.5 rounded-full shrink-0")}>
                 Novo
               </span>
             )}
             {item.grauOrigem && (
-              <span className="rounded border bg-muted/40 px-1 py-px text-[9px] font-medium uppercase tracking-wider text-muted-foreground shrink-0">
+              <span className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "rounded border bg-muted/40 px-1 py-px text-[9px] font-medium uppercase tracking-wider text-muted-foreground shrink-0")}>
                 {item.grauOrigem === 'primeiro_grau'
                   ? '1º'
                   : item.grauOrigem === 'segundo_grau'
@@ -161,7 +161,7 @@ export function TimelineSidebarItem({
           {/* Linha 2: título do item */}
           <p
             className={cn(
-              'text-sm font-medium leading-tight line-clamp-2',
+              /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ 'text-sm font-medium leading-tight line-clamp-2',
               isSelected
                 ? 'text-primary'
                 : 'text-foreground/70 group-hover:text-foreground'

@@ -7,6 +7,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -122,7 +123,7 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.3, delay: index * 0.05 }}
-      className="relative flex gap-4"
+      className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "relative flex gap-4")}
     >
       {/* Linha vertical */}
       <div className="relative flex flex-col items-center">
@@ -145,22 +146,22 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
       </div>
 
       {/* Conteúdo do item */}
-      <Card className="flex-1 p-4 mb-4">
+      <Card className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex-1 p-4 mb-4")}>
         {/* Header do item */}
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           {/* Primeira linha: Instância (se disponível) + Título */}
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
             {grauOrigem && (
-              <SemanticBadge category="grau" value={grauOrigem} className="w-fit text-xs">
+              <SemanticBadge category="grau" value={grauOrigem} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "w-fit text-xs")}>
                 {formatarGrauComOrdinal(grauOrigem)}
               </SemanticBadge>
             )}
-            <Heading level="card" className="text-base flex-1">{item.titulo}</Heading>
+            <Heading level="card" className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base flex-1")}>{item.titulo}</Heading>
             {item.documentoSigiloso && (
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <AppBadge variant="outline" className="gap-1">
+                    <AppBadge variant="outline" className={cn(/* design-system-escape: gap-1 gap sem token DS */ "gap-1")}>
                       <Lock className="h-3 w-3" />
                       Sigiloso
                     </AppBadge>
@@ -172,15 +173,15 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
               </TooltipProvider>
             )}
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
             {formatarDataHora(item.data)}
           </p>
 
           {/* Informações adicionais */}
-          <div className="text-sm text-muted-foreground space-y-1">
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; space-y-1 sem token DS */ "text-sm text-muted-foreground space-y-1")}>
             {item.nomeResponsavel && (
               <p>
-                <span className="font-medium">Responsável:</span>{' '}
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Responsável:</span>{' '}
                 {item.nomeSignatario || item.nomeResponsavel}
               </p>
             )}
@@ -189,7 +190,7 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
 
         {/* Ações (apenas para documentos com Backblaze) */}
         {isDocumento && (
-          <div className="mt-4 flex gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-4 flex gap-2")}>
             {hasBackblaze ? (
               <>
                 <TooltipProvider>

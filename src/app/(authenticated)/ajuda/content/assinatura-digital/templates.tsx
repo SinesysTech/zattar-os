@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
@@ -23,12 +24,12 @@ import {
 
 export default function AssinaturaDigitalTemplatesDoc() {
   return (
-    <div className="space-y-10">
+    <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
       <div>
         <Heading level="page">
           Assinatura Digital — Templates
         </Heading>
-        <p className="text-muted-foreground text-lg">
+        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-muted-foreground text-lg")}>
           Crie modelos reutilizáveis de documentos para assinatura digital, com campos de preenchimento posicionados e configurados para cada uso.
         </p>
       </div>

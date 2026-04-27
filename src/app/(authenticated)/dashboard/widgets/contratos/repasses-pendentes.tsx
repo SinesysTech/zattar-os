@@ -12,6 +12,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import { ArrowLeftRight } from 'lucide-react';
 import {
   WidgetContainer,
@@ -47,7 +48,7 @@ export function WidgetRepassesPendentes() {
   if (!data) {
     return (
       <WidgetContainer title="Repasses Pendentes" icon={ArrowLeftRight} subtitle="Divisão cliente/escritório" depth={1}>
-        <p className="text-[11px] text-muted-foreground/60 py-4 text-center">
+        <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-4 text-center")}>
           Não foi possível carregar os dados.
         </p>
       </WidgetContainer>
@@ -63,7 +64,7 @@ export function WidgetRepassesPendentes() {
   if (!contratos) {
     return (
       <WidgetContainer title="Repasses Pendentes" icon={ArrowLeftRight} subtitle="Divisão cliente/escritório" depth={1}>
-        <p className="text-[11px] text-muted-foreground/60 py-4 text-center">
+        <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-4 text-center")}>
           Dados indisponíveis
         </p>
       </WidgetContainer>
@@ -75,7 +76,7 @@ export function WidgetRepassesPendentes() {
   if (repassesPendentes.length === 0) {
     return (
       <WidgetContainer title="Repasses Pendentes" icon={ArrowLeftRight} subtitle="Divisão cliente/escritório" depth={1}>
-        <div className="flex flex-col items-center justify-center py-8 gap-2">
+        <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center justify-center py-8 gap-2")}>
           <ArrowLeftRight className="size-8 text-muted-foreground/45" />
           <p className="text-[11px] text-muted-foreground/60 text-center">
             Nenhum repasse pendente
@@ -92,7 +93,7 @@ export function WidgetRepassesPendentes() {
       subtitle="Divisão cliente/escritório"
       depth={1}
     >
-      <div className="space-y-0.5">
+      <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
         {repassesPendentes.map((r, i) => {
           const valorCliente = r.total * (r.pctCliente / 100);
           const valorEscritorio = r.total - valorCliente;
@@ -100,32 +101,32 @@ export function WidgetRepassesPendentes() {
           return (
             <ListItem key={`${r.processo}-${i}`} className="items-start">
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-1.5">
-                  <p className="text-[12px] font-medium leading-tight truncate">
+                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[12px] font-medium leading-tight truncate")}>
                     {r.cliente}
                   </p>
                   <StatusBadge status={r.status} />
                 </div>
-                <p className="text-[10px] text-muted-foreground/60 font-mono break-all leading-relaxed mt-0.5">
+                <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[10px] text-muted-foreground/60 font-mono break-all leading-relaxed mt-0.5")}>
                   {r.processo}
                 </p>
-                <div className="flex items-center gap-3 mt-1">
-                  <div className="flex items-center gap-1">
+                <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mt-1")}>
+                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
                     <span className="text-[9px] text-muted-foreground/50">Cliente ({r.pctCliente}%):</span>
-                    <span className="text-[10px] font-medium tabular-nums">
+                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums")}>
                       {fmtMoeda(valorCliente)}
                     </span>
                   </div>
                   <div className="w-px h-3 bg-border/15" aria-hidden="true" />
-                  <div className="flex items-center gap-1">
+                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
                     <span className="text-[9px] text-muted-foreground/50">Escritório:</span>
-                    <span className="text-[10px] font-medium tabular-nums">
+                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums")}>
                       {fmtMoeda(valorEscritorio)}
                     </span>
                   </div>
                 </div>
               </div>
-              <span className="text-[11px] font-semibold tabular-nums shrink-0">
+              <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[11px] font-semibold tabular-nums shrink-0")}>
                 {fmtMoeda(r.total)}
               </span>
             </ListItem>

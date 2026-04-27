@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { FileText, Eye, Edit} from 'lucide-react';
 import { toast } from 'sonner';
@@ -298,56 +299,56 @@ export default function TemplateInfoPopover({
   return (
     <>
       <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent side="right" className="w-96 overflow-y-auto p-5">
-          <SheetHeader className="p-0 pb-1">
+        <SheetContent side="right" className={cn(/* design-system-escape: p-5 → usar <Inset> */ "w-96 overflow-y-auto p-5")}>
+          <SheetHeader className={cn(/* design-system-escape: p-0 → usar <Inset>; pb-1 padding direcional sem Inset equiv. */ "p-0 pb-1")}>
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <FileText className="h-4 w-4 text-muted-foreground" />
-                <SheetTitle className="text-base font-semibold">
+                <SheetTitle className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ "text-base font-semibold")}>
                   {isCreating ? 'Novo Template' : 'Informações do Template'}
                 </SheetTitle>
               </div>
               {!isCreating && (
                 <Badge
                   variant={STATUS_OPTIONS.find(s => s.value === formData.status)?.variant || 'default'}
-                  className="text-xs"
+                  className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}
                 >
                   {STATUS_OPTIONS.find(s => s.value === formData.status)?.label}
                 </Badge>
               )}
             </div>
-            <SheetDescription className="text-xs">
+            <SheetDescription className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
               Editar nome, descrição e status do template
             </SheetDescription>
           </SheetHeader>
 
-          <Separator className="my-3" />
+          <Separator className={cn(/* design-system-escape: my-3 margin sem primitiva DS */ "my-3")} />
 
-          <div className="space-y-4">
+          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             {/* Nome */}
-            <div className="space-y-1.5">
-              <Label htmlFor="template-nome" className="text-xs text-muted-foreground">
+            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+              <Label htmlFor="template-nome" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                 Nome do Template *
               </Label>
               <Input
                 id="template-nome"
                 value={formData.nome}
                 onChange={(e) => setFormData(prev => ({ ...prev, nome: e.target.value }))}
-                className="h-8 text-xs"
+                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
                 placeholder="Ex: Contrato Apps - Uber 2024"
               />
             </div>
 
             {/* Descricao */}
-            <div className="space-y-1.5">
-              <Label htmlFor="template-descricao" className="text-xs text-muted-foreground">
+            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+              <Label htmlFor="template-descricao" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                 Descrição
               </Label>
               <Textarea
                 id="template-descricao"
                 value={formData.descricao}
                 onChange={(e) => setFormData(prev => ({ ...prev, descricao: e.target.value }))}
-                className="text-xs resize-none"
+                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs resize-none")}
                 rows={3}
                 placeholder="Informações adicionais sobre o uso deste template (opcional)"
               />
@@ -356,16 +357,16 @@ export default function TemplateInfoPopover({
             <Separator />
 
             {/* Conteudo Markdown */}
-            <div className="space-y-1.5">
-              <Label htmlFor="template-markdown" className="text-xs text-muted-foreground">
+            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+              <Label htmlFor="template-markdown" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                 Conteúdo Markdown (Opcional)
               </Label>
-              <div className="flex gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setShowMarkdownEditor(true)}
-                  className="flex-1 gap-2 text-xs"
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex-1 gap-2 text-xs")}
                 >
                   <Edit className="h-3.5 w-3.5" />
                   {formData.conteudo_markdown.trim() === '' ? 'Adicionar Conteúdo' : 'Editar Conteúdo'}
@@ -375,7 +376,7 @@ export default function TemplateInfoPopover({
                     variant="outline"
                     size="sm"
                     onClick={handleOpenPreview}
-                    className="flex-1 gap-2 text-xs"
+                    className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex-1 gap-2 text-xs")}
                   >
                     <Eye className="h-3.5 w-3.5" />
                     Pré-visualizar
@@ -387,8 +388,8 @@ export default function TemplateInfoPopover({
             <Separator />
 
             {/* Status */}
-            <div className="space-y-1.5">
-              <Label htmlFor="template-status" className="text-xs text-muted-foreground">
+            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+              <Label htmlFor="template-status" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                 Status *
               </Label>
               <Select
@@ -397,12 +398,12 @@ export default function TemplateInfoPopover({
                   setFormData(prev => ({ ...prev, status: value }))
                 }
               >
-                <SelectTrigger id="template-status" className="h-8 text-xs">
+                <SelectTrigger id="template-status" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}>
                   <SelectValue placeholder="Selecione o status" />
                 </SelectTrigger>
                 <SelectContent>
                   {STATUS_OPTIONS.map((option) => (
-                    <SelectItem key={option.value} value={option.value} className="text-xs">
+                    <SelectItem key={option.value} value={option.value} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                       {option.label}
                     </SelectItem>
                   ))}
@@ -411,11 +412,11 @@ export default function TemplateInfoPopover({
             </div>
 
             {/* Acoes */}
-            <div className="flex gap-2 pt-2 border-t">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-2 padding direcional sem Inset equiv. */ "flex gap-2 pt-2 border-t")}>
               <Button
                 variant="outline"
                 size="sm"
-                className="flex-1 text-xs"
+                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex-1 text-xs")}
                 onClick={handleCancel}
                 disabled={isSaving}
               >
@@ -423,7 +424,7 @@ export default function TemplateInfoPopover({
               </Button>
               <Button
                 size="sm"
-                className="flex-1 gap-2 text-xs"
+                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex-1 gap-2 text-xs")}
                 onClick={handleRequestSave}
                 disabled={!hasChanges || isSaving || desativacaoCheck.isChecking}
               >
@@ -464,7 +465,7 @@ export default function TemplateInfoPopover({
       >
         <DialogContent className="glass-dialog max-w-lg">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
+            <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <AlertTriangle className="size-5 text-warning" />
               Template em uso em {desativacaoCheck.formularios.length} formulário
               {desativacaoCheck.formularios.length > 1 ? 's' : ''}
@@ -477,15 +478,15 @@ export default function TemplateInfoPopover({
             </DialogDescription>
           </DialogHeader>
 
-          <div className="max-h-64 overflow-y-auto space-y-2 py-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; py-2 padding direcional sem Inset equiv. */ "max-h-64 overflow-y-auto space-y-2 py-2")}>
             {desativacaoCheck.formularios.map((f) => (
               <div
                 key={f.id}
-                className="flex items-start justify-between gap-3 rounded-lg border border-border/40 bg-muted/30 px-3 py-2"
+                className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-start justify-between gap-3 rounded-lg border border-border/40 bg-muted/30 px-3 py-2")}
               >
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <p className="text-xs font-medium text-foreground truncate">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
+                    <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-foreground truncate")}>
                       {f.nome}
                     </p>
                     <Badge
@@ -541,7 +542,7 @@ export default function TemplateInfoPopover({
         <DialogContent className="max-w-4xl max-h-[85vh] overflow-auto">
           <DialogHeader>
             <DialogTitle>Preview do Markdown</DialogTitle>
-            <DialogDescription className="text-xs">
+            <DialogDescription className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
               Visualização do conteúdo formatado (variáveis não são substituídas neste preview)
             </DialogDescription>
           </DialogHeader>

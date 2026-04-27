@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth/server";
-import { generateMeta } from "@/lib/utils";
+import { generateMeta, cn } from '@/lib/utils';
 import { createDbClient } from "@/lib/supabase";
 import { ProjectForm } from "../../components/projects/project-form";
 
@@ -47,7 +47,7 @@ export default async function NewProjectPage() {
   const { clientes, usuarios } = await fetchFormOptions();
 
   return (
-    <div className="mx-auto max-w-3xl space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "mx-auto max-w-3xl space-y-4")}>
       <ProjectForm
         clientes={clientes}
         usuarios={usuarios}

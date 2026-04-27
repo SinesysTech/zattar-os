@@ -12,6 +12,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { ArrowLeft, Search } from 'lucide-react';
 import Link from 'next/link';
@@ -126,16 +127,16 @@ export function EspecialidadesPageClient() {
   }, [filtered]);
 
   return (
-    <div className="space-y-5">
+    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       {/* ── Header ──────────────────────────────────────────── */}
-      <div className="flex items-end justify-between gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
         <div>
-          <div className="flex items-center gap-2 mb-1">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-1")}>
             <Button
               asChild
               variant="ghost"
               size="sm"
-              className="h-7 px-2 text-muted-foreground/70"
+              className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-7 px-2 text-muted-foreground/70")}
             >
               <Link href="/pericias">
                 <ArrowLeft className="size-3.5" />
@@ -145,7 +146,7 @@ export function EspecialidadesPageClient() {
           </div>
           <Heading level="page">Especialidades</Heading>
           {!isLoading && (
-            <p className="text-sm text-muted-foreground/70 mt-0.5">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/70 mt-0.5")}>
               {ativas} ativa{ativas !== 1 ? 's' : ''} · {total} no catálogo ·
               sincronizado do PJE
             </p>
@@ -157,21 +158,21 @@ export function EspecialidadesPageClient() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar descrição ou TRT..."
-            className="h-9 w-72 pl-8 bg-card"
+            className={cn(/* design-system-escape: pl-8 padding direcional sem Inset equiv. */ "h-9 w-72 pl-8 bg-card")}
           />
         </div>
       </div>
 
       {/* ── Lista agrupada por TRT ─────────────────────────── */}
       {isLoading ? (
-        <div className="space-y-3">
+        <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
           {Array.from({ length: 4 }).map((_, i) => (
             <Skeleton key={i} className="h-24 w-full rounded-2xl" />
           ))}
         </div>
       ) : error ? (
-        <GlassPanel depth={1} className="p-12 text-center">
-          <p className="text-sm text-destructive">{error}</p>
+        <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12 text-center")}>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{error}</p>
           <Button
             variant="outline"
             size="sm"
@@ -182,20 +183,20 @@ export function EspecialidadesPageClient() {
           </Button>
         </GlassPanel>
       ) : filtered.length === 0 ? (
-        <GlassPanel depth={1} className="p-12 text-center">
-          <p className="text-sm text-muted-foreground">
+        <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12 text-center")}>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
             {search
               ? 'Nenhuma especialidade encontrada para esta busca.'
               : 'Nenhuma especialidade no catálogo.'}
           </p>
         </GlassPanel>
       ) : (
-        <div className="space-y-4">
+        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           {grouped.map(([trt, rows]) => (
             <GlassPanel key={trt} depth={1} className="overflow-hidden">
-              <div className="flex items-center justify-between px-4 py-2.5 border-b border-border/30 bg-muted/20">
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">
+              <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center justify-between px-4 py-2.5 border-b border-border/30 bg-muted/20")}>
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60")}>
                     Tribunal
                   </span>
                   <AppBadge variant="outline">{trt}</AppBadge>
@@ -213,7 +214,7 @@ export function EspecialidadesPageClient() {
               >
                 <div
                   role="row"
-                  className="grid grid-cols-[1fr_100px_120px_100px] gap-4 px-4 py-2 text-[10px] uppercase tracking-wider text-muted-foreground/60"
+                  className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; tracking-wider sem token DS */ "grid grid-cols-[1fr_100px_120px_100px] gap-4 px-4 py-2 text-[10px] uppercase tracking-wider text-muted-foreground/60")}
                 >
                   <span>Descrição</span>
                   <span>Grau</span>
@@ -224,12 +225,12 @@ export function EspecialidadesPageClient() {
                   <div
                     key={item.id}
                     role="row"
-                    className="grid grid-cols-[1fr_100px_120px_100px] gap-4 items-center px-4 py-2.5 hover:bg-muted/20 transition-colors"
+                    className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "grid grid-cols-[1fr_100px_120px_100px] gap-4 items-center px-4 py-2.5 hover:bg-muted/20 transition-colors")}
                   >
-                    <span className="text-sm font-medium text-foreground/90 truncate">
+                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-foreground/90 truncate")}>
                       {item.descricao}
                     </span>
-                    <span className="text-xs text-muted-foreground">
+                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                       {item.grau === 'primeiro_grau' ? '1º Grau' : '2º Grau'}
                     </span>
                     <span>

@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import {
   Select,
@@ -36,16 +37,16 @@ export function ModuloDesligamentoPlataforma({ data, onChange }: ModuloDesligame
   const mostrarValorRetido = data.saldo_retido === true;
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <div>
         <Heading level="card">Desligado pelo Algoritmo</Heading>
-        <p className="text-sm text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
           Como foi encerrada a relação com a plataforma
         </p>
       </div>
 
       {/* B.4.1: Forma de desligamento */}
-      <div className="space-y-2">
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Label htmlFor="forma-desligamento">Como foi encerrada sua relação com a plataforma?</Label>
         <Select
           value={data.forma_desligamento ?? ''}
@@ -64,7 +65,7 @@ export function ModuloDesligamentoPlataforma({ data, onChange }: ModuloDesligame
         </Select>
       </div>
 
-      <div className="space-y-2 sm:max-w-xs">
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 sm:max-w-xs")}>
         <Label htmlFor="data-fim-plataforma">Data de encerramento na plataforma</Label>
         <Input
           id="data-fim-plataforma"
@@ -77,7 +78,7 @@ export function ModuloDesligamentoPlataforma({ data, onChange }: ModuloDesligame
       {foiBloqueado && (
         <>
           {/* B.4.2: Aviso prévio */}
-          <div className="space-y-3">
+          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
             <Label>Recebeu aviso prévio antes do bloqueio/desativação?</Label>
             <SimNaoRadio
               id="aviso-previo"
@@ -87,7 +88,7 @@ export function ModuloDesligamentoPlataforma({ data, onChange }: ModuloDesligame
           </div>
 
           {/* B.4.3: Direito de defesa */}
-          <div className="space-y-3">
+          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
             <Label>Teve direito a defesa ou contestação antes do desligamento?</Label>
             <SimNaoRadio
               id="direito-defesa"
@@ -97,7 +98,7 @@ export function ModuloDesligamentoPlataforma({ data, onChange }: ModuloDesligame
           </div>
 
           {/* B.4.4: Motivo informado */}
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label htmlFor="motivo-informado">Qual motivo foi informado pela plataforma (se algum)?</Label>
             <Textarea
               id="motivo-informado"
@@ -115,7 +116,7 @@ export function ModuloDesligamentoPlataforma({ data, onChange }: ModuloDesligame
       )}
 
       {/* B.4.5: Saldo retido */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>Havia saldo/ganhos retidos pela plataforma no momento do desligamento?</Label>
         <SimNaoRadio
           id="saldo-retido"
@@ -124,7 +125,7 @@ export function ModuloDesligamentoPlataforma({ data, onChange }: ModuloDesligame
         />
 
         {mostrarValorRetido && (
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label htmlFor="valor-retido">Valor aproximado retido</Label>
             <Input
               id="valor-retido"
@@ -138,7 +139,7 @@ export function ModuloDesligamentoPlataforma({ data, onChange }: ModuloDesligame
       </div>
 
       {/* B.4.6: Tempo na plataforma */}
-      <div className="space-y-2">
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Label htmlFor="tempo-plataforma">Quanto tempo trabalhou na plataforma?</Label>
         <Select
           value={data.tempo_plataforma ?? ''}

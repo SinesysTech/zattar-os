@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { HistoricoSalarios } from '@/app/(authenticated)/rh';
 
@@ -16,7 +17,7 @@ export default function HistoricoSalarioPage({ params }: PageProps) {
 
   if (usuarioId === null) {
     return (
-      <div className="rounded-lg border bg-card p-6 text-center text-muted-foreground">
+      <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "rounded-lg border bg-card p-6 text-center text-muted-foreground")}>
         Carregando...
       </div>
     );

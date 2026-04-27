@@ -43,7 +43,7 @@ export function CustomAudioGrid({ className }: CustomAudioGridProps) {
   }
 
   return (
-    <div className={cn("flex flex-wrap items-center justify-center gap-8 p-8 h-full relative", className)}>
+    <div className={cn(/* design-system-escape: gap-8 gap sem token DS; p-8 → usar <Inset> */ "flex flex-wrap items-center justify-center gap-8 p-8 h-full relative", className)}>
       {/* Tiles ocultos para reprodução de áudio dos participantes remotos */}
       <div className="sr-only" aria-hidden="true">
         {participants.map((p) => (
@@ -53,9 +53,9 @@ export function CustomAudioGrid({ className }: CustomAudioGridProps) {
 
       {/* UI visual (avatares) */}
       {allParticipants.map((p: DyteParticipant) => (
-        <div key={p.id} className="flex flex-col items-center gap-4 group">
+        <div key={p.id} className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center gap-4 group")}>
           <div className={cn(
-            "relative w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-video-text shadow-lg transition-transform",
+            /* design-system-escape: text-3xl → migrar para <Heading level="display-*">; font-bold → className de <Text>/<Heading> */ "relative w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-video-text shadow-lg transition-transform",
             "bg-linear-to-br from-info to-primary",
             p.audioEnabled && "animate-pulse ring-4 ring-success/30",
             "group-hover:scale-105"
@@ -75,8 +75,8 @@ export function CustomAudioGrid({ className }: CustomAudioGridProps) {
           </div>
 
           <div className="text-center">
-            <p className="font-semibold text-video-text text-lg">{p.name} {p.id === self?.id && "(Você)"}</p>
-            <p className="text-sm text-video-muted">{p.audioEnabled ? "Falando..." : "Mudo"}</p>
+            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; text-lg → migrar para <Text variant="body-lg"> */ "font-semibold text-video-text text-lg")}>{p.name} {p.id === self?.id && "(Você)"}</p>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-video-muted")}>{p.audioEnabled ? "Falando..." : "Mudo"}</p>
           </div>
         </div>
       ))}

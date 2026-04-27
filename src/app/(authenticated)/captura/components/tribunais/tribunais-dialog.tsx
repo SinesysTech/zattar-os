@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 
 import {
@@ -84,10 +85,10 @@ export function TribunaisDialog({ tribunal, open, onOpenChange, onSuccess }: Pro
         </DialogHeader>
 
         {!tribunal ? (
-          <div className="text-sm text-muted-foreground">Nenhum tribunal selecionado.</div>
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Nenhum tribunal selecionado.</div>
         ) : (
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; py-4 padding direcional sem Inset equiv. */ "grid gap-4 py-4")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="url-base">URL Base</Label>
               <Input
                 id="url-base"
@@ -96,7 +97,7 @@ export function TribunaisDialog({ tribunal, open, onOpenChange, onSuccess }: Pro
                 placeholder="https://pje.trt15.jus.br"
               />
             </div>
-            <div className="grid gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="url-api">URL API</Label>
               <Input
                 id="url-api"

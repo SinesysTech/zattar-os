@@ -100,8 +100,8 @@ export function CustomCallControls({
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 bg-video-surface/95 backdrop-blur-md border-t border-video-border p-4 md:p-6">
-      <div className="relative flex items-center justify-center gap-2 md:gap-4 max-w-7xl mx-auto">
+    <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; md:p-6 sem equivalente DS */ "fixed bottom-0 left-0 right-0 z-40 bg-video-surface/95 backdrop-blur-md border-t border-video-border p-4 md:p-6")}>
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; md:gap-4 sem equivalente DS */ "relative flex items-center justify-center gap-2 md:gap-4 max-w-7xl mx-auto")}>
 
         {/* Network Indicator (Absolute Left) */}
         <div className="absolute left-0 top-1/2 -translate-y-1/2 hidden md:block">
@@ -145,7 +145,7 @@ export function CustomCallControls({
             <TooltipContent><p>{videoEnabled ? "Desativar câmera" : "Ativar câmera"}</p></TooltipContent>
           </Tooltip>
 
-          <div className="w-px h-8 bg-video-surface-hover mx-2" />
+          <div className={cn(/* design-system-escape: mx-2 margin sem primitiva DS */ "w-px h-8 bg-video-surface-hover mx-2")} />
 
           {/* Screenshare */}
           <Tooltip>
@@ -185,44 +185,44 @@ export function CustomCallControls({
               <TooltipContent><p>Efeitos de Vídeo</p></TooltipContent>
             </Tooltip>
             <PopoverContent className="w-72 bg-video-surface border-video-border text-video-text" side="top">
-              <div className="grid gap-4">
-                <div className="space-y-2">
-                  <Heading level="subsection" className="leading-none">Efeitos de Vídeo</Heading>
-                  <p className="text-xs text-muted-foreground">
+              <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4")}>
+                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                  <Heading level="subsection" className={cn(/* design-system-escape: leading-none sem token DS */ "leading-none")}>Efeitos de Vídeo</Heading>
+                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                     Escolha um efeito para sua câmera
                   </p>
                 </div>
                 <RadioGroup
                   value={activeEffect}
                   onValueChange={(val) => onApplyEffect?.(val as 'none' | 'blur' | 'image')}
-                  className="grid grid-cols-1 gap-3"
+                  className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 gap-3")}
                 >
-                  <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-video-surface-hover/50 transition-colors cursor-pointer" onClick={() => onApplyEffect?.('none')}>
+                  <div className={cn(/* design-system-escape: space-x-3 sem token DS; p-2 → usar <Inset> */ "flex items-center space-x-3 p-2 rounded-lg hover:bg-video-surface-hover/50 transition-colors cursor-pointer")} onClick={() => onApplyEffect?.('none')}>
                     <RadioGroupItem value="none" id="effect-none" className="border-video-muted text-info" />
                     <Label htmlFor="effect-none" className="cursor-pointer flex-1">Normal</Label>
-                    <div className="w-12 h-8 rounded bg-video-surface-hover border border-video-muted flex items-center justify-center text-xs">
+                    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "w-12 h-8 rounded bg-video-surface-hover border border-video-muted flex items-center justify-center text-xs")}>
                       <span className="text-video-muted">OFF</span>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-video-surface-hover/50 transition-colors cursor-pointer" onClick={() => onApplyEffect?.('blur')}>
+                  <div className={cn(/* design-system-escape: space-x-3 sem token DS; p-2 → usar <Inset> */ "flex items-center space-x-3 p-2 rounded-lg hover:bg-video-surface-hover/50 transition-colors cursor-pointer")} onClick={() => onApplyEffect?.('blur')}>
                     <RadioGroupItem value="blur" id="effect-blur" className="border-video-muted text-info" />
                     <Label htmlFor="effect-blur" className="cursor-pointer flex-1">Desfoque (Blur)</Label>
-                    <div className="w-12 h-8 rounded bg-linear-to-br from-video-muted to-video-surface-hover border border-video-muted flex items-center justify-center text-xs blur-sm">
+                    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "w-12 h-8 rounded bg-linear-to-br from-video-muted to-video-surface-hover border border-video-muted flex items-center justify-center text-xs blur-sm")}>
                       <span className="text-video-text text-[10px]">BLUR</span>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-video-surface-hover/50 transition-colors" onClick={() => onApplyEffect?.('image')}>
+                  <div className={cn(/* design-system-escape: space-x-3 sem token DS; p-2 → usar <Inset> */ "flex items-center space-x-3 p-2 rounded-lg hover:bg-video-surface-hover/50 transition-colors")} onClick={() => onApplyEffect?.('image')}>
                     <RadioGroupItem value="image" id="effect-image" className="border-video-muted text-info" />
                     <Label htmlFor="effect-image" className="flex-1 cursor-pointer">Imagem Virtual</Label>
-                    <div className="w-12 h-8 rounded bg-linear-to-br from-info to-primary border border-video-muted flex items-center justify-center text-xs">
+                    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "w-12 h-8 rounded bg-linear-to-br from-info to-primary border border-video-muted flex items-center justify-center text-xs")}>
                       <span className="text-video-text text-[10px]">IMG</span>
                     </div>
                   </div>
                 </RadioGroup>
                 {activeEffect !== 'none' && (
-                  <div className="pt-2 border-t border-video-border">
-                    <p className="text-xs text-muted-foreground">
-                      Efeito ativo: <span className="text-video-text font-medium capitalize">{activeEffect === 'blur' ? 'Desfoque' : 'Imagem Virtual'}</span>
+                  <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "pt-2 border-t border-video-border")}>
+                    <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                      Efeito ativo: <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-video-text font-medium capitalize")}>{activeEffect === 'blur' ? 'Desfoque' : 'Imagem Virtual'}</span>
                     </p>
                   </div>
                 )}
@@ -296,7 +296,7 @@ export function CustomCallControls({
             </Tooltip>
           )}
 
-          <div className="w-px h-8 bg-video-surface-hover mx-2" />
+          <div className={cn(/* design-system-escape: mx-2 margin sem primitiva DS */ "w-px h-8 bg-video-surface-hover mx-2")} />
 
           {/* Leave */}
           <Tooltip>

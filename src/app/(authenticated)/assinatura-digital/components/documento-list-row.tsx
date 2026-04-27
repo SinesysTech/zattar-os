@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import { Camera, ChevronRight, FileText } from "lucide-react";
 import { IconContainer } from '@/components/ui/icon-container';
 import { ProgressRing } from "@/app/(authenticated)/dashboard/widgets/primitives";
@@ -34,14 +35,14 @@ export function DocumentListRow({ doc, onSelect, selected }: DocumentListRowProp
       </IconContainer>
 
       <div className="flex-1 min-w-0">
-        <p className="text-xs font-medium truncate">{doc.titulo}</p>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium truncate")}>{doc.titulo}</p>
         <p className="text-[10px] text-muted-foreground/55">
           {doc.criadoPor} &middot; {timeAgo(doc.criadoEm)}
         </p>
       </div>
 
       {doc.assinantes.length > 0 && (
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 shrink-0")}>
           <ProgressRing
             percent={progress.percent}
             size={24}
@@ -63,7 +64,7 @@ export function DocumentListRow({ doc, onSelect, selected }: DocumentListRowProp
         {cfg.label}
       </span>
 
-      <div className="items-center gap-1 shrink-0 hidden md:flex">
+      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "items-center gap-1 shrink-0 hidden md:flex")}>
         {doc.selfieHabilitada && (
           <Camera className="size-3 text-muted-foreground/45" />
         )}

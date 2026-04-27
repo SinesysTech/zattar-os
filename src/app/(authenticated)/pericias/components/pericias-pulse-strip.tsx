@@ -35,16 +35,16 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
     stats.ativas > 0 ? Math.round((stats.semResponsavel / stats.ativas) * 100) : 0;
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 lg:grid-cols-4 gap-3")}>
       {/* ── Ativas ─────────────────────────────────────────────────── */}
-      <GlassPanel depth={1} className="px-4 py-3.5">
-        <div className="flex items-start justify-between gap-2">
+      <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate">
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
               Perícias Ativas
             </p>
-            <div className="flex items-baseline gap-1.5 mt-1">
-              <p className="font-display text-2xl font-bold tabular-nums leading-none tracking-tight">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+              <p className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ "font-display text-2xl font-bold tabular-nums leading-none tracking-tight")}>
                 <AnimatedNumber value={stats.ativas} />
               </p>
             </div>
@@ -54,7 +54,7 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
           </IconContainer>
         </div>
 
-        <div className="mt-2.5 flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
           {stats.trendMensal.length >= 2 ? (
             <Sparkline data={stats.trendMensal} width={80} height={16} />
           ) : (
@@ -67,14 +67,14 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
       </GlassPanel>
 
       {/* ── Aguardando Laudo ───────────────────────────────────────── */}
-      <GlassPanel depth={1} className="px-4 py-3.5">
-        <div className="flex items-start justify-between gap-2">
+      <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate">
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
               Aguardando Laudo
             </p>
-            <div className="flex items-baseline gap-1.5 mt-1">
-              <p className="font-display text-2xl font-bold tabular-nums leading-none tracking-tight">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+              <p className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ "font-display text-2xl font-bold tabular-nums leading-none tracking-tight")}>
                 <AnimatedNumber value={stats.aguardandoLaudo} />
               </p>
             </div>
@@ -84,7 +84,7 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
           </IconContainer>
         </div>
 
-        <div className="mt-2.5 flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full bg-info/25 transition-all duration-700"
@@ -101,19 +101,19 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
       <GlassPanel
         depth={stats.prazosCriticos7d > 0 ? 2 : 1}
         className={cn(
-          'px-4 py-3.5',
+          /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ 'px-4 py-3.5',
           stats.prazosCriticos7d > 0 && 'border-destructive/15',
         )}
       >
-        <div className="flex items-start justify-between gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate">
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
               Prazos em 7d
             </p>
-            <div className="flex items-baseline gap-1.5 mt-1">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
               <p
                 className={cn(
-                  'font-display text-2xl font-bold tabular-nums leading-none tracking-tight',
+                  /* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ 'font-display text-2xl font-bold tabular-nums leading-none tracking-tight',
                   stats.prazosCriticos7d > 0 && 'text-destructive/80',
                 )}
               >
@@ -132,7 +132,7 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
           </IconContainer>
         </div>
 
-        <div className="mt-2.5 flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full bg-destructive/25 transition-all duration-700"
@@ -149,19 +149,19 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
       <GlassPanel
         depth={stats.semResponsavel > 0 ? 2 : 1}
         className={cn(
-          'px-4 py-3.5',
+          /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ 'px-4 py-3.5',
           stats.semResponsavel > 0 && 'border-warning/15',
         )}
       >
-        <div className="flex items-start justify-between gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate">
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
               Sem Responsável
             </p>
-            <div className="flex items-baseline gap-1.5 mt-1">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
               <p
                 className={cn(
-                  'font-display text-2xl font-bold tabular-nums leading-none tracking-tight',
+                  /* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ 'font-display text-2xl font-bold tabular-nums leading-none tracking-tight',
                   stats.semResponsavel > 0 && 'text-warning/80',
                 )}
               >
@@ -174,7 +174,7 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
           </IconContainer>
         </div>
 
-        <div className="mt-2.5 flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full bg-warning/25 transition-all duration-700"

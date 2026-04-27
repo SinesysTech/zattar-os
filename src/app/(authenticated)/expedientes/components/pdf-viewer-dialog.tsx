@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { FileText} from 'lucide-react';
 import { actionGerarUrlDownload } from '@/app/(authenticated)/documentos';
@@ -78,7 +79,7 @@ export function PdfViewerDialog({
                 maxWidth="4xl"
                 footer={footerButton}
             >
-                <div className="flex flex-col items-center justify-center flex-1 gap-4 h-[60vh] min-h-100">
+                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center justify-center flex-1 gap-4 h-[60vh] min-h-100")}>
                     <FileText className="h-16 w-16 text-muted-foreground" />
                     <p className="text-muted-foreground">Documento não disponível</p>
                 </div>
@@ -102,7 +103,7 @@ export function PdfViewerDialog({
                 )}
 
                 {error ? (
-                    <div className="flex flex-col items-center justify-center h-full gap-4">
+                    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center justify-center h-full gap-4")}>
                         <FileText className="h-16 w-16 text-destructive" />
                         <p className="text-destructive text-center">{error}</p>
                     </div>

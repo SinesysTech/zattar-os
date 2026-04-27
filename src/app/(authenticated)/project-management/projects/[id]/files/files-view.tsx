@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import * as React from "react";
 import Link from "next/link";
 import {
@@ -110,9 +111,9 @@ export function FilesView({
   };
 
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
           <Button variant="ghost" size="icon" aria-label="Voltar" asChild>
             <Link href={`/app/project-management/projects/${projeto.id}`}>
               <ArrowLeft className="size-4" />
@@ -120,7 +121,7 @@ export function FilesView({
           </Button>
           <div>
             <Heading level="page">Arquivos</Heading>
-            <p className="text-muted-foreground text-sm">{projeto.nome}</p>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>{projeto.nome}</p>
           </div>
         </div>
 
@@ -149,7 +150,7 @@ export function FilesView({
 
       {anexos.length === 0 ? (
         <Card>
-          <CardContent className="py-12 text-center">
+          <CardContent className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "py-12 text-center")}>
             <FileIcon className="mx-auto size-10 text-muted-foreground mb-2" />
             <p className="text-muted-foreground">
               Nenhum arquivo enviado. Clique em &quot;Upload&quot; para
@@ -159,20 +160,20 @@ export function FilesView({
         </Card>
       ) : (
         <Card>
-          <CardContent className="p-0">
+          <CardContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "p-0")}>
             <div className="divide-y">
               {anexos.map((anexo) => (
                 <div
                   key={anexo.id}
-                  className="flex items-center justify-between px-4 py-3"
+                  className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-center justify-between px-4 py-3")}
                 >
-                  <div className="flex items-center gap-3 min-w-0">
+                  <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 min-w-0")}>
                     <FileIcon className="size-5 text-muted-foreground shrink-0" />
                     <div className="min-w-0">
-                      <p className="text-sm font-medium truncate">
+                      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")}>
                         {anexo.nomeArquivo}
                       </p>
-                      <p className="text-muted-foreground text-xs">
+                      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground text-xs")}>
                         {formatFileSize(anexo.tamanhoBytes)}
                         {anexo.usuarioNome && ` · ${anexo.usuarioNome}`}
                         {" · "}
@@ -181,7 +182,7 @@ export function FilesView({
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-1">
+                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
                     <Button variant="ghost" size="icon" aria-label="Baixar" asChild>
                       <a
                         href={anexo.url}

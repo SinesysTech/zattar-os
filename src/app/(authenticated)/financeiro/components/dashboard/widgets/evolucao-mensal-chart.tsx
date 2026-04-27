@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useId } from 'react';
 import {
   AreaChart,
@@ -74,8 +75,8 @@ export function EvolucaoMensalChart({ data }: EvolucaoMensalChartProps) {
 
   return (
     <Card className="h-full flex flex-col">
-      <CardHeader className="pb-2">
-        <CardTitle className="flex items-center gap-2 text-sm font-medium">
+      <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+        <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "flex items-center gap-2 text-sm font-medium")}>
           <TrendingUp className="h-4 w-4 text-muted-foreground" />
           Evolução Mensal (12 meses)
         </CardTitle>

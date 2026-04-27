@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useActionState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -415,7 +416,7 @@ export function ExpedienteDialog({
       form="criar-expediente-form"
       type="submit"
       size="sm"
-      className="rounded-xl gap-2"
+      className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "rounded-xl gap-2")}
       disabled={isPending || !podeSubmeter}
     >
       {isPending ? (
@@ -443,7 +444,7 @@ export function ExpedienteDialog({
       <form
         id="criar-expediente-form"
         action={formAction}
-        className="space-y-4"
+        className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}
       >
         {/* Hidden inputs — contratam com o schema do backend */}
         <input
@@ -510,9 +511,9 @@ export function ExpedienteDialog({
             )}
             title="Selecione o tribunal e grau"
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="trt" className="flex items-center gap-2">
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                <Label htmlFor="trt" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                   <Building2 className="h-4 w-4 text-muted-foreground" />
                   TRT
                   <span className="text-destructive">*</span>
@@ -542,15 +543,15 @@ export function ExpedienteDialog({
                   <p
                     id="trt-error"
                     role="alert"
-                    className="text-sm font-medium text-destructive"
+                    className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}
                   >
                     {getErrors()!.trt[0]}
                   </p>
                 )}
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="grau" className="flex items-center gap-2">
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                <Label htmlFor="grau" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                   <Scale className="h-4 w-4 text-muted-foreground" />
                   Grau
                   <span className="text-destructive">*</span>
@@ -580,7 +581,7 @@ export function ExpedienteDialog({
                   <p
                     id="grau-error"
                     role="alert"
-                    className="text-sm font-medium text-destructive"
+                    className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}
                   >
                     {getErrors()!.grau[0]}
                   </p>
@@ -600,10 +601,10 @@ export function ExpedienteDialog({
             )}
             title="Selecione o processo"
           >
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label
                 htmlFor="processoIdCombobox"
-                className="flex items-center gap-2"
+                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}
               >
                 <FileText className="h-4 w-4 text-muted-foreground" />
                 Processo
@@ -611,16 +612,16 @@ export function ExpedienteDialog({
               </Label>
 
               {loadingProcessos ? (
-                <div className="flex items-center gap-2 h-10 px-3 border border-border/40 rounded-md bg-muted/40">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv. */ "flex items-center gap-2 h-10 px-3 border border-border/40 rounded-md bg-muted/40")}>
                   <LoadingSpinner />
-                  <span className="text-sm text-muted-foreground">
+                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                     Carregando processos...
                   </span>
                 </div>
               ) : processosError ? (
                 <Alert variant="destructive">
                   <AlertCircle className="h-4 w-4" />
-                  <AlertDescription className="flex items-center justify-between gap-3">
+                  <AlertDescription className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
                     <span>Falha ao carregar processos. {processosError}</span>
                     <Button
                       type="button"
@@ -660,7 +661,7 @@ export function ExpedienteDialog({
                   {getErrors()?.processoId && (
                     <p
                       role="alert"
-                      className="text-sm font-medium text-destructive"
+                      className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}
                     >
                       {getErrors()!.processoId[0]}
                     </p>
@@ -677,11 +678,11 @@ export function ExpedienteDialog({
             icon={CheckCircle2}
             title="Processo vinculado"
           >
-            <p className="text-base font-semibold tabular-nums">
+            <p className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ "text-base font-semibold tabular-nums")}>
               {processoSelecionado.numeroProcesso}
             </p>
-            <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <div className="space-y-1 min-w-0">
+            <dl className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 gap-3 sm:grid-cols-2")}>
+              <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1 min-w-0")}>
                 <Text
                   variant="meta-label"
                   as="dt"
@@ -689,11 +690,11 @@ export function ExpedienteDialog({
                 >
                   Parte autora
                 </Text>
-                <dd className="text-sm font-medium truncate">
+                <dd className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")}>
                   {processoSelecionado.nomeParteAutora || '—'}
                 </dd>
               </div>
-              <div className="space-y-1 min-w-0">
+              <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1 min-w-0")}>
                 <Text
                   variant="meta-label"
                   as="dt"
@@ -701,7 +702,7 @@ export function ExpedienteDialog({
                 >
                   Parte ré
                 </Text>
-                <dd className="text-sm font-medium truncate">
+                <dd className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")}>
                   {processoSelecionado.nomeParteRe || '—'}
                 </dd>
               </div>
@@ -716,19 +717,19 @@ export function ExpedienteDialog({
             stepState={stepStateFor(currentStep === 3, podeSubmeter)}
             title="Dados do expediente"
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2 col-span-1 md:col-span-2">
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 col-span-1 md:col-span-2")}>
                 <Label
                   htmlFor="tipoExpedienteIdSelect"
-                  className="flex items-center gap-2"
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}
                 >
                   <FileType className="h-4 w-4 text-muted-foreground" />
                   Tipo de expediente
                 </Label>
                 {loadingTipos ? (
-                  <div className="flex items-center gap-2 h-10 px-3 border border-border/40 rounded-md bg-muted/40">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv. */ "flex items-center gap-2 h-10 px-3 border border-border/40 rounded-md bg-muted/40")}>
                     <LoadingSpinner />
-                    <span className="text-sm text-muted-foreground">
+                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                       Carregando tipos...
                     </span>
                   </div>
@@ -759,17 +760,17 @@ export function ExpedienteDialog({
                 {getErrors()?.tipoExpedienteId && (
                   <p
                     role="alert"
-                    className="text-sm font-medium text-destructive"
+                    className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}
                   >
                     {getErrors()!.tipoExpedienteId[0]}
                   </p>
                 )}
               </div>
 
-              <div className="space-y-2 col-span-1 md:col-span-2">
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 col-span-1 md:col-span-2")}>
                 <Label
                   htmlFor="descricao"
-                  className="flex items-center gap-2"
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}
                 >
                   <FileText className="h-4 w-4 text-muted-foreground" />
                   Descrição
@@ -792,17 +793,17 @@ export function ExpedienteDialog({
                   <p
                     id="descricao-error"
                     role="alert"
-                    className="text-sm font-medium text-destructive"
+                    className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}
                   >
                     {getErrors()!.descricao[0]}
                   </p>
                 )}
               </div>
 
-              <div className="space-y-2 col-span-1">
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 col-span-1")}>
                 <Label
                   htmlFor="dataPrazo"
-                  className="flex items-center gap-2"
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}
                 >
                   <Calendar className="h-4 w-4 text-muted-foreground" />
                   Data do prazo
@@ -818,10 +819,10 @@ export function ExpedienteDialog({
                 </div>
               </div>
 
-              <div className="space-y-2 col-span-1">
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 col-span-1")}>
                 <Label
                   htmlFor="horaPrazo"
-                  className="flex items-center gap-2"
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}
                 >
                   <Clock className="h-4 w-4 text-muted-foreground" />
                   Hora
@@ -834,7 +835,7 @@ export function ExpedienteDialog({
                   value={horaPrazoValue}
                   onChange={(e) => setHoraPrazoValue(e.target.value)}
                   disabled={isPending || !dataPrazoValue}
-                  className="h-10 w-full pl-2"
+                  className={cn(/* design-system-escape: pl-2 padding direcional sem Inset equiv. */ "h-10 w-full pl-2")}
                   aria-invalid={
                     !!(getErrors()?.dataPrazoLegalParte || getErrors()?.horaPrazo)
                   }
@@ -849,7 +850,7 @@ export function ExpedienteDialog({
                   <p
                     id="prazo-error"
                     role="alert"
-                    className="text-sm font-medium text-destructive"
+                    className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}
                   >
                     {getErrors()!.dataPrazoLegalParte?.[0] ||
                       getErrors()!.horaPrazo?.[0]}
@@ -857,18 +858,18 @@ export function ExpedienteDialog({
                 )}
               </div>
 
-              <div className="space-y-2 col-span-1 md:col-span-2">
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 col-span-1 md:col-span-2")}>
                 <Label
                   htmlFor="responsavelIdCombobox"
-                  className="flex items-center gap-2"
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}
                 >
                   <User className="h-4 w-4 text-muted-foreground" />
                   Responsável
                 </Label>
                 {loadingUsuarios ? (
-                  <div className="flex items-center gap-2 h-10 px-3 border border-border/40 rounded-md bg-muted/40">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv. */ "flex items-center gap-2 h-10 px-3 border border-border/40 rounded-md bg-muted/40")}>
                     <LoadingSpinner />
-                    <span className="text-sm text-muted-foreground">
+                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                       Carregando usuários...
                     </span>
                   </div>
@@ -888,7 +889,7 @@ export function ExpedienteDialog({
                 {getErrors()?.responsavelId && (
                   <p
                     role="alert"
-                    className="text-sm font-medium text-destructive"
+                    className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}
                   >
                     {getErrors()!.responsavelId[0]}
                   </p>

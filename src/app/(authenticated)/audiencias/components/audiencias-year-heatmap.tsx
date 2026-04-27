@@ -151,7 +151,7 @@ const MonthGrid = React.memo(function MonthGrid({
           )}
           aria-label={tooltipText}
         >
-          <TooltipContent side="top" className="text-micro-caption px-2 py-1">
+          <TooltipContent side="top" className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "text-micro-caption px-2 py-1")}>
             {tooltipText}
           </TooltipContent>
         </button>
@@ -164,14 +164,14 @@ const MonthGrid = React.memo(function MonthGrid({
       <div className="text-overline text-muted-foreground/70 mb-1.5">
         {MONTH_NAMES[monthIndex]}
       </div>
-      <div className="grid grid-cols-7 gap-0.5 mb-1">
+      <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "grid grid-cols-7 gap-0.5 mb-1")}>
         {WEEKDAY_LABELS.map((lbl, i) => (
           <div key={i} className="text-micro-caption text-muted-foreground/50 text-center">
             {lbl}
           </div>
         ))}
       </div>
-      <div className="grid grid-cols-7 gap-0.5">
+      <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "grid grid-cols-7 gap-0.5")}>
         {cells}
       </div>
     </div>
@@ -196,8 +196,8 @@ function StatCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-border/40 bg-muted/30 p-4 px-5">
-      <div className="flex items-center gap-2 mb-3">
+    <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; px-5 padding direcional sem Inset equiv. */ "rounded-2xl border border-border/40 bg-muted/30 p-4 px-5")}>
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
         <IconContainer size="md" className={iconBg}>
           <Icon className={cn('w-3.5 h-3.5', iconColor)} />
         </IconContainer>
@@ -244,10 +244,10 @@ export function AudienciasYearHeatmap({
 
   return (
     <TooltipProvider delayDuration={100}>
-      <div className="flex h-full flex-col overflow-y-auto p-4 sm:p-6">
+      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-6 sem equivalente DS */ "flex h-full flex-col overflow-y-auto p-4 sm:p-6")}>
         {/* Year Navigator */}
-        <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-          <div className="flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between mb-6 flex-wrap gap-3")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <Button
               variant="ghost"
               size="icon"
@@ -271,7 +271,7 @@ export function AudienciasYearHeatmap({
             </Button>
             <Button
               size="sm"
-              className="ml-2 rounded-full px-4"
+              className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "ml-2 rounded-full px-4")}
               onClick={() => onDateChange(new Date())}
             >
               Hoje
@@ -280,9 +280,9 @@ export function AudienciasYearHeatmap({
         </div>
 
         {/* Main Layout: Heatmap + Stats Sidebar */}
-        <div className="flex gap-5 flex-wrap xl:flex-nowrap">
+        <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex gap-5 flex-wrap xl:flex-nowrap")}>
           {/* Heatmap Panel */}
-          <GlassPanel depth={1} className="p-6 flex-1 min-w-0">
+          <GlassPanel depth={1} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 flex-1 min-w-0")}>
             <div className="grid grid-cols-4 gap-x-6 gap-y-8">
               {Array.from({ length: 12 }, (_, i) => (
                 <Tooltip key={i}>
@@ -297,9 +297,9 @@ export function AudienciasYearHeatmap({
             </div>
 
             {/* Legend */}
-            <div className="mt-8 flex items-center gap-3">
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "mt-8 flex items-center gap-3")}>
               <span className="text-micro-caption">Menos</span>
-              <div className="flex items-center gap-1">
+              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
                 <div className="w-2.5 h-2.5 rounded-[2px] bg-muted/50" />
                 <div className="w-2.5 h-2.5 rounded-[2px] bg-primary/30" />
                 <div className="w-2.5 h-2.5 rounded-[2px] bg-primary/55" />
@@ -307,8 +307,8 @@ export function AudienciasYearHeatmap({
                 <div className="w-2.5 h-2.5 rounded-[2px] bg-primary/85" />
               </div>
               <span className="text-micro-caption">Mais</span>
-              <span className="text-muted-foreground/40 mx-2 text-micro-caption">·</span>
-              <div className="flex items-center gap-1.5">
+              <span className={cn(/* design-system-escape: mx-2 margin sem primitiva DS */ "text-muted-foreground/40 mx-2 text-micro-caption")}>·</span>
+              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
                 <div className="w-2.5 h-2.5 rounded-[2px] bg-muted/50 ring-[1.5px] ring-primary ring-offset-1 ring-offset-transparent" />
                 <span className="text-micro-caption">Hoje</span>
               </div>
@@ -316,7 +316,7 @@ export function AudienciasYearHeatmap({
           </GlassPanel>
 
           {/* Stats Sidebar */}
-          <div className="flex flex-col gap-4 w-full xl:w-64 shrink-0">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4 w-full xl:w-64 shrink-0")}>
             {/* Total no Ano */}
             <StatCard icon={CalendarDays} iconBg="bg-primary/15" iconColor="text-primary" label="Total no Ano">
               <div className="text-kpi-value">{stats.total}</div>
@@ -362,7 +362,7 @@ export function AudienciasYearHeatmap({
             {/* Próxima Audiência */}
             {stats.proxima && (
               <StatCard icon={Clock} iconBg="bg-info/12" iconColor="text-info" label="Próxima">
-                <div className="text-label font-semibold">
+                <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-label font-semibold")}>
                   {format(parseISO(stats.proxima.dataInicio), "dd MMM · HH'h'mm", { locale: ptBR })}
                 </div>
                 <div className="text-mono-num mt-0.5">
@@ -370,7 +370,7 @@ export function AudienciasYearHeatmap({
                 </div>
                 {stats.proxima.tipoDescricao && (
                   <div className="mt-2">
-                    <span className="text-micro-badge px-2 py-0.5 rounded-full font-medium bg-info/12 text-info border border-info/20">
+                    <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "text-micro-badge px-2 py-0.5 rounded-full font-medium bg-info/12 text-info border border-info/20")}>
                       {stats.proxima.tipoDescricao}
                     </span>
                   </div>

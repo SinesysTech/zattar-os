@@ -11,6 +11,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import { BarChart3 } from 'lucide-react';
 import {
   WidgetContainer,
@@ -31,7 +32,7 @@ export function WidgetParcelasStatus() {
   if (!data) {
     return (
       <WidgetContainer title="Parcelas" icon={BarChart3} subtitle="Status de pagamento" depth={1}>
-        <p className="text-[11px] text-muted-foreground/60 py-4 text-center">
+        <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-4 text-center")}>
           Não foi possível carregar os dados.
         </p>
       </WidgetContainer>
@@ -47,7 +48,7 @@ export function WidgetParcelasStatus() {
   if (!contratos) {
     return (
       <WidgetContainer title="Parcelas" icon={BarChart3} subtitle="Status de pagamento" depth={1}>
-        <p className="text-[11px] text-muted-foreground/60 py-4 text-center">
+        <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-4 text-center")}>
           Dados indisponíveis
         </p>
       </WidgetContainer>
@@ -71,7 +72,7 @@ export function WidgetParcelasStatus() {
   if (totalCount === 0) {
     return (
       <WidgetContainer title="Parcelas" icon={BarChart3} subtitle="Status de pagamento" depth={1}>
-        <p className="text-[11px] text-muted-foreground/60 py-6 text-center italic">
+        <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-6 text-center italic")}>
           Nenhuma parcela registrada.
         </p>
       </WidgetContainer>
@@ -85,19 +86,19 @@ export function WidgetParcelasStatus() {
       subtitle="Status de pagamento"
       depth={1}
     >
-      <div className="flex flex-col gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4")}>
         <StackedBar segments={segments} height={10} />
 
-        <div className="flex flex-col gap-1.5">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
           {parcelasStatus.map((p) => {
             const pct = totalCount > 0 ? ((p.count / totalCount) * 100).toFixed(0) : '0';
             return (
-              <div key={p.status} className="flex items-center gap-2">
+              <div key={p.status} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <ToneDot tone={p.tone} shape="square" size="lg" aria-label={p.status} />
                 <span className="text-[10px] text-muted-foreground/70 truncate flex-1 capitalize">
                   {p.status.replace(/_/g, ' ')}
                 </span>
-                <span className="text-[10px] font-medium tabular-nums">
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums")}>
                   {fmtNum(p.count)}
                 </span>
                 <span className="text-[9px] text-muted-foreground/50 tabular-nums w-8 text-right">
@@ -108,20 +109,20 @@ export function WidgetParcelasStatus() {
           })}
         </div>
 
-        <div className="flex justify-between pt-3 border-t border-border/10">
+        <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex justify-between pt-3 border-t border-border/10")}>
           <div>
-            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Total
             </p>
-            <p className="text-sm font-semibold font-display tabular-nums">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold font-display tabular-nums")}>
               {fmtMoeda(totalValor)}
             </p>
           </div>
           <div className="text-right">
-            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Pendente
             </p>
-            <p className="text-sm font-semibold font-display tabular-nums text-warning/80">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold font-display tabular-nums text-warning/80")}>
               {fmtMoeda(valorPendente)}
             </p>
           </div>

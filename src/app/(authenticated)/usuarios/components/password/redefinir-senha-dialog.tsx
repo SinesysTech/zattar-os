@@ -1,6 +1,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -139,9 +140,9 @@ export function RedefinirSenhaDialog({
         </Button>
       }
     >
-      <form ref={formRef} onSubmit={handleSubmit} className="space-y-4 p-6">
+      <form ref={formRef} onSubmit={handleSubmit} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; p-6 → migrar para <Inset variant="dialog"> */ "space-y-4 p-6")}>
         {error && (
-          <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+          <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-3 text-sm text-destructive")}>
             {error}
           </div>
         )}
@@ -153,7 +154,7 @@ export function RedefinirSenhaDialog({
           </Alert>
         )}
 
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label htmlFor="novaSenha">Nova Senha *</Label>
           <div className="relative">
             <Input
@@ -165,7 +166,7 @@ export function RedefinirSenhaDialog({
               placeholder="Digite a nova senha"
               required
               disabled={isLoading || !!successMessage}
-              className="pr-10"
+              className={cn(/* design-system-escape: pr-10 padding direcional sem Inset equiv. */ "pr-10")}
             />
             <button
               type="button"
@@ -185,7 +186,7 @@ export function RedefinirSenhaDialog({
           </Text>
         </div>
 
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label htmlFor="confirmarSenha">Confirmar Nova Senha *</Label>
           <div className="relative">
             <Input
@@ -197,7 +198,7 @@ export function RedefinirSenhaDialog({
               placeholder="Digite novamente a nova senha"
               required
               disabled={isLoading || !!successMessage}
-              className="pr-10"
+              className={cn(/* design-system-escape: pr-10 padding direcional sem Inset equiv. */ "pr-10")}
             />
             <button
               type="button"

@@ -35,17 +35,17 @@ export function MessageGroup({ messages, isOwn, isGroupChat }: MessageGroupProps
           )}
         >
           <AvatarImage src={usuario.avatar} alt={displayName} />
-          <AvatarFallback className="bg-primary/10 text-primary text-[0.625rem] font-semibold rounded-lg">
+          <AvatarFallback className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "bg-primary/10 text-primary text-[0.625rem] font-semibold rounded-lg")}>
             {fallback}
           </AvatarFallback>
         </Avatar>
       </div>
 
       {/* Messages column */}
-      <div className="flex flex-col gap-1">
+      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
         {/* Sender name — only for group chats, only on first bubble */}
         {isGroupChat && !isOwn && (
-          <p className="text-[0.625rem] font-semibold text-primary opacity-60 mb-1 pl-[0.125rem]">
+          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[0.625rem] font-semibold text-primary opacity-60 mb-1 pl-[0.125rem]")}>
             {firstMessage.usuario.nomeExibicao || firstMessage.usuario.nomeCompleto}
           </p>
         )}

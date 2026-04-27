@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { LayoutGrid, List, Plus } from "lucide-react";
@@ -38,12 +39,12 @@ export function ProjectListView({ projetos }: ProjectListViewProps) {
 
   if (viewMode === "cards") {
     return (
-      <div className="space-y-4">
-        <div className="flex items-center justify-between py-4">
+      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+        <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "flex items-center justify-between py-4")}>
           <Heading level="page">
             Projetos
           </Heading>
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             {viewModeToggle}
             <Button
               onClick={() =>
@@ -55,12 +56,12 @@ export function ProjectListView({ projetos }: ProjectListViewProps) {
             </Button>
           </div>
         </div>
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-4">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-4")}>
           {projetos.map((projeto) => (
             <ProjectCard key={projeto.id} projeto={projeto} />
           ))}
           {projetos.length === 0 && (
-            <p className="text-muted-foreground col-span-full text-center py-12">
+            <p className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "text-muted-foreground col-span-full text-center py-12")}>
               Nenhum projeto encontrado.
             </p>
           )}

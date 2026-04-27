@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Text } from '@/components/ui/typography';
 
 /**
@@ -34,14 +35,14 @@ export function TimelineContextCard({
   orgao,
 }: TimelineContextCardProps) {
   return (
-    <div className="shrink-0 p-4 border-b flex flex-col justify-center bg-card sticky top-0 z-10">
+    <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "shrink-0 p-4 border-b flex flex-col justify-center bg-card sticky top-0 z-10")}>
       {/* Número do processo em fonte mono */}
-      <p className="font-mono text-xs text-muted-foreground mb-1 tracking-wider truncate">
+      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; tracking-wider sem token DS */ "font-mono text-xs text-muted-foreground mb-1 tracking-wider truncate")}>
         Nº {numeroProcesso}
       </p>
 
       {/* Partes do processo */}
-      <Text variant="label" as="p" className="font-medium truncate">
+      <Text variant="label" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium truncate")}>
         {partes}
       </Text>
 

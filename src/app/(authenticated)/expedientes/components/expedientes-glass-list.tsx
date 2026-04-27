@@ -100,27 +100,27 @@ function GlassRow({
         }
       }}
       className={cn(
-        'group w-full text-left rounded-2xl border border-border/60 bg-card p-4 cursor-pointer',
+        /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'group w-full text-left rounded-2xl border border-border/60 bg-card p-4 cursor-pointer',
         'transition-all duration-180 ease-out',
         'hover:border-border hover:shadow-[0_4px_14px_rgba(0,0,0,0.06)] hover:-translate-y-px',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
         URGENCY_BORDER[urgency],
       )}
     >
-      <div className="flex items-start gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start gap-4")}>
         {/* TEMPORAL: prazo fatal + countdown (coluna fixa à esquerda) */}
-        <div className="flex flex-col items-center gap-1.5 w-22 shrink-0 pt-0.5">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; pt-0.5 padding direcional sem Inset equiv. */ "flex flex-col items-center gap-1.5 w-22 shrink-0 pt-0.5")}>
           <div className="text-center">
             {temPrazo ? (
               <>
-                <div className="text-caption font-semibold text-foreground leading-tight whitespace-nowrap tabular-nums">
+                <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-caption font-semibold text-foreground leading-tight whitespace-nowrap tabular-nums")}>
                   {format(
                     parseISO(expediente.dataPrazoLegalParte!),
                     'dd MMM yyyy',
                     { locale: ptBR },
                   )}
                 </div>
-                <div className="text-micro-caption uppercase tracking-wider text-muted-foreground/55 mt-0.5">
+                <div className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption uppercase tracking-wider text-muted-foreground/55 mt-0.5")}>
                   Fatal
                 </div>
               </>
@@ -131,22 +131,22 @@ function GlassRow({
             )}
           </div>
           {temPrazo && (vencido || dias !== null) && (
-            <div className="flex items-center gap-1 flex-wrap justify-center">
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 flex-wrap justify-center")}>
               {vencido ? (
                 <SemanticBadge
                   category="expediente_status"
                   value="VENCIDO"
                   variantOverride="destructive"
                   toneOverride="soft"
-                  className="text-micro-badge px-1.5 py-0 h-5"
+                  className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-micro-badge px-1.5 py-0 h-5")}
                 >
                   Vencido
                 </SemanticBadge>
               ) : dias !== null ? (
                 <span
                   className={cn(
-                    'inline-flex items-center rounded-md px-2 py-0.5',
-                    'text-micro-caption font-semibold tabular-nums',
+                    /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'inline-flex items-center rounded-md px-2 py-0.5',
+                    /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-micro-caption font-semibold tabular-nums',
                     URGENCY_COUNTDOWN[urgency],
                   )}
                 >
@@ -160,7 +160,7 @@ function GlassRow({
         {/* MAIN INFO */}
         <div className="flex-1 min-w-0">
           {/* L1 — Tipo como título + flags à direita */}
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <ExpedienteTipoPopover
               expedienteId={expediente.id}
               tipoExpedienteId={expediente.tipoExpedienteId}
@@ -169,28 +169,28 @@ function GlassRow({
             >
               <h3
                 className={cn(
-                  'text-label font-semibold text-foreground leading-tight truncate cursor-pointer',
+                  /* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ 'text-label font-semibold text-foreground leading-tight truncate cursor-pointer',
                   !tipo && 'text-muted-foreground italic font-normal',
                 )}
               >
                 {tipoLabel}
               </h3>
             </ExpedienteTipoPopover>
-            <div className="ml-auto flex items-center gap-1.5 shrink-0">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "ml-auto flex items-center gap-1.5 shrink-0")}>
               {expediente.segredoJustica && (
-                <span className="inline-flex items-center gap-1 bg-warning/10 border border-warning/25 text-warning rounded-md px-1.5 py-0.5 text-micro-caption font-semibold">
+                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-warning/10 border border-warning/25 text-warning rounded-md px-1.5 py-0.5 text-micro-caption font-semibold")}>
                   <Lock className="w-2.5 h-2.5" />
                   Segredo
                 </span>
               )}
               {expediente.juizoDigital && (
-                <span className="inline-flex items-center gap-1 bg-info/10 border border-info/25 text-info rounded-md px-1.5 py-0.5 text-micro-caption font-semibold">
+                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-info/10 border border-info/25 text-info rounded-md px-1.5 py-0.5 text-micro-caption font-semibold")}>
                   <Monitor className="w-2.5 h-2.5" />
                   Digital
                 </span>
               )}
               {expediente.prioridadeProcessual && (
-                <span className="inline-flex items-center gap-1 bg-destructive/10 border border-destructive/25 text-destructive rounded-md px-1.5 py-0.5 text-micro-caption font-semibold">
+                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-destructive/10 border border-destructive/25 text-destructive rounded-md px-1.5 py-0.5 text-micro-caption font-semibold")}>
                   <AlertTriangle className="w-2.5 h-2.5" />
                   Prioridade
                 </span>
@@ -200,7 +200,7 @@ function GlassRow({
 
           {/* L2 — Partes */}
           {(partes.autora || partes.re) && (
-            <div className="mt-0.5 text-caption font-semibold text-foreground/85 leading-snug flex flex-wrap items-baseline gap-x-1">
+            <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-snug sem token DS */ "mt-0.5 text-caption font-semibold text-foreground/85 leading-snug flex flex-wrap items-baseline gap-x-1")}>
               {partes.autora && <span>{partes.autora}</span>}
               {partes.autora && partes.re && (
                 <span className="text-[9px] font-normal text-muted-foreground/50">vs</span>
@@ -240,12 +240,12 @@ function GlassRow({
 
           {/* FOOTER — descrição + observações + responsável + concluir */}
           <div
-            className="mt-2.5 pt-2.5 border-t border-border/50 flex items-center gap-3"
+            className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "mt-2.5 pt-2.5 border-t border-border/50 flex items-center gap-3")}
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => e.stopPropagation()}
           >
             {/* Descrição editável */}
-            <div className="flex items-center gap-1.5 min-w-0 flex-1">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 min-w-0 flex-1")}>
               <FileText className="w-3 h-3 shrink-0 text-muted-foreground/60" />
               <ExpedienteTextEditor
                 expedienteId={expediente.id}
@@ -258,7 +258,7 @@ function GlassRow({
             </div>
 
             {/* Observações editáveis */}
-            <div className="flex items-center gap-1.5 min-w-0 flex-1">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 min-w-0 flex-1")}>
               <MessageSquare className="w-3 h-3 shrink-0 text-muted-foreground/60" />
               <ExpedienteTextEditor
                 expedienteId={expediente.id}
@@ -297,8 +297,8 @@ function GlassRow({
                 onKeyDown={(e) => e.stopPropagation()}
                 aria-label="Baixar expediente"
                 className={cn(
-                  'flex h-6 shrink-0 items-center gap-1 rounded-md px-2',
-                  'text-[10px] font-medium text-primary/80 bg-primary/10',
+                  /* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv. */ 'flex h-6 shrink-0 items-center gap-1 rounded-md px-2',
+                  /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[10px] font-medium text-primary/80 bg-primary/10',
                   'hover:bg-primary/20 transition-colors duration-150 cursor-pointer',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
                 )}
@@ -320,19 +320,19 @@ function GlassRow({
 
 function ListSkeleton() {
   return (
-    <div className="flex flex-col gap-2">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
       {Array.from({ length: 5 }, (_, i) => (
         <div
           key={i}
-          className="rounded-2xl border border-border/60 bg-card p-4"
+          className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-2xl border border-border/60 bg-card p-4")}
         >
-          <div className="flex items-start gap-4">
-            <div className="flex flex-col items-center gap-1.5 w-22 shrink-0">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start gap-4")}>
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col items-center gap-1.5 w-22 shrink-0")}>
               <Skeleton className="h-4 w-16" />
               <Skeleton className="h-3 w-10" />
               <Skeleton className="h-5 w-12 rounded-md" />
             </div>
-            <div className="flex-1 space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "flex-1 space-y-2")}>
               <Skeleton className="h-4 w-48" />
               <Skeleton className="h-3.5 w-64" />
               <Skeleton className="h-3 w-56" />
@@ -351,12 +351,12 @@ function ListSkeleton() {
 
 function GlassEmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center py-16 opacity-60">
+    <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
       <FileSearch className="w-10 h-10 text-muted-foreground/30 mb-4" />
-      <p className="text-sm font-medium text-muted-foreground/50">
+      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/50")}>
         Nenhum expediente encontrado
       </p>
-      <p className="text-xs text-muted-foreground/30 mt-1">
+      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/30 mt-1")}>
         Tente ajustar os filtros ou criar um novo expediente
       </p>
     </div>
@@ -380,7 +380,7 @@ export function ExpedientesGlassList({
   if (expedientes.length === 0) return <GlassEmptyState />;
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
       {expedientes.map((exp) => (
         <GlassRow
           key={exp.id}

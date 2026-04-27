@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
 import { ChevronLeft } from 'lucide-react';
@@ -33,7 +34,7 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
 
   if (!result.success || !result.data) {
     return (
-      <div className="flex flex-col items-center justify-center p-8 space-y-4">
+      <div className={cn(/* design-system-escape: p-8 → usar <Inset>; space-y-4 → migrar para <Stack gap="default"> */ "flex flex-col items-center justify-center p-8 space-y-4")}>
         <Typography.H2 className="text-destructive">Assistente não encontrado</Typography.H2>
         <Button asChild variant="outline">
           <Link href="/assistentes">Voltar</Link>
@@ -50,9 +51,9 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
 
     if (!difyApp) {
       return (
-        <div className="flex flex-col items-center justify-center p-8 space-y-4">
+        <div className={cn(/* design-system-escape: p-8 → usar <Inset>; space-y-4 → migrar para <Stack gap="default"> */ "flex flex-col items-center justify-center p-8 space-y-4")}>
           <Typography.H2 className="text-destructive">App Dify não encontrado</Typography.H2>
-          <p className="text-sm text-muted-foreground">
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
             O app Dify vinculado a este assistente foi removido.
           </p>
           <Button asChild variant="outline">
@@ -63,15 +64,15 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
     }
 
     return (
-      <div className="flex-1 p-4 md:p-6 h-full flex flex-col">
+      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; md:p-6 sem equivalente DS */ "flex-1 p-4 md:p-6 h-full flex flex-col")}>
         <div className="border rounded-md flex-1 overflow-hidden bg-background min-h-0 flex flex-col">
-          <div className="flex items-center gap-3 border-b px-4 py-3 shrink-0">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-center gap-3 border-b px-4 py-3 shrink-0")}>
             <Button asChild variant="ghost" size="icon" aria-label="Voltar" className="h-7 w-7 shrink-0">
               <Link href="/assistentes">
                 <ChevronLeft className="h-4 w-4" />
               </Link>
             </Button>
-            <Typography.Small className="font-medium">{assistente.nome}</Typography.Small>
+            <Typography.Small className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{assistente.nome}</Typography.Small>
           </div>
           <div className="flex-1 min-h-0">
             <AssistenteNativoView appId={difyApp.id} appType={difyApp.app_type} metadata={difyApp.metadata ?? null} />
@@ -83,15 +84,15 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
 
   // Renderização iframe (comportamento original)
   return (
-    <div className="flex-1 p-4 md:p-6 h-full flex flex-col">
+    <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; md:p-6 sem equivalente DS */ "flex-1 p-4 md:p-6 h-full flex flex-col")}>
       <div className="border rounded-md flex-1 overflow-hidden bg-background min-h-0 flex flex-col">
-        <div className="flex items-center gap-3 border-b px-4 py-3 shrink-0">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-center gap-3 border-b px-4 py-3 shrink-0")}>
           <Button asChild variant="ghost" size="icon" aria-label="Voltar" className="h-7 w-7 shrink-0">
             <Link href="/assistentes">
               <ChevronLeft className="h-4 w-4" />
             </Link>
           </Button>
-          <Typography.Small className="font-medium">{assistente.nome}</Typography.Small>
+          <Typography.Small className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{assistente.nome}</Typography.Small>
         </div>
         <div className="flex-1 min-h-0">
           <div

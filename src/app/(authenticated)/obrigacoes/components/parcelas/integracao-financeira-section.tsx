@@ -119,12 +119,12 @@ export function IntegracaoFinanceiraSection({ acordoId, onSyncComplete }: Integr
   const statusGeral = temInconsistencias ? 'inconsistente' : (pendentes > 0 ? 'pendente' : 'sincronizado');
 
   return (
-    <div className="rounded-lg border bg-card p-6">
+    <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "rounded-lg border bg-card p-6")}>
       <div className="flex items-center justify-between mb-4">
-        <Heading level="section" as="h2" className="flex items-center gap-2">
+        <Heading level="section" as="h2" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           <RefreshCw className="h-5 w-5" /> Integração Financeira
         </Heading>
-        <Badge variant="outline" className={cn('gap-1',
+        <Badge variant="outline" className={cn(/* design-system-escape: gap-1 gap sem token DS */ 'gap-1',
           statusGeral === 'sincronizado' && 'text-success border-success',
           statusGeral === 'pendente' && 'text-warning border-warning',
           statusGeral === 'inconsistente' && 'text-destructive border-destructive'
@@ -136,27 +136,27 @@ export function IntegracaoFinanceiraSection({ acordoId, onSyncComplete }: Integr
       </div>
 
       {statusSync && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-          <div className="rounded-lg bg-muted/50 p-3">
-            <p className="text-xs text-muted-foreground">Total</p>
-            <p className="text-xl font-bold">{statusSync.totalParcelas}</p>
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 md:grid-cols-4 gap-4 mb-4")}>
+          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg bg-muted/50 p-3")}>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Total</p>
+            <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-xl font-bold")}>{statusSync.totalParcelas}</p>
           </div>
-          <div className="rounded-lg bg-success/15 p-3">
-            <p className="text-xs text-muted-foreground">Sincronizadas</p>
-            <p className="text-xl font-bold text-success">{statusSync.parcelasSincronizadas}</p>
+          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg bg-success/15 p-3")}>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Sincronizadas</p>
+            <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-xl font-bold text-success")}>{statusSync.parcelasSincronizadas}</p>
           </div>
-          <div className="rounded-lg bg-warning/15 p-3">
-            <p className="text-xs text-muted-foreground">Pendentes</p>
-            <p className="text-xl font-bold text-warning">{statusSync.parcelasPendentes}</p>
+          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg bg-warning/15 p-3")}>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Pendentes</p>
+            <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-xl font-bold text-warning")}>{statusSync.parcelasPendentes}</p>
           </div>
-          <div className="rounded-lg bg-destructive/15 p-3">
-            <p className="text-xs text-muted-foreground">Inconsistentes</p>
-            <p className="text-xl font-bold text-destructive">{statusSync.parcelasInconsistentes}</p>
+          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg bg-destructive/15 p-3")}>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Inconsistentes</p>
+            <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-xl font-bold text-destructive")}>{statusSync.parcelasInconsistentes}</p>
           </div>
         </div>
       )}
 
-      <div className="flex flex-wrap gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2")}>
         <Button variant="outline" size="sm" onClick={() => setSyncDialogOpen(true)} disabled={isSyncing || isVerifying}>
           {isSyncing ? <LoadingSpinner className="mr-2" /> : <RefreshCw className="h-4 w-4 mr-2" />}
           Sincronizar

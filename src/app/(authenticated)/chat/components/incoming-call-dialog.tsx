@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { Phone, PhoneOff, Video } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -148,17 +149,17 @@ export function IncomingCallDialog({
           <div className="absolute inset-0 bg-primary/5 animate-pulse" />
         </div>
 
-        <DialogHeader className="flex flex-col items-center gap-4 py-6">
+        <DialogHeader className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; py-6 padding direcional sem Inset equiv. */ "flex flex-col items-center gap-4 py-6")}>
           <DialogTitle className="sr-only">Recebendo chamada</DialogTitle>
           
           <div className="relative">
             <Avatar size="3xl" className="border-4 border-background shadow-lg">
               <AvatarImage src={callData.iniciadorAvatar} />
-              <AvatarFallback className="text-2xl">
+              <AvatarFallback className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "text-2xl")}>
                 {callData.iniciadorNome?.substring(0, 2).toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            <div className="absolute bottom-0 right-0 bg-background rounded-full p-1.5 shadow-md">
+            <div className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "absolute bottom-0 right-0 bg-background rounded-full p-1.5 shadow-md")}>
               {isVideo ? (
                 <Video className="h-5 w-5 text-primary" />
               ) : (
@@ -167,18 +168,18 @@ export function IncomingCallDialog({
             </div>
           </div>
 
-          <div className="text-center space-y-1">
+          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "text-center space-y-1")}>
             <Heading level="card">
               {callData.iniciadorNome}
             </Heading>
-            <p className="text-sm text-muted-foreground animate-pulse">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground animate-pulse")}>
               Chamada de {isVideo ? 'vídeo' : 'áudio'} recebida...
             </p>
           </div>
         </DialogHeader>
 
-        <DialogFooter className="flex flex-row justify-center gap-8 sm:justify-center pb-6">
-          <div className="flex flex-col items-center gap-2">
+        <DialogFooter className={cn(/* design-system-escape: gap-8 gap sem token DS; pb-6 padding direcional sem Inset equiv. */ "flex flex-row justify-center gap-8 sm:justify-center pb-6")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center gap-2")}>
             <Button
               variant="destructive"
               size="icon" aria-label="Desligar"
@@ -188,10 +189,10 @@ export function IncomingCallDialog({
             >
               <PhoneOff className="h-6 w-6" />
             </Button>
-            <span className="text-xs text-muted-foreground">Recusar</span>
+            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Recusar</span>
           </div>
 
-          <div className="flex flex-col items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center gap-2")}>
             <Button
               variant="default"
               size="icon" aria-label="Câmera"
@@ -205,7 +206,7 @@ export function IncomingCallDialog({
                 <Phone className="h-6 w-6" />
               )}
             </Button>
-            <span className="text-xs text-muted-foreground">Aceitar</span>
+            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Aceitar</span>
           </div>
         </DialogFooter>
       </DialogContent>

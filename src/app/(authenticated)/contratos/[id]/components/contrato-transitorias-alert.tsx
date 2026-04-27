@@ -83,8 +83,8 @@ export function ContratoTransitoriasAlert({
         role="alert"
         aria-live="polite"
         className={cn(
-          'flex flex-col gap-3 rounded-2xl bg-warning/8 p-4 ring-1 ring-warning/25',
-          'sm:flex-row sm:items-start sm:gap-4',
+          /* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ 'flex flex-col gap-3 rounded-2xl bg-warning/8 p-4 ring-1 ring-warning/25',
+          /* design-system-escape: sm:gap-4 sem equivalente DS */ 'sm:flex-row sm:items-start sm:gap-4',
           className
         )}
       >
@@ -95,7 +95,7 @@ export function ContratoTransitoriasAlert({
           <AlertTriangle className="size-4 text-warning" strokeWidth={2.5} />
         </span>
 
-        <div className="min-w-0 flex-1 space-y-1.5">
+        <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "min-w-0 flex-1 space-y-1.5")}>
           <Heading level="card" className="text-warning">
             {isPlural
               ? `${transitorias.length} partes contrárias com cadastro pendente`
@@ -107,11 +107,11 @@ export function ContratoTransitoriasAlert({
               : 'Essa parte foi criada no formulário público com apenas o nome. Complete o cadastro para continuar o fluxo do contrato.'}
           </Text>
 
-          <ul className="mt-2 space-y-1">
+          <ul className={cn(/* design-system-escape: space-y-1 sem token DS */ "mt-2 space-y-1")}>
             {transitorias.map((t) => (
               <li
                 key={t.id}
-                className="flex items-center justify-between gap-3 rounded-xl bg-surface-container-low/60 px-3 py-2 ring-1 ring-outline-variant/20"
+                className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center justify-between gap-3 rounded-xl bg-surface-container-low/60 px-3 py-2 ring-1 ring-outline-variant/20")}
               >
                 <Text variant="label" className="truncate text-foreground">
                   {t.nome}

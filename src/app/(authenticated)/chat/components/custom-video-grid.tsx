@@ -58,7 +58,7 @@ export const CustomVideoGrid = memo(function CustomVideoGrid({
 
   if (isSidebar || (isSpotlight && participants.length > 0)) {
     return (
-      <div className={cn("flex h-full gap-4 p-4", className)}>
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; p-4 → migrar para <Inset variant="card-compact"> */ "flex h-full gap-4 p-4", className)}>
         {/* Main Stage */}
         <div className="flex-1 rounded-lg overflow-hidden bg-video-surface/50 relative">
           {spotlightParticipant ? (
@@ -74,7 +74,7 @@ export const CustomVideoGrid = memo(function CustomVideoGrid({
         </div>
 
         {/* Sidebar */}
-        <div className="w-64 flex flex-col gap-2 overflow-y-auto">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "w-64 flex flex-col gap-2 overflow-y-auto")}>
           {sidebarParticipants.map(p => (
             <div key={p.id} className="aspect-video rounded-lg overflow-hidden bg-video-surface-hover">
               <DyteParticipantTile participant={p} meeting={meeting} />
@@ -88,7 +88,7 @@ export const CustomVideoGrid = memo(function CustomVideoGrid({
   // Default Grid Layout
   return (
     <div className={cn(
-      "grid gap-4 p-4 h-full content-center",
+      /* design-system-escape: gap-4 → migrar para <Inline gap="default">; p-4 → migrar para <Inset variant="card-compact"> */ "grid gap-4 p-4 h-full content-center",
       getGridClass(participants.length),
       className
     )}>
@@ -104,7 +104,7 @@ export const CustomVideoGrid = memo(function CustomVideoGrid({
             className="rounded-lg overflow-hidden bg-video-surface shadow-lg relative aspect-video"
           >
             <DyteParticipantTile participant={participant} meeting={meeting} className="w-full h-full" />
-            <div className="absolute bottom-2 left-2 bg-black/50 px-2 py-1 rounded text-xs text-video-text backdrop-blur-sm">
+            <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "absolute bottom-2 left-2 bg-black/50 px-2 py-1 rounded text-xs text-video-text backdrop-blur-sm")}>
               {participant.name}
             </div>
           </motion.div>

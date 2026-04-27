@@ -4,6 +4,7 @@
  * Dialog para adicionar/editar itens do orçamento
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -166,9 +167,9 @@ export function OrcamentoItemDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div className="grid gap-4 py-4">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; py-4 padding direcional sem Inset equiv. */ "grid gap-4 py-4")}>
             {/* Conta Contábil */}
-            <div className="grid gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="contaContabilId">Conta Contábil *</Label>
               <PlanoContaSelect
                 value={formData.contaContabilId}
@@ -179,7 +180,7 @@ export function OrcamentoItemDialog({
             </div>
 
             {/* Descrição */}
-            <div className="grid gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="descricao">Descrição</Label>
               <Input
                 id="descricao"
@@ -192,7 +193,7 @@ export function OrcamentoItemDialog({
             </div>
 
             {/* Valor Previsto */}
-            <div className="grid gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="valorPrevisto">Valor Previsto *</Label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
@@ -206,7 +207,7 @@ export function OrcamentoItemDialog({
                   onChange={(e) =>
                     setFormData({ ...formData, valorPrevisto: formatCurrency(e.target.value) })
                   }
-                  className="pl-10"
+                  className={cn(/* design-system-escape: pl-10 padding direcional sem Inset equiv. */ "pl-10")}
                   placeholder="0,00"
                   disabled={isLoading}
                 />
@@ -214,7 +215,7 @@ export function OrcamentoItemDialog({
             </div>
 
             {/* Observações */}
-            <div className="grid gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="observacoes">Observações</Label>
               <Textarea
                 id="observacoes"

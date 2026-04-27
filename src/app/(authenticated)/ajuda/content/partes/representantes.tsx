@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
@@ -97,10 +98,10 @@ const actions: ActionDef[] = [
 
 export default function RepresentantesDoc() {
   return (
-    <div className="space-y-10">
-      <div className="space-y-2">
+    <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Heading level="page">Representantes</Heading>
-        <p className="text-muted-foreground text-lg">
+        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-muted-foreground text-lg")}>
           Cadastro de advogados e representantes legais vinculados às partes e processos do escritório.
         </p>
       </div>
@@ -130,7 +131,7 @@ export default function RepresentantesDoc() {
         <p className="text-muted-foreground">
           Um representante pode atuar em múltiplos papéis dentro do sistema:
         </p>
-        <ul className="list-disc list-inside space-y-1 text-muted-foreground text-sm mt-2">
+        <ul className={cn(/* design-system-escape: space-y-1 sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "list-disc list-inside space-y-1 text-muted-foreground text-sm mt-2")}>
           <li>Como advogado do escritório responsável por um processo.</li>
           <li>Como representante legal de um cliente específico.</li>
           <li>Como advogado correspondente contratado para atos em outra comarca.</li>

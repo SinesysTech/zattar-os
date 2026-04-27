@@ -5,6 +5,7 @@
  * Visualiza informações completas e itens do orçamento
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { format } from 'date-fns';
@@ -153,7 +154,7 @@ function criarColunasItens(
         const item = row.original;
         return (
           <div className="min-h-10 flex flex-col justify-center">
-            <span className="text-sm font-medium">
+            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>
               {item.contaContabil?.codigo} - {item.contaContabil?.nome}
             </span>
           </div>
@@ -171,7 +172,7 @@ function criarColunasItens(
       cell: ({ row }) => {
         const item = row.original;
         return (
-          <div className="min-h-10 flex items-center justify-center text-sm">
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "min-h-10 flex items-center justify-center text-sm")}>
             {item.centroCusto?.nome || '-'}
           </div>
         );
@@ -187,7 +188,7 @@ function criarColunasItens(
       size: 200,
       cell: ({ row }) => {
         return (
-          <div className="min-h-10 flex items-center justify-start text-sm text-muted-foreground">
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "min-h-10 flex items-center justify-start text-sm text-muted-foreground")}>
             {row.getValue('observacoes') || '-'}
           </div>
         );
@@ -204,7 +205,7 @@ function criarColunasItens(
       cell: ({ row }) => {
         const valor = row.getValue('valorPrevisto') as number;
         return (
-          <div className="min-h-10 flex items-center justify-end font-mono text-sm font-medium">
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "min-h-10 flex items-center justify-end font-mono text-sm font-medium")}>
             {formatarValor(valor)}
           </div>
         );
@@ -214,7 +215,7 @@ function criarColunasItens(
       id: 'acoes',
       header: () => (
         <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">Ações</div>
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Ações</div>
         </div>
       ),
       size: 80,
@@ -364,22 +365,22 @@ export default function OrcamentoDetalhesPage() {
   // Loading
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center gap-4">
+      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
           <Skeleton className="h-10 w-10" />
           <Skeleton className="h-8 w-64" />
         </div>
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-3")}>
           {[...Array(3)].map((_, i) => (
             <Card key={i}>
-              <CardContent className="p-6">
+              <CardContent className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
                 <Skeleton className="h-20" />
               </CardContent>
             </Card>
           ))}
         </div>
         <Card>
-          <CardContent className="p-6">
+          <CardContent className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
             <Skeleton className="h-64" />
           </CardContent>
         </Card>
@@ -390,13 +391,13 @@ export default function OrcamentoDetalhesPage() {
   // Erro
   if (error || !orcamento) {
     return (
-      <div className="space-y-6">
+      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
         <Button variant="ghost" onClick={handleVoltar}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
         </Button>
-        <div className="rounded-md bg-destructive/15 p-4 text-sm text-destructive">
-          <p className="font-semibold">Erro ao carregar orçamento</p>
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-4 text-sm text-destructive")}>
+          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Erro ao carregar orçamento</p>
           <p>{error || 'Orçamento não encontrado'}</p>
         </div>
       </div>
@@ -406,10 +407,10 @@ export default function OrcamentoDetalhesPage() {
   const statusConfig = STATUS_CONFIG[orcamento.status];
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
           <Button variant="ghost" size="icon" aria-label="Voltar" onClick={handleVoltar}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
@@ -418,7 +419,7 @@ export default function OrcamentoDetalhesPage() {
           </Badge>
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2")}>
           {(isEmExecucao || orcamento.status === 'encerrado') && (
             <Button variant="outline" onClick={handleVerAnalise}>
               <BarChart3 className="mr-2 h-4 w-4" />
@@ -461,33 +462,33 @@ export default function OrcamentoDetalhesPage() {
       </div>
 
       {/* Cards de Informações */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-4")}>
         <Card>
-          <CardHeader className="pb-2">
+          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
             <CardDescription>Ano</CardDescription>
-            <CardTitle className="text-2xl">{orcamento.ano}</CardTitle>
+            <CardTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "text-2xl")}>{orcamento.ano}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
-          <CardHeader className="pb-2">
+          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
             <CardDescription>Período</CardDescription>
-            <CardTitle className="text-2xl">
+            <CardTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "text-2xl")}>
               {PERIODO_LABELS[orcamento.periodo] || orcamento.periodo}
             </CardTitle>
           </CardHeader>
         </Card>
         <Card>
-          <CardHeader className="pb-2">
+          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
             <CardDescription>Vigência</CardDescription>
-            <CardTitle className="text-lg">
+            <CardTitle className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-lg")}>
               {formatarData(orcamento.dataInicio)} - {formatarData(orcamento.dataFim)}
             </CardTitle>
           </CardHeader>
         </Card>
         <Card>
-          <CardHeader className="pb-2">
+          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
             <CardDescription>Total Previsto</CardDescription>
-            <CardTitle className="text-2xl font-mono">{formatarValor(totalPrevisto)}</CardTitle>
+            <CardTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "text-2xl font-mono")}>{formatarValor(totalPrevisto)}</CardTitle>
           </CardHeader>
         </Card>
       </div>
@@ -553,7 +554,7 @@ export default function OrcamentoDetalhesPage() {
             <AlertDialogDescription>
               Tem certeza que deseja excluir este item do orçamento?
               {selectedItem && (
-                <span className="block mt-2 font-medium text-foreground">
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "block mt-2 font-medium text-foreground")}>
                   {selectedItem.contaContabil?.nome} - {formatarValor(selectedItem.valorPrevisto)}
                 </span>
               )}

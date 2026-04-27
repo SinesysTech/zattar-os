@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import React, { useRef, useState } from "react";
 import { Mic, Paperclip, PlusCircleIcon, SendIcon, SmileIcon, X, FileIcon} from "lucide-react";
 import {
@@ -216,11 +217,11 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
   };
 
   return (
-    <div className="px-5 pb-4 pt-3 bg-chat-thread">
+    <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv. */ "px-5 pb-4 pt-3 bg-chat-thread")}>
       {/* Typing Indicator */}
       {typingIndicatorText && !isRecording && (
-        <div className="flex items-center gap-1.5 text-[0.65rem] text-muted-foreground/50 px-2 mb-1.5">
-          <div className="flex gap-0.5">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv. */ "flex items-center gap-1.5 text-[0.65rem] text-muted-foreground/50 px-2 mb-1.5")}>
+          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex gap-0.5")}>
             {[0, 1, 2].map((i) => (
               <span
                 key={i}
@@ -235,10 +236,10 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
 
       {/* File Preview Area */}
       {uploadedFile && (
-        <div className="mb-2 p-2 bg-muted rounded-md flex items-center justify-between">
-          <div className="flex items-center gap-2 overflow-hidden">
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "mb-2 p-2 bg-muted rounded-md flex items-center justify-between")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 overflow-hidden")}>
             <FileIcon className="h-5 w-5 text-info dark:text-info shrink-0" />
-            <span className="text-sm truncate max-w-50">{uploadedFile.fileName}</span>
+            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm truncate max-w-50")}>{uploadedFile.fileName}</span>
           </div>
           <Button variant="ghost" size="icon" aria-label="Fechar" className="h-6 w-6" onClick={handleRemoveFile}>
             <X className="h-4 w-4" />
@@ -246,25 +247,25 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
         </div>
       )}
 
-      <div className="flex items-end gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-end gap-2")}>
         {/* Glass input wrapper */}
         <div
-          className="flex-1 flex items-end rounded-2xl border transition-all duration-200 px-3.5 pb-1 pt-1 min-h-11 focus-within:border-primary/25 focus-within:shadow-[0_0_0_3px_rgba(139,92,246,0.06)] border-border/50 dark:border-foreground/8 bg-foreground/2 dark:bg-foreground/4"
+          className={cn(/* design-system-escape: px-3.5 padding direcional sem Inset equiv.; pb-1 padding direcional sem Inset equiv.; pt-1 padding direcional sem Inset equiv. */ "flex-1 flex items-end rounded-2xl border transition-all duration-200 px-3.5 pb-1 pt-1 min-h-11 focus-within:border-primary/25 focus-within:shadow-[0_0_0_3px_rgba(139,92,246,0.06)] border-border/50 dark:border-foreground/8 bg-foreground/2 dark:bg-foreground/4")}
         >
           {isRecording ? (
             // Recording UI — unchanged
             <div className="flex-1 flex items-center justify-between h-9 w-full">
-              <div className="flex items-center gap-3">
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
                 <div className="relative flex h-3 w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive dark:bg-destructive opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-destructive dark:bg-destructive"></span>
                 </div>
-                <span className="font-mono text-destructive dark:text-destructive font-medium">{formatDuration(recordingDuration)}</span>
-                <span className="text-xs text-destructive dark:text-destructive animate-pulse hidden sm:inline-block">Gravando áudio...</span>
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-mono text-destructive dark:text-destructive font-medium")}>{formatDuration(recordingDuration)}</span>
+                <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-destructive dark:text-destructive animate-pulse hidden sm:inline-block")}>Gravando áudio...</span>
               </div>
 
-              <div className="flex items-center gap-2">
-                <Button variant="ghost" size="sm" onClick={cancelRecording} className="text-muted-foreground hover:text-destructive hover:bg-destructive/15 dark:hover:text-destructive rounded-full px-4">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                <Button variant="ghost" size="sm" onClick={cancelRecording} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "text-muted-foreground hover:text-destructive hover:bg-destructive/15 dark:hover:text-destructive rounded-full px-4")}>
                   Cancelar
                 </Button>
                 <Button size="icon" aria-label="Enviar" onClick={handleSendAudio} className="rounded-full bg-destructive hover:bg-destructive dark:bg-destructive dark:hover:bg-destructive text-white h-9 w-9">
@@ -282,7 +283,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
                 disabled={isUploading}
                 placeholder={isUploading ? "Enviando arquivo..." : "Digite uma mensagem..."}
                 rows={1}
-                className="flex-1 bg-transparent border-none shadow-none ring-0 focus-visible:ring-0 resize-none min-h-8 max-h-30 overflow-y-auto text-[0.825rem] leading-relaxed py-1 px-0 placeholder:text-muted-foreground/40"
+                className={cn(/* design-system-escape: leading-relaxed sem token DS; py-1 padding direcional sem Inset equiv.; px-0 padding direcional sem Inset equiv. */ "flex-1 bg-transparent border-none shadow-none ring-0 focus-visible:ring-0 resize-none min-h-8 max-h-30 overflow-y-auto text-[0.825rem] leading-relaxed py-1 px-0 placeholder:text-muted-foreground/40")}
               />
 
               {/* Hidden File Input */}
@@ -295,12 +296,12 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
               />
 
               {/* Action buttons — desktop inline, mobile dropdown */}
-              <div className="flex items-center self-end pb-0.5">
+              <div className={cn(/* design-system-escape: pb-0.5 padding direcional sem Inset equiv. */ "flex items-center self-end pb-0.5")}>
                 {/* Mobile: dropdown */}
                 <div className="block lg:hidden">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="size-11 rounded-full p-0">
+                      <Button variant="ghost" className={cn(/* design-system-escape: p-0 → usar <Inset> */ "size-11 rounded-full p-0")}>
                         <PlusCircleIcon className="size-4" />
                       </Button>
                     </DropdownMenuTrigger>
@@ -316,7 +317,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
                   </DropdownMenu>
                 </div>
                 {/* Desktop: inline icon buttons */}
-                <div className="hidden lg:flex items-center gap-0.5">
+                <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "hidden lg:flex items-center gap-0.5")}>
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>

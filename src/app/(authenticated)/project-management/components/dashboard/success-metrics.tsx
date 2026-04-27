@@ -31,7 +31,7 @@ function TrendIndicator({
   const isPositive = variacao >= 0;
   const Icon = isPositive ? ArrowUpRight : ArrowDownRight;
   return (
-    <span className="flex items-center gap-1">
+    <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
       <Icon className={cn("size-4", isPositive ? "text-success" : "text-destructive")} />
       {value}
     </span>
@@ -48,14 +48,14 @@ export function SuccessMetrics({ membros, resumo }: SuccessMetricsProps) {
     <Card>
       <CardHeader>
         <CardDescription>Membros Ativos</CardDescription>
-        <CardTitle className="font-display text-2xl lg:text-3xl">
+        <CardTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; lg:text-3xl sem equivalente DS */ "font-display text-2xl lg:text-3xl")}>
           {membros.length}
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="mb-2 text-sm font-bold">Destaques do Mês</p>
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "mb-2 text-sm font-bold")}>Destaques do Mês</p>
         {membros.length > 0 ? (
-          <div className="flex -space-x-4">
+          <div className={cn(/* design-system-escape: -space-x-4 sem equivalente DS */ "flex -space-x-4")}>
             <TooltipProvider>
               {membros.map((membro) => (
                 <Tooltip key={membro.usuarioId}>
@@ -83,23 +83,23 @@ export function SuccessMetrics({ membros, resumo }: SuccessMetricsProps) {
             Nenhum membro ativo.
           </Text>
         )}
-        <p className="mt-8 mb-2 text-sm font-bold">Resumo</p>
-        <div className="divide-y *:py-3">
-          <div className="flex justify-between text-sm">
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "mt-8 mb-2 text-sm font-bold")}>Resumo</p>
+        <div className={cn(/* design-system-escape: *:py-3 sem equivalente DS */ "divide-y *:py-3")}>
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex justify-between text-sm")}>
             <span>Projetos Ativos</span>
             <TrendIndicator
               value={resumo.projetosAtivos}
               variacao={resumo.projetosAtivosVariacao}
             />
           </div>
-          <div className="flex justify-between text-sm">
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex justify-between text-sm")}>
             <span>Taxa de Conclusão</span>
             <TrendIndicator
               value={`${resumo.taxaConclusao}%`}
               variacao={resumo.taxaConclusaoVariacao}
             />
           </div>
-          <div className="flex justify-between text-sm">
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex justify-between text-sm")}>
             <span>Horas este Mês</span>
             <TrendIndicator
               value={`${resumo.horasRegistradas}h`}

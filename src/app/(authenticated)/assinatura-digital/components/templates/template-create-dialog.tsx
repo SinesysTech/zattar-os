@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -244,14 +245,14 @@ export function TemplateCreateDialog({
       footer={footer}
     >
       {isLoadingSegmentos ? (
-        <div className="flex items-center justify-center py-8">
+        <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex items-center justify-center py-8")}>
           <LoadingSpinner className="size-8 text-muted-foreground" />
         </div>
       ) : (
         <form
           id="template-create-form"
           onSubmit={handleSubmit(onSubmit)}
-          className="space-y-4"
+          className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}
         >
           {/* Etapa 1: Informações do Template */}
           {step === 1 && (
@@ -269,7 +270,7 @@ export function TemplateCreateDialog({
           {step === 2 && (
             <>
               {tipoTemplate === 'markdown' && (
-                <div className="space-y-1.5">
+                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
                   <Label htmlFor="conteudo_markdown">
                     Conteúdo Markdown <span className="text-destructive">*</span>
                   </Label>
@@ -279,7 +280,7 @@ export function TemplateCreateDialog({
                     formularios={[]}
                   />
                   {form.formState.errors.conteudo_markdown && (
-                    <p className="text-sm text-destructive">
+                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
                       {form.formState.errors.conteudo_markdown.message as string}
                     </p>
                   )}

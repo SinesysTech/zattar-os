@@ -2,6 +2,7 @@
 
 // Componente de diálogo para reverter baixa de expediente
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useActionState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -85,7 +86,7 @@ export function ExpedientesReverterBaixaDialog({
   const generalError = !formState.success ? (formState.error || formState.message) : null;
 
   const footerButtons = (
-    <div className="flex w-full items-center justify-end gap-2">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex w-full items-center justify-end gap-2")}>
       <Button
         type="button"
         variant="outline"
@@ -115,34 +116,34 @@ export function ExpedientesReverterBaixaDialog({
       maxWidth="lg"
       footer={footerButtons}
     >
-      <form id="reverter-baixa-form" key={formKey} action={formAction} className="space-y-6">
+      <form id="reverter-baixa-form" key={formKey} action={formAction} className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
         {/* Informações do expediente */}
-        <div className="space-y-2 rounded-lg border p-4 bg-muted/50">
-          <div className="text-sm font-medium">Expediente</div>
-          <div className="text-sm space-y-1">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; p-4 → migrar para <Inset variant="card-compact"> */ "space-y-2 rounded-lg border p-4 bg-muted/50")}>
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Expediente</div>
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; space-y-1 sem token DS */ "text-sm space-y-1")}>
             <div>
-              <span className="font-medium">Processo:</span> {expediente.numeroProcesso}
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Processo:</span> {expediente.numeroProcesso}
             </div>
             <div>
-              <span className="font-medium">Parte Autora:</span> {expediente.nomeParteAutora}
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Parte Autora:</span> {expediente.nomeParteAutora}
             </div>
             <div>
-              <span className="font-medium">Parte Ré:</span> {expediente.nomeParteRe}
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Parte Ré:</span> {expediente.nomeParteRe}
             </div>
             {expediente.baixadoEm && (
               <div>
-                <span className="font-medium">Baixado em:</span>{' '}
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Baixado em:</span>{' '}
                 {new Date(expediente.baixadoEm).toLocaleString('pt-BR')}
               </div>
             )}
             {expediente.protocoloId && (
               <div>
-                <span className="font-medium">Protocolo:</span> {expediente.protocoloId}
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Protocolo:</span> {expediente.protocoloId}
               </div>
             )}
             {expediente.justificativaBaixa && (
               <div>
-                <span className="font-medium">Justificativa:</span>{' '}
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Justificativa:</span>{' '}
                 {expediente.justificativaBaixa}
               </div>
             )}
@@ -150,10 +151,10 @@ export function ExpedientesReverterBaixaDialog({
         </div>
 
         {/* Aviso */}
-        <div className="flex items-start gap-3 rounded-lg border border-warning bg-warning/10 p-4">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex items-start gap-3 rounded-lg border border-warning bg-warning/10 p-4")}>
           <AlertTriangle className="h-5 w-5 text-warning shrink-0 mt-0.5" />
-          <div className="text-sm">
-            <div className="font-medium text-warning mb-1">Atenção</div>
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
+            <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-warning mb-1")}>Atenção</div>
             <div className="text-muted-foreground">
               Ao reverter a baixa, o expediente voltará a aparecer na lista de pendentes.
               Os dados de protocolo e justificativa serão removidos, mas a ação será registrada
@@ -163,10 +164,10 @@ export function ExpedientesReverterBaixaDialog({
         </div>
 
         {/* Confirmação textual — previne reversão acidental */}
-        <div className="space-y-2">
-          <Label htmlFor="reverter-confirmacao" className="text-sm">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <Label htmlFor="reverter-confirmacao" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
             Para confirmar, digite{' '}
-            <span className="font-semibold text-foreground">{PALAVRA_CONFIRMACAO}</span> abaixo
+            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-foreground")}>{PALAVRA_CONFIRMACAO}</span> abaixo
           </Label>
           <Input
             id="reverter-confirmacao"
@@ -181,14 +182,14 @@ export function ExpedientesReverterBaixaDialog({
             aria-describedby="reverter-confirmacao-hint"
             placeholder={PALAVRA_CONFIRMACAO}
           />
-          <p id="reverter-confirmacao-hint" className="text-xs text-muted-foreground">
+          <p id="reverter-confirmacao-hint" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
             Case-insensitive. A ação só será habilitada após a confirmação exata.
           </p>
         </div>
 
         {/* Mensagem de erro */}
         {generalError && (
-          <div role="alert" className="rounded-lg border border-destructive bg-destructive/10 p-3 text-sm text-destructive">
+          <div role="alert" className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-lg border border-destructive bg-destructive/10 p-3 text-sm text-destructive")}>
             {generalError}
           </div>
         )}

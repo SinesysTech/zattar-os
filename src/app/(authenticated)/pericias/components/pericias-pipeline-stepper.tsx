@@ -107,7 +107,7 @@ export function PericiasPipelineStepper({
   const maxCount = Math.max(...stages.map((s) => s.count), 1);
 
   const body = (
-    <div className="flex items-stretch gap-3">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-stretch gap-3")}>
       {stages.map((stage) => {
         const cfg = STAGE_CONFIG[stage.situacao]!;
         const Icon = cfg.icon;
@@ -117,12 +117,12 @@ export function PericiasPipelineStepper({
         const clickable = typeof onSituacaoClick === 'function';
 
         const inner = (
-          <div className="flex flex-col items-center gap-2 py-2 px-1 w-full">
-            <div className="flex items-center gap-1.5">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-2 padding direcional sem Inset equiv.; px-1 padding direcional sem Inset equiv. */ "flex flex-col items-center gap-2 py-2 px-1 w-full")}>
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
               <Icon className={cn('size-3.5', cfg.textColor)} />
               <span
                 className={cn(
-                  'text-[10px] font-medium uppercase tracking-[0.06em] text-center',
+                  /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[10px] font-medium uppercase tracking-[0.06em] text-center',
                   isActive
                     ? 'text-foreground'
                     : 'text-muted-foreground/65',
@@ -135,7 +135,7 @@ export function PericiasPipelineStepper({
               as="p"
               variant="kpi-value"
               className={cn(
-                'leading-none',
+                /* design-system-escape: leading-none sem token DS */ 'leading-none',
                 isActive ? 'text-foreground' : 'text-foreground/85',
               )}
             >
@@ -154,7 +154,7 @@ export function PericiasPipelineStepper({
             {total > 0 ? (
               <span
                 className={cn(
-                  'text-[10px] font-medium tabular-nums',
+                  /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[10px] font-medium tabular-nums',
                   isActive ? cfg.textColor : 'text-muted-foreground/55',
                 )}
               >
@@ -203,8 +203,8 @@ export function PericiasPipelineStepper({
   if (compact) return body;
 
   return (
-    <GlassPanel className="p-5">
-      <div className="flex items-center gap-2 mb-4">
+    <GlassPanel className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-4")}>
         <span className="inline-flex size-7 items-center justify-center rounded-lg bg-primary/8">
           <GitBranch className="size-3.5 text-primary/70" />
         </span>

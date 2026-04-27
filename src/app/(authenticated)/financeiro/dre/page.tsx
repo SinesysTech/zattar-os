@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent } from '@/components/ui/card';
@@ -10,18 +11,18 @@ function DRELoading() {
   return (
     <div className="w-full">
       {/* DataTableToolbar skeleton - Linha 1: Título */}
-      <div className="flex items-center justify-between py-4">
+      <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "flex items-center justify-between py-4")}>
         <Skeleton className="h-8 w-32" />
       </div>
 
       {/* DataTableToolbar skeleton - Linha 2: Filtros */}
-      <div className="flex items-center gap-4 pb-4">
-        <div className="flex items-center gap-2 flex-1">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pb-4 padding direcional sem Inset equiv. */ "flex items-center gap-4 pb-4")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1")}>
           <Skeleton className="h-9 w-80" />
           <Skeleton className="h-6 w-px" />
           <Skeleton className="h-5 w-40" />
         </div>
-        <div className="flex items-center gap-3">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
           <Skeleton className="h-6 w-28" />
           <Skeleton className="h-6 w-24" />
           <Skeleton className="h-6 w-px" />
@@ -31,10 +32,10 @@ function DRELoading() {
       </div>
 
       {/* KPI cards */}
-      <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3 md:grid-cols-2 lg:grid-cols-4")}>
         {Array.from({ length: 4 }).map((_, i) => (
           <Card key={i} className="border-l-4 border-l-muted">
-            <CardContent className="p-4">
+            <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
               <Skeleton className="h-16" />
             </CardContent>
           </Card>
@@ -42,11 +43,11 @@ function DRELoading() {
       </div>
 
       {/* Tabs + content */}
-      <div className="mt-4 space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "mt-4 space-y-3")}>
         <Skeleton className="h-10 w-80" />
         <Card>
-          <CardContent className="pt-6">
-            <div className="space-y-1.5">
+          <CardContent className={cn(/* design-system-escape: pt-6 padding direcional sem Inset equiv. */ "pt-6")}>
+            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
               {Array.from({ length: 12 }).map((_, i) => (
                 <Skeleton key={i} className="h-7" />
               ))}

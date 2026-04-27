@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import {
   RefreshCw,
   FileWarning,
@@ -68,10 +69,10 @@ function FinancialMetricCards({ dadosFinanceiros }: FinancialMetricCardsProps) {
 
 function DashboardSkeleton() {
   return (
-    <div className="w-full grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "w-full grid gap-4 md:grid-cols-2 lg:grid-cols-4")}>
       {/* Linha 1: KPIs */}
       {[1, 2, 3, 4].map((i) => (
-        <div key={i} className="min-w-0 rounded-lg border bg-card p-6 space-y-2">
+        <div key={i} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; space-y-2 → migrar para <Stack gap="tight"> */ "min-w-0 rounded-lg border bg-card p-6 space-y-2")}>
           <Skeleton className="h-4 w-2/3" />
           <Skeleton className="h-8 w-1/3" />
           <Skeleton className="h-3 w-full" />
@@ -79,17 +80,17 @@ function DashboardSkeleton() {
       ))}
 
       {/* Linha 2: Gráficos */}
-      <div className="min-w-0 lg:col-span-3 rounded-lg border bg-card p-6 space-y-4">
+      <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; space-y-4 → migrar para <Stack gap="default"> */ "min-w-0 lg:col-span-3 rounded-lg border bg-card p-6 space-y-4")}>
         <Skeleton className="h-5 w-32" />
         <Skeleton className="h-48 w-full" />
       </div>
-      <div className="min-w-0 lg:col-span-1 rounded-lg border bg-card p-6 space-y-4">
+      <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; space-y-4 → migrar para <Stack gap="default"> */ "min-w-0 lg:col-span-1 rounded-lg border bg-card p-6 space-y-4")}>
         <Skeleton className="h-5 w-24" />
         <Skeleton className="h-48 w-full" />
       </div>
 
       {/* Linha 3: Lista */}
-      <div className="min-w-0 md:col-span-2 lg:col-span-4 rounded-lg border bg-card p-6 space-y-4">
+      <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; space-y-4 → migrar para <Stack gap="default"> */ "min-w-0 md:col-span-2 lg:col-span-4 rounded-lg border bg-card p-6 space-y-4")}>
         <Skeleton className="h-5 w-48" />
         <Skeleton className="h-8 w-full" />
         <Skeleton className="h-8 w-full" />
@@ -101,8 +102,8 @@ function DashboardSkeleton() {
 
 function DashboardError({ error, onRetry }: { error: string; onRetry: () => void }) {
   return (
-    <div className="flex flex-col items-center justify-center py-12 text-center">
-      <div className="rounded-full bg-destructive/10 p-4 mb-4">
+    <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-12 text-center")}>
+      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-full bg-destructive/10 p-4 mb-4")}>
         <RefreshCw className="h-8 w-8 text-destructive" />
       </div>
       <Typography.H4 className="mb-2">Erro ao carregar dashboard</Typography.H4>
@@ -142,12 +143,12 @@ function UserDashboard({ data, onRefetch }: UserDashboardProps) {
   // Se não tem nenhuma permissão
   if (!temAlgumaPermissao) {
     return (
-      <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4")}>
           <Typography.H1>Olá, {data.usuario.nome}!</Typography.H1>
         </div>
-        <div className="flex flex-col items-center justify-center py-12 text-center">
-          <div className="rounded-full bg-muted p-4 mb-4">
+        <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-12 text-center")}>
+          <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-full bg-muted p-4 mb-4")}>
             <FileWarning className="h-8 w-8 text-muted-foreground" />
           </div>
           <Typography.H4 className="mb-2">Sem permissões de visualização</Typography.H4>
@@ -161,9 +162,9 @@ function UserDashboard({ data, onRefetch }: UserDashboardProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       {/* Saudação */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4")}>
         <Typography.H1>Olá, {data.usuario.nome}!</Typography.H1>
         <Button variant="ghost" size="sm" onClick={onRefetch} className="w-full sm:w-auto">
           <RefreshCw className="h-4 w-4 mr-2" />
@@ -171,12 +172,12 @@ function UserDashboard({ data, onRefetch }: UserDashboardProps) {
         </Button>
       </div>
 
-      <div className="space-y-6">
+      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
         {/* ====================================================================
             GRUPO 1: KPIs CORE - Métricas Principais
             Processos, Audiências, Expedientes, Financeiro
         ==================================================================== */}
-        <div className="w-full grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "w-full grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4")}>
           {podeVerProcessos && (
             <MetricCard
               title="Processos"
@@ -214,7 +215,7 @@ function UserDashboard({ data, onRefetch }: UserDashboardProps) {
             GRUPO 2: PROCESSOS - Detalhes e Análises
         ==================================================================== */}
         {podeVerProcessos && (
-          <div className="w-full grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "w-full grid grid-cols-1 gap-4 md:grid-cols-2")}>
             <WidgetProcessosResumo data={data.processos} />
             <WidgetProdutividade data={data.produtividade} />
           </div>
@@ -224,7 +225,7 @@ function UserDashboard({ data, onRefetch }: UserDashboardProps) {
             GRUPO 3: AUDIÊNCIAS E EXPEDIENTES - Listas Rápidas
         ==================================================================== */}
         {(podeVerAudiencias || podeVerExpedientes) && (
-          <div className="w-full grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "w-full grid grid-cols-1 gap-4 md:grid-cols-2")}>
             {podeVerAudiencias && (
               <WidgetAudienciasProximas data={data.proximasAudiencias} />
             )}
@@ -241,7 +242,7 @@ function UserDashboard({ data, onRefetch }: UserDashboardProps) {
         ==================================================================== */}
         {podeVerFinanceiro && (
           <>
-            <div className="w-full grid grid-cols-1 gap-4 lg:grid-cols-3">
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "w-full grid grid-cols-1 gap-4 lg:grid-cols-3")}>
               <div className="lg:col-span-2">
                 <WidgetFluxoCaixa />
               </div>
@@ -257,8 +258,8 @@ function UserDashboard({ data, onRefetch }: UserDashboardProps) {
       </div>
 
       {/* Última atualização */}
-      <div className="text-center pt-4 border-t">
-        <Typography.Muted className="text-xs">
+      <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "text-center pt-4 border-t")}>
+        <Typography.Muted className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
           Última atualização:{' '}
           {new Date(data.ultimaAtualizacao).toLocaleString('pt-BR', {
             dateStyle: 'short',
@@ -281,9 +282,9 @@ interface AdminDashboardProps {
 
 function AdminDashboard({ data, onRefetch }: AdminDashboardProps) {
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       {/* Saudação */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4")}>
         <Typography.H1>Olá, {data.usuario.nome}!</Typography.H1>
         <Button variant="ghost" size="sm" onClick={onRefetch} className="w-full sm:w-auto">
           <RefreshCw className="h-4 w-4 mr-2" />
@@ -291,17 +292,17 @@ function AdminDashboard({ data, onRefetch }: AdminDashboardProps) {
         </Button>
       </div>
 
-      <div className="space-y-6">
+      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
         {/* ====================================================================
             GRUPO 1: KPIs CORE - Métricas Principais
         ==================================================================== */}
-        <div className="w-full grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "w-full grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4")}>
           <MetricCard
             title="Total Processos"
             value={data.metricas.totalProcessos.toLocaleString('pt-BR')}
             href="/processos"
             footer={
-              <p className="text-xs text-muted-foreground">
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                 Total de processos ativos: {data.metricas.processosAtivos.toLocaleString('pt-BR')} • Total de processos arquivados: {data.metricas.processosArquivados.toLocaleString('pt-BR')}
               </p>
             }
@@ -332,7 +333,7 @@ function AdminDashboard({ data, onRefetch }: AdminDashboardProps) {
         {/* ====================================================================
             GRUPO 2: AUDIÊNCIAS E EXPEDIENTES - Listas Rápidas
         ==================================================================== */}
-        <div className="w-full grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "w-full grid grid-cols-1 gap-4 md:grid-cols-2")}>
           <WidgetAudienciasProximas data={data.proximasAudiencias} />
           <WidgetExpedientesUrgentes data={data.expedientesUrgentes} />
         </div>
@@ -342,7 +343,7 @@ function AdminDashboard({ data, onRefetch }: AdminDashboardProps) {
             Layout ajustado: Fluxo de Caixa (2 cols) + Despesas (1 col)
             Alturas equalizadas para consistência visual
         ==================================================================== */}
-        <div className="w-full grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "w-full grid grid-cols-1 gap-4 lg:grid-cols-3")}>
           <div className="lg:col-span-2">
             <WidgetFluxoCaixa />
           </div>
@@ -357,19 +358,19 @@ function AdminDashboard({ data, onRefetch }: AdminDashboardProps) {
         {/* ====================================================================
             GRUPO 4: PRODUTIVIDADE E ADMINISTRAÇÃO
         ==================================================================== */}
-        <div className="w-full grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "w-full grid grid-cols-1 gap-4 md:grid-cols-2")}>
           <MetricCard
             title="Usuários Ativos"
             value={data.metricas.totalUsuarios.toLocaleString('pt-BR')}
           />
-          <div className="p-6 rounded-lg border bg-card">
+          <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 rounded-lg border bg-card")}>
             <Typography.H4 className="mb-4">Performance de Advogados</Typography.H4>
             {data.performanceAdvogados.length > 0 ? (
-              <ul className="space-y-2">
+              <ul className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                 {data.performanceAdvogados.slice(0, 5).map((adv) => (
                   <li key={adv.usuario_id} className="flex justify-between">
                     <span className="truncate">{adv.usuario_nome}</span>
-                    <Typography.Muted className="text-sm">
+                    <Typography.Muted className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
                       {adv.baixasMes} baixas/mês ({adv.taxaCumprimentoPrazo}%)
                     </Typography.Muted>
                   </li>
@@ -385,7 +386,7 @@ function AdminDashboard({ data, onRefetch }: AdminDashboardProps) {
             GRUPO 5: CAPTURA - Status de Capturas
         ==================================================================== */}
         {data.statusCapturas.length > 0 && (
-          <div className="w-full grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "w-full grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3")}>
             {data.statusCapturas.slice(0, 6).map((captura) => {
               // Mapear status do domínio para valores do design system
               const statusMap: Record<string, string> = {
@@ -399,7 +400,7 @@ function AdminDashboard({ data, onRefetch }: AdminDashboardProps) {
               return (
                 <div
                   key={`${captura.trt}-${captura.grau}`}
-                  className="p-6 rounded-lg border bg-card"
+                  className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 rounded-lg border bg-card")}
                 >
                   <div className="flex items-center justify-between mb-4">
                     <Typography.H4>
@@ -409,7 +410,7 @@ function AdminDashboard({ data, onRefetch }: AdminDashboardProps) {
                       {captura.status}
                     </Badge>
                   </div>
-                  <Typography.Muted className="text-xs">
+                  <Typography.Muted className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                     Última execução:{' '}
                     {captura.ultimaExecucao
                       ? new Date(captura.ultimaExecucao).toLocaleString('pt-BR', {
@@ -426,8 +427,8 @@ function AdminDashboard({ data, onRefetch }: AdminDashboardProps) {
       </div>
 
       {/* Última atualização */}
-      <div className="text-center pt-4 border-t">
-        <Typography.Muted className="text-xs">
+      <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "text-center pt-4 border-t")}>
+        <Typography.Muted className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
           Última atualização:{' '}
           {new Date(data.ultimaAtualizacao).toLocaleString('pt-BR', {
             dateStyle: 'short',

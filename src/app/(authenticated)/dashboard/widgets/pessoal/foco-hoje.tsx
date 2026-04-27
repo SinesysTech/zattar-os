@@ -8,6 +8,7 @@
  * Deriva top 3 ações recomendadas.
  */
 
+import { cn } from '@/lib/utils';
 import { Zap } from 'lucide-react';
 import { WidgetContainer, InsightBanner } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
@@ -173,7 +174,7 @@ export function WidgetFocoHoje() {
       subtitle="Próximas ações recomendadas"
       depth={2}
     >
-      <div className="flex flex-col gap-2 mb-4">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2 mb-4")}>
         {acoes.map((acao, i) => (
           <div
             key={i}
@@ -192,21 +193,21 @@ export function WidgetFocoHoje() {
 
             {/* Conteúdo — hierarquia: título → partes → processo */}
             <div className="flex-1 min-w-0">
-              <p className="text-[10px] font-semibold text-foreground/85 leading-tight">
+              <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[10px] font-semibold text-foreground/85 leading-tight")}>
                 {acao.titulo}
               </p>
               {acao.partes && (
-                <p className="text-[10px] text-foreground/65 mt-0.5 leading-tight">
+                <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[10px] text-foreground/65 mt-0.5 leading-tight")}>
                   {acao.partes}
                 </p>
               )}
               {acao.numeroProcesso && (
-                <p className="text-[9px] text-muted-foreground/80 mt-0.5 break-all leading-relaxed">
+                <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[9px] text-muted-foreground/80 mt-0.5 break-all leading-relaxed")}>
                   {acao.numeroProcesso}
                 </p>
               )}
               {acao.contextoProcesso && (
-                <p className="text-[9px] text-foreground/55 mt-0.5 leading-tight">
+                <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[9px] text-foreground/55 mt-0.5 leading-tight")}>
                   {acao.contextoProcesso}
                 </p>
               )}

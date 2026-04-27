@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import { obterDashboardUsuario, obterDashboardAdmin } from '../service';
@@ -47,23 +48,23 @@ export default async function ProcessosPage() {
 
   return (
     <DashboardProvider initialData={initialData}>
-      <div className="space-y-4">
+      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         <Heading level="page">Processos</Heading>
         {/* Row 1: Hero + Heatmap */}
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 xl:grid-cols-3")}>
           <div className="xl:col-span-2">
             <WidgetSaudeProcessual />
           </div>
           <WidgetHeatmapAtividade />
         </div>
         {/* Row 2: KPIs + Tendência */}
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 xl:grid-cols-3")}>
           <WidgetKpiPulse />
           <WidgetTendenciaNovos />
           <WidgetProcessosComTabs />
         </div>
         {/* Row 3: Distribuições */}
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 xl:grid-cols-3")}>
           <WidgetStatusDistribuicao />
           <WidgetCasosTribunal />
           <WidgetSegmento />

@@ -89,7 +89,7 @@ export function ViewerPaginationPill({
       role="toolbar"
       aria-label="Controles de paginação e zoom"
     >
-      <div className="flex items-center h-10 px-2 gap-0 rounded-full bg-card border shadow-sm">
+      <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; gap-0 gap sem token DS */ "flex items-center h-10 px-2 gap-0 rounded-full bg-card border shadow-sm")}>
         {/* Botão página anterior */}
         <button
           type="button"
@@ -97,7 +97,7 @@ export function ViewerPaginationPill({
           disabled={!canPrev}
           aria-label="Página anterior"
           className={cn(
-            'flex items-center justify-center p-1.5 rounded-full transition-opacity',
+            /* design-system-escape: p-1.5 → usar <Inset> */ 'flex items-center justify-center p-1.5 rounded-full transition-opacity',
             !canPrev ? 'opacity-50 cursor-not-allowed' : 'hover:bg-muted cursor-pointer'
           )}
         >
@@ -114,12 +114,12 @@ export function ViewerPaginationPill({
           onBlur={commitPageInput}
           onKeyDown={handlePageInputKeyDown}
           aria-label="Página atual"
-          className="w-8 text-center bg-transparent border-none p-0 text-sm font-mono focus:outline-none focus:ring-0"
+          className={cn(/* design-system-escape: p-0 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "w-8 text-center bg-transparent border-none p-0 text-sm font-mono focus:outline-none focus:ring-0")}
         />
 
         {/* Separador e total de páginas */}
         <Text variant="caption" as="span" className="text-muted-foreground font-mono select-none">/</Text>
-        <span className="text-muted-foreground text-sm font-mono select-none ml-1">
+        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm font-mono select-none ml-1")}>
           {totalPages}
         </span>
 
@@ -130,7 +130,7 @@ export function ViewerPaginationPill({
           disabled={!canNext}
           aria-label="Próxima página"
           className={cn(
-            'flex items-center justify-center p-1.5 rounded-full transition-opacity',
+            /* design-system-escape: p-1.5 → usar <Inset> */ 'flex items-center justify-center p-1.5 rounded-full transition-opacity',
             !canNext ? 'opacity-50 cursor-not-allowed' : 'hover:bg-muted cursor-pointer'
           )}
         >
@@ -138,7 +138,7 @@ export function ViewerPaginationPill({
         </button>
 
         {/* Divisor vertical */}
-        <div className="w-px h-4 bg-border mx-2 shrink-0" aria-hidden="true" />
+        <div className={cn(/* design-system-escape: mx-2 margin sem primitiva DS */ "w-px h-4 bg-border mx-2 shrink-0")} aria-hidden="true" />
 
         {/* Botão zoom out */}
         <button
@@ -147,7 +147,7 @@ export function ViewerPaginationPill({
           disabled={!canZoomOut}
           aria-label={`Diminuir zoom (atual: ${zoomLevel}%)`}
           className={cn(
-            'flex items-center justify-center p-1.5 rounded-full transition-opacity',
+            /* design-system-escape: p-1.5 → usar <Inset> */ 'flex items-center justify-center p-1.5 rounded-full transition-opacity',
             !canZoomOut ? 'opacity-50 cursor-not-allowed' : 'hover:bg-muted cursor-pointer'
           )}
         >
@@ -155,7 +155,7 @@ export function ViewerPaginationPill({
         </button>
 
         {/* Indicador de zoom */}
-        <span className="text-xs font-mono text-muted-foreground select-none min-w-8 text-center tabular-nums">
+        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs font-mono text-muted-foreground select-none min-w-8 text-center tabular-nums")}>
           {zoomLevel}%
         </span>
 
@@ -166,7 +166,7 @@ export function ViewerPaginationPill({
           disabled={!canZoomIn}
           aria-label={`Aumentar zoom (atual: ${zoomLevel}%)`}
           className={cn(
-            'flex items-center justify-center p-1.5 rounded-full transition-opacity',
+            /* design-system-escape: p-1.5 → usar <Inset> */ 'flex items-center justify-center p-1.5 rounded-full transition-opacity',
             !canZoomIn ? 'opacity-50 cursor-not-allowed' : 'hover:bg-muted cursor-pointer'
           )}
         >

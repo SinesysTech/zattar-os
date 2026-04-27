@@ -11,6 +11,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import {
   CheckSquare,
   Bell,
@@ -204,7 +205,7 @@ export function WidgetScorePessoal() {
       className="md:col-span-3"
       depth={2}
     >
-      <div className="flex flex-col sm:flex-row items-center gap-5">
+      <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex flex-col sm:flex-row items-center gap-5")}>
 
         {/* Gauge compacto */}
         <GaugeMeter value={68} max={100} label="Seu dia" status="warning" size={72} />
@@ -213,16 +214,16 @@ export function WidgetScorePessoal() {
         <div className="hidden sm:block w-px self-stretch bg-border/10" />
 
         {/* Stats em linha */}
-        <div className="flex items-center gap-5 flex-1 min-w-0 flex-wrap">
+        <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5 flex-1 min-w-0 flex-wrap")}>
           {([
             { label: 'Tarefas', val: 18, suffix: '/25', sub: 'concluídas hoje' },
             { label: 'Lembretes', val: 3, suffix: '', sub: 'pendentes' },
             { label: 'Audiências', val: 2, suffix: '', sub: 'hoje' },
             { label: 'Documentos', val: 4, suffix: '', sub: 'editados' },
           ] as const).map((s) => (
-            <div key={s.label} className="flex flex-col gap-0.5">
-              <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">{s.label}</span>
-              <span className="font-display text-lg font-bold tabular-nums">
+            <div key={s.label} className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>{s.label}</span>
+              <span className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold tabular-nums")}>
                 <AnimatedNumber value={s.val} suffix={s.suffix} />
               </span>
               <span className="text-[9px] text-muted-foreground/55">{s.sub}</span>
@@ -256,7 +257,7 @@ export function WidgetHeatmapProdutividade() {
       depth={1}
     >
       {/* Heatmap principal */}
-      <div className="flex justify-start mb-4 overflow-x-auto pb-1">
+      <div className={cn(/* design-system-escape: pb-1 padding direcional sem Inset equiv. */ "flex justify-start mb-4 overflow-x-auto pb-1")}>
         <CalendarHeatmap
           data={HEATMAP_PRODUTIVIDADE}
           colorScale="success"
@@ -264,7 +265,7 @@ export function WidgetHeatmapProdutividade() {
       </div>
 
       {/* Legenda de intensidade */}
-      <div className="flex items-center gap-1.5 mb-4">
+      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mb-4")}>
         <span className="text-[9px] text-muted-foreground/55">menos</span>
         {['bg-border/10', 'bg-success/15', 'bg-success/30', 'bg-success/50', 'bg-success/80'].map((c, i) => (
           <div key={i} className={`size-3 rounded-[3px] ${c}`} />
@@ -273,18 +274,18 @@ export function WidgetHeatmapProdutividade() {
       </div>
 
       {/* Métricas abaixo */}
-      <div className="pt-3 border-t border-border/10 flex items-start gap-6">
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; gap-6 → migrar para <Inline gap="loose"> */ "pt-3 border-t border-border/10 flex items-start gap-6")}>
         <ComparisonStat
           label="Média semanal"
           current={23}
           previous={19}
           format="number"
         />
-        <div className="flex flex-col gap-0.5">
-          <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+          <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Melhor dia
           </span>
-          <span className="font-display text-lg font-bold">Quarta</span>
+          <span className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold")}>Quarta</span>
           <span className="text-[9px] text-muted-foreground/55">avg 5.2 tarefas/dia</span>
         </div>
       </div>
@@ -302,7 +303,7 @@ export function WidgetFocoHoje() {
       subtitle="Próximas ações recomendadas — baseado em IA"
       depth={2}
     >
-      <div className="flex flex-col gap-2 mb-4">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2 mb-4")}>
         {FOCO_HOJE.map((item, i) => (
           <div
             key={i}
@@ -321,7 +322,7 @@ export function WidgetFocoHoje() {
 
             {/* Conteúdo */}
             <div className="flex-1 min-w-0">
-              <p className="text-[10px] font-semibold text-foreground/85 truncate leading-tight">
+              <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[10px] font-semibold text-foreground/85 truncate leading-tight")}>
                 {item.titulo}
               </p>
               <p className="text-[9px] text-muted-foreground/45 mt-0.5 truncate">
@@ -371,7 +372,7 @@ export function WidgetMeuDia() {
           aria-hidden="true"
         />
 
-        <div className="flex flex-col gap-0.5">
+        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
           {MEU_DIA.map((item, i) => {
             const Icon = TIPO_ICONS[item.type];
             const isNext = item.next === true;
@@ -424,7 +425,7 @@ export function WidgetMeuDia() {
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                     <span
                       className={`text-[10px] font-medium truncate flex-1 ${item.done
                           ? 'line-through text-muted-foreground/55'
@@ -436,12 +437,12 @@ export function WidgetMeuDia() {
                       {item.title}
                     </span>
                     {isNext && (
-                      <span className="text-[8px] uppercase tracking-wider text-primary/70 bg-primary/10 px-1.5 py-0.5 rounded-full shrink-0">
+                      <span className={cn(/* design-system-escape: tracking-wider sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[8px] uppercase tracking-wider text-primary/70 bg-primary/10 px-1.5 py-0.5 rounded-full shrink-0")}>
                         próximo
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center gap-1.5 mt-0.5">
+                  <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mt-0.5")}>
                     <Icon
                       className={`size-2.5 shrink-0 ${item.done ? 'text-muted-foreground/45' : 'text-muted-foreground/60'
                         }`}
@@ -485,16 +486,16 @@ export function WidgetTarefasStatus() {
       subtitle="Distribuição da carteira pessoal"
       depth={1}
     >
-      <div className="flex items-center gap-5">
+      <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5")}>
         <MiniDonut
           segments={TAREFAS_SEGMENTS}
           size={84}
           strokeWidth={11}
           centerLabel={`${fmtNum(total)} total`}
         />
-        <div className="flex flex-col gap-2.5 flex-1 min-w-0">
+        <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex flex-col gap-2.5 flex-1 min-w-0")}>
           {TAREFAS_SEGMENTS.map((seg) => (
-            <div key={seg.label} className="flex items-center gap-2">
+            <div key={seg.label} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <span
                 className="size-2 rounded-full shrink-0"
                 style={{ backgroundColor: seg.color }}
@@ -502,16 +503,16 @@ export function WidgetTarefasStatus() {
               <span className="text-[10px] text-muted-foreground/60 truncate flex-1">
                 {seg.label}
               </span>
-              <span className="text-[10px] font-semibold tabular-nums">{seg.value}</span>
+              <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold tabular-nums")}>{seg.value}</span>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="mt-3 pt-3 border-t border-border/10">
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 pt-3 border-t border-border/10")}>
         <div className="flex items-center justify-between">
           <span className="text-[10px] text-muted-foreground/50">Concluídas esta semana</span>
-          <span className="text-[11px] font-semibold text-emerald-400/80 tabular-nums">
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[11px] font-semibold text-emerald-400/80 tabular-nums")}>
             {pctConcluidas}%
           </span>
         </div>
@@ -546,9 +547,9 @@ export function WidgetProdutividadeSemanal() {
           delta={`média: ${PRODUTIVIDADE_AVG} / dia`}
           deltaType="neutral"
         />
-        <div className="flex flex-col items-end gap-0.5">
-          <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">melhor dia</span>
-          <span className="text-base font-bold tabular-nums">
+        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-end gap-0.5")}>
+          <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>melhor dia</span>
+          <span className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-bold → className de <Text>/<Heading> */ "text-base font-bold tabular-nums")}>
             {Math.max(...PRODUTIVIDADE_SEMANAL.map((d) => d.value))}
           </span>
           <span className="text-[9px] text-muted-foreground/60">
@@ -589,14 +590,14 @@ export function WidgetLembretesAtivos() {
       subtitle={`${LEMBRETES.length} lembretes para hoje`}
       depth={1}
     >
-      <div className="flex flex-col -mx-1">
+      <div className={cn(/* design-system-escape: -mx-1 sem equivalente DS */ "flex flex-col -mx-1")}>
         {LEMBRETES.map((item, i) => (
           <ListItem key={i}>
             <UrgencyDot level={item.urgency} />
             <div className="flex-1 min-w-0">
               <p className="text-[10px] text-foreground/75 truncate">{item.text}</p>
             </div>
-            <div className="flex items-center gap-1 shrink-0">
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 shrink-0")}>
               {item.time ? (
                 <>
                   <Clock className="size-2.5 text-muted-foreground/55" />
@@ -612,11 +613,11 @@ export function WidgetLembretesAtivos() {
         ))}
       </div>
 
-      <div className="mt-3 pt-2 border-t border-border/10 flex items-center justify-between">
-        <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">
+      <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "mt-3 pt-2 border-t border-border/10 flex items-center justify-between")}>
+        <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/55 uppercase tracking-wider")}>
           próximo
         </span>
-        <span className="text-[10px] text-primary/60 font-medium">
+        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] text-primary/60 font-medium")}>
           {LEMBRETES.filter((l) => l.time).sort((a, b) => (a.time! > b.time! ? 1 : -1))[0]?.time}
           {' — '}
           <span className="text-muted-foreground/50">
@@ -643,12 +644,12 @@ export function WidgetCapturaStatus() {
       depth={1}
     >
       {/* Strip de status geral */}
-      <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-foreground/3 border border-border/10 mb-3">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 px-3 py-2 rounded-xl bg-foreground/3 border border-border/10 mb-3")}>
         <RefreshCw className="size-3 text-muted-foreground/55" />
         <span className="text-[10px] text-muted-foreground/50 flex-1">
           Última sincronização
         </span>
-        <span className="text-[10px] font-medium text-muted-foreground/60 tabular-nums">
+        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium text-muted-foreground/60 tabular-nums")}>
           há 2h
         </span>
         {erros > 0 && (
@@ -657,14 +658,14 @@ export function WidgetCapturaStatus() {
       </div>
 
       {/* Indicadores por tribunal */}
-      <div className="flex flex-col gap-1.5">
+      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
         {CAPTURA_TRIBUNAIS.map((t) => (
           <div
             key={t.sigla}
-            className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-foreground/4 transition-all duration-150"
+            className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-foreground/4 transition-all duration-150")}
           >
             <div className={`size-2 rounded-full shrink-0 ${CAPTURA_STATUS_STYLES[t.status]}`} />
-            <span className="text-[10px] font-semibold text-foreground/70 w-10 shrink-0 tabular-nums">
+            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold text-foreground/70 w-10 shrink-0 tabular-nums")}>
               {t.sigla}
             </span>
             <span className="text-[10px] text-muted-foreground/45 flex-1 truncate">{t.nome}</span>
@@ -683,7 +684,7 @@ export function WidgetCapturaStatus() {
       </div>
 
       {(erros > 0 || sincronizando > 0) && (
-        <div className="mt-3 pt-2 border-t border-border/10">
+        <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "mt-3 pt-2 border-t border-border/10")}>
           <p className="text-[9px] text-muted-foreground/55">
             {erros > 0 && (
               <span className="text-destructive/50">{erros} tribunal(is) com erro. </span>
@@ -709,49 +710,49 @@ export function WidgetChatAtivo() {
       depth={1}
     >
       {/* Contador de não lidas */}
-      <div className="flex items-center gap-3 mb-4">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mb-4")}>
         <div className="relative">
           <div className="size-10 rounded-2xl bg-primary/8er border-primary/15 flex items-center justify-center">
             <MessageCircle className="size-4 text-primary/50" />
           </div>
           {CHAT_NAO_LIDAS > 0 && (
-            <span className="absolute -top-1 -right-1 size-4 rounded-full bg-primary text-[8px] font-bold text-background flex items-center justify-center tabular-nums">
+            <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "absolute -top-1 -right-1 size-4 rounded-full bg-primary text-[8px] font-bold text-background flex items-center justify-center tabular-nums")}>
               {CHAT_NAO_LIDAS}
             </span>
           )}
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-[10px] text-muted-foreground/50">Não lidas</p>
-          <p className="text-lg font-bold tabular-nums">{CHAT_NAO_LIDAS}</p>
+          <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold tabular-nums")}>{CHAT_NAO_LIDAS}</p>
         </div>
-        <div className="flex flex-col items-end gap-0.5">
-          <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">salas</span>
-          <span className="text-base font-bold tabular-nums">{CHAT_SALAS}</span>
+        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-end gap-0.5")}>
+          <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>salas</span>
+          <span className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-bold → className de <Text>/<Heading> */ "text-base font-bold tabular-nums")}>{CHAT_SALAS}</span>
           <span className="text-[9px] text-muted-foreground/55">ativas</span>
         </div>
       </div>
 
       {/* Preview da última mensagem */}
-      <div className="px-3 py-2.5 rounded-xl bg-foreground/3 border border-border/10">
-        <div className="flex items-center gap-1.5 mb-1">
+      <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "px-3 py-2.5 rounded-xl bg-foreground/3 border border-border/10")}>
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mb-1")}>
           <div className="size-1.5 rounded-full bg-emerald-500/60" />
-          <span className="text-[10px] font-semibold text-foreground/70">
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold text-foreground/70")}>
             {CHAT_ULTIMA_MSG.autor}
           </span>
           <span className="text-[9px] text-muted-foreground/55 ml-auto tabular-nums">
             {CHAT_ULTIMA_MSG.tempo}
           </span>
         </div>
-        <p className="text-[10px] text-muted-foreground/55 leading-relaxed line-clamp-2">
+        <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[10px] text-muted-foreground/55 leading-relaxed line-clamp-2")}>
           {CHAT_ULTIMA_MSG.preview}
         </p>
       </div>
 
-      <div className="mt-3 pt-2 border-t border-border/10 flex items-center justify-between">
-        <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">
+      <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "mt-3 pt-2 border-t border-border/10 flex items-center justify-between")}>
+        <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/55 uppercase tracking-wider")}>
           {CHAT_SALAS} salas — {CHAT_NAO_LIDAS} pendentes
         </span>
-        <span className="text-[9px] text-primary/50 font-medium">ver todas</span>
+        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[9px] text-primary/50 font-medium")}>ver todas</span>
       </div>
     </WidgetContainer>
   );
@@ -767,7 +768,7 @@ export function WidgetDocumentosRecentes() {
       subtitle="Últimas edições — seus arquivos"
       depth={1}
     >
-      <div className="flex flex-col gap-0.5 -mx-1">
+      <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS; -mx-1 sem equivalente DS */ "flex flex-col gap-0.5 -mx-1")}>
         {DOCUMENTOS_RECENTES.map((doc, i) => {
           const Icon = DOC_ICONS[doc.tipo];
           return (
@@ -784,7 +785,7 @@ export function WidgetDocumentosRecentes() {
                 />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[10px] font-medium text-foreground/75 truncate">
+                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium text-foreground/75 truncate")}>
                   {doc.nome}
                 </p>
                 <p className="text-[9px] text-muted-foreground/60 mt-0.5">
@@ -804,11 +805,11 @@ export function WidgetDocumentosRecentes() {
         })}
       </div>
 
-      <div className="mt-3 pt-2 border-t border-border/10 flex items-center justify-between">
-        <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">
+      <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "mt-3 pt-2 border-t border-border/10 flex items-center justify-between")}>
+        <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/55 uppercase tracking-wider")}>
           {DOCUMENTOS_RECENTES.length} recentes
         </span>
-        <span className="text-[9px] text-primary/50 font-medium">abrir todos</span>
+        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[9px] text-primary/50 font-medium")}>abrir todos</span>
       </div>
     </WidgetContainer>
   );

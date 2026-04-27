@@ -84,12 +84,12 @@ function WeekEventChip({ event, onClick }: { event: AgendaEvent; onClick?: () =>
     >
       {/* Accent bar (cor sólida do tipo) */}
       <span className={cn("absolute left-0 top-0 bottom-0 w-0.75", colors.accent)} aria-hidden />
-      <div className="pl-2 pr-1.5 py-1">
-        <div className="flex items-baseline gap-1.5">
-          <span className={cn("text-[10px] font-semibold tabular-nums", colors.text)}>
+      <div className={cn(/* design-system-escape: pl-2 padding direcional sem Inset equiv.; pr-1.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "pl-2 pr-1.5 py-1")}>
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5")}>
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold tabular-nums", colors.text)}>
             {fmtTime(event.start)}
           </span>
-          <span className="text-[10px] text-foreground/90 font-semibold truncate">
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] text-foreground/90 font-semibold truncate")}>
             {event.title}
           </span>
         </div>
@@ -190,9 +190,9 @@ export function SemanaView({
   }, [today]);
 
   return (
-    <div className={cn("flex gap-4", className)}>
+    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4", className)}>
       {/* Sidebar */}
-      <div className="w-56 shrink-0 space-y-4 hidden xl:flex xl:flex-col">
+      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "w-56 shrink-0 space-y-4 hidden xl:flex xl:flex-col")}>
         <MiniCalendar
           currentDate={currentDate}
           selectedDate={currentDate}
@@ -215,10 +215,10 @@ export function SemanaView({
           {weekDays.map((day, i) => {
             const isToday = isSameDay(day, today);
             return (
-              <div key={i} className="flex-1 text-center py-2 border-l border-border/6 first:border-l-0">
-                <div className="text-[10px] text-muted-foreground/40 font-medium">{WEEKDAYS[day.getDay()]}</div>
+              <div key={i} className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex-1 text-center py-2 border-l border-border/6 first:border-l-0")}>
+                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] text-muted-foreground/40 font-medium")}>{WEEKDAYS[day.getDay()]}</div>
                 <div className={cn(
-                  "inline-flex items-center justify-center size-7 rounded-full mt-0.5 text-sm font-semibold",
+                  /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center justify-center size-7 rounded-full mt-0.5 text-sm font-semibold",
                   isToday ? "bg-primary text-primary-foreground" : "text-muted-foreground/70",
                 )}>
                   {day.getDate()}
@@ -233,7 +233,7 @@ export function SemanaView({
           <div className="relative">
             {HOURS.map((hour) => (
               <div key={hour} className="flex" style={{ height: SLOT_HEIGHT }}>
-                <div className="w-12 shrink-0 text-right pr-3 pt-1 text-[10px] font-mono font-medium text-muted-foreground/25 tabular-nums">
+                <div className={cn(/* design-system-escape: pr-3 padding direcional sem Inset equiv.; pt-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "w-12 shrink-0 text-right pr-3 pt-1 text-[10px] font-mono font-medium text-muted-foreground/25 tabular-nums")}>
                   {String(hour).padStart(2, "0")}:00
                 </div>
                 {weekDays.map((_, di) => (

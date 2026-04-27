@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import * as React from "react";
 import { Cell, Pie, PieChart, Tooltip } from "recharts";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -96,7 +97,7 @@ export function LeadBySourceCard({ data, error }: LeadBySourceCardProps) {
         </CardHeader>
         <CardContent className="flex-1">
           <div className="flex items-center justify-center h-62.5">
-            <p className="text-sm text-muted-foreground">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
               {error || 'Nenhum dado disponível'}
             </p>
           </div>
@@ -114,7 +115,7 @@ export function LeadBySourceCard({ data, error }: LeadBySourceCardProps) {
         </CardAction>
       </CardHeader>
       <CardContent className="flex-1">
-        <div className="space-y-4">
+        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           {/* Gráfico de Pizza */}
           <div className="flex items-center justify-center">
             <div style={{ width: CHART_WIDTH, height: CHART_HEIGHT }}>
@@ -129,16 +130,16 @@ export function LeadBySourceCard({ data, error }: LeadBySourceCardProps) {
                       const percent = totalClientes > 0 ? (p.clientes / totalClientes) * 100 : 0;
 
                       return (
-                        <div className="rounded-lg border bg-background p-3 shadow-sm">
-                          <div className="flex items-center gap-2">
+                        <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg border bg-background p-3 shadow-sm")}>
+                          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                             <span
                               className="inline-block size-2 rounded-full"
                               style={{ backgroundColor: p.color }}
                             />
-                            <div className="text-sm font-medium">{p.label}</div>
+                            <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{p.label}</div>
                           </div>
-                          <div className="mt-2 text-sm text-muted-foreground">
-                            <span className="font-semibold text-foreground">{p.clientes}</span>{" "}
+                          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-2 text-sm text-muted-foreground")}>
+                            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-foreground")}>{p.clientes}</span>{" "}
                             {p.clientes === 1 ? "cliente" : "clientes"}{" "}
                             <span className="text-muted-foreground">({percent.toFixed(1)}%)</span>
                           </div>
@@ -172,13 +173,13 @@ export function LeadBySourceCard({ data, error }: LeadBySourceCardProps) {
           </div>
 
           {/* Total e Legenda dos estados */}
-          <div className="space-y-3">
+          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
             <div className="text-center">
-              <p className="text-2xl font-bold">{totalClientes.toLocaleString('pt-BR')}</p>
-              <p className="text-xs text-muted-foreground">Total de Clientes</p>
+              <p className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-bold")}>{totalClientes.toLocaleString('pt-BR')}</p>
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Total de Clientes</p>
             </div>
 
-            <div className="flex justify-around flex-wrap gap-4">
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex justify-around flex-wrap gap-4")}>
               {chartData.map((item, idx) => {
                 const percent = totalClientes > 0 ? (item.clientes / totalClientes) * 100 : 0;
                 const isActive = activeIndex === null || activeIndex === idx;
@@ -188,18 +189,18 @@ export function LeadBySourceCard({ data, error }: LeadBySourceCardProps) {
                     className={isActive ? "flex flex-col" : "flex flex-col opacity-50"}
                     key={item.estado}
                   >
-                    <div className="mb-1 flex items-center gap-2">
+                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mb-1 flex items-center gap-2")}>
                       <span
                         className="block size-2 rounded-full"
                         style={{
                           backgroundColor: item.color
                         }}></span>
-                      <div className="text-xs tracking-wide uppercase">
+                      <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; tracking-wide sem token DS */ "text-xs tracking-wide uppercase")}>
                         {item.label}
                       </div>
                     </div>
-                    <div className="ms-3.5 text-lg font-semibold">{item.clientes}</div>
-                    <div className="ms-3.5 text-xs text-muted-foreground">{percent.toFixed(1)}%</div>
+                    <div className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "ms-3.5 text-lg font-semibold")}>{item.clientes}</div>
+                    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "ms-3.5 text-xs text-muted-foreground")}>{percent.toFixed(1)}%</div>
                   </div>
                 );
               })}

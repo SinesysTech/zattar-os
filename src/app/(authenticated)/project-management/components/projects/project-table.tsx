@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import type { ColumnDef, Table as TanstackTable } from "@tanstack/react-table";
@@ -33,7 +34,7 @@ function ProjectRowActions({ projeto }: { projeto: Projeto }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
+        <Button variant="ghost" className={cn(/* design-system-escape: p-0 → usar <Inset> */ "h-8 w-8 p-0")}>
           <span className="sr-only">Abrir menu</span>
           <Ellipsis className="h-4 w-4" />
         </Button>
@@ -76,7 +77,7 @@ const columns: ColumnDef<Projeto>[] = [
     header: ({ column }) => (
       <Button
         variant="ghost"
-        className="p-0!"
+        className={cn(/* design-system-escape: p-0! → usar <Inset> */ "p-0!")}
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Projeto
@@ -122,7 +123,7 @@ const columns: ColumnDef<Projeto>[] = [
     header: ({ column }) => (
       <Button
         variant="ghost"
-        className="p-0!"
+        className={cn(/* design-system-escape: p-0! → usar <Inset> */ "p-0!")}
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Prazo

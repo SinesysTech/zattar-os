@@ -66,7 +66,7 @@ export function ProfileSidebar({
   return (
     <GlassPanel
       depth={1}
-      className="overflow-hidden sticky top-6 self-start p-0"
+      className={cn(/* design-system-escape: p-0 → usar <Inset> */ "overflow-hidden sticky top-6 self-start p-0")}
     >
       {/* 1. Cover area */}
       <div className="relative">
@@ -79,7 +79,7 @@ export function ProfileSidebar({
           size="sm"
           variant="outline"
           onClick={onEditCover}
-          className="absolute top-2 right-2 h-7 px-2 gap-1 text-[11px] bg-black/30 backdrop-blur-sm border-foreground/10 text-white/70 hover:bg-black/50 hover:text-white/90"
+          className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; gap-1 gap sem token DS */ "absolute top-2 right-2 h-7 px-2 gap-1 text-[11px] bg-black/30 backdrop-blur-sm border-foreground/10 text-white/70 hover:bg-black/50 hover:text-white/90")}
         >
           <Camera className="size-3" />
           Editar
@@ -87,7 +87,7 @@ export function ProfileSidebar({
       </div>
 
       {/* 2. Avatar section */}
-      <div className="flex flex-col items-center -mt-11 px-5 relative z-[2]">
+      <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv. */ "flex flex-col items-center -mt-11 px-5 relative z-[2]")}>
         <div
           className="group relative cursor-pointer"
           onClick={onEditAvatar}
@@ -100,11 +100,11 @@ export function ProfileSidebar({
             strokeWidth={2.5}
           />
           <Avatar
-            className="border-4 border-background m-1.5"
+            className={cn(/* design-system-escape: m-1.5 margin sem primitiva DS */ "border-4 border-background m-1.5")}
             style={{ width: 88, height: 88 }}
           >
             {avatarUrl && <AvatarImage src={avatarUrl} alt={usuario.nomeCompleto} />}
-            <AvatarFallback className="text-lg font-semibold">{initials}</AvatarFallback>
+            <AvatarFallback className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "text-lg font-semibold")}>{initials}</AvatarFallback>
           </Avatar>
           {/* Hover overlay */}
           <span className="absolute inset-1.5 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
@@ -119,13 +119,13 @@ export function ProfileSidebar({
         </div>
 
         {/* 3. Name + Role */}
-        <Typography.H2 className="text-lg font-bold mt-3 text-center">{usuario.nomeCompleto}</Typography.H2>
+        <Typography.H2 className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold mt-3 text-center")}>{usuario.nomeCompleto}</Typography.H2>
         {usuario.cargo?.nome && (
-          <p className="text-xs text-muted-foreground/40 mt-0.5 text-center">{usuario.cargo.nome}</p>
+          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/40 mt-0.5 text-center")}>{usuario.cargo.nome}</p>
         )}
 
         {/* 4. Badges row */}
-        <div className="flex gap-1.5 mt-2.5 flex-wrap justify-center">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex gap-1.5 mt-2.5 flex-wrap justify-center")}>
           <Badge variant={usuario.ativo ? 'success' : 'outline'} tone="soft">
             {usuario.ativo ? 'Ativo' : 'Inativo'}
           </Badge>
@@ -144,9 +144,9 @@ export function ProfileSidebar({
 
       {/* 5. Contacts section */}
       {contactItems.length > 0 && (
-        <div className="px-5 py-4 mt-4 border-t border-border/10 space-y-2.5">
+        <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv.; space-y-2.5 sem token DS */ "px-5 py-4 mt-4 border-t border-border/10 space-y-2.5")}>
           {contactItems.map(({ icon: Icon, value, label }, idx) => (
-            <div key={idx} className="flex items-center gap-2.5 text-xs">
+            <div key={idx} className={cn(/* design-system-escape: gap-2.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-2.5 text-xs")}>
               <Icon className="size-3.5 text-muted-foreground/35 shrink-0" />
               <span
                 className="text-muted-foreground/55 truncate"
@@ -160,12 +160,12 @@ export function ProfileSidebar({
       )}
 
       {/* 6. Completeness section */}
-      <div className="px-5 py-3 border-t border-border/10">
+      <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-5 py-3 border-t border-border/10")}>
         <div className="flex justify-between items-center mb-1.5">
-          <span className="text-[10px] uppercase tracking-wider text-muted-foreground/40 font-medium">
+          <span className={cn(/* design-system-escape: tracking-wider sem token DS; font-medium → className de <Text>/<Heading> */ "text-[10px] uppercase tracking-wider text-muted-foreground/40 font-medium")}>
             Perfil
           </span>
-          <span className={cn('text-[11px] font-semibold', colorCss.text)}>
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-[11px] font-semibold', colorCss.text)}>
             {completeness.score}%
           </span>
         </div>
@@ -177,9 +177,9 @@ export function ProfileSidebar({
           />
         </div>
         {/* Checklist */}
-        <ul className="space-y-1">
+        <ul className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
           {completeness.items.map((item) => (
-            <li key={item.key} className="flex items-center gap-1.5 text-[11px]">
+            <li key={item.key} className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 text-[11px]")}>
               <span className={item.done ? 'text-success' : 'text-warning'}>
                 {item.done ? '✓' : '○'}
               </span>
@@ -197,12 +197,12 @@ export function ProfileSidebar({
       </div>
 
       {/* 7. Quick Actions */}
-      <div className="px-5 py-4 border-t border-border/10 flex flex-col gap-1.5">
+      <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv.; gap-1.5 gap sem token DS */ "px-5 py-4 border-t border-border/10 flex flex-col gap-1.5")}>
         <Button
           variant="outline"
           size="sm"
           onClick={onEdit}
-          className="w-full justify-start gap-2 bg-primary/8 border-primary/20 text-primary hover:bg-primary/12"
+          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "w-full justify-start gap-2 bg-primary/8 border-primary/20 text-primary hover:bg-primary/12")}
         >
           <Pencil className="size-3.5" />
           Editar Perfil
@@ -211,7 +211,7 @@ export function ProfileSidebar({
           variant="outline"
           size="sm"
           onClick={onResetPassword}
-          className="w-full justify-start gap-2"
+          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "w-full justify-start gap-2")}
         >
           <KeyRound className="size-3.5" />
           Redefinir Senha
@@ -221,7 +221,7 @@ export function ProfileSidebar({
             variant="outline"
             size="sm"
             onClick={onDeactivate}
-            className="w-full justify-start gap-2 border-destructive/15 text-destructive hover:bg-destructive/5 hover:border-destructive/30"
+            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "w-full justify-start gap-2 border-destructive/15 text-destructive hover:bg-destructive/5 hover:border-destructive/30")}
           >
             <Power className="size-3.5" />
             Desativar Usuário

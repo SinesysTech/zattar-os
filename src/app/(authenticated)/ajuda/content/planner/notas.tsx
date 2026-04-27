@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
@@ -20,10 +21,10 @@ import {
 
 export default function NotasDoc() {
   return (
-    <div className="space-y-10">
+    <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
       <div>
         <Heading level="page">Notas</Heading>
-        <p className="text-muted-foreground text-lg">
+        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-muted-foreground text-lg")}>
           Capture ideias, registre informações e organize anotações pessoais ou compartilhadas com a equipe.
         </p>
       </div>

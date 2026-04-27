@@ -232,11 +232,11 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
           </DialogDescription>
         </DialogHeader>
         {error && (
-          <div className="bg-destructive/15 text-destructive rounded-md px-3 py-2 text-sm">
+          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "bg-destructive/15 text-destructive rounded-md px-3 py-2 text-sm")}>
             {error}
           </div>
         )}
-        <div className="grid gap-4 py-4">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; py-4 padding direcional sem Inset equiv. */ "grid gap-4 py-4")}>
           <div className="*:not-first:mt-1.5">
             <Label htmlFor="title">Título</Label>
             <Input
@@ -258,7 +258,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
             />
           </div>
 
-          <div className="flex gap-4">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}>
             <div className="flex-1 *:not-first:mt-1.5">
               <Label htmlFor="start-date">Data de Início</Label>
               <Popover
@@ -273,7 +273,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
                     variant={"outline"}
                     disabled={readOnly}
                     className={cn(
-                      "group bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
+                      /* design-system-escape: px-3 padding direcional sem Inset equiv. */ "group bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
                       !startDate && "text-muted-foreground"
                     )}>
                     <span className={cn("truncate", !startDate && "text-muted-foreground")}>
@@ -286,7 +286,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
                     />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-2" align="start">
+                <PopoverContent className={cn(/* design-system-escape: p-2 → usar <Inset> */ "w-auto p-2")} align="start">
                   <Calendar
                     mode="single"
                     selected={startDate}
@@ -327,7 +327,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
             )}
           </div>
 
-          <div className="flex gap-4">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}>
             <div className="flex-1 *:not-first:mt-1.5">
               <Label htmlFor="end-date">Data de Término</Label>
               <Popover
@@ -342,7 +342,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
                     variant={"outline"}
                     disabled={readOnly}
                     className={cn(
-                      "group bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
+                      /* design-system-escape: px-3 padding direcional sem Inset equiv. */ "group bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
                       !endDate && "text-muted-foreground"
                     )}>
                     <span className={cn("truncate", !endDate && "text-muted-foreground")}>
@@ -355,7 +355,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
                     />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-2" align="start">
+                <PopoverContent className={cn(/* design-system-escape: p-2 → usar <Inset> */ "w-auto p-2")} align="start">
                   <Calendar
                     mode="single"
                     selected={endDate}
@@ -393,7 +393,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
             )}
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <Checkbox
               id="all-day"
               checked={allDay}
@@ -418,7 +418,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
           <div className="*:not-first:mt-1.5">
             <Label htmlFor="responsavel">Responsável</Label>
             {readOnly ? (
-              <p className="text-sm text-muted-foreground">
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                 {responsavelId
                   ? (usuarios.find((u) => u.id === responsavelId)?.nomeExibicao ||
                     usuarios.find((u) => u.id === responsavelId)?.nomeCompleto ||
@@ -446,10 +446,10 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
             )}
           </div>
 
-          <fieldset className="space-y-4">
-            <legend className="text-foreground text-sm leading-none font-medium">Cor</legend>
+          <fieldset className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+            <legend className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-none sem token DS; font-medium → className de <Text>/<Heading> */ "text-foreground text-sm leading-none font-medium")}>Cor</legend>
             <RadioGroup
-              className="flex gap-1.5"
+              className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex gap-1.5")}
               disabled={readOnly}
               defaultValue={colorOptions[0]?.value}
               value={color}
@@ -465,7 +465,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
                       style={{ backgroundColor: colorOption.cssVar }}
                     />
                   </TooltipTrigger>
-                  <TooltipContent side="bottom" className="text-xs">
+                  <TooltipContent side="bottom" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                     {colorOption.label}
                   </TooltipContent>
                 </Tooltip>
@@ -479,7 +479,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
               <Trash2 size={16} aria-hidden="true" />
             </Button>
           )}
-          <div className="flex flex-1 justify-end gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-1 justify-end gap-2")}>
             {readOnly && onNavigateToSource && (
               <Button variant="outline" onClick={onNavigateToSource}>
                 <ExternalLink size={16} aria-hidden="true" />

@@ -31,14 +31,14 @@ export function SearchHero({ onBuscar }: SearchHeroProps) {
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col items-center gap-3">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "mx-auto flex w-full max-w-3xl flex-col items-center gap-3")}>
       <Text variant="caption" className="text-center text-muted-foreground/60">
         Consulte comunicações processuais na base pública do Comunica CNJ.
       </Text>
 
       <div
         className={cn(
-          'flex w-full items-center gap-2 rounded-2xl border bg-card px-4 py-2.5 transition-all',
+          /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ 'flex w-full items-center gap-2 rounded-2xl border bg-card px-4 py-2.5 transition-all',
           'border-border/20',
           'focus-within:border-primary/40 focus-within:shadow-[0_4px_24px_color-mix(in_oklch,var(--primary)_10%,transparent)]',
         )}
@@ -51,7 +51,7 @@ export function SearchHero({ onBuscar }: SearchHeroProps) {
           onChange={(e) => setTermo(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Número do processo, nome da parte, OAB..."
-          className="flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground/60"
+          className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground/60")}
           autoComplete="off"
           spellCheck={false}
           aria-label="Termo de busca"
@@ -62,7 +62,7 @@ export function SearchHero({ onBuscar }: SearchHeroProps) {
           size="sm"
           onClick={onBuscar}
           disabled={isBuscando}
-          className="gap-1.5 rounded-xl"
+          className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5 rounded-xl")}
         >
           {isBuscando ? (
             <LoadingSpinner />

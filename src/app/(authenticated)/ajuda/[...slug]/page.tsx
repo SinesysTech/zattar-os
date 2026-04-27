@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { use, Suspense } from 'react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
@@ -10,7 +11,7 @@ import { Heading } from '@/components/ui/typography';
 
 function DocLoading() {
   return (
-    <div className="max-w-4xl space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "max-w-4xl space-y-4")}>
       <Skeleton className="h-8 w-64" />
       <Skeleton className="h-4 w-96" />
       <Skeleton className="h-64 w-full" />
@@ -20,7 +21,7 @@ function DocLoading() {
 
 function NotFound() {
   return (
-    <div className="max-w-4xl space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "max-w-4xl space-y-4")}>
       <Heading level="page">Página não encontrada</Heading>
       <p className="text-muted-foreground">
         O tópico de documentação que você procura não existe ou foi movido.

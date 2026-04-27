@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
 import {
   Dialog,
@@ -123,7 +124,7 @@ export function PdfViewerDialog({ hash, open, onOpenChange }: PdfViewerDialogPro
 
         <div className="flex min-h-0 flex-1 flex-col">
           {isLoading && (
-            <div className="flex flex-1 items-center justify-center gap-3">
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-1 items-center justify-center gap-3")}>
               <LoadingSpinner className="size-8" />
               <Text variant="caption" className="text-muted-foreground">
                 Carregando certidão...
@@ -132,7 +133,7 @@ export function PdfViewerDialog({ hash, open, onOpenChange }: PdfViewerDialogPro
           )}
 
           {error && (
-            <Alert variant="destructive" className="m-4">
+            <Alert variant="destructive" className={cn(/* design-system-escape: m-4 margin sem primitiva DS */ "m-4")}>
               <AlertCircle className="size-4" aria-hidden />
               <AlertDescription>{error}</AlertDescription>
             </Alert>
@@ -140,7 +141,7 @@ export function PdfViewerDialog({ hash, open, onOpenChange }: PdfViewerDialogPro
 
           {pdfUrl && !isLoading && !error && (
             <>
-              <div className="mb-4 flex gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mb-4 flex gap-2")}>
                 <Button variant="outline" size="sm" onClick={handleDownload}>
                   <Download className="mr-2 size-4" aria-hidden />
                   Baixar PDF

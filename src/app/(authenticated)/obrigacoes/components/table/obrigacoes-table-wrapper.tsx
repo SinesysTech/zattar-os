@@ -7,6 +7,7 @@
  * ObrigacoesContent. Este wrapper só consome `busca` e `filters` via props.
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
@@ -137,7 +138,7 @@ export function ObrigacoesTableWrapper({
   );
 
   return (
-    <div className="space-y-3">
+    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
       {weekNavigatorProps && (
         <WeekNavigator
           weekDays={weekNavigatorProps.weekDays}

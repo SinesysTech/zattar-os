@@ -60,7 +60,7 @@ function EventWrapper({
   return (
     <button
       className={cn(
-        "focus-visible:border-ring focus-visible:ring-ring/50 flex size-full cursor-pointer overflow-hidden px-1 text-left font-medium backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] data-dragging:cursor-grabbing data-dragging:shadow-lg data-past-event:line-through data-past-event:opacity-75 sm:px-2",
+        /* design-system-escape: px-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading>; sm:px-2 sem equivalente DS */ "focus-visible:border-ring focus-visible:ring-ring/50 flex size-full cursor-pointer overflow-hidden px-1 text-left font-medium backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] data-dragging:cursor-grabbing data-dragging:shadow-lg data-past-event:line-through data-past-event:opacity-75 sm:px-2",
         getEventColorClasses(event.color),
         getBorderRadiusClasses(isFirstDay, isLastDay),
         className
@@ -152,7 +152,7 @@ export function EventItem({
         isDragging={isDragging}
         onClick={onClick}
         className={cn(
-          "mt-(--event-gap)ar(--event-height)] items-center text-[10px] sm:text-xs",
+          /* design-system-escape: sm:text-xs sem equivalente DS */ "mt-(--event-gap)ar(--event-height)] items-center text-[10px] sm:text-xs",
           className
         )}
         currentTime={currentTime}
@@ -183,9 +183,9 @@ export function EventItem({
         isDragging={isDragging}
         onClick={onClick}
         className={cn(
-          "py-1",
+          /* design-system-escape: py-1 padding direcional sem Inset equiv. */ "py-1",
           durationMinutes < 45 ? "items-center" : "flex-col",
-          view === "week" ? "text-[10px] sm:text-xs" : "text-xs",
+          view === "week" ? /* design-system-escape: sm:text-xs sem equivalente DS */ "text-[10px] sm:text-xs" : /* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs",
           className
         )}
         currentTime={currentTime}
@@ -202,7 +202,7 @@ export function EventItem({
           </div>
         ) : (
           <>
-            <div className="truncate font-medium">{event.title}</div>
+            <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "truncate font-medium")}>{event.title}</div>
             {showTime && (
               <div className="truncate font-normal opacity-70 sm:text-[11px]">{getEventTime()}</div>
             )}
@@ -216,7 +216,7 @@ export function EventItem({
   return (
     <button
       className={cn(
-        "focus-visible:border-ring focus-visible:ring-ring/50 flex w-full flex-col gap-1 rounded p-2 text-left transition outline-none focus-visible:ring-[3px] data-past-event:line-through data-past-event:opacity-90",
+        /* design-system-escape: gap-1 gap sem token DS; p-2 → usar <Inset> */ "focus-visible:border-ring focus-visible:ring-ring/50 flex w-full flex-col gap-1 rounded p-2 text-left transition outline-none focus-visible:ring-[3px] data-past-event:line-through data-past-event:opacity-90",
         getEventColorClasses(eventColor),
         className
       )}
@@ -226,8 +226,8 @@ export function EventItem({
       onTouchStart={onTouchStart}
       {...dndListeners}
       {...dndAttributes}>
-      <div className="text-sm font-medium">{event.title}</div>
-      <div className="text-xs opacity-70">
+      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{event.title}</div>
+      <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs opacity-70")}>
         {event.allDay ? (
           <span>Dia inteiro</span>
         ) : (
@@ -238,12 +238,12 @@ export function EventItem({
         )}
         {event.location && (
           <>
-            <span className="px-1 opacity-35"> · </span>
+            <span className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv. */ "px-1 opacity-35")}> · </span>
             <span>{event.location}</span>
           </>
         )}
       </div>
-      {event.description && <div className="my-1 text-xs opacity-90">{event.description}</div>}
+      {event.description && <div className={cn(/* design-system-escape: my-1 margin sem primitiva DS; text-xs → migrar para <Text variant="caption"> */ "my-1 text-xs opacity-90")}>{event.description}</div>}
     </button>
   );
 }

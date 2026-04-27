@@ -41,8 +41,8 @@ export function FileTypeIndicators({
   return (
     <div
       className={cn(
-        'flex items-center justify-center gap-4',
-        compact ? 'gap-3' : 'gap-6',
+        /* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ 'flex items-center justify-center gap-4',
+        compact ? /* design-system-escape: gap-3 gap sem token DS */ 'gap-3' : /* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ 'gap-6',
         className
       )}
     >
@@ -51,10 +51,10 @@ export function FileTypeIndicators({
         const isLast = index === FILE_TYPES.length - 1;
 
         return (
-          <div key={fileType.type} className="flex items-center gap-4">
+          <div key={fileType.type} className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
             <div
               className={cn(
-                'group/type flex items-center gap-2 transition-all duration-300',
+                /* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ 'group/type flex items-center gap-2 transition-all duration-300',
                 'opacity-80 hover:opacity-100',
                 'cursor-default'
               )}
@@ -69,9 +69,9 @@ export function FileTypeIndicators({
               />
               <span
                 className={cn(
-                  'font-medium uppercase tracking-wider transition-colors duration-500',
+                  /* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ 'font-medium uppercase tracking-wider transition-colors duration-500',
                   'text-muted-foreground group-hover/type:text-foreground',
-                  compact ? 'text-xs' : 'text-sm'
+                  compact ? /* design-system-escape: text-xs → migrar para <Text variant="caption"> */ 'text-xs' : /* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ 'text-sm'
                 )}
               >
                 {fileType.label}

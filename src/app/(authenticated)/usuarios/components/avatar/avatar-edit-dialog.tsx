@@ -3,6 +3,7 @@
 
 // Dialog para edição de avatar do perfil do usuário
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import {
   Dialog,
@@ -110,7 +111,7 @@ export function AvatarEditDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex justify-center py-6">
+        <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex justify-center py-6")}>
           <AvatarUpload
             avatarUrl={currentAvatarUrl}
             fallbackInitials={getInitials(nomeExibicao)}

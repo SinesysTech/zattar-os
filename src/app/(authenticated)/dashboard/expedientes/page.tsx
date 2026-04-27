@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import { obterDashboardUsuario, obterDashboardAdmin } from '../service';
@@ -47,21 +48,21 @@ export default async function ExpedientesPage() {
 
   return (
     <DashboardProvider initialData={initialData}>
-      <div className="space-y-4">
+      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         <Heading level="page">Expedientes</Heading>
         {/* Row 1: Urgências + Funil */}
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2")}>
           <UrgencyList />
           <AgingFunnel />
         </div>
         {/* Row 2: Saúde + Volume + Prazo */}
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-3")}>
           <SaudePrazos />
           <VolumeSemanal />
           <PrazoMedio />
         </div>
         {/* Row 3: Origem + Resultado + Responsividade */}
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-3")}>
           <OrigemDistribution />
           <ResultadoDecisao />
           <TendenciaResponsividade />

@@ -5,6 +5,7 @@
  * Usa tabs simples (shadcn) para alternar entre Salários e Folhas de Pagamento
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -27,7 +28,7 @@ const VALID_TABS = new Set<RHView>(['salarios', 'folhas-pagamento']);
 
 function TabSkeleton() {
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       <Skeleton className="h-10 w-full" />
       <Skeleton className="h-64 w-full" />
     </div>

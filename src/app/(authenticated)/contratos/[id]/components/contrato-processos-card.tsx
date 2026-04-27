@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { Scale, ExternalLink, Plus } from 'lucide-react';
 
@@ -73,7 +74,7 @@ export function ContratoProcessosCard({
             Nenhum processo vinculado
           </Text>
         ) : (
-          <div className="flex flex-col gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
             {processos.map((vinculo) => {
               const processo = vinculo.processo;
               if (!processo) return null;
@@ -93,7 +94,7 @@ export function ContratoProcessosCard({
                 <Link
                   key={vinculo.id}
                   href={`/app/processos/${processo.id}`}
-                  className="group flex items-center gap-3 px-3 py-2.5 rounded-xl bg-muted/30 border border-border/20 transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "group flex items-center gap-3 px-3 py-2.5 rounded-xl bg-muted/30 border border-border/20 transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
                 >
                   <div className="flex-1 min-w-0">
                     <Text variant="label" className="tabular-nums truncate block">

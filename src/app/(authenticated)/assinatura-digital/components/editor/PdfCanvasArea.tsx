@@ -235,26 +235,26 @@ export default function PdfCanvasArea({
         data-state={field.isSelected ? "selected" : "idle"}
       >
         <div className={cn(
-          "absolute inset-0 px-1 overflow-hidden",
+          /* design-system-escape: px-1 padding direcional sem Inset equiv. */ "absolute inset-0 px-1 overflow-hidden",
           isRichTextField
-            ? "flex items-start p-1.5 text-left"
+            ? /* design-system-escape: p-1.5 → usar <Inset> */ "flex items-start p-1.5 text-left"
             : "flex items-center justify-center text-center"
         )}>
           <span className={cn(
-            "text-xs font-medium text-foreground",
+            /* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-foreground",
             isRichTextField
-              ? "line-clamp-20 wrap-break-word whitespace-pre-wrap leading-tight"
+              ? /* design-system-escape: leading-tight sem token DS */ "line-clamp-20 wrap-break-word whitespace-pre-wrap leading-tight"
               : "truncate"
           )}>{displayText}</span>
         </div>
         {signer && (
-          <div className="pointer-events-none absolute -top-6 left-0 flex items-center gap-1 rounded-sm px-2 py-0.5 text-[10px] font-medium text-white shadow-sm" style={{ backgroundColor: signerColor }}>
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "pointer-events-none absolute -top-6 left-0 flex items-center gap-1 rounded-sm px-2 py-0.5 text-[10px] font-medium text-white shadow-sm")} style={{ backgroundColor: signerColor }}>
             {signer.nome}
           </div>
         )}
         {field.isSelected && (
           <>
-            <AppBadge variant="secondary" className={cn("pointer-events-none absolute flex items-center gap-1 rounded-full px-2 py-0 text-[11px] shadow-sm", signer ? "-top-12 left-0" : "-top-6 left-0")}>
+            <AppBadge variant="secondary" className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "pointer-events-none absolute flex items-center gap-1 rounded-full px-2 py-0 text-[11px] shadow-sm", signer ? "-top-12 left-0" : "-top-6 left-0")}>
               {isImageField ? <ImageIcon className="h-3 w-3" aria-hidden="true" /> : isRichTextField ? <AlignLeft className="h-3 w-3" aria-hidden="true" /> : <Type className="h-3 w-3" aria-hidden="true" />}
               {typeLabel}
             </AppBadge>
@@ -294,7 +294,7 @@ export default function PdfCanvasArea({
       <ContextMenuTrigger asChild>
         <div
           ref={canvasRef}
-          className="flex flex-col items-center gap-4"
+          className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center gap-4")}
           style={{ transform: `scale(${zoom})`, transformOrigin: "top center" }}
         >
           {/* Renderizar todas as páginas em sequência (scroll contínuo) */}
@@ -343,7 +343,7 @@ export default function PdfCanvasArea({
                 {fieldsOnPage.map((field, index) => renderField(field, pageNumber, index))}
 
                 {/* Indicador de página */}
-                <div className="absolute bottom-2 right-2 text-xs text-muted-foreground bg-white/80 px-2 py-0.5 rounded">
+                <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "absolute bottom-2 right-2 text-xs text-muted-foreground bg-white/80 px-2 py-0.5 rounded")}>
                   {pageNumber}/{totalPages}
                 </div>
               </div>
@@ -421,7 +421,7 @@ export default function PdfCanvasArea({
                       />
                       <span className="truncate">{s.nome}</span>
                       {activeField.signatario_id === s.id && (
-                        <span className="ml-auto text-xs text-muted-foreground">atual</span>
+                        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "ml-auto text-xs text-muted-foreground")}>atual</span>
                       )}
                     </ContextMenuItem>
                   ))}

@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Calendar, Clock, Video } from 'lucide-react';
 import { WidgetContainer } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
@@ -60,7 +61,7 @@ function fmtDataAudiencia(dateStr: string): string {
 
 function EmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center py-8 gap-2">
+    <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center justify-center py-8 gap-2")}>
       <Calendar className="size-8 text-muted-foreground/45" />
       <p className="text-[11px] text-muted-foreground/60 text-center">
         Nenhuma audiência agendada nos próximos 30 dias
@@ -90,50 +91,50 @@ function AudienciaItem({
         ${isFirst ? `${styles.bgColor} border rounded-lg border-border/20 pr-2` : ''}
       `}
     >
-      <div className="flex items-start justify-between gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
         <div className="min-w-0">
-          <div className="flex items-center gap-1.5 flex-wrap">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 flex-wrap")}>
             <span
               className={`text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full ${styles.pillColor}`}
             >
               {audiencia.tipo_audiencia ?? 'Sem tipo'}
             </span>
             {isFirst && (
-              <span className="text-[9px] font-medium text-primary/70 uppercase tracking-wider">
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[9px] font-medium text-primary/70 uppercase tracking-wider")}>
                 Próxima
               </span>
             )}
           </div>
-          <p className="text-[11px] font-medium mt-1 leading-tight">{parte}</p>
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[11px] font-medium mt-1 leading-tight")}>{parte}</p>
           {contextoProcesso && (
-            <p className="text-[10px] text-foreground/60 mt-0.5 leading-tight">
+            <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[10px] text-foreground/60 mt-0.5 leading-tight")}>
               {contextoProcesso}
             </p>
           )}
-          <p className="text-[9px] text-muted-foreground/60 font-mono break-all leading-relaxed mt-0.5">
+          <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[9px] text-muted-foreground/60 font-mono break-all leading-relaxed mt-0.5")}>
             {audiencia.numero_processo}
           </p>
         </div>
         <div className="text-right shrink-0">
-          <div className="flex items-center gap-1 justify-end text-[10px] text-muted-foreground/60">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 justify-end text-[10px] text-muted-foreground/60")}>
             <Calendar className="size-2.5" />
             <span>{fmtDataAudiencia(audiencia.data_audiencia)}</span>
           </div>
           {audiencia.hora_audiencia && (
-            <div className="flex items-center gap-1 justify-end text-[10px] text-muted-foreground/50 mt-0.5">
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 justify-end text-[10px] text-muted-foreground/50 mt-0.5")}>
               <Clock className="size-2.5" />
               <span>{audiencia.hora_audiencia}</span>
             </div>
           )}
         </div>
       </div>
-      <div className="flex items-center gap-2 mt-1.5">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-1.5")}>
         {audiencia.url_audiencia_virtual && (
           <a
             href={audiencia.url_audiencia_virtual}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-[9px] font-medium text-primary/80 hover:text-primary transition-colors shrink-0 cursor-pointer"
+            className={cn(/* design-system-escape: gap-1 gap sem token DS; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1 text-[9px] font-medium text-primary/80 hover:text-primary transition-colors shrink-0 cursor-pointer")}
           >
             <Video className="size-2.5" />
             <span>Entrar</span>
@@ -160,7 +161,7 @@ export function ProximasAudiencias() {
         icon={Calendar}
         subtitle="Agenda dos próximos 30 dias"
       >
-        <p className="text-[11px] text-muted-foreground/60 py-4 text-center">
+        <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-4 text-center")}>
           Não foi possível carregar as audiências.
         </p>
       </WidgetContainer>
@@ -178,7 +179,7 @@ export function ProximasAudiencias() {
       {audiencias.length === 0 ? (
         <EmptyState />
       ) : (
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           {audiencias.map((a, index) => (
             <AudienciaItem key={a.id} audiencia={a} isFirst={index === 0} />
           ))}

@@ -3,6 +3,7 @@
 
 // Componente de filtros avançados para usuários
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -59,12 +60,12 @@ export function UsuariosFiltrosAvancados({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-4" align="start">
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Typography.Small className="font-semibold">Status</Typography.Small>
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 cursor-pointer">
+      <PopoverContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "w-80 p-4")} align="start">
+        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <Typography.Small className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Status</Typography.Small>
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <label className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 cursor-pointer")}>
                 <input
                   type="radio"
                   name="ativo"
@@ -74,7 +75,7 @@ export function UsuariosFiltrosAvancados({
                 />
                 <Typography.Muted as="span">Ativo</Typography.Muted>
               </label>
-              <label className="flex items-center gap-2 cursor-pointer">
+              <label className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 cursor-pointer")}>
                 <input
                   type="radio"
                   name="ativo"
@@ -84,7 +85,7 @@ export function UsuariosFiltrosAvancados({
                 />
                 <Typography.Muted as="span">Inativo</Typography.Muted>
               </label>
-              <label className="flex items-center gap-2 cursor-pointer">
+              <label className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 cursor-pointer")}>
                 <input
                   type="radio"
                   name="ativo"
@@ -97,8 +98,8 @@ export function UsuariosFiltrosAvancados({
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Typography.Small as="label" htmlFor="oab" className="font-semibold">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <Typography.Small as="label" htmlFor="oab" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>
               Número da OAB
             </Typography.Small>
             <Input
@@ -109,8 +110,8 @@ export function UsuariosFiltrosAvancados({
             />
           </div>
 
-          <div className="space-y-2">
-            <Typography.Small as="label" htmlFor="ufOab" className="font-semibold">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <Typography.Small as="label" htmlFor="ufOab" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>
               UF da OAB
             </Typography.Small>
             <Input

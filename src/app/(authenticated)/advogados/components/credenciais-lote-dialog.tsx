@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import * as React from "react";
 import { DialogFormShell } from "@/components/shared/dialog-shell";
 import { Button } from "@/components/ui/button";
@@ -130,8 +131,8 @@ export function CredenciaisLoteDialog({
       maxWidth="3xl"
       hideFooter
     >
-      <div className="px-6 py-4 space-y-6">
-        <p className="text-sm text-muted-foreground">
+      <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv.; space-y-6 → migrar para <Stack gap="loose"> */ "px-6 py-4 space-y-6")}>
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
           Advogado: {advogado.nome_completo} (CPF: {formatCpf(advogado.cpf)})
         </p>
         {resultado ? (
@@ -141,12 +142,12 @@ export function CredenciaisLoteDialog({
           // Formulário
           <>
             {/* Tribunais */}
-            <div className="grid gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <div className="flex items-center justify-between">
                 <Label>
                   Tribunais <span className="text-destructive">*</span>
                 </Label>
-                <div className="flex gap-2">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
                   <Button
                     type="button"
                     variant="ghost"
@@ -167,10 +168,10 @@ export function CredenciaisLoteDialog({
                   </Button>
                 </div>
               </div>
-              <ScrollArea className="h-48 border rounded-md p-3">
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+              <ScrollArea className={cn(/* design-system-escape: p-3 → usar <Inset> */ "h-48 border rounded-md p-3")}>
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2")}>
                   {TRIBUNAIS_ATIVOS.map((trt) => (
-                    <div key={trt} className="flex items-center space-x-2">
+                    <div key={trt} className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
                       <Checkbox
                         id={`trt-${trt}`}
                         checked={tribunais.includes(trt)}
@@ -179,7 +180,7 @@ export function CredenciaisLoteDialog({
                       />
                       <label
                         htmlFor={`trt-${trt}`}
-                        className="text-sm cursor-pointer"
+                        className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm cursor-pointer")}
                         title={TRIBUNAIS_LABELS[trt]}
                       >
                         {trt}
@@ -188,21 +189,21 @@ export function CredenciaisLoteDialog({
                   ))}
                 </div>
               </ScrollArea>
-              <p className="text-xs text-muted-foreground">
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                 {tribunais.length} tribunal(is) selecionado(s)
               </p>
             </div>
 
             {/* Graus */}
-            <div className="grid gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label>
                 Graus <span className="text-destructive">*</span>
               </Label>
-              <div className="flex gap-4">
+              <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}>
                 {(["1", "2"] as GrauCredencial[]).map((grau) => (
                   <label
                     key={grau}
-                    className="flex items-center gap-2 cursor-pointer"
+                    className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 cursor-pointer")}
                   >
                     <Checkbox
                       id={`grau-${grau}`}
@@ -210,14 +211,14 @@ export function CredenciaisLoteDialog({
                       onCheckedChange={() => toggleGrau(grau)}
                       disabled={isSaving}
                     />
-                    <span className="text-sm">{GRAUS_LABELS[grau]}</span>
+                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{GRAUS_LABELS[grau]}</span>
                   </label>
                 ))}
               </div>
             </div>
 
             {/* Senha */}
-            <div className="grid gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="senha">
                 Senha <span className="text-destructive">*</span>
               </Label>
@@ -229,35 +230,35 @@ export function CredenciaisLoteDialog({
                 placeholder="Senha única para todas as credenciais"
                 disabled={isSaving}
               />
-              <p className="text-xs text-muted-foreground">
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                 Esta senha será usada para todas as credenciais criadas. O login
                 (usuário) será o CPF do advogado.
               </p>
             </div>
 
             {/* Modo duplicata */}
-            <div className="grid gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label>Credenciais existentes</Label>
               <RadioGroup
                 value={modoDuplicata}
                 onValueChange={(v) => setModoDuplicata(v as ModoDuplicata)}
-                className="flex gap-4"
+                className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}
                 disabled={isSaving}
               >
-                <div className="flex items-center space-x-2">
+                <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
                   <RadioGroupItem value="pular" id="modo-pular" />
                   <label
                     htmlFor="modo-pular"
-                    className="text-sm cursor-pointer"
+                    className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm cursor-pointer")}
                   >
                     Pular (manter existente)
                   </label>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
                   <RadioGroupItem value="sobrescrever" id="modo-sobrescrever" />
                   <label
                     htmlFor="modo-sobrescrever"
-                    className="text-sm cursor-pointer"
+                    className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm cursor-pointer")}
                   >
                     Sobrescrever (atualizar senha)
                   </label>
@@ -288,7 +289,7 @@ export function CredenciaisLoteDialog({
             )}
 
             {/* Botões */}
-            <div className="flex items-center gap-2 pt-4 border-t">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-4 padding direcional sem Inset equiv. */ "flex items-center gap-2 pt-4 border-t")}>
               <Button
                 type="button"
                 variant="outline"
@@ -325,7 +326,7 @@ function ResultadoView({
   const hasErrors = resultado.erros > 0;
 
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       <Alert variant={hasErrors ? "destructive" : "default"}>
         <CheckCircle className="h-4 w-4" />
         <AlertTitle>Operação concluída</AlertTitle>
@@ -351,21 +352,21 @@ function ResultadoView({
         </AlertDescription>
       </Alert>
 
-      <ScrollArea className="h-48 border rounded-md p-3">
-        <table className="w-full text-sm">
+      <ScrollArea className={cn(/* design-system-escape: p-3 → usar <Inset> */ "h-48 border rounded-md p-3")}>
+        <table className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "w-full text-sm")}>
           <thead>
             <tr className="border-b">
-              <th className="text-left py-2">Tribunal</th>
-              <th className="text-left py-2">Grau</th>
-              <th className="text-left py-2">Status</th>
+              <th className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "text-left py-2")}>Tribunal</th>
+              <th className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "text-left py-2")}>Grau</th>
+              <th className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "text-left py-2")}>Status</th>
             </tr>
           </thead>
           <tbody>
             {resultado.detalhes.map((d, i) => (
               <tr key={i} className="border-b last:border-0">
-                <td className="py-2">{d.tribunal}</td>
-                <td className="py-2">{d.grau}° Grau</td>
-                <td className="py-2">
+                <td className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "py-2")}>{d.tribunal}</td>
+                <td className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "py-2")}>{d.grau}° Grau</td>
+                <td className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "py-2")}>
                   <StatusBadge status={d.status} mensagem={d.mensagem} />
                 </td>
               </tr>
@@ -374,7 +375,7 @@ function ResultadoView({
         </table>
       </ScrollArea>
 
-      <div className="flex justify-end pt-4 border-t">
+      <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "flex justify-end pt-4 border-t")}>
         <Button onClick={onClose}>Fechar</Button>
       </div>
     </div>

@@ -80,22 +80,22 @@ export function LoadHeatmap({ audiencias, responsavelNomes, className }: LoadHea
   const semResponsavel = audiencias.filter((a) => !a.responsavelId).length;
 
   return (
-    <div className={cn("space-y-4", className)}>
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4", className)}>
       {/* Type Distribution */}
-      <GlassPanel className="p-4">
-        <div className="flex items-center gap-2 mb-3">
+      <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
           <BarChart3 className="size-3 text-primary/40" />
-          <Text variant="caption" as="span" className="font-medium text-muted-foreground/60">Distribuição por tipo</Text>
+          <Text variant="caption" as="span" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground/60")}>Distribuição por tipo</Text>
           <span className="text-micro-caption tabular-nums text-muted-foreground/60 ml-auto">{audiencias.length} total</span>
         </div>
 
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           {typeDistribution.map((item) => (
             <div key={item.tipo}>
               <div className="flex items-baseline justify-between mb-0.5">
                 <span className="text-micro-caption text-foreground/70 truncate max-w-[60%]">{item.tipo}</span>
-                <div className="flex items-baseline gap-1.5">
-                  <span className="text-micro-caption font-bold tabular-nums">{item.count}</span>
+                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5")}>
+                  <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-micro-caption font-bold tabular-nums")}>{item.count}</span>
                   <span className="text-micro-badge text-muted-foreground/55 tabular-nums">{item.percent}%</span>
                 </div>
               </div>
@@ -111,18 +111,18 @@ export function LoadHeatmap({ audiencias, responsavelNomes, className }: LoadHea
       </GlassPanel>
 
       {/* Responsavel Load */}
-      <GlassPanel className="p-4">
-        <div className="flex items-center gap-2 mb-3">
+      <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
           <Users className="size-3 text-primary/40" />
-          <Text variant="caption" as="span" className="font-medium text-muted-foreground/60">Carga por advogado</Text>
+          <Text variant="caption" as="span" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground/60")}>Carga por advogado</Text>
         </div>
 
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           {responsavelLoad.map((item) => (
             <div key={item.id}>
               <div className="flex items-baseline justify-between mb-0.5">
                 <span className="text-micro-caption text-foreground/70 truncate max-w-[60%]">{item.nome}</span>
-                <span className="text-micro-caption font-bold tabular-nums">{item.count}</span>
+                <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-micro-caption font-bold tabular-nums")}>{item.count}</span>
               </div>
               <div className="h-1 rounded-full bg-border/8 overflow-hidden">
                 <div
@@ -137,9 +137,9 @@ export function LoadHeatmap({ audiencias, responsavelNomes, className }: LoadHea
           ))}
 
           {semResponsavel > 0 && (
-            <div className="flex items-center justify-between pt-1 border-t border-border/8">
+            <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "flex items-center justify-between pt-1 border-t border-border/8")}>
               <span className="text-micro-caption text-warning/60">Sem responsável</span>
-              <span className="text-micro-caption font-bold tabular-nums text-warning/60">{semResponsavel}</span>
+              <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-micro-caption font-bold tabular-nums text-warning/60")}>{semResponsavel}</span>
             </div>
           )}
         </div>

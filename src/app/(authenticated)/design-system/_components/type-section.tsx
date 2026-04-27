@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { Heading, Text } from "@/components/ui/typography";
 import { SpecimenCard } from "./specimen-card";
 
@@ -9,7 +10,7 @@ interface TypeRowProps {
 
 function TypeRow({ token, size, children }: TypeRowProps) {
   return (
-    <div className="grid grid-cols-[100px_1fr_90px] items-baseline gap-4 border-b border-dashed border-border py-2 last:border-b-0 sm:grid-cols-[120px_1fr_80px]">
+    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; py-2 padding direcional sem Inset equiv. */ "grid grid-cols-[100px_1fr_90px] items-baseline gap-4 border-b border-dashed border-border py-2 last:border-b-0 sm:grid-cols-[120px_1fr_80px]")}>
       <span className="font-mono text-[10px] text-muted-foreground">{token}</span>
       <div className="min-w-0 truncate">{children}</div>
       <span className="text-right font-mono text-[10px] text-muted-foreground">
@@ -74,7 +75,7 @@ function TypeBody() {
           <Text variant="caption">Atualizado em 12 abr 2026 · 14:32</Text>
         </TypeRow>
       </div>
-      <div className="mt-4 flex items-baseline gap-4 rounded-xl border border-border bg-card px-3.5 py-3">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-3.5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "mt-4 flex items-baseline gap-4 rounded-xl border border-border bg-card px-3.5 py-3")}>
         <Text variant="kpi-value">R$ 1.245.830</Text>
         <Text variant="widget-sub">valor total em disputa · 28 processos</Text>
       </div>
@@ -107,9 +108,9 @@ function TypeMeta() {
           <span className="text-mono-num">0001234-56.2024.5.01.0001</span>
         </TypeRow>
       </div>
-      <div className="mt-4 grid grid-cols-2 gap-3 rounded-xl border border-border bg-card p-3.5 sm:grid-cols-4">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-3.5 → usar <Inset> */ "mt-4 grid grid-cols-2 gap-3 rounded-xl border border-border bg-card p-3.5 sm:grid-cols-4")}>
         {metas.map((m) => (
-          <div key={m.label} className="flex flex-col gap-1">
+          <div key={m.label} className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
             <Text variant="meta-label">{m.label}</Text>
             <span
               className={`text-[13px] font-semibold ${
@@ -127,7 +128,7 @@ function TypeMeta() {
 
 export function TypeSection() {
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       <TypeHeadings />
       <TypeBody />
       <TypeMeta />

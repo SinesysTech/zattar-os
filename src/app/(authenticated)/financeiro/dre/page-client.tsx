@@ -7,6 +7,7 @@
  * REFATORADO: Migrado para layout DataShell + DataTableToolbar (padrão ZattarOS)
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useAgentContext } from '@copilotkit/react-core/v2';
 import { format, startOfMonth, endOfMonth, startOfYear, endOfYear, startOfQuarter, endOfQuarter, subMonths } from 'date-fns';
@@ -155,7 +156,7 @@ function VariacaoIndicator({
   }
 
   const iconSize = size === 'sm' ? 'h-3.5 w-3.5' : 'h-3 w-3';
-  const textSize = size === 'sm' ? 'text-xs' : 'text-xs';
+  const textSize = size === 'sm' ? /* design-system-escape: text-xs → migrar para <Text variant="caption"> */ 'text-xs' : /* design-system-escape: text-xs → migrar para <Text variant="caption"> */ 'text-xs';
 
   return (
     <div className={`flex items-center gap-1 ${textSize} ${getVariacaoColor(valor)}`}>
@@ -227,10 +228,10 @@ function ResumoCards({
 }) {
   if (isLoading) {
     return (
-      <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3 md:grid-cols-2 lg:grid-cols-4")}>
         {Array.from({ length: 4 }).map((_, i) => (
           <Card key={i}>
-            <CardContent className="p-4">
+            <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
               <Skeleton className="h-16" />
             </CardContent>
           </Card>
@@ -241,14 +242,14 @@ function ResumoCards({
 
   if (!resumo) {
     return (
-      <div className="text-center py-6 text-sm text-muted-foreground">
+      <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "text-center py-6 text-sm text-muted-foreground")}>
         Selecione um período para visualizar o DRE.
       </div>
     );
   }
 
   return (
-    <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3 md:grid-cols-2 lg:grid-cols-4")}>
       {KPI_CONFIG.map((kpi) => {
         const valor = resumo[kpi.key];
         const Icon = kpi.icon;
@@ -257,10 +258,10 @@ function ResumoCards({
 
         return (
           <Card key={kpi.key} className={`border-l-4 ${kpi.borderColor}`}>
-            <CardContent className="p-4">
+            <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
               <div className="flex items-start justify-between">
-                <div className="space-y-1">
-                  <p className="text-xs font-medium text-muted-foreground">{kpi.label}</p>
+                <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-muted-foreground")}>{kpi.label}</p>
                   <p className={`text-xl font-semibold font-mono tracking-tight ${showColor ? getLucroColor(valor) : ''}`}>
                     {formatarValor(valor)}
                   </p>
@@ -271,14 +272,14 @@ function ResumoCards({
               </div>
               <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-0.5">
                 {kpi.margemKey && (
-                  <span className="text-xs text-muted-foreground">
+                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                     {kpi.margemLabel}: {formatarPercentual(resumo[kpi.margemKey])}
                   </span>
                 )}
                 {isLucroLiquido && (
                   <Badge
                     variant={valor > 0 ? 'success' : valor < 0 ? 'destructive' : 'secondary'}
-                    className="text-[10px] px-1.5 py-0"
+                    className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0")}
                   >
                     {valor > 0 ? 'Lucro' : valor < 0 ? 'Prejuízo' : 'Neutro'}
                   </Badge>
@@ -359,9 +360,9 @@ function DRETable({ resumo }: { resumo: ResumoDRE }) {
       <table className="w-full">
         <thead>
           <tr className="border-b bg-muted/50">
-            <th className="text-left p-2.5 px-4 text-xs font-medium uppercase tracking-wider text-muted-foreground">Descrição</th>
-            <th className="text-right p-2.5 px-4 text-xs font-medium uppercase tracking-wider text-muted-foreground w-40">Valor (R$)</th>
-            <th className="text-right p-2.5 px-4 text-xs font-medium uppercase tracking-wider text-muted-foreground w-28">% Receita</th>
+            <th className={cn(/* design-system-escape: p-2.5 → usar <Inset>; px-4 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ /* design-system-escape: p-2.5 → usar <Inset>; px-4 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-left p-2.5 px-4 text-xs font-medium uppercase tracking-wider text-muted-foreground")}>Descrição</th>
+            <th className={cn(/* design-system-escape: p-2.5 → usar <Inset>; px-4 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ /* design-system-escape: p-2.5 → usar <Inset>; px-4 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-right p-2.5 px-4 text-xs font-medium uppercase tracking-wider text-muted-foreground w-40")}>Valor (R$)</th>
+            <th className={cn(/* design-system-escape: p-2.5 → usar <Inset>; px-4 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ /* design-system-escape: p-2.5 → usar <Inset>; px-4 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-right p-2.5 px-4 text-xs font-medium uppercase tracking-wider text-muted-foreground w-28")}>% Receita</th>
           </tr>
         </thead>
         <tbody>
@@ -377,7 +378,7 @@ function DRETable({ resumo }: { resumo: ResumoDRE }) {
             return (
               <tr
                 key={index}
-                className={`border-b last:border-b-0 transition-colors hover:bg-muted/50 ${linha.destaque ? 'bg-muted/30 font-medium' : ''
+                className={`border-b last:border-b-0 transition-colors hover:bg-muted/50 ${linha.destaque ? /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'bg-muted/30 font-medium' : ''
                   } ${linha.final
                     ? resumo.lucroLiquido >= 0
                       ? 'bg-success/10'
@@ -386,16 +387,16 @@ function DRETable({ resumo }: { resumo: ResumoDRE }) {
                   }`}
               >
                 <td
-                  className={`p-2.5 px-4 text-sm ${linha.bold ? 'font-semibold' : ''
-                    } ${(linha.indent || 0) === 1 ? 'pl-8' : ''
+                  className={`p-2.5 px-4 text-sm ${linha.bold ? /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'font-semibold' : ''
+                    } ${(linha.indent || 0) === 1 ? /* design-system-escape: pl-8 padding direcional sem Inset equiv. */ 'pl-8' : ''
                     }`}
                 >
                   {linha.descricao}
                 </td>
-                <td className={`p-2.5 px-4 text-right text-sm font-mono tabular-nums ${linha.bold ? 'font-semibold' : ''} ${valorColor}`}>
+                <td className={`p-2.5 px-4 text-right text-sm font-mono tabular-nums ${linha.bold ? /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'font-semibold' : ''} ${valorColor}`}>
                   {linha.valor !== null ? formatarValor(linha.valor) : ''}
                 </td>
-                <td className={`p-2.5 px-4 text-right text-sm font-mono tabular-nums ${linha.bold ? 'font-semibold' : ''} text-muted-foreground`}>
+                <td className={`p-2.5 px-4 text-right text-sm font-mono tabular-nums ${linha.bold ? /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'font-semibold' : ''} text-muted-foreground`}>
                   {linha.percentual !== null ? formatarPercentual(linha.percentual) : ''}
                 </td>
               </tr>
@@ -414,7 +415,7 @@ function DRETable({ resumo }: { resumo: ResumoDRE }) {
 function CategoriaPieChart({ categorias }: { categorias: CategoriaDRE[] }) {
   if (categorias.length === 0) {
     return (
-      <div className="flex items-center justify-center h-64 text-muted-foreground text-sm">
+      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex items-center justify-center h-64 text-muted-foreground text-sm")}>
         Sem dados para exibir
       </div>
     );
@@ -483,30 +484,30 @@ function CategoriaTab({
 }) {
   return (
     <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base">{title}</CardTitle>
+      <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+        <CardTitle className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
         {isLoading ? (
           <Skeleton className="h-72" />
         ) : categorias && categorias.length > 0 ? (
-          <div className="grid gap-4 lg:grid-cols-2">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 lg:grid-cols-2")}>
             <CategoriaPieChart categorias={categorias} />
-            <div className="space-y-1.5">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Detalhamento</p>
+            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2")}>Detalhamento</p>
               {categorias.map((cat: CategoriaDRE, i: number) => (
-                <div key={cat.categoria} className="flex items-center justify-between py-1.5 px-2 rounded transition-colors hover:bg-muted/50">
-                  <div className="flex items-center gap-2">
+                <div key={cat.categoria} className={cn(/* design-system-escape: py-1.5 padding direcional sem Inset equiv.; px-2 padding direcional sem Inset equiv. */ "flex items-center justify-between py-1.5 px-2 rounded transition-colors hover:bg-muted/50")}>
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                     <div
                       className="w-2.5 h-2.5 rounded-full shrink-0"
                       style={{ backgroundColor: CHART_COLORS[i % CHART_COLORS.length] } as React.CSSProperties}
                     />
-                    <span className="text-sm">{cat.categoria}</span>
+                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{cat.categoria}</span>
                   </div>
-                  <div className="text-right flex items-center gap-2">
-                    <span className="font-mono text-sm tabular-nums">{formatarValor(cat.valor)}</span>
-                    <span className="text-xs text-muted-foreground tabular-nums w-14 text-right">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "text-right flex items-center gap-2")}>
+                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "font-mono text-sm tabular-nums")}>{formatarValor(cat.valor)}</span>
+                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground tabular-nums w-14 text-right")}>
                       {formatarPercentual(cat.percentualReceita)}
                     </span>
                   </div>
@@ -515,7 +516,7 @@ function CategoriaTab({
             </div>
           </div>
         ) : (
-          <p className="text-center py-6 text-sm text-muted-foreground">
+          <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "text-center py-6 text-sm text-muted-foreground")}>
             {emptyMessage}
           </p>
         )}
@@ -531,7 +532,7 @@ function CategoriaTab({
 function EvolucaoChart({ evolucao }: { evolucao: EvolucaoDRE[] }) {
   if (evolucao.length === 0) {
     return (
-      <div className="flex items-center justify-center h-64 text-muted-foreground text-sm">
+      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex items-center justify-center h-64 text-muted-foreground text-sm")}>
         Sem dados de evolução
       </div>
     );
@@ -773,8 +774,8 @@ export default function DREClient() {
             <DataTableToolbar title="Demonstração de Resultado do Exercício" />
           }
         >
-          <div className="rounded-md bg-destructive/15 p-4 text-sm text-destructive">
-            <p className="font-semibold">Erro ao carregar DRE</p>
+          <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-4 text-sm text-destructive")}>
+            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Erro ao carregar DRE</p>
             <p>{error}</p>
           </div>
         </DataShell>
@@ -805,7 +806,7 @@ export default function DREClient() {
                   defaultValue="nenhuma"
                 />
 
-                <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-1.5 text-sm text-muted-foreground")}>
                   <Calendar className="h-3.5 w-3.5" />
                   <span>
                     {format(new Date(periodo.dataInicio), "dd MMM", { locale: ptBR })} — {format(new Date(periodo.dataFim), "dd MMM yyyy", { locale: ptBR })}
@@ -814,7 +815,7 @@ export default function DREClient() {
               </>
             }
             actionSlot={
-              <div className="flex items-center gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <Button variant="ghost" size="icon" aria-label="Atualizar" className="h-8 w-8" onClick={handleRefresh} disabled={isLoading}>
                   <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
                   <span className="sr-only">Atualizar</span>
@@ -851,21 +852,21 @@ export default function DREClient() {
         />
 
         {/* Tabs */}
-        <Tabs defaultValue="estrutura" className="mt-4 space-y-3">
+        <Tabs defaultValue="estrutura" className={cn(/* design-system-escape: space-y-3 sem token DS */ "mt-4 space-y-3")}>
           <TabsList>
-            <TabsTrigger value="estrutura" className="gap-1.5 px-3">
+            <TabsTrigger value="estrutura" className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv. */ "gap-1.5 px-3")}>
               <List className="h-3.5 w-3.5" />
               Estrutura
             </TabsTrigger>
-            <TabsTrigger value="receitas" className="gap-1.5 px-3">
+            <TabsTrigger value="receitas" className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv. */ "gap-1.5 px-3")}>
               <TrendingUp className="h-3.5 w-3.5" />
               Receitas
             </TabsTrigger>
-            <TabsTrigger value="despesas" className="gap-1.5 px-3">
+            <TabsTrigger value="despesas" className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv. */ "gap-1.5 px-3")}>
               <TrendingDown className="h-3.5 w-3.5" />
               Despesas
             </TabsTrigger>
-            <TabsTrigger value="evolucao" className="gap-1.5 px-3">
+            <TabsTrigger value="evolucao" className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv. */ "gap-1.5 px-3")}>
               <BarChart3 className="h-3.5 w-3.5" />
               Evolução
             </TabsTrigger>
@@ -873,10 +874,10 @@ export default function DREClient() {
 
           <TabsContent value="estrutura">
             <Card>
-              <CardHeader className="pb-2">
+              <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-base">Estrutura do DRE</CardTitle>
+                    <CardTitle className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>Estrutura do DRE</CardTitle>
                     <CardDescription>
                       {dre?.periodo.descricao || 'Selecione um período'}
                     </CardDescription>
@@ -885,7 +886,7 @@ export default function DREClient() {
               </CardHeader>
               <CardContent>
                 {isLoading ? (
-                  <div className="space-y-1.5">
+                  <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
                     {Array.from({ length: 15 }).map((_, i) => (
                       <Skeleton key={i} className="h-7" />
                     ))}
@@ -893,7 +894,7 @@ export default function DREClient() {
                 ) : dre?.resumo ? (
                   <DRETable resumo={dre.resumo} />
                 ) : (
-                  <p className="text-center py-6 text-sm text-muted-foreground">
+                  <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "text-center py-6 text-sm text-muted-foreground")}>
                     Selecione um período para visualizar o DRE
                   </p>
                 )}
@@ -923,8 +924,8 @@ export default function DREClient() {
 
           <TabsContent value="evolucao">
             <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base">Evolução Anual</CardTitle>
+              <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+                <CardTitle className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>Evolução Anual</CardTitle>
                 <CardDescription>
                   Evolução mensal — {anoAtual}
                 </CardDescription>

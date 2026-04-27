@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import {
   Select,
@@ -31,16 +32,16 @@ export function ModuloExclusividadePessoalidade({ data, onChange }: ModuloExclus
   const forteIndicioVinculo = data.atende_exclusivamente === true && data.pode_enviar_substituto === false;
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <div>
         <Heading level="card">Só Você Serve</Heading>
-        <p className="text-sm text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
           Avaliar exclusividade e pessoalidade — indícios fortes de vínculo disfarçado
         </p>
       </div>
 
       {/* C.3.1: Exclusividade */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>Atendia exclusivamente esta empresa (não tinha outros clientes PJ)?</Label>
         <SimNaoRadio
           id="atende-exclusivamente"
@@ -52,7 +53,7 @@ export function ModuloExclusividadePessoalidade({ data, onChange }: ModuloExclus
       </div>
 
       {/* C.3.2: Pessoalidade */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>Poderia enviar outra pessoa no seu lugar para fazer o trabalho?</Label>
         <SimNaoRadio
           id="pode-enviar-substituto"
@@ -70,7 +71,7 @@ export function ModuloExclusividadePessoalidade({ data, onChange }: ModuloExclus
       )}
 
       {/* C.3.3: Proibição de outros clientes */}
-      <div className="space-y-2">
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Label htmlFor="proibicao">A empresa proibia (formal ou informalmente) que atendesse outros clientes?</Label>
         <Select
           value={data.proibicao_outros_clientes ?? ''}
@@ -90,7 +91,7 @@ export function ModuloExclusividadePessoalidade({ data, onChange }: ModuloExclus
       </div>
 
       {/* C.3.4: Liberdade de recusar tarefas */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>Tinha liberdade para recusar tarefas ou projetos da empresa?</Label>
         <SimNaoRadio
           id="liberdade-recusar"
@@ -100,7 +101,7 @@ export function ModuloExclusividadePessoalidade({ data, onChange }: ModuloExclus
       </div>
 
       {/* C.3.5: Duração da relação */}
-      <div className="space-y-2">
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Label htmlFor="duracao">Quanto tempo durou sua relação com esta empresa?</Label>
         <Select
           value={data.duracao_relacao ?? ''}

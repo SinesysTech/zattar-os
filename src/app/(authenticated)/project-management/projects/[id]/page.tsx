@@ -1,7 +1,7 @@
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth/server";
-import { generateMeta } from "@/lib/utils";
+import { generateMeta, cn } from '@/lib/utils';
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -73,21 +73,21 @@ export default async function ProjectDetailPage({ params }: Props) {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <div className="flex items-center justify-between">
-        <div className="space-y-1">
+        <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
           <Heading level="page">{projeto.nome}</Heading>
-          <div className="flex items-center gap-3">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
             <ProjectStatusBadge status={projeto.status} />
             <PriorityIndicator prioridade={projeto.prioridade} />
             {projeto.clienteNome && (
-              <span className="text-muted-foreground text-sm">
+              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>
                 {projeto.clienteNome}
               </span>
             )}
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           <Button variant="outline" asChild>
             <Link href={`${basePath}/edit`}>
               <Pencil className="mr-1 size-4" />
@@ -103,14 +103,14 @@ export default async function ProjectDetailPage({ params }: Props) {
       </div>
 
       {/* Links de navegação para sub-rotas */}
-      <nav className="flex gap-2">
+      <nav className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
         {navLinks.map((link) => (
           <Button key={link.href} variant="outline" size="sm" asChild>
             <Link href={link.href}>
               <link.icon className="mr-1 size-4" />
               {link.label}
               {link.count != null && (
-                <span className="bg-muted text-muted-foreground ml-1 rounded-full px-1.5 py-0.5 text-xs">
+                <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "bg-muted text-muted-foreground ml-1 rounded-full px-1.5 py-0.5 text-xs")}>
                   {link.count}
                 </span>
               )}
@@ -120,12 +120,12 @@ export default async function ProjectDetailPage({ params }: Props) {
       </nav>
 
       {/* Visão Geral — conteúdo principal */}
-      <div className="space-y-4">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 lg:grid-cols-4")}>
           <Card>
             <CardHeader>
               <CardDescription>Progresso</CardDescription>
-              <CardTitle className="text-2xl">
+              <CardTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "text-2xl")}>
                 {projeto.progresso}%
               </CardTitle>
             </CardHeader>
@@ -141,12 +141,12 @@ export default async function ProjectDetailPage({ params }: Props) {
           <Card>
             <CardHeader>
               <CardDescription>Tarefas</CardDescription>
-              <CardTitle className="text-2xl">
+              <CardTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "text-2xl")}>
                 {tarefasConcluidas}/{tarefas.length}
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground text-sm">
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>
                 {tarefasPendentes} pendentes
               </p>
             </CardContent>
@@ -155,7 +155,7 @@ export default async function ProjectDetailPage({ params }: Props) {
           <Card>
             <CardHeader>
               <CardDescription>Orçamento</CardDescription>
-              <CardTitle className="text-2xl">
+              <CardTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "text-2xl")}>
                 {projeto.orcamento != null
                   ? new Intl.NumberFormat("pt-BR", {
                     style: "currency",
@@ -166,7 +166,7 @@ export default async function ProjectDetailPage({ params }: Props) {
             </CardHeader>
             <CardContent>
               {projeto.valorGasto != null && (
-                <p className="text-muted-foreground text-sm">
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>
                   Gasto:{" "}
                   {new Intl.NumberFormat("pt-BR", {
                     style: "currency",
@@ -180,7 +180,7 @@ export default async function ProjectDetailPage({ params }: Props) {
           <Card>
             <CardHeader>
               <CardDescription>Equipe</CardDescription>
-              <CardTitle className="text-2xl">
+              <CardTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "text-2xl")}>
                 {membros.length} membros
               </CardTitle>
             </CardHeader>
@@ -208,7 +208,7 @@ export default async function ProjectDetailPage({ params }: Props) {
             <CardTitle>Informações</CardTitle>
           </CardHeader>
           <CardContent>
-            <dl className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
+            <dl className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; text-sm → migrar para <Text variant="body-sm"> */ "grid grid-cols-1 gap-4 text-sm sm:grid-cols-2")}>
               <div>
                 <dt className="text-muted-foreground">Responsável</dt>
                 <dd>{projeto.responsavelNome ?? "—"}</dd>
@@ -244,11 +244,11 @@ export default async function ProjectDetailPage({ params }: Props) {
               {projeto.tags.length > 0 && (
                 <div className="col-span-full">
                   <dt className="text-muted-foreground">Tags</dt>
-                  <dd className="flex gap-1 flex-wrap mt-1">
+                  <dd className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1 flex-wrap mt-1")}>
                     {projeto.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="bg-muted rounded-md px-2 py-0.5 text-xs"
+                        className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "bg-muted rounded-md px-2 py-0.5 text-xs")}
                       >
                         {tag}
                       </span>

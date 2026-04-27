@@ -8,6 +8,7 @@
  * Representantes são sempre pessoas físicas (advogados).
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useActionState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -415,7 +416,7 @@ export function RepresentanteFormDialog({
   // Renderizar Step 1 - Identificação
   const renderStep1 = () => (
     <div className="grid gap-(--density-field-gap)">
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label htmlFor="nome">
           Nome Completo <span className="text-destructive">*</span>
         </Label>
@@ -429,8 +430,8 @@ export function RepresentanteFormDialog({
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
           <Label htmlFor="cpf">
             CPF <span className="text-destructive">*</span>
           </Label>
@@ -444,7 +445,7 @@ export function RepresentanteFormDialog({
           />
         </div>
 
-        <div className="grid gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
           <Label htmlFor="sexo">Sexo</Label>
           {mounted ? (
             <Select
@@ -461,13 +462,13 @@ export function RepresentanteFormDialog({
               </SelectContent>
             </Select>
           ) : (
-            <div className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm" />
+            <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm")} />
           )}
           <input type="hidden" name="sexo" value={formData.sexo} />
         </div>
       </div>
 
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label htmlFor="tipo">Tipo de Representante</Label>
         {mounted ? (
           <Select
@@ -486,15 +487,15 @@ export function RepresentanteFormDialog({
             </SelectContent>
           </Select>
         ) : (
-          <div className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm" />
+          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm")} />
         )}
         <input type="hidden" name="tipo" value={formData.tipo} />
       </div>
 
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label>Inscrições OAB</Label>
-        <div className="grid gap-2 border rounded-lg p-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-4 → migrar para <Inset variant="card-compact"> */ "grid gap-2 border rounded-lg p-4")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-1 md:grid-cols-3 gap-2")}>
             <Input
               placeholder="Número OAB"
               value={novaOAB.numero}
@@ -517,7 +518,7 @@ export function RepresentanteFormDialog({
                 </SelectContent>
               </Select>
             ) : (
-              <div className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm" />
+              <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm")} />
             )}
             {mounted ? (
               <Select
@@ -536,7 +537,7 @@ export function RepresentanteFormDialog({
                 </SelectContent>
               </Select>
             ) : (
-              <div className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm" />
+              <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm")} />
             )}
           </div>
           <Button
@@ -552,18 +553,18 @@ export function RepresentanteFormDialog({
           </Button>
         </div>
         {formData.oabs.length > 0 && (
-          <div className="flex flex-wrap gap-2 mt-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2 mt-2")}>
             {formData.oabs.map((oab, index) => (
               <Badge
                 key={index}
                 variant="secondary"
-                className="gap-1 pr-1"
+                className={cn(/* design-system-escape: gap-1 gap sem token DS; pr-1 padding direcional sem Inset equiv. */ "gap-1 pr-1")}
               >
                 {oab.numero}/{oab.uf} ({SITUACOES_OAB.find(s => s.value === oab.situacao)?.label || oab.situacao})
                 <button
                   type="button"
                   onClick={() => handleRemoveOAB(index)}
-                  className="ml-1 hover:bg-muted rounded-full p-0.5"
+                  className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-1 hover:bg-muted rounded-full p-0.5")}
                   aria-label={`Remover OAB ${oab.numero}/${oab.uf}`}
                   title={`Remover OAB ${oab.numero}/${oab.uf}`}
                 >
@@ -580,9 +581,9 @@ export function RepresentanteFormDialog({
   // Renderizar Step 2 - Contato
   const renderStep2 = () => (
     <div className="grid gap-(--density-field-gap)">
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label htmlFor="novo-email-representante">E-mails</Label>
-        <div className="flex gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
           <Input
             id="novo-email-representante"
             type="email"
@@ -613,18 +614,18 @@ export function RepresentanteFormDialog({
           Pressione Enter ou clique em + para adicionar múltiplos e-mails
         </p>
         {formData.emails.length > 0 && (
-          <div className="flex flex-wrap gap-2 mt-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2 mt-2")}>
             {formData.emails.map((email, index) => (
               <Badge
                 key={index}
                 variant="secondary"
-                className="gap-1 pr-1"
+                className={cn(/* design-system-escape: gap-1 gap sem token DS; pr-1 padding direcional sem Inset equiv. */ "gap-1 pr-1")}
               >
                 {email}
                 <button
                   type="button"
                   onClick={() => handleRemoveEmail(index)}
-                  className="ml-1 hover:bg-muted rounded-full p-0.5"
+                  className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-1 hover:bg-muted rounded-full p-0.5")}
                   aria-label={`Remover e-mail ${email}`}
                   title={`Remover e-mail ${email}`}
                 >
@@ -636,7 +637,7 @@ export function RepresentanteFormDialog({
         )}
       </div>
 
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label>Celular</Label>
         <InputTelefone
           mode="cell"
@@ -653,7 +654,7 @@ export function RepresentanteFormDialog({
         />
       </div>
 
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label>Telefone Residencial</Label>
         <InputTelefone
           mode="landline"
@@ -670,7 +671,7 @@ export function RepresentanteFormDialog({
         />
       </div>
 
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label>Telefone Comercial</Label>
         <InputTelefone
           mode="landline"
@@ -692,7 +693,7 @@ export function RepresentanteFormDialog({
   // Renderizar Step 3 - Endereço
   const renderStep3 = () => (
     <div className="grid gap-(--density-field-gap)">
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label>CEP</Label>
         <InputCEP
           value={formData.cep}
@@ -702,7 +703,7 @@ export function RepresentanteFormDialog({
         />
       </div>
 
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label htmlFor="logradouro">Logradouro</Label>
         <Input
           id="logradouro"
@@ -712,8 +713,8 @@ export function RepresentanteFormDialog({
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
           <Label htmlFor="numero">Número</Label>
           <Input
             id="numero"
@@ -722,7 +723,7 @@ export function RepresentanteFormDialog({
             placeholder="Nº"
           />
         </div>
-        <div className="grid gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
           <Label htmlFor="complemento">Complemento</Label>
           <Input
             id="complemento"
@@ -733,7 +734,7 @@ export function RepresentanteFormDialog({
         </div>
       </div>
 
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label htmlFor="bairro">Bairro</Label>
         <Input
           id="bairro"
@@ -743,8 +744,8 @@ export function RepresentanteFormDialog({
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
           <Label htmlFor="municipio">Cidade</Label>
           <Input
             id="municipio"
@@ -753,7 +754,7 @@ export function RepresentanteFormDialog({
             placeholder="Nome da cidade"
           />
         </div>
-        <div className="grid gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
           <Label htmlFor="estado_sigla">Estado</Label>
           {mounted ? (
             <Select
@@ -772,7 +773,7 @@ export function RepresentanteFormDialog({
               </SelectContent>
             </Select>
           ) : (
-            <div className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm" />
+            <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm")} />
           )}
         </div>
       </div>
@@ -782,26 +783,26 @@ export function RepresentanteFormDialog({
   // Renderizar Step 4 - Informações Adicionais
   const renderStep4 = () => (
     <div className="grid gap-(--density-field-gap)">
-      <div className="mt-4 p-4 rounded-lg bg-muted/50 border">
+      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "mt-4 p-4 rounded-lg bg-muted/50 border")}>
         <Heading level="subsection" className="mb-2">Resumo do cadastro</Heading>
-        <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+        <dl className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "grid grid-cols-2 gap-x-4 gap-y-2 text-sm")}>
           <dt className="text-muted-foreground">Nome:</dt>
-          <dd className="font-medium truncate">{formData.nome || '-'}</dd>
+          <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium truncate")}>{formData.nome || '-'}</dd>
 
           <dt className="text-muted-foreground">CPF:</dt>
-          <dd className="font-medium">{formData.cpf || '-'}</dd>
+          <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formData.cpf || '-'}</dd>
 
           <dt className="text-muted-foreground">Tipo:</dt>
-          <dd className="font-medium">{TIPOS_REPRESENTANTE.find(t => t.value === formData.tipo)?.label || '-'}</dd>
+          <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{TIPOS_REPRESENTANTE.find(t => t.value === formData.tipo)?.label || '-'}</dd>
 
           <dt className="text-muted-foreground">OABs:</dt>
-          <dd className="font-medium">{formData.oabs.length || '0'}</dd>
+          <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formData.oabs.length || '0'}</dd>
 
           <dt className="text-muted-foreground">E-mails:</dt>
-          <dd className="font-medium">{formData.emails.length || '0'}</dd>
+          <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formData.emails.length || '0'}</dd>
 
           <dt className="text-muted-foreground">Cidade:</dt>
-          <dd className="font-medium">{formData.municipio || '-'}</dd>
+          <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formData.municipio || '-'}</dd>
         </dl>
       </div>
     </div>
@@ -838,7 +839,7 @@ export function RepresentanteFormDialog({
         stepTitle: stepInfo.title,
       }}
       footer={
-        <div className="flex justify-end w-full gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex justify-end w-full gap-2")}>
             <DialogNavPrevious
               onClick={handlePrevious}
               disabled={isFirstStep || isPending}

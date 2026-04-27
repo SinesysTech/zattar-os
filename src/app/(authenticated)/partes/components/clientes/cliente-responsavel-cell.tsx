@@ -99,7 +99,7 @@ export function ClienteResponsavelCell({
                     role="combobox"
                     aria-expanded={open}
                     className={cn(
-                        "flex items-center justify-center gap-2 h-8 w-full min-w-0 px-1 hover:bg-muted/50",
+                        /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-1 padding direcional sem Inset equiv. */ "flex items-center justify-center gap-2 h-8 w-full min-w-0 px-1 hover:bg-muted/50",
                         !responsavel && "text-muted-foreground"
                     )}
                     title={responsavel ? `Responsável: ${responsavel.nomeExibicao}` : 'Clique para atribuir responsável'}
@@ -108,11 +108,11 @@ export function ClienteResponsavelCell({
                         <>
                             <Avatar size="sm">
                                 <AvatarImage src={responsavel.avatarUrl || undefined} alt={responsavel.nomeExibicao} />
-                                <AvatarFallback className="text-[10px] font-medium">
+                                <AvatarFallback className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium")}>
                                     {getInitials(responsavel.nomeExibicao)}
                                 </AvatarFallback>
                             </Avatar>
-                            <span className="truncate max-w-30 text-xs font-normal text-foreground">
+                            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "truncate max-w-30 text-xs font-normal text-foreground")}>
                                 {responsavel.nomeExibicao}
                             </span>
                         </>
@@ -121,7 +121,7 @@ export function ClienteResponsavelCell({
                     )}
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="p-0" align="start">
+            <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "p-0")} align="start">
                 <Command>
                     <CommandInput placeholder="Buscar usuário..." />
                     <CommandList>
@@ -130,9 +130,9 @@ export function ClienteResponsavelCell({
                             <CommandItem
                                 value="null"
                                 onSelect={() => handleSelect('null')}
-                                className="gap-2"
+                                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}
                             >
-                                <div className="flex h-6 w-6 items-center justify-center rounded-full border border-dashed text-xs">
+                                <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex h-6 w-6 items-center justify-center rounded-full border border-dashed text-xs")}>
                                     ?
                                 </div>
                                 <span>Sem responsável</span>
@@ -144,7 +144,7 @@ export function ClienteResponsavelCell({
                                     key={usuario.id}
                                     value={usuario.nomeExibicao} // Buscando pelo nome
                                     onSelect={() => handleSelect(usuario.id.toString())}
-                                    className="gap-2"
+                                    className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}
                                 >
                                     <Avatar size="sm">
                                         <AvatarImage src={usuario.avatarUrl || undefined} alt={usuario.nomeExibicao} />

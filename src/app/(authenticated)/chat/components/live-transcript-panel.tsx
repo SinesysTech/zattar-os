@@ -27,8 +27,8 @@ export function LiveTranscriptPanel({ transcripts, isVisible, onClose }: LiveTra
 
   return (
     <div className="absolute right-2 top-16 bottom-20 w-[calc(100%-1rem)] sm:right-4 sm:top-20 sm:bottom-24 sm:w-80 bg-black/80 backdrop-blur-md border border-video-surface-hover rounded-lg shadow-lg flex flex-col z-50 transition-all duration-300 animate-in slide-in-from-right-10">
-      <div className="flex items-center justify-between p-3 border-b border-video-surface-hover">
-        <div className="flex items-center gap-2 text-video-text">
+      <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between p-3 border-b border-video-surface-hover")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-video-text")}>
           <MessageSquareText className="w-4 h-4" />
           <Heading level="widget">Transcrição em Tempo Real</Heading>
         </div>
@@ -42,17 +42,17 @@ export function LiveTranscriptPanel({ transcripts, isVisible, onClose }: LiveTra
         </Button>
       </div>
 
-      <ScrollArea className="flex-1 p-4" ref={scrollRef}>
-        <div className="flex flex-col gap-3">
+      <ScrollArea className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex-1 p-4")} ref={scrollRef}>
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
           {transcripts.length === 0 ? (
-            <div className="text-center text-video-muted text-sm py-8">
+            <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; py-8 padding direcional sem Inset equiv. */ "text-center text-video-muted text-sm py-8")}>
               Aguardando fala...
             </div>
           ) : (
             transcripts.map((segment) => (
-              <div key={segment.id} className="flex flex-col gap-1">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs font-bold text-info truncate max-w-37.5">
+              <div key={segment.id} className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
+                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-bold → className de <Text>/<Heading> */ "text-xs font-bold text-info truncate max-w-37.5")}>
                     {segment.participantName}
                   </span>
                   <span className="text-[10px] text-video-muted">
@@ -60,7 +60,7 @@ export function LiveTranscriptPanel({ transcripts, isVisible, onClose }: LiveTra
                   </span>
                 </div>
                 <p className={cn(
-                  "text-sm leading-relaxed wrap-break-word",
+                  /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-relaxed sem token DS */ "text-sm leading-relaxed wrap-break-word",
                   segment.isFinal ? "text-video-text" : "text-video-muted italic"
                 )}>
                   {segment.text}

@@ -10,6 +10,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { ArrowLeft, ExternalLink, Search, User } from 'lucide-react';
 import Link from 'next/link';
@@ -36,16 +37,16 @@ export function PeritosPageClient() {
   const total = peritos.length;
 
   return (
-    <div className="space-y-5">
+    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       {/* ── Header ──────────────────────────────────────────── */}
-      <div className="flex items-end justify-between gap-4 flex-wrap">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4 flex-wrap")}>
         <div>
-          <div className="flex items-center gap-2 mb-1">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-1")}>
             <Button
               asChild
               variant="ghost"
               size="sm"
-              className="h-7 px-2 text-muted-foreground/70"
+              className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-7 px-2 text-muted-foreground/70")}
             >
               <Link href="/pericias">
                 <ArrowLeft className="size-3.5" />
@@ -55,20 +56,20 @@ export function PeritosPageClient() {
           </div>
           <Heading level="page">Peritos</Heading>
           {!isLoading && (
-            <p className="text-sm text-muted-foreground/70 mt-0.5">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/70 mt-0.5")}>
               {total} perito{total !== 1 ? 's' : ''} ativo{total !== 1 ? 's' : ''}{' '}
               · gestão completa em Partes / Terceiros
             </p>
           )}
         </div>
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
           <div className="relative">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/50 pointer-events-none" />
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Buscar perito..."
-              className="h-9 w-64 pl-8 bg-card"
+              className={cn(/* design-system-escape: pl-8 padding direcional sem Inset equiv. */ "h-9 w-64 pl-8 bg-card")}
             />
           </div>
           <Button asChild size="sm" variant="outline" className="rounded-xl">
@@ -83,16 +84,16 @@ export function PeritosPageClient() {
       {/* ── Info banner ───────────────────────────────────── */}
       <GlassPanel
         depth={1}
-        className="px-4 py-3 flex items-start gap-3 border-info/20"
+        className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "px-4 py-3 flex items-start gap-3 border-info/20")}
       >
         <IconContainer size="md" className="bg-info/10">
           <User className="size-4 text-info/70" />
         </IconContainer>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-foreground/90">
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-foreground/90")}>
             Peritos são cadastrados como Terceiros
           </p>
-          <p className="text-xs text-muted-foreground/70 mt-0.5">
+          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/70 mt-0.5")}>
             Esta página mostra a vista consolidada. Para criar, editar ou
             desativar peritos, acesse{' '}
             <Link
@@ -108,40 +109,40 @@ export function PeritosPageClient() {
 
       {/* ── Lista ───────────────────────────────────────────── */}
       {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3")}>
           {Array.from({ length: 6 }).map((_, i) => (
             <Skeleton key={i} className="h-20 rounded-2xl" />
           ))}
         </div>
       ) : error ? (
-        <GlassPanel depth={1} className="p-12 text-center">
-          <p className="text-sm text-destructive">{error}</p>
+        <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12 text-center")}>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{error}</p>
         </GlassPanel>
       ) : filtered.length === 0 ? (
-        <GlassPanel depth={1} className="p-12 text-center">
+        <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12 text-center")}>
           <User className="size-10 text-muted-foreground/30 mx-auto mb-3" />
-          <p className="text-sm text-muted-foreground">
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
             {search
               ? 'Nenhum perito encontrado para esta busca.'
               : 'Nenhum perito ativo cadastrado.'}
           </p>
         </GlassPanel>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3")}>
           {filtered.map((p) => (
             <GlassPanel
               key={p.id}
               depth={2}
-              className="p-4 flex items-center gap-3"
+              className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; gap-3 gap sem token DS */ "p-4 flex items-center gap-3")}
             >
               <div className="size-9 rounded-full bg-muted/40 border border-border/30 flex items-center justify-center shrink-0">
                 <User className="size-4 text-muted-foreground/60" />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-semibold text-foreground/90 truncate">
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold text-foreground/90 truncate")}>
                   {p.nome}
                 </p>
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground/55">
+                <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/55")}>
                   Perito Judicial
                 </p>
               </div>

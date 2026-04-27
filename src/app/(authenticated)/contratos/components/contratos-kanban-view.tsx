@@ -12,6 +12,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import Link from 'next/link';
 import { Layers, FolderOpen } from 'lucide-react';
@@ -64,13 +65,13 @@ function ContratoCard({ contrato, stageCor }: { contrato: KanbanContrato; stageC
   return (
     <GlassPanel
       depth={2}
-      className="p-3 flex flex-col gap-1.5 text-sm"
+      className={cn(/* design-system-escape: p-3 → usar <Inset>; gap-1.5 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "p-3 flex flex-col gap-1.5 text-sm")}
       style={{ borderLeft: `3px solid ${stageCor}` }}
     >
-      <p className="text-label font-semibold text-foreground line-clamp-2">
+      <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-label font-semibold text-foreground line-clamp-2")}>
         {contrato.clienteNome}
       </p>
-      <div className="flex flex-wrap gap-1 mt-0.5">
+      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-wrap gap-1 mt-0.5")}>
         <SemanticBadge category="tipo_contrato" value={contrato.tipoContrato}>
           {TIPO_CONTRATO_LABELS[contrato.tipoContrato as TipoContrato] ?? contrato.tipoContrato}
         </SemanticBadge>
@@ -106,9 +107,9 @@ function KanbanColumnContent({
       value={estagioId}
       className="min-w-60 max-w-60 sm:min-w-70 sm:max-w-70 shrink-0"
     >
-      <div className="flex flex-col gap-2 min-h-28">
-        <div className="flex items-center justify-between px-1 pb-2">
-          <div className="flex items-center gap-2 min-w-0">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2 min-h-28")}>
+        <div className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "flex items-center justify-between px-1 pb-2")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
             <span
               className="inline-block w-2 h-2 rounded-full shrink-0"
               style={{ backgroundColor: cor, boxShadow: `0 0 10px ${cor}55` }}
@@ -119,7 +120,7 @@ function KanbanColumnContent({
             </span>
           </div>
           <span
-            className="text-micro-caption font-semibold tabular-nums text-muted-foreground/50 shrink-0"
+            className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-micro-caption font-semibold tabular-nums text-muted-foreground/50 shrink-0")}
             aria-label={`${contratos.length} contratos`}
           >
             {contratos.length}
@@ -161,13 +162,13 @@ function KanbanColumnContent({
 
 function KanbanBoardSkeleton() {
   return (
-    <div className="flex gap-3 overflow-x-auto pb-4 pt-2">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; pb-4 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv. */ "flex gap-3 overflow-x-auto pb-4 pt-2")}>
       {Array.from({ length: 4 }).map((_, i) => (
         <div
           key={i}
-          className="flex flex-col gap-2 min-w-60 max-w-60 sm:min-w-70 sm:max-w-70"
+          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2 min-w-60 max-w-60 sm:min-w-70 sm:max-w-70")}
         >
-          <div className="flex items-center justify-between px-1 pb-2">
+          <div className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "flex items-center justify-between px-1 pb-2")}>
             <Skeleton className="h-3.5 w-28" />
             <Skeleton className="h-3 w-5" />
           </div>
@@ -311,7 +312,7 @@ function KanbanBoardContent({
       getItemValue={(item: KanbanContrato) => String(item.id)}
       flatCursor
     >
-      <KanbanBoard className="overflow-x-auto pb-4 pt-2 items-start">
+      <KanbanBoard className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv. */ "overflow-x-auto pb-4 pt-2 items-start")}>
         {Object.entries(localColumns).map(([colKey, items]) => {
           const estagio = getEstagioForColumn(colKey);
           if (colKey === SEM_ESTAGIO_KEY && items.length === 0) return null;

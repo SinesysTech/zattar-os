@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -55,9 +56,9 @@ export function CallTranscriptViewer({ chamada }: CallTranscriptViewerProps) {
 
   if (!chamada.transcricao) {
     return (
-      <div className="flex flex-col items-center justify-center p-8 text-muted-foreground border border-dashed rounded-lg">
+      <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center p-8 text-muted-foreground border border-dashed rounded-lg")}>
         <FileText className="w-8 h-8 mb-2 opacity-50" />
-        <p className="text-sm">Nenhuma transcrição disponível para esta chamada.</p>
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Nenhuma transcrição disponível para esta chamada.</p>
       </div>
     );
   }
@@ -65,13 +66,13 @@ export function CallTranscriptViewer({ chamada }: CallTranscriptViewerProps) {
   return (
     <div className="flex flex-col h-full border rounded-lg overflow-hidden bg-background">
       <Tabs defaultValue={resumo ? "resumo" : "transcricao"} className="flex flex-col h-full">
-        <div className="p-4 border-b bg-muted/30">
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 border-b bg-muted/30")}>
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="resumo" className="gap-2">
+            <TabsTrigger value="resumo" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}>
               <ListVideo className="w-4 h-4" />
               Resumo IA
             </TabsTrigger>
-            <TabsTrigger value="transcricao" className="gap-2">
+            <TabsTrigger value="transcricao" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}>
               <FileText className="w-4 h-4" />
               Transcrição Completa
             </TabsTrigger>
@@ -79,9 +80,9 @@ export function CallTranscriptViewer({ chamada }: CallTranscriptViewerProps) {
         </div>
 
         <div className="flex-1 overflow-hidden relative">
-          <TabsContent value="resumo" className="h-full m-0 p-0">
+          <TabsContent value="resumo" className={cn(/* design-system-escape: m-0 margin sem primitiva DS; p-0 → usar <Inset> */ "h-full m-0 p-0")}>
             <div className="h-full flex flex-col">
-              <ScrollArea className="flex-1 p-6">
+              <ScrollArea className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "flex-1 p-6")}>
                 {resumo ? (
                   <div className="prose dark:prose-invert prose-sm max-w-none">
                     <ReactMarkdown>{resumo}</ReactMarkdown>
@@ -93,13 +94,13 @@ export function CallTranscriptViewer({ chamada }: CallTranscriptViewerProps) {
                 )}
               </ScrollArea>
               
-              <div className="p-4 border-t bg-muted/10 flex justify-end">
+              <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 border-t bg-muted/10 flex justify-end")}>
                 <Button 
                   onClick={handleGerarResumo} 
                   disabled={isGenerating}
                   variant={resumo ? "outline" : "default"}
                   size="sm"
-                  className="gap-2"
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${isGenerating ? 'animate-spin' : ''}`} />
                   {resumo ? "Regenerar Resumo" : "Gerar Resumo com IA"}
@@ -108,11 +109,11 @@ export function CallTranscriptViewer({ chamada }: CallTranscriptViewerProps) {
             </div>
           </TabsContent>
 
-          <TabsContent value="transcricao" className="h-full m-0 p-0">
+          <TabsContent value="transcricao" className={cn(/* design-system-escape: m-0 margin sem primitiva DS; p-0 → usar <Inset> */ "h-full m-0 p-0")}>
              <div className="h-full flex flex-col">
-              <div className="flex items-center justify-between p-2 border-b text-xs text-muted-foreground bg-muted/20 px-4">
+              <div className={cn(/* design-system-escape: p-2 → usar <Inset>; text-xs → migrar para <Text variant="caption">; px-4 padding direcional sem Inset equiv. */ "flex items-center justify-between p-2 border-b text-xs text-muted-foreground bg-muted/20 px-4")}>
                  <span>{chamada.transcricao.length} caracteres</span>
-                 <div className="flex gap-1">
+                 <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1")}>
                     <Button variant="ghost" size="icon" className="h-6 w-6" onClick={handleCopyTranscript} title="Copiar">
                       <Copy className="w-3.5 h-3.5" />
                     </Button>
@@ -121,7 +122,7 @@ export function CallTranscriptViewer({ chamada }: CallTranscriptViewerProps) {
                     </Button>
                  </div>
               </div>
-              <ScrollArea className="flex-1 p-4 font-mono text-sm leading-relaxed">
+              <ScrollArea className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; text-sm → migrar para <Text variant="body-sm">; leading-relaxed sem token DS */ "flex-1 p-4 font-mono text-sm leading-relaxed")}>
                 <div className="whitespace-pre-wrap text-foreground/90">
                   {chamada.transcricao}
                 </div>

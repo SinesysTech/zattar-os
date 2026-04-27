@@ -57,14 +57,14 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
   if (isLoading) {
     return (
       <Card className="h-full">
-        <CardHeader className="pb-2">
-          <div className="flex items-center gap-2">
+        <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <Bell className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium">Alertas</span>
+            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Alertas</span>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
+          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
             {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="h-12 rounded-lg bg-muted animate-pulse" />
             ))}
@@ -83,14 +83,14 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
 
   return (
     <Card className="h-full flex flex-col">
-      <CardHeader className="pb-2">
+      <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
         <CardTitle className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-sm font-medium">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "flex items-center gap-2 text-sm font-medium")}>
             <Bell className="h-4 w-4 text-muted-foreground" />
             Alertas
           </div>
           {alertas.length > 0 && (
-            <SemanticBadge category="status" value={alertas.length} variantOverride="secondary" className="text-xs tabular-nums">
+            <SemanticBadge category="status" value={alertas.length} variantOverride="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs tabular-nums")}>
               {alertas.length}
             </SemanticBadge>
           )}
@@ -99,15 +99,15 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
       <CardContent className="flex-1">
         {alertas.length === 0 ? (
           <div className="flex items-center justify-center h-full min-h-32">
-            <div className="text-center space-y-2">
-              <div className="rounded-full bg-success/10 p-3 mx-auto w-fit">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "text-center space-y-2")}>
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-full bg-success/10 p-3 mx-auto w-fit")}>
                 <CheckCircle2 className="h-5 w-5 text-success" />
               </div>
-              <p className="text-sm text-muted-foreground">Nenhum alerta ativo</p>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Nenhum alerta ativo</p>
             </div>
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             {visibleAlertas.map((alerta, idx) => {
               const config = SEVERITY_CONFIG[alerta.tipo] || SEVERITY_CONFIG.info;
               const Icon = config.icon;
@@ -116,17 +116,17 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
                 <div
                   key={idx}
                   className={cn(
-                    'flex items-start gap-2.5 rounded-lg border px-3 py-2.5 text-sm',
+                    /* design-system-escape: gap-2.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ 'flex items-start gap-2.5 rounded-lg border px-3 py-2.5 text-sm',
                     config.badgeClass
                   )}
                 >
                   <Icon className={cn('h-4 w-4 shrink-0 mt-0.5', config.iconClass)} />
-                  <span className="flex-1 leading-snug">{alerta.mensagem}</span>
+                  <span className={cn(/* design-system-escape: leading-snug sem token DS */ "flex-1 leading-snug")}>{alerta.mensagem}</span>
                 </div>
               );
             })}
             {alertas.length > 5 && (
-              <p className="text-xs text-center text-muted-foreground pt-1">
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; pt-1 padding direcional sem Inset equiv. */ "text-xs text-center text-muted-foreground pt-1")}>
                 +{alertas.length - 5} alerta{alertas.length - 5 !== 1 ? 's' : ''} adiciona{alertas.length - 5 !== 1 ? 'is' : 'l'}
               </p>
             )}

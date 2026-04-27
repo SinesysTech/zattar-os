@@ -13,6 +13,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import { Activity } from 'lucide-react';
 import {
   ComparisonStat,
@@ -50,9 +51,9 @@ export function TendenciaResponsividade() {
         icon={Activity}
         subtitle="Metricas de desempenho"
         depth={1}
-        className="h-auto! self-start p-4!"
+        className={cn(/* design-system-escape: p-4! → usar <Inset> */ "h-auto! self-start p-4!")}
       >
-        <p className="text-[11px] text-muted-foreground/60 py-6 text-center">
+        <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-6 text-center")}>
           Dados de responsividade nao disponiveis.
         </p>
       </WidgetContainer>
@@ -76,9 +77,9 @@ export function TendenciaResponsividade() {
       icon={Activity}
       subtitle="Metricas de desempenho"
       depth={1}
-      className="h-auto! self-start p-4!"
+      className={cn(/* design-system-escape: p-4! → usar <Inset> */ "h-auto! self-start p-4!")}
     >
-      <div className="mt-2 grid grid-cols-2 gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "mt-2 grid grid-cols-2 gap-4")}>
         {tempoResposta !== undefined && (
           <ComparisonStat
             label="Tempo Resposta"

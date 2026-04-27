@@ -5,6 +5,7 @@
  * Usado nas tabelas de clientes, terceiros e representantes
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -45,7 +46,7 @@ export function ProcessosRelacionadosCell({
 }: ProcessosRelacionadosCellProps) {
   if (!processos || processos.length === 0) {
     return (
-      <div className="min-h-10 flex items-center justify-center text-muted-foreground text-sm">
+      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "min-h-10 flex items-center justify-center text-muted-foreground text-sm")}>
         -
       </div>
     );
@@ -56,7 +57,7 @@ export function ProcessosRelacionadosCell({
   const processosRestantes = processos.slice(maxExibidos);
 
   return (
-    <div className="min-h-10 flex flex-col gap-1 py-1 min-w-0">
+    <div className={cn(/* design-system-escape: gap-1 gap sem token DS; py-1 padding direcional sem Inset equiv. */ "min-h-10 flex flex-col gap-1 py-1 min-w-0")}>
       {processosExibidos.map((processo) => (
         <ProcessoItem key={processo.processo_id} processo={processo} />
       ))}
@@ -67,14 +68,14 @@ export function ProcessosRelacionadosCell({
             <Button
               variant="ghost"
               size="sm"
-              className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
+              className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "h-6 px-2 text-xs text-muted-foreground hover:text-foreground")}
             >
               +{processosRestantes.length} mais
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-80 p-2" align="start">
-            <div className="space-y-1.5 max-h-60 overflow-y-auto">
-              <p className="text-xs font-medium text-muted-foreground mb-2">
+          <PopoverContent className={cn(/* design-system-escape: p-2 → usar <Inset> */ "w-80 p-2")} align="start">
+            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5 max-h-60 overflow-y-auto")}>
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-muted-foreground mb-2")}>
                 Todos os processos ({processos.length})
               </p>
               {processos.map((processo) => (
@@ -118,7 +119,7 @@ function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
       : processo.nome_parte_autora;
 
   return (
-    <div className="flex items-start gap-1 min-w-0 max-w-full">
+    <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-start gap-1 min-w-0 max-w-full")}>
       <HoverCard openDelay={200} closeDelay={100}>
         <HoverCardTrigger asChild>
           <Link
@@ -128,44 +129,44 @@ function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
               e.stopPropagation();
               router.push(processoHref);
             }}
-            className="inline-flex items-center text-xs min-h-6 px-2 py-0.5 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-w-0"
+            className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center text-xs min-h-6 px-2 py-0.5 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-w-0")}
           >
             <span className="break-all">{numeroFormatado}</span>
           </Link>
         </HoverCardTrigger>
-        <HoverCardContent align="start" className="w-80 p-3">
-          <div className="space-y-3">
+        <HoverCardContent align="start" className={cn(/* design-system-escape: p-3 → usar <Inset> */ "w-80 p-3")}>
+          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
             {/* Header: Grau e Status */}
-            <div className="flex items-center justify-between gap-2">
-              <SemanticBadge category="grau" value={processo.grau} className="text-xs">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
+              <SemanticBadge category="grau" value={processo.grau} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                 {formatarGrau(processo.grau)}
               </SemanticBadge>
               {processo.codigo_status_processo && (
-                <SemanticBadge category="status" value={processo.codigo_status_processo} className="text-xs">
+                <SemanticBadge category="status" value={processo.codigo_status_processo} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                   {processo.codigo_status_processo}
                 </SemanticBadge>
               )}
             </div>
 
             {/* Parte Contrária */}
-            <div className="space-y-1">
-              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-1.5 text-xs text-muted-foreground")}>
                 <User className="h-3 w-3" />
                 <span>Parte contrária</span>
               </div>
-              <p className="text-sm font-medium truncate" title={parteContraria || undefined}>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")} title={parteContraria || undefined}>
                 {parteContraria || '-'}
               </p>
             </div>
 
             {/* Classe Judicial */}
             {processo.classe_judicial && (
-              <div className="space-y-1">
-                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-1.5 text-xs text-muted-foreground")}>
                   <Scale className="h-3 w-3" />
                   <span>Classe</span>
                 </div>
-                <p className="text-sm truncate" title={processo.classe_judicial}>
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm truncate")} title={processo.classe_judicial}>
                   {processo.classe_judicial}
                 </p>
               </div>
@@ -173,10 +174,10 @@ function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
 
             {/* Próxima Audiência */}
             {processo.data_proxima_audiencia && (
-              <div className="flex items-center gap-1.5 pt-1 border-t text-xs">
+              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; pt-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-1.5 pt-1 border-t text-xs")}>
                 <CalendarDays className="h-3.5 w-3.5 text-muted-foreground" />
                 <span className="text-muted-foreground">Próxima audiência:</span>
-                <span className="font-medium">{formatarData(processo.data_proxima_audiencia)}</span>
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formatarData(processo.data_proxima_audiencia)}</span>
               </div>
             )}
           </div>

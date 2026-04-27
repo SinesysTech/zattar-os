@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import {
   Select,
@@ -42,16 +43,16 @@ export function ModuloRuptura({ data, onChange }: ModuloRupturaProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <div>
         <Heading level="card">A Ruptura e o Acerto de Contas</Heading>
-        <p className="text-sm text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
           Como o trabalho terminou e se as verbas foram pagas
         </p>
       </div>
 
       {/* A.4.1: Motivo do término */}
-      <div className="space-y-2">
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Label htmlFor="motivo">Como o trabalho terminou?</Label>
         <Select
           value={data.motivo ?? ''}
@@ -70,7 +71,7 @@ export function ModuloRuptura({ data, onChange }: ModuloRupturaProps) {
         </Select>
       </div>
 
-      <div className="space-y-2 sm:max-w-xs">
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 sm:max-w-xs")}>
         <Label htmlFor="data-demissao">Data do desligamento</Label>
         <Input
           id="data-demissao"
@@ -81,17 +82,17 @@ export function ModuloRuptura({ data, onChange }: ModuloRupturaProps) {
       </div>
 
       {/* A.4.2: Verbas rescisórias */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>Recebeu o acerto rescisório e guias do FGTS e Seguro-Desemprego?</Label>
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           {VERBAS_RECEBIDAS_OPTIONS.map((opt) => (
-            <div key={opt.value} className="flex items-center gap-2">
+            <div key={opt.value} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <Checkbox
                 id={`verba-${opt.value}`}
                 checked={verbas.includes(opt.value)}
                 onCheckedChange={(checked) => toggleVerba(opt.value, checked === true)}
               />
-              <Label htmlFor={`verba-${opt.value}`} className="cursor-pointer text-sm font-normal">
+              <Label htmlFor={`verba-${opt.value}`} className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "cursor-pointer text-sm font-normal")}>
                 {opt.label}
               </Label>
             </div>

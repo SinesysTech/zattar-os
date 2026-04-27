@@ -1,6 +1,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -93,8 +94,8 @@ export function AprovarFolhaDialog({
           <DialogDescription>Selecione as contas para gerar os lançamentos financeiros.</DialogDescription>
         </DialogHeader>
 
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          <div className="space-y-2">
+        <form className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")} onSubmit={handleSubmit}>
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label>Conta Bancária</Label>
             <Controller
               name="contaBancariaId"
@@ -116,7 +117,7 @@ export function AprovarFolhaDialog({
             />
           </div>
 
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label>Conta Contábil</Label>
             <Controller
               name="contaContabilId"
@@ -141,7 +142,7 @@ export function AprovarFolhaDialog({
             />
           </div>
 
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label>Centro de Custo (opcional)</Label>
             <Controller
               name="centroCustoId"
@@ -166,7 +167,7 @@ export function AprovarFolhaDialog({
             />
           </div>
 
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label>Observações</Label>
             <Textarea rows={3} {...form.register('observacoes')} />
           </div>

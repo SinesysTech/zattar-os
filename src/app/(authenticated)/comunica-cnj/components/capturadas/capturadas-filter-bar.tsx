@@ -20,7 +20,7 @@ import type {
   MeioComunicacao,
 } from '@/app/(authenticated)/comunica-cnj/domain';
 
-const POPOVER_CLASSES = 'rounded-2xl glass-dropdown overflow-hidden p-0';
+const POPOVER_CLASSES = /* design-system-escape: p-0 → usar <Inset> */ 'rounded-2xl glass-dropdown overflow-hidden p-0';
 
 const MEIO_OPTIONS: { value: MeioComunicacao; label: string }[] = [
   { value: 'D', label: 'Diário Eletrônico' },
@@ -55,7 +55,7 @@ function FilterDropdownTrigger({
   return (
     <div
       className={cn(
-        'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
+        /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
         active
           ? 'border-primary/20 bg-primary/5 text-primary'
           : 'border-border/15 text-muted-foreground/60 hover:bg-muted/30',
@@ -79,7 +79,7 @@ function FilterDropdownTrigger({
               onClear();
             }
           }}
-          className="ml-0.5 rounded-full p-0.5 hover:bg-primary/10 transition-colors"
+          className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-0.5 rounded-full p-0.5 hover:bg-primary/10 transition-colors")}
           aria-label={`Limpar ${label}`}
         >
           <X className="size-2.5" />
@@ -136,7 +136,7 @@ function StatusFilter({
         align="start"
         side="bottom"
       >
-        <div className="p-2 space-y-0.5">
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-0.5 sem token DS */ "p-2 space-y-0.5")}>
           {STATUS_OPTIONS.map((opt) => (
             <button
               key={opt.value}
@@ -146,7 +146,7 @@ function StatusFilter({
                 setOpen(false);
               }}
               className={cn(
-                'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
+                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
                 selected === opt.value
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70',
@@ -209,13 +209,13 @@ function TribunalFilter({
         side="bottom"
       >
         <Command className="bg-transparent">
-          <div className="px-3 pt-3 pb-1.5">
+          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
             <CommandInput
               placeholder="Buscar tribunal..."
-              className="h-8 text-xs rounded-lg"
+              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs rounded-lg")}
             />
           </div>
-          <CommandList className="max-h-52 px-1.5 pb-1.5">
+          <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-52 px-1.5 pb-1.5")}>
             <CommandEmpty>
               <span className="text-[11px] text-muted-foreground/40">
                 Não encontrado
@@ -227,7 +227,7 @@ function TribunalFilter({
                   key={sigla}
                   value={sigla}
                   onSelect={() => handleToggle(sigla)}
-                  className="gap-2 rounded-lg text-xs px-2 py-1.5"
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-xs px-2 py-1.5")}
                 >
                   <div
                     className={cn(
@@ -299,13 +299,13 @@ function TipoFilter({
         side="bottom"
       >
         <Command className="bg-transparent">
-          <div className="px-3 pt-3 pb-1.5">
+          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
             <CommandInput
               placeholder="Buscar tipo..."
-              className="h-8 text-xs rounded-lg"
+              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs rounded-lg")}
             />
           </div>
-          <CommandList className="max-h-52 px-1.5 pb-1.5">
+          <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-52 px-1.5 pb-1.5")}>
             <CommandEmpty>
               <span className="text-[11px] text-muted-foreground/40">
                 Não encontrado
@@ -317,7 +317,7 @@ function TipoFilter({
                   key={tipo}
                   value={tipo}
                   onSelect={() => handleToggle(tipo)}
-                  className="gap-2 rounded-lg text-xs px-2 py-1.5"
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-xs px-2 py-1.5")}
                 >
                   <div
                     className={cn(
@@ -375,7 +375,7 @@ function MeioFilter({
         align="start"
         side="bottom"
       >
-        <div className="p-2 space-y-0.5">
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-0.5 sem token DS */ "p-2 space-y-0.5")}>
           {MEIO_OPTIONS.map((opt) => (
             <button
               key={opt.value}
@@ -385,7 +385,7 @@ function MeioFilter({
                 setOpen(false);
               }}
               className={cn(
-                'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
+                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
                 selected === opt.value
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70',
@@ -433,12 +433,12 @@ function PeriodoFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent
-        className={cn(POPOVER_CLASSES, 'w-72 p-4')}
+        className={cn(POPOVER_CLASSES, /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'w-72 p-4')}
         align="start"
         side="bottom"
       >
-        <div className="space-y-3">
-          <div className="space-y-1.5">
+        <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+          <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
             <Label htmlFor="cap-data-inicio">
               <Text variant="meta-label">Data início</Text>
             </Label>
@@ -454,7 +454,7 @@ function PeriodoFilter({
               }
             />
           </div>
-          <div className="space-y-1.5">
+          <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
             <Label htmlFor="cap-data-fim">
               <Text variant="meta-label">Data fim</Text>
             </Label>
@@ -505,7 +505,7 @@ export function CapturadasFilterBar({
   statusCounts,
 }: CapturadasFilterBarProps) {
   return (
-    <div className="flex items-center gap-2 flex-wrap">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
       <StatusFilter
         selected={statusSelecionado}
         onChange={onStatusChange}

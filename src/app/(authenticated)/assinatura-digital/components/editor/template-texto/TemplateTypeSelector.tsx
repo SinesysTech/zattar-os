@@ -43,7 +43,7 @@ export function TemplateTypeSelector({
   disabled = false,
 }: TemplateTypeSelectorProps) {
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 sm:grid-cols-2")}>
       {templateTypes.map((option) => {
         const Icon = option.icon;
         const isSelected = value === option.type;
@@ -55,7 +55,7 @@ export function TemplateTypeSelector({
             onClick={() => !disabled && onChange(option.type)}
             disabled={disabled}
             className={cn(
-              'relative flex flex-col items-start gap-3 rounded-lg border-2 p-4 text-left transition-all',
+              /* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ 'relative flex flex-col items-start gap-3 rounded-lg border-2 p-4 text-left transition-all',
               'hover:border-primary/50 hover:bg-accent/50',
               'focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
               isSelected
@@ -81,7 +81,7 @@ export function TemplateTypeSelector({
             {/* Icon */}
             <div
               className={cn(
-                'rounded-lg p-2',
+                /* design-system-escape: p-2 → usar <Inset> */ 'rounded-lg p-2',
                 isSelected
                   ? 'bg-primary/10 text-primary'
                   : 'bg-muted text-muted-foreground'
@@ -91,9 +91,9 @@ export function TemplateTypeSelector({
             </div>
 
             {/* Content */}
-            <div className="space-y-1 pr-6">
+            <div className={cn(/* design-system-escape: space-y-1 sem token DS; pr-6 padding direcional sem Inset equiv. */ "space-y-1 pr-6")}>
               <Heading level="subsection">{option.title}</Heading>
-              <p className="text-sm text-muted-foreground">{option.description}</p>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{option.description}</p>
             </div>
           </button>
         );

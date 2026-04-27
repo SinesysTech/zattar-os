@@ -17,8 +17,8 @@ import { EditNoteModal } from "./add-note-modal";
 export default function NoteListItem({ note }: { note: Note }) {
   const { labels, archiveNote } = useNotes();
   return (
-    <Card className="group relative mb-4 block break-inside-avoid gap-0 overflow-hidden rounded-md transition-shadow group-data-[view-mode=list]:py-0 group-data-[view-mode=masonry]:pt-0 hover:shadow-lg md:group-data-[view-mode=list]:flex md:group-data-[view-mode=list]:flex-row">
-      <div className="absolute top-2 right-2 z-10 flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+    <Card className={cn(/* design-system-escape: gap-0 gap sem token DS; group-data-[view-mode=list]:py-0 sem equivalente DS; group-data-[view-mode=masonry]:pt-0 sem equivalente DS */ "group relative mb-4 block break-inside-avoid gap-0 overflow-hidden rounded-md transition-shadow group-data-[view-mode=list]:py-0 group-data-[view-mode=masonry]:pt-0 hover:shadow-lg md:group-data-[view-mode=list]:flex md:group-data-[view-mode=list]:flex-row")}>
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "absolute top-2 right-2 z-10 flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100")}>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -60,16 +60,16 @@ export default function NoteListItem({ note }: { note: Note }) {
           />
         </figure>
       )}
-      <CardContent className="pt-6 group-data-[view-mode=list]:pb-6">
-        <div className="space-y-4">
-          <Typography.H3 className="font-display text-xl lg:text-2xl">{note.title}</Typography.H3>
-          <p className="text-muted-foreground text-sm">{stripHtmlTags(note.content)}</p>
+      <CardContent className={cn(/* design-system-escape: pt-6 padding direcional sem Inset equiv.; group-data-[view-mode=list]:pb-6 sem equivalente DS */ "pt-6 group-data-[view-mode=list]:pb-6")}>
+        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <Typography.H3 className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; lg:text-2xl sem equivalente DS */ "font-display text-xl lg:text-2xl")}>{note.title}</Typography.H3>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>{stripHtmlTags(note.content)}</p>
           {note.type === "checklist" && note.items && (
-            <ul className="peer space-y-4">
+            <ul className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "peer space-y-4")}>
               {note.items.map((item, key) => (
                 <li
                   key={key}
-                  className={cn("flex items-center space-x-2", {
+                  className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2", {
                     "text-muted-foreground line-through": item.checked
                   })}>
                   <Checkbox
@@ -79,7 +79,7 @@ export default function NoteListItem({ note }: { note: Note }) {
                   />
                   <label
                     htmlFor={`checklist_${key}`}
-                    className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 aria-checked:line-through">
+                    className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-none sem token DS; font-medium → className de <Text>/<Heading> */ "text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 aria-checked:line-through")}>
                     {item.text}
                   </label>
                 </li>
@@ -89,7 +89,7 @@ export default function NoteListItem({ note }: { note: Note }) {
           {note.type === "text" && note.content && (
             <p className="text-muted-foreground whitespace-pre-line">{stripHtmlTags(note.content)}</p>
           )}
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-4 flex flex-wrap gap-2")}>
             {note.labels.map((id, key) => {
               const label = labels.find((e) => e.id === id);
               if (label)

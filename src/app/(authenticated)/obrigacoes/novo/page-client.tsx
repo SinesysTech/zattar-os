@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { AcordoForm } from '@/app/(authenticated)/obrigacoes';
 import { ArrowLeft } from 'lucide-react';
@@ -22,9 +23,9 @@ export default function NovaObrigacaoClient() {
   };
 
   return (
-    <div className="py-8 space-y-6 max-w-4xl mx-auto">
+    <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv.; space-y-6 → migrar para <Stack gap="loose"> */ "py-8 space-y-6 max-w-4xl mx-auto")}>
       {/* Header */}
-      <div className="flex items-center gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
         <Button variant="ghost" size="icon" aria-label="Voltar" asChild>
           <Link href="/obrigacoes">
             <ArrowLeft className="h-4 w-4" />
@@ -36,7 +37,7 @@ export default function NovaObrigacaoClient() {
       </div>
 
       {/* Formulario */}
-      <div className="rounded-lg border bg-card p-6">
+      <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "rounded-lg border bg-card p-6")}>
         <AcordoForm
           onSuccess={handleSuccess}
           onCancel={handleCancel}

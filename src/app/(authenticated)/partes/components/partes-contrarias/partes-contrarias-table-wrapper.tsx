@@ -6,6 +6,7 @@
  * Implementação seguindo o padrão DataShell.
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import Link from 'next/link';
 import type { Table as TanstackTable, SortingState, ColumnDef, RowSelectionState } from '@tanstack/react-table';
@@ -207,14 +208,14 @@ export function PartesContrariasTableWrapper() {
           const idade = calcularIdade(dataNascimento);
 
           return (
-            <div className="flex flex-col items-start gap-0.5 max-w-full overflow-hidden">
-              <div className="flex items-center gap-1 max-w-full">
-                <span className="text-sm font-medium wrap-break-word whitespace-normal">
+            <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-start gap-0.5 max-w-full overflow-hidden")}>
+              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 max-w-full")}>
+                <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium wrap-break-word whitespace-normal")}>
                   {formatarNome(parte.nome)}
                 </span>
                 <CopyButton text={parte.nome} label="Copiar nome" />
               </div>
-              <div className="flex items-center gap-1">
+              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
                 <Text variant="caption" as="span" className="text-muted-foreground">
                   {documento}
                 </Text>
@@ -223,7 +224,7 @@ export function PartesContrariasTableWrapper() {
                 )}
               </div>
               {isPF && dataNascimento && (
-                <span className="text-xs text-muted-foreground text-left">
+                <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground text-left")}>
                   {formatarData(dataNascimento)}
                   {idade !== null && ` - ${idade} anos`}
                 </span>
@@ -263,9 +264,9 @@ export function PartesContrariasTableWrapper() {
           const hasEndereco = enderecoFormatado && enderecoFormatado !== '-';
 
           return (
-            <div className="flex items-start gap-1 max-w-full overflow-hidden">
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-start gap-1 max-w-full overflow-hidden")}>
               <span
-                className="text-sm whitespace-normal wrap-break-word flex-1"
+                className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm whitespace-normal wrap-break-word flex-1")}
                 title={enderecoFormatado}
               >
                 {enderecoFormatado || '-'}
@@ -385,7 +386,7 @@ export function PartesContrariasTableWrapper() {
               }
             />
           ) : (
-            <div className="p-6" />
+            <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")} />
           )
         }
         footer={

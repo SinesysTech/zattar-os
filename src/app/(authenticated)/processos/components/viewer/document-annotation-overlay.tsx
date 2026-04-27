@@ -57,39 +57,39 @@ export function DocumentAnnotationOverlay({
 
   return (
     <aside className="pointer-events-auto absolute inset-y-3 right-3 z-20 hidden w-72 rounded-2xl border bg-background/96 shadow-lg backdrop-blur lg:flex lg:flex-col">
-      <div className="border-b px-3 py-2.5">
-        <div className="flex items-center gap-2">
+      <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "border-b px-3 py-2.5")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           <div className="flex size-7 items-center justify-center rounded-full bg-primary/10 text-primary">
             <StickyNote className="size-3.5" />
           </div>
           <div>
-            <Text variant="label" as="p" className="font-semibold text-foreground">Anotações</Text>
+            <Text variant="label" as="p" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-foreground")}>Anotações</Text>
             <Text variant="caption" className="text-muted-foreground">Painel flutuante da leitura</Text>
           </div>
         </div>
       </div>
 
-      <div className="border-b px-3 py-2.5 space-y-2">
-        <div className="rounded-xl border bg-muted/25 px-3 py-2">
-          <p className="truncate text-xs font-medium text-foreground">
+      <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; space-y-2 → migrar para <Stack gap="tight"> */ "border-b px-3 py-2.5 space-y-2")}>
+        <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "rounded-xl border bg-muted/25 px-3 py-2")}>
+          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "truncate text-xs font-medium text-foreground")}>
             {itemTitle || 'Nenhum evento selecionado'}
           </p>
           {itemDate && <p className="mt-0.5 text-[11px] text-muted-foreground">{itemDate}</p>}
         </div>
 
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Textarea
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
             placeholder="Registrar nota..."
             className="min-h-22 resize-none bg-background"
           />
-          <div className="flex items-center justify-between gap-2">
-            <p className="line-clamp-2 text-[10px] leading-4 text-muted-foreground">{helperText}</p>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
+            <p className={cn(/* design-system-escape: leading-4 sem token DS */ "line-clamp-2 text-[10px] leading-4 text-muted-foreground")}>{helperText}</p>
             <Button
               type="button"
               size="sm"
-              className="h-8 gap-1.5 px-3"
+              className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv. */ "h-8 gap-1.5 px-3")}
               onClick={() => {
                 const trimmedDraft = draft.trim();
                 if (!trimmedDraft) return;
@@ -105,12 +105,12 @@ export function DocumentAnnotationOverlay({
         </div>
       </div>
 
-      <ScrollArea className="min-h-0 flex-1 px-3 py-2.5">
-        <div className="space-y-2 pr-1">
+      <ScrollArea className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "min-h-0 flex-1 px-3 py-2.5")}>
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; pr-1 padding direcional sem Inset equiv. */ "space-y-2 pr-1")}>
           {annotations.length === 0 ? (
-            <div className="rounded-xl border border-dashed bg-muted/25 px-4 py-5 text-center">
-              <p className="text-sm font-medium text-foreground">Nenhuma anotação ainda</p>
-              <p className="mt-1 text-[11px] leading-4 text-muted-foreground">
+            <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "rounded-xl border border-dashed bg-muted/25 px-4 py-5 text-center")}>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-foreground")}>Nenhuma anotação ainda</p>
+              <p className={cn(/* design-system-escape: leading-4 sem token DS */ "mt-1 text-[11px] leading-4 text-muted-foreground")}>
                 Use este painel sem sair do documento.
               </p>
             </div>
@@ -119,13 +119,13 @@ export function DocumentAnnotationOverlay({
               <article
                 key={annotation.id}
                 className={cn(
-                  'rounded-xl border px-3 py-2.5 shadow-sm',
+                  /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ 'rounded-xl border px-3 py-2.5 shadow-sm',
                   index === 0 ? 'bg-primary/5 border-primary/20' : 'bg-background'
                 )}
               >
-                <div className="mb-1.5 flex items-start justify-between gap-2">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mb-1.5 flex items-start justify-between gap-2")}>
                   <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                    <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground")}>
                       Nota {index + 1}
                     </p>
                     <p className="mt-0.5 text-[10px] text-muted-foreground">{formatarCriacao(annotation.createdAt)}</p>
@@ -141,7 +141,7 @@ export function DocumentAnnotationOverlay({
                     <Trash2 className="size-3.5" />
                   </Button>
                 </div>
-                <p className="text-sm leading-5 text-foreground">{annotation.content}</p>
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-5 sem token DS */ "text-sm leading-5 text-foreground")}>{annotation.content}</p>
               </article>
             ))
           )}

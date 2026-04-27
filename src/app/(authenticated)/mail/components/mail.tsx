@@ -109,11 +109,11 @@ export function Mail({
 
   if (serviceUnavailable) {
     return (
-      <div className="flex h-full flex-col items-center justify-center gap-4 p-8 text-center">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; p-8 → usar <Inset> */ "flex h-full flex-col items-center justify-center gap-4 p-8 text-center")}>
         <MailWarning className="text-muted-foreground h-12 w-12" />
-        <div className="space-y-2">
-          <Heading level="section" className="text-lg">E-mail não configurado</Heading>
-          <p className="text-muted-foreground max-w-md text-sm">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <Heading level="section" className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-lg")}>E-mail não configurado</Heading>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground max-w-md text-sm")}>
             Configure sua conta de e-mail para começar a enviar e receber mensagens.
           </p>
         </div>
@@ -132,7 +132,7 @@ export function Mail({
       {/* Skip link for keyboard accessibility */}
       <a
         href="#mail-list"
-        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground">
+        className={cn(/* design-system-escape: focus:px-4 sem equivalente DS; focus:py-2 sem equivalente DS */ "sr-only focus:not-sr-only focus:absolute focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground")}>
         Ir para lista de e-mails
       </a>
 
@@ -170,9 +170,9 @@ export function Mail({
         <ResizablePanel id="middle-panel" hidden={isMailExpanded} defaultSize={defaultLayout[1]} minSize={28}>
           <Tabs
             defaultValue="all"
-            className="flex h-full flex-col gap-0 bg-card"
+            className={cn(/* design-system-escape: gap-0 gap sem token DS */ "flex h-full flex-col gap-0 bg-card")}
             onValueChange={(value) => setTab(value)}>
-            <div className="flex h-13 shrink-0 items-center gap-2 px-4">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-4 padding direcional sem Inset equiv. */ "flex h-13 shrink-0 items-center gap-2 px-4")}>
               {hasSelection ? (
                 <>
                   <Checkbox
@@ -180,11 +180,11 @@ export function Mail({
                     onCheckedChange={handleSelectAll}
                     aria-label="Selecionar todos"
                   />
-                  <span className="text-muted-foreground text-xs">
+                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground text-xs")}>
                     {selectedUids.size} selecionado{selectedUids.size > 1 ? "s" : ""}
                   </span>
 
-                  <div className="ml-auto flex items-center gap-1">
+                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "ml-auto flex items-center gap-1")}>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Button
@@ -230,7 +230,7 @@ export function Mail({
                       <TooltipContent>Excluir</TooltipContent>
                     </Tooltip>
 
-                    <Separator orientation="vertical" className="mx-1 h-4" />
+                    <Separator orientation="vertical" className={cn(/* design-system-escape: mx-1 margin sem primitiva DS */ "mx-1 h-4")} />
 
                     <Tooltip>
                       <TooltipTrigger asChild>
@@ -247,7 +247,7 @@ export function Mail({
                       <TooltipContent>Marcar como lido</TooltipContent>
                     </Tooltip>
 
-                    <Separator orientation="vertical" className="mx-1 h-4" />
+                    <Separator orientation="vertical" className={cn(/* design-system-escape: mx-1 margin sem primitiva DS */ "mx-1 h-4")} />
 
                     <Tooltip>
                       <TooltipTrigger asChild>
@@ -280,10 +280,10 @@ export function Mail({
                   )}
 
                   <TabsList className="ml-auto h-7">
-                    <TabsTrigger value="all" className="text-xs px-2 h-5">
+                    <TabsTrigger value="all" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv. */ "text-xs px-2 h-5")}>
                       Todos
                     </TabsTrigger>
-                    <TabsTrigger value="unread" className="text-xs px-2 h-5">
+                    <TabsTrigger value="unread" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv. */ "text-xs px-2 h-5")}>
                       Não lidos
                     </TabsTrigger>
                   </TabsList>
@@ -291,7 +291,7 @@ export function Mail({
               )}
             </div>
             <Separator />
-            <div className="p-4">
+            <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
               <form onSubmit={handleSearch}>
                 <InputGroup>
                   <InputGroupAddon>

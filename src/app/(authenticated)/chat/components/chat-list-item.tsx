@@ -17,7 +17,7 @@ export function ChatListItem({ chat, active, onClick }: ChatListItemProps) {
   return (
     <div
       className={cn(
-        "group/item flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-200",
+        /* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ "group/item flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-200",
         "border border-transparent relative",
         active
           ? "bg-chat-sidebar-active border-primary/8"
@@ -40,7 +40,7 @@ export function ChatListItem({ chat, active, onClick }: ChatListItemProps) {
           {chat.image ? (
             <img src={chat.image} alt={chat.name || chat.nome} className="size-full object-cover" />
           ) : (
-            <div className="size-full flex items-center justify-center bg-primary/12 text-primary text-[11px] font-semibold">
+            <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "size-full flex items-center justify-center bg-primary/12 text-primary text-[11px] font-semibold")}>
               {generateAvatarFallback(chat.name || chat.nome)}
             </div>
           )}
@@ -54,20 +54,20 @@ export function ChatListItem({ chat, active, onClick }: ChatListItemProps) {
 
       {/* Info */}
       <div className="flex-1 min-w-0">
-        <div className="flex items-center justify-between gap-2">
-          <span className="text-[0.8rem] font-semibold text-foreground truncate">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[0.8rem] font-semibold text-foreground truncate")}>
             {chat.name || chat.nome}
           </span>
           <span className="text-[0.6rem] text-muted-foreground/40 tabular-nums shrink-0">
             {chat.date ? new Date(chat.date).toLocaleDateString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : ''}
           </span>
         </div>
-        <div className="flex items-center justify-between gap-2 mt-1">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2 mt-1")}>
           <span className="text-[0.7rem] text-muted-foreground/50 truncate flex-1">
             {chat.lastMessage}
           </span>
           {unreadCount > 0 && (
-            <span className="min-w-4.5 h-[h-4.5unded-full bg-primary text-white text-[0.6rem] font-semibold flex items-center justify-center px-1 shrink-0">
+            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1 padding direcional sem Inset equiv. */ "min-w-4.5 h-[h-4.5unded-full bg-primary text-white text-[0.6rem] font-semibold flex items-center justify-center px-1 shrink-0")}>
               {unreadCount}
             </span>
           )}

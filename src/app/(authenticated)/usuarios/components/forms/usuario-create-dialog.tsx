@@ -210,7 +210,7 @@ export function UsuarioCreateDialog({
       title="Novo Usuário"
       maxWidth="2xl"
       footer={
-        <div className="flex gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
           {step > 0 && (
             <Button type="button" variant="outline" onClick={() => setStep(s => s - 1)} disabled={isLoading}>
               Anterior
@@ -230,21 +230,21 @@ export function UsuarioCreateDialog({
       }
     >
         <form ref={formRef} onSubmit={handleSubmit}>
-          <div className="space-y-4">
+          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             {/* Step Indicator */}
-            <div className="flex items-center gap-2 mb-6">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-6")}>
               {STEPS.map((label, i) => (
                 <React.Fragment key={label}>
-                  <div className="flex items-center gap-2">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                     <div className={cn(
-                      'size-7 rounded-full flex items-center justify-center text-xs font-semibold transition-colors',
+                      /* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ 'size-7 rounded-full flex items-center justify-center text-xs font-semibold transition-colors',
                       i < step ? 'bg-success/15 text-success' :
                       i === step ? 'bg-primary/15 text-primary' :
                       'bg-muted/8 text-muted-foreground/40'
                     )}>
                       {i < step ? '✓' : i + 1}
                     </div>
-                    <span className={cn('text-xs hidden sm:inline', i === step ? 'text-foreground' : 'text-muted-foreground/40')}>
+                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ 'text-xs hidden sm:inline', i === step ? 'text-foreground' : 'text-muted-foreground/40')}>
                       {label}
                     </span>
                   </div>
@@ -254,16 +254,16 @@ export function UsuarioCreateDialog({
             </div>
 
             {error && (
-              <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-3 text-sm text-destructive")}>
                 {error}
               </div>
             )}
 
             {/* Step 0: Dados Pessoais */}
             {step === 0 && (
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
+              <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                     <Label htmlFor="nomeCompleto">
                       Nome Completo <Text variant="caption" as="span" className="text-destructive">*</Text>
                     </Label>
@@ -276,7 +276,7 @@ export function UsuarioCreateDialog({
                     />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                     <Label htmlFor="nomeExibicao">
                       Nome de Exibição <Text variant="caption" as="span" className="text-destructive">*</Text>
                     </Label>
@@ -290,8 +290,8 @@ export function UsuarioCreateDialog({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
+                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                     <Label htmlFor="cpf">
                       CPF <Text variant="caption" as="span" className="text-destructive">*</Text>
                     </Label>
@@ -305,7 +305,7 @@ export function UsuarioCreateDialog({
                     />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                     <Label htmlFor="rg">RG</Label>
                     <Input
                       id="rg"
@@ -316,8 +316,8 @@ export function UsuarioCreateDialog({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
+                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                     <Label htmlFor="dataNascimento">Data de Nascimento</Label>
                     <FormDatePicker
                       id="dataNascimento"
@@ -327,7 +327,7 @@ export function UsuarioCreateDialog({
                     />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                     <Label htmlFor="genero">Gênero</Label>
                     <Select
                       value={formData.genero || ''}
@@ -351,8 +351,8 @@ export function UsuarioCreateDialog({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2 md:col-span-2">
+                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 md:col-span-2")}>
                     <Label htmlFor="senha">
                       Senha <Text variant="caption" as="span" className="text-destructive">*</Text>
                     </Label>
@@ -373,9 +373,9 @@ export function UsuarioCreateDialog({
 
             {/* Step 1: Contato */}
             {step === 1 && (
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
+              <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                     <Label htmlFor="emailCorporativo">
                       E-mail Corporativo <Text variant="caption" as="span" className="text-destructive">*</Text>
                     </Label>
@@ -391,7 +391,7 @@ export function UsuarioCreateDialog({
                     />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                     <Label htmlFor="emailPessoal">E-mail Pessoal</Label>
                     <Input
                       id="emailPessoal"
@@ -403,8 +403,8 @@ export function UsuarioCreateDialog({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
+                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                     <Label htmlFor="telefone">Telefone</Label>
                     <Input
                       id="telefone"
@@ -415,7 +415,7 @@ export function UsuarioCreateDialog({
                     />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                     <Label htmlFor="ramal">Ramal</Label>
                     <Input
                       id="ramal"
@@ -426,8 +426,8 @@ export function UsuarioCreateDialog({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
+                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                     <Label htmlFor="cargoId">Cargo</Label>
                     <Select
                       value={formData.cargoId?.toString() || 'none'}
@@ -450,7 +450,7 @@ export function UsuarioCreateDialog({
                     </Select>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                     <Label htmlFor="oab">OAB</Label>
                     <Input
                       id="oab"
@@ -461,8 +461,8 @@ export function UsuarioCreateDialog({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
+                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                     <Label htmlFor="ufOab">UF OAB</Label>
                     <Input
                       id="ufOab"
@@ -481,11 +481,11 @@ export function UsuarioCreateDialog({
 
             {/* Step 2: Endereço */}
             {step === 2 && (
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
+              <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                     <Label htmlFor="cep">CEP</Label>
-                    <div className="flex gap-2">
+                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
                       <Input
                         id="cep"
                         value={formData.endereco?.cep || ''}
@@ -512,8 +512,8 @@ export function UsuarioCreateDialog({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="md:col-span-2 space-y-2">
+                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "md:col-span-2 space-y-2")}>
                     <Label htmlFor="logradouro">Logradouro</Label>
                     <Input
                       id="logradouro"
@@ -523,7 +523,7 @@ export function UsuarioCreateDialog({
                     />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                     <Label htmlFor="numero">Número</Label>
                     <Input
                       id="numero"
@@ -533,7 +533,7 @@ export function UsuarioCreateDialog({
                     />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                     <Label htmlFor="complemento">Complemento</Label>
                     <Input
                       id="complemento"
@@ -543,7 +543,7 @@ export function UsuarioCreateDialog({
                     />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                     <Label htmlFor="bairro">Bairro</Label>
                     <Input
                       id="bairro"
@@ -553,7 +553,7 @@ export function UsuarioCreateDialog({
                     />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                     <Label htmlFor="cidade">Cidade</Label>
                     <Input
                       id="cidade"
@@ -563,7 +563,7 @@ export function UsuarioCreateDialog({
                     />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                     <Label htmlFor="estado">UF</Label>
                     <Input
                       id="estado"
@@ -575,7 +575,7 @@ export function UsuarioCreateDialog({
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-2 pt-2">
+                <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight">; pt-2 padding direcional sem Inset equiv. */ "flex items-center space-x-2 pt-2")}>
                   <Checkbox
                     id="ativo"
                     checked={formData.ativo ?? true}

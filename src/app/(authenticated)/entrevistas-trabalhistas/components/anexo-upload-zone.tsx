@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { Upload, Paperclip } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
@@ -62,19 +63,19 @@ export function AnexoUploadZone({ entrevistaId, contratoId, modulo }: AnexoUploa
   };
 
   return (
-    <GlassPanel className="space-y-4 p-4">
-      <div className="flex items-start gap-2">
+    <GlassPanel className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; p-4 → migrar para <Inset variant="card-compact"> */ "space-y-4 p-4")}>
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2")}>
         <Paperclip className="mt-0.5 h-4 w-4 text-muted-foreground" />
         <div>
-          <h4 className="text-sm font-semibold">Anexos de apoio da etapa</h4>
-          <p className="text-xs text-muted-foreground">
+          <h4 className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold")}>Anexos de apoio da etapa</h4>
+          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
             Envie audios, documentos, imagens ou videos relacionados a esta pergunta.
           </p>
         </div>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2">
-        <div className="space-y-2">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3 sm:grid-cols-2")}>
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label htmlFor={`tipo-anexo-${modulo}`}>Tipo de anexo</Label>
           <Select value={tipoAnexo} onValueChange={setTipoAnexo}>
             <SelectTrigger id={`tipo-anexo-${modulo}`}>
@@ -90,7 +91,7 @@ export function AnexoUploadZone({ entrevistaId, contratoId, modulo }: AnexoUploa
           </Select>
         </div>
 
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label htmlFor={`arquivo-anexo-${modulo}`}>Arquivo</Label>
           <Input
             id={`arquivo-anexo-${modulo}`}
@@ -101,7 +102,7 @@ export function AnexoUploadZone({ entrevistaId, contratoId, modulo }: AnexoUploa
         </div>
       </div>
 
-      <div className="space-y-2">
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Label htmlFor={`descricao-anexo-${modulo}`}>Descricao (opcional)</Label>
         <Textarea
           id={`descricao-anexo-${modulo}`}
@@ -112,8 +113,8 @@ export function AnexoUploadZone({ entrevistaId, contratoId, modulo }: AnexoUploa
         />
       </div>
 
-      <div className="flex items-center justify-between gap-3">
-        <p className="text-xs text-muted-foreground">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
           Limite de 25MB por arquivo.
         </p>
         <Button type="button" onClick={handleUpload} disabled={isLoading}>
@@ -122,7 +123,7 @@ export function AnexoUploadZone({ entrevistaId, contratoId, modulo }: AnexoUploa
         </Button>
       </div>
 
-      {mensagem && <p className="text-xs text-muted-foreground">{mensagem}</p>}
+      {mensagem && <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{mensagem}</p>}
     </GlassPanel>
   );
 }

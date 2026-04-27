@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import {
   RepassesPendentesList,
@@ -38,7 +39,7 @@ export function RepassesPageContent() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <RepassesPendentesList
         refreshToken={refreshToken}
         onAnexarDeclaracao={handleAnexarDeclaracao}

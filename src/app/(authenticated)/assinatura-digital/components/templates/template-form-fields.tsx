@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import type { UseFormReturn, FieldErrors } from 'react-hook-form';
 import { FileText, FileUp } from 'lucide-react';
@@ -139,19 +140,19 @@ export function TemplateFormFields({
   };
 
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       {/* Seletor de Tipo de Template */}
-      <div className="space-y-1.5">
+      <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
         <Label>
           Tipo de Template <span className="text-destructive">*</span>
         </Label>
         <Tabs value={tipoTemplate} onValueChange={handleTipoChange}>
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="markdown" className="flex items-center gap-2">
+            <TabsTrigger value="markdown" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <FileText className="h-4 w-4" />
               Editor Texto (Markdown)
             </TabsTrigger>
-            <TabsTrigger value="pdf" className="flex items-center gap-2">
+            <TabsTrigger value="pdf" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <FileUp className="h-4 w-4" />
               PDF Upload
             </TabsTrigger>
@@ -160,9 +161,9 @@ export function TemplateFormFields({
       </div>
 
       {/* Grid responsivo para campos básicos */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
         {/* Nome */}
-        <div className="space-y-1.5">
+        <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
           <Label htmlFor="nome">
             Nome do Template <span className="text-destructive">*</span>
           </Label>
@@ -173,12 +174,12 @@ export function TemplateFormFields({
             disabled={isSubmitting}
           />
           {getErrorMessage('nome') && (
-            <p className="text-sm text-destructive">{getErrorMessage('nome')}</p>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{getErrorMessage('nome')}</p>
           )}
         </div>
 
         {/* Segmento */}
-        <div className="space-y-1.5">
+        <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
           <Label htmlFor="segmento_id">Segmento (Opcional)</Label>
           <Select
             onValueChange={(value) => setValue('segmento_id', Number(value))}
@@ -202,19 +203,19 @@ export function TemplateFormFields({
               variant="ghost"
               size="sm"
               onClick={handleClearSegmento}
-              className="h-6 text-xs"
+              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-6 text-xs")}
             >
               Limpar seleção
             </Button>
           )}
           {getErrorMessage('segmento_id') && (
-            <p className="text-sm text-destructive">{getErrorMessage('segmento_id')}</p>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{getErrorMessage('segmento_id')}</p>
           )}
         </div>
       </div>
 
       {/* Descrição - largura total */}
-      <div className="space-y-1.5">
+      <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
         <Label htmlFor="descricao">Descrição</Label>
         <Textarea
           id="descricao"
@@ -224,12 +225,12 @@ export function TemplateFormFields({
           rows={2}
         />
         {getErrorMessage('descricao') && (
-          <p className="text-sm text-destructive">{getErrorMessage('descricao')}</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{getErrorMessage('descricao')}</p>
         )}
       </div>
 
       {/* Checkbox Ativo */}
-      <div className="flex items-center space-x-2">
+      <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
         <Checkbox
           id="ativo"
           checked={ativo ?? true}
@@ -246,7 +247,7 @@ export function TemplateFormFields({
         <>
           {/* Editor Markdown (condicional) */}
           {tipoTemplate === 'markdown' && (
-            <div className="space-y-1.5">
+            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
               <Label htmlFor="conteudo_markdown">
                 Conteúdo Markdown <span className="text-destructive">*</span>
               </Label>
@@ -256,7 +257,7 @@ export function TemplateFormFields({
                 formularios={[]}
               />
               {getErrorMessage('conteudo_markdown') && (
-                <p className="text-sm text-destructive">{getErrorMessage('conteudo_markdown')}</p>
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{getErrorMessage('conteudo_markdown')}</p>
               )}
             </div>
           )}

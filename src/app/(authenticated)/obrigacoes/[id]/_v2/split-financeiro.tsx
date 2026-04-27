@@ -34,13 +34,13 @@ export function SplitFinanceiro({ acordo }: SplitFinanceiroProps) {
   const pctSucumbencia = valorTotal > 0 ? (sucumbencia / valorTotal) * 100 : 0;
 
   return (
-    <GlassPanel depth={1} className="p-5">
-      <div className="flex items-start justify-between gap-3 mb-4">
+    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3 mb-4")}>
         <div>
           <Text variant="meta-label" className="text-muted-foreground/60">
             Split financeiro
           </Text>
-          <Text variant="caption" className="text-foreground/85 font-medium mt-0.5">
+          <Text variant="caption" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-foreground/85 font-medium mt-0.5")}>
             Distribuição sobre {formatCurrency(valorTotal)}
           </Text>
         </div>
@@ -73,7 +73,7 @@ export function SplitFinanceiro({ acordo }: SplitFinanceiroProps) {
         )}
       </div>
 
-      <ul className="space-y-2.5">
+      <ul className={cn(/* design-system-escape: space-y-2.5 sem token DS */ "space-y-2.5")}>
         <SplitRow
           dotClass="bg-primary/70"
           label="Cliente"
@@ -100,11 +100,11 @@ export function SplitFinanceiro({ acordo }: SplitFinanceiroProps) {
       </ul>
 
       {sucumbencia > 0 && (
-        <div className="mt-4 pt-3 border-t border-border/15 flex items-center justify-between">
+        <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-4 pt-3 border-t border-border/15 flex items-center justify-between")}>
           <Text variant="meta-label" className="text-muted-foreground/60">
             Total escritório
           </Text>
-          <Text variant="caption" className="font-semibold tabular-nums">
+          <Text variant="caption" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold tabular-nums")}>
             {formatCurrency(totalEscritorio)}
           </Text>
         </div>
@@ -128,11 +128,11 @@ function SplitRow({
 }) {
   const pct = valorTotal > 0 ? (valor / valorTotal) * 100 : 0;
   return (
-    <li className="flex items-center gap-3">
+    <li className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
       <span className={cn('size-2 rounded-full shrink-0', dotClass)} />
-      <div className="flex-1 min-w-0 flex items-baseline justify-between gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex-1 min-w-0 flex items-baseline justify-between gap-3")}>
         <div className="min-w-0">
-          <Text variant="caption" className="font-medium text-foreground/85">
+          <Text variant="caption" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/85")}>
             {label}
           </Text>
           <Text variant="meta-label" className="text-muted-foreground/55 block">
@@ -140,7 +140,7 @@ function SplitRow({
           </Text>
         </div>
         <div className="text-right shrink-0">
-          <Text variant="caption" className="font-semibold tabular-nums">
+          <Text variant="caption" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold tabular-nums")}>
             {formatCurrency(valor)}
           </Text>
           <Text

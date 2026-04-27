@@ -5,6 +5,7 @@
  * Fonte: useDashboard() → data.dadosFinanceiros.fluxoCaixaMensal
  */
 
+import { cn } from '@/lib/utils';
 import { TrendingUp } from 'lucide-react';
 import { WidgetContainer, MiniBar, fmtMoeda } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
@@ -19,7 +20,7 @@ export function WidgetFluxoCaixa() {
   if (!data) {
     return (
       <WidgetContainer title="Fluxo de Caixa" icon={TrendingUp} subtitle="Sem dados">
-        <p className="text-xs text-muted-foreground/60">Dados indisponíveis.</p>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60")}>Dados indisponíveis.</p>
       </WidgetContainer>
     );
   }
@@ -29,7 +30,7 @@ export function WidgetFluxoCaixa() {
   if (!fluxo || fluxo.length === 0) {
     return (
       <WidgetContainer title="Fluxo de Caixa" icon={TrendingUp} subtitle="Mensal">
-        <p className="text-xs text-muted-foreground/60">Nenhum dado de fluxo disponível.</p>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60")}>Nenhum dado de fluxo disponível.</p>
       </WidgetContainer>
     );
   }
@@ -44,7 +45,7 @@ export function WidgetFluxoCaixa() {
 
   return (
     <WidgetContainer title="Fluxo de Caixa" icon={TrendingUp} subtitle="Receita vs Despesa">
-      <div className="flex flex-col gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
         <MiniBar
           data={barData}
           height={56}
@@ -53,12 +54,12 @@ export function WidgetFluxoCaixa() {
         />
 
         {/* Legend */}
-        <div className="flex items-center gap-4 text-[10px] text-muted-foreground/60">
-          <div className="flex items-center gap-1.5">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4 text-[10px] text-muted-foreground/60")}>
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
             <div className="size-2 rounded-sm bg-success/50" />
             <span>Receita</span>
           </div>
-          <div className="flex items-center gap-1.5">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
             <div className="size-2 rounded-sm bg-destructive/40" />
             <span>Despesa</span>
           </div>
@@ -66,11 +67,11 @@ export function WidgetFluxoCaixa() {
 
         {/* Last month summary */}
         {lastMonth && (
-          <div className="flex items-center justify-between text-[11px] pt-1 border-t border-border/10">
+          <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "flex items-center justify-between text-[11px] pt-1 border-t border-border/10")}>
             <span className="text-muted-foreground/50">{fmtMes(lastMonth.mes)}</span>
-            <div className="flex items-center gap-3">
-              <span className="text-success/70 font-medium">{fmtMoeda(lastMonth.receita)}</span>
-              <span className="text-destructive/60 font-medium">{fmtMoeda(lastMonth.despesa)}</span>
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-success/70 font-medium")}>{fmtMoeda(lastMonth.receita)}</span>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-destructive/60 font-medium")}>{fmtMoeda(lastMonth.despesa)}</span>
             </div>
           </div>
         )}

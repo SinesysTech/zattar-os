@@ -160,21 +160,21 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoUnificado> }) {
   const dataProximaAudiencia = processo.dataProximaAudiencia;
 
   return (
-    <div className="flex flex-col items-start justify-center gap-1.5 py-2 min-w-0 group">
-      <div className="flex items-center gap-1.5 flex-wrap">
-        <SemanticBadge category="tribunal" value={trt} className="w-fit text-xs">
+    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex flex-col items-start justify-center gap-1.5 py-2 min-w-0 group")}>
+      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 flex-wrap")}>
+        <SemanticBadge category="tribunal" value={trt} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "w-fit text-xs")}>
           {trt}
         </SemanticBadge>
         {isUnificado ? (
           <GrauBadgesSimple grausAtivos={(processo as ProcessoUnificado).grausAtivos} />
         ) : (
-          <SemanticBadge category="grau" value={(processo as Processo).grau} className="w-fit text-xs">
+          <SemanticBadge category="grau" value={(processo as Processo).grau} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "w-fit text-xs")}>
             {formatarGrau((processo as Processo).grau)}
           </SemanticBadge>
         )}
       </div>
-      <div className="flex items-center gap-1.5">
-        <div className="text-sm font-medium whitespace-nowrap">
+      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium whitespace-nowrap")}>
           {classeJudicial && `${classeJudicial} `}
           {numeroProcesso}
         </div>
@@ -190,20 +190,20 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoUnificado> }) {
           </TooltipProvider>
         )}
       </div>
-      <div className="flex items-center gap-1.5">
-        <span className="text-xs text-muted-foreground max-w-full truncate">{orgaoJulgador}</span>
+      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground max-w-full truncate")}>{orgaoJulgador}</span>
         <ProximaAudienciaPopover dataAudiencia={dataProximaAudiencia} />
       </div>
-      <div className="flex flex-col gap-0.5">
+      <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
         <ParteBadge
           polo="ATIVO"
-          className="flex whitespace-normal wrap-break-word text-left font-normal text-xs"
+          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex whitespace-normal wrap-break-word text-left font-normal text-xs")}
         >
           {processo.nomeParteAutoraOrigem || processo.nomeParteAutora || '-'}
         </ParteBadge>
         <ParteBadge
           polo="PASSIVO"
-          className="flex whitespace-normal wrap-break-word text-left font-normal text-xs"
+          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex whitespace-normal wrap-break-word text-left font-normal text-xs")}
         >
           {processo.nomeParteReOrigem || processo.nomeParteRe || '-'}
         </ParteBadge>
@@ -263,14 +263,14 @@ function ProcessoResponsavelCell({
           e.stopPropagation();
           setIsDialogOpen(true);
         }}
-        className="flex items-center justify-start gap-2 text-sm w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1 cursor-pointer"
+        className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm">; px-1 padding direcional sem Inset equiv.; -mx-1 sem equivalente DS */ "flex items-center justify-start gap-2 text-sm w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1 cursor-pointer")}
         title={nomeExibicao !== '-' ? `Clique para alterar responsável: ${nomeExibicao}` : 'Clique para atribuir responsável'}
       >
         {responsavel ? (
           <>
             <Avatar size="sm">
               <AvatarImage src={responsavel.avatarUrl || undefined} alt={responsavel.nomeExibicao} />
-              <AvatarFallback className="text-[10px] font-medium">
+              <AvatarFallback className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium")}>
                 {getInitials(responsavel.nomeExibicao)}
               </AvatarFallback>
             </Avatar>
@@ -311,7 +311,7 @@ function criarColunas(
       accessorKey: 'dataAutuacao',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Data Autuação" />,
       cell: ({ row }) => (
-        <span className="text-sm text-muted-foreground whitespace-nowrap" suppressHydrationWarning>
+        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground whitespace-nowrap")} suppressHydrationWarning>
           {formatarData(row.original.dataAutuacao)}
         </span>
       ),
@@ -338,7 +338,7 @@ function criarColunas(
       cell: ({ row }) => {
         const processoTags = tagsMap[row.original.id] || [];
         return (
-          <div className="flex items-center py-2 min-w-0">
+          <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2 min-w-0")}>
             <TagBadgeList
               tags={processoTags}
               maxVisible={3}
@@ -358,7 +358,7 @@ function criarColunas(
       header: ({ column }) => <DataTableColumnHeader column={column} title="Responsável" />,
       cell: ({ row }) => {
         return (
-          <div className="flex items-center py-2 min-w-0">
+          <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2 min-w-0")}>
             <ProcessoResponsavelCell
               processo={row.original}
               usuarios={usuarios}
@@ -380,8 +380,8 @@ function criarColunas(
         // Fallback para ATIVO se status for nulo (cenário de migração de dados)
         const status = row.original.status;
         return (
-          <div className="flex items-center py-2">
-            <ProcessoStatusBadge status={status} className="text-xs" />
+          <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
+            <ProcessoStatusBadge status={status} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")} />
           </div>
         );
       },
@@ -397,7 +397,7 @@ function criarColunas(
       cell: ({ row }) => {
         const processo = row.original;
         return (
-          <div className="flex items-center py-2">
+          <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -437,11 +437,11 @@ function criarColunas(
       header: ({ column }) => <DataTableColumnHeader column={column} title="Prioridade" />,
       cell: ({ row }) => {
         const prioridade = row.original.prioridadeProcessual;
-        if (!prioridade) return <span className="text-sm text-muted-foreground">-</span>;
+        if (!prioridade) return <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>-</span>;
 
         const variant = prioridade >= 3 ? 'destructive' : prioridade >= 2 ? 'warning' : 'secondary';
         return (
-          <AppBadge variant={variant as 'destructive' | 'secondary'} className="text-xs">
+          <AppBadge variant={variant as 'destructive' | 'secondary'} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
             {prioridade}
           </AppBadge>
         );
@@ -459,7 +459,7 @@ function criarColunas(
       accessorKey: 'qtdeParteAutora',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Qtde Autores" />,
       cell: ({ row }) => (
-        <span className="text-sm text-muted-foreground">
+        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
           {row.original.qtdeParteAutora ?? '-'}
         </span>
       ),
@@ -476,7 +476,7 @@ function criarColunas(
       accessorKey: 'qtdeParteRe',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Qtde Réus" />,
       cell: ({ row }) => (
-        <span className="text-sm text-muted-foreground">
+        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
           {row.original.qtdeParteRe ?? '-'}
         </span>
       ),
@@ -499,7 +499,7 @@ function criarColunas(
         } else if (juizoDigital === false) {
           return <XCircle className="h-4 w-4 text-muted-foreground" />;
         }
-        return <span className="text-sm text-muted-foreground">-</span>;
+        return <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>-</span>;
       },
       enableSorting: true,
       meta: {
@@ -514,7 +514,7 @@ function criarColunas(
       accessorKey: 'dataArquivamento',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Arquivamento" />,
       cell: ({ row }) => (
-        <span className="text-sm text-muted-foreground whitespace-nowrap" suppressHydrationWarning>
+        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground whitespace-nowrap")} suppressHydrationWarning>
           {formatarData(row.original.dataArquivamento || null)}
         </span>
       ),
@@ -537,7 +537,7 @@ function criarColunas(
         if (temAssociacao) {
           return <Link2 className="h-4 w-4 text-info" />;
         }
-        return <span className="text-sm text-muted-foreground">-</span>;
+        return <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>-</span>;
       },
       enableSorting: true,
       meta: {
@@ -553,14 +553,14 @@ function criarColunas(
       header: ({ column }) => <DataTableColumnHeader column={column} title="Origem" />,
       cell: ({ row }) => {
         const origem = row.original.origem;
-        if (!origem) return <span className="text-sm text-muted-foreground">-</span>;
+        if (!origem) return <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>-</span>;
 
         const isArquivado = origem === 'arquivado';
         return (
           <AppBadge
             variant={isArquivado ? 'secondary' : 'default'}
             className={cn(
-              'text-xs',
+              /* design-system-escape: text-xs → migrar para <Text variant="caption"> */ 'text-xs',
               !isArquivado && 'bg-success/15 text-success hover:bg-success/25'
             )}
           >
@@ -581,7 +581,7 @@ function criarColunas(
       accessorKey: 'createdAt',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Criado Em" />,
       cell: ({ row }) => (
-        <span className="text-sm text-muted-foreground whitespace-nowrap" suppressHydrationWarning>
+        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground whitespace-nowrap")} suppressHydrationWarning>
           {formatarDataHora(row.original.createdAt || null)}
         </span>
       ),
@@ -598,7 +598,7 @@ function criarColunas(
       accessorKey: 'updatedAt',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Atualizado Em" />,
       cell: ({ row }) => (
-        <span className="text-sm text-muted-foreground whitespace-nowrap" suppressHydrationWarning>
+        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground whitespace-nowrap")} suppressHydrationWarning>
           {formatarDataHora(row.original.updatedAt || null)}
         </span>
       ),
@@ -980,7 +980,7 @@ export function ProcessosTableWrapper({
               }
             />
           ) : (
-            <div className="p-6" />
+            <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")} />
           )
         }
         footer={
@@ -1001,7 +1001,7 @@ export function ProcessosTableWrapper({
         }
       >
         {error && (
-          <div className="mb-4 rounded-md border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "mb-4 rounded-md border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive")}>
             {error}
           </div>
         )}

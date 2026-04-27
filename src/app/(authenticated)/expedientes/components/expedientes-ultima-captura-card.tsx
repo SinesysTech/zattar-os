@@ -32,10 +32,10 @@ function MetricColumn({
 }) {
   return (
     <div className="flex-1 min-w-0">
-      <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate">
+      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
         {label}
       </p>
-      <p className="font-display text-xl font-bold tabular-nums leading-none mt-1 text-foreground">
+      <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none mt-1 text-foreground")}>
         <AnimatedNumber value={value} />
       </p>
       <div className="mt-2 h-1 rounded-full bg-muted/30 overflow-hidden">
@@ -52,14 +52,14 @@ function MetricColumn({
 
 function UltimaCapturaCardSkeleton() {
   return (
-    <GlassPanel depth={1} className="px-4 py-3.5 animate-pulse">
-      <div className="flex items-start justify-between gap-2">
+    <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5 animate-pulse")}>
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
         <div className="h-4 w-28 bg-muted/30 rounded" />
         <div className="size-8 bg-muted/20 rounded-lg" />
       </div>
-      <div className="flex gap-4 mt-3">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4 mt-3")}>
         {[0, 1, 2].map((i) => (
-          <div key={i} className="flex-1 space-y-1.5">
+          <div key={i} className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "flex-1 space-y-1.5")}>
             <div className="h-2.5 w-16 bg-muted/20 rounded" />
             <div className="h-6 w-10 bg-muted/30 rounded" />
             <div className="h-1 bg-muted/20 rounded-full" />
@@ -81,11 +81,11 @@ export function ExpedientesUltimaCapturaCard({
 
   if (!resumo) {
     return (
-      <GlassPanel depth={1} className="px-4 py-3.5 opacity-50">
-        <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50">
+      <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5 opacity-50")}>
+        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50")}>
           ÚLTIMA CAPTURA
         </p>
-        <p className="text-sm text-muted-foreground/60 mt-1">Nenhuma captura realizada</p>
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/60 mt-1")}>Nenhuma captura realizada</p>
       </GlassPanel>
     );
   }
@@ -102,7 +102,7 @@ export function ExpedientesUltimaCapturaCard({
     <GlassPanel
       depth={1}
       className={cn(
-        'px-4 py-3.5 cursor-pointer select-none',
+        /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ 'px-4 py-3.5 cursor-pointer select-none',
         'transition-all duration-200 hover:scale-[1.01] hover:shadow-lg',
         'focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:outline-none',
       )}
@@ -121,23 +121,23 @@ export function ExpedientesUltimaCapturaCard({
       <div className="absolute top-0 right-0 w-24 h-24 bg-info/5 rounded-full blur-3xl pointer-events-none" />
 
       {/* Header */}
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex items-center gap-2 min-w-0">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
           <IconContainer size="md" className="bg-info/8 shrink-0">
             <Radar className="size-4 text-info/70" />
           </IconContainer>
           <div className="min-w-0">
-            <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60">
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60")}>
               ÚLTIMA CAPTURA
             </p>
-            <p className="text-[10px] text-info/70 leading-tight">{tempoRelativo}</p>
+            <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[10px] text-info/70 leading-tight")}>{tempoRelativo}</p>
           </div>
         </div>
         <ArrowRight className="size-3 text-info/50 shrink-0 mt-1" />
       </div>
 
       {/* Métricas */}
-      <div className="flex gap-4 mt-3">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4 mt-3")}>
         <MetricColumn
           label="Criados"
           value={resumo.totalCriados}

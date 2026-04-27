@@ -140,10 +140,10 @@ export function AcordoDetalhesClient({
 
   // ---------- Render ----------
   return (
-    <div className="flex flex-col gap-4 h-full">
+    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4 h-full")}>
       {/* ==================== HEADER · Capa do processo ==================== */}
-      <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div className="flex items-start gap-3 min-w-0 flex-1">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start justify-between gap-4 flex-wrap")}>
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3 min-w-0 flex-1")}>
           <Button
             variant="ghost"
             size="icon"
@@ -155,8 +155,8 @@ export function AcordoDetalhesClient({
               <ArrowLeft className="h-4 w-4" />
             </Link>
           </Button>
-          <div className="min-w-0 space-y-2">
-            <div className="flex items-center gap-2 flex-wrap">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "min-w-0 space-y-2")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
               <Heading level="page" className="min-w-0 truncate">
                 {tituloPartes}
               </Heading>
@@ -169,7 +169,7 @@ export function AcordoDetalhesClient({
               </SemanticBadge>
               <span
                 className={cn(
-                  'inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-[10px] font-semibold border',
+                  /* design-system-escape: gap-0.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-[10px] font-semibold border',
                   isRecebimento
                     ? 'bg-success/10 text-success border-success/25'
                     : 'bg-destructive/10 text-destructive border-destructive/25',
@@ -184,7 +184,7 @@ export function AcordoDetalhesClient({
               </span>
             </div>
 
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm">
+            <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm")}>
               {processo?.trt && (
                 <SemanticBadge
                   category="tribunal"
@@ -206,7 +206,7 @@ export function AcordoDetalhesClient({
               {processo?.numero_processo && (
                 <Text
                   variant="caption"
-                  className="font-medium text-foreground/85 tabular-nums"
+                  className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/85 tabular-nums")}
                 >
                   {processo.numero_processo}
                 </Text>
@@ -231,7 +231,7 @@ export function AcordoDetalhesClient({
           </div>
         </div>
 
-        <div className="flex gap-2 shrink-0">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2 shrink-0")}>
           <Button variant="outline" size="sm" asChild className="rounded-xl">
             <Link href={`/obrigacoes/${acordoId}/editar`}>
               <Edit className="size-3.5 mr-1" />
@@ -262,11 +262,11 @@ export function AcordoDetalhesClient({
       />
 
       {/* ==================== TAB CONTENT ==================== */}
-      <div className="flex-1 min-h-0 overflow-y-auto pr-1">
+      <div className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "flex-1 min-h-0 overflow-y-auto pr-1")}>
         {activeTab === 'resumo' && <ResumoTab acordo={acordo} />}
 
         {activeTab === 'parcelas' && (
-          <GlassPanel depth={1} className="p-4">
+          <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
             <ParcelasTable
               parcelas={parcelas}
               direcao={acordo.direcao}
@@ -351,12 +351,12 @@ function ResumoTab({ acordo }: { acordo: AcordoComParcelas }) {
   // no que é particular ao acordo (tipo, valor, parcelamento, distribuição).
 
   return (
-    <div className="space-y-4">
-      <GlassPanel depth={1} className="p-5">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
         <Heading level="section" className="mb-4">
           Dados do acordo
         </Heading>
-        <dl className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <dl className={cn(/* design-system-escape: gap-5 gap sem token DS */ "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5")}>
           <Field label="Tipo" value={TIPO_LABELS[acordo.tipo]} />
           <Field label="Direção" value={DIRECAO_LABELS[acordo.direcao]} />
           <Field
@@ -406,7 +406,7 @@ function ResumoTab({ acordo }: { acordo: AcordoComParcelas }) {
           />
         </dl>
         {acordo.observacoes && (
-          <div className="mt-5 pt-4 border-t border-border/15">
+          <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "mt-5 pt-4 border-t border-border/15")}>
             <Text variant="label" className="mb-1.5">
               Observações
             </Text>
@@ -429,7 +429,7 @@ function RepassesTab({
 }) {
   if (parcelas.length === 0) {
     return (
-      <GlassPanel depth={1} className="p-10 text-center">
+      <GlassPanel depth={1} className={cn(/* design-system-escape: p-10 → usar <Inset> */ "p-10 text-center")}>
         <Text variant="caption" className="text-muted-foreground/60">
           Nenhum repasse associado a este acordo.
         </Text>
@@ -438,7 +438,7 @@ function RepassesTab({
   }
 
   return (
-    <div className="space-y-2">
+    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
       {parcelas.map((parcela) => {
         const valorRepasse = parcela.valorRepasseCliente ?? 0;
         const toneClass =
@@ -449,14 +449,14 @@ function RepassesTab({
             : 'bg-info/10 text-info border-info/20';
 
         return (
-          <GlassPanel key={parcela.id} depth={1} className="p-4">
-            <div className="flex items-center justify-between gap-3 flex-wrap">
+          <GlassPanel key={parcela.id} depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3 flex-wrap")}>
               <div className="min-w-0">
-                <div className="flex items-center gap-2">
-                  <Text variant="caption" className="font-medium text-foreground/85">Parcela {parcela.numeroParcela}</Text>
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                  <Text variant="caption" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/85")}>Parcela {parcela.numeroParcela}</Text>
                   <span
                     className={cn(
-                      'inline-flex items-center rounded px-1.5 py-0.5 border text-[9px] font-semibold',
+                      /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center rounded px-1.5 py-0.5 border text-[9px] font-semibold',
                       toneClass,
                     )}
                   >
@@ -471,7 +471,7 @@ function RepassesTab({
                 </Text>
               </div>
               <div className="text-right">
-                <Text variant="kpi-value" className="text-base">
+                <Text variant="kpi-value" className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
                   {formatCurrency(valorRepasse)}
                 </Text>
                 <Text variant="meta-label" className="tabular-nums">
@@ -521,7 +521,7 @@ function TimelineTab({ acordo }: { acordo: AcordoComParcelas }) {
 
   if (events.length <= 1) {
     return (
-      <GlassPanel depth={1} className="p-10 text-center">
+      <GlassPanel depth={1} className={cn(/* design-system-escape: p-10 → usar <Inset> */ "p-10 text-center")}>
         <Text variant="caption" className="text-muted-foreground/60">
           Histórico ainda sem movimentações além da criação.
         </Text>
@@ -530,8 +530,8 @@ function TimelineTab({ acordo }: { acordo: AcordoComParcelas }) {
   }
 
   return (
-    <GlassPanel depth={1} className="p-5">
-      <ol className="relative border-l border-border/20 ml-2 space-y-5">
+    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
+      <ol className={cn(/* design-system-escape: space-y-5 sem token DS */ "relative border-l border-border/20 ml-2 space-y-5")}>
         {events.map((event, idx) => {
           const Icon = event.icon;
           const dotClass =
@@ -548,9 +548,9 @@ function TimelineTab({ acordo }: { acordo: AcordoComParcelas }) {
                   dotClass,
                 )}
               />
-              <div className="flex items-center gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <Icon className="w-3.5 h-3.5 text-muted-foreground/50" />
-                <Text variant="caption" className="font-medium text-foreground/85">{event.label}</Text>
+                <Text variant="caption" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/85")}>{event.label}</Text>
               </div>
               <Text variant="meta-label" className="mt-0.5">
                 {format(parseISO(event.date), "dd 'de' MMM 'de' yyyy", {
@@ -589,7 +589,7 @@ function Field({
         variant={emphasis ? 'kpi-value' : 'caption'}
         className={cn(
           'wrap-break-word',
-          emphasis ? 'text-lg' : 'font-medium text-foreground/85',
+          emphasis ? /* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ 'text-lg' : /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'font-medium text-foreground/85',
         )}
       >
         {value}

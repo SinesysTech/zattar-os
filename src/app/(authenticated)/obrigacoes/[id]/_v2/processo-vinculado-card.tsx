@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import Link from 'next/link';
 import { ArrowUpRight, Briefcase, Building2 } from 'lucide-react';
@@ -20,7 +21,7 @@ interface ProcessoVinculadoCardProps {
 export function ProcessoVinculadoCard({ processo }: ProcessoVinculadoCardProps) {
   if (!processo) {
     return (
-      <GlassPanel depth={1} className="p-5 flex items-center justify-center min-h-[180px]">
+      <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5 flex items-center justify-center min-h-[180px]")}>
         <Text variant="caption" className="text-muted-foreground/60 text-center">
           Este acordo não está vinculado a um processo.
         </Text>
@@ -36,15 +37,15 @@ export function ProcessoVinculadoCard({ processo }: ProcessoVinculadoCardProps) 
   const parteRe = processo.nome_parte_re?.trim() || null;
 
   return (
-    <GlassPanel depth={1} className="p-5">
-      <div className="flex items-start justify-between gap-3 mb-4">
+    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3 mb-4")}>
         <div className="min-w-0">
           <Text variant="meta-label" className="text-muted-foreground/60">
             Processo vinculado
           </Text>
           <Text
             variant="caption"
-            className="font-semibold text-foreground/90 tabular-nums mt-1 block truncate"
+            className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-foreground/90 tabular-nums mt-1 block truncate")}
           >
             {processo.numero_processo}
           </Text>
@@ -54,7 +55,7 @@ export function ProcessoVinculadoCard({ processo }: ProcessoVinculadoCardProps) 
         </IconContainer>
       </div>
 
-      <div className="flex flex-wrap items-center gap-1.5 mb-4">
+      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-wrap items-center gap-1.5 mb-4")}>
         {processo.trt && (
           <SemanticBadge
             category="tribunal"
@@ -83,13 +84,13 @@ export function ProcessoVinculadoCard({ processo }: ProcessoVinculadoCardProps) 
         )}
       </div>
 
-      <div className="space-y-3 mb-5">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3 mb-5")}>
         {processo.descricao_orgao_julgador && (
-          <div className="flex items-start gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2")}>
             <Building2 className="size-3.5 text-muted-foreground/50 mt-0.5 shrink-0" />
             <Text
               variant="caption"
-              className="text-foreground/80 leading-snug"
+              className={cn(/* design-system-escape: leading-snug sem token DS */ "text-foreground/80 leading-snug")}
             >
               {processo.descricao_orgao_julgador}
             </Text>
@@ -97,7 +98,7 @@ export function ProcessoVinculadoCard({ processo }: ProcessoVinculadoCardProps) 
         )}
 
         {(parteAutora || parteRe) && (
-          <div className="pt-3 border-t border-border/15 space-y-1.5">
+          <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; space-y-1.5 sem token DS */ "pt-3 border-t border-border/15 space-y-1.5")}>
             {parteAutora && (
               <PartesRow polo="Autor" nome={parteAutora} />
             )}
@@ -120,7 +121,7 @@ export function ProcessoVinculadoCard({ processo }: ProcessoVinculadoCardProps) 
 
 function PartesRow({ polo, nome }: { polo: string; nome: string }) {
   return (
-    <div className="flex items-baseline gap-2 min-w-0">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-baseline gap-2 min-w-0")}>
       <Text
         variant="meta-label"
         className="text-muted-foreground/55 shrink-0 w-12"
@@ -129,7 +130,7 @@ function PartesRow({ polo, nome }: { polo: string; nome: string }) {
       </Text>
       <Text
         variant="caption"
-        className="font-medium text-foreground/85 truncate flex-1 min-w-0"
+        className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/85 truncate flex-1 min-w-0")}
       >
         {nome}
       </Text>

@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { LoadingSpinner } from "@/components/ui/loading-state"
@@ -17,9 +18,9 @@ export default function AssinaturaPageClient() {
   }, [router]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-100 gap-4">
+    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center justify-center min-h-100 gap-4")}>
       <LoadingSpinner className="size-8 text-muted-foreground" />
-      <p className="text-sm text-muted-foreground">
+      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
         Redirecionando para o novo fluxo de assinatura...
       </p>
     </div>

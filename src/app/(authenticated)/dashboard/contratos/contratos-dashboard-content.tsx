@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useSearchParams } from 'next/navigation';
 import CustomDateRangePicker from '@/components/shared/custom-date-range-picker';
 import {
@@ -22,16 +23,16 @@ export default function ContratosDashboardContent() {
   const dateFilter = parseCrmDateFilterFromSearchParams(params);
 
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       <div className="flex justify-end">
         <CustomDateRangePicker />
       </div>
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 xl:grid-cols-4")}>
         <TotalCustomersCard dateFilter={dateFilter} />
         <TotalDeals dateFilter={dateFilter} />
         <TotalContractsCard dateFilter={dateFilter} />
       </div>
-      <div className="grid gap-4 xl:grid-cols-3">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 xl:grid-cols-3")}>
         <LeadBySourceCardWrapper dateFilter={dateFilter} />
         <SalesPipeline dateFilter={dateFilter} />
       </div>

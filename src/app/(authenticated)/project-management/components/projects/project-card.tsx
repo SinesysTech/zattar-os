@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import Link from "next/link";
 import { Text } from "@/components/ui/typography";
 import {
@@ -54,7 +55,7 @@ export function ProjectCard({ projeto }: ProjectCardProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-muted-foreground mb-4 text-sm">
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground mb-4 text-sm")}>
             {projeto.dataInicio
               ? new Date(projeto.dataInicio).toLocaleDateString("pt-BR")
               : "Sem data de início"}
@@ -63,7 +64,7 @@ export function ProjectCard({ projeto }: ProjectCardProps) {
           <div className="mb-6">
             <div className="mb-2 flex items-center justify-between">
               <Text variant="label" as="span" className="text-muted-foreground">Progresso</Text>
-              <span className="text-sm font-semibold">
+              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold")}>
                 {projeto.progresso}%
               </span>
             </div>
@@ -75,13 +76,13 @@ export function ProjectCard({ projeto }: ProjectCardProps) {
           </div>
 
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               {projeto.membros && projeto.membros.length > 0 && (
                 <MemberAvatarGroup membros={projeto.membros} max={3} />
               )}
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <ProjectStatusBadge status={projeto.status} />
               {deadlineText && (
                 <span

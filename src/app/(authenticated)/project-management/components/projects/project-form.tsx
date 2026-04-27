@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -141,7 +142,7 @@ export function ProjectForm({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-6"
+            className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}
           >
             <FormField
               control={form.control}
@@ -177,7 +178,7 @@ export function ProjectForm({
               )}
             />
 
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 md:grid-cols-2")}>
               <FormField
                 control={form.control}
                 name="status"
@@ -235,7 +236,7 @@ export function ProjectForm({
               />
             </div>
 
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 md:grid-cols-2")}>
               <FormField
                 control={form.control}
                 name="clienteId"
@@ -286,7 +287,7 @@ export function ProjectForm({
               />
             </div>
 
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 md:grid-cols-2")}>
               <FormField
                 control={form.control}
                 name="dataInicio"
@@ -316,7 +317,7 @@ export function ProjectForm({
               />
             </div>
 
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 md:grid-cols-2")}>
               <FormField
                 control={form.control}
                 name="orcamento"
@@ -355,7 +356,7 @@ export function ProjectForm({
               />
             </div>
 
-            <div className="flex justify-end gap-3">
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex justify-end gap-3")}>
               <Button
                 type="button"
                 variant="outline"

@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Users } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -12,15 +13,15 @@ interface TestemunhasToggleProps {
 
 export function TestemunhasToggle({ checked, onCheckedChange }: TestemunhasToggleProps) {
   return (
-    <GlassPanel className="flex items-center gap-3 p-4">
+    <GlassPanel className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex items-center gap-3 p-4")}>
       <Users className="h-5 w-5 text-muted-foreground" />
-      <div className="flex flex-1 items-center gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-1 items-center gap-2")}>
         <Checkbox
           id="testemunhas"
           checked={checked}
           onCheckedChange={(v) => onCheckedChange(v === true)}
         />
-        <Label htmlFor="testemunhas" className="cursor-pointer text-sm font-medium">
+        <Label htmlFor="testemunhas" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "cursor-pointer text-sm font-medium")}>
           Testemunhas foram mapeadas durante a entrevista
         </Label>
       </div>

@@ -8,6 +8,7 @@
  * mantendo a área de visualização limpa (conforme protótipo 1.html).
  */
 
+import { cn } from '@/lib/utils';
 import {
   Info,
   ExternalLink,
@@ -62,11 +63,11 @@ export function ViewerToolbar({
   const actionsDisabled = isLoading || !hasBackblaze;
 
   return (
-    <div className="absolute top-3 left-3 right-3 z-10 flex items-center gap-2 pointer-events-none">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "absolute top-3 left-3 right-3 z-10 flex items-center gap-2 pointer-events-none")}>
       {/* Título do documento atual */}
       {title && (
-        <div className="pointer-events-auto flex items-center gap-2 rounded-full bg-card/90 backdrop-blur-sm border shadow-sm px-3 py-1.5 min-w-0 max-w-xs lg:max-w-sm">
-          <p className="truncate text-xs font-medium text-foreground">{title}</p>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "pointer-events-auto flex items-center gap-2 rounded-full bg-card/90 backdrop-blur-sm border shadow-sm px-3 py-1.5 min-w-0 max-w-xs lg:max-w-sm")}>
+          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "truncate text-xs font-medium text-foreground")}>{title}</p>
           {date && (
             <>
               <span className="text-muted-foreground/50 shrink-0" aria-hidden="true">&middot;</span>
@@ -78,7 +79,7 @@ export function ViewerToolbar({
 
       {/* Ações */}
       <TooltipProvider>
-        <div className="pointer-events-auto flex items-center gap-1 rounded-full bg-card/90 backdrop-blur-sm border shadow-sm px-1 py-0.5 ml-auto shrink-0">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "pointer-events-auto flex items-center gap-1 rounded-full bg-card/90 backdrop-blur-sm border shadow-sm px-1 py-0.5 ml-auto shrink-0")}>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
@@ -120,7 +121,7 @@ export function ViewerToolbar({
               >
                 <StickyNote className="size-4" />
                 {annotationCount > 0 && (
-                  <span className="absolute -right-0.5 -top-0.5 inline-flex min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground">
+                  <span className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "absolute -right-0.5 -top-0.5 inline-flex min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground")}>
                     {annotationCount}
                   </span>
                 )}

@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import { useState } from "react";
 import {
   Globe,
@@ -34,12 +35,12 @@ function CopyableValue({ value, label }: { value: string; label?: string }) {
   };
 
   return (
-    <div className="flex items-start gap-2 group">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2 group")}>
       <div className="flex-1 min-w-0">
         {label && (
-          <span className="text-xs text-muted-foreground">{label}</span>
+          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{label}</span>
         )}
-        <p className="text-sm font-mono break-all">{value}</p>
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm font-mono break-all")}>{value}</p>
       </div>
       <Button
         variant="ghost"
@@ -70,15 +71,15 @@ function InfoRow({
 }) {
   if (!value) return null;
   return (
-    <div className="flex items-start gap-3 py-2">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex items-start gap-3 py-2")}>
       {Icon && (
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-muted">
           <Icon className="h-4 w-4 text-muted-foreground" />
         </div>
       )}
       <div className="flex-1 min-w-0">
-        <span className="text-xs text-muted-foreground">{label}</span>
-        <div className={mono ? "text-sm font-mono break-all" : "text-sm"}>
+        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{label}</span>
+        <div className={mono ? /* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm font-mono break-all" : /* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm"}>
           {value}
         </div>
       </div>
@@ -102,14 +103,14 @@ export function SegurancaSection({ signatario }: SegurancaSectionProps) {
 
   if (!hasAnySecurityData) {
     return (
-      <p className="text-sm text-muted-foreground italic">
+      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground italic")}>
         Nenhum dado de segurança coletado.
       </p>
     );
   }
 
   return (
-    <div className="space-y-1">
+    <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
       {/* IP Address */}
       {signatario.ipAddress && (
         <InfoRow
@@ -135,18 +136,18 @@ export function SegurancaSection({ signatario }: SegurancaSectionProps) {
           icon={Globe}
           label="Geolocalização"
           value={
-            <div className="space-y-1">
-              <p className="text-sm font-mono">
+            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm font-mono")}>
                 {signatario.geolocation!.latitude?.toFixed(6)}, {" "}
                 {signatario.geolocation!.longitude?.toFixed(6)}
               </p>
               {signatario.geolocation!.accuracy != null && (
-                <p className="text-xs text-muted-foreground">
+                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                   Precisão: ~{Math.round(signatario.geolocation!.accuracy)}m
                 </p>
               )}
               {signatario.geolocation!.timestamp && (
-                <p className="text-xs text-muted-foreground">
+                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                   Capturado em:{" "}
                   {new Date(
                     signatario.geolocation!.timestamp
@@ -164,12 +165,12 @@ export function SegurancaSection({ signatario }: SegurancaSectionProps) {
           icon={FileCheck}
           label="Termos de Aceite"
           value={
-            <div className="space-y-1">
-              <Badge variant="outline" className="text-xs">
+            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+              <Badge variant="outline" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                 {signatario.termosAceiteVersao}
               </Badge>
               {signatario.termosAceiteData && (
-                <p className="text-xs text-muted-foreground">
+                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                   Aceito em:{" "}
                   {new Date(signatario.termosAceiteData).toLocaleString(
                     "pt-BR"
@@ -187,17 +188,17 @@ export function SegurancaSection({ signatario }: SegurancaSectionProps) {
           <CollapsibleTrigger asChild>
             <Button
               variant="ghost"
-              className="h-auto w-full justify-between rounded-lg px-0 py-2 hover:bg-transparent"
+              className={cn(/* design-system-escape: px-0 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-auto w-full justify-between rounded-lg px-0 py-2 hover:bg-transparent")}
             >
-              <div className="flex min-w-0 items-start gap-3 text-left">
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex min-w-0 items-start gap-3 text-left")}>
                 <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-muted">
                   <Fingerprint className="h-4 w-4 text-muted-foreground" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <span className="text-xs text-muted-foreground">
+                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                     Device Fingerprint
                   </span>
-                  <p className="text-sm">
+                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
                     {Object.keys(signatario.dispositivoFingerprint!).length}{" "}
                     campos coletados
                   </p>
@@ -211,8 +212,8 @@ export function SegurancaSection({ signatario }: SegurancaSectionProps) {
             </Button>
           </CollapsibleTrigger>
           <CollapsibleContent>
-            <div className="mt-2 rounded-md bg-muted/50 p-3 max-h-64 overflow-auto">
-              <pre className="text-xs font-mono whitespace-pre-wrap break-all">
+            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "mt-2 rounded-md bg-muted/50 p-3 max-h-64 overflow-auto")}>
+              <pre className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs font-mono whitespace-pre-wrap break-all")}>
                 {JSON.stringify(
                   signatario.dispositivoFingerprint,
                   null,

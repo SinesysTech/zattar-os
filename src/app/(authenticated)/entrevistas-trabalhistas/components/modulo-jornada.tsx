@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -41,20 +42,20 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <div>
         <Heading level="card">Apropriação do Tempo</Heading>
-        <p className="text-sm text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
           Jornada de trabalho, horas extras e intervalos
         </p>
       </div>
 
       {/* A.2.1: Controle de ponto */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>Como era registrado o horário de entrada e saída?</Label>
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           {CONTROLE_PONTO_OPTIONS.map((opt) => (
-            <div key={opt.value} className="flex items-center gap-2">
+            <div key={opt.value} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <Checkbox
                 id={`ponto-${opt.value}`}
                 checked={controlePonto.includes(opt.value)}
@@ -62,7 +63,7 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
                   toggleControlePonto(opt.value, checked === true)
                 }
               />
-              <Label htmlFor={`ponto-${opt.value}`} className="cursor-pointer text-sm font-normal">
+              <Label htmlFor={`ponto-${opt.value}`} className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "cursor-pointer text-sm font-normal")}>
                 {opt.label}
               </Label>
             </div>
@@ -70,8 +71,8 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="space-y-2">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 sm:grid-cols-2")}>
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label htmlFor="horario-entrada">Horário habitual de entrada</Label>
           <Input
             id="horario-entrada"
@@ -81,7 +82,7 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
             className="max-w-44"
           />
         </div>
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label htmlFor="horario-saida">Horário habitual de saída</Label>
           <Input
             id="horario-saida"
@@ -101,7 +102,7 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
       )}
 
       {/* A.2.2: Intervalo */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>Conseguia tirar 1 hora inteira de almoço/descanso?</Label>
         <SimNaoRadio
           id="intervalo"
@@ -114,7 +115,7 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
 
       {/* Campo condicional: minutos reais */}
       {intervaloReduzido && (
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label htmlFor="minutos-intervalo">Quantos minutos de intervalo realmente tinha?</Label>
           <Input
             id="minutos-intervalo"
@@ -135,10 +136,10 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
       )}
 
       {/* Horas extras */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>Recebia pelas horas a mais que trabalhava?</Label>
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <Checkbox
               id="he-pagas"
               checked={data.horas_extras_pagas === true}
@@ -146,11 +147,11 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
                 onChange({ ...data, horas_extras_pagas: checked === true })
               }
             />
-            <Label htmlFor="he-pagas" className="cursor-pointer text-sm font-normal">
+            <Label htmlFor="he-pagas" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "cursor-pointer text-sm font-normal")}>
               Recebia todas as horas extras
             </Label>
           </div>
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <Checkbox
               id="bh-nao-compensado"
               checked={data.banco_horas_compensado === false}
@@ -158,7 +159,7 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
                 onChange({ ...data, banco_horas_compensado: checked === true ? false : undefined })
               }
             />
-            <Label htmlFor="bh-nao-compensado" className="cursor-pointer text-sm font-normal">
+            <Label htmlFor="bh-nao-compensado" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "cursor-pointer text-sm font-normal")}>
               Fazia hora extra de graça ou ia para banco de horas que nunca folgava
             </Label>
           </div>
@@ -166,7 +167,7 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
       </div>
 
       {/* Narrativa do dia típico */}
-      <div className="space-y-2">
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Label htmlFor="dia-tipico">Descreva um dia típico de trabalho</Label>
         <Textarea
           id="dia-tipico"

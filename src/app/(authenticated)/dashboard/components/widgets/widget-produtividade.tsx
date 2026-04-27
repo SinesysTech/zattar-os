@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import {
   CardContent,
@@ -24,7 +25,7 @@ export function WidgetProdutividade({ data, loading, error }: WidgetProdutividad
     return (
       <GlassPanel>
         <CardHeader><Skeleton className="h-5 w-28" /></CardHeader>
-        <CardContent className="space-y-3">
+        <CardContent className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
           <Skeleton className="h-20 w-full" />
         </CardContent>
       </GlassPanel>
@@ -35,7 +36,7 @@ export function WidgetProdutividade({ data, loading, error }: WidgetProdutividad
     return (
       <GlassPanel>
         <CardHeader><CardTitle>Produtividade</CardTitle></CardHeader>
-        <CardContent><p className="text-sm text-destructive">{error}</p></CardContent>
+        <CardContent><p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{error}</p></CardContent>
       </GlassPanel>
     );
   }
@@ -56,29 +57,29 @@ export function WidgetProdutividade({ data, loading, error }: WidgetProdutividad
         <CardTitle>Produtividade</CardTitle>
         <CardDescription>Baixas e atividades recentes</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-5">
+      <CardContent className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
         {/* Main numbers */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-3 gap-4")}>
           <div>
-            <div className="font-display text-2xl">{data.baixasHoje}</div>
-            <p className="text-xs text-muted-foreground">Hoje</p>
+            <div className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "font-display text-2xl")}>{data.baixasHoje}</div>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Hoje</p>
           </div>
           <div>
-            <div className="font-display text-2xl">{data.baixasSemana}</div>
-            <p className="text-xs text-muted-foreground">Semana</p>
+            <div className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "font-display text-2xl")}>{data.baixasSemana}</div>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Semana</p>
           </div>
           <div>
-            <div className="font-display text-2xl">{data.baixasMes}</div>
-            <p className="text-xs text-muted-foreground">Mês</p>
+            <div className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "font-display text-2xl")}>{data.baixasMes}</div>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Mês</p>
           </div>
         </div>
 
         {/* Trend comparison */}
-        <div className="flex items-center justify-between rounded-lg bg-muted/50 p-3">
-          <span className="text-sm text-muted-foreground">vs. semana anterior</span>
+        <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between rounded-lg bg-muted/50 p-3")}>
+          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>vs. semana anterior</span>
           <Badge
             variant={trendDirection === 'up' ? 'success' : trendDirection === 'down' ? 'destructive' : 'outline'}
-            className="text-xs gap-1"
+            className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; gap-1 gap sem token DS */ "text-xs gap-1")}
           >
             <TrendIcon className="h-3 w-3" />
             {data.comparativoSemanaAnterior > 0 ? '+' : ''}{data.comparativoSemanaAnterior}%
@@ -86,14 +87,14 @@ export function WidgetProdutividade({ data, loading, error }: WidgetProdutividad
         </div>
 
         {/* Average */}
-        <div className="flex items-center justify-between text-sm">
+        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex items-center justify-between text-sm")}>
           <span className="text-muted-foreground">Média diária (mês)</span>
-          <span className="font-medium tabular-nums">{data.mediaDiaria.toFixed(1)}</span>
+          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium tabular-nums")}>{data.mediaDiaria.toFixed(1)}</span>
         </div>
 
         {/* Last 7 days bar chart */}
         {porDia.length > 0 && (
-          <div className="space-y-1.5">
+          <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
             {porDia.map((dia) => {
               const percent = (dia.baixas / maxBaixas) * 100;
               const date = new Date(dia.data);
@@ -101,14 +102,14 @@ export function WidgetProdutividade({ data, loading, error }: WidgetProdutividad
               const dayNumber = date.getDate();
 
               return (
-                <div key={dia.data} className="flex items-center gap-3 text-xs">
+                <div key={dia.data} className={cn(/* design-system-escape: gap-3 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-3 text-xs")}>
                   <span className="w-16 text-muted-foreground shrink-0">
                     {dayName}, {dayNumber}
                   </span>
                   <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
                     <div className="h-full bg-primary transition-all rounded-full" style={{ width: `${percent}%` }} />
                   </div>
-                  <span className="w-6 text-right font-medium tabular-nums">{dia.baixas}</span>
+                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "w-6 text-right font-medium tabular-nums")}>{dia.baixas}</span>
                 </div>
               );
             })}

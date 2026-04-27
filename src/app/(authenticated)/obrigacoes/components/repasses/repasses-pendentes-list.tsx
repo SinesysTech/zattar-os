@@ -1,6 +1,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useEffect } from 'react';
 import {
    Table,
@@ -50,9 +51,9 @@ export function RepassesPendentesList({ onAnexarDeclaracao, onRealizarRepasse, r
    };
 
    return (
-      <div className="space-y-8">
+      <div className={cn(/* design-system-escape: space-y-8 → migrar para <Stack gap="section"> */ "space-y-8")}>
          {repassesPendentesDecl.length > 0 && (
-            <div className="space-y-4">
+            <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
                <Typography.H4>Aguardando Declaração</Typography.H4>
                <div className="rounded-md border">
                   <Table>
@@ -74,7 +75,7 @@ export function RepassesPendentesList({ onAnexarDeclaracao, onRealizarRepasse, r
                                  </Badge>
                               </TableCell>
                               <TableCell className="text-right">
-                                 <div className="flex items-center justify-end gap-2">
+                                 <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-end gap-2")}>
                                     <GerarLinkButton
                                        parcelaId={r.parcelaId}
                                        size="sm"
@@ -82,7 +83,7 @@ export function RepassesPendentesList({ onAnexarDeclaracao, onRealizarRepasse, r
                                        onGerado={() => refetch()}
                                     />
                                     {onAnexarDeclaracao && (
-                                       <Button size="sm" variant="outline" onClick={() => onAnexarDeclaracao(r.parcelaId)} className="rounded-xl gap-1.5">
+                                       <Button size="sm" variant="outline" onClick={() => onAnexarDeclaracao(r.parcelaId)} className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "rounded-xl gap-1.5")}>
                                           <Upload className="size-3.5" /> Anexar manual
                                        </Button>
                                     )}
@@ -97,7 +98,7 @@ export function RepassesPendentesList({ onAnexarDeclaracao, onRealizarRepasse, r
          )}
 
          {repassesPendentesTransf.length > 0 && (
-            <div className="space-y-4">
+            <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
                <Typography.H4>Prontos para Transferência</Typography.H4>
                <div className="rounded-md border">
                   <Table>

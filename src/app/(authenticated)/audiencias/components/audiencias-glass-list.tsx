@@ -134,7 +134,7 @@ function PrepRing({ audiencia }: { audiencia: Audiencia }) {
       </svg>
       <span
         className={cn(
-          'absolute inset-0 flex items-center justify-center text-micro-caption font-bold tabular-nums',
+          /* design-system-escape: font-bold → className de <Text>/<Heading> */ 'absolute inset-0 flex items-center justify-center text-micro-caption font-bold tabular-nums',
           getScoreColor(score)
         )}
       >
@@ -232,17 +232,17 @@ function GlassRow({
         }
       }}
       className={cn(
-        'group w-full text-left rounded-2xl border border-border/60 bg-card p-4 cursor-pointer',
+        /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'group w-full text-left rounded-2xl border border-border/60 bg-card p-4 cursor-pointer',
         'transition-all duration-180 ease-out',
         'hover:border-border hover:shadow-[0_4px_14px_rgba(0,0,0,0.06)] hover:-translate-y-px',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
       )}
     >
-      <div className="flex items-start gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start gap-4")}>
         {/* DATA + HORA + PREP RING (coluna fixa à esquerda) */}
-        <div className="flex flex-col items-center gap-1.5 w-22 shrink-0 pt-0.5">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; pt-0.5 padding direcional sem Inset equiv. */ "flex flex-col items-center gap-1.5 w-22 shrink-0 pt-0.5")}>
           <div className="text-center">
-            <div className="text-caption font-semibold text-foreground leading-tight whitespace-nowrap">
+            <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-caption font-semibold text-foreground leading-tight whitespace-nowrap")}>
               {format(dataInicio, 'dd MMM yyyy', { locale: ptBR })}
             </div>
             {audiencia.horaInicio && (
@@ -257,18 +257,18 @@ function GlassRow({
         {/* MAIN INFO */}
         <div className="flex-1 min-w-0">
           {/* Linha 1: modalidade badge + status à direita */}
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             {audiencia.modalidade && (
-              <span className="inline-flex items-center gap-1 rounded-md bg-primary/10 border border-primary/20 px-1.5 py-0.5 text-caption font-semibold tracking-[0.02em] text-primary">
+              <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 rounded-md bg-primary/10 border border-primary/20 px-1.5 py-0.5 text-caption font-semibold tracking-[0.02em] text-primary")}>
                 <ModalidadeIcon className="w-2.5 h-2.5" />
                 {MODALIDADE_AUDIENCIA_LABELS[audiencia.modalidade]}
               </span>
             )}
-            <div className="ml-auto flex items-center gap-1.5 shrink-0">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "ml-auto flex items-center gap-1.5 shrink-0")}>
               {countdown ? (
                 <span
                   className={cn(
-                    'inline-flex items-center gap-1 text-caption font-semibold',
+                    /* design-system-escape: gap-1 gap sem token DS; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center gap-1 text-caption font-semibold',
                     countdown.isUrgent ? 'text-warning' : 'text-success'
                   )}
                 >
@@ -289,23 +289,23 @@ function GlassRow({
 
           {/* Linha 2: título + partes + litisconsórcio + nº processo */}
           <div className="mt-1">
-            <h3 className="text-label font-semibold text-foreground leading-tight">
+            <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-label font-semibold text-foreground leading-tight")}>
               {audiencia.tipoDescricao || 'Audiência'}
             </h3>
-            <div className="mt-0.5 text-caption text-foreground/85 leading-snug flex flex-wrap items-baseline gap-x-0">
-              <span className="font-medium">{poloAtivo}</span>
+            <div className={cn(/* design-system-escape: leading-snug sem token DS */ "mt-0.5 text-caption text-foreground/85 leading-snug flex flex-wrap items-baseline gap-x-0")}>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{poloAtivo}</span>
               {audiencia.poloAtivoRepresentaVarios && (
                 <span className="text-muted-foreground/60"> e outros</span>
               )}
-              <span className="mx-1.5 text-muted-foreground/60 font-medium">×</span>
-              <span className="font-medium">{poloPassivo}</span>
+              <span className={cn(/* design-system-escape: mx-1.5 margin sem primitiva DS; font-medium → className de <Text>/<Heading> */ "mx-1.5 text-muted-foreground/60 font-medium")}>×</span>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{poloPassivo}</span>
               {audiencia.poloPassivoRepresentaVarios && (
                 <span className="text-muted-foreground/60"> e outros</span>
               )}
-              <span className="mx-2 inline-block w-0.75 h-0.75 rounded-full bg-muted-foreground/50 align-middle" />
+              <span className={cn(/* design-system-escape: mx-2 margin sem primitiva DS */ "mx-2 inline-block w-0.75 h-0.75 rounded-full bg-muted-foreground/50 align-middle")} />
               <span className="text-muted-foreground tabular-nums">{audiencia.numeroProcesso}</span>
               {(audiencia.poloAtivoRepresentaVarios || audiencia.poloPassivoRepresentaVarios) && (
-                <span className="ml-2 inline-flex items-center gap-1 bg-muted border border-border/70 text-muted-foreground rounded-md px-1.5 py-0.5 text-micro-caption font-semibold">
+                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "ml-2 inline-flex items-center gap-1 bg-muted border border-border/70 text-muted-foreground rounded-md px-1.5 py-0.5 text-micro-caption font-semibold")}>
                   <Users className="w-2.5 h-2.5" />
                   Litisconsórcio
                 </span>
@@ -314,14 +314,14 @@ function GlassRow({
           </div>
 
           {/* Linha 3: TRT + grau + sala + órgão julgador + indicadores */}
-          <div className="mt-1 flex flex-wrap items-center gap-1.5">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "mt-1 flex flex-wrap items-center gap-1.5")}>
             {audiencia.trt && (
-              <span className="text-micro-caption font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/60">
+              <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-caption font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/60")}>
                 {audiencia.trt}
               </span>
             )}
             {audiencia.grau && (
-              <span className="inline-flex items-center rounded bg-muted border border-border/50 px-1.5 py-px text-micro-caption font-semibold text-muted-foreground">
+              <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center rounded bg-muted border border-border/50 px-1.5 py-px text-micro-caption font-semibold text-muted-foreground")}>
                 {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
               </span>
             )}
@@ -340,19 +340,19 @@ function GlassRow({
               </>
             )}
             {audiencia.segredoJustica && (
-              <span className="inline-flex items-center gap-1 bg-warning/10 border border-warning/25 text-warning rounded-md px-1.5 py-0.5 text-micro-caption font-semibold">
+              <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-warning/10 border border-warning/25 text-warning rounded-md px-1.5 py-0.5 text-micro-caption font-semibold")}>
                 <Lock className="w-2.5 h-2.5" />
                 Segredo
               </span>
             )}
             {audiencia.juizoDigital && (
-              <span className="inline-flex items-center gap-1 bg-info/10 border border-info/25 text-info rounded-md px-1.5 py-0.5 text-micro-caption font-semibold">
+              <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-info/10 border border-info/25 text-info rounded-md px-1.5 py-0.5 text-micro-caption font-semibold")}>
                 <Monitor className="w-2.5 h-2.5" />
                 Digital
               </span>
             )}
             {audiencia.designada && (
-              <span className="inline-flex items-center gap-1 bg-success/10 border border-success/25 text-success rounded-md px-1.5 py-0.5 text-micro-caption font-semibold">
+              <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-success/10 border border-success/25 text-success rounded-md px-1.5 py-0.5 text-micro-caption font-semibold")}>
                 <CheckCircle2 className="w-2.5 h-2.5" />
                 Designada
               </span>
@@ -361,12 +361,12 @@ function GlassRow({
 
           {/* Barra meta: obs à esquerda + responsável à direita */}
           <div
-            className="mt-2.5 pt-2.5 border-t border-border/50"
+            className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "mt-2.5 pt-2.5 border-t border-border/50")}
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => e.stopPropagation()}
           >
             {editingObs ? (
-              <div className="space-y-1.5">
+              <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
                 <Textarea
                   value={obsDraft}
                   onChange={(e) => setObsDraft(e.target.value)}
@@ -375,12 +375,12 @@ function GlassRow({
                   className="text-caption"
                   autoFocus
                 />
-                <div className="flex items-center justify-end gap-1">
+                <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center justify-end gap-1")}>
                   <Button
                     size="sm"
                     variant="ghost"
                     onClick={handleCancelObs}
-                    className="h-6 text-caption px-2"
+                    className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-6 text-caption px-2")}
                   >
                     <X className="w-3 h-3" />
                     Cancelar
@@ -389,7 +389,7 @@ function GlassRow({
                     size="sm"
                     onClick={handleSaveObs}
                     disabled={savingObs}
-                    className="h-6 text-caption px-2"
+                    className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-6 text-caption px-2")}
                   >
                     {savingObs ? (
                       <LoadingSpinner size="sm" />
@@ -401,11 +401,11 @@ function GlassRow({
                 </div>
               </div>
             ) : (
-              <div className="flex items-center justify-between gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
                 {/* Esquerda: link virtual + observações */}
-                <div className="flex items-center gap-3 min-w-0 flex-1">
+                <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 min-w-0 flex-1")}>
                   {audiencia.urlAudienciaVirtual && (
-                    <div className="inline-flex items-center gap-1.5 min-w-0 max-w-48">
+                    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "inline-flex items-center gap-1.5 min-w-0 max-w-48")}>
                       <LinkIcon className="w-3 h-3 text-muted-foreground/70 shrink-0" />
                       <a
                         href={audiencia.urlAudienciaVirtual}
@@ -435,13 +435,13 @@ function GlassRow({
                     type="button"
                     onClick={handleStartObs}
                     className={cn(
-                      'flex items-center gap-1.5 rounded-md px-1.5 py-1 -mx-1.5 -my-1 text-left',
+                      /* design-system-escape: gap-1.5 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; -mx-1.5 sem equivalente DS; -my-1 sem equivalente DS */ 'flex items-center gap-1.5 rounded-md px-1.5 py-1 -mx-1.5 -my-1 text-left',
                       'transition-colors cursor-pointer hover:bg-muted/60',
                       obsValue ? 'text-foreground/75' : 'text-muted-foreground/60'
                     )}
                   >
                     <MessageSquare className="w-3 h-3 shrink-0 text-muted-foreground/60" />
-                    <span className="text-caption flex-1 line-clamp-1 leading-snug">
+                    <span className={cn(/* design-system-escape: leading-snug sem token DS */ "text-caption flex-1 line-clamp-1 leading-snug")}>
                       {obsValue || 'Adicionar observações'}
                     </span>
                     <Pencil className="w-2.5 h-2.5 shrink-0 text-muted-foreground/40 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -475,16 +475,16 @@ function GlassRow({
 
 function ListSkeleton() {
   return (
-    <div className="flex flex-col gap-2">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
       {Array.from({ length: 5 }, (_, i) => (
-        <div key={i} className="rounded-2xl border border-border/60 bg-card p-4">
-          <div className="flex items-start gap-4">
-            <div className="flex flex-col items-center gap-2 w-21 shrink-0">
+        <div key={i} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-2xl border border-border/60 bg-card p-4")}>
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start gap-4")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center gap-2 w-21 shrink-0")}>
               <Skeleton className="w-11 h-11 rounded-full" />
               <Skeleton className="h-3 w-14" />
               <Skeleton className="h-3 w-12" />
             </div>
-            <div className="flex-1 space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "flex-1 space-y-2")}>
               <Skeleton className="h-4 w-64" />
               <Skeleton className="h-3.5 w-full" />
               <Skeleton className="h-3 w-48" />
@@ -503,10 +503,10 @@ function ListSkeleton() {
 
 function EmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center py-16 opacity-60">
+    <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
       <Gavel className="w-10 h-10 text-muted-foreground/30 mb-4" />
-      <p className="text-sm font-medium text-muted-foreground/50">Nenhuma audiência encontrada</p>
-      <p className="text-xs text-muted-foreground/30 mt-1">
+      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/50")}>Nenhuma audiência encontrada</p>
+      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/30 mt-1")}>
         Tente ajustar os filtros ou criar uma nova audiência
       </p>
     </div>
@@ -523,7 +523,7 @@ export function AudienciasGlassList({ audiencias, isLoading, onView, usuarios }:
 
   return (
     <TooltipProvider>
-      <div className="flex flex-col gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
         {audiencias.map((aud) => (
           <GlassRow key={aud.id} audiencia={aud} onView={() => onView(aud)} usuarios={usuarios} />
         ))}

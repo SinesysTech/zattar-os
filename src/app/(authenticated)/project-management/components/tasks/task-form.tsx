@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -160,7 +161,7 @@ export function TaskFormDialog({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4"
+            className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}
           >
             <FormField
               control={form.control}
@@ -196,7 +197,7 @@ export function TaskFormDialog({
               )}
             />
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
               <FormField
                 control={form.control}
                 name="status"
@@ -277,7 +278,7 @@ export function TaskFormDialog({
               )}
             />
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
               <FormField
                 control={form.control}
                 name="dataPrazo"
@@ -313,7 +314,7 @@ export function TaskFormDialog({
               />
             </div>
 
-            <div className="flex justify-end gap-3 pt-2">
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS; pt-2 padding direcional sem Inset equiv. */ "flex justify-end gap-3 pt-2")}>
               <Button
                 type="button"
                 variant="outline"

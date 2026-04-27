@@ -6,6 +6,7 @@
  * Neste MVP, as ações disponíveis são as mesmas do plano: atribuir responsável e observações.
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 
 import { DialogFormShell } from '@/components/shared/dialog-shell';
@@ -105,9 +106,9 @@ export function PericiaDialog({
         </Button>
       }
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="grid gap-2">
-          <div className="text-sm font-medium">Responsável</div>
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Responsável</div>
           <Select value={responsavelId || '_none'} onValueChange={setResponsavelId}>
             <SelectTrigger className="w-full bg-card">
               <SelectValue placeholder="Selecione..." />
@@ -123,8 +124,8 @@ export function PericiaDialog({
           </Select>
         </div>
 
-        <div className="md:col-span-2 grid gap-2">
-          <div className="text-sm font-medium">Observações</div>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "md:col-span-2 grid gap-2")}>
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Observações</div>
           <Textarea
             value={observacoes}
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setObservacoes(e.target.value)}
@@ -134,7 +135,7 @@ export function PericiaDialog({
           />
         </div>
 
-        {error && <div className="md:col-span-2 text-sm text-destructive">{error}</div>}
+        {error && <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "md:col-span-2 text-sm text-destructive")}>{error}</div>}
       </div>
     </DialogFormShell>
   );

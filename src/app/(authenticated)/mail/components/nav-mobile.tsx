@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import { useState, useCallback } from "react";
 
 import { Pencil } from "lucide-react";
@@ -41,15 +42,15 @@ export function NavMobile() {
           </DialogHeader>
         </VisuallyHidden>
 
-        <div className="flex h-13 items-center justify-center px-4">
-          <span className="text-sm font-semibold">E-mail</span>
+        <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "flex h-13 items-center justify-center px-4")}>
+          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold")}>E-mail</span>
         </div>
 
         <Separator />
 
-        <div className="px-2 py-2">
+        <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "px-2 py-2")}>
           <ComposeMailDialog>
-            <Button variant="default" className="w-full gap-2">
+            <Button variant="default" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "w-full gap-2")}>
               <Pencil className="h-4 w-4" />
               Novo E-mail
             </Button>

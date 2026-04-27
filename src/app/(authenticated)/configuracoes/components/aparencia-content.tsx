@@ -7,6 +7,7 @@
  * organizadas em cards responsivos com labels em português.
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -26,9 +27,9 @@ import {
  */
 export function AparenciaContent() {
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       {/* Grid de cards com configurações */}
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "grid gap-6 md:grid-cols-2")}>
         {/* Card: Tema (Preset) */}
         <Card>
           <CardHeader>
@@ -96,7 +97,7 @@ export function AparenciaContent() {
 
       {/* Card: Botão de Reset */}
       <Card>
-        <CardContent className="pt-6">
+        <CardContent className={cn(/* design-system-escape: pt-6 padding direcional sem Inset equiv. */ "pt-6")}>
           <ResetThemeButton label="Restaurar Padrão" />
         </CardContent>
       </Card>

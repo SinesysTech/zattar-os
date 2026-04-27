@@ -9,6 +9,7 @@
  * - DataTable com callback onTableReady
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { ColumnDef } from '@tanstack/react-table';
@@ -182,8 +183,8 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
         const date = new Date(row.original.iniciadaEm);
         return (
           <div className="flex flex-col">
-            <span className="font-medium">{format(date, 'dd/MM/yyyy', { locale: ptBR })}</span>
-            <span className="text-xs text-muted-foreground">{format(date, 'HH:mm', { locale: ptBR })}</span>
+            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{format(date, 'dd/MM/yyyy', { locale: ptBR })}</span>
+            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{format(date, 'HH:mm', { locale: ptBR })}</span>
           </div>
         );
       },
@@ -194,7 +195,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
       cell: ({ row }) => {
         const Icon = getTipoChamadaIcon(row.original.tipo as TipoChamada);
         return (
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <Icon className="h-4 w-4 text-muted-foreground" />
             <span className="capitalize">{row.original.tipo}</span>
           </div>
@@ -214,7 +215,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
       cell: ({ row }) => {
         const user = row.original.iniciador;
         return user ? (
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <Avatar size="sm">
               <AvatarImage src={user.avatar} />
               <AvatarFallback>{user.nomeCompleto.charAt(0)}</AvatarFallback>
@@ -233,9 +234,9 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
       cell: ({ row }) => {
         const count = row.original.participantes.length;
         return (
-          <div className="flex items-center gap-1">
-            <span className="text-sm">{count}</span>
-            <span className="text-xs text-muted-foreground">participantes</span>
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{count}</span>
+            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>participantes</span>
           </div>
         );
       },
@@ -270,7 +271,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
         const gravacaoUrl = row.original.gravacaoUrl;
 
         if (!gravacaoUrl) {
-          return <span className="text-muted-foreground text-xs">-</span>;
+          return <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground text-xs")}>-</span>;
         }
 
         return (
@@ -283,7 +284,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
                 chamadaId: row.original.id,
               });
             }}
-            className="h-8 w-8 p-0"
+            className={cn(/* design-system-escape: p-0 → usar <Inset> */ "h-8 w-8 p-0")}
           >
             <Play className="h-4 w-4 text-primary" />
             <span className="sr-only">Assistir</span>
@@ -298,10 +299,10 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
         const hasTranscript = !!row.original.transcricao;
         const hasSummary = !!row.original.resumo;
 
-        if (!hasTranscript && !hasSummary) return <span className="text-muted-foreground text-xs">-</span>;
+        if (!hasTranscript && !hasSummary) return <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground text-xs")}>-</span>;
 
         return (
-          <div className="flex items-center gap-1">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
             {hasTranscript && (
               <TooltipProvider>
                 <Tooltip>
@@ -389,7 +390,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
               }
             />
           ) : (
-            <div className="p-6" />
+            <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")} />
           )
         }
         footer={

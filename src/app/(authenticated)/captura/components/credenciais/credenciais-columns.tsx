@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Eye, Pencil, Power } from 'lucide-react';
@@ -29,8 +30,8 @@ export function criarColunasCredenciais({ onViewAdvogado, onEdit, onToggleStatus
       header: ({ column }) => <DataTableColumnHeader column={column} title="Advogado" />,
       cell: ({ row }) => (
         <div className="min-w-0">
-          <p className="truncate text-sm font-medium">{row.original.advogado_nome}</p>
-          <p className="truncate text-xs text-muted-foreground">
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "truncate text-sm font-medium")}>{row.original.advogado_nome}</p>
+          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "truncate text-xs text-muted-foreground")}>
             OAB {formatOabs(row.original.advogado_oabs)} • CPF {row.original.advogado_cpf}
           </p>
         </div>
@@ -73,7 +74,7 @@ export function criarColunasCredenciais({ onViewAdvogado, onEdit, onToggleStatus
       cell: ({ row }) => {
         const credencial = row.original;
         return (
-          <div className="flex items-center gap-1">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button

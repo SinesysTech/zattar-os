@@ -65,12 +65,12 @@ function KpiTile({
   tone?: 'success' | 'warning';
 }) {
   return (
-    <div className="flex flex-col gap-1.5 px-4 py-3 rounded-xl bg-muted/30 border border-border/20">
+    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex flex-col gap-1.5 px-4 py-3 rounded-xl bg-muted/30 border border-border/20")}>
       <Text variant="meta-label">{label}</Text>
       <Text
         variant="kpi-value"
         className={cn(
-          'leading-none text-[22px]',
+          /* design-system-escape: leading-none sem token DS */ 'leading-none text-[22px]',
           tone === 'success' && 'text-success',
           tone === 'warning' && 'text-warning',
         )}
@@ -85,10 +85,10 @@ function ProgressBar({ pct }: { pct: number }) {
   return (
     <div>
       <div className="flex justify-between mb-1.5">
-        <Text variant="caption" className="font-medium">
+        <Text variant="caption" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
           Progresso de recebimento
         </Text>
-        <Text variant="caption" className="text-primary font-bold tabular-nums">
+        <Text variant="caption" className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-primary font-bold tabular-nums")}>
           {pct}%
         </Text>
       </div>
@@ -110,11 +110,11 @@ function ProgressBar({ pct }: { pct: number }) {
 
 function LancamentoRow({ lancamento }: { lancamento: Lancamento }) {
   return (
-    <div className="grid grid-cols-[2.2fr_1fr_1fr_1fr] gap-3 items-center px-3 py-2.5 rounded-xl bg-muted/30 border border-border/20 transition-colors hover:bg-muted/50">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "grid grid-cols-[2.2fr_1fr_1fr_1fr] gap-3 items-center px-3 py-2.5 rounded-xl bg-muted/30 border border-border/20 transition-colors hover:bg-muted/50")}>
       <Text variant="label" className="truncate block">
         {lancamento.descricao}
       </Text>
-      <Text variant="label" className="tabular-nums font-semibold">
+      <Text variant="label" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "tabular-nums font-semibold")}>
         {formatCurrency(lancamento.valor)}
       </Text>
       <Text variant="caption" className="tabular-nums">
@@ -153,7 +153,7 @@ export function ContratoFinanceiroCard({
   const pctRecebido = valorTotal > 0 ? Math.round((totalReceitas / valorTotal) * 100) : 0;
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex flex-col gap-5")}>
       {/* Resumo */}
       <DetailSection icon={DollarSign} label="Resumo financeiro">
         <DetailSectionCard>
@@ -163,7 +163,7 @@ export function ContratoFinanceiroCard({
             </Text>
           ) : (
             <>
-              <div className="grid grid-cols-3 gap-3 mb-4">
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-3 gap-3 mb-4")}>
                 <KpiTile label="Valor total" value={formatCurrency(valorTotal)} />
                 <KpiTile label="Recebido" value={formatCurrency(totalReceitas)} tone="success" />
                 <KpiTile label="Pendente" value={formatCurrency(totalPendente)} tone="warning" />
@@ -177,20 +177,20 @@ export function ContratoFinanceiroCard({
       {/* Lançamentos */}
       {!isEmpty && (
         <DetailSection icon={Wallet} label="Lançamentos">
-          <DetailSectionCard className="p-3">
+          <DetailSectionCard className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3")}>
             {isLoading ? (
-              <Text variant="caption" className="text-center py-3 block">
+              <Text variant="caption" className={cn(/* design-system-escape: py-3 padding direcional sem Inset equiv. */ "text-center py-3 block")}>
                 Carregando...
               </Text>
             ) : (
               <>
-                <div className="grid grid-cols-[2.2fr_1fr_1fr_1fr] gap-3 items-center px-3 pb-2">
+                <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "grid grid-cols-[2.2fr_1fr_1fr_1fr] gap-3 items-center px-3 pb-2")}>
                   <Text variant="meta-label">Descrição</Text>
                   <Text variant="meta-label">Valor</Text>
                   <Text variant="meta-label">Vencimento</Text>
                   <Text variant="meta-label">Status</Text>
                 </div>
-                <div className="flex flex-col gap-1.5">
+                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
                   {lancamentos.slice(0, 10).map((l) => (
                     <LancamentoRow key={l.id} lancamento={l} />
                   ))}
@@ -198,7 +198,7 @@ export function ContratoFinanceiroCard({
                 {lancamentos.length > 10 && (
                   <Text
                     variant="caption"
-                    className="pt-2.5 mt-2 text-center block border-t border-border/20"
+                    className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "pt-2.5 mt-2 text-center block border-t border-border/20")}
                   >
                     Mostrando 10 de {lancamentos.length} lançamentos
                   </Text>

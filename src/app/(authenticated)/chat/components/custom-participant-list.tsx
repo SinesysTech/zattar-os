@@ -42,26 +42,26 @@ export const CustomParticipantList = memo(function CustomParticipantList({ isVis
       "animate-in slide-in-from-right-10 duration-300",
       className
     )}>
-      <div className="p-4 border-b border-video-border flex justify-between items-center">
+      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 border-b border-video-border flex justify-between items-center")}>
         <Heading level="widget" className="text-video-text">Participantes ({allParticipants.length})</Heading>
         {/* Close button for mobile could go here */}
       </div>
 
-      <ScrollArea className="flex-1 p-2">
+      <ScrollArea className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex-1 p-2")}>
         {allParticipants.length === 0 ? (
           <EmptyState
             icon={Users}
             title="Sem participantes"
             description="Aguardando participantes entrarem na chamada."
-            className="py-6 [&_h3]:text-sm [&_h3]:text-video-text [&_p]:text-xs [&_p]:text-video-muted [&>div:first-child]:mb-2 [&>div:first-child]:h-12 [&>div:first-child]:w-12 [&_svg]:h-6 [&_svg]:w-6 [&>div:first-child]:bg-video-surface-hover"
+            className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv.; [&_h3]:text-sm sem equivalente DS; [&_p]:text-xs sem equivalente DS */ "py-6 [&_h3]:text-sm [&_h3]:text-video-text [&_p]:text-xs [&_p]:text-video-muted [&>div:first-child]:mb-2 [&>div:first-child]:h-12 [&>div:first-child]:w-12 [&_svg]:h-6 [&_svg]:w-6 [&>div:first-child]:bg-video-surface-hover")}
           />
         ) : (
-          <div className="space-y-1">
+          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
             {allParticipants.map((p: DyteParticipant) => (
-              <div key={p.id} className="flex items-center gap-3 p-3 hover:bg-video-surface-hover/50 transition-colors rounded-lg group">
+              <div key={p.id} className={cn(/* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ "flex items-center gap-3 p-3 hover:bg-video-surface-hover/50 transition-colors rounded-lg group")}>
                 {/* Avatar */}
                 <div className={cn(
-                  "w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-video-text shadow-sm",
+                  /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-video-text shadow-sm",
                   "bg-linear-to-br from-info to-primary",
                   p.audioEnabled && "ring-2 ring-success"
                 )}>
@@ -75,16 +75,16 @@ export const CustomParticipantList = memo(function CustomParticipantList({ isVis
 
                 {/* Info */}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-video-text truncate">
+                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-video-text truncate")}>
                     {p.name} {p.id === self?.id && "(Você)"}
                   </p>
-                  <p className="text-xs text-video-muted">
+                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-video-muted")}>
                     {p.id === self?.id ? "Conectado" : "Na chamada"}
                   </p>
                 </div>
 
                 {/* Status Icons */}
-                <div className="flex gap-2">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
                   {p.audioEnabled ? (
                     <Mic className="w-3 h-3 text-success" />
                   ) : (

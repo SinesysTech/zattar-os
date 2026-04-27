@@ -1,6 +1,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -259,16 +260,16 @@ export function UsuarioEditDialog({
       }
     >
       <form ref={formRef} onSubmit={handleSubmit}>
-        <div className="grid gap-6">
+        <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "grid gap-6")}>
           {/* Avatar */}
-          <div className="flex items-center gap-4 pb-4 border-b">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pb-4 padding direcional sem Inset equiv. */ "flex items-center gap-4 pb-4 border-b")}>
             <div
               className="relative group cursor-pointer"
               onClick={() => setAvatarDialogOpen(true)}
             >
               <Avatar size="2xl" className="border-2 border-muted">
                 <AvatarImage src={currentAvatarUrl || undefined} alt={formData.nomeExibicao || usuario.nomeExibicao} />
-                <AvatarFallback className="text-lg font-medium">
+                <AvatarFallback className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-medium → className de <Text>/<Heading> */ "text-lg font-medium")}>
                   {getInitials(formData.nomeExibicao || usuario.nomeExibicao)}
                 </AvatarFallback>
               </Avatar>
@@ -277,18 +278,18 @@ export function UsuarioEditDialog({
               </div>
             </div>
             <div className="flex-1">
-              <Typography.Small className="font-medium">Foto de Perfil</Typography.Small>
-              <p className="text-xs text-muted-foreground">
+              <Typography.Small className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Foto de Perfil</Typography.Small>
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                 Clique na imagem para alterar o avatar do usuário
               </p>
             </div>
           </div>
 
           {/* Dados Pessoais */}
-          <div className="grid gap-4">
-            <Typography.Small className="font-medium text-muted-foreground">Dados Pessoais</Typography.Small>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4")}>
+            <Typography.Small className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground")}>Dados Pessoais</Typography.Small>
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-3 gap-4")}>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                 <Label htmlFor="nomeCompleto">
                   Nome Completo <span className="text-destructive">*</span>
                 </Label>
@@ -301,7 +302,7 @@ export function UsuarioEditDialog({
                   required
                 />
               </div>
-              <div className="grid gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                 <Label htmlFor="nomeExibicao">
                   Nome de Exibição <span className="text-destructive">*</span>
                 </Label>
@@ -314,7 +315,7 @@ export function UsuarioEditDialog({
                   required
                 />
               </div>
-              <div className="grid gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                 <Label htmlFor="dataNascimento">Data de Nascimento</Label>
                 <FormDatePicker
                   id="dataNascimento"
@@ -324,8 +325,8 @@ export function UsuarioEditDialog({
                 />
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="grid gap-2">
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-3 gap-4")}>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                 <Label htmlFor="cpf">CPF</Label>
                 <Input
                   id="cpf"
@@ -335,7 +336,7 @@ export function UsuarioEditDialog({
                   }
                 />
               </div>
-              <div className="grid gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                 <Label htmlFor="rg">RG</Label>
                 <Input
                   id="rg"
@@ -345,7 +346,7 @@ export function UsuarioEditDialog({
                   }
                 />
               </div>
-              <div className="grid gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                 <Label htmlFor="genero">Gênero</Label>
                 <Select
                   value={formData.genero || ''}
@@ -370,10 +371,10 @@ export function UsuarioEditDialog({
           </div>
 
           {/* Contato */}
-          <GlassPanel depth={1} className="p-4 grid gap-4">
-            <Typography.Small className="font-medium text-muted-foreground">Contato</Typography.Small>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="grid gap-2">
+          <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; gap-4 → migrar para <Inline gap="default"> */ "p-4 grid gap-4")}>
+            <Typography.Small className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground")}>Contato</Typography.Small>
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                 <Label htmlFor="emailCorporativo">
                   E-mail Corporativo <span className="text-destructive">*</span>
                 </Label>
@@ -387,7 +388,7 @@ export function UsuarioEditDialog({
                   required
                 />
               </div>
-              <div className="grid gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                 <Label htmlFor="emailPessoal">E-mail Pessoal</Label>
                 <Input
                   id="emailPessoal"
@@ -399,8 +400,8 @@ export function UsuarioEditDialog({
                 />
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="grid gap-2">
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                 <Label htmlFor="telefone">Telefone</Label>
                 <Input
                   id="telefone"
@@ -410,7 +411,7 @@ export function UsuarioEditDialog({
                   }
                 />
               </div>
-              <div className="grid gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                 <Label htmlFor="ramal">Ramal</Label>
                 <Input
                   id="ramal"
@@ -424,10 +425,10 @@ export function UsuarioEditDialog({
           </GlassPanel>
 
           {/* Profissional */}
-          <GlassPanel depth={1} className="p-4 grid gap-4">
-            <Typography.Small className="font-medium text-muted-foreground">Profissional</Typography.Small>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="grid gap-2">
+          <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; gap-4 → migrar para <Inline gap="default"> */ "p-4 grid gap-4")}>
+            <Typography.Small className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground")}>Profissional</Typography.Small>
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-3 gap-4")}>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                 <Label htmlFor="cargo">Cargo</Label>
                 <Select
                   value={formData.cargoId?.toString() || 'none'}
@@ -452,7 +453,7 @@ export function UsuarioEditDialog({
                   </SelectContent>
                 </Select>
               </div>
-              <div className="grid gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                 <Label htmlFor="oab">OAB</Label>
                 <Input
                   id="oab"
@@ -462,7 +463,7 @@ export function UsuarioEditDialog({
                   }
                 />
               </div>
-              <div className="grid gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                 <Label htmlFor="ufOab">UF OAB</Label>
                 <Input
                   id="ufOab"
@@ -480,12 +481,12 @@ export function UsuarioEditDialog({
           </GlassPanel>
 
           {/* Endereço */}
-          <GlassPanel depth={1} className="p-4 grid gap-4">
-            <Typography.Small className="font-medium text-muted-foreground">Endereço</Typography.Small>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="grid gap-2">
+          <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; gap-4 → migrar para <Inline gap="default"> */ "p-4 grid gap-4")}>
+            <Typography.Small className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground")}>Endereço</Typography.Small>
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-3 gap-4")}>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                 <Label htmlFor="cep">CEP</Label>
-                <div className="flex gap-2">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
                   <Input
                     id="cep"
                     value={formData.endereco.cep}
@@ -515,8 +516,8 @@ export function UsuarioEditDialog({
                 </div>
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="grid gap-2">
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-3 gap-4")}>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                 <Label htmlFor="logradouro">Logradouro</Label>
                 <Input
                   id="logradouro"
@@ -532,7 +533,7 @@ export function UsuarioEditDialog({
                   }
                 />
               </div>
-              <div className="grid gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                 <Label htmlFor="numero">Número</Label>
                 <Input
                   id="numero"
@@ -545,7 +546,7 @@ export function UsuarioEditDialog({
                   }
                 />
               </div>
-              <div className="grid gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                 <Label htmlFor="complemento">Complemento</Label>
                 <Input
                   id="complemento"
@@ -562,8 +563,8 @@ export function UsuarioEditDialog({
                 />
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="grid gap-2">
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-3 gap-4")}>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                 <Label htmlFor="bairro">Bairro</Label>
                 <Input
                   id="bairro"
@@ -576,7 +577,7 @@ export function UsuarioEditDialog({
                   }
                 />
               </div>
-              <div className="grid gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                 <Label htmlFor="cidade">Cidade</Label>
                 <Input
                   id="cidade"
@@ -589,7 +590,7 @@ export function UsuarioEditDialog({
                   }
                 />
               </div>
-              <div className="grid gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                 <Label htmlFor="estado">UF</Label>
                 <Input
                   id="estado"
@@ -610,10 +611,10 @@ export function UsuarioEditDialog({
           </GlassPanel>
 
           {/* Status */}
-          <GlassPanel depth={1} className="p-4 grid gap-4">
-            <Typography.Small className="font-medium text-muted-foreground">Status do Usuário</Typography.Small>
-            <div className="space-y-3">
-              <div className="flex items-center space-x-2">
+          <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; gap-4 → migrar para <Inline gap="default"> */ "p-4 grid gap-4")}>
+            <Typography.Small className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground")}>Status do Usuário</Typography.Small>
+            <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+              <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
                 <Checkbox
                   id="ativo"
                   checked={formData.ativo}

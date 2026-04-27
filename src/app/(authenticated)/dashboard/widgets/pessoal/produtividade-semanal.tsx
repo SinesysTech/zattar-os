@@ -6,6 +6,7 @@
  *        useDashboard() → sem porDia (role=admin) → mostra mensagem
  */
 
+import { cn } from '@/lib/utils';
 import { BarChart3 } from 'lucide-react';
 import {
   WidgetContainer,
@@ -95,20 +96,20 @@ export function WidgetProdutividadeSemanal() {
       subtitle="Baixas por dia — semana atual"
       depth={1}
     >
-      <div className="flex items-end justify-between gap-2 mb-3">
-        <div className="flex flex-col gap-0.5">
-          <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-end justify-between gap-2 mb-3")}>
+        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+          <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Total semana
           </span>
-          <span className="font-display text-lg font-bold tabular-nums">
+          <span className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold tabular-nums")}>
             {fmtNum(baixasSemana || total)}
           </span>
         </div>
-        <div className="flex flex-col items-end gap-0.5">
-          <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-end gap-0.5")}>
+          <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Média diária
           </span>
-          <span className="font-display text-base font-bold tabular-nums text-primary/80">
+          <span className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-bold → className de <Text>/<Heading> */ "font-display text-base font-bold tabular-nums text-primary/80")}>
             {media}
           </span>
         </div>
@@ -117,11 +118,11 @@ export function WidgetProdutividadeSemanal() {
       <MiniBar data={barData} height={64} barColor="bg-primary/60" />
 
       {melhorDia && (
-        <div className="mt-3 pt-3 border-t border-border/10 flex items-center justify-between">
+        <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 pt-3 border-t border-border/10 flex items-center justify-between")}>
           <span className="text-[9px] text-muted-foreground/60">
             Melhor dia: {getDiaSemanaLabel(melhorDia.data)}
           </span>
-          <span className="text-[9px] font-semibold tabular-nums text-primary/70">
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[9px] font-semibold tabular-nums text-primary/70")}>
             {melhorDia.baixas} baixas
           </span>
         </div>

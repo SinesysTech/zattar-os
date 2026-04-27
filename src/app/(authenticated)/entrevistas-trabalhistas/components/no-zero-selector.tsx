@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { Building2, Smartphone, Briefcase, ChevronRight } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
@@ -64,7 +65,7 @@ export function NoZeroSelector({ onSelect, isLoading }: NoZeroSelectorProps) {
   const perfisDisponiveis = selected ? PERFIS_POR_TRILHA[selected] : [];
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "mx-auto max-w-2xl space-y-6")}>
       <div className="text-center">
         <Heading level="card">Qual era a natureza principal do serviço prestado?</Heading>
         <Text variant="caption" className="mt-1">
@@ -72,7 +73,7 @@ export function NoZeroSelector({ onSelect, isLoading }: NoZeroSelectorProps) {
         </Text>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 sm:grid-cols-3")}>
         {TIPO_CONFIG.map(({ value, icon }) => {
           const isSelected = selected === value;
 
@@ -95,7 +96,7 @@ export function NoZeroSelector({ onSelect, isLoading }: NoZeroSelectorProps) {
                   {icon}
                 </div>
                 <div>
-                  <p className="font-medium">{TIPO_LITIGIO_LABELS[value]}</p>
+                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{TIPO_LITIGIO_LABELS[value]}</p>
                   <Text variant="caption" className="mt-1">
                     {TIPO_LITIGIO_DESCRICAO[value]}
                   </Text>
@@ -107,8 +108,8 @@ export function NoZeroSelector({ onSelect, isLoading }: NoZeroSelectorProps) {
       </div>
 
       {selected && (
-        <GlassPanel className="space-y-4 p-4">
-          <div className="space-y-2">
+        <GlassPanel className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; p-4 → migrar para <Inset variant="card-compact"> */ "space-y-4 p-4")}>
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label htmlFor="perfil">Perfil do reclamante (opcional)</Label>
             <Select value={perfil ?? ''} onValueChange={(v) => setPerfil(v as PerfilReclamante)}>
               <SelectTrigger id="perfil">

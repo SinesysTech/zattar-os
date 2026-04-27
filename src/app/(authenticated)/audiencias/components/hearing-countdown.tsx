@@ -61,7 +61,7 @@ export function HearingCountdown({ targetDate, className, compact = false }: Hea
 
   if (timeLeft.total <= 0) {
     return (
-      <Text variant="caption" as="span" className={cn("font-medium text-muted-foreground/60", className)}>
+      <Text variant="caption" as="span" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground/60", className)}>
         Agora
       </Text>
     );
@@ -69,24 +69,24 @@ export function HearingCountdown({ targetDate, className, compact = false }: Hea
 
   if (compact) {
     return (
-      <span className={cn("text-caption tabular-nums font-semibold", urgencyColor, className)}>
+      <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-caption tabular-nums font-semibold", urgencyColor, className)}>
         {timeLeft.hours > 0 ? `${timeLeft.hours}h ` : ""}{timeLeft.minutes}min
       </span>
     );
   }
 
   return (
-    <div className={cn("inline-flex items-center gap-1 px-2 py-1 rounded-lg", urgencyBg, className)}>
-      <div className="flex items-center gap-0.5 tabular-nums">
+    <div className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "inline-flex items-center gap-1 px-2 py-1 rounded-lg", urgencyBg, className)}>
+      <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center gap-0.5 tabular-nums")}>
         {timeLeft.hours > 0 && (
           <>
-            <span className={cn("text-sm font-bold", urgencyColor)}>{pad(timeLeft.hours)}</span>
+            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold", urgencyColor)}>{pad(timeLeft.hours)}</span>
             <span className="text-micro-caption text-muted-foreground/60">:</span>
           </>
         )}
-        <span className={cn("text-sm font-bold", urgencyColor)}>{pad(timeLeft.minutes)}</span>
+        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold", urgencyColor)}>{pad(timeLeft.minutes)}</span>
         <span className="text-micro-caption text-muted-foreground/60">:</span>
-        <span className={cn("text-sm font-bold", urgencyColor)}>{pad(timeLeft.seconds)}</span>
+        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold", urgencyColor)}>{pad(timeLeft.seconds)}</span>
       </div>
     </div>
   );

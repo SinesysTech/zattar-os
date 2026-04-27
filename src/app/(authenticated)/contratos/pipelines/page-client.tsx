@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
@@ -224,7 +225,7 @@ function PipelineDialog({ open, onOpenChange, pipeline, segmentos, onSuccess }: 
       }
     >
       <Form {...form}>
-        <form id="pipeline-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form id="pipeline-form" onSubmit={form.handleSubmit(onSubmit)} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           {!isEditing && (
             <FormField
               control={form.control}
@@ -234,7 +235,7 @@ function PipelineDialog({ open, onOpenChange, pipeline, segmentos, onSuccess }: 
                   <FormLabel>Segmento</FormLabel>
                   <FormControl>
                     <select
-                      className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                      className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50")}
                       value={field.value}
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     >
@@ -388,7 +389,7 @@ function EstagioDialog({ open, onOpenChange, pipelineId, estagio, onSuccess }: E
       }
     >
       <Form {...form}>
-        <form id="estagio-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form id="estagio-form" onSubmit={form.handleSubmit(onSubmit)} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           <FormField
             control={form.control}
             name="nome"
@@ -424,10 +425,10 @@ function EstagioDialog({ open, onOpenChange, pipelineId, estagio, onSuccess }: E
               <FormItem>
                 <FormLabel>Cor</FormLabel>
                 <FormControl>
-                  <div className="flex items-center gap-3">
+                  <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
                     <input
                       type="color"
-                      className="h-9 w-12 cursor-pointer rounded-md border border-input p-1"
+                      className={cn(/* design-system-escape: p-1 → usar <Inset> */ "h-9 w-12 cursor-pointer rounded-md border border-input p-1")}
                       value={field.value}
                       onChange={(e) => field.onChange(e.target.value)}
                     />
@@ -449,7 +450,7 @@ function EstagioDialog({ open, onOpenChange, pipelineId, estagio, onSuccess }: E
             name="isDefault"
             render={({ field }) => (
               <FormItem>
-                <div className="flex items-center gap-3">
+                <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
                   <FormControl>
                     <Switch
                       checked={field.value}
@@ -619,23 +620,23 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
     <>
       <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent side="right" className="w-full sm:max-w-lg flex flex-col">
-          <SheetHeader className="pb-2">
+          <SheetHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
             <SheetTitle>Estágios — {pipeline.nome}</SheetTitle>
           </SheetHeader>
 
-          <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-3">
+          <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv.; space-y-3 sem token DS */ "flex-1 overflow-y-auto px-4 pb-4 space-y-3")}>
             {isLoadingEstagios ? (
-              <div className="space-y-2 pt-2">
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; pt-2 padding direcional sem Inset equiv. */ "space-y-2 pt-2")}>
                 {Array.from({ length: 3 }).map((_, i) => (
                   <Skeleton key={i} className="h-14 w-full" />
                 ))}
               </div>
             ) : estagios.length === 0 ? (
-              <p className="pt-4 text-center text-sm text-muted-foreground">
+              <p className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "pt-4 text-center text-sm text-muted-foreground")}>
                 Nenhum estágio cadastrado.
               </p>
             ) : (
-              <div className="space-y-2 pt-2">
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; pt-2 padding direcional sem Inset equiv. */ "space-y-2 pt-2")}>
                 {estagios.map((estagio, index) => (
                   <div
                     key={estagio.id}
@@ -643,7 +644,7 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
                     onDragStart={(e) => handleDragStart(e, index)}
                     onDragOver={(e) => handleDragOver(e, index)}
                     onDragEnd={handleDragEnd}
-                    className="flex items-center gap-3 rounded-md border bg-card p-3 cursor-grab active:cursor-grabbing select-none"
+                    className={cn(/* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ "flex items-center gap-3 rounded-md border bg-card p-3 cursor-grab active:cursor-grabbing select-none")}
                   >
                     <GripVertical className="h-4 w-4 shrink-0 text-muted-foreground" />
 
@@ -655,16 +656,16 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
                     />
 
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-sm font-medium truncate">{estagio.nome}</span>
+                      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+                        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")}>{estagio.nome}</span>
                         {estagio.isDefault && (
                           <Star className="h-3.5 w-3.5 shrink-0 fill-warning text-warning" />
                         )}
                       </div>
-                      <span className="text-xs font-mono text-muted-foreground">{estagio.slug}</span>
+                      <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs font-mono text-muted-foreground")}>{estagio.slug}</span>
                     </div>
 
-                    <div className="flex items-center gap-1 shrink-0">
+                    <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 shrink-0")}>
                       <Button
                         variant="ghost"
                         size="icon"
@@ -693,7 +694,7 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
             )}
           </div>
 
-          <div className="px-4 pb-4 pt-2 border-t space-y-2">
+          <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv.; space-y-2 → migrar para <Stack gap="tight"> */ "px-4 pb-4 pt-2 border-t space-y-2")}>
             {hasReordered && (
               <Button
                 onClick={() => void handleSaveOrder()}
@@ -838,13 +839,13 @@ export function PipelinesPageClient() {
   const ativosCount = pipelines.filter((p) => p.ativo).length;
 
   return (
-    <div className="space-y-5">
+    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       {/* Header */}
-      <div className="flex items-end justify-between gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
         <div>
           <Heading level="page">Pipelines de Contratos</Heading>
           {!isLoading && (
-            <p className="text-sm text-muted-foreground mt-0.5">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground mt-0.5")}>
               {ativosCount} ativo{ativosCount !== 1 ? 's' : ''} &middot; {pipelines.length} total
             </p>
           )}
@@ -858,22 +859,22 @@ export function PipelinesPageClient() {
       {/* Lista Glass */}
       <GlassPanel depth={1} className="overflow-hidden">
         {isLoading ? (
-          <div className="p-4 space-y-2">
+          <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-2 → migrar para <Stack gap="tight"> */ "p-4 space-y-2")}>
             {Array.from({ length: 4 }).map((_, i) => (
               <Skeleton key={i} className="h-14 w-full rounded-xl" />
             ))}
           </div>
         ) : error ? (
-          <div className="p-8 text-center text-sm text-destructive">{error}</div>
+          <div className={cn(/* design-system-escape: p-8 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "p-8 text-center text-sm text-destructive")}>{error}</div>
         ) : pipelines.length === 0 ? (
-          <div className="p-12 text-center text-sm text-muted-foreground">
+          <div className={cn(/* design-system-escape: p-12 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "p-12 text-center text-sm text-muted-foreground")}>
             Nenhum pipeline cadastrado.
           </div>
         ) : (
           <div role="table" aria-label="Pipelines de Contratos">
             <div
               role="row"
-              className="grid grid-cols-[1.5fr_1fr_1.2fr_100px_200px] gap-4 px-4 py-2.5 border-b border-border/40 text-[11px] uppercase tracking-wide font-medium text-muted-foreground/70"
+              className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; tracking-wide sem token DS; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; tracking-wide sem token DS; font-medium → className de <Text>/<Heading> */ "grid grid-cols-[1.5fr_1fr_1.2fr_100px_200px] gap-4 px-4 py-2.5 border-b border-border/40 text-[11px] uppercase tracking-wide font-medium text-muted-foreground/70")}
             >
               <span>Nome</span>
               <span>Segmento</span>
@@ -886,25 +887,25 @@ export function PipelinesPageClient() {
                 <div
                   key={pipeline.id}
                   role="row"
-                  className="grid grid-cols-[1.5fr_1fr_1.2fr_100px_200px] gap-4 items-center px-4 py-3 hover:bg-muted/30 transition-colors"
+                  className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "grid grid-cols-[1.5fr_1fr_1.2fr_100px_200px] gap-4 items-center px-4 py-3 hover:bg-muted/30 transition-colors")}
                 >
                   <div className="min-w-0">
-                    <div className="text-sm font-medium truncate">{pipeline.nome}</div>
+                    <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")}>{pipeline.nome}</div>
                     {pipeline.descricao && (
-                      <p className="text-xs text-muted-foreground truncate">
+                      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground truncate")}>
                         {pipeline.descricao}
                       </p>
                     )}
                   </div>
-                  <span className="text-sm text-muted-foreground truncate">
+                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground truncate")}>
                     {segmentoNomeMap[pipeline.segmentoId] ?? `Segmento #${pipeline.segmentoId}`}
                   </span>
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-sm text-muted-foreground">
+                  <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                       {pipeline.estagios?.length ?? 0} estágio(s)
                     </span>
                     {pipeline.estagios && pipeline.estagios.length > 0 && (
-                      <div className="flex -space-x-1">
+                      <div className={cn(/* design-system-escape: -space-x-1 sem equivalente DS */ "flex -space-x-1")}>
                         {pipeline.estagios.slice(0, 5).map((e) => (
                           <div
                             key={e.id}
@@ -921,11 +922,11 @@ export function PipelinesPageClient() {
                       {pipeline.ativo ? 'Ativo' : 'Inativo'}
                     </Badge>
                   </span>
-                  <div className="flex items-center justify-end gap-2">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-end gap-2")}>
                     <Button
                       variant="outline"
                       size="sm"
-                      className="h-8 gap-1.5 cursor-pointer"
+                      className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "h-8 gap-1.5 cursor-pointer")}
                       onClick={() => handleGerenciarEstagios(pipeline)}
                     >
                       <Settings className="h-3.5 w-3.5" />

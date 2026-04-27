@@ -9,6 +9,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import { CalendarDays } from 'lucide-react';
 import {
   CalendarHeatmap,
@@ -40,9 +41,9 @@ export function CalendarioPrazos() {
         icon={CalendarDays}
         subtitle="Densidade de prazos por dia"
         depth={1}
-        className="h-auto! self-start p-4!"
+        className={cn(/* design-system-escape: p-4! → usar <Inset> */ "h-auto! self-start p-4!")}
       >
-        <p className="text-[11px] text-muted-foreground/60 py-6 text-center">
+        <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-6 text-center")}>
           Dados de calendario nao disponiveis.
         </p>
       </WidgetContainer>
@@ -55,7 +56,7 @@ export function CalendarioPrazos() {
       icon={CalendarDays}
       subtitle="Densidade de prazos por dia"
       depth={1}
-      className="h-auto! self-start p-4!"
+      className={cn(/* design-system-escape: p-4! → usar <Inset> */ "h-auto! self-start p-4!")}
     >
       <div className="mt-2">
         <CalendarHeatmap
@@ -64,9 +65,9 @@ export function CalendarioPrazos() {
         />
       </div>
 
-      <div className="mt-3 flex items-center gap-1.5 justify-end">
+      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "mt-3 flex items-center gap-1.5 justify-end")}>
         <span className="text-[8px] text-muted-foreground/50">Menos</span>
-        <div className="flex gap-0.5">
+        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex gap-0.5")}>
           <div className="size-3 rounded-[2px] bg-border/10" />
           <div className="size-3 rounded-[2px] bg-destructive/15" />
           <div className="size-3 rounded-[2px] bg-destructive/30" />

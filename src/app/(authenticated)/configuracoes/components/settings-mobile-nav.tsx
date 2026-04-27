@@ -14,7 +14,7 @@ export function SettingsMobileNav({ activeTab, onTabChange }: SettingsMobileNavP
   return (
     <div className="md:hidden">
       <ScrollArea className="w-full">
-        <GlassPanel className="flex-row gap-1 p-1 rounded-xl">
+        <GlassPanel className={cn(/* design-system-escape: gap-1 gap sem token DS; p-1 → usar <Inset> */ "flex-row gap-1 p-1 rounded-xl")}>
           {ALL_NAV_ITEMS.map((item) => {
             const isActive = activeTab === item.id;
             return (
@@ -22,7 +22,7 @@ export function SettingsMobileNav({ activeTab, onTabChange }: SettingsMobileNavP
                 key={item.id}
                 onClick={() => onTabChange(item.id)}
                 className={cn(
-                  'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all duration-200 cursor-pointer',
+                  /* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all duration-200 cursor-pointer',
                   isActive
                     ? 'bg-foreground/5 text-foreground'
                     : 'text-muted-foreground hover:bg-foreground/4'

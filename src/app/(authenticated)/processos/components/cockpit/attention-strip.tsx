@@ -74,22 +74,22 @@ export function AttentionStrip({
   if (!hasUrgency) return null;
 
   return (
-    <GlassPanel depth={2} className="mx-4 mt-2 shrink-0">
+    <GlassPanel depth={2} className={cn(/* design-system-escape: mx-4 margin sem primitiva DS */ "mx-4 mt-2 shrink-0")}>
       <div className="flex items-stretch overflow-x-auto">
         {proximaAudiencia && (() => {
           const countdown = formatCountdown(proximaAudiencia.dataInicio);
           return (
-            <div className="flex-1 min-w-50 px-4 py-3">
-              <div className="flex items-center gap-2 mb-1.5">
+            <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex-1 min-w-50 px-4 py-3")}>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-1.5")}>
                 <Calendar className="size-3.5 text-primary/40" />
-                <span className="text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider">
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider")}>
                   Próxima Audiência
                 </span>
-                <span className={cn('text-[10px] font-bold tabular-nums ml-auto', URGENCY_STYLES[countdown.urgency])}>
+                <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ 'text-[10px] font-bold tabular-nums ml-auto', URGENCY_STYLES[countdown.urgency])}>
                   {countdown.label}
                 </span>
               </div>
-              <p className="text-xs font-medium truncate">
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium truncate")}>
                 {proximaAudiencia.tipoDescricao || 'Audiência'}
               </p>
               <p className="text-[10px] text-muted-foreground/50 mt-0.5">
@@ -99,7 +99,7 @@ export function AttentionStrip({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="mt-1.5 h-6 px-2 text-[10px]"
+                  className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "mt-1.5 h-6 px-2 text-[10px]")}
                   onClick={() => onOpenAudiencia(proximaAudiencia)}
                 >
                   Ver detalhes <ChevronRight className="size-3 ml-0.5" />
@@ -114,25 +114,25 @@ export function AttentionStrip({
         )}
 
         {expedientesUrgentes.total > 0 && (
-          <div className="flex-1 min-w-45 px-4 py-3">
-            <div className="flex items-center gap-2 mb-1.5">
+          <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex-1 min-w-45 px-4 py-3")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-1.5")}>
               <FileText className="size-3.5 text-warning/40" />
-              <span className="text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider">
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider")}>
                 Prazos
               </span>
             </div>
             {expedientesUrgentes.vencidos.length > 0 && (
-              <div className="flex items-center gap-1.5 mb-1">
+              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mb-1")}>
                 <AlertTriangle className="size-3 text-destructive/70" />
-                <span className="text-[10px] font-medium text-destructive/70">
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium text-destructive/70")}>
                   {expedientesUrgentes.vencidos.length} vencido{expedientesUrgentes.vencidos.length > 1 ? 's' : ''}
                 </span>
               </div>
             )}
             {expedientesUrgentes.vencendo.length > 0 && (
-              <div className="flex items-center gap-1.5">
+              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
                 <Clock className="size-3 text-warning/70" />
-                <span className="text-[10px] font-medium text-warning/70">
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium text-warning/70")}>
                   {expedientesUrgentes.vencendo.length} vencendo
                 </span>
               </div>
@@ -145,24 +145,24 @@ export function AttentionStrip({
         )}
 
         {periciasPendentes.length > 0 && (
-          <div className="flex-1 min-w-40 px-4 py-3">
-            <div className="flex items-center gap-2 mb-1.5">
+          <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex-1 min-w-40 px-4 py-3")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-1.5")}>
               <Microscope className="size-3.5 text-info/40" />
-              <span className="text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider">
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider")}>
                 Perícias
               </span>
             </div>
-            <span className="text-[10px] font-medium text-info/70">
+            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium text-info/70")}>
               {periciasPendentes.length} pendente{periciasPendentes.length > 1 ? 's' : ''}
             </span>
           </div>
         )}
 
-        <div className="flex items-center px-3 shrink-0">
+        <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "flex items-center px-3 shrink-0")}>
           <Button
             variant="ghost"
             size="sm"
-            className="h-7 px-2.5 text-[10px] text-muted-foreground/50"
+            className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv. */ "h-7 px-2.5 text-[10px] text-muted-foreground/50")}
             onClick={onOpenAllDetails}
           >
             Ver todos <ChevronRight className="size-3 ml-0.5" />

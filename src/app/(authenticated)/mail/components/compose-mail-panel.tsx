@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import { useRef, useState } from "react";
 import { X} from "lucide-react";
 import { toast } from "sonner";
@@ -95,8 +96,8 @@ export function ComposeMailPanel() {
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
-      <div className="flex h-13 shrink-0 items-center justify-between px-4">
-        <Heading level="card" className="text-sm">Novo E-mail</Heading>
+      <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "flex h-13 shrink-0 items-center justify-between px-4")}>
+        <Heading level="card" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Novo E-mail</Heading>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
@@ -115,14 +116,14 @@ export function ComposeMailPanel() {
       <Separator />
 
       {/* Fields */}
-      <div className="shrink-0 grid gap-3 px-4 py-3">
-        <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "shrink-0 grid gap-3 px-4 py-3")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
           <div className="flex items-center justify-between">
             <Label htmlFor="compose-panel-to">Para</Label>
             {!showCcBcc && (
               <button
                 type="button"
-                className="text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer")}
                 onClick={() => setShowCcBcc(true)}>
                 Cc / Cco
               </button>
@@ -140,7 +141,7 @@ export function ComposeMailPanel() {
 
         {showCcBcc && (
           <>
-            <div className="grid gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="compose-panel-cc">Cc</Label>
               <Input
                 id="compose-panel-cc"
@@ -150,7 +151,7 @@ export function ComposeMailPanel() {
                 onChange={(e) => setCc(e.target.value)}
               />
             </div>
-            <div className="grid gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="compose-panel-bcc">Cco</Label>
               <Input
                 id="compose-panel-bcc"
@@ -163,7 +164,7 @@ export function ComposeMailPanel() {
           </>
         )}
 
-        <div className="grid gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
           <Label htmlFor="compose-panel-subject">Assunto</Label>
           <Input
             id="compose-panel-subject"
@@ -185,7 +186,7 @@ export function ComposeMailPanel() {
       <Separator />
 
       {/* Footer */}
-      <div className="flex shrink-0 items-center justify-end gap-2 p-4">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-4 → migrar para <Inset variant="card-compact"> */ "flex shrink-0 items-center justify-end gap-2 p-4")}>
         <Button
           variant="outline"
           size="sm"

@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
@@ -23,7 +24,7 @@ import {
 
 export default function Sistema() {
   return (
-    <div className="space-y-10">
+    <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
       <div>
         <Heading level="page">
           Configurações do Sistema
@@ -42,12 +43,12 @@ export default function Sistema() {
         </p>
 
         {/* 2FAuth */}
-        <div className="space-y-3 mb-8">
-          <h3 className="font-semibold text-base flex items-center gap-2">
+        <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3 mb-8")}>
+          <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; text-base → migrar para <Text variant="body">; gap-2 → migrar para <Inline gap="tight"> */ "font-semibold text-base flex items-center gap-2")}>
             <ShieldCheck className="h-4 w-4 text-primary" />
             Autenticação em Dois Fatores (2FAuth)
           </h3>
-          <p className="text-sm text-muted-foreground">
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
             Configure um servidor 2FAuth auto-hospedado para centralizar o gerenciamento dos
             códigos TOTP da equipe, permitindo autenticação unificada.
           </p>
@@ -76,12 +77,12 @@ export default function Sistema() {
         </div>
 
         {/* Chatwoot */}
-        <div className="space-y-3 mb-8">
-          <h3 className="font-semibold text-base flex items-center gap-2">
+        <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3 mb-8")}>
+          <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; text-base → migrar para <Text variant="body">; gap-2 → migrar para <Inline gap="tight"> */ "font-semibold text-base flex items-center gap-2")}>
             <MessageSquare className="h-4 w-4 text-primary" />
             Chatwoot (Chat e Atendimento)
           </h3>
-          <p className="text-sm text-muted-foreground">
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
             Integre o Chatwoot para gerenciar conversas com clientes diretamente do ZattarOS,
             sem precisar alternar entre sistemas.
           </p>
@@ -120,12 +121,12 @@ export default function Sistema() {
         </div>
 
         {/* Dyte */}
-        <div className="space-y-3">
-          <h3 className="font-semibold text-base flex items-center gap-2">
+        <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+          <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; text-base → migrar para <Text variant="body">; gap-2 → migrar para <Inline gap="tight"> */ "font-semibold text-base flex items-center gap-2")}>
             <Video className="h-4 w-4 text-primary" />
             Dyte (Videoconferências)
           </h3>
-          <p className="text-sm text-muted-foreground">
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
             Configure o Dyte para realizar videoconferências diretamente do ZattarOS, integradas
             ao Planner e ao módulo de Audiências.
           </p>

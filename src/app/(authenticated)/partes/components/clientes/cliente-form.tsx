@@ -414,13 +414,13 @@ export function ClienteFormDialog({
 
   // Renderizar Step 1 - Tipo de Pessoa
   const renderStep1 = () => (
-    <div className="py-4">
-      <div className="flex flex-col gap-2">
+    <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "py-4")}>
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
         <button
           type="button"
           onClick={() => setFormData(prev => ({ ...prev, tipo_pessoa: 'pf' }))}
           className={cn(
-            'flex items-center gap-3 px-4 py-3 rounded-md border transition-all text-left',
+            /* design-system-escape: gap-3 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ 'flex items-center gap-3 px-4 py-3 rounded-md border transition-all text-left',
             isPF
               ? 'border-primary bg-primary/5'
               : 'border-border hover:border-muted-foreground/30 hover:bg-muted/30'
@@ -433,10 +433,10 @@ export function ClienteFormDialog({
             <User className="h-4 w-4" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className={cn('font-medium text-sm', isPF && 'text-primary')}>
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm"> */ 'font-medium text-sm', isPF && 'text-primary')}>
               Pessoa Física
             </p>
-            <p className="text-xs text-muted-foreground">
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
               CPF, RG, data de nascimento
             </p>
           </div>
@@ -449,7 +449,7 @@ export function ClienteFormDialog({
           type="button"
           onClick={() => setFormData(prev => ({ ...prev, tipo_pessoa: 'pj' }))}
           className={cn(
-            'flex items-center gap-3 px-4 py-3 rounded-md border transition-all text-left',
+            /* design-system-escape: gap-3 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ 'flex items-center gap-3 px-4 py-3 rounded-md border transition-all text-left',
             isPJ
               ? 'border-primary bg-primary/5'
               : 'border-border hover:border-muted-foreground/30 hover:bg-muted/30'
@@ -462,10 +462,10 @@ export function ClienteFormDialog({
             <Building2 className="h-4 w-4" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className={cn('font-medium text-sm', isPJ && 'text-primary')}>
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm"> */ 'font-medium text-sm', isPJ && 'text-primary')}>
               Pessoa Jurídica
             </p>
-            <p className="text-xs text-muted-foreground">
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
               CNPJ, razão social, nome fantasia
             </p>
           </div>
@@ -480,7 +480,7 @@ export function ClienteFormDialog({
   // Renderizar Step 2 - Identificacao
   const renderStep2 = () => (
     <div className="grid gap-(--density-field-gap)">
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label htmlFor="nome">
           {isPF ? 'Nome Completo' : 'Razão Social'} <span className="text-destructive">*</span>
         </Label>
@@ -494,7 +494,7 @@ export function ClienteFormDialog({
         />
       </div>
 
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label htmlFor="nome_social_fantasia">
           {isPF ? 'Nome Social' : 'Nome Fantasia'}
         </Label>
@@ -509,7 +509,7 @@ export function ClienteFormDialog({
 
       {isPF && (
         <>
-          <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
             <Label htmlFor="cpf">
               CPF <span className="text-destructive">*</span>
             </Label>
@@ -523,8 +523,8 @@ export function ClienteFormDialog({
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 sm:grid-cols-2 gap-4")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="rg">RG</Label>
               <Input
                 id="rg"
@@ -534,7 +534,7 @@ export function ClienteFormDialog({
                 placeholder="Número do RG"
               />
             </div>
-            <div className="grid gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="data_nascimento">Data de Nascimento</Label>
               <FormDatePicker
                 id="data_nascimento"
@@ -544,8 +544,8 @@ export function ClienteFormDialog({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 sm:grid-cols-2 gap-4")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="genero">Gênero</Label>
               {mounted ? (
                 <Select
@@ -564,10 +564,10 @@ export function ClienteFormDialog({
                   </SelectContent>
                 </Select>
               ) : (
-                <div className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm" />
+                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm")} />
               )}
             </div>
-            <div className="grid gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="estado_civil">Estado Civil</Label>
               {mounted ? (
                 <Select
@@ -586,13 +586,13 @@ export function ClienteFormDialog({
                   </SelectContent>
                 </Select>
               ) : (
-                <div className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm" />
+                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm")} />
               )}
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 sm:grid-cols-2 gap-4")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="nacionalidade">Nacionalidade</Label>
               <Input
                 id="nacionalidade"
@@ -602,7 +602,7 @@ export function ClienteFormDialog({
                 placeholder="Ex: Brasileira"
               />
             </div>
-            <div className="grid gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="nome_genitora">Nome da Mãe</Label>
               <Input
                 id="nome_genitora"
@@ -618,7 +618,7 @@ export function ClienteFormDialog({
 
       {isPJ && (
         <>
-          <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
             <Label htmlFor="cnpj">
               CNPJ <span className="text-destructive">*</span>
             </Label>
@@ -632,8 +632,8 @@ export function ClienteFormDialog({
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 sm:grid-cols-2 gap-4")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="inscricao_estadual">Inscrição Estadual</Label>
               <Input
                 id="inscricao_estadual"
@@ -643,7 +643,7 @@ export function ClienteFormDialog({
                 placeholder="Numero da IE"
               />
             </div>
-            <div className="grid gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="data_abertura">Data de Abertura</Label>
               <FormDatePicker
                 id="data_abertura"
@@ -660,9 +660,9 @@ export function ClienteFormDialog({
   // Renderizar Step 3 - Contato
   const renderStep3 = () => (
     <div className="grid gap-(--density-field-gap)">
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label htmlFor="novo-email-cliente">E-mails</Label>
-        <div className="flex gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
           <Input
             id="novo-email-cliente"
             type="email"
@@ -693,18 +693,18 @@ export function ClienteFormDialog({
           Pressione Enter ou clique em + para adicionar múltiplos e-mails
         </p>
         {formData.emails.length > 0 && (
-          <div className="flex flex-wrap gap-2 mt-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2 mt-2")}>
             {formData.emails.map((email, index) => (
               <Badge
                 key={index}
                 variant="secondary"
-                className="gap-1 pr-1"
+                className={cn(/* design-system-escape: gap-1 gap sem token DS; pr-1 padding direcional sem Inset equiv. */ "gap-1 pr-1")}
               >
                 {email}
                 <button
                   type="button"
                   onClick={() => handleRemoveEmail(index)}
-                  className="ml-1 hover:bg-muted rounded-full p-0.5"
+                  className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-1 hover:bg-muted rounded-full p-0.5")}
                   aria-label={`Remover e-mail ${email}`}
                   title={`Remover e-mail ${email}`}
                 >
@@ -716,7 +716,7 @@ export function ClienteFormDialog({
         )}
       </div>
 
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label>Celular</Label>
         <InputTelefone
           mode="cell"
@@ -733,7 +733,7 @@ export function ClienteFormDialog({
         />
       </div>
 
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label>Telefone Residencial</Label>
         <InputTelefone
           mode="landline"
@@ -750,7 +750,7 @@ export function ClienteFormDialog({
         />
       </div>
 
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label>Telefone Comercial</Label>
         <InputTelefone
           mode="landline"
@@ -772,7 +772,7 @@ export function ClienteFormDialog({
   // Renderizar Step 4 - Endereco
   const renderStep4 = () => (
     <div className="grid gap-(--density-field-gap)">
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label>CEP</Label>
         <InputCEP
           value={formData.cep}
@@ -782,7 +782,7 @@ export function ClienteFormDialog({
         />
       </div>
 
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label htmlFor="logradouro">Logradouro</Label>
         <Input
           id="logradouro"
@@ -792,8 +792,8 @@ export function ClienteFormDialog({
         />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 sm:grid-cols-2 gap-4")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
           <Label htmlFor="numero">Número</Label>
           <Input
             id="numero"
@@ -802,7 +802,7 @@ export function ClienteFormDialog({
             placeholder="No"
           />
         </div>
-        <div className="grid gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
           <Label htmlFor="complemento">Complemento</Label>
           <Input
             id="complemento"
@@ -813,7 +813,7 @@ export function ClienteFormDialog({
         </div>
       </div>
 
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label htmlFor="bairro">Bairro</Label>
         <Input
           id="bairro"
@@ -823,8 +823,8 @@ export function ClienteFormDialog({
         />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 sm:grid-cols-2 gap-4")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
           <Label htmlFor="municipio">Cidade</Label>
           <Input
             id="municipio"
@@ -833,7 +833,7 @@ export function ClienteFormDialog({
             placeholder="Nome da cidade"
           />
         </div>
-        <div className="grid gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
           <Label htmlFor="estado_sigla">Estado</Label>
           {mounted ? (
             <Select
@@ -852,7 +852,7 @@ export function ClienteFormDialog({
               </SelectContent>
             </Select>
           ) : (
-            <div className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm" />
+            <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm")} />
           )}
         </div>
       </div>
@@ -869,7 +869,7 @@ export function ClienteFormDialog({
 
     return (
       <div className="grid gap-(--density-field-gap)">
-        <div className="grid gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
           <Label htmlFor="observacoes">Observações</Label>
           <Textarea
             id="observacoes"
@@ -881,122 +881,122 @@ export function ClienteFormDialog({
           />
         </div>
 
-        <div className="mt-4 p-4 rounded-lg bg-muted/50 border">
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "mt-4 p-4 rounded-lg bg-muted/50 border")}>
           <Heading level="subsection" className="mb-3">Resumo do cadastro</Heading>
-          <dl className="space-y-2 text-sm">
+          <dl className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "space-y-2 text-sm")}>
             <div className="flex justify-between">
               <dt className="text-muted-foreground">Tipo</dt>
-              <dd className="font-medium text-right">{isPF ? 'Pessoa Física' : 'Pessoa Jurídica'}</dd>
+              <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{isPF ? 'Pessoa Física' : 'Pessoa Jurídica'}</dd>
             </div>
 
             <div className="flex justify-between">
               <dt className="text-muted-foreground">Nome</dt>
-              <dd className="font-medium text-right max-w-[60%] wrap-break-word">{formData.nome || '-'}</dd>
+              <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right max-w-[60%] wrap-break-word")}>{formData.nome || '-'}</dd>
             </div>
 
             {formData.nome_social_fantasia && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">{isPF ? 'Nome Social' : 'Nome Fantasia'}</dt>
-                <dd className="font-medium text-right max-w-[60%] wrap-break-word">{formData.nome_social_fantasia}</dd>
+                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right max-w-[60%] wrap-break-word")}>{formData.nome_social_fantasia}</dd>
               </div>
             )}
 
             <div className="flex justify-between">
               <dt className="text-muted-foreground">{isPF ? 'CPF' : 'CNPJ'}</dt>
-              <dd className="font-medium text-right">{isPF ? formData.cpf || '-' : formData.cnpj || '-'}</dd>
+              <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{isPF ? formData.cpf || '-' : formData.cnpj || '-'}</dd>
             </div>
 
             {isPF && formData.rg && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">RG</dt>
-                <dd className="font-medium text-right">{formData.rg}</dd>
+                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{formData.rg}</dd>
               </div>
             )}
 
             {isPF && formData.data_nascimento && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Data de Nascimento</dt>
-                <dd className="font-medium text-right">{formData.data_nascimento}</dd>
+                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{formData.data_nascimento}</dd>
               </div>
             )}
 
             {isPJ && formData.data_abertura && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Data de Abertura</dt>
-                <dd className="font-medium text-right">{formData.data_abertura}</dd>
+                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{formData.data_abertura}</dd>
               </div>
             )}
 
             {isPF && formData.genero && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Gênero</dt>
-                <dd className="font-medium text-right">{GENEROS.find(g => g.value === formData.genero)?.label || formData.genero}</dd>
+                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{GENEROS.find(g => g.value === formData.genero)?.label || formData.genero}</dd>
               </div>
             )}
 
             {isPF && formData.estado_civil && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Estado Civil</dt>
-                <dd className="font-medium text-right">{ESTADOS_CIVIS.find(ec => ec.value === formData.estado_civil)?.label || formData.estado_civil}</dd>
+                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{ESTADOS_CIVIS.find(ec => ec.value === formData.estado_civil)?.label || formData.estado_civil}</dd>
               </div>
             )}
 
             {isPF && formData.nacionalidade && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Nacionalidade</dt>
-                <dd className="font-medium text-right">{formData.nacionalidade}</dd>
+                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{formData.nacionalidade}</dd>
               </div>
             )}
 
             {isPF && formData.nome_genitora && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Nome da Mãe</dt>
-                <dd className="font-medium text-right max-w-[60%] wrap-break-word">{formData.nome_genitora}</dd>
+                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right max-w-[60%] wrap-break-word")}>{formData.nome_genitora}</dd>
               </div>
             )}
 
             {isPJ && formData.inscricao_estadual && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Inscrição Estadual</dt>
-                <dd className="font-medium text-right">{formData.inscricao_estadual}</dd>
+                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{formData.inscricao_estadual}</dd>
               </div>
             )}
 
             <div className="flex justify-between">
               <dt className="text-muted-foreground">E-mails</dt>
-              <dd className="font-medium text-right">{formData.emails.length > 0 ? formData.emails.join(', ') : '-'}</dd>
+              <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{formData.emails.length > 0 ? formData.emails.join(', ') : '-'}</dd>
             </div>
 
             <div className="flex justify-between">
               <dt className="text-muted-foreground">Celular</dt>
-              <dd className="font-medium text-right">{formatTelefone(formData.ddd_celular, formData.numero_celular)}</dd>
+              <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{formatTelefone(formData.ddd_celular, formData.numero_celular)}</dd>
             </div>
 
             {(formData.ddd_residencial && formData.numero_residencial) && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Tel. Residencial</dt>
-                <dd className="font-medium text-right">{formatTelefone(formData.ddd_residencial, formData.numero_residencial)}</dd>
+                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{formatTelefone(formData.ddd_residencial, formData.numero_residencial)}</dd>
               </div>
             )}
 
             {(formData.ddd_comercial && formData.numero_comercial) && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Tel. Comercial</dt>
-                <dd className="font-medium text-right">{formatTelefone(formData.ddd_comercial, formData.numero_comercial)}</dd>
+                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{formatTelefone(formData.ddd_comercial, formData.numero_comercial)}</dd>
               </div>
             )}
 
             {formData.cep && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">CEP</dt>
-                <dd className="font-medium text-right">{formData.cep}</dd>
+                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{formData.cep}</dd>
               </div>
             )}
 
             {formData.logradouro && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Endereço</dt>
-                <dd className="font-medium text-right max-w-[60%] wrap-break-word">
+                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right max-w-[60%] wrap-break-word")}>
                   {formData.logradouro}{formData.numero ? `, ${formData.numero}` : ''}{formData.complemento ? ` - ${formData.complemento}` : ''}
                 </dd>
               </div>
@@ -1005,14 +1005,14 @@ export function ClienteFormDialog({
             {formData.bairro && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Bairro</dt>
-                <dd className="font-medium text-right">{formData.bairro}</dd>
+                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{formData.bairro}</dd>
               </div>
             )}
 
             {(formData.municipio || formData.estado_sigla) && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Cidade/UF</dt>
-                <dd className="font-medium text-right">{formData.municipio || '-'}{formData.estado_sigla ? `/${formData.estado_sigla}` : ''}</dd>
+                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{formData.municipio || '-'}{formData.estado_sigla ? `/${formData.estado_sigla}` : ''}</dd>
               </div>
             )}
           </dl>
@@ -1043,7 +1043,7 @@ export function ClienteFormDialog({
   const isLastStep = currentStep === TOTAL_STEPS;
 
   const renderEditFullView = () => (
-    <div className="space-y-6 pb-2">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose">; pb-2 padding direcional sem Inset equiv. */ "space-y-6 pb-2")}>
       <section aria-labelledby="secao-identificacao">
         <Heading level="subsection" id="secao-identificacao" className="mb-3">
           Identificação
@@ -1069,7 +1069,7 @@ export function ClienteFormDialog({
         <Heading level="subsection" id="secao-observacoes" className="mb-3">
           Observações
         </Heading>
-        <div className="grid gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
           <Label htmlFor="observacoes">Observações</Label>
           <Textarea
             id="observacoes"
@@ -1113,7 +1113,7 @@ export function ClienteFormDialog({
             )}
           </Button>
         ) : (
-          <div className="flex justify-end w-full gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex justify-end w-full gap-2")}>
               <DialogNavPrevious
                 onClick={handlePrevious}
                 disabled={isFirstStep || isPending}

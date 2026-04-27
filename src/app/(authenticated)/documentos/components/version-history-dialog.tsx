@@ -4,6 +4,7 @@
  * Dialog para histórico de versões do documento
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import {
   History, Clock, User, RotateCcw, FileText} from 'lucide-react';
@@ -90,7 +91,7 @@ export function VersionHistoryDialog({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="max-w-2xl max-h-[80vh]">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
+            <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <History className="h-5 w-5" />
               Histórico de Versões
             </DialogTitle>
@@ -99,9 +100,9 @@ export function VersionHistoryDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <ScrollArea className="h-[400px] pr-4">
+          <ScrollArea className={cn(/* design-system-escape: pr-4 padding direcional sem Inset equiv. */ "h-[400px] pr-4")}>
             {loading ? (
-              <div className="space-y-4">
+              <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
                 {[1, 2, 3].map((i) => (
                   <Skeleton key={i} className="h-20 w-full" />
                 ))}
@@ -110,21 +111,21 @@ export function VersionHistoryDialog({
               <div className="flex flex-col items-center justify-center h-64 text-center">
                 <FileText className="h-12 w-12 text-muted-foreground mb-4" />
                 <Typography.H3>Sem histórico de versões</Typography.H3>
-                <p className="text-sm text-muted-foreground mt-1">
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground mt-1")}>
                   As versões serão salvas automaticamente conforme você edita
                 </p>
               </div>
             ) : (
-              <div className="space-y-3">
+              <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
                 {versions.map((version, index) => (
                   <div
                     key={version.id}
-                    className="flex items-start gap-4 p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
+                    className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; p-4 → migrar para <Inset variant="card-compact"> */ "flex items-start gap-4 p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors")}
                   >
                     {/* Timeline indicator */}
                     <div className="flex flex-col items-center">
                       <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                        <span className="text-sm font-medium text-primary">
+                        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-primary")}>
                           v{version.versao}
                         </span>
                       </div>
@@ -135,32 +136,32 @@ export function VersionHistoryDialog({
 
                     {/* Content */}
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-4">
+                      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start justify-between gap-4")}>
                         <div>
                           <Typography.H4 className="truncate">
                             {version.titulo || 'Sem título'}
                           </Typography.H4>
-                          <div className="flex items-center gap-3 mt-1 text-sm text-muted-foreground">
-                            <span className="flex items-center gap-1">
+                          <div className={cn(/* design-system-escape: gap-3 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-3 mt-1 text-sm text-muted-foreground")}>
+                            <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
                               <Clock className="h-3.5 w-3.5" />
                               {formatRelative(version.created_at)}
                             </span>
                             {version.criador && (
-                              <span className="flex items-center gap-1">
+                              <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
                                 <User className="h-3.5 w-3.5" />
                                 {version.criador.nomeCompleto}
                               </span>
                             )}
                           </div>
-                          <p className="text-xs text-muted-foreground mt-1">
+                          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mt-1")}>
                             {formatDate(version.created_at)}
                           </p>
                         </div>
 
                         {/* Actions */}
-                        <div className="flex items-center gap-2">
+                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                           {index === 0 && (
-                            <Badge variant="secondary" className="text-xs">
+                            <Badge variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                               Atual
                             </Badge>
                           )}

@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useActionState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -111,13 +112,13 @@ export function ExpedientesAlterarResponsavelDialog({
       maxWidth="md"
       footer={footerButtons}
     >
-      <form id="alterar-responsavel-form" action={formAction} className="space-y-4">
+      <form id="alterar-responsavel-form" action={formAction} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         <input
           type="hidden"
           name="responsavelId"
           value={responsavelId === 'null' ? '' : responsavelId}
         />
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label htmlFor="responsavelId">Responsável</Label>
           <Select
             value={responsavelId || 'null'}
@@ -137,7 +138,7 @@ export function ExpedientesAlterarResponsavelDialog({
             </SelectContent>
           </Select>
           {generalError && (
-            <p role="alert" className="text-sm font-medium text-destructive">{generalError}</p>
+            <p role="alert" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}>{generalError}</p>
           )}
         </div>
       </form>

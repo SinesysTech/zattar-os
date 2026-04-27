@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { Text } from "@/components/ui/typography";
 import { SpecimenCard } from "./specimen-card";
 
@@ -26,7 +27,7 @@ export function GlassSection() {
   return (
     <SpecimenCard eyebrow="GLASS SYSTEM · VIDRO SOBRE PEDRA">
       <div
-        className="relative overflow-hidden rounded-2xl p-6"
+        className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "relative overflow-hidden rounded-2xl p-6")}
         style={{
           background: `
             radial-gradient(700px at 15% 10%, oklch(0.48 0.26 281 / 0.22), transparent 60%),
@@ -43,13 +44,13 @@ export function GlassSection() {
             backgroundSize: "14px 14px",
           }}
         />
-        <div className="relative z-10 grid gap-3.5 sm:grid-cols-3">
+        <div className={cn(/* design-system-escape: gap-3.5 gap sem token DS */ "relative z-10 grid gap-3.5 sm:grid-cols-3")}>
           {tiles.map((t) => (
             <div
               key={t.cls}
               className={`flex flex-col gap-1.5 rounded-2xl p-4 ${t.cls}`}
             >
-              <span className="font-heading text-[13px] font-bold text-foreground">
+              <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-heading text-[13px] font-bold text-foreground")}>
                 {t.title}
               </span>
               <span className="font-mono text-[10px] text-muted-foreground">

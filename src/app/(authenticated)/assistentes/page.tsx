@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { Suspense } from 'react';
 import { AssistentesListWrapper, actionListarAssistentes, requireAuth } from '@/app/(authenticated)/assistentes/feature';
 import { checkMultiplePermissions } from '@/lib/auth/authorization';
@@ -26,7 +27,7 @@ export default async function AssistentesPage() {
   if (!result.success || !result.data) {
     // Handle error state gracefully
     return (
-      <div className="py-4 text-destructive">
+      <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "py-4 text-destructive")}>
         Erro ao carregar dados: {result.error}
       </div>
     );

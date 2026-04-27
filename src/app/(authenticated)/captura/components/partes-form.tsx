@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { forwardRef, useImperativeHandle, useMemo, useState, useEffect, useCallback } from 'react';
 import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaResult, CapturaResultData } from './captura-result';
@@ -149,7 +150,7 @@ export const PartesForm = forwardRef<CapturaFormHandle, PartesFormProps>(
     }), [handleCaptura, isLoading]);
 
     return (
-      <div className="space-y-6">
+      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
         <CapturaFormBase
           advogadoId={advogadoId}
           credenciaisSelecionadas={credenciaisSelecionadas}
@@ -157,25 +158,25 @@ export const PartesForm = forwardRef<CapturaFormHandle, PartesFormProps>(
           onCredenciaisChange={setCredenciaisSelecionadas}
           onCredenciaisDisponiveisChange={setCredenciaisDisponiveis}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "grid grid-cols-1 md:grid-cols-2 gap-6")}>
             {credSelecionadasDetalhes.length > 0 && (
-              <div className="space-y-2 md:col-span-2">
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 md:col-span-2")}>
                 <Label>Escopo da captura</Label>
-                <div className="rounded-md border border-dashed border-border/60 p-3 text-xs text-muted-foreground space-y-1">
+                <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-xs → migrar para <Text variant="caption">; space-y-1 sem token DS */ "rounded-md border border-dashed border-border/60 p-3 text-xs text-muted-foreground space-y-1")}>
                   <p>
-                    Tribunais (TRTs) incluídos: <span className="font-medium text-foreground">{trtsDerivados.join(', ') || '-'}</span>
+                    Tribunais (TRTs) incluídos: <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>{trtsDerivados.join(', ') || '-'}</span>
                   </p>
                   <p>
-                    Graus considerados: <span className="font-medium text-foreground">{grausDerivados.join(', ') || '-'}</span>
+                    Graus considerados: <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>{grausDerivados.join(', ') || '-'}</span>
                   </p>
                 </div>
-                <p className="text-xs text-muted-foreground">
+                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                   Os filtros acima são derivados automaticamente das credenciais selecionadas.
                 </p>
               </div>
             )}
 
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label htmlFor="numeroProcesso">Número do processo (único)</Label>
               <Input
                 id="numeroProcesso"
@@ -183,12 +184,12 @@ export const PartesForm = forwardRef<CapturaFormHandle, PartesFormProps>(
                 value={numeroProcesso}
                 onChange={(event) => setNumeroProcesso(event.target.value)}
               />
-              <p className="text-xs text-muted-foreground">
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                 Utilize este campo para capturar as partes de um processo específico.
               </p>
             </div>
 
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label htmlFor="numerosLista">Lista de processos</Label>
               <Textarea
                 id="numerosLista"
@@ -197,12 +198,12 @@ export const PartesForm = forwardRef<CapturaFormHandle, PartesFormProps>(
                 value={numerosProcessoTexto}
                 onChange={(event) => setNumerosProcessoTexto(event.target.value)}
               />
-              <p className="text-xs text-muted-foreground">
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                 Aceita múltiplos números de processos. Espaços e duplicados são ignorados automaticamente.
               </p>
               {totalProcessosManuais > 0 && (
-                <p className="text-xs text-muted-foreground">
-                  Processos especificados manualmente: <span className="font-medium">{totalProcessosManuais}</span>
+                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                  Processos especificados manualmente: <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{totalProcessosManuais}</span>
                 </p>
               )}
             </div>

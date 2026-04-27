@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { Suspense } from 'react';
 import { PageShell } from '@/components/shared/page-shell';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -8,7 +9,7 @@ export const revalidate = 0;
 
 function FormulariosLoading() {
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       <Skeleton className="h-10 w-full" />
       <Skeleton className="h-125 w-full" />
     </div>

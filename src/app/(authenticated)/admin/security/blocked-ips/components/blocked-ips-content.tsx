@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import { useEffect, useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -185,7 +186,7 @@ export function BlockedIpsContent() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
+      <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "flex items-center justify-center py-12")}>
         <LoadingSpinner className="size-8 text-muted-foreground" />
       </div>
     );
@@ -193,7 +194,7 @@ export function BlockedIpsContent() {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 gap-4">
+      <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv.; gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center justify-center py-12 gap-4")}>
         <AlertTriangle className="h-12 w-12 text-destructive" />
         <p className="text-destructive">{error}</p>
         <Button onClick={fetchData} variant="outline">
@@ -209,46 +210,46 @@ export function BlockedIpsContent() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-4")}>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Bloqueados</CardTitle>
+          <CardHeader className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
+            <CardTitle className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Total Bloqueados</CardTitle>
             <ShieldX className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data.stats.totalBlocked}</div>
+            <div className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-bold")}>{data.stats.totalBlocked}</div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Permanentes</CardTitle>
+          <CardHeader className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
+            <CardTitle className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Permanentes</CardTitle>
             <Ban className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data.stats.permanent}</div>
+            <div className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-bold")}>{data.stats.permanent}</div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Temporários</CardTitle>
+          <CardHeader className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
+            <CardTitle className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Temporários</CardTitle>
             <Clock className="h-4 w-4 text-warning" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data.stats.temporary}</div>
+            <div className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-bold")}>{data.stats.temporary}</div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Whitelist</CardTitle>
+          <CardHeader className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
+            <CardTitle className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Whitelist</CardTitle>
             <ShieldCheck className="h-4 w-4 text-success" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data.stats.whitelisted}</div>
+            <div className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-bold")}>{data.stats.whitelisted}</div>
           </CardContent>
         </Card>
       </div>
@@ -257,7 +258,7 @@ export function BlockedIpsContent() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <Shield className="h-5 w-5" />
               IPs Bloqueados
             </CardTitle>
@@ -270,7 +271,7 @@ export function BlockedIpsContent() {
         </CardHeader>
         <CardContent>
           {data.blocked.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
+            <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "text-center py-8 text-muted-foreground")}>
               Nenhum IP bloqueado no momento
             </div>
           ) : (
@@ -311,7 +312,7 @@ export function BlockedIpsContent() {
                         )}
                       </TableCell>
                       <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
+                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex justify-end gap-2")}>
                           <Button
                             variant="outline"
                             size="sm"
@@ -360,7 +361,7 @@ export function BlockedIpsContent() {
       {/* Whitelist Table */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <ShieldCheck className="h-5 w-5 text-success" />
             Whitelist
           </CardTitle>
@@ -368,7 +369,7 @@ export function BlockedIpsContent() {
         </CardHeader>
         <CardContent>
           {data.whitelist.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
+            <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "text-center py-8 text-muted-foreground")}>
               Nenhum IP na whitelist
             </div>
           ) : (
@@ -479,8 +480,8 @@ export function BlockedIpsContent() {
               Insira o IP que deseja bloquear e o motivo.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-4 padding direcional sem Inset equiv. */ "space-y-4 py-4")}>
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label htmlFor="ip">Endereço IP</Label>
               <Input
                 id="ip"
@@ -489,7 +490,7 @@ export function BlockedIpsContent() {
                 onChange={(e) => setBlockDialog((prev) => ({ ...prev, ip: e.target.value }))}
               />
             </div>
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label htmlFor="reason">Motivo</Label>
               <Input
                 id="reason"
@@ -498,7 +499,7 @@ export function BlockedIpsContent() {
                 onChange={(e) => setBlockDialog((prev) => ({ ...prev, reason: e.target.value }))}
               />
             </div>
-            <div className="flex items-center space-x-2">
+            <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
               <input
                 type="checkbox"
                 id="permanent"

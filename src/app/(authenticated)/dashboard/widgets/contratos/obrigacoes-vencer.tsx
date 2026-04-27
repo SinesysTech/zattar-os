@@ -12,6 +12,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import { Wallet } from 'lucide-react';
 import {
   WidgetContainer,
@@ -61,7 +62,7 @@ export function WidgetObrigacoesVencer() {
   if (!data) {
     return (
       <WidgetContainer title="Obrigações a Vencer" icon={Wallet} subtitle="Próximos 30 dias" depth={1}>
-        <p className="text-[11px] text-muted-foreground/60 py-4 text-center">
+        <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-4 text-center")}>
           Não foi possível carregar os dados.
         </p>
       </WidgetContainer>
@@ -77,7 +78,7 @@ export function WidgetObrigacoesVencer() {
   if (!contratos) {
     return (
       <WidgetContainer title="Obrigações a Vencer" icon={Wallet} subtitle="Próximos 30 dias" depth={1}>
-        <p className="text-[11px] text-muted-foreground/60 py-4 text-center">
+        <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-4 text-center")}>
           Dados indisponíveis
         </p>
       </WidgetContainer>
@@ -89,7 +90,7 @@ export function WidgetObrigacoesVencer() {
   if (obrigacoesVencer.length === 0) {
     return (
       <WidgetContainer title="Obrigações a Vencer" icon={Wallet} subtitle="Próximos 30 dias" depth={1}>
-        <div className="flex flex-col items-center justify-center py-8 gap-2">
+        <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center justify-center py-8 gap-2")}>
           <Wallet className="size-8 text-muted-foreground/45" />
           <p className="text-[11px] text-muted-foreground/60 text-center">
             Nenhuma obrigação a vencer no período
@@ -106,22 +107,22 @@ export function WidgetObrigacoesVencer() {
       subtitle="Próximos 30 dias"
       depth={1}
     >
-      <div className="space-y-0.5">
+      <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
         {obrigacoesVencer.map((ob, i) => (
           <ListItem key={`${ob.descricao}-${i}`} className="items-start">
             <UrgencyDot level={mapUrgencia(ob.urgencia)} />
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-1.5">
-                <p className="text-[12px] font-medium leading-tight truncate">
+              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[12px] font-medium leading-tight truncate")}>
                   {ob.descricao}
                 </p>
                 <TipoBadge tipo={ob.tipo} />
               </div>
-              <div className="flex items-center gap-2 mt-0.5">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-0.5")}>
                 <span className="text-[10px] text-muted-foreground/60">
                   {fmtData(ob.vencimento)}
                 </span>
-                <span className="text-[10px] font-medium tabular-nums">
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums")}>
                   {fmtMoeda(ob.valor)}
                 </span>
               </div>

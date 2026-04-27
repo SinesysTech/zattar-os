@@ -2,6 +2,7 @@
  * Componente para exibir badges de graus ativos de um processo unificado
  */
 
+import { cn } from '@/lib/utils';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import {
   Tooltip,
@@ -44,7 +45,7 @@ export function GrauBadges({ instances }: GrauBadgesProps) {
   });
 
   return (
-    <div className="flex items-center gap-1.5 flex-wrap">
+    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 flex-wrap")}>
       {instancesOrdenadas.map((instance) => {
         const label = GRAU_LABELS_MAP[instance.grau];
 
@@ -57,7 +58,7 @@ export function GrauBadges({ instances }: GrauBadgesProps) {
                 </SemanticBadge>
               </TooltipTrigger>
               <TooltipContent>
-                <div className="text-xs space-y-1">
+                <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; space-y-1 sem token DS */ "text-xs space-y-1")}>
                   <div>
                     <strong>Grau:</strong> {label}
                   </div>
@@ -97,7 +98,7 @@ export function GrauBadgesSimple({ grausAtivos }: { grausAtivos?: GrauProcesso[]
   });
 
   return (
-    <div className="flex items-center gap-1 flex-wrap">
+    <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 flex-wrap")}>
       {grausOrdenados.map((grau) => {
         const label = GRAU_LABELS_MAP[grau];
 

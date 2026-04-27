@@ -7,6 +7,7 @@
  *   - role=admin: data.metricas (MetricasEscritorio: totalProcessos, processosAtivos, taxaResolucao)
  */
 
+import { cn } from '@/lib/utils';
 import { HeartPulse } from 'lucide-react';
 import {
   WidgetContainer,
@@ -53,7 +54,7 @@ export function WidgetSaudeProcessual() {
         subtitle="Score composto — ativos e resolução"
         depth={2}
       >
-        <p className="text-xs text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
           Não foi possível carregar os dados processuais.
         </p>
       </WidgetContainer>
@@ -96,7 +97,7 @@ export function WidgetSaudeProcessual() {
       subtitle={`Score composto — ${subtitleExtra}`}
       depth={2}
     >
-      <div className="flex items-center gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
         <GaugeMeter
           value={score}
           max={100}
@@ -104,7 +105,7 @@ export function WidgetSaudeProcessual() {
           status={status}
           size={72}
         />
-        <div className="grid grid-cols-3 gap-3 flex-1 min-w-0">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-3 gap-3 flex-1 min-w-0")}>
           <ComparisonStat
             label="Ativos"
             current={stats.ativos}
@@ -118,12 +119,12 @@ export function WidgetSaudeProcessual() {
             format="number"
           />
           {stats.taxaResolucao !== undefined && (
-            <div className="flex flex-col gap-1">
-              <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+              <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
                 Taxa resolução
               </p>
-              <div className="flex items-baseline gap-1">
-                <span className="font-display text-lg font-bold">
+              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-baseline gap-1")}>
+                <span className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold")}>
                   {stats.taxaResolucao}%
                 </span>
               </div>

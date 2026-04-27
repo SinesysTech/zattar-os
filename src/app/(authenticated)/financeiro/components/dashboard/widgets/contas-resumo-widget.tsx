@@ -57,23 +57,23 @@ function ContaSection({
   iconColorClass: string;
 }) {
   return (
-    <div className="space-y-2.5">
+    <div className={cn(/* design-system-escape: space-y-2.5 sem token DS */ "space-y-2.5")}>
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className={cn('rounded-md p-1.5', colorClass)}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ 'rounded-md p-1.5', colorClass)}>
             <Icon className={cn('h-3.5 w-3.5', iconColorClass)} />
           </div>
-          <span className="text-xs font-medium text-muted-foreground">{title}</span>
+          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-muted-foreground")}>{title}</span>
         </div>
-        <Button variant="ghost" size="sm" asChild className="h-6 px-2 text-xs">
+        <Button variant="ghost" size="sm" asChild className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "h-6 px-2 text-xs")}>
           <Link href={href}>
             Ver <ArrowRight className="h-3 w-3 ml-1" />
           </Link>
         </Button>
       </div>
       <div>
-        <p className="text-lg font-bold font-heading tabular-nums">{formatarMoeda(valor)}</p>
-        <p className="text-xs text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold font-heading tabular-nums")}>{formatarMoeda(valor)}</p>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
           {quantidade} conta{quantidade !== 1 ? 's' : ''} pendente{quantidade !== 1 ? 's' : ''}
         </p>
       </div>
@@ -89,11 +89,11 @@ export function ContasResumoWidget({ contasPagar, contasReceber, isLoading }: Co
   if (isLoading) {
     return (
       <Card className="h-full">
-        <CardHeader className="pb-2">
+        <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
           <Skeleton className="h-5 w-40" />
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             <Skeleton className="h-16 w-full" />
             <Skeleton className="h-2.5 w-full rounded-full" />
             <Skeleton className="h-16 w-full" />
@@ -107,12 +107,12 @@ export function ContasResumoWidget({ contasPagar, contasReceber, isLoading }: Co
 
   return (
     <Card className="h-full flex flex-col">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium">
+      <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+        <CardTitle className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>
           Contas a Pagar / Receber
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex-1 space-y-4">
+      <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "flex-1 space-y-4")}>
         <ContaSection
           title="A Pagar"
           icon={ArrowUpFromLine}

@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import {
   Select,
   SelectContent,
@@ -91,7 +92,7 @@ export function TipoCapturaSelect({
     <Select value={value} onValueChange={onValueChange} disabled={disabled}>
       <SelectTrigger className="w-full">
         <SelectValue>
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <Icon className="h-4 w-4" />
             <span>{selectedTipo?.label}</span>
           </div>
@@ -102,11 +103,11 @@ export function TipoCapturaSelect({
           const TipoIcon = tipo.icon;
           return (
             <SelectItem key={tipo.value} value={tipo.value}>
-              <div className="flex items-center gap-3">
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
                 <TipoIcon className="h-4 w-4" />
                 <div className="flex flex-col">
-                  <span className="font-medium">{tipo.label}</span>
-                  <span className="text-xs text-muted-foreground">
+                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{tipo.label}</span>
+                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                     {tipo.description}
                   </span>
                 </div>

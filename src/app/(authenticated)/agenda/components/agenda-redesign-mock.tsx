@@ -11,6 +11,7 @@
 
 "use client";
 
+import { cn } from '@/lib/utils';
 import { useState, useCallback, useMemo } from "react";
 import {
   Columns3,
@@ -156,16 +157,16 @@ export function AgendaRedesignMock() {
   const eventCount = filteredEvents.length;
 
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       {/* ── Row 1: Title + View Toggle + CTA ── */}
-      <div className="flex items-center justify-between flex-wrap gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center justify-between flex-wrap gap-4")}>
         <div>
           <Heading level="page">Agenda</Heading>
-          <p className="text-sm text-muted-foreground/50 mt-0.5">
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 mt-0.5")}>
             {label} · {eventCount} eventos
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
           <ViewToggle
             mode={view}
             onChange={(m) => setView(m as AgendaView)}

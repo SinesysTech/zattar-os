@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -146,15 +147,15 @@ export function SegmentoEditDialog({
         </Button>
       }
     >
-      <form id="segmento-edit-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form id="segmento-edit-form" onSubmit={handleSubmit(onSubmit)} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         {Object.keys(errors).length > 0 && (
-          <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+          <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-3 text-sm text-destructive")}>
             Corrija os erros no formulário antes de continuar.
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2 md:col-span-2">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 md:col-span-2")}>
             <Label htmlFor="nome">
               Nome <span className="text-destructive">*</span>
             </Label>
@@ -167,11 +168,11 @@ export function SegmentoEditDialog({
               disabled={isSubmitting}
             />
             {errors.nome && (
-              <p className="text-sm text-destructive">{errors.nome.message}</p>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.nome.message}</p>
             )}
           </div>
 
-          <div className="space-y-2 md:col-span-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 md:col-span-2")}>
             <Label htmlFor="slug">
               Slug <span className="text-destructive">*</span>
             </Label>
@@ -182,11 +183,11 @@ export function SegmentoEditDialog({
               disabled={isSubmitting}
             />
             {errors.slug && (
-              <p className="text-sm text-destructive">{errors.slug.message}</p>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.slug.message}</p>
             )}
           </div>
 
-          <div className="space-y-2 md:col-span-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 md:col-span-2")}>
             <Label htmlFor="descricao">Descrição</Label>
             <Textarea
               id="descricao"
@@ -196,11 +197,11 @@ export function SegmentoEditDialog({
               rows={3}
             />
             {errors.descricao && (
-              <p className="text-sm text-destructive">{errors.descricao.message}</p>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.descricao.message}</p>
             )}
           </div>
 
-          <div className="flex items-center space-x-2 md:col-span-2">
+          <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2 md:col-span-2")}>
             <Switch
               id="ativo"
               checked={watch('ativo')}

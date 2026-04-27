@@ -447,12 +447,12 @@ export function TerceiroFormDialog({
   // Renderizar Step 1 - Tipo de Pessoa e Classificação
   const renderStep1 = () => (
     <div className="grid gap-(--density-field-gap)">
-      <div className="grid grid-cols-2 gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
         <button
           type="button"
           onClick={() => setFormData(prev => ({ ...prev, tipo_pessoa: 'pf' }))}
           className={cn(
-            'flex flex-col items-center justify-center gap-3 p-6 rounded-lg border-2 transition-all hover:border-primary/50',
+            /* design-system-escape: gap-3 gap sem token DS; p-6 → migrar para <Inset variant="dialog"> */ 'flex flex-col items-center justify-center gap-3 p-6 rounded-lg border-2 transition-all hover:border-primary/50',
             isPF
               ? 'border-primary bg-primary/5'
               : 'border-border bg-background hover:bg-muted/50'
@@ -465,15 +465,15 @@ export function TerceiroFormDialog({
             <User className="h-8 w-8" />
           </div>
           <div className="text-center">
-            <p className={cn('font-semibold', isPF && 'text-primary')}>
+            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'font-semibold', isPF && 'text-primary')}>
               Pessoa Física
             </p>
-            <p className="text-sm text-muted-foreground">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
               CPF, RG, data de nascimento
             </p>
           </div>
           {isPF && (
-            <div className="flex items-center gap-1 text-primary text-sm">
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-1 text-primary text-sm")}>
               <Check className="h-4 w-4" />
               Selecionado
             </div>
@@ -484,7 +484,7 @@ export function TerceiroFormDialog({
           type="button"
           onClick={() => setFormData(prev => ({ ...prev, tipo_pessoa: 'pj' }))}
           className={cn(
-            'flex flex-col items-center justify-center gap-3 p-6 rounded-lg border-2 transition-all hover:border-primary/50',
+            /* design-system-escape: gap-3 gap sem token DS; p-6 → migrar para <Inset variant="dialog"> */ 'flex flex-col items-center justify-center gap-3 p-6 rounded-lg border-2 transition-all hover:border-primary/50',
             isPJ
               ? 'border-primary bg-primary/5'
               : 'border-border bg-background hover:bg-muted/50'
@@ -497,15 +497,15 @@ export function TerceiroFormDialog({
             <Building2 className="h-8 w-8" />
           </div>
           <div className="text-center">
-            <p className={cn('font-semibold', isPJ && 'text-primary')}>
+            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'font-semibold', isPJ && 'text-primary')}>
               Pessoa Jurídica
             </p>
-            <p className="text-sm text-muted-foreground">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
               CNPJ, razão social, nome fantasia
             </p>
           </div>
           {isPJ && (
-            <div className="flex items-center gap-1 text-primary text-sm">
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-1 text-primary text-sm")}>
               <Check className="h-4 w-4" />
               Selecionado
             </div>
@@ -513,8 +513,8 @@ export function TerceiroFormDialog({
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
           <Label htmlFor="tipo_parte">
             Tipo de Parte <span className="text-destructive">*</span>
           </Label>
@@ -535,12 +535,12 @@ export function TerceiroFormDialog({
               </SelectContent>
             </Select>
           ) : (
-            <div className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm" />
+            <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm")} />
           )}
           <input type="hidden" name="tipo_parte" value={formData.tipo_parte} />
         </div>
 
-        <div className="grid gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
           <Label htmlFor="polo">
             Polo Processual <span className="text-destructive">*</span>
           </Label>
@@ -561,7 +561,7 @@ export function TerceiroFormDialog({
               </SelectContent>
             </Select>
           ) : (
-            <div className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm" />
+            <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm")} />
           )}
           <input type="hidden" name="polo" value={formData.polo} />
         </div>
@@ -572,7 +572,7 @@ export function TerceiroFormDialog({
   // Renderizar Step 2 - Identificação
   const renderStep2 = () => (
     <div className="grid gap-(--density-field-gap)">
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label htmlFor="nome">
           {isPF ? 'Nome Completo' : 'Razão Social'} <span className="text-destructive">*</span>
         </Label>
@@ -586,7 +586,7 @@ export function TerceiroFormDialog({
         />
       </div>
 
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label htmlFor="nome_fantasia">
           {isPF ? 'Nome Social' : 'Nome Fantasia'}
         </Label>
@@ -601,7 +601,7 @@ export function TerceiroFormDialog({
 
       {isPF && (
         <>
-          <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
             <Label htmlFor="cpf">
               CPF <span className="text-destructive">*</span>
             </Label>
@@ -615,8 +615,8 @@ export function TerceiroFormDialog({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="rg">RG</Label>
               <Input
                 id="rg"
@@ -626,7 +626,7 @@ export function TerceiroFormDialog({
                 placeholder="Número do RG"
               />
             </div>
-            <div className="grid gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="data_nascimento">Data de Nascimento</Label>
               <FormDatePicker
                 id="data_nascimento"
@@ -637,8 +637,8 @@ export function TerceiroFormDialog({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="genero">Gênero</Label>
               {mounted ? (
                 <Select
@@ -657,11 +657,11 @@ export function TerceiroFormDialog({
                   </SelectContent>
                 </Select>
               ) : (
-                <div className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm" />
+                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm")} />
               )}
               <input type="hidden" name="genero" value={formData.genero} />
             </div>
-            <div className="grid gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="estado_civil">Estado Civil</Label>
               {mounted ? (
                 <Select
@@ -680,14 +680,14 @@ export function TerceiroFormDialog({
                   </SelectContent>
                 </Select>
               ) : (
-                <div className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm" />
+                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm")} />
               )}
               <input type="hidden" name="estado_civil" value={formData.estado_civil} />
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="nacionalidade">Nacionalidade</Label>
               <Input
                 id="nacionalidade"
@@ -697,7 +697,7 @@ export function TerceiroFormDialog({
                 placeholder="Ex: Brasileira"
               />
             </div>
-            <div className="grid gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="nome_genitora">Nome da Mãe</Label>
               <Input
                 id="nome_genitora"
@@ -713,7 +713,7 @@ export function TerceiroFormDialog({
 
       {isPJ && (
         <>
-          <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
             <Label htmlFor="cnpj">
               CNPJ <span className="text-destructive">*</span>
             </Label>
@@ -727,8 +727,8 @@ export function TerceiroFormDialog({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="inscricao_estadual">Inscrição Estadual</Label>
               <Input
                 id="inscricao_estadual"
@@ -738,7 +738,7 @@ export function TerceiroFormDialog({
                 placeholder="Número da IE"
               />
             </div>
-            <div className="grid gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="data_abertura">Data de Abertura</Label>
               <FormDatePicker
                 id="data_abertura"
@@ -756,9 +756,9 @@ export function TerceiroFormDialog({
   // Renderizar Step 3 - Contato
   const renderStep3 = () => (
     <div className="grid gap-(--density-field-gap)">
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label htmlFor="novo-email-terceiro">E-mails</Label>
-        <div className="flex gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
           <Input
             id="novo-email-terceiro"
             type="email"
@@ -789,18 +789,18 @@ export function TerceiroFormDialog({
           Pressione Enter ou clique em + para adicionar múltiplos e-mails
         </p>
         {formData.emails.length > 0 && (
-          <div className="flex flex-wrap gap-2 mt-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2 mt-2")}>
             {formData.emails.map((email, index) => (
               <Badge
                 key={index}
                 variant="secondary"
-                className="gap-1 pr-1"
+                className={cn(/* design-system-escape: gap-1 gap sem token DS; pr-1 padding direcional sem Inset equiv. */ "gap-1 pr-1")}
               >
                 {email}
                 <button
                   type="button"
                   onClick={() => handleRemoveEmail(index)}
-                  className="ml-1 hover:bg-muted rounded-full p-0.5"
+                  className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-1 hover:bg-muted rounded-full p-0.5")}
                   aria-label={`Remover e-mail ${email}`}
                   title={`Remover e-mail ${email}`}
                 >
@@ -812,7 +812,7 @@ export function TerceiroFormDialog({
         )}
       </div>
 
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label>Celular</Label>
         <InputTelefone
           mode="cell"
@@ -829,7 +829,7 @@ export function TerceiroFormDialog({
         />
       </div>
 
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label>Telefone Residencial</Label>
         <InputTelefone
           mode="landline"
@@ -846,7 +846,7 @@ export function TerceiroFormDialog({
         />
       </div>
 
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label>Telefone Comercial</Label>
         <InputTelefone
           mode="landline"
@@ -868,7 +868,7 @@ export function TerceiroFormDialog({
   // Renderizar Step 4 - Endereço
   const renderStep4 = () => (
     <div className="grid gap-(--density-field-gap)">
-      <div className="flex items-center space-x-2">
+      <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
         <Checkbox
           id="endereco_desconhecido"
           checked={formData.endereco_desconhecido}
@@ -881,7 +881,7 @@ export function TerceiroFormDialog({
 
       {!formData.endereco_desconhecido && (
         <>
-          <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
             <Label>CEP</Label>
             <InputCEP
               value={formData.cep}
@@ -891,7 +891,7 @@ export function TerceiroFormDialog({
             />
           </div>
 
-          <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
             <Label htmlFor="logradouro">Logradouro</Label>
             <Input
               id="logradouro"
@@ -901,8 +901,8 @@ export function TerceiroFormDialog({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="numero">Número</Label>
               <Input
                 id="numero"
@@ -911,7 +911,7 @@ export function TerceiroFormDialog({
                 placeholder="Nº"
               />
             </div>
-            <div className="grid gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="complemento">Complemento</Label>
               <Input
                 id="complemento"
@@ -922,7 +922,7 @@ export function TerceiroFormDialog({
             </div>
           </div>
 
-          <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
             <Label htmlFor="bairro">Bairro</Label>
             <Input
               id="bairro"
@@ -932,8 +932,8 @@ export function TerceiroFormDialog({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="municipio">Cidade</Label>
               <Input
                 id="municipio"
@@ -942,7 +942,7 @@ export function TerceiroFormDialog({
                 placeholder="Nome da cidade"
               />
             </div>
-            <div className="grid gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="estado_sigla">Estado</Label>
               {mounted ? (
                 <Select
@@ -961,7 +961,7 @@ export function TerceiroFormDialog({
                   </SelectContent>
                 </Select>
               ) : (
-                <div className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm" />
+                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm")} />
               )}
             </div>
           </div>
@@ -973,7 +973,7 @@ export function TerceiroFormDialog({
   // Renderizar Step 5 - Informações Adicionais
   const renderStep5 = () => (
     <div className="grid gap-(--density-field-gap)">
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label htmlFor="observacoes">Observações</Label>
         <Textarea
           id="observacoes"
@@ -985,8 +985,8 @@ export function TerceiroFormDialog({
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="flex items-center space-x-2">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-3 gap-4")}>
+        <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
           <Checkbox
             id="ativo"
             checked={formData.ativo}
@@ -997,7 +997,7 @@ export function TerceiroFormDialog({
           </Label>
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
           <Checkbox
             id="principal"
             checked={formData.principal}
@@ -1008,7 +1008,7 @@ export function TerceiroFormDialog({
           </Label>
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
           <Checkbox
             id="autoridade"
             checked={formData.autoridade}
@@ -1020,29 +1020,29 @@ export function TerceiroFormDialog({
         </div>
       </div>
 
-      <div className="mt-4 p-4 rounded-lg bg-muted/50 border">
+      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "mt-4 p-4 rounded-lg bg-muted/50 border")}>
         <Heading level="subsection" className="mb-2">Resumo do cadastro</Heading>
-        <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+        <dl className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "grid grid-cols-2 gap-x-4 gap-y-2 text-sm")}>
           <dt className="text-muted-foreground">Tipo:</dt>
-          <dd className="font-medium">{isPF ? 'Pessoa Física' : 'Pessoa Jurídica'}</dd>
+          <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{isPF ? 'Pessoa Física' : 'Pessoa Jurídica'}</dd>
 
           <dt className="text-muted-foreground">Tipo de Parte:</dt>
-          <dd className="font-medium">{PARTE_TIPO_LABELS[formData.tipo_parte] || formData.tipo_parte}</dd>
+          <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{PARTE_TIPO_LABELS[formData.tipo_parte] || formData.tipo_parte}</dd>
 
           <dt className="text-muted-foreground">Polo:</dt>
-          <dd className="font-medium">{POLOS.find(p => p.value === formData.polo)?.label || formData.polo}</dd>
+          <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{POLOS.find(p => p.value === formData.polo)?.label || formData.polo}</dd>
 
           <dt className="text-muted-foreground">Nome:</dt>
-          <dd className="font-medium truncate">{formData.nome || '-'}</dd>
+          <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium truncate")}>{formData.nome || '-'}</dd>
 
           <dt className="text-muted-foreground">{isPF ? 'CPF:' : 'CNPJ:'}</dt>
-          <dd className="font-medium">{isPF ? formData.cpf : formData.cnpj || '-'}</dd>
+          <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{isPF ? formData.cpf : formData.cnpj || '-'}</dd>
 
           <dt className="text-muted-foreground">E-mails:</dt>
-          <dd className="font-medium">{formData.emails.length || '0'}</dd>
+          <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formData.emails.length || '0'}</dd>
 
           <dt className="text-muted-foreground">Cidade:</dt>
-          <dd className="font-medium">{formData.municipio || '-'}</dd>
+          <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formData.municipio || '-'}</dd>
         </dl>
       </div>
     </div>
@@ -1081,7 +1081,7 @@ export function TerceiroFormDialog({
         stepTitle: stepInfo.title,
       }}
       footer={
-        <div className="flex justify-end w-full gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex justify-end w-full gap-2")}>
             <DialogNavPrevious
               onClick={handlePrevious}
               disabled={isFirstStep || isPending}

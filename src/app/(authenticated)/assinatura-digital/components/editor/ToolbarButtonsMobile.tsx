@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import {
   AlignLeft,
   ChevronLeft,
@@ -290,7 +291,7 @@ export default function ToolbarButtonsMobile({
           </Tooltip>
         </TooltipProvider>
 
-        <div className="flex items-center px-2 text-xs text-muted-foreground whitespace-nowrap">
+        <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "flex items-center px-2 text-xs text-muted-foreground whitespace-nowrap")}>
           {currentPage}/{totalPages}
         </div>
 

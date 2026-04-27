@@ -70,7 +70,7 @@ export function AudienciaModalidadeBadge({
   }
 
   return (
-    <SemanticBadge category="audiencia_modalidade" value={modalidade} className={cn('flex items-center gap-1', className)}>
+    <SemanticBadge category="audiencia_modalidade" value={modalidade} className={cn(/* design-system-escape: gap-1 gap sem token DS */ 'flex items-center gap-1', className)}>
       {Icon && <Icon className="h-3 w-3" />}
       {MODALIDADE_AUDIENCIA_LABELS[modalidade]}
     </SemanticBadge>

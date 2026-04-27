@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import { useState } from "react";
 import {
   Dialog,
@@ -39,33 +40,33 @@ export function RecordingConsentDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <AlertCircle className="h-5 w-5 text-warning" />
             Consentimento para Gravação
           </DialogTitle>
-          <DialogDescription className="text-left space-y-3 pt-2">
+          <DialogDescription className={cn(/* design-system-escape: space-y-3 sem token DS; pt-2 padding direcional sem Inset equiv. */ "text-left space-y-3 pt-2")}>
             <p>
               Você está prestes a iniciar a gravação desta chamada. De acordo com a{" "}
               <strong>Lei Geral de Proteção de Dados (LGPD)</strong>, é necessário o
               consentimento de todos os participantes.
             </p>
             
-            <div className="bg-muted p-3 rounded-md">
-              <p className="text-sm font-medium mb-1">Participantes atuais:</p>
-              <ul className="text-sm list-disc list-inside">
+            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "bg-muted p-3 rounded-md")}>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium mb-1")}>Participantes atuais:</p>
+              <ul className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm list-disc list-inside")}>
                 {participantNames.map((name, idx) => (
                   <li key={idx}>{name}</li>
                 ))}
               </ul>
             </div>
 
-            <p className="text-sm">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
               A gravação será armazenada de forma segura e ficará disponível por{" "}
               <strong>7 dias</strong> no servidor do Dyte. Após esse período, será
               automaticamente excluída.
             </p>
 
-            <div className="flex items-start gap-2 pt-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-2 padding direcional sem Inset equiv. */ "flex items-start gap-2 pt-2")}>
               <Checkbox
                 id="consent"
                 checked={agreed}
@@ -73,7 +74,7 @@ export function RecordingConsentDialog({
               />
               <label
                 htmlFor="consent"
-                className="text-sm leading-tight cursor-pointer"
+                className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-tight sem token DS */ "text-sm leading-tight cursor-pointer")}
               >
                 Confirmo que todos os participantes foram informados e consentiram com a
                 gravação desta chamada.
@@ -82,7 +83,7 @@ export function RecordingConsentDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <DialogFooter className="gap-2 sm:gap-0">
+        <DialogFooter className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; sm:gap-0 sem equivalente DS */ "gap-2 sm:gap-0")}>
           <Button
             variant="outline"
             onClick={() => {

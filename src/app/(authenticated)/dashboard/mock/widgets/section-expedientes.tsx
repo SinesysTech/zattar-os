@@ -9,6 +9,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import { AlertTriangle, Clock, FileText, Activity, CalendarDays } from 'lucide-react';
 import {
   AnimatedNumber,
@@ -104,12 +105,12 @@ export function UrgencyList() {
       depth={1}
       className="md:col-span-2"
     >
-      <div className="space-y-0.5">
+      <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
         {URGENCY_LIST_DATA.map((item) => (
           <ListItem key={item.id}>
             <UrgencyDot level={item.level} />
             <div className="flex-1 min-w-0">
-              <p className="text-[12px] font-medium leading-tight truncate">{item.title}</p>
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[12px] font-medium leading-tight truncate")}>{item.title}</p>
               <p className="text-[10px] text-muted-foreground/60 mt-0.5">
                 {URGENCY_LABELS[item.level]} · {fmtData(item.prazo)}
               </p>
@@ -146,14 +147,14 @@ export function AgingFunnel() {
       subtitle="Distribuição por janela de prazo"
       depth={1}
     >
-      <div className="space-y-3 mt-1">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3 mt-1")}>
         {AGING_DATA.map((row) => (
-          <div key={row.label} className="flex items-center gap-3">
+          <div key={row.label} className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
             <UrgencyDot level={row.level} />
             <div className="w-28 shrink-0">
               <span className="text-[11px] text-muted-foreground/60">{row.label}</span>
             </div>
-            <div className="flex-1 h-5 flex items-center gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex-1 h-5 flex items-center gap-2")}>
               <div
                 className="h-full rounded-sm transition-all duration-500"
                 style={{
@@ -163,7 +164,7 @@ export function AgingFunnel() {
                 }}
               />
               <span
-                className="text-[12px] font-bold tabular-nums shrink-0"
+                className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[12px] font-bold tabular-nums shrink-0")}
                 style={{ color: row.color }}
               >
                 {row.count}
@@ -172,9 +173,9 @@ export function AgingFunnel() {
           </div>
         ))}
       </div>
-      <div className="mt-4 pt-3 border-t border-border/10 flex items-center justify-between">
-        <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wide">Total</span>
-        <span className="text-sm font-bold">
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-4 pt-3 border-t border-border/10 flex items-center justify-between")}>
+        <span className={cn(/* design-system-escape: tracking-wide sem token DS */ "text-[10px] text-muted-foreground/60 uppercase tracking-wide")}>Total</span>
+        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold")}>
           {fmtNum(AGING_DATA.reduce((s, d) => s + d.count, 0))}
         </span>
       </div>
@@ -201,19 +202,19 @@ export function OrigemDistribution() {
       subtitle="Últimos 30 dias"
       depth={1}
     >
-      <div className="flex items-center gap-5 mt-1">
+      <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5 mt-1")}>
         <MiniDonut
           segments={ORIGEM_DATA}
           size={88}
           strokeWidth={11}
           centerLabel={fmtNum(ORIGEM_TOTAL)}
         />
-        <div className="flex-1 space-y-2.5">
+        <div className={cn(/* design-system-escape: space-y-2.5 sem token DS */ "flex-1 space-y-2.5")}>
           {ORIGEM_DATA.map((seg) => {
             const pct = Math.round((seg.value / ORIGEM_TOTAL) * 100);
             return (
-              <div key={seg.label} className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2 min-w-0">
+              <div key={seg.label} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
                   <div
                     className="size-2 rounded-full shrink-0"
                     style={{ backgroundColor: seg.color }}
@@ -222,8 +223,8 @@ export function OrigemDistribution() {
                     {seg.label}
                   </span>
                 </div>
-                <div className="flex items-center gap-1.5 shrink-0">
-                  <span className="text-[11px] font-semibold">{seg.value}</span>
+                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 shrink-0")}>
+                  <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[11px] font-semibold")}>{seg.value}</span>
                   <span className="text-[10px] text-muted-foreground/60">{pct}%</span>
                 </div>
               </div>
@@ -257,18 +258,18 @@ export function ResultadoDecisao() {
       <div className="mt-1 mb-3">
         <StackedBar segments={RESULTADO_DATA} height={10} />
       </div>
-      <div className="space-y-2.5">
+      <div className={cn(/* design-system-escape: space-y-2.5 sem token DS */ "space-y-2.5")}>
         {RESULTADO_DATA.map((item) => {
           const pct = Math.round((item.value / RESULTADO_TOTAL) * 100);
           return (
-            <div key={item.label} className="flex items-center gap-3">
+            <div key={item.label} className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
               <ProgressRing
                 percent={pct}
                 size={36}
                 color={item.color}
               />
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] font-medium leading-tight">{item.label}</p>
+                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[11px] font-medium leading-tight")}>{item.label}</p>
                 <p className="text-[10px] text-muted-foreground/60">{item.value} expedientes</p>
               </div>
             </div>
@@ -306,19 +307,19 @@ export function VolumeSemanal() {
           barColor2="bg-primary/30"
         />
       </div>
-      <div className="flex items-center gap-4 mt-3 pt-3 border-t border-border/10">
-        <div className="flex items-center gap-1.5">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pt-3 padding direcional sem Inset equiv. */ "flex items-center gap-4 mt-3 pt-3 border-t border-border/10")}>
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
           <div className="size-2 rounded-sm bg-destructive/50" />
           <span className="text-[10px] text-muted-foreground/50">Recebidos</span>
         </div>
-        <div className="flex items-center gap-1.5">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
           <div className="size-2 rounded-sm bg-primary/30" />
           <span className="text-[10px] text-muted-foreground/50">Baixados</span>
         </div>
         <div className="ml-auto">
           <span className="text-[10px] text-muted-foreground/60">
             Total:{' '}
-            <span className="font-semibold text-foreground/70">
+            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-foreground/70")}>
               {fmtNum(VOLUME_DATA.reduce((s, d) => s + d.value, 0))}
             </span>
           </span>
@@ -341,7 +342,7 @@ export function PrazoMedio() {
       subtitle="Tempo medio entre recebimento e baixa"
       depth={1}
     >
-      <div className="flex items-end justify-between gap-4 mt-1">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4 mt-1")}>
         <div>
           <Stat
             label="Media atual"
@@ -349,38 +350,38 @@ export function PrazoMedio() {
             delta="vs. 5,1 dias mes anterior"
             deltaType="positive"
           />
-          <div className="mt-3 flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-3 flex items-center gap-2")}>
             <UrgencyDot level="ok" />
             <span className="text-[11px] text-muted-foreground/50">
               Reducao de{' '}
-              <span className="text-success/70 font-semibold">17,6%</span> em 8 semanas
+              <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-success/70 font-semibold")}>17,6%</span> em 8 semanas
             </span>
           </div>
         </div>
-        <div className="flex flex-col items-end gap-1">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col items-end gap-1")}>
           <Sparkline
             data={PRAZO_TREND}
             width={88}
             height={32}
             color={COLORS.ok}
           />
-          <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wide">
+          <span className={cn(/* design-system-escape: tracking-wide sem token DS */ "text-[9px] text-muted-foreground/55 uppercase tracking-wide")}>
             8 semanas
           </span>
         </div>
       </div>
-      <div className="mt-4 pt-3 border-t border-border/10 grid grid-cols-3 gap-3">
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "mt-4 pt-3 border-t border-border/10 grid grid-cols-3 gap-3")}>
         <div className="text-center">
-          <p className="text-[10px] text-muted-foreground/60 uppercase tracking-wide">Minimo</p>
-          <p className="text-sm font-bold text-success/80">1,0 d</p>
+          <p className={cn(/* design-system-escape: tracking-wide sem token DS */ "text-[10px] text-muted-foreground/60 uppercase tracking-wide")}>Minimo</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold text-success/80")}>1,0 d</p>
         </div>
         <div className="text-center border-x border-border/10">
-          <p className="text-[10px] text-muted-foreground/60 uppercase tracking-wide">Media</p>
-          <p className="text-sm font-bold">4,2 d</p>
+          <p className={cn(/* design-system-escape: tracking-wide sem token DS */ "text-[10px] text-muted-foreground/60 uppercase tracking-wide")}>Media</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold")}>4,2 d</p>
         </div>
         <div className="text-center">
-          <p className="text-[10px] text-muted-foreground/60 uppercase tracking-wide">Maximo</p>
-          <p className="text-sm font-bold text-destructive/80">18,0 d</p>
+          <p className={cn(/* design-system-escape: tracking-wide sem token DS */ "text-[10px] text-muted-foreground/60 uppercase tracking-wide")}>Maximo</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold text-destructive/80")}>18,0 d</p>
         </div>
       </div>
     </WidgetContainer>
@@ -402,8 +403,8 @@ export function SaudePrazos() {
       depth={2}
       className="md:col-span-2"
     >
-      <div className="flex flex-col items-center gap-4 mt-1">
-        <div className="flex flex-col items-center gap-1">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center gap-4 mt-1")}>
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col items-center gap-1")}>
           <GaugeMeter
             value={SAUDE_PRAZOS_SCORE}
             max={100}
@@ -416,28 +417,28 @@ export function SaudePrazos() {
           </p>
         </div>
 
-        <div className="grid grid-cols-3 gap-4 w-full pt-3 border-t border-border/10">
-          <div className="flex flex-col items-center gap-0.5">
-            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pt-3 padding direcional sem Inset equiv. */ "grid grid-cols-3 gap-4 w-full pt-3 border-t border-border/10")}>
+          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-center gap-0.5")}>
+            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Vencidos
             </span>
-            <span className="font-display text-xl font-bold text-destructive/80">
-              <AnimatedNumber value={4} suffix=" vencidos" className="text-base" />
+            <span className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "font-display text-xl font-bold text-destructive/80")}>
+              <AnimatedNumber value={4} suffix=" vencidos" className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")} />
             </span>
           </div>
-          <div className="flex flex-col items-center gap-0.5 border-x border-border/10">
-            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-center gap-0.5 border-x border-border/10")}>
+            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Vencem hoje
             </span>
-            <span className="font-display text-xl font-bold text-warning/80">
-              <AnimatedNumber value={2} suffix=" hoje" className="text-base" />
+            <span className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "font-display text-xl font-bold text-warning/80")}>
+              <AnimatedNumber value={2} suffix=" hoje" className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")} />
             </span>
           </div>
-          <div className="flex flex-col items-center gap-0.5">
-            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-center gap-0.5")}>
+            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Prazo médio
             </span>
-            <span className="font-display text-base font-bold">
+            <span className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-bold → className de <Text>/<Heading> */ "font-display text-base font-bold")}>
               16h 42min
             </span>
           </div>
@@ -476,10 +477,10 @@ export function CalendarioPrazos() {
       subtitle="Densidade de prazos — últimas 5 semanas"
       depth={1}
     >
-      <div className="flex flex-col gap-4 mt-1">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4 mt-1")}>
         <CalendarHeatmap data={CALENDARIO_DATA} colorScale="destructive" />
 
-        <div className="pt-3 border-t border-border/10 space-y-2">
+        <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; space-y-2 → migrar para <Stack gap="tight"> */ "pt-3 border-t border-border/10 space-y-2")}>
           <Stat
             label="Semana mais pesada"
             value="12–16 mar"
@@ -487,18 +488,18 @@ export function CalendarioPrazos() {
             deltaType="alert"
             small
           />
-          <div className="flex items-center gap-3 mt-1">
-            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mt-1")}>
+            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Intensidade:
             </span>
-            <div className="flex items-center gap-1">
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
               <div className="size-3 rounded-[3px] bg-border/10" />
               <div className="size-3 rounded-[3px] bg-destructive/15" />
               <div className="size-3 rounded-[3px] bg-destructive/30" />
               <div className="size-3 rounded-[3px] bg-destructive/50" />
               <div className="size-3 rounded-[3px] bg-destructive/80" />
             </div>
-            <div className="flex items-center gap-1 ml-1">
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 ml-1")}>
               <span className="text-[9px] text-muted-foreground/55">Vazio</span>
               <span className="text-[9px] text-muted-foreground/55">→</span>
               <span className="text-[9px] text-destructive/60">Crítico</span>
@@ -542,13 +543,13 @@ export function TendenciaResponsividade() {
           format="number"
         />
         {/* Backlog: queda é positiva — invertemos current e previous para o sinal */}
-        <div className="flex flex-col gap-1">
-          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Backlog atual
           </p>
-          <div className="flex items-baseline gap-2">
-            <span className="font-display text-lg font-bold">14</span>
-            <span className="text-[10px] font-medium text-success/70">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-baseline gap-2")}>
+            <span className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold")}>14</span>
+            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium text-success/70")}>
               −22,2%
             </span>
           </div>
@@ -556,7 +557,7 @@ export function TendenciaResponsividade() {
         </div>
       </div>
 
-      <div className="mt-4 pt-3 border-t border-border/10">
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-4 pt-3 border-t border-border/10")}>
         <InsightBanner type="success">
           Tempo de resposta melhorou 18% — ritmo de baixas acelerando
         </InsightBanner>

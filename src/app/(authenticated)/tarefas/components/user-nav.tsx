@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,9 +25,9 @@ export function UserNav() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
-          <div className="flex flex-col space-y-1">
-            <p className="text-sm leading-none font-medium">shadcn</p>
-            <p className="text-muted-foreground text-xs leading-none">m@example.com</p>
+          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "flex flex-col space-y-1")}>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-none sem token DS; font-medium → className de <Text>/<Heading> */ "text-sm leading-none font-medium")}>shadcn</p>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; leading-none sem token DS */ "text-muted-foreground text-xs leading-none")}>m@example.com</p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

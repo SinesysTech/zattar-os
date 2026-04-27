@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { Text } from "@/components/ui/typography";
 import { SpecimenCard } from "./specimen-card";
 
@@ -17,24 +18,24 @@ function PalettePrimary() {
       title="Zattar Purple — hue 281°"
       aside="oklch(L C 281)"
     >
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-[220px_1fr]">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 md:grid-cols-[220px_1fr]")}>
         <div
-          className="flex aspect-[1.3/1] flex-col justify-between rounded-2xl p-4 text-white"
+          className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex aspect-[1.3/1] flex-col justify-between rounded-2xl p-4 text-white")}
           style={{ background: "var(--primary)" }}
         >
           <Text variant="meta-label" className="text-white/80">
             --primary
           </Text>
-          <div className="space-y-1">
+          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
             <div className="text-kpi-value">#5523EB</div>
             <div className="font-mono text-[10px] opacity-80">oklch(.48 .26 281)</div>
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-6">
+        <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "grid grid-cols-3 gap-2.5 sm:grid-cols-6")}>
           {swatches.map((s) => (
             <div
               key={s.label}
-              className="flex aspect-[1.2/1] flex-col justify-between rounded-xl border p-2.5"
+              className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex aspect-[1.2/1] flex-col justify-between rounded-xl border p-2.5")}
               style={{
                 background: s.bg,
                 color: s.dark ? "oklch(0.15 0.01 281)" : "white",
@@ -42,14 +43,14 @@ function PalettePrimary() {
                 borderWidth: s.anchor ? 2 : 1,
               }}
             >
-              <span className="font-mono text-[10px] font-medium">{s.label}</span>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-mono text-[10px] font-medium")}>{s.label}</span>
               <span className="font-mono text-[10px] opacity-75">{s.caption}</span>
             </div>
           ))}
         </div>
       </div>
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
-        <div className="flex items-center gap-2.5 rounded-xl border border-border bg-card px-3.5 py-2.5">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "mt-4 grid gap-3 sm:grid-cols-2")}>
+        <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-3.5 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-2.5 rounded-xl border border-border bg-card px-3.5 py-2.5")}>
           <span
             className="size-6 rounded-md"
             style={{ background: "var(--highlight)" }}
@@ -61,7 +62,7 @@ function PalettePrimary() {
             </span>
           </div>
         </div>
-        <div className="flex items-center gap-2.5 rounded-xl border border-border bg-card px-3.5 py-2.5">
+        <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-3.5 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-2.5 rounded-xl border border-border bg-card px-3.5 py-2.5")}>
           <span className="size-6 rounded-full bg-primary" />
           <span className="font-mono text-[11px]">ring focus · transparent</span>
         </div>
@@ -87,11 +88,11 @@ function PaletteNeutrals() {
       title="Micro-tinted hue 281°"
       aside="chroma 0.005–0.01"
     >
-      <div className="grid grid-cols-4 gap-2 sm:grid-cols-8">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-4 gap-2 sm:grid-cols-8")}>
         {tiles.map((t) => (
           <div
             key={t.l}
-            className="flex aspect-square items-end rounded-xl border p-2 font-mono text-[10px]"
+            className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex aspect-square items-end rounded-xl border p-2 font-mono text-[10px]")}
             style={{
               background: t.bg,
               color: t.dark ? "var(--foreground)" : "white",
@@ -102,18 +103,18 @@ function PaletteNeutrals() {
           </div>
         ))}
       </div>
-      <div className="mt-4 grid gap-2.5 sm:grid-cols-3">
-        <div className="flex flex-col gap-1 rounded-xl border border-border bg-card px-4 py-3">
+      <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "mt-4 grid gap-2.5 sm:grid-cols-3")}>
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex flex-col gap-1 rounded-xl border border-border bg-card px-4 py-3")}>
           <span className="font-mono text-[10px] text-muted-foreground">--card</span>
-          <span className="text-[13px] font-semibold">Card surface</span>
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[13px] font-semibold")}>Card surface</span>
         </div>
-        <div className="flex flex-col gap-1 rounded-xl border border-border bg-muted px-4 py-3">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex flex-col gap-1 rounded-xl border border-border bg-muted px-4 py-3")}>
           <span className="font-mono text-[10px] text-muted-foreground">--muted</span>
-          <span className="text-[13px] font-semibold">Muted</span>
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[13px] font-semibold")}>Muted</span>
         </div>
-        <div className="flex flex-col gap-1 rounded-xl border border-transparent bg-sidebar px-4 py-3 text-sidebar-foreground">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex flex-col gap-1 rounded-xl border border-transparent bg-sidebar px-4 py-3 text-sidebar-foreground")}>
           <span className="font-mono text-[10px] opacity-70">--sidebar</span>
-          <span className="text-[13px] font-semibold">Sidebar (always dark)</span>
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[13px] font-semibold")}>Sidebar (always dark)</span>
         </div>
       </div>
     </SpecimenCard>
@@ -137,28 +138,28 @@ function PaletteStatus() {
   ];
   return (
     <SpecimenCard eyebrow="SEMANTIC · STATUS">
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3 lg:grid-cols-4")}>
         {tiles.map((t) => (
           <div
             key={t.title}
-            className="flex min-h-[110px] flex-col justify-between gap-2 rounded-xl p-3.5 text-white"
+            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-3.5 → usar <Inset> */ "flex min-h-[110px] flex-col justify-between gap-2 rounded-xl p-3.5 text-white")}
             style={{ background: t.bg }}
           >
             <div className="flex items-center justify-between font-mono text-[10px] opacity-85">
               <span>{t.title}</span>
               <span>{t.hue}</span>
             </div>
-            <div className="font-heading text-base font-bold">{t.label}</div>
+            <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-bold → className de <Text>/<Heading> */ "font-heading text-base font-bold")}>{t.label}</div>
           </div>
         ))}
       </div>
-      <div className="mt-4 flex flex-col gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-4 flex flex-col gap-2")}>
         <Text variant="meta-label">CHIPS EM USO</Text>
-        <div className="flex flex-wrap gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2")}>
           {chips.map((c) => (
             <span
               key={c.label}
-              className="rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em]"
+              className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em]")}
               style={{ background: c.bg, color: c.color }}
             >
               {c.label}
@@ -185,7 +186,7 @@ function PaletteUser() {
         L ≈ 0.65, C ≈ 0.18. Usada em tags, labels, cores de evento, seletores.
       </Text>
       <div
-        className="grid gap-1.5"
+        className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "grid gap-1.5")}
         style={{ gridTemplateColumns: "repeat(auto-fit, minmax(28px, 1fr))" }}
       >
         {Array.from({ length: 18 }, (_, i) => i + 1).map((n) => (
@@ -196,11 +197,11 @@ function PaletteUser() {
           />
         ))}
       </div>
-      <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6")}>
         {labels.map((l) => (
           <div
             key={l.n}
-            className="flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground"
+            className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground")}
           >
             <span
               className="size-2.5 rounded-full"
@@ -225,24 +226,24 @@ function PaletteEvent() {
   ];
   return (
     <SpecimenCard eyebrow="EVENT COLORS · DOMÍNIO JURÍDICO">
-      <div className="grid gap-2.5 sm:grid-cols-2">
+      <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "grid gap-2.5 sm:grid-cols-2")}>
         {events.map((e) => (
           <div
             key={e.token}
-            className="grid grid-cols-[4px_44px_1fr_auto] items-center gap-3.5 rounded-xl border border-border bg-card px-3.5 py-3"
+            className={cn(/* design-system-escape: gap-3.5 gap sem token DS; px-3.5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "grid grid-cols-[4px_44px_1fr_auto] items-center gap-3.5 rounded-xl border border-border bg-card px-3.5 py-3")}
           >
             <span
               className="h-9 w-1 rounded"
               style={{ background: `var(${e.token})` }}
             />
             <span
-              className="flex size-9 items-center justify-center rounded-xl font-heading text-sm font-bold text-white"
+              className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "flex size-9 items-center justify-center rounded-xl font-heading text-sm font-bold text-white")}
               style={{ background: `var(${e.token})` }}
             >
               {e.code}
             </span>
-            <div className="flex flex-col gap-0.5">
-              <span className="text-[13px] font-semibold text-foreground">{e.label}</span>
+            <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+              <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[13px] font-semibold text-foreground")}>{e.label}</span>
               <span className="font-mono text-[10px] text-muted-foreground">
                 {e.token}
               </span>
@@ -257,7 +258,7 @@ function PaletteEvent() {
 
 export function ColorsSection() {
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       <PalettePrimary />
       <PaletteNeutrals />
       <PaletteStatus />

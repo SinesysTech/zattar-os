@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { Text } from "@/components/ui/typography";
 import { SpecimenCard } from "./specimen-card";
 
@@ -20,30 +21,30 @@ function SpacingScale() {
   ];
   return (
     <SpecimenCard eyebrow="SPACING · GRID 4PX">
-      <div className="flex items-end gap-4 py-2">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; py-2 padding direcional sem Inset equiv. */ "flex items-end gap-4 py-2")}>
         {steps.map((s) => (
-          <div key={s.t} className="flex flex-col items-center gap-2">
+          <div key={s.t} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center gap-2")}>
             <div
               className="w-5 rounded bg-primary"
               style={{ height: s.h }}
             />
-            <span className="font-mono text-[10px] font-medium">{s.t}</span>
+            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-mono text-[10px] font-medium")}>{s.t}</span>
             <span className="font-mono text-[10px] text-muted-foreground">
               {s.v}
             </span>
           </div>
         ))}
       </div>
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "mt-4 grid gap-3 sm:grid-cols-2")}>
         {usage.map((u) => (
           <div
             key={u.lbl}
-            className="flex flex-col gap-1 rounded-xl border border-border bg-card px-3.5 py-3"
+            className={cn(/* design-system-escape: gap-1 gap sem token DS; px-3.5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex flex-col gap-1 rounded-xl border border-border bg-card px-3.5 py-3")}
           >
             <span className="font-mono text-[10px] text-muted-foreground">
               {u.lbl}
             </span>
-            <span className="text-[13px] font-semibold">{u.val}</span>
+            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[13px] font-semibold")}>{u.val}</span>
           </div>
         ))}
       </div>
@@ -62,7 +63,7 @@ function RadiusScale() {
   ];
   return (
     <SpecimenCard eyebrow="RADIUS · HIERARQUIA">
-      <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-3 gap-3 sm:grid-cols-6")}>
         {tiles.map((t) => (
           <div
             key={t.lbl}
@@ -95,13 +96,13 @@ function ShadowScale() {
   ];
   return (
     <SpecimenCard eyebrow="SHADOW · ELEVAÇÃO">
-      <div className="grid grid-cols-2 gap-4 pb-6 sm:grid-cols-5">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pb-6 padding direcional sem Inset equiv. */ "grid grid-cols-2 gap-4 pb-6 sm:grid-cols-5")}>
         {tiles.map((t) => (
           <div
             key={t.lbl}
             className={`flex aspect-[1.1/1] flex-col justify-between rounded-xl border border-border/50 bg-white p-3.5 ${t.cls}`}
           >
-            <span className="font-mono text-[10px] font-medium text-muted-foreground">
+            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-mono text-[10px] font-medium text-muted-foreground")}>
               {t.lbl}
             </span>
             <span className="font-mono text-[9px] text-muted-foreground/70">
@@ -110,8 +111,8 @@ function ShadowScale() {
           </div>
         ))}
       </div>
-      <div className="flex items-center gap-2.5 rounded-xl border border-destructive/30 bg-destructive/[0.08] px-3 py-2.5 text-[12px] text-destructive">
-        <span className="rounded bg-destructive/[0.12] px-1.5 py-0.5 font-mono text-[10px]">
+      <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-2.5 rounded-xl border border-destructive/30 bg-destructive/[0.08] px-3 py-2.5 text-[12px] text-destructive")}>
+        <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "rounded bg-destructive/[0.12] px-1.5 py-0.5 font-mono text-[10px]")}>
           proibido
         </span>
         <span>{`shadow-${"xl"} · shadow-${"2xl"} — sempre usar lg como teto`}</span>
@@ -122,7 +123,7 @@ function ShadowScale() {
 
 export function SpacingSection() {
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       <SpacingScale />
       <RadiusScale />
       <ShadowScale />

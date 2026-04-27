@@ -9,6 +9,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import { AlertTriangle } from 'lucide-react';
 import {
   AnimatedNumber,
@@ -58,9 +59,9 @@ export function SaudePrazos() {
       icon={AlertTriangle}
       subtitle="Score de conformidade de prazos"
       depth={1}
-      className="h-auto! self-start p-4!"
+      className={cn(/* design-system-escape: p-4! → usar <Inset> */ "h-auto! self-start p-4!")}
     >
-      <div className="flex items-start gap-4 mt-1">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start gap-4 mt-1")}>
         <GaugeMeter
           value={score}
           max={100}
@@ -69,33 +70,33 @@ export function SaudePrazos() {
           size={90}
         />
 
-        <div className="flex-1 space-y-2">
-          <div className="flex items-baseline gap-2">
-            <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "flex-1 space-y-2")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-baseline gap-2")}>
+            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
               Vencidos
             </span>
             <AnimatedNumber
               value={vencidos}
-              className="font-display text-lg font-bold text-destructive/80"
+              className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold text-destructive/80")}
             />
           </div>
 
-          <div className="flex items-baseline gap-2">
-            <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-baseline gap-2")}>
+            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
               Vencem Hoje
             </span>
             <AnimatedNumber
               value={venceHoje}
-              className="font-display text-lg font-bold text-warning/80"
+              className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold text-warning/80")}
             />
           </div>
 
           {tempoResposta !== undefined && (
-            <div className="flex items-baseline gap-2">
-              <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-baseline gap-2")}>
+              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
                 Prazo Medio
               </span>
-              <span className="font-display text-sm font-bold">
+              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "font-display text-sm font-bold")}>
                 {tempoResposta}d
               </span>
             </div>

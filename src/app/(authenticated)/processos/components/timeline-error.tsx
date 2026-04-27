@@ -6,6 +6,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import { AlertTriangle, RotateCw, ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -71,21 +72,21 @@ export function TimelineError({ error, onRetry, message }: TimelineErrorProps) {
   const { title, description, canRetry } = getErrorDetails(error);
 
   return (
-    <div className="space-y-6">
-      <Card className="p-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+      <Card className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
         <Alert variant="destructive">
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>{title}</AlertTitle>
-          <AlertDescription className="mt-2 space-y-2">
-            {message && <p className="font-medium">{message}</p>}
+          <AlertDescription className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "mt-2 space-y-2")}>
+            {message && <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{message}</p>}
             <p>{description}</p>
 
             {/* Detalhes técnicos (colapsível) */}
             <details className="mt-3">
-              <summary className="cursor-pointer text-sm font-medium">
+              <summary className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "cursor-pointer text-sm font-medium")}>
                 Detalhes técnicos
               </summary>
-              <pre className="mt-2 text-xs bg-muted p-3 rounded overflow-x-auto">
+              <pre className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; p-3 → usar <Inset> */ "mt-2 text-xs bg-muted p-3 rounded overflow-x-auto")}>
                 {error.message}
               </pre>
             </details>
@@ -93,9 +94,9 @@ export function TimelineError({ error, onRetry, message }: TimelineErrorProps) {
         </Alert>
 
         {/* Ações */}
-        <div className="flex gap-3 mt-6">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex gap-3 mt-6")}>
           {canRetry && (
-            <Button onClick={onRetry} className="gap-2">
+            <Button onClick={onRetry} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}>
               <RotateCw className="h-4 w-4" />
               Tentar Novamente
             </Button>
@@ -103,7 +104,7 @@ export function TimelineError({ error, onRetry, message }: TimelineErrorProps) {
           <Button
             variant="outline"
             onClick={() => router.push('/processos')}
-            className="gap-2"
+            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}
           >
             <ArrowLeft className="h-4 w-4" />
             Voltar para Processos

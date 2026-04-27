@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
@@ -20,7 +21,7 @@ import {
 
 export default function FinanceiroVisaoGeral() {
   return (
-    <div className="space-y-10">
+    <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
       <div>
         <Heading level="page">Financeiro — Visão Geral</Heading>
         <p className="text-muted-foreground mt-2">
@@ -35,7 +36,7 @@ export default function FinanceiroVisaoGeral() {
           O dashboard financeiro exibe os principais indicadores do período selecionado em tempo
           real. Os cards de resumo mostram:
         </p>
-        <ul className="mt-3 space-y-2 text-sm text-muted-foreground list-disc list-inside">
+        <ul className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "mt-3 space-y-2 text-sm text-muted-foreground list-disc list-inside")}>
           <li>Receita total do mês corrente</li>
           <li>Despesas totais do mês corrente</li>
           <li>Resultado líquido (receitas menos despesas)</li>
@@ -147,7 +148,7 @@ export default function FinanceiroVisaoGeral() {
           Todos os dados do painel financeiro respondem ao seletor de período localizado no canto
           superior direito. Você pode filtrar por:
         </p>
-        <ul className="mt-3 space-y-2 text-sm text-muted-foreground list-disc list-inside">
+        <ul className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "mt-3 space-y-2 text-sm text-muted-foreground list-disc list-inside")}>
           <li>Mês corrente</li>
           <li>Mês anterior</li>
           <li>Trimestre atual</li>

@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { Suspense } from 'react';
 import { FinanceiroDashboard } from '@/app/(authenticated)/financeiro';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -8,7 +9,7 @@ export const revalidate = 0;
 
 export default function FinanceiroPage() {
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <FinanceiroNavigationSelect />
       <Suspense fallback={<Skeleton className="h-10 w-full" />}>
         <FinanceiroDashboard />

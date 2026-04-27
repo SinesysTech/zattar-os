@@ -64,7 +64,7 @@ export function CapturaEscopoBadge({
   }, [credencialIds, credenciaisMap]);
 
   if (tribunais.length === 0) {
-    return <span className="text-xs text-muted-foreground/30">—</span>;
+    return <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/30")}>—</span>;
   }
 
   const tribunaisLabel = resumirTribunais(tribunais);
@@ -75,12 +75,12 @@ export function CapturaEscopoBadge({
       <TooltipTrigger asChild>
         <span
           className={cn(
-            'inline-flex items-baseline gap-1 text-xs text-muted-foreground/80 cursor-help',
+            /* design-system-escape: gap-1 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ 'inline-flex items-baseline gap-1 text-xs text-muted-foreground/80 cursor-help',
             'hover:text-foreground transition-colors',
             className,
           )}
         >
-          <span className="font-medium tabular-nums">{tribunaisLabel}</span>
+          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium tabular-nums")}>{tribunaisLabel}</span>
           {grausLabel && (
             <>
               <span aria-hidden className="text-muted-foreground/40">·</span>
@@ -89,18 +89,18 @@ export function CapturaEscopoBadge({
           )}
         </span>
       </TooltipTrigger>
-      <TooltipContent side="top" align="start" className="max-w-xs p-0 overflow-hidden">
-        <div className="px-3 py-2 border-b border-border/40">
-          <p className="text-[11px] font-semibold text-foreground">Escopo da captura</p>
+      <TooltipContent side="top" align="start" className={cn(/* design-system-escape: p-0 → usar <Inset> */ "max-w-xs p-0 overflow-hidden")}>
+        <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "px-3 py-2 border-b border-border/40")}>
+          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[11px] font-semibold text-foreground")}>Escopo da captura</p>
           <p className="text-[10px] text-muted-foreground/80">
             {tribunais.length} tribunal{tribunais.length === 1 ? '' : 'is'} ·{' '}
             {graus.length} grau{graus.length === 1 ? '' : 's'}
           </p>
         </div>
-        <ul className="px-3 py-2 grid grid-cols-2 gap-x-3 gap-y-1 max-h-56 overflow-y-auto">
+        <ul className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "px-3 py-2 grid grid-cols-2 gap-x-3 gap-y-1 max-h-56 overflow-y-auto")}>
           {detalhes.map((d, idx) => (
-            <li key={`${d.tribunal}-${d.grau}-${idx}`} className="flex items-center gap-1.5">
-              <span className="inline-flex items-center px-1.5 py-0.5 rounded-lg text-[9px] font-semibold tabular-nums border border-border/15 bg-muted/20 text-muted-foreground tracking-wide">
+            <li key={`${d.tribunal}-${d.grau}-${idx}`} className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+              <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading>; tracking-wide sem token DS */ "inline-flex items-center px-1.5 py-0.5 rounded-lg text-[9px] font-semibold tabular-nums border border-border/15 bg-muted/20 text-muted-foreground tracking-wide")}>
                 {d.tribunal}
               </span>
               <span className="text-[10px] text-muted-foreground/80">{formatarGrau(d.grau)}</span>

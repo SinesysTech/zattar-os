@@ -26,7 +26,7 @@ import {
   AvatarImage,
   AvatarIndicator,
 } from '@/components/ui/avatar';
-import { generateAvatarFallback } from '@/lib/utils';
+import { generateAvatarFallback, cn } from '@/lib/utils';
 import { Heading, Text } from '@/components/ui/typography';
 import useChatStore from '../hooks/use-chat-store';
 import { UsuarioChat } from '../domain';
@@ -48,13 +48,13 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
 
   return (
     <Dialog open={showProfileSheet} onOpenChange={toggleProfileSheet}>
-      <DialogContent className="glass-dialog max-w-lg max-h-[90vh] p-0 flex flex-col">
-        <DialogHeader className="px-6 pt-6 pb-2 shrink-0">
-          <DialogTitle className="text-2xl">Perfil</DialogTitle>
+      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "glass-dialog max-w-lg max-h-[90vh] p-0 flex flex-col")}>
+        <DialogHeader className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; pt-6 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "px-6 pt-6 pb-2 shrink-0")}>
+          <DialogTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "text-2xl")}>Perfil</DialogTitle>
         </DialogHeader>
 
-        <div className="flex-1 overflow-y-auto px-6 pb-6">
-          <div className="my-4 flex flex-col items-center justify-end">
+        <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; pb-6 padding direcional sem Inset equiv. */ "flex-1 overflow-y-auto px-6 pb-6")}>
+          <div className={cn(/* design-system-escape: my-4 margin sem primitiva DS */ "my-4 flex flex-col items-center justify-end")}>
             <Avatar className="mb-4 size-32 overflow-visible">
               <AvatarImage src={user.avatar} alt="avatar image" />
               <AvatarIndicator
@@ -66,7 +66,7 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
               </AvatarFallback>
             </Avatar>
             <Heading level="card" as="h4" className="mb-2">{user.nomeCompleto}</Heading>
-            <div className="text-xs">
+            <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
               Último acesso:{' '}
               {user.onlineStatus === 'online' ? (
                 <span className={getOnlineStatusColor('online')}>Online</span>
@@ -80,31 +80,31 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
             </div>
           </div>
 
-          <div className="space-y-2 divide-y divide-border/20">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 divide-y divide-border/20")}>
             {user.about && (
-              <div className="space-y-3 py-4">
+              <div className={cn(/* design-system-escape: space-y-3 sem token DS; py-4 padding direcional sem Inset equiv. */ "space-y-3 py-4")}>
                 <Text variant="overline" as="h5">Sobre</Text>
                 <div className="text-muted-foreground">{user.about}</div>
               </div>
             )}
             {user.phone && (
-              <div className="space-y-3 py-4">
+              <div className={cn(/* design-system-escape: space-y-3 sem token DS; py-4 padding direcional sem Inset equiv. */ "space-y-3 py-4")}>
                 <Text variant="overline" as="h5">Telefone</Text>
                 <div className="text-muted-foreground">{user.phone}</div>
               </div>
             )}
             {user.country && (
-              <div className="space-y-3 py-4">
+              <div className={cn(/* design-system-escape: space-y-3 sem token DS; py-4 padding direcional sem Inset equiv. */ "space-y-3 py-4")}>
                 <Text variant="overline" as="h5">País</Text>
                 <div className="text-muted-foreground">{user.country}</div>
               </div>
             )}
             {user.medias?.length && (
-              <div className="space-y-3 py-4">
+              <div className={cn(/* design-system-escape: space-y-3 sem token DS; py-4 padding direcional sem Inset equiv. */ "space-y-3 py-4")}>
                 <Text variant="overline" as="h5">Mídia</Text>
                 <div>
                   <ScrollArea className="w-full">
-                    <div className="flex gap-4 *:shrink-0">
+                    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4 *:shrink-0")}>
                       {user.medias.map(
                         (item: { type: string; url: string }, i) => (
                           <div key={i}>
@@ -128,7 +128,7 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
               </div>
             )}
             {user.website && (
-              <div className="space-y-3 py-4">
+              <div className={cn(/* design-system-escape: space-y-3 sem token DS; py-4 padding direcional sem Inset equiv. */ "space-y-3 py-4")}>
                 <Text variant="overline" as="h5">Website</Text>
                 <div>
                   <a
@@ -143,11 +143,11 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
               </div>
             )}
             {user.socialLinks?.length && (
-              <div className="space-y-3 py-4">
+              <div className={cn(/* design-system-escape: space-y-3 sem token DS; py-4 padding direcional sem Inset equiv. */ "space-y-3 py-4")}>
                 <Text variant="overline" as="h5">
                   Redes Sociais
                 </Text>
-                <div className="flex flex-wrap items-center gap-2 *:shrink-0">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap items-center gap-2 *:shrink-0")}>
                   {user.socialLinks.map(
                     (item: { icon: string; link: string }, key) => (
                       <Button

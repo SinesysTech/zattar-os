@@ -233,7 +233,7 @@ export function PromoverTransitoriaDialog({
       title="Completar cadastro da parte contrária"
       maxWidth="lg"
       footer={
-        <div className="flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           {mode === 'merge' && (
             <Button variant="ghost" onClick={handleSwitchToCriar} disabled={isBusy}>
               Criar nova em vez disso
@@ -274,17 +274,17 @@ export function PromoverTransitoriaDialog({
       }
     >
       {isLoading ? (
-        <div className="flex items-center justify-center py-10">
+        <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv. */ "flex items-center justify-center py-10")}>
           <LoadingSpinner />
         </div>
       ) : (
-        <div className="space-y-5">
+        <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
           {transitoria && (
-            <div className="rounded-xl bg-surface-container-low/50 p-3 ring-1 ring-outline-variant/30">
+            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-xl bg-surface-container-low/50 p-3 ring-1 ring-outline-variant/30")}>
               <Text variant="caption" className="text-muted-foreground">
                 Cadastro pendente
               </Text>
-              <Text variant="label" className="mt-0.5 font-semibold text-foreground">
+              <Text variant="label" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "mt-0.5 font-semibold text-foreground")}>
                 {transitoria.nome}
               </Text>
               {transitoria.criado_em_contrato_id && (
@@ -296,12 +296,12 @@ export function PromoverTransitoriaDialog({
           )}
 
           {sugestoes.length > 0 && (
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Heading level="card">Partes similares encontradas</Heading>
               <Text variant="caption" className="text-muted-foreground">
                 Selecione uma abaixo para vincular em vez de criar duplicata.
               </Text>
-              <ul className="space-y-1.5" role="listbox">
+              <ul className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")} role="listbox">
                 {sugestoes.map((sug) => {
                   const isSelected =
                     mode === 'merge' &&
@@ -317,7 +317,7 @@ export function PromoverTransitoriaDialog({
                         onClick={() => handleSelectSugestao(sug)}
                         disabled={!isOficial || isBusy}
                         className={cn(
-                          'flex w-full items-start gap-3 rounded-xl px-3 py-2.5 text-left ring-1 transition-colors',
+                          /* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ 'flex w-full items-start gap-3 rounded-xl px-3 py-2.5 text-left ring-1 transition-colors',
                           isSelected
                             ? 'bg-primary/10 ring-primary/30'
                             : isOficial
@@ -341,7 +341,7 @@ export function PromoverTransitoriaDialog({
                           )}
                         </span>
                         <div className="min-w-0 flex-1">
-                          <Text variant="label" className="truncate font-medium text-foreground">
+                          <Text variant="label" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "truncate font-medium text-foreground")}>
                             {sug.nome}
                           </Text>
                           <Text
@@ -369,12 +369,12 @@ export function PromoverTransitoriaDialog({
           )}
 
           {mode === 'criar' && (
-            <div className="space-y-3">
+            <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
               <Heading level="card">
                 {sugestoes.length > 0 ? 'Ou criar uma nova parte contrária' : 'Dados da parte contrária'}
               </Heading>
 
-              <div className="space-y-2">
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                 <Label htmlFor="promover-nome">Nome / Razão social</Label>
                 <Input
                   id="promover-nome"
@@ -386,8 +386,8 @@ export function PromoverTransitoriaDialog({
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-2">
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3")}>
+                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                   <Label htmlFor="promover-tipo-pessoa">Tipo</Label>
                   <Select
                     value={tipoPessoa}
@@ -403,7 +403,7 @@ export function PromoverTransitoriaDialog({
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-2">
+                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                   <Label htmlFor="promover-doc">{tipoPessoa === 'pf' ? 'CPF' : 'CNPJ'}</Label>
                   <Input
                     id="promover-doc"
@@ -416,8 +416,8 @@ export function PromoverTransitoriaDialog({
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-2">
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3")}>
+                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                   <Label htmlFor="promover-email">Email</Label>
                   <Input
                     id="promover-email"
@@ -428,7 +428,7 @@ export function PromoverTransitoriaDialog({
                     disabled={isBusy}
                   />
                 </div>
-                <div className="space-y-2">
+                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                   <Label htmlFor="promover-telefone">Telefone</Label>
                   <Input
                     id="promover-telefone"

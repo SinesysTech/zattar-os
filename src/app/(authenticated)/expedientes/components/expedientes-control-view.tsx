@@ -98,8 +98,8 @@ function getDiasLabel(diasRestantes: number | null, prazoVencido: boolean): stri
 }
 
 const URGENCY_TEXT_CLASS: Record<UrgencyLevel, string> = {
-  critico: 'text-destructive/80 font-semibold',
-  alto: 'text-warning/80 font-semibold',
+  critico: /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-destructive/80 font-semibold',
+  alto: /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-warning/80 font-semibold',
   medio: 'text-primary/70',
   baixo: 'text-muted-foreground/45',
   ok: 'text-success/60',
@@ -123,9 +123,9 @@ function InfoRow({
   value: React.ReactNode;
 }) {
   return (
-    <div className="flex items-start justify-between gap-3">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
       <span className="shrink-0 text-overline">{label}</span>
-      <span className="text-right text-caption font-medium">{value}</span>
+      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-right text-caption font-medium")}>{value}</span>
     </div>
   );
 }
@@ -138,8 +138,8 @@ function EditableInfoRow({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex items-start justify-between gap-3">
-      <span className="shrink-0 text-overline pt-1">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
+      <span className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "shrink-0 text-overline pt-1")}>
         {label}
       </span>
       <div className="flex justify-end">{children}</div>
@@ -217,7 +217,7 @@ function QueueCard({
     <GlassPanel
       depth={1}
       className={cn(
-        'group w-full cursor-pointer text-left transition-all duration-200 p-0',
+        /* design-system-escape: p-0 → usar <Inset> */ 'group w-full cursor-pointer text-left transition-all duration-200 p-0',
         'border-border/40 hover:border-primary/30 hover:bg-accent/50 hover:shadow-md',
         URGENCY_BORDER[urgencyLevel],
         selected && 'border-primary/40 bg-primary/5 ring-1 ring-primary/20',
@@ -228,11 +228,11 @@ function QueueCard({
         tabIndex={0}
         onClick={onSelect}
         onKeyDown={(e: React.KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(); } }}
-        className="p-4 focus:outline-none"
+        className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 focus:outline-none")}
       >
       {/* Header row */}
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex min-w-0 items-center gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex min-w-0 items-center gap-2")}>
           <UrgencyDot level={urgencyLevel} />
           <ExpedienteTipoPopover
             expedienteId={expediente.id}
@@ -261,15 +261,15 @@ function QueueCard({
       </div>
 
       {/* Identificação do Processo (Seção 2) */}
-      <div className="mt-3 pt-3 border-t border-border/10">
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 pt-3 border-t border-border/10")}>
         {/* Partes — autora e ré em linhas separadas para não truncar em bloco */}
         {(partes.autora || partes.re) && (
-          <div className="flex items-start gap-1.5 min-w-0 mb-1.5 focus-within:ring-0">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-start gap-1.5 min-w-0 mb-1.5 focus-within:ring-0")}>
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-semibold text-foreground truncate">
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-foreground truncate")}>
                 {partes.autora || '—'}
               </p>
-              <p className="text-xs font-semibold text-foreground truncate">
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-foreground truncate")}>
                 <span className="text-[9px] font-normal text-muted-foreground/50 mr-1">vs</span>
                 {partes.re || '—'}
               </p>
@@ -282,7 +282,7 @@ function QueueCard({
         )}
 
         {/* TRT · Grau · Processo (linha compacta de identificação legal) */}
-        <div className="flex items-center gap-1.5 min-w-0">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 min-w-0")}>
           <span className="text-mono-num truncate">
             {[expediente.trt, grauLabel, expediente.numeroProcesso].filter(Boolean).join(' · ')}
           </span>
@@ -300,7 +300,7 @@ function QueueCard({
       {/* Corpo: Resumo e Observações — visível apenas quando há conteúdo */}
       {(expediente.descricaoArquivos || expediente.observacoes) && (
         <div
-          className="mt-3 space-y-2"
+          className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "mt-3 space-y-2")}
           onClick={(e) => e.stopPropagation()}
           onKeyDown={(e) => e.stopPropagation()}
         >
@@ -332,10 +332,10 @@ function QueueCard({
       )}
 
       {/* Footer: ações fixas + responsável (Seção 4) */}
-      <div className="mt-3 pt-3 border-t border-border/10 flex items-center gap-1.5">
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; gap-1.5 gap sem token DS */ "mt-3 pt-3 border-t border-border/10 flex items-center gap-1.5")}>
         {/* Ações sempre visíveis — esquerda */}
         <div
-          className="flex items-center gap-1"
+          className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}
           onClick={(e) => e.stopPropagation()}
           onKeyDown={(e) => e.stopPropagation()}
         >
@@ -348,7 +348,7 @@ function QueueCard({
                   e.stopPropagation(); e.preventDefault(); onBaixar(e);
                 }
               }}
-              className="flex h-6 items-center gap-1 rounded-md bg-primary/10 px-2 text-[10px] font-medium text-primary/80 transition-colors hover:bg-primary/20 cursor-pointer"
+              className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex h-6 items-center gap-1 rounded-md bg-primary/10 px-2 text-[10px] font-medium text-primary/80 transition-colors hover:bg-primary/20 cursor-pointer")}
             >
               <CheckCircle2 className="size-3" />
               Baixar
@@ -363,7 +363,7 @@ function QueueCard({
                   e.stopPropagation(); e.preventDefault(); onViewDetail(e);
                 }
               }}
-              className="flex h-6 items-center gap-1 rounded-md border border-border/20 px-2 text-[10px] font-medium text-muted-foreground/60 transition-colors hover:border-border/40 hover:text-muted-foreground/80 cursor-pointer"
+              className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex h-6 items-center gap-1 rounded-md border border-border/20 px-2 text-[10px] font-medium text-muted-foreground/60 transition-colors hover:border-border/40 hover:text-muted-foreground/80 cursor-pointer")}
             >
               <ExternalLink className="size-3" />
               Detalhes
@@ -407,7 +407,7 @@ function SectionHeader({
   accentClass: string;
 }) {
   return (
-    <div className="flex items-center gap-2 mb-3">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
       <Icon className={cn('size-3.5', accentClass)} />
       <h3 className="text-overline">{label}</h3>
       <span className="text-mono-num text-muted-foreground/40">{count}</span>
@@ -437,9 +437,9 @@ function DetailPanel({
   const grauLabel = GRAU_TRIBUNAL_LABELS[expediente.grau] ?? expediente.grau;
 
   return (
-    <GlassPanel depth={2} className="p-5">
+    <GlassPanel depth={2} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
       {/* Header */}
-      <div className="flex items-start justify-between gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
         <div className="min-w-0">
           <ExpedienteTipoPopover
             expedienteId={expediente.id}
@@ -468,7 +468,7 @@ function DetailPanel({
       </div>
 
       {/* Info rows */}
-      <div className="mt-4 space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "mt-4 space-y-3")}>
         {expediente.trt && (
           <InfoRow
             label="Tribunal"
@@ -539,10 +539,10 @@ function DetailPanel({
       </div>
 
       {/* Actions */}
-      <div className="mt-5 flex flex-col gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-5 flex flex-col gap-2")}>
         {onBaixar && (
           <Button
-            className="h-9 w-full gap-2 text-xs"
+            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "h-9 w-full gap-2 text-xs")}
             onClick={() => onBaixar(expediente)}
           >
             <CheckCircle2 className="size-3.5" />
@@ -552,7 +552,7 @@ function DetailPanel({
         {onViewDetail && (
           <Button
             variant="outline"
-            className="h-9 w-full gap-2 text-xs"
+            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "h-9 w-full gap-2 text-xs")}
             onClick={() => onViewDetail(expediente)}
           >
             <ExternalLink className="size-3.5" />
@@ -675,12 +675,12 @@ export function ExpedientesControlView({
   // Empty state
   if (expedientes.length === 0) {
     return (
-      <GlassPanel depth={1} className="flex min-h-52 flex-col items-center justify-center p-8 text-center">
+      <GlassPanel depth={1} className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex min-h-52 flex-col items-center justify-center p-8 text-center")}>
         <SearchX className="size-8 text-muted-foreground/20" />
-        <Heading level="card" className="mt-4 text-sm text-muted-foreground/50">
+        <Heading level="card" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-4 text-sm text-muted-foreground/50")}>
           Nenhum expediente encontrado
         </Heading>
-        <p className="mt-1.5 max-w-sm text-xs text-muted-foreground/30">
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "mt-1.5 max-w-sm text-xs text-muted-foreground/30")}>
           Ajuste os filtros ou a busca para ampliar o recorte operacional.
         </p>
       </GlassPanel>
@@ -688,7 +688,7 @@ export function ExpedientesControlView({
   }
 
   const mainContent = (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       {sections.map(({ key, label, icon, items, accentClass }) => (
         <section key={key}>
           <SectionHeader
@@ -698,7 +698,7 @@ export function ExpedientesControlView({
             accentClass={accentClass}
           />
           <div className={cn(
-            'grid gap-2.5',
+            /* design-system-escape: gap-2.5 gap sem token DS */ 'grid gap-2.5',
             selected
               ? 'grid-cols-1 sm:grid-cols-2'
               : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
@@ -743,7 +743,7 @@ export function ExpedientesControlView({
   }
 
   return (
-    <div className="grid gap-5 lg:grid-cols-[1fr_380px]">
+    <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "grid gap-5 lg:grid-cols-[1fr_380px]")}>
       {/* Main queue */}
       <div className="min-w-0">{mainContent}</div>
 

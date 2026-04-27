@@ -24,7 +24,7 @@ export function UploadContextPanel({
   isUploading,
 }: UploadContextPanelProps) {
   return (
-    <div className="group relative flex flex-col justify-center space-y-6 p-6 lg:p-8 animate-fade-in-left animate-duration-500">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose">; p-6 → migrar para <Inset variant="dialog">; lg:p-8 sem equivalente DS */ "group relative flex flex-col justify-center space-y-6 p-6 lg:p-8 animate-fade-in-left animate-duration-500")}>
       {/* Blob decorativo de fundo */}
       <div
         className={cn(
@@ -39,9 +39,9 @@ export function UploadContextPanel({
       <div className="relative">
         <span
           className={cn(
-            "inline-flex items-center rounded-full px-3 py-1",
+            /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "inline-flex items-center rounded-full px-3 py-1",
             "bg-primary/10 text-primary",
-            "text-xs font-medium uppercase tracking-wider",
+            /* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-xs font-medium uppercase tracking-wider",
           )}
         >
           Passo 1
@@ -51,15 +51,15 @@ export function UploadContextPanel({
       {/* Título */}
       <h2
         className={cn(
-          "relative font-heading font-bold leading-tight tracking-tight",
-          "text-3xl text-foreground md:text-4xl lg:text-5xl",
+          /* design-system-escape: font-bold → className de <Text>/<Heading>; leading-tight sem token DS; tracking-tight sem token DS */ "relative font-heading font-bold leading-tight tracking-tight",
+          /* design-system-escape: text-3xl → migrar para <Heading level="display-*"> */ /* design-system-escape: text-3xl → migrar para <Heading level="display-*"> */ "text-3xl text-foreground md:text-4xl lg:text-5xl",
         )}
       >
         Vamos assinar seu documento
       </h2>
 
       {/* Descrição */}
-      <p className="relative text-lg leading-relaxed text-muted-foreground">
+      <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; leading-relaxed sem token DS */ "relative text-lg leading-relaxed text-muted-foreground")}>
         Suportamos arquivos <strong className="text-foreground">PDF</strong> com até{" "}
         <strong className="text-foreground">10MB</strong>.
       </p>
@@ -72,7 +72,7 @@ export function UploadContextPanel({
           onClick={onSelectFile}
           disabled={isUploading}
           className={cn(
-            "w-full gap-2 lg:w-auto rounded-xl",
+            /* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "w-full gap-2 lg:w-auto rounded-xl",
             "bg-primary text-primary-foreground hover:bg-primary/90",
             "shadow-lg shadow-primary/20 hover:shadow-primary/40",
             "hover:-translate-y-0.5 transition-all duration-200",
@@ -85,7 +85,7 @@ export function UploadContextPanel({
       </div>
 
       {/* Informação de segurança */}
-      <div className="relative flex items-center gap-2 text-xs text-muted-foreground">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "relative flex items-center gap-2 text-xs text-muted-foreground")}>
         <Shield className="size-4" />
         <span>Seus arquivos são criptografados e seguros</span>
       </div>

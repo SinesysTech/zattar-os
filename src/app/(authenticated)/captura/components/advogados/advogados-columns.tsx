@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Pencil, Key, Trash2 } from 'lucide-react';
 
@@ -42,7 +43,7 @@ export function criarColunasAdvogados({
       size: 280,
       meta: { align: 'left' as const },
       cell: ({ row }) => (
-        <span className="text-sm font-medium">{row.original.nome_completo}</span>
+        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{row.original.nome_completo}</span>
       ),
     },
     {
@@ -52,7 +53,7 @@ export function criarColunasAdvogados({
       size: 160,
       meta: { align: 'left' as const },
       cell: ({ row }) => (
-        <span className="font-mono text-sm">{formatarCpf(row.original.cpf)}</span>
+        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "font-mono text-sm")}>{formatarCpf(row.original.cpf)}</span>
       ),
     },
     {
@@ -69,13 +70,13 @@ export function criarColunasAdvogados({
         const hasMultiple = oabs.length > 1;
         
         return (
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-sm">{primaryOab.numero}</span>
-            <Badge variant="outline" tone="soft" className="text-xs">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "font-mono text-sm")}>{primaryOab.numero}</span>
+            <Badge variant="outline" tone="soft" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
               {primaryOab.uf}
             </Badge>
             {hasMultiple && (
-              <Badge variant="secondary" className="text-xs">
+              <Badge variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                 +{oabs.length - 1}
               </Badge>
             )}
@@ -93,7 +94,7 @@ export function criarColunasAdvogados({
       cell: ({ row }) => {
         const advogado = row.original;
         return (
-          <div className="flex items-center gap-1">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button

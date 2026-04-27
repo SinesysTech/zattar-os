@@ -43,13 +43,13 @@ export function DataTableFacetedFilter<TData, TValue>({
           {title}
           {selectedValues?.size > 0 && (
             <>
-              <Separator orientation="vertical" className="mx-2 h-4" />
-              <Badge variant="secondary" className="rounded-sm px-1 font-normal lg:hidden">
+              <Separator orientation="vertical" className={cn(/* design-system-escape: mx-2 margin sem primitiva DS */ "mx-2 h-4")} />
+              <Badge variant="secondary" className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv. */ "rounded-sm px-1 font-normal lg:hidden")}>
                 {selectedValues.size}
               </Badge>
-              <div className="hidden gap-1 lg:flex">
+              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "hidden gap-1 lg:flex")}>
                 {selectedValues.size > 2 ? (
-                  <Badge variant="secondary" className="rounded-sm px-1 font-normal">
+                  <Badge variant="secondary" className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv. */ "rounded-sm px-1 font-normal")}>
                     {selectedValues.size} selecionados
                   </Badge>
                 ) : (
@@ -59,7 +59,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                       <Badge
                         variant="secondary"
                         key={option.value}
-                        className="rounded-sm px-1 font-normal">
+                        className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv. */ "rounded-sm px-1 font-normal")}>
                         {option.label}
                       </Badge>
                     ))
@@ -69,7 +69,7 @@ export function DataTableFacetedFilter<TData, TValue>({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] bg-popover p-0" align="start">
+      <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-[200px] bg-popover p-0")} align="start">
         <Command>
           <CommandInput placeholder={title} />
           <CommandList>
@@ -101,7 +101,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                     {option.icon && <option.icon className="text-muted-foreground size-4" />}
                     <span>{option.label}</span>
                     {facets?.get(option.value) && (
-                      <span className="text-muted-foreground ml-auto flex size-4 items-center justify-center font-mono text-xs">
+                      <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground ml-auto flex size-4 items-center justify-center font-mono text-xs")}>
                         {facets.get(option.value)}
                       </span>
                     )}

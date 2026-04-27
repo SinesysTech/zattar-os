@@ -250,21 +250,21 @@ describe("DocumentFlowShell", () => {
       renderShell({ fullHeight: true });
 
       const content = screen.getByTestId("child-content").parentElement!;
-      expect(content).not.toHaveClass("p-6");
+      expect(content).not.toHaveClass(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6");
     });
 
     it("deve aplicar padding quando fullHeight=false (padrao)", () => {
       renderShell({ fullHeight: false });
 
       const content = screen.getByTestId("child-content").parentElement!;
-      expect(content).toHaveClass("p-6");
+      expect(content).toHaveClass(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6");
     });
 
-    it("deve aplicar layout full-height com -m-6", () => {
+    it(/* design-system-escape: -m-6 sem equivalente DS */ "deve aplicar layout full-height com -m-6", () => {
       const { container } = renderShell();
 
       const wrapper = container.firstElementChild!;
-      expect(wrapper).toHaveClass("-m-6");
+      expect(wrapper).toHaveClass(/* design-system-escape: -m-6 sem equivalente DS */ "-m-6");
       expect(wrapper).toHaveClass("flex");
       expect(wrapper).toHaveClass("flex-col");
     });

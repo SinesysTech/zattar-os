@@ -8,6 +8,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import { Clock } from 'lucide-react';
 import {
   Sparkline,
@@ -41,9 +42,9 @@ export function PrazoMedio() {
         icon={Clock}
         subtitle="Tendencia semanal"
         depth={1}
-        className="h-auto! self-start p-4!"
+        className={cn(/* design-system-escape: p-4! → usar <Inset> */ "h-auto! self-start p-4!")}
       >
-        <p className="text-[11px] text-muted-foreground/60 py-6 text-center">
+        <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-6 text-center")}>
           Dados de prazo medio nao disponiveis.
         </p>
       </WidgetContainer>
@@ -69,9 +70,9 @@ export function PrazoMedio() {
       icon={Clock}
       subtitle="Tendencia semanal (dias)"
       depth={1}
-      className="h-auto! self-start p-4!"
+      className={cn(/* design-system-escape: p-4! → usar <Inset> */ "h-auto! self-start p-4!")}
     >
-      <div className="flex items-start gap-4 mt-1">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start gap-4 mt-1")}>
         <div className="flex-1">
           <Stat
             label="Media Atual"
@@ -82,17 +83,17 @@ export function PrazoMedio() {
 
           {tempoResposta !== undefined && (
             <div className="mt-2">
-              <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider">
+              <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>
                 Tempo Resposta
               </p>
-              <p className="font-display text-sm font-bold mt-0.5">
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "font-display text-sm font-bold mt-0.5")}>
                 {tempoResposta}d
               </p>
             </div>
           )}
         </div>
 
-        <div className="pt-2">
+        <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "pt-2")}>
           <Sparkline
             data={prazoMedio}
             alert={isAlert}
@@ -102,19 +103,19 @@ export function PrazoMedio() {
         </div>
       </div>
 
-      <div className="mt-3 flex items-center justify-between border-t border-border/10 pt-2.5">
-        <div className="flex gap-4">
+      <div className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "mt-3 flex items-center justify-between border-t border-border/10 pt-2.5")}>
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}>
           <div>
             <span className="text-[8px] text-muted-foreground/50 uppercase">Min</span>
-            <p className="text-[11px] font-bold tabular-nums">{minVal.toFixed(1)}d</p>
+            <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[11px] font-bold tabular-nums")}>{minVal.toFixed(1)}d</p>
           </div>
           <div>
             <span className="text-[8px] text-muted-foreground/50 uppercase">Media</span>
-            <p className="text-[11px] font-bold tabular-nums">{avgVal.toFixed(1)}d</p>
+            <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[11px] font-bold tabular-nums")}>{avgVal.toFixed(1)}d</p>
           </div>
           <div>
             <span className="text-[8px] text-muted-foreground/50 uppercase">Max</span>
-            <p className="text-[11px] font-bold tabular-nums">{maxVal.toFixed(1)}d</p>
+            <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[11px] font-bold tabular-nums")}>{maxVal.toFixed(1)}d</p>
           </div>
         </div>
       </div>

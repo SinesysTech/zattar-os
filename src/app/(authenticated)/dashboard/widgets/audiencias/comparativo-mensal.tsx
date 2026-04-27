@@ -12,6 +12,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import { BarChart3 } from 'lucide-react';
 import {
   WidgetContainer,
@@ -44,7 +45,7 @@ export function WidgetComparativoMensal() {
         icon={BarChart3}
         subtitle="Comparacao entre os ultimos 2 meses"
       >
-        <div className="flex flex-col items-center justify-center py-6 gap-2">
+        <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center justify-center py-6 gap-2")}>
           <BarChart3 className="size-8 text-muted-foreground/45" />
           <p className="text-[11px] text-muted-foreground/60 text-center">
             Necessario pelo menos 2 meses de dados
@@ -77,17 +78,17 @@ export function WidgetComparativoMensal() {
       icon={BarChart3}
       subtitle={`${previous.mes} vs ${current.mes}`}
     >
-      <div className="space-y-4">
+      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         {/* Header: month labels */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1.5">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
               <div className="size-2 rounded-sm bg-muted-foreground/30" />
               <span className="text-[9px] text-muted-foreground/60">
                 {previous.mes}
               </span>
             </div>
-            <div className="flex items-center gap-1.5">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
               <div className="size-2 rounded-sm bg-primary/60" />
               <span className="text-[9px] text-muted-foreground/60">
                 {current.mes}
@@ -97,7 +98,7 @@ export function WidgetComparativoMensal() {
         </div>
 
         {/* Comparison stats grid */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
           <ComparisonStat
             label="Realizadas"
             current={current.realizadas}
@@ -127,10 +128,10 @@ export function WidgetComparativoMensal() {
         </div>
 
         {/* Visual comparison bars */}
-        <div className="space-y-2">
-          <div className="space-y-1">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
             <p className="text-[9px] text-muted-foreground/50">Marcadas</p>
-            <div className="flex gap-1">
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1")}>
               <div className="h-3 rounded-full bg-muted-foreground/20 transition-all duration-500" style={{
                 width: `${Math.max(
                   (previous.marcadas / Math.max(current.marcadas, previous.marcadas, 1)) * 100,
@@ -138,7 +139,7 @@ export function WidgetComparativoMensal() {
                 )}%`,
               }} />
             </div>
-            <div className="flex gap-1">
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1")}>
               <div className="h-3 rounded-full bg-primary/60 transition-all duration-500" style={{
                 width: `${Math.max(
                   (current.marcadas / Math.max(current.marcadas, previous.marcadas, 1)) * 100,
@@ -148,9 +149,9 @@ export function WidgetComparativoMensal() {
             </div>
           </div>
 
-          <div className="space-y-1">
+          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
             <p className="text-[9px] text-muted-foreground/50">Realizadas</p>
-            <div className="flex gap-1">
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1")}>
               <div className="h-3 rounded-full bg-muted-foreground/20 transition-all duration-500" style={{
                 width: `${Math.max(
                   (previous.realizadas / Math.max(current.realizadas, previous.realizadas, 1)) * 100,
@@ -158,7 +159,7 @@ export function WidgetComparativoMensal() {
                 )}%`,
               }} />
             </div>
-            <div className="flex gap-1">
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1")}>
               <div className="h-3 rounded-full bg-success/60 transition-all duration-500" style={{
                 width: `${Math.max(
                   (current.realizadas / Math.max(current.realizadas, previous.realizadas, 1)) * 100,

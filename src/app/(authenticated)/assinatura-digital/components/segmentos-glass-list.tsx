@@ -210,20 +210,20 @@ function GlassRow({
         }
       }}
       className={cn(
-        'w-full text-left rounded-2xl border border-border/40 p-4 cursor-pointer bg-card',
+        /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'w-full text-left rounded-2xl border border-border/40 p-4 cursor-pointer bg-card',
         'transition-all duration-180 ease-out',
         'hover:bg-accent/40 hover:border-border/60 hover:scale-[1.0025] hover:-translate-y-px hover:shadow-lg',
         isAlt && 'bg-muted/20',
       )}
     >
-      <div className="grid grid-cols-[auto_1fr_auto_90px_120px] gap-4 items-center">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-[auto_1fr_auto_90px_120px] gap-4 items-center")}>
         {/* Status dot */}
         <div className="flex items-center w-4">
           <div className={cn('w-2 h-2 rounded-full shrink-0', getAtivoDotColor(segmento.ativo))} />
         </div>
 
         {/* Main info */}
-        <div className="flex items-center gap-3 min-w-0">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 min-w-0")}>
           <div
             className="w-9 h-9 rounded-[0.625rem] flex items-center justify-center shrink-0"
             style={{ background: `color-mix(in oklch, var(${token}) 14%, transparent)` }}
@@ -231,9 +231,9 @@ function GlassRow({
             <Tags className="w-4 h-4" style={{ color: `var(${token})` }} />
           </div>
           <div className="min-w-0">
-            <div className="text-sm font-semibold truncate">{segmento.nome}</div>
+            <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold truncate")}>{segmento.nome}</div>
             {segmento.descricao && (
-              <div className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
+              <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mt-0.5 line-clamp-1")}>
                 {segmento.descricao}
               </div>
             )}
@@ -244,7 +244,7 @@ function GlassRow({
         </div>
 
         {/* Uso */}
-        <span className="inline-flex backdrop-blur-sm rounded-lg text-[11px] font-semibold tracking-[0.04em] px-2 py-1 bg-foreground/6 border border-foreground/10 text-muted-foreground">
+        <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "inline-flex backdrop-blur-sm rounded-lg text-[11px] font-semibold tracking-[0.04em] px-2 py-1 bg-foreground/6 border border-foreground/10 text-muted-foreground")}>
           <span className="tabular-nums">{segmento.formularios_count ?? 0}</span>
           <span className="ml-1 opacity-60">
             formulário{(segmento.formularios_count ?? 0) !== 1 ? 's' : ''}
@@ -255,7 +255,7 @@ function GlassRow({
         <div className="flex justify-start">
           <span
             className={cn(
-              'inline-flex items-center gap-1.5 backdrop-blur-sm rounded-lg text-[10px] font-semibold tracking-[0.04em] px-2 py-1 border whitespace-nowrap',
+              /* design-system-escape: gap-1.5 gap sem token DS; font-semibold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'inline-flex items-center gap-1.5 backdrop-blur-sm rounded-lg text-[10px] font-semibold tracking-[0.04em] px-2 py-1 border whitespace-nowrap',
               segmento.ativo
                 ? 'bg-success/10 border-success/25 text-success'
                 : 'bg-muted-foreground/10 border-muted-foreground/25 text-muted-foreground',
@@ -266,7 +266,7 @@ function GlassRow({
         </div>
 
         {/* Actions */}
-        <div className="flex items-center justify-end gap-0.5" data-row-action>
+        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center justify-end gap-0.5")} data-row-action>
           <SegmentoActions
             segmento={segmento}
             onEdit={onEdit}
@@ -322,19 +322,19 @@ function GlassCard({
         }
       }}
       className={cn(
-        'relative flex flex-col gap-3 rounded-2xl border border-border/40 bg-card p-4 cursor-pointer',
+        /* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ 'relative flex flex-col gap-3 rounded-2xl border border-border/40 bg-card p-4 cursor-pointer',
         'transition-all duration-180 ease-out',
         'hover:bg-accent/40 hover:border-border/60 hover:-translate-y-px hover:shadow-lg',
       )}
     >
-      <div className="flex items-start justify-between gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
         <div
           className="w-10 h-10 rounded-[0.625rem] flex items-center justify-center"
           style={{ background: `color-mix(in oklch, var(${token}) 14%, transparent)` }}
         >
           <Tags className="w-4 h-4" style={{ color: `var(${token})` }} />
         </div>
-        <div className="flex items-center gap-1.5" data-row-action>
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")} data-row-action>
           <div className={cn('w-2 h-2 rounded-full', getAtivoDotColor(segmento.ativo))} />
           <SegmentoActions
             segmento={segmento}
@@ -350,21 +350,21 @@ function GlassCard({
       </div>
 
       <div>
-        <div className="text-sm font-semibold line-clamp-1">{segmento.nome}</div>
+        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold line-clamp-1")}>{segmento.nome}</div>
         <div className="text-[10px] text-muted-foreground mt-0.5 font-mono truncate">
           {segmento.slug}
         </div>
       </div>
 
       {segmento.descricao ? (
-        <p className="text-xs text-muted-foreground line-clamp-3 flex-1">{segmento.descricao}</p>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground line-clamp-3 flex-1")}>{segmento.descricao}</p>
       ) : (
-        <p className="text-xs text-muted-foreground/40 italic flex-1">Sem descrição</p>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/40 italic flex-1")}>Sem descrição</p>
       )}
 
-      <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/40">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between gap-2 pt-2 border-t border-border/40")}>
         <span className="text-[10px] text-muted-foreground">
-          <span className="font-display text-sm font-bold tabular-nums text-foreground/80">
+          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "font-display text-sm font-bold tabular-nums text-foreground/80")}>
             {segmento.formularios_count ?? 0}
           </span>
           <span className="ml-1">
@@ -373,7 +373,7 @@ function GlassCard({
         </span>
         <span
           className={cn(
-            'inline-flex items-center gap-1.5 rounded-lg text-[10px] font-semibold tracking-[0.04em] px-2 py-1 border',
+            /* design-system-escape: gap-1.5 gap sem token DS; font-semibold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'inline-flex items-center gap-1.5 rounded-lg text-[10px] font-semibold tracking-[0.04em] px-2 py-1 border',
             segmento.ativo
               ? 'bg-success/10 border-success/25 text-success'
               : 'bg-muted-foreground/10 border-muted-foreground/25 text-muted-foreground',
@@ -392,7 +392,7 @@ function GlassCard({
 
 function ListSkeleton() {
   return (
-    <div className="flex flex-col gap-2">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
       {Array.from({ length: 5 }, (_, i) => (
         <div key={i} className="h-20 rounded-2xl border border-border/40 bg-card animate-pulse" />
       ))}
@@ -402,7 +402,7 @@ function ListSkeleton() {
 
 function CardsSkeleton() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3")}>
       {Array.from({ length: 6 }, (_, i) => (
         <div key={i} className="h-44 rounded-2xl border border-border/40 bg-card animate-pulse" />
       ))}
@@ -412,10 +412,10 @@ function CardsSkeleton() {
 
 function EmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center py-16 opacity-60">
+    <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
       <Tags className="w-10 h-10 text-muted-foreground/30 mb-4" />
-      <p className="text-sm font-medium text-muted-foreground/50">Nenhum segmento encontrado</p>
-      <p className="text-xs text-muted-foreground/30 mt-1">Tente ajustar os filtros ou criar um novo segmento</p>
+      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/50")}>Nenhum segmento encontrado</p>
+      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/30 mt-1")}>Tente ajustar os filtros ou criar um novo segmento</p>
     </div>
   );
 }
@@ -441,7 +441,7 @@ export function SegmentosGlassList({
   return (
     <TooltipProvider>
       {mode === 'cards' ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3")}>
           {segmentos.map((s) => (
             <GlassCard
               key={s.id}
@@ -456,7 +456,7 @@ export function SegmentosGlassList({
           ))}
         </div>
       ) : (
-        <div className="flex flex-col gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
           {segmentos.map((s, i) => (
             <GlassRow
               key={s.id}

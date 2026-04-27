@@ -14,6 +14,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useAgentContext } from '@copilotkit/react-core/v2';
 import { useDebounce } from '@/hooks/use-debounce';
@@ -454,7 +455,7 @@ export function ContratosListWrapper({
   // ── Render ───────────────────────────────────────────────────────────────
   return (
     <>
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         {selectedCount > 0 && (
           <ContratosBulkActionsBar
             selectedCount={selectedCount}

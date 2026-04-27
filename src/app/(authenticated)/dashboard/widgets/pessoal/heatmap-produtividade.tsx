@@ -6,6 +6,7 @@
  * Fallback: deriva heatmap a partir de data.produtividade.porDia (ultimos 35 dias)
  */
 
+import { cn } from '@/lib/utils';
 import { BarChart3 } from 'lucide-react';
 import {
   WidgetContainer,
@@ -58,7 +59,7 @@ export function WidgetHeatmapProdutividade() {
         subtitle="Tarefas concluidas por dia -- ultimas 5 semanas"
         depth={1}
       >
-        <p className="text-xs text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
           Nao foi possivel carregar os dados.
         </p>
       </WidgetContainer>
@@ -73,7 +74,7 @@ export function WidgetHeatmapProdutividade() {
         subtitle="Tarefas concluidas por dia -- ultimas 5 semanas"
         depth={1}
       >
-        <p className="text-xs text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
           Disponivel apenas para usuarios individuais.
         </p>
       </WidgetContainer>
@@ -126,7 +127,7 @@ export function WidgetHeatmapProdutividade() {
       <CalendarHeatmap data={heatmapData} colorScale="success" />
 
       {/* Legenda de intensidade */}
-      <div className="mt-3 flex items-center justify-end gap-1">
+      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "mt-3 flex items-center justify-end gap-1")}>
         <span className="text-[8px] text-muted-foreground/50 mr-1">Menos</span>
         {legendColors.map((color, i) => (
           <div
@@ -138,17 +139,17 @@ export function WidgetHeatmapProdutividade() {
       </div>
 
       {/* Estatisticas */}
-      <div className="mt-3 pt-3 border-t border-border/10 flex items-start justify-between gap-4">
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; gap-4 → migrar para <Inline gap="default"> */ "mt-3 pt-3 border-t border-border/10 flex items-start justify-between gap-4")}>
         <ComparisonStat
           label="Media semanal"
           current={semanaAtual}
           previous={semanaAnterior}
         />
-        <div className="flex flex-col gap-1 items-end">
-          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1 items-end")}>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Melhor dia
           </p>
-          <span className="font-display text-lg font-bold tabular-nums">
+          <span className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold tabular-nums")}>
             {melhorDiaValor}
           </span>
           <p className="text-[9px] text-muted-foreground/55">

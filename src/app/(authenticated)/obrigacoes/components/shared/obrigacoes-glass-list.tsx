@@ -123,14 +123,14 @@ function GlassRow({
         }
       }}
       className={cn(
-        'group w-full text-left rounded-2xl border border-border/60 bg-card p-4 cursor-pointer',
+        /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'group w-full text-left rounded-2xl border border-border/60 bg-card p-4 cursor-pointer',
         'transition-all duration-180 ease-out',
         'hover:border-border hover:shadow-[0_4px_14px_rgba(0,0,0,0.06)] hover:-translate-y-px',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
         URGENCY_BORDER[urgency],
       )}
     >
-      <div className="grid grid-cols-[32px_2.5fr_1fr_1fr_1fr_96px_40px] gap-3 items-center">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-[32px_2.5fr_1fr_1fr_1fr_96px_40px] gap-3 items-center")}>
         {/* 1. Urgency dot */}
         <div className="flex items-center justify-center">
           <div className={cn('w-2 h-2 rounded-full shrink-0', URGENCY_DOT[urgency])} />
@@ -139,7 +139,7 @@ function GlassRow({
         {/* 2. Partes / Processo com TRT+Grau / Órgão julgador */}
         <div className="min-w-0">
           {/* Linha 1: Nome das partes */}
-          <div className="text-sm font-medium text-foreground/90 truncate">
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-foreground/90 truncate")}>
             {parteAutora || parteRe ? (
               <>
                 {parteAutora || '—'}
@@ -152,12 +152,12 @@ function GlassRow({
           </div>
 
           {/* Linha 2: [TRT] [Grau] Número do processo */}
-          <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mt-0.5 flex-wrap")}>
             {trt && (
               <SemanticBadge
                 category="tribunal"
                 value={trt}
-                className="text-[9px] font-semibold"
+                className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[9px] font-semibold")}
               >
                 {trt}
               </SemanticBadge>
@@ -166,7 +166,7 @@ function GlassRow({
               <SemanticBadge
                 category="grau"
                 value={grau}
-                className="text-[9px] font-semibold"
+                className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[9px] font-semibold")}
               >
                 {grauLabel}
               </SemanticBadge>
@@ -229,11 +229,11 @@ function GlassRow({
           <SemanticBadge
             category="obrigacao_tipo"
             value={acordo.tipo}
-            className="text-[9px] font-semibold"
+            className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[9px] font-semibold")}
           >
             {tipoLabel}
           </SemanticBadge>
-          <div className="flex items-center gap-1 mt-1">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 mt-1")}>
             {isRecebimento ? (
               <ArrowDown className="size-3 text-success/70 shrink-0" />
             ) : (
@@ -241,7 +241,7 @@ function GlassRow({
             )}
             <span
               className={cn(
-                'text-[11px] font-medium tabular-nums truncate',
+                /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[11px] font-medium tabular-nums truncate',
                 isRecebimento ? 'text-success/90' : 'text-destructive/90',
               )}
               title={`${direcaoLabel} · ${CURRENCY.format(acordo.valorTotal)}`}
@@ -290,24 +290,24 @@ function GlassRow({
 
 function ListSkeleton() {
   return (
-    <div className="flex flex-col gap-2">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
       {Array.from({ length: 6 }, (_, i) => (
         <div
           key={i}
-          className="rounded-2xl border border-border/40 bg-card p-4"
+          className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-2xl border border-border/40 bg-card p-4")}
         >
-          <div className="grid grid-cols-[32px_2.5fr_1fr_1fr_1fr_96px_40px] gap-3 items-center">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-[32px_2.5fr_1fr_1fr_1fr_96px_40px] gap-3 items-center")}>
             <Skeleton className="w-2 h-2 rounded-full" />
-            <div className="space-y-1.5">
+            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
               <Skeleton className="h-3.5 w-48" />
               <Skeleton className="h-2.5 w-36" />
             </div>
-            <div className="space-y-1">
+            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
               <Skeleton className="h-3 w-20" />
               <Skeleton className="h-2 w-14" />
             </div>
             <Skeleton className="h-3 w-20" />
-            <div className="space-y-1">
+            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
               <Skeleton className="h-2.5 w-16" />
               <Skeleton className="h-1 w-full rounded-full" />
             </div>
@@ -326,12 +326,12 @@ function ListSkeleton() {
 
 function GlassEmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center py-16 opacity-60">
+    <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
       <FileSearch className="w-10 h-10 text-muted-foreground/30 mb-4" />
-      <p className="text-sm font-medium text-muted-foreground/50">
+      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/50")}>
         Nenhuma obrigação encontrada
       </p>
-      <p className="text-xs text-muted-foreground/30 mt-1">
+      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/30 mt-1")}>
         Tente ajustar os filtros ou criar uma nova obrigação
       </p>
     </div>
@@ -351,7 +351,7 @@ export function ObrigacoesGlassList({
   if (acordos.length === 0) return <GlassEmptyState />;
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
       {acordos.map((acordo) => (
         <GlassRow
           key={acordo.id}

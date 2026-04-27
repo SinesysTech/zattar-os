@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
@@ -74,10 +75,10 @@ const navigationActions: ActionDef[] = [
 
 export default function DashboardDoc() {
   return (
-    <div className="space-y-10">
-      <div className="space-y-2">
+    <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Heading level="page">Dashboard</Heading>
-        <p className="text-muted-foreground text-lg">
+        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-muted-foreground text-lg")}>
           Painel central do ZattarOS com visão consolidada das principais métricas do escritório.
         </p>
       </div>
@@ -121,7 +122,7 @@ export default function DashboardDoc() {
           por exemplo, clicar em &quot;Processos com prazo hoje&quot; abre a tela de Processos já filtrada
           pelos registros do dia.
         </p>
-        <ul className="list-disc list-inside space-y-1 text-muted-foreground text-sm mt-2">
+        <ul className={cn(/* design-system-escape: space-y-1 sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "list-disc list-inside space-y-1 text-muted-foreground text-sm mt-2")}>
           <li>Gráficos de barras e linhas para evolução temporal</li>
           <li>Cards de contagem com indicadores de variação percentual</li>
           <li>Listas resumidas dos registros mais recentes ou urgentes</li>

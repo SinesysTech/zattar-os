@@ -5,6 +5,7 @@
  * Fonte: useDashboard() → data.dadosFinanceiros.saldoTotal + saldoTrend
  */
 
+import { cn } from '@/lib/utils';
 import { Wallet } from 'lucide-react';
 import { WidgetContainer, Stat, MiniArea, fmtMoeda } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
@@ -18,7 +19,7 @@ export function WidgetSaldoTrend() {
   if (!data) {
     return (
       <WidgetContainer title="Saldo" icon={Wallet} subtitle="Sem dados">
-        <p className="text-xs text-muted-foreground/60">Dados indisponíveis.</p>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60")}>Dados indisponíveis.</p>
       </WidgetContainer>
     );
   }
@@ -46,7 +47,7 @@ export function WidgetSaldoTrend() {
 
   return (
     <WidgetContainer title="Saldo" icon={Wallet} subtitle="Tendência 12 meses">
-      <div className="flex items-center justify-between gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center justify-between gap-4")}>
         <Stat
           label="Saldo atual"
           value={fmtMoeda(saldo)}

@@ -14,6 +14,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import { Activity } from 'lucide-react';
 import {
   CalendarHeatmap,
@@ -88,14 +89,14 @@ export function WidgetHeatmapAtividade() {
       subtitle="Baixas por dia — últimas 5 semanas"
       depth={1}
     >
-      <div className="flex flex-col gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
         <CalendarHeatmap data={heatmapData} colorScale="primary" />
 
         {/* Legenda + Stats */}
-        <div className="flex items-center justify-between pt-3 border-t border-border/10">
-          <div className="flex items-center gap-1.5">
+        <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex items-center justify-between pt-3 border-t border-border/10")}>
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
             <span className="text-[8px] text-muted-foreground/50">Menos</span>
-            <div className="flex items-center gap-0.5">
+            <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center gap-0.5")}>
               <div className="size-2.5 rounded-sm bg-border/10" />
               <div className="size-2.5 rounded-sm bg-primary/15" />
               <div className="size-2.5 rounded-sm bg-primary/30" />
@@ -104,13 +105,13 @@ export function WidgetHeatmapAtividade() {
             </div>
             <span className="text-[8px] text-muted-foreground/50">Mais</span>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="flex items-baseline gap-1">
-              <span className="text-xs font-semibold tabular-nums">{mediaFmt}</span>
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-baseline gap-1")}>
+              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold tabular-nums")}>{mediaFmt}</span>
               <span className="text-[8px] text-muted-foreground/50">média/dia</span>
             </div>
-            <div className="flex items-baseline gap-1">
-              <span className="text-xs font-semibold tabular-nums">{fmtNum(pico)}</span>
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-baseline gap-1")}>
+              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold tabular-nums")}>{fmtNum(pico)}</span>
               <span className="text-[8px] text-muted-foreground/50">pico</span>
             </div>
           </div>

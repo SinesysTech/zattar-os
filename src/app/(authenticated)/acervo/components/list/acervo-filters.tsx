@@ -5,6 +5,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -34,7 +35,7 @@ export function AcervoFilters({
   onReset,
 }: AcervoFiltersProps) {
   return (
-    <div className="space-y-4 rounded-lg border p-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; p-4 → migrar para <Inset variant="card-compact"> */ "space-y-4 rounded-lg border p-4")}>
       <div className="flex items-center justify-between">
         <Typography.H3>Filtros</Typography.H3>
         <Button variant="ghost" size="sm" onClick={onReset}>
@@ -43,9 +44,9 @@ export function AcervoFilters({
         </Button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 lg:grid-cols-3")}>
         {/* Search */}
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label htmlFor="busca">Busca</Label>
           <Input
             id="busca"
@@ -56,7 +57,7 @@ export function AcervoFilters({
         </div>
 
         {/* Origin */}
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label htmlFor="origem">Origem</Label>
           <Select
             value={filters.origem || 'all'}
@@ -76,7 +77,7 @@ export function AcervoFilters({
         </div>
 
         {/* TRT */}
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label htmlFor="trt">TRT</Label>
           <Input
             id="trt"
@@ -87,7 +88,7 @@ export function AcervoFilters({
         </div>
 
         {/* Grade */}
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label htmlFor="grau">Grau</Label>
           <Select
             value={filters.grau || 'all'}
@@ -107,7 +108,7 @@ export function AcervoFilters({
         </div>
 
         {/* Judicial Class */}
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label htmlFor="classe_judicial">Classe Judicial</Label>
           <Input
             id="classe_judicial"
@@ -118,7 +119,7 @@ export function AcervoFilters({
         </div>
 
         {/* Has Next Hearing */}
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label htmlFor="tem_proxima_audiencia">Próxima Audiência</Label>
           <Select
             value={
@@ -147,7 +148,7 @@ export function AcervoFilters({
         </div>
 
         {/* Secrecy */}
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label htmlFor="segredo_justica">Segredo de Justiça</Label>
           <Select
             value={
@@ -176,7 +177,7 @@ export function AcervoFilters({
         </div>
 
         {/* Without Responsible */}
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label htmlFor="sem_responsavel">Responsável</Label>
           <Select
             value={

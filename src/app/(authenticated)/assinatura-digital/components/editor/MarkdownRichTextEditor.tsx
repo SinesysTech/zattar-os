@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import React, { useEffect, useRef, useState } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -138,7 +139,7 @@ export function MarkdownRichTextEditor({ value, onChange, formularios }: Markdow
 
   return (
     <div className="border rounded-md">
-      <div className="border-b p-2 flex flex-wrap gap-1">
+      <div className={cn(/* design-system-escape: p-2 → usar <Inset>; gap-1 gap sem token DS */ "border-b p-2 flex flex-wrap gap-1")}>
         <Button
           variant="ghost"
           size="sm"
@@ -300,7 +301,7 @@ export function MarkdownRichTextEditor({ value, onChange, formularios }: Markdow
           <Redo className="h-4 w-4" />
         </Button>
       </div>
-      <div className="p-4 max-h-[calc(85vh-250px)] overflow-y-auto">
+      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 max-h-[calc(85vh-250px)] overflow-y-auto")}>
         <EditorContent editor={editor} />
       </div>
       <Dialog open={linkDialogOpen} onOpenChange={setLinkDialogOpen}>
@@ -308,7 +309,7 @@ export function MarkdownRichTextEditor({ value, onChange, formularios }: Markdow
           <DialogHeader>
             <DialogTitle>Inserir Link</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             <div>
               <Label htmlFor="link-text">Texto do Link</Label>
               <Input

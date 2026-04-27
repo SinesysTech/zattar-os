@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import dynamic from 'next/dynamic';
 import {
   useDashboardFinanceiro,
@@ -53,7 +54,7 @@ export function FinanceiroDashboard() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       {/* ================================================================
           Tier 1 — KPI Strip (visão instantânea)
           6 métricas críticas com tendência % vs mês anterior
@@ -67,7 +68,7 @@ export function FinanceiroDashboard() {
           Tier 2 — Análise de Tendências
           Evolução 12 meses (2/3) + Despesas por Categoria (1/3)
           ================================================================ */}
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 lg:grid-cols-3")}>
         <div className="lg:col-span-2">
           <EvolucaoMensalChart data={dashData?.evolucaoMensal || []} />
         </div>
@@ -81,7 +82,7 @@ export function FinanceiroDashboard() {
           Tier 3 — Projeção e Planejamento
           Fluxo de Caixa (2/3) + Orçamento vs Realizado (1/3)
           ================================================================ */}
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 lg:grid-cols-3")}>
         <div className="lg:col-span-2">
           <FluxoCaixaChart
             data={fluxoData || []}
@@ -98,7 +99,7 @@ export function FinanceiroDashboard() {
           Tier 4 — Operacional
           Obrigações + Alertas + Contas Pagar/Receber
           ================================================================ */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 lg:grid-cols-3")}>
         <ObrigacoesWidget
           resumo={resumoObrigacoes}
           isLoading={isLoadingObrigacoes}

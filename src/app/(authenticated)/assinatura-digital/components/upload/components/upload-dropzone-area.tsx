@@ -58,7 +58,7 @@ export function UploadDropzoneArea({
       {...getRootProps()}
       className={cn(
         'group relative flex min-h-110 w-full flex-col items-center justify-center',
-        'cursor-pointer rounded-[20px] border-2 border-dashed p-8 lg:p-12 text-center',
+        /* design-system-escape: p-8 → usar <Inset>; lg:p-12 sem equivalente DS */ 'cursor-pointer rounded-[20px] border-2 border-dashed p-8 lg:p-12 text-center',
         'backdrop-blur-xl transition-all duration-200',
         !hasFile && !hasError && !isDragActive && 'border-border/80 bg-card/55 hover:border-primary/45 hover:bg-primary/5',
         isDragActive && 'border-primary/55 bg-primary/5 scale-[1.005]',
@@ -91,7 +91,7 @@ export function UploadDropzoneArea({
 
 function EmptyState({ isDragActive }: { isDragActive: boolean }) {
   return (
-    <div className="flex flex-col items-center gap-5">
+    <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex flex-col items-center gap-5")}>
       {/* Icon tile grande estilo POC */}
       <div
         className={cn(
@@ -106,13 +106,13 @@ function EmptyState({ isDragActive }: { isDragActive: boolean }) {
         )} />
       </div>
 
-      <div className="space-y-1.5 max-w-sm">
-        <h3 className="font-heading text-xl font-bold leading-tight">
+      <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5 max-w-sm")}>
+        <h3 className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-tight sem token DS */ "font-heading text-xl font-bold leading-tight")}>
           {isDragActive ? 'Solte o arquivo aqui' : 'Arraste o PDF aqui'}
         </h3>
-        <p className="text-sm text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
           Ou clique para selecionar do computador. Tamanho máximo{' '}
-          <span className="font-medium text-foreground">10 MB</span>.
+          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>10 MB</span>.
         </p>
       </div>
 
@@ -120,7 +120,7 @@ function EmptyState({ isDragActive }: { isDragActive: boolean }) {
         <Button
           type="button"
           size="sm"
-          className="pointer-events-none gap-1.5 mt-1"
+          className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "pointer-events-none gap-1.5 mt-1")}
         >
           <Upload className="size-3.5" />
           Selecionar arquivo
@@ -129,17 +129,17 @@ function EmptyState({ isDragActive }: { isDragActive: boolean }) {
 
       {/* Meta restrictions — row inline com icon-tiles discretos */}
       <div className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[11px] text-muted-foreground">
-        <span className="inline-flex items-center gap-1.5">
+        <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "inline-flex items-center gap-1.5")}>
           <FileText className="size-3" />
           PDF apenas
         </span>
         <span className="h-3 w-px bg-border" aria-hidden />
-        <span className="inline-flex items-center gap-1.5">
+        <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "inline-flex items-center gap-1.5")}>
           <Layers className="size-3" />
           Até 100 páginas
         </span>
         <span className="h-3 w-px bg-border" aria-hidden />
-        <span className="inline-flex items-center gap-1.5">
+        <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "inline-flex items-center gap-1.5")}>
           <Lock className="size-3" />
           Upload criptografado
         </span>
@@ -152,15 +152,15 @@ function EmptyState({ isDragActive }: { isDragActive: boolean }) {
 
 function ErrorState({ message }: { message?: string }) {
   return (
-    <div className="flex flex-col items-center space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "flex flex-col items-center space-y-4")}>
       <div className="inline-flex size-14 items-center justify-center rounded-2xl bg-destructive/10">
         <AlertCircle className="size-7 text-destructive" />
       </div>
-      <div className="space-y-1.5 max-w-sm">
-        <p className="font-heading text-lg font-semibold text-destructive">
+      <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5 max-w-sm")}>
+        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "font-heading text-lg font-semibold text-destructive")}>
           Erro no upload
         </p>
-        <p className="text-sm text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
           {message || 'Ocorreu um erro ao processar o arquivo. Tente novamente.'}
         </p>
       </div>
@@ -198,13 +198,13 @@ function FilePreviewCard({
   return (
     <div
       className={cn(
-        'w-full max-w-md rounded-2xl border p-4 shadow-sm backdrop-blur-md',
+        /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'w-full max-w-md rounded-2xl border p-4 shadow-sm backdrop-blur-md',
         'glass-kpi border-border/40 bg-card/70 transition-all duration-200',
         isCompleted && 'border-success/30',
       )}
       onClick={(e) => e.stopPropagation()}
     >
-      <div className="flex items-start gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3")}>
         <div
           className={cn(
             'flex size-11 shrink-0 items-center justify-center rounded-xl',
@@ -215,24 +215,24 @@ function FilePreviewCard({
         </div>
 
         <div className="min-w-0 flex-1 text-left">
-          <p className="truncate text-sm font-medium text-foreground">{fileName}</p>
-          <p className="text-xs text-muted-foreground tabular-nums mt-0.5">
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "truncate text-sm font-medium text-foreground")}>{fileName}</p>
+          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground tabular-nums mt-0.5")}>
             {formatFileSize(fileSize)}
           </p>
 
           {isUploading && (
-            <div className="mt-3 space-y-1">
+            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "mt-3 space-y-1")}>
               <Progress value={progress} className="h-1.5" />
-              <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground tabular-nums">
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wide sem token DS */ "text-[11px] font-medium uppercase tracking-wide text-muted-foreground tabular-nums")}>
                 Enviando · {progress}%
               </p>
             </div>
           )}
 
           {isCompleted && (
-            <div className="mt-2 flex items-center gap-1.5 text-success">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "mt-2 flex items-center gap-1.5 text-success")}>
               <CheckCircle2 className="size-4" strokeWidth={2.5} />
-              <span className="text-xs font-medium">Upload concluído</span>
+              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium")}>Upload concluído</span>
             </div>
           )}
         </div>

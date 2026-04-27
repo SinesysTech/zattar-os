@@ -49,7 +49,7 @@ export function TimelineSidebarHeader({
   onOpenSearch,
 }: TimelineSidebarHeaderProps) {
   return (
-    <div className="flex-none p-3 border-b space-y-2">
+    <div className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-2 → migrar para <Stack gap="tight"> */ "flex-none p-3 border-b space-y-2")}>
       {/* Campo de busca com indicador CMD+K */}
       <div className="relative">
         <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
@@ -57,7 +57,7 @@ export function TimelineSidebarHeader({
           placeholder="Buscar na timeline..."
           value={searchTerm}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="h-8 pl-8 pr-16 text-xs"
+          className={cn(/* design-system-escape: pl-8 padding direcional sem Inset equiv.; pr-16 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "h-8 pl-8 pr-16 text-xs")}
         />
         {/* Badge CMD+K para abrir busca avançada */}
         <button
@@ -65,9 +65,9 @@ export function TimelineSidebarHeader({
           onClick={onOpenSearch}
           className={cn(
             'absolute right-2 top-1/2 -translate-y-1/2',
-            'flex items-center gap-0.5 px-1.5 py-0.5 rounded',
+            /* design-system-escape: gap-0.5 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'flex items-center gap-0.5 px-1.5 py-0.5 rounded',
             'bg-muted border border-border',
-            'text-[10px] font-medium text-muted-foreground',
+            /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[10px] font-medium text-muted-foreground',
             'hover:bg-accent hover:text-accent-foreground transition-colors',
             'cursor-pointer'
           )}

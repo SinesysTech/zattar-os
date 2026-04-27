@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import dynamic from 'next/dynamic';
 import { Toaster } from 'sonner';
 
@@ -10,7 +11,7 @@ import { Skeleton } from '@/components/ui/skeleton';
  */
 function PlateEditorSkeleton() {
   return (
-    <div className="mx-auto w-full max-w-4xl space-y-4 py-8">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-8 padding direcional sem Inset equiv. */ "mx-auto w-full max-w-4xl space-y-4 py-8")}>
       <Skeleton className="h-8 w-3/4" />
       <Skeleton className="h-6 w-full" />
       <Skeleton className="h-6 w-full" />

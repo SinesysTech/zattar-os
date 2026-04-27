@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import {
   Dialog,
@@ -99,26 +100,26 @@ export function PerfilEditSheet({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] w-100 sm:w-135 overflow-y-auto p-6">
+      <DialogContent className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "max-h-[90vh] w-100 sm:w-135 overflow-y-auto p-6")}>
         <form onSubmit={handleSubmit}>
-          <DialogHeader className="pb-5">
-            <DialogTitle className="text-xl font-semibold">Editar Perfil</DialogTitle>
+          <DialogHeader className={cn(/* design-system-escape: pb-5 padding direcional sem Inset equiv. */ "pb-5")}>
+            <DialogTitle className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-semibold → className de <Text>/<Heading> */ "text-xl font-semibold")}>Editar Perfil</DialogTitle>
             <DialogDescription>
               Atualize suas informações pessoais e de contato.
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-6">
+          <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
             {error && (
-              <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-3 text-sm text-destructive")}>
                 {error}
               </div>
             )}
 
             {/* Informações Básicas */}
-            <div className="space-y-4">
+            <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
               <Typography.H4>Informações Básicas</Typography.H4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
                 <div>
                   <Label htmlFor="nomeCompleto">Nome Completo *</Label>
                   <Input
@@ -176,7 +177,7 @@ export function PerfilEditSheet({
                   <select
                     id="genero"
                     title="Selecione o gênero"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
                     value={formData.genero || ''}
                     onChange={(e) =>
                       setFormData({ ...formData, genero: e.target.value as GeneroUsuario })
@@ -193,9 +194,9 @@ export function PerfilEditSheet({
             </div>
 
             {/* Informações Profissionais */}
-            <div className="space-y-4">
+            <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
               <Typography.H4>Informações Profissionais</Typography.H4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
                 <div>
                   <Label htmlFor="oab">OAB</Label>
                   <Input
@@ -223,9 +224,9 @@ export function PerfilEditSheet({
             </div>
 
             {/* Contato */}
-            <div className="space-y-4">
+            <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
               <Typography.H4>Contato</Typography.H4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
                 <div>
                   <Label htmlFor="emailCorporativo">E-mail Corporativo *</Label>
                   <Input
@@ -274,9 +275,9 @@ export function PerfilEditSheet({
             </div>
 
             {/* Endereço */}
-            <div className="space-y-4">
+            <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
               <Typography.H4>Endereço</Typography.H4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
                 <div className="md:col-span-2">
                   <Label htmlFor="logradouro">Logradouro</Label>
                   <Input

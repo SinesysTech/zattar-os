@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/providers/user-provider';
@@ -211,9 +212,9 @@ export function ExpedientesCalendar() {
     const vencidosCount = tableData.filter(e => e.prazoVencido && !e.baixadoEm).length;
 
     return (
-        <div className="flex flex-col h-full space-y-4">
+        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "flex flex-col h-full space-y-4")}>
             {/* Header / Week Navigation + Days Carousel (integrado) */}
-            <div className="p-4 bg-card rounded-lg border shadow-sm">
+            <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 bg-card rounded-lg border shadow-sm")}>
                 <WeekDaysCarousel
                     currentDate={currentDate}
                     selectedDate={selectedDate}
@@ -266,7 +267,7 @@ export function ExpedientesCalendar() {
                                 </>
                             }
                             actionSlot={
-                                <div className="flex items-center gap-2">
+                                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                                     <Tooltip>
                                         <TooltipTrigger asChild>
                                             <Button
@@ -298,9 +299,9 @@ export function ExpedientesCalendar() {
                     </>
                 }
             >
-                <div className="p-4 bg-muted/10 border-b">
+                <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 bg-muted/10 border-b")}>
                     <div className="flex items-center justify-between">
-                        <Heading level="card" className="flex items-center gap-2">
+                        <Heading level="card" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                             <CalendarIcon className="h-4 w-4" />
                             Expedientes de {format(selectedDate, "EEEE, d 'de' MMMM", { locale: ptBR })}
                             <AppBadge variant="secondary" className="ml-2">
@@ -308,7 +309,7 @@ export function ExpedientesCalendar() {
                             </AppBadge>
                         </Heading>
                         {(semDataCount > 0 || vencidosCount > 0) && (
-                            <div className="flex items-center gap-2">
+                            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                                 {semDataCount > 0 && (
                                     <AppBadge variant="warning">
                                         <AlertTriangle className="h-3 w-3 mr-1" />
@@ -325,11 +326,11 @@ export function ExpedientesCalendar() {
                         )}
                     </div>
                     {!mostrarTodos && currentUserId && (
-                        <div className="mt-2 text-sm text-muted-foreground">
+                        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-2 text-sm text-muted-foreground")}>
                             Mostrando apenas seus expedientes.{' '}
                             <Button
                                 variant="link"
-                                className="h-auto p-0 text-primary"
+                                className={cn(/* design-system-escape: p-0 → usar <Inset> */ "h-auto p-0 text-primary")}
                                 onClick={() => setMostrarTodos(true)}
                             >
                                 Ver todos
@@ -337,11 +338,11 @@ export function ExpedientesCalendar() {
                         </div>
                     )}
                     {mostrarTodos && (
-                        <div className="mt-2 text-sm text-muted-foreground">
+                        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-2 text-sm text-muted-foreground")}>
                             Mostrando todos os expedientes.{' '}
                             <Button
                                 variant="link"
-                                className="h-auto p-0 text-primary"
+                                className={cn(/* design-system-escape: p-0 → usar <Inset> */ "h-auto p-0 text-primary")}
                                 onClick={() => setMostrarTodos(false)}
                             >
                                 Ver apenas meus

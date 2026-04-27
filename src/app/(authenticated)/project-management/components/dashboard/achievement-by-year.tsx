@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import { Bar, BarChart, LabelList, XAxis, YAxis } from "recharts";
 import { Text } from "@/components/ui/typography";
 import {
@@ -32,7 +33,7 @@ export function AchievementByYear({ data }: AchievementByYearProps) {
             Comparativo de projetos concluídos nos últimos anos.
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex items-center justify-center py-12">
+        <CardContent className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "flex items-center justify-center py-12")}>
           <Text variant="caption" className="text-muted-foreground">
             Nenhum dado disponível.
           </Text>
@@ -51,12 +52,12 @@ export function AchievementByYear({ data }: AchievementByYearProps) {
           Comparativo de projetos concluídos nos últimos anos.
         </CardDescription>
       </CardHeader>
-      <CardContent className="grid gap-4">
+      <CardContent className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4")}>
         {data.map((item, index) => (
-          <div key={item.ano} className="grid auto-rows-min gap-2">
-            <div className="flex items-baseline gap-1 text-2xl leading-none font-semibold tabular-nums">
+          <div key={item.ano} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid auto-rows-min gap-2")}>
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS; text-2xl → migrar para <Heading level="...">; leading-none sem token DS; font-semibold → className de <Text>/<Heading> */ "flex items-baseline gap-1 text-2xl leading-none font-semibold tabular-nums")}>
               {item.totalConcluidos}
-              <span className="text-muted-foreground text-xs font-normal">
+              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground text-xs font-normal")}>
                 projetos
               </span>
             </div>

@@ -11,6 +11,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import { MapPin } from 'lucide-react';
 import {
   WidgetContainer,
@@ -46,7 +47,7 @@ export function ModalidadeDistribution() {
         icon={MapPin}
         subtitle="Distribuicao de formatos"
       >
-        <div className="flex flex-col items-center justify-center py-6 gap-2">
+        <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center justify-center py-6 gap-2")}>
           <MapPin className="size-8 text-muted-foreground/45" />
           <p className="text-[11px] text-muted-foreground/60 text-center">
             Dados de modalidade indisponiveis
@@ -70,7 +71,7 @@ export function ModalidadeDistribution() {
       icon={MapPin}
       subtitle="Distribuicao de formatos"
     >
-      <div className="flex flex-col items-center gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center gap-4")}>
         <MiniDonut
           segments={segments}
           size={90}
@@ -79,7 +80,7 @@ export function ModalidadeDistribution() {
         />
 
         {/* Legend */}
-        <div className="w-full space-y-1.5">
+        <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "w-full space-y-1.5")}>
           {porModalidade.map((m) => {
             const pct = total > 0 ? ((m.count / total) * 100).toFixed(1) : '0';
             return (
@@ -87,14 +88,14 @@ export function ModalidadeDistribution() {
                 key={m.modalidade}
                 className="flex items-center justify-between text-[11px]"
               >
-                <div className="flex items-center gap-2 min-w-0">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
                   <ToneDot tone={m.tone} size="lg" aria-label={m.modalidade} />
                   <span className="text-muted-foreground/70 truncate">
                     {m.modalidade}
                   </span>
                 </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  <span className="font-medium tabular-nums">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 shrink-0")}>
+                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium tabular-nums")}>
                     {fmtNum(m.count)}
                   </span>
                   <span className="text-muted-foreground/50 text-[10px] tabular-nums w-10 text-right">

@@ -1,5 +1,6 @@
 "use client"
 
+import { cn } from '@/lib/utils';
 import { useState, useCallback, useEffect } from 'react';
 import { DndContext, DragEndEvent, DragStartEvent, PointerSensor, useSensor, useSensors, closestCenter, DragOverlay } from '@dnd-kit/core';
 import { Button } from '@/components/ui/button';
@@ -483,9 +484,9 @@ export function FormSchemaBuilder({
         : fieldType;
 
       return (
-        <div className="flex items-center gap-2 rounded-lg border border-primary bg-card px-3 py-2.5 shadow-lg opacity-90 w-56">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 rounded-lg border border-primary bg-card px-3 py-2.5 shadow-lg opacity-90 w-56")}>
           <Icon className="size-4 text-muted-foreground" />
-          <span className="text-sm font-medium capitalize">{label}</span>
+          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium capitalize")}>{label}</span>
         </div>
       );
     }
@@ -496,9 +497,9 @@ export function FormSchemaBuilder({
       const Icon = getFieldIcon(field.type);
 
       return (
-        <div className="flex items-center gap-2 rounded-lg border border-primary bg-card px-3 py-2.5 shadow-lg opacity-90 w-56">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 rounded-lg border border-primary bg-card px-3 py-2.5 shadow-lg opacity-90 w-56")}>
           <Icon className="size-4 text-muted-foreground" />
-          <span className="text-sm font-medium">{field.label}</span>
+          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{field.label}</span>
         </div>
       );
     }
@@ -509,14 +510,14 @@ export function FormSchemaBuilder({
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="shrink-0 flex items-center justify-between rounded-lg border bg-card px-4 py-2.5">
-        <div className="flex items-center gap-2">
-          <Heading level="section" className="text-sm">{formularioNome}</Heading>
+      <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "shrink-0 flex items-center justify-between rounded-lg border bg-card px-4 py-2.5")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <Heading level="section" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{formularioNome}</Heading>
           {isDirty && <Badge variant="outline" className="text-[10px]">Não salvo</Badge>}
         </div>
 
         <TooltipProvider delayDuration={0}>
-          <div className="flex items-center gap-1">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
@@ -580,7 +581,7 @@ export function FormSchemaBuilder({
       </div>
 
       {/* Content */}
-      <div className="flex-1 min-h-0 pt-3">
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex-1 min-h-0 pt-3")}>
         {mode === 'edit' ? (
           <DndContext
             sensors={sensors}
@@ -588,13 +589,13 @@ export function FormSchemaBuilder({
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
           >
-            <div className="h-full grid grid-cols-[280px_1fr_320px] gap-4">
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "h-full grid grid-cols-[280px_1fr_320px] gap-4")}>
               {/* Paleta */}
               <FieldPalette />
 
               {/* Canvas */}
               <ScrollArea className="h-full">
-                <div className="p-4">
+                <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
                   <SchemaCanvas
                     schema={schema}
                     selectedFieldId={selectedFieldId}
@@ -628,12 +629,12 @@ export function FormSchemaBuilder({
           // Preview mode
           <div className="h-full overflow-y-auto">
             <div className="max-w-3xl mx-auto">
-              <div className="mb-4 p-3 bg-muted/50 border rounded-lg">
-                <div className="flex items-center gap-2 text-sm text-foreground">
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "mb-4 p-3 bg-muted/50 border rounded-lg")}>
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2 text-sm text-foreground")}>
                   <Eye className="size-4 text-muted-foreground" />
-                  <span className="font-medium">Preview do Formulário</span>
+                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Preview do Formulário</span>
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mt-1")}>
                   Visualização de como o formulário será exibido aos usuários
                 </p>
               </div>
@@ -678,8 +679,8 @@ export function FormSchemaBuilder({
               Configure o título e descrição da seção
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-4 padding direcional sem Inset equiv. */ "space-y-4 py-4")}>
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label>Título *</Label>
               <Input
                 value={sectionForm.title}
@@ -687,7 +688,7 @@ export function FormSchemaBuilder({
                 placeholder="Nome da seção"
               />
             </div>
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label>Descrição</Label>
               <Textarea
                 value={sectionForm.description}
@@ -712,7 +713,7 @@ export function FormSchemaBuilder({
       <Dialog open={showDeleteSectionDialog} onOpenChange={setShowDeleteSectionDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
+            <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <AlertTriangle className="w-5 h-5 text-destructive" />
               Deletar Seção?
             </DialogTitle>
@@ -740,11 +741,11 @@ export function FormSchemaBuilder({
               Visualize ou edite o schema em formato JSON
             </DialogDescription>
           </DialogHeader>
-          <div className="py-4">
+          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "py-4")}>
             <Textarea
               value={jsonContent}
               onChange={e => setJsonContent(e.target.value)}
-              className="font-mono text-xs h-96"
+              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "font-mono text-xs h-96")}
             />
           </div>
           <DialogFooter>

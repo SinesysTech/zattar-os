@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 
 import { DialogFormShell } from '@/components/shared/dialog-shell';
@@ -63,7 +64,7 @@ export function PericiaObservacoesDialog({
       title="Observações"
       maxWidth="md"
       footer={
-        <div className="flex w-full justify-end gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex w-full justify-end gap-2")}>
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
@@ -77,7 +78,7 @@ export function PericiaObservacoesDialog({
         </div>
       }
     >
-      <div className="grid grid-cols-1 gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 gap-3")}>
         <Textarea
           value={observacoes}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
@@ -87,7 +88,7 @@ export function PericiaObservacoesDialog({
           className="min-h-[140px] resize-none"
           disabled={isSaving}
         />
-        {error && <div className="text-sm text-destructive">{error}</div>}
+        {error && <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{error}</div>}
       </div>
     </DialogFormShell>
   );

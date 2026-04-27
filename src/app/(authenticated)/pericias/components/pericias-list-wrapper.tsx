@@ -8,6 +8,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
@@ -158,7 +159,7 @@ export function PericiasListWrapper({
   }, []);
 
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       <PericiasGlassList
         pericias={pericias}
         isLoading={isLoading}
@@ -168,19 +169,19 @@ export function PericiasListWrapper({
 
       {/* Pagination simples */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between text-[11px] text-muted-foreground/70 pt-2">
+        <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between text-[11px] text-muted-foreground/70 pt-2")}>
           <span className="tabular-nums">
             Mostrando{' '}
-            <span className="text-foreground font-medium">
+            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-foreground font-medium")}>
               {pageIndex * PAGE_SIZE + 1}
             </span>
             –
-            <span className="text-foreground font-medium">
+            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-foreground font-medium")}>
               {Math.min((pageIndex + 1) * PAGE_SIZE, total)}
             </span>{' '}
-            de <span className="text-foreground font-medium">{total}</span>
+            de <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-foreground font-medium")}>{total}</span>
           </span>
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <Button
               variant="outline"
               size="sm"

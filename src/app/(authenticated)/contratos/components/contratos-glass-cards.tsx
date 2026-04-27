@@ -101,7 +101,7 @@ function ResponsavelChip({
           e.stopPropagation();
           setDialogOpen(true);
         }}
-        className="inline-flex items-center gap-1.5 min-w-0 rounded-lg -mx-1 px-1 py-0.5 transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring cursor-pointer"
+        className={cn(/* design-system-escape: gap-1.5 gap sem token DS; -mx-1 sem equivalente DS; px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center gap-1.5 min-w-0 rounded-lg -mx-1 px-1 py-0.5 transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring cursor-pointer")}
         title={nome ? `Alterar responsável: ${nome}` : 'Atribuir responsável'}
       >
         {nome ? (
@@ -150,7 +150,7 @@ function CardActions({
 }) {
   return (
     <div
-      className="flex items-center gap-0.5"
+      className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center gap-0.5")}
       onClick={(e) => e.stopPropagation()}
       onKeyDown={(e) => e.stopPropagation()}
     >
@@ -272,7 +272,7 @@ function GlassCard({
   return (
     <GlassPanel
       className={cn(
-        'group relative p-4 cursor-pointer transition-all duration-180',
+        /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'group relative p-4 cursor-pointer transition-all duration-180',
         'hover:border-border/40 hover:shadow-[0_4px_14px_color-mix(in_oklch,var(--foreground)_6%,transparent)] hover:-translate-y-px',
         isSelected && 'border-primary/40 ring-1 ring-primary/20',
       )}
@@ -285,9 +285,9 @@ function GlassCard({
       />
 
       {/* Header: checkbox + avatar + cliente + status */}
-      <div className="relative flex items-start gap-2.5">
+      <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "relative flex items-start gap-2.5")}>
         <div
-          className="pt-0.5"
+          className={cn(/* design-system-escape: pt-0.5 padding direcional sem Inset equiv. */ "pt-0.5")}
           onClick={(e) => e.stopPropagation()}
           onKeyDown={(e) => e.stopPropagation()}
         >
@@ -300,13 +300,13 @@ function GlassCard({
         </div>
 
         <div className="size-9 rounded-xl bg-primary/8 flex items-center justify-center shrink-0">
-          <Text variant="micro-badge" className="font-bold text-primary/70">
+          <Text variant="micro-badge" className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-bold text-primary/70")}>
             {generateAvatarFallback(clienteNome)}
           </Text>
         </div>
 
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-1.5">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
             <span
               aria-hidden="true"
               className={cn('size-2 rounded-full shrink-0 opacity-80', STATUS_DOT_COLOR[contrato.status])}
@@ -314,7 +314,7 @@ function GlassCard({
             <Text
               variant="label"
               as="h3"
-              className="font-semibold text-foreground truncate leading-tight flex-1"
+              className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "font-semibold text-foreground truncate leading-tight flex-1")}
             >
               {clienteNome}
             </Text>
@@ -332,21 +332,21 @@ function GlassCard({
             </Text>
           )}
 
-          <div className="mt-1.5 flex items-center gap-1 flex-wrap">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "mt-1.5 flex items-center gap-1 flex-wrap")}>
             <SemanticBadge category="status_contrato" value={contrato.status}>
               {STATUS_CONTRATO_LABELS[contrato.status]}
             </SemanticBadge>
             {contrato.papelClienteNoContrato === 'autora' ? (
               <Text
                 variant="micro-badge"
-                className="inline-flex items-center bg-primary/10 border border-primary/20 text-primary rounded px-1 py-px font-semibold"
+                className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center bg-primary/10 border border-primary/20 text-primary rounded px-1 py-px font-semibold")}
               >
                 Cliente é autor
               </Text>
             ) : (
               <Text
                 variant="micro-badge"
-                className="inline-flex items-center bg-warning/10 border border-warning/20 text-warning rounded px-1 py-px font-semibold"
+                className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center bg-warning/10 border border-warning/20 text-warning rounded px-1 py-px font-semibold")}
               >
                 Cliente é réu
               </Text>
@@ -356,7 +356,7 @@ function GlassCard({
       </div>
 
       {/* Tipo + cobrança + segmento */}
-      <div className="relative mt-3 flex flex-wrap items-center gap-1">
+      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "relative mt-3 flex flex-wrap items-center gap-1")}>
         <SemanticBadge category="tipo_contrato" value={contrato.tipoContrato}>
           {TIPO_CONTRATO_LABELS[contrato.tipoContrato]}
         </SemanticBadge>
@@ -366,7 +366,7 @@ function GlassCard({
         {segmentoNome && (
           <Text
             variant="micro-badge"
-            className="inline-flex items-center font-medium text-muted-foreground/70 bg-muted/50 border border-border/30 rounded px-1.5 py-0.5"
+            className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center font-medium text-muted-foreground/70 bg-muted/50 border border-border/30 rounded px-1.5 py-0.5")}
           >
             {segmentoNome}
           </Text>
@@ -374,21 +374,21 @@ function GlassCard({
       </div>
 
       {/* Processos vinculados */}
-      <div className="relative mt-3 pt-3 border-t border-border/20">
-        <div className="flex items-center gap-1.5 mb-1.5">
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "relative mt-3 pt-3 border-t border-border/20")}>
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mb-1.5")}>
           <Scale className="size-3 text-muted-foreground/50" />
-          <Text variant="micro-caption" className="font-medium text-muted-foreground/70">
+          <Text variant="micro-caption" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground/70")}>
             {processos.length === 0
               ? 'Sem processos vinculados'
               : `${processos.length} ${processos.length === 1 ? 'processo' : 'processos'}`}
           </Text>
         </div>
         {firstProcesso && firstProcesso.processo && (
-          <div className="flex flex-wrap items-center gap-1">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-wrap items-center gap-1")}>
             <Link
               href={`/app/processos/${firstProcesso.processoId}`}
               onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-primary/5 text-primary border border-primary/15 hover:bg-primary/10 transition-colors"
+              className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-primary/5 text-primary border border-primary/15 hover:bg-primary/10 transition-colors")}
             >
               <Text variant="micro-caption" className="tabular-nums text-primary">
                 {firstProcesso.processo.numeroProcesso ??
@@ -403,15 +403,15 @@ function GlassCard({
       </div>
 
       {/* Rodapé: responsável + cadastro + ações */}
-      <div className="relative mt-3 pt-3 border-t border-border/20 flex items-center justify-between gap-2">
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "relative mt-3 pt-3 border-t border-border/20 flex items-center justify-between gap-2")}>
         <ResponsavelChip
           contrato={contrato}
           usuariosMap={usuariosMap}
           usuarios={usuarios}
           onChanged={onResponsavelChanged}
         />
-        <div className="flex items-center gap-1.5">
-          <div className="inline-flex items-center gap-1 text-muted-foreground/60">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "inline-flex items-center gap-1 text-muted-foreground/60")}>
             <Clock className="size-2.5" />
             <Text variant="micro-caption">{timeAgo(contrato.cadastradoEm)}</Text>
           </div>
@@ -435,26 +435,26 @@ function GlassCard({
 
 function CardSkeleton() {
   return (
-    <GlassPanel className="p-4">
-      <div className="flex items-start gap-2.5">
+    <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+      <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-start gap-2.5")}>
         <Skeleton className="size-3.5 rounded" />
         <Skeleton className="size-9 rounded-xl" />
-        <div className="flex-1 space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "flex-1 space-y-2")}>
           <Skeleton className="h-3 w-3/4" />
           <Skeleton className="h-2.5 w-1/2" />
           <Skeleton className="h-4 w-24 rounded" />
         </div>
       </div>
-      <div className="flex gap-1 mt-3">
+      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1 mt-3")}>
         <Skeleton className="h-4 w-16 rounded" />
         <Skeleton className="h-4 w-14 rounded" />
         <Skeleton className="h-4 w-20 rounded" />
       </div>
-      <div className="mt-3 pt-3 border-t border-border/20 space-y-2">
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; space-y-2 → migrar para <Stack gap="tight"> */ "mt-3 pt-3 border-t border-border/20 space-y-2")}>
         <Skeleton className="h-2 w-32" />
         <Skeleton className="h-4 w-40 rounded" />
       </div>
-      <div className="mt-3 pt-3 border-t border-border/20 flex justify-between">
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 pt-3 border-t border-border/20 flex justify-between")}>
         <Skeleton className="h-4 w-24 rounded" />
         <Skeleton className="h-3 w-12" />
       </div>
@@ -468,7 +468,7 @@ function CardSkeleton() {
 
 function EmptyState() {
   return (
-    <div className="col-span-full flex flex-col items-center justify-center py-16 opacity-60">
+    <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "col-span-full flex flex-col items-center justify-center py-16 opacity-60")}>
       <FileText className="w-10 h-10 text-muted-foreground/30 mb-4" />
       <Text variant="label" className="text-muted-foreground/60">
         Nenhum contrato encontrado
@@ -501,7 +501,7 @@ export function ContratosGlassCards({
 }: ContratosGlassCardsProps) {
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3")}>
         {Array.from({ length: 6 }, (_, i) => (
           <CardSkeleton key={i} />
         ))}
@@ -519,7 +519,7 @@ export function ContratosGlassCards({
 
   return (
     <TooltipProvider>
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3")}>
         {contratos.map((contrato) => (
           <GlassCard
             key={contrato.id}

@@ -50,12 +50,12 @@ export function SourceLegend({
   className,
 }: SourceLegendProps) {
   return (
-    <GlassPanel className={cn("p-4", className)}>
-      <div className="flex items-center gap-2 mb-3">
+    <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4", className)}>
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
         <Layers className="size-3.5 text-muted-foreground/55" />
-        <span className="text-xs font-semibold text-foreground">Calendários</span>
+        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-foreground")}>Calendários</span>
       </div>
-      <div className="space-y-1.5">
+      <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
         {SOURCE_ORDER.map((source) => {
           const cfg = SOURCE_CONFIGS[source];
           const colors = sourceColorToken(source);
@@ -65,7 +65,7 @@ export function SourceLegend({
           return (
             <label
               key={source}
-              className="flex items-center gap-2.5 cursor-pointer group"
+              className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5 cursor-pointer group")}
               role="checkbox"
               aria-checked={active}
               tabIndex={0}

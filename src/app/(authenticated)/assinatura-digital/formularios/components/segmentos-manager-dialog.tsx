@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import * as React from "react";
 import { Pencil, Copy, Trash2, Plus} from "lucide-react";
 
@@ -84,19 +85,19 @@ export function SegmentosManagerDialog({
           </Button>
         }
       >
-        <div className="space-y-4">
+        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           {state.error && (
-            <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+            <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-3 text-sm text-destructive")}>
               {state.error}
             </div>
           )}
 
           {state.isLoading ? (
-            <div className="flex items-center justify-center py-10">
+            <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv. */ "flex items-center justify-center py-10")}>
               <LoadingSpinner className="size-6 text-muted-foreground" />
             </div>
           ) : state.segmentos.length === 0 ? (
-            <div className="py-10 text-center text-sm text-muted-foreground">
+            <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "py-10 text-center text-sm text-muted-foreground")}>
               Nenhum segmento encontrado.
             </div>
           ) : (
@@ -104,11 +105,11 @@ export function SegmentosManagerDialog({
               {state.segmentos.map((segmento) => (
                 <div
                   key={segmento.id}
-                  className="flex items-center justify-between gap-3 p-3"
+                  className={cn(/* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ "flex items-center justify-between gap-3 p-3")}
                 >
                   <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="truncate text-sm font-medium">
+                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                      <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "truncate text-sm font-medium")}>
                         {segmento.nome}
                       </span>
                       <Badge variant={segmento.ativo ? "success" : "secondary"}>
@@ -116,13 +117,13 @@ export function SegmentosManagerDialog({
                       </Badge>
                     </div>
                     {segmento.descricao ? (
-                      <div className="truncate text-xs text-muted-foreground">
+                      <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "truncate text-xs text-muted-foreground")}>
                         {segmento.descricao}
                       </div>
                     ) : null}
                   </div>
 
-                  <div className="flex items-center gap-1">
+                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Button

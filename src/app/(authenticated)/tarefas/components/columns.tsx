@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import { ColumnDef } from "@tanstack/react-table";
 import { ExternalLink } from "lucide-react";
 
@@ -44,7 +45,7 @@ export const columns: ColumnDef<TarefaDisplayItem>[] = [
 
       const d = new Date(date);
       return (
-        <span className="truncate font-medium">
+        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "truncate font-medium")}>
           {d.toLocaleDateString("pt-BR", {
             day: "2-digit",
             month: "2-digit",
@@ -70,7 +71,7 @@ export const columns: ColumnDef<TarefaDisplayItem>[] = [
       }
 
       return (
-        <div className="flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           {label.icon && <label.icon className="mr-2 h-4 w-4 text-muted-foreground" />}
           <span>{label.label}</span>
         </div>
@@ -90,18 +91,18 @@ export const columns: ColumnDef<TarefaDisplayItem>[] = [
       const url = row.original.url;
 
       return (
-        <div className="flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           {url ? (
             <a
               href={url}
-              className="flex max-w-125 items-center gap-1 truncate font-medium text-foreground hover:text-primary hover:underline"
+              className={cn(/* design-system-escape: gap-1 gap sem token DS; font-medium → className de <Text>/<Heading> */ "flex max-w-125 items-center gap-1 truncate font-medium text-foreground hover:text-primary hover:underline")}
               title="Abrir no módulo de origem"
             >
               <span className="truncate">{row.getValue("title")}</span>
               <ExternalLink className="size-3 shrink-0 text-muted-foreground" />
             </a>
           ) : (
-            <span className="max-w-125 truncate font-medium">{row.getValue("title")}</span>
+            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "max-w-125 truncate font-medium")}>{row.getValue("title")}</span>
           )}
           {row.original.prazoVencido && (
             <Badge variant="destructive" className="shrink-0 text-[10px]">
@@ -126,7 +127,7 @@ export const columns: ColumnDef<TarefaDisplayItem>[] = [
       }
 
       return (
-        <div className="flex w-25 items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex w-25 items-center gap-2")}>
           {status.icon && <status.icon className="text-muted-foreground size-4" />}
           <span>{status.label}</span>
         </div>
@@ -150,7 +151,7 @@ export const columns: ColumnDef<TarefaDisplayItem>[] = [
       }
 
       return (
-        <div className="flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           {priority.icon && <priority.icon className="text-muted-foreground size-4" />}
           <span>{priority.label}</span>
         </div>

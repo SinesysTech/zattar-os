@@ -61,7 +61,7 @@ function StatusOrCountdown({
     return (
       <span
         className={cn(
-          'inline-flex items-center gap-1 text-[11px] font-semibold',
+          /* design-system-escape: gap-1 gap sem token DS; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center gap-1 text-[11px] font-semibold',
           urgency === 'critico' ? 'text-destructive' : 'text-warning',
         )}
       >
@@ -73,7 +73,7 @@ function StatusOrCountdown({
 
   if (status === 'vinculado') {
     return (
-      <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-success">
+      <span className={cn(/* design-system-escape: gap-1 gap sem token DS; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 text-[11px] font-semibold text-success")}>
         <Link2 className="w-3 h-3" />
         Vinculado
       </span>
@@ -82,7 +82,7 @@ function StatusOrCountdown({
 
   if (status === 'pendente') {
     return (
-      <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-warning">
+      <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1.5 text-[11px] font-semibold text-warning")}>
         <span className="size-1.5 rounded-full bg-warning" aria-hidden />
         Pendente
       </span>
@@ -91,7 +91,7 @@ function StatusOrCountdown({
 
   if (status === 'orfao') {
     return (
-      <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-warning">
+      <span className={cn(/* design-system-escape: gap-1 gap sem token DS; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 text-[11px] font-semibold text-warning")}>
         <Unlink className="w-3 h-3" />
         Órfão
       </span>
@@ -143,7 +143,7 @@ function GlassRow({
         }
       }}
       className={cn(
-        'group w-full text-left rounded-2xl border border-border/60 bg-card p-4 cursor-pointer',
+        /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'group w-full text-left rounded-2xl border border-border/60 bg-card p-4 cursor-pointer',
         'transition-all duration-180 ease-out',
         'hover:border-border hover:shadow-[0_4px_14px_color-mix(in_oklch,var(--foreground)_6%,transparent)] hover:-translate-y-px',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
@@ -151,16 +151,16 @@ function GlassRow({
         isSelected && 'border-primary/40 bg-primary/5',
       )}
     >
-      <div className="flex items-start gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start gap-4")}>
         {/* COLUNA ESQUERDA (âncora): data + badge de tipo */}
-        <div className="flex flex-col items-start gap-1.5 w-24 shrink-0 pt-0.5">
-          <div className="text-[11.5px] font-semibold text-foreground leading-tight whitespace-nowrap">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; pt-0.5 padding direcional sem Inset equiv. */ "flex flex-col items-start gap-1.5 w-24 shrink-0 pt-0.5")}>
+          <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[11.5px] font-semibold text-foreground leading-tight whitespace-nowrap")}>
             {dataDisponibilizacao
               ? format(dataDisponibilizacao, 'dd MMM yyyy', { locale: ptBR })
               : '—'}
           </div>
           {tipoLabel && (
-            <span className="inline-flex items-center rounded-md bg-primary/10 border border-primary/20 px-1.5 py-0.5 text-[10.5px] font-semibold tracking-[0.02em] text-primary">
+            <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center rounded-md bg-primary/10 border border-primary/20 px-1.5 py-0.5 text-[10.5px] font-semibold tracking-[0.02em] text-primary")}>
               {tipoLabel}
             </span>
           )}
@@ -169,8 +169,8 @@ function GlassRow({
         {/* COLUNA PRINCIPAL */}
         <div className="flex-1 min-w-0">
           {/* LINHA 1 (título): partes × partes — com status alinhado à direita */}
-          <div className="flex items-start gap-3">
-            <h3 className="flex-1 text-[14px] font-semibold text-foreground leading-tight">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3")}>
+            <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "flex-1 text-[14px] font-semibold text-foreground leading-tight")}>
               {temPartes ? (
                 <span className="flex flex-wrap items-baseline gap-x-0">
                   <span>{poloAtivo}</span>
@@ -179,7 +179,7 @@ function GlassRow({
                       e outros
                     </span>
                   )}
-                  <span className="mx-1.5 text-[13px] font-medium text-muted-foreground/60">
+                  <span className={cn(/* design-system-escape: mx-1.5 margin sem primitiva DS; font-medium → className de <Text>/<Heading> */ "mx-1.5 text-[13px] font-medium text-muted-foreground/60")}>
                     ×
                   </span>
                   <span>{poloPassivo}</span>
@@ -193,7 +193,7 @@ function GlassRow({
                 <span className="tabular-nums">{numeroProcesso}</span>
               )}
             </h3>
-            <div className="shrink-0 pt-0.5">
+            <div className={cn(/* design-system-escape: pt-0.5 padding direcional sem Inset equiv. */ "shrink-0 pt-0.5")}>
               <StatusOrCountdown
                 status={comunicacao.statusVinculacao}
                 dias={comunicacao.diasParaPrazo}
@@ -203,9 +203,9 @@ function GlassRow({
           </div>
 
           {/* LINHA 2 (meta): TRT pill + número do processo + órgão + classe */}
-          <div className="mt-1 flex flex-wrap items-center gap-1.5">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "mt-1 flex flex-wrap items-center gap-1.5")}>
             {comunicacao.siglaTribunal && (
-              <span className="text-[9px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/70">
+              <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-[9px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/70")}>
                 {comunicacao.siglaTribunal}
               </span>
             )}
@@ -233,7 +233,7 @@ function GlassRow({
             {urgency === 'critico' && comunicacao.diasParaPrazo !== null && (
               <>
                 <span className="w-0.75 h-0.75 rounded-full bg-muted-foreground/30 shrink-0" />
-                <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-destructive">
+                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 text-[10px] font-semibold text-destructive")}>
                   <AlertTriangle className="w-2.5 h-2.5" />
                   Prazo crítico
                 </span>
@@ -278,7 +278,7 @@ export function CapturadasGlassList({
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
       {comunicacoes.map((c) => (
         <GlassRow
           key={c.id}

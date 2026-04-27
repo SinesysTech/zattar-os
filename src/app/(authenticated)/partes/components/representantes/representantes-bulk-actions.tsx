@@ -7,6 +7,7 @@
  * NOTA: Representantes usam hard delete (exclusão permanente).
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/typography';
@@ -38,11 +39,11 @@ export function RepresentantesBulkActionsBar({
   if (selectedCount === 0) return null;
 
   return (
-    <div className="flex items-center gap-2 rounded-md border bg-muted/50 px-3 py-2">
-      <Text variant="caption" as="span" className="font-medium whitespace-nowrap">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 rounded-md border bg-muted/50 px-3 py-2")}>
+      <Text variant="caption" as="span" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium whitespace-nowrap")}>
         {selectedCount} selecionado{selectedCount > 1 ? 's' : ''}
       </Text>
-      <div className="flex items-center gap-1 ml-2">
+      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 ml-2")}>
         <Button variant="outline" size="sm" className="text-destructive hover:text-destructive" onClick={onExcluir}>
           <Trash2 className="mr-1.5 h-3.5 w-3.5" />
           Excluir

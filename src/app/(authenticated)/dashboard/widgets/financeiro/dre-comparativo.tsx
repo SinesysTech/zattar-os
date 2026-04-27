@@ -5,6 +5,7 @@
  * Fonte: useDashboard() → data.dadosFinanceiros.dreComparativo
  */
 
+import { cn } from '@/lib/utils';
 import { TrendingUp } from 'lucide-react';
 import { WidgetContainer, Stat, Sparkline, fmtMoeda } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
@@ -18,7 +19,7 @@ export function WidgetDREComparativo() {
   if (!data) {
     return (
       <WidgetContainer title="DRE Comparativo" icon={TrendingUp} subtitle="Sem dados">
-        <p className="text-xs text-muted-foreground/60">Dados indisponíveis.</p>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60")}>Dados indisponíveis.</p>
       </WidgetContainer>
     );
   }
@@ -28,7 +29,7 @@ export function WidgetDREComparativo() {
   if (!dre) {
     return (
       <WidgetContainer title="DRE Comparativo" icon={TrendingUp} subtitle="12 meses">
-        <p className="text-xs text-muted-foreground/60">Nenhum dado de DRE disponível.</p>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60")}>Nenhum dado de DRE disponível.</p>
       </WidgetContainer>
     );
   }
@@ -51,15 +52,15 @@ export function WidgetDREComparativo() {
       icon={TrendingUp}
       subtitle="12 meses"
       action={
-        <div className="flex items-center gap-1 text-[10px] text-muted-foreground/60">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 text-[10px] text-muted-foreground/60")}>
           <TrendingUp className="size-3" />
           <span>Margem {margem}%</span>
         </div>
       }
     >
-      <div className="grid grid-cols-3 gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-3 gap-4")}>
         {/* Receita */}
-        <div className="flex flex-col gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
           <Stat
             label="Receita"
             value={fmtMoeda(receitaAtual)}
@@ -71,7 +72,7 @@ export function WidgetDREComparativo() {
         </div>
 
         {/* Despesa */}
-        <div className="flex flex-col gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
           <Stat
             label="Despesa"
             value={fmtMoeda(despesaAtual)}
@@ -83,7 +84,7 @@ export function WidgetDREComparativo() {
         </div>
 
         {/* Resultado */}
-        <div className="flex flex-col gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
           <Stat
             label="Resultado"
             value={fmtMoeda(resultadoAtual)}

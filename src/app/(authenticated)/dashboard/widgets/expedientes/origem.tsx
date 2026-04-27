@@ -8,6 +8,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import { FileText } from 'lucide-react';
 import {
   MiniDonut,
@@ -40,9 +41,9 @@ export function OrigemDistribution() {
         icon={FileText}
         subtitle="Distribuicao por origem"
         depth={1}
-        className="h-auto! self-start p-4!"
+        className={cn(/* design-system-escape: p-4! → usar <Inset> */ "h-auto! self-start p-4!")}
       >
-        <p className="text-[11px] text-muted-foreground/60 py-6 text-center">
+        <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-6 text-center")}>
           Dados de origem nao disponiveis.
         </p>
       </WidgetContainer>
@@ -62,9 +63,9 @@ export function OrigemDistribution() {
       icon={FileText}
       subtitle="Distribuicao por origem"
       depth={1}
-      className="h-auto! self-start p-4!"
+      className={cn(/* design-system-escape: p-4! → usar <Inset> */ "h-auto! self-start p-4!")}
     >
-      <div className="flex items-center gap-5 mt-2">
+      <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5 mt-2")}>
         <MiniDonut
           segments={segments}
           size={80}
@@ -72,9 +73,9 @@ export function OrigemDistribution() {
           centerLabel={fmtNum(total)}
         />
 
-        <div className="flex-1 space-y-1.5">
+        <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "flex-1 space-y-1.5")}>
           {porOrigem.map((o) => (
-            <div key={o.origem} className="flex items-center gap-2">
+            <div key={o.origem} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <div
                 className="size-2.5 rounded-full shrink-0"
                 style={{ backgroundColor: o.color }}
@@ -82,7 +83,7 @@ export function OrigemDistribution() {
               <span className="text-[10px] text-muted-foreground/70 flex-1 truncate">
                 {o.origem}
               </span>
-              <span className="text-[11px] font-bold tabular-nums">
+              <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[11px] font-bold tabular-nums")}>
                 {fmtNum(o.count)}
               </span>
             </div>

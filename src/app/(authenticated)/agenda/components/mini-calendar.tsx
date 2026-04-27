@@ -101,13 +101,13 @@ export function MiniCalendar({
   const weeks = useMemo(() => buildMonthGrid(year, month), [year, month]);
 
   return (
-    <GlassPanel className={cn("p-4", className)}>
+    <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4", className)}>
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs font-semibold text-foreground">
+        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-foreground")}>
           {MONTH_NAMES[month]} {year}
         </span>
-        <div className="flex gap-1">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1")}>
           <button
             onClick={onPrevMonth}
             className="size-5 flex items-center justify-center rounded hover:bg-muted/30 text-muted-foreground/55 transition-colors cursor-pointer"
@@ -126,11 +126,11 @@ export function MiniCalendar({
       </div>
 
       {/* Weekday headers */}
-      <div className="grid grid-cols-7 gap-0 mb-1">
+      <div className={cn(/* design-system-escape: gap-0 gap sem token DS */ "grid grid-cols-7 gap-0 mb-1")}>
         {WEEKDAY_LABELS.map((label, i) => (
           <div
             key={`${label}-${i}`}
-            className="flex items-center justify-center size-7 text-[9px] font-semibold text-muted-foreground/40"
+            className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "flex items-center justify-center size-7 text-[9px] font-semibold text-muted-foreground/40")}
           >
             {label}
           </div>
@@ -139,7 +139,7 @@ export function MiniCalendar({
 
       {/* Day grid */}
       {weeks.map((week, wi) => (
-        <div key={wi} className="grid grid-cols-7 gap-0">
+        <div key={wi} className={cn(/* design-system-escape: gap-0 gap sem token DS */ "grid grid-cols-7 gap-0")}>
           {week.map((cell) => {
             const isToday = isSameDay(cell.date, today);
             const isSelected = selectedDate && isSameDay(cell.date, selectedDate);
@@ -153,8 +153,8 @@ export function MiniCalendar({
                   "relative flex items-center justify-center size-7 rounded-lg text-[11px] transition-colors cursor-pointer",
                   !cell.currentMonth && "opacity-30",
                   cell.currentMonth && !isToday && !isSelected && "text-muted-foreground hover:bg-muted/20",
-                  isToday && "bg-primary text-primary-foreground font-bold",
-                  isSelected && !isToday && "outline outline-1.5 outline-primary outline-offset-1 font-semibold text-foreground",
+                  isToday && /* design-system-escape: font-bold → className de <Text>/<Heading> */ "bg-primary text-primary-foreground font-bold",
+                  isSelected && !isToday && /* design-system-escape: font-semibold → className de <Text>/<Heading> */ "outline outline-1.5 outline-primary outline-offset-1 font-semibold text-foreground",
                 )}
                 aria-label={`${cell.day} de ${MONTH_NAMES[month]}`}
                 aria-current={isToday ? "date" : undefined}

@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Database, Link2, AlertTriangle, type LucideIcon } from 'lucide-react';
@@ -68,24 +69,24 @@ export function SearchStats() {
 
   return (
     <div className="mx-auto w-full max-w-3xl">
-      <div className="flex items-center justify-between gap-3 mb-2">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3 mb-2")}>
         <Text variant="overline" className="text-muted-foreground/70">
           Sua base capturada
         </Text>
         <Link
           href="/comunica-cnj/capturadas"
-          className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+          className={cn(/* design-system-escape: gap-1 gap sem token DS; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline")}
         >
           Ver gestão completa
           <ArrowRight className="size-3" aria-hidden />
         </Link>
       </div>
-      <div className="grid grid-cols-3 gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-3 gap-3")}>
         {items.map((item) => (
-          <GlassPanel key={item.label} className="px-4 py-3">
-            <div className="flex items-start justify-between gap-2">
+          <GlassPanel key={item.label} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
               <div className="min-w-0">
-                <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider truncate">
+                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider truncate")}>
                   {item.label}
                 </p>
                 <Heading level="widget" className="tabular-nums mt-1">

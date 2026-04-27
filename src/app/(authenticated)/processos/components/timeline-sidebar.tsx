@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useMemo, useState } from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -79,8 +80,8 @@ export function TimelineSidebar({
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="flex-none p-3 border-b space-y-2">
-        <div className="text-xs text-muted-foreground">
+      <div className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-2 → migrar para <Stack gap="tight"> */ "flex-none p-3 border-b space-y-2")}>
+        <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
           {items.length} {items.length === 1 ? 'item' : 'itens'} · {totalDocs}{' '}
           {totalDocs === 1 ? 'documento' : 'documentos'} · {totalMovs}{' '}
           {totalMovs === 1 ? 'movimento' : 'movimentos'}
@@ -91,7 +92,7 @@ export function TimelineSidebar({
             placeholder="Buscar na timeline..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="h-8 pl-8 text-xs"
+            className={cn(/* design-system-escape: pl-8 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "h-8 pl-8 text-xs")}
           />
         </div>
       </div>
@@ -99,15 +100,15 @@ export function TimelineSidebar({
       {/* Lista scrollável */}
       <div className="flex-1 overflow-y-auto min-h-0">
         {grouped.length === 0 ? (
-          <div className="p-4 text-center text-xs text-muted-foreground">
+          <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; text-xs → migrar para <Text variant="caption"> */ "p-4 text-center text-xs text-muted-foreground")}>
             Nenhum item encontrado
           </div>
         ) : (
           grouped.map((group) => (
             <div key={group.label}>
               {/* Date separator */}
-              <div className="sticky top-0 z-10 bg-muted/80 backdrop-blur-sm px-3 py-1.5 border-b">
-                <span className="text-[11px] font-medium text-muted-foreground uppercase">
+              <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "sticky top-0 z-10 bg-muted/80 backdrop-blur-sm px-3 py-1.5 border-b")}>
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-muted-foreground uppercase")}>
                   {group.label}
                 </span>
               </div>

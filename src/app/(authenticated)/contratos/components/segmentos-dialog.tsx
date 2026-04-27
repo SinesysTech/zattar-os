@@ -7,6 +7,7 @@
  * Permite criar, editar e deletar segmentos.
  */
 
+import { cn } from '@/lib/utils';
 import { useState, useEffect, useCallback } from 'react';
 import {
   Dialog,
@@ -257,12 +258,12 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="flex-1 overflow-y-auto space-y-4">
+          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "flex-1 overflow-y-auto space-y-4")}>
             {/* Formulário de Criação/Edição */}
             {(isCreating || editingId) && (
-              <div className="border rounded-lg p-4 space-y-4">
+              <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-4 → migrar para <Stack gap="default"> */ "border rounded-lg p-4 space-y-4")}>
                 <div className="flex items-center justify-between">
-                  <Typography.Small className="font-medium">
+                  <Typography.Small className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
                     {editingId ? 'Editar Segmento' : 'Novo Segmento'}
                   </Typography.Small>
                   <Button
@@ -275,9 +276,9 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
                   </Button>
                 </div>
 
-                <div className="grid gap-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="grid gap-2">
+                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4")}>
+                  <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                       <Label htmlFor="nome">
                         Nome <span className="text-destructive">*</span>
                       </Label>
@@ -291,7 +292,7 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
                       />
                     </div>
 
-                    <div className="grid gap-2">
+                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                       <Label htmlFor="slug">
                         Slug <span className="text-destructive">*</span>
                       </Label>
@@ -308,7 +309,7 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
                     </div>
                   </div>
 
-                  <div className="grid gap-2">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                     <Label htmlFor="descricao">Descrição</Label>
                     <Textarea
                       id="descricao"
@@ -323,7 +324,7 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
                   </div>
 
                   {editingId && (
-                    <div className="flex items-center gap-2">
+                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                       <Checkbox
                         id="ativo"
                         checked={formData.ativo}
@@ -339,7 +340,7 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
                   )}
                 </div>
 
-                <div className="flex justify-end gap-2">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex justify-end gap-2")}>
                   <Button
                     variant="outline"
                     onClick={resetForm}
@@ -369,7 +370,7 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
 
             {/* Lista de Segmentos */}
             {isLoading ? (
-              <div className="flex items-center justify-center py-8">
+              <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex items-center justify-center py-8")}>
                 <LoadingSpinner className="size-6 text-muted-foreground" />
               </div>
             ) : segmentos.length === 0 ? (
@@ -382,16 +383,16 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
                 </EmptyHeader>
               </Empty>
             ) : (
-              <div className="space-y-1">
+              <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
                 {segmentos.map((segmento) => (
                   <div
                     key={segmento.id}
-                    className="flex items-center justify-between py-2 px-3 hover:bg-muted/50 transition-colors rounded"
+                    className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; px-3 padding direcional sem Inset equiv. */ "flex items-center justify-between py-2 px-3 hover:bg-muted/50 transition-colors rounded")}
                   >
-                    <div className="flex items-center gap-2 flex-1 min-w-0">
-                      <span className="font-medium">{segmento.nome}</span>
+                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 min-w-0")}>
+                      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{segmento.nome}</span>
                       {!segmento.ativo && (
-                        <AppBadge variant="secondary" className="text-xs">
+                        <AppBadge variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                           Inativo
                         </AppBadge>
                       )}
@@ -402,7 +403,7 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
                       )}
                     </div>
 
-                    <div className="flex items-center gap-1 ml-4">
+                    <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 ml-4")}>
                       <Button
                         variant="ghost"
                         size="icon" aria-label="Editar"

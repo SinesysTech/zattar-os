@@ -211,14 +211,14 @@ export function WidgetDashboard({ currentUserId, currentUserName, initialData }:
 
   return (
     <DashboardProvider initialData={initialData}>
-    <div className="space-y-5 pb-8">
+    <div className={cn(/* design-system-escape: space-y-5 sem token DS; pb-8 padding direcional sem Inset equiv. */ "space-y-5 pb-8")}>
       {/* ── Cabecalho ───────────────────────────────────────────── */}
-      <div className="flex items-end justify-between gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
         <div>
           <Heading level="page">
             {saudacao}, {primeiroNome}.
           </Heading>
-          <p className="text-sm text-muted-foreground/60 mt-0.5">
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/60 mt-0.5")}>
             {hoje} &mdash;{' '}
             {visibleWidgets.length === 0
               ? 'nenhum widget ativo'
@@ -250,7 +250,7 @@ export function WidgetDashboard({ currentUserId, currentUserName, initialData }:
 
       {/* ── Grid de widgets ─────────────────────────────────────── */}
       {visibleWidgets.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3 auto-rows-auto grid-flow-row-dense">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3 auto-rows-auto grid-flow-row-dense")}>
           {visibleWidgets.map((widget) => {
             const WidgetComponent = widget.component;
             return (
@@ -275,18 +275,18 @@ export function WidgetDashboard({ currentUserId, currentUserName, initialData }:
 
 function EmptyState({ onOpenPicker }: { onOpenPicker?: () => void }) {
   return (
-    <GlassPanel depth={1} className="p-12">
-      <div className="flex flex-col items-center justify-center text-center gap-4">
+    <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12")}>
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center justify-center text-center gap-4")}>
         <div className="size-14 rounded-2xl border border-border/20 bg-foreground/3 flex items-center justify-center">
           <LayoutGrid className="size-6 text-muted-foreground/55" />
         </div>
         <div>
-          <p className="font-heading text-base font-semibold text-foreground/70">
+          <p className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ "font-heading text-base font-semibold text-foreground/70")}>
             Nenhum widget selecionado
           </p>
-          <p className="text-sm text-muted-foreground/50 mt-1 max-w-xs">
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 mt-1 max-w-xs")}>
             Clique em{' '}
-            <span className="font-medium text-foreground/60">Personalizar</span>{' '}
+            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/60")}>Personalizar</span>{' '}
             para escolher quais informacoes exibir no seu painel.
           </p>
         </div>
@@ -295,7 +295,7 @@ function EmptyState({ onOpenPicker }: { onOpenPicker?: () => void }) {
             variant="outline"
             size="sm"
             onClick={onOpenPicker}
-            className="gap-2 border-border/30 bg-transparent hover:bg-foreground/5"
+            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2 border-border/30 bg-transparent hover:bg-foreground/5")}
           >
             <LayoutGrid className="size-3.5" />
             Personalizar

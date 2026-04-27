@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { forwardRef, useImperativeHandle, useState, useEffect, useCallback } from 'react';
 import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaResult, CapturaResultData } from './captura-result';
@@ -81,12 +82,12 @@ export const CombinadaForm = forwardRef<CapturaFormHandle, CombinadaFormProps>(
     }), [handleCaptura, isLoading]);
 
     return (
-      <div className="space-y-6">
+      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
         <Alert>
           <Info className="h-4 w-4" />
           <AlertDescription>
             A captura unificada executa múltiplas capturas em uma única sessão autenticada:
-            <ul className="list-disc list-inside mt-2 space-y-1 text-sm">
+            <ul className={cn(/* design-system-escape: space-y-1 sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "list-disc list-inside mt-2 space-y-1 text-sm")}>
               <li>Audiências Designadas (hoje até +1 ano)</li>
               <li>Audiências Realizadas (dia anterior)</li>
               <li>Audiências Canceladas (hoje até +1 ano)</li>

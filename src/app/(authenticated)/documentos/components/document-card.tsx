@@ -4,6 +4,7 @@
  * Card de documento para visualização em grid
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { FileText, MoreVertical, Share2, Trash2, Users } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
@@ -36,15 +37,15 @@ export function DocumentCard({ documento, onClick }: DocumentCardProps) {
       className="group cursor-pointer transition-all hover:shadow-md"
       onClick={onClick}
     >
-      <CardContent className="p-4">
+      <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
         <div className="flex items-start justify-between">
-          <div className="flex items-start gap-3 flex-1 min-w-0">
-            <div className="rounded-lg bg-primary/10 p-2">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3 flex-1 min-w-0")}>
+            <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "rounded-lg bg-primary/10 p-2")}>
               <FileText className="h-5 w-5 text-primary" />
             </div>
             <div className="flex-1 min-w-0">
               <Typography.H3 className="truncate">{documento.titulo}</Typography.H3>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mt-1")}>
                 {documento.descricao || 'Sem descrição'}
               </p>
             </div>
@@ -76,14 +77,14 @@ export function DocumentCard({ documento, onClick }: DocumentCardProps) {
 
         {/* Tags */}
         {documento.tags && documento.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-3">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-wrap gap-1 mt-3")}>
             {documento.tags.slice(0, 3).map((tag: string) => (
-              <Badge key={tag} variant="secondary" className="text-xs">
+              <Badge key={tag} variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                 {tag}
               </Badge>
             ))}
             {documento.tags.length > 3 && (
-              <Badge variant="secondary" className="text-xs">
+              <Badge variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                 +{documento.tags.length - 3}
               </Badge>
             )}
@@ -91,8 +92,8 @@ export function DocumentCard({ documento, onClick }: DocumentCardProps) {
         )}
 
         {/* Footer */}
-        <div className="flex items-center justify-between mt-4 pt-3 border-t text-xs text-muted-foreground">
-          <div className="flex items-center gap-1">
+        <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "flex items-center justify-between mt-4 pt-3 border-t text-xs text-muted-foreground")}>
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
             <Users className="h-3 w-3" />
             <span>{documento.criador.nomeCompleto}</span>
           </div>

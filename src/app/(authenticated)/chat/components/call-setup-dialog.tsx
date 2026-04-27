@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { useEffect, useRef } from 'react';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import {
@@ -116,7 +117,7 @@ export function CallSetupDialog({
         </Button>
       }
     >
-      <div className="flex flex-col gap-6 p-6">
+      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose">; p-6 → migrar para <Inset variant="dialog"> */ "flex flex-col gap-6 p-6")}>
         {/* Video Preview Area */}
         {tipo === TipoChamada.Video && (
           <div className="relative w-full aspect-video bg-muted rounded-lg overflow-hidden border">
@@ -138,11 +139,11 @@ export function CallSetupDialog({
         )}
 
         {/* Device Selection Controls */}
-        <div className="space-y-4">
+        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           {/* Camera Selection */}
           {tipo === TipoChamada.Video && (
-            <div className="grid gap-2">
-              <Label htmlFor="camera-select" className="flex items-center gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+              <Label htmlFor="camera-select" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <Video className="w-4 h-4" /> Câmera
               </Label>
               {devicesLoading ? (
@@ -172,13 +173,13 @@ export function CallSetupDialog({
           )}
 
           {/* Microphone Selection */}
-          <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
             <div className="flex items-center justify-between">
-              <Label htmlFor="mic-select" className="flex items-center gap-2">
+              <Label htmlFor="mic-select" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <Mic className="w-4 h-4" /> Microfone
               </Label>
               {isTestingAudio && (
-                <div className="flex items-center gap-2 w-32">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 w-32")}>
                   <Mic className={`w-3 h-3 ${audioLevel > 5 ? 'text-success' : 'text-muted-foreground'}`} />
                   <Progress value={audioLevel} className="h-1.5" />
                 </div>
@@ -212,8 +213,8 @@ export function CallSetupDialog({
 
           {/* Speaker Selection */}
           {audioOutputDevices.length > 0 && (
-            <div className="grid gap-2">
-              <Label htmlFor="speaker-select" className="flex items-center gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+              <Label htmlFor="speaker-select" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <Volume2 className="w-4 h-4" /> Alto-falante
               </Label>
               <Select
@@ -240,7 +241,7 @@ export function CallSetupDialog({
         </div>
 
         {(devicesError || testError) && (
-          <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-md">
+          <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "p-3 text-sm text-destructive bg-destructive/10 rounded-md")}>
             {devicesError || testError}
           </div>
         )}

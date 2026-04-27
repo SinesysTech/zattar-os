@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
 import {
   Scale,
@@ -224,16 +225,16 @@ export default function DashboardMockPage() {
         }}
       />
 
-      <div className="space-y-6">
+      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
         {/* ────────────────────────────────────────────────────
             GREETING — Minimal, human
            ──────────────────────────────────────────────────── */}
         <div className="flex items-end justify-between">
           <div>
-            <h1 className="text-2xl font-heading font-semibold tracking-tight">
+            <h1 className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-2xl font-heading font-semibold tracking-tight")}>
               Bom dia, {MOCK.nome}.
             </h1>
-            <p className="text-sm text-muted-foreground/60 mt-0.5">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/60 mt-0.5")}>
               Você tem {MOCK.atencao.filter(a => a.urgencia === 'critico' || a.urgencia === 'alto').length} itens
               urgentes e {MOCK.meuDia.filter(d => !d.done).length} compromissos restantes hoje.
             </p>
@@ -245,37 +246,37 @@ export default function DashboardMockPage() {
             This is the hero. Not a chart, not a metric.
             "What should I do next?"
            ──────────────────────────────────────────────────── */}
-        <GlassPanel depth={3} className="p-5 group cursor-pointer hover:border-primary/20">
-          <div className="flex items-center gap-2 text-[11px] text-primary/60 font-medium uppercase tracking-wider mb-3">
+        <GlassPanel depth={3} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5 group cursor-pointer hover:border-primary/20")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "flex items-center gap-2 text-[11px] text-primary/60 font-medium uppercase tracking-wider mb-3")}>
             <Zap className="size-3.5" />
             Próxima ação
           </div>
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col sm:flex-row sm:items-center gap-4")}>
             {/* Countdown */}
-            <div className="flex items-baseline gap-1 tabular-nums shrink-0">
-              <span className="text-4xl sm:text-5xl font-display font-bold tracking-tight">
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-baseline gap-1 tabular-nums shrink-0")}>
+              <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-4xl sm:text-5xl font-display font-bold tracking-tight")}>
                 {countdown.h > 0 && <>{countdown.h}<span className="text-muted-foreground/60">h</span>{' '}</>}
                 {String(countdown.m).padStart(2, '0')}<span className="text-muted-foreground/60">m</span>
               </span>
-              <span className="text-lg text-muted-foreground/60 font-mono">
+              <span className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-lg text-muted-foreground/60 font-mono")}>
                 {String(countdown.s).padStart(2, '0')}s
               </span>
             </div>
 
             {/* Info */}
-            <div className="flex-1 min-w-0 sm:border-l sm:border-border/10 sm:pl-4">
-              <p className="font-heading font-semibold text-lg truncate">
+            <div className={cn(/* design-system-escape: sm:pl-4 sem equivalente DS */ "flex-1 min-w-0 sm:border-l sm:border-border/10 sm:pl-4")}>
+              <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; text-lg → migrar para <Text variant="body-lg"> */ "font-heading font-semibold text-lg truncate")}>
                 {MOCK.proximaAcao.tipo}
               </p>
-              <p className="text-sm text-muted-foreground truncate mt-0.5">
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground truncate mt-0.5")}>
                 {MOCK.proximaAcao.parte}
               </p>
-              <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground/60">
-                <span className="flex items-center gap-1">
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-3 mt-2 text-xs text-muted-foreground/60")}>
+                <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
                   <Scale className="size-3" />
                   <span className="truncate">{MOCK.proximaAcao.processo}</span>
                 </span>
-                <span className="flex items-center gap-1">
+                <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
                   <MapPin className="size-3" />
                   <span className="truncate">{MOCK.proximaAcao.local}</span>
                 </span>
@@ -293,7 +294,7 @@ export default function DashboardMockPage() {
             PULSE — At-a-glance health of the practice
             Not KPI cards. Compact, ambient, scannable.
            ──────────────────────────────────────────────────── */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-3 gap-3")}>
           {[
             {
               label: 'Processos',
@@ -318,11 +319,11 @@ export default function DashboardMockPage() {
               icon: Wallet,
             },
           ].map((p) => (
-            <GlassPanel key={p.label} depth={1} className="px-4 py-3 cursor-pointer hover:scale-[1.01]">
+            <GlassPanel key={p.label} depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3 cursor-pointer hover:scale-[1.01]")}>
               <div className="flex items-center justify-between">
                 <div className="min-w-0">
-                  <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">{p.label}</p>
-                  <p className="text-xl font-display font-bold mt-0.5 truncate">{p.valor}</p>
+                  <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>{p.label}</p>
+                  <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-xl font-display font-bold mt-0.5 truncate")}>{p.valor}</p>
                   <p className={`text-[11px] mt-0.5 ${p.alert ? 'text-destructive' : 'text-muted-foreground/50'}`}>
                     {p.delta}
                   </p>
@@ -339,11 +340,11 @@ export default function DashboardMockPage() {
             Not expedientes, audiências, obrigações separately.
             ONE list, sorted by "when does this explode?"
            ──────────────────────────────────────────────────── */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 lg:grid-cols-5 gap-4")}>
           {/* REQUER ATENÇÃO — 3 cols */}
-          <GlassPanel depth={1} className="lg:col-span-3 p-5">
+          <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "lg:col-span-3 p-5")}>
             <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <AlertCircle className="size-4 text-muted-foreground/50" />
                 <h2 className="text-widget-title">Requer Atenção</h2>
               </div>
@@ -352,17 +353,16 @@ export default function DashboardMockPage() {
               </span>
             </div>
 
-            <div className="space-y-1">
+            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
               {MOCK.atencao.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center gap-3 px-3 py-2.5 -mx-1 rounded-xl
-                             hover:bg-foreground/4 transition-all duration-150 cursor-pointer group"
+                  className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; -mx-1 sem equivalente DS */ "flex items-center gap-3 px-3 py-2.5 -mx-1 rounded-xl hover:bg-foreground/4 transition-all duration-150 cursor-pointer group")}
                 >
                   <UrgencyDot level={item.urgencia} />
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium truncate">{item.titulo}</span>
+                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                      <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")}>{item.titulo}</span>
                       <TypeBadge tipo={item.tipo} />
                     </div>
                     <p className="text-[11px] text-muted-foreground/50 mt-0.5">{item.detalhe}</p>
@@ -374,9 +374,9 @@ export default function DashboardMockPage() {
           </GlassPanel>
 
           {/* MEU DIA — 2 cols */}
-          <GlassPanel depth={1} className="lg:col-span-2 p-5">
+          <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "lg:col-span-2 p-5")}>
             <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <Clock className="size-4 text-muted-foreground/50" />
                 <h2 className="text-widget-title">Meu Dia</h2>
               </div>
@@ -389,7 +389,7 @@ export default function DashboardMockPage() {
               {/* Timeline line */}
               <div className="absolute left-2.25 top-3 bottom-3 w-px bg-border/20" />
 
-              <div className="space-y-0.5">
+              <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
                 {MOCK.meuDia.map((item, i) => {
                   const isPast = item.done;
                   const isNext = !item.done && (i === 0 || MOCK.meuDia[i - 1].done);
@@ -405,13 +405,13 @@ export default function DashboardMockPage() {
                         <TimelineIcon tipo={item.tipo} done={item.done} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-baseline gap-2">
+                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-baseline gap-2")}>
                           <span className={`text-[11px] tabular-nums shrink-0 ${isPast ? 'text-muted-foreground/55' : 'text-muted-foreground/60'
                             }`}>
                             {item.hora}
                           </span>
                           <span className={`text-sm truncate ${isPast ? 'text-muted-foreground/60 line-through' : ''
-                            } ${isNext ? 'font-medium' : ''}`}>
+                            } ${isNext ? /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'font-medium' : ''}`}>
                             {item.titulo}
                           </span>
                         </div>
@@ -428,55 +428,55 @@ export default function DashboardMockPage() {
             PANORAMA FINANCEIRO — Compressed glass strip
             Not a full chart section. Just the pulse of money.
            ──────────────────────────────────────────────────── */}
-        <GlassPanel depth={1} className="px-5 py-4">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-            <div className="flex items-center gap-2 shrink-0">
+        <GlassPanel depth={1} className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "px-5 py-4")}>
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col sm:flex-row sm:items-center gap-4")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 shrink-0")}>
               <TrendingUp className="size-4 text-muted-foreground/50" />
               <h2 className="text-widget-title">Panorama</h2>
             </div>
 
-            <div className="flex-1 flex items-center gap-6 overflow-x-auto">
+            <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "flex-1 flex items-center gap-6 overflow-x-auto")}>
               {/* Mini sparkline */}
-              <div className="flex items-center gap-3 shrink-0">
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 shrink-0")}>
                 <div className="flex flex-col">
                   <span className="text-[10px] text-muted-foreground/60">Receita 6m</span>
-                  <span className="text-sm font-semibold tabular-nums">{fmtMoeda(67500)}</span>
+                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold tabular-nums")}>{fmtMoeda(67500)}</span>
                 </div>
                 <Sparkline data={MOCK.financeiro.receita} />
               </div>
 
               <div className="w-px h-8 bg-border/10 shrink-0 hidden sm:block" />
 
-              <div className="flex items-center gap-3 shrink-0">
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 shrink-0")}>
                 <div className="flex flex-col">
                   <span className="text-[10px] text-muted-foreground/60">Despesa 6m</span>
-                  <span className="text-sm font-semibold tabular-nums">{fmtMoeda(32100)}</span>
+                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold tabular-nums")}>{fmtMoeda(32100)}</span>
                 </div>
                 <Sparkline data={MOCK.financeiro.despesa} alert />
               </div>
 
               <div className="w-px h-8 bg-border/10 shrink-0 hidden sm:block" />
 
-              <div className="flex items-center gap-4 shrink-0">
+              <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4 shrink-0")}>
                 <div className="flex flex-col">
                   <span className="text-[10px] text-success/60">A receber</span>
-                  <span className="text-sm font-semibold tabular-nums">{fmtMoeda(MOCK.financeiro.receber.valor)}</span>
+                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold tabular-nums")}>{fmtMoeda(MOCK.financeiro.receber.valor)}</span>
                 </div>
                 <div className="flex flex-col">
                   <span className="text-[10px] text-destructive/60">A pagar</span>
-                  <span className="text-sm font-semibold tabular-nums">{fmtMoeda(MOCK.financeiro.pagar.valor)}</span>
+                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold tabular-nums")}>{fmtMoeda(MOCK.financeiro.pagar.valor)}</span>
                 </div>
               </div>
             </div>
 
-            <button className="text-xs text-primary/50 hover:text-primary transition-colors cursor-pointer shrink-0 flex items-center gap-1">
+            <button className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; gap-1 gap sem token DS */ "text-xs text-primary/50 hover:text-primary transition-colors cursor-pointer shrink-0 flex items-center gap-1")}>
               Detalhes <ChevronRight className="size-3" />
             </button>
           </div>
         </GlassPanel>
 
         {/* Footer */}
-        <p className="text-center text-[10px] text-muted-foreground/50 pb-8">
+        <p className={cn(/* design-system-escape: pb-8 padding direcional sem Inset equiv. */ "text-center text-[10px] text-muted-foreground/50 pb-8")}>
           {'Protótipo v2 — "The Glass Briefing" — dados fictícios'}
         </p>
       </div>

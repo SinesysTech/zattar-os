@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { forwardRef, useImperativeHandle, useState, useEffect, useCallback } from 'react';
 import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaResult, CapturaResultData } from './captura-result';
@@ -100,18 +101,18 @@ export const PericiasForm = forwardRef<CapturaFormHandle, PericiasFormProps>(
     }), [handleCaptura, isLoading]);
 
     return (
-      <div className="space-y-6">
+      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
         <CapturaFormBase
           advogadoId={advogadoId}
           credenciaisSelecionadas={credenciaisSelecionadas}
           onAdvogadoChange={setAdvogadoId}
           onCredenciaisChange={setCredenciaisSelecionadas}
         >
-          <div className="space-y-3">
+          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
             <Label>Situações das Perícias</Label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 md:grid-cols-2 gap-3")}>
               {SITUACAO_PERICIA_OPTIONS.map((option) => (
-                <div key={option.value} className="flex items-center space-x-2">
+                <div key={option.value} className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
                   <Checkbox
                     id={`situacao-${option.value}`}
                     checked={situacoesSelecionadas.includes(option.value)}
@@ -119,14 +120,14 @@ export const PericiasForm = forwardRef<CapturaFormHandle, PericiasFormProps>(
                   />
                   <Label
                     htmlFor={`situacao-${option.value}`}
-                    className="text-sm font-normal cursor-pointer"
+                    className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm font-normal cursor-pointer")}
                   >
                     {option.label}
                   </Label>
                 </div>
               ))}
             </div>
-            <p className="text-sm text-muted-foreground">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
               Selecione as situações das perícias que deseja capturar
             </p>
           </div>

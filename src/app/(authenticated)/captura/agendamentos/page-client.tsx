@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useState, useMemo, useCallback } from 'react';
 import {
@@ -211,27 +212,27 @@ export default function AgendamentosPage() {
 
   return (
     <>
-      <div className="space-y-5">
+      <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
         {/* KPI Strip */}
         <PulseStrip items={kpiItems} />
 
         {/* Toolbar */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground/60">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60")}>
               {filteredAgendamentos.length} agendamento{filteredAgendamentos.length !== 1 ? 's' : ''}
             </span>
             {agendamentos.filter((a) => a.ativo).length > 0 && (
               <>
                 <div className="w-px h-4 bg-border/10" />
-                <span className="inline-flex items-center gap-1 text-[10px] font-medium text-success">
+                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1 text-[10px] font-medium text-success")}>
                   <span className="size-1.5 rounded-full bg-success" />
                   {agendamentos.filter((a) => a.ativo).length} ativos
                 </span>
               </>
             )}
           </div>
-          <div className="flex items-center gap-2 flex-1 justify-end">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
             <SearchInput value={busca} onChange={setBusca} placeholder="Buscar agendamentos..." />
           </div>
         </div>
@@ -239,10 +240,10 @@ export default function AgendamentosPage() {
         {/* Loading */}
         {isLoading && (
           <GlassPanel depth={1} className="overflow-hidden">
-            <div className="space-y-0">
+            <div className={cn(/* design-system-escape: space-y-0 sem token DS */ "space-y-0")}>
               {Array.from({ length: 5 }, (_, i) => (
-                <div key={i} className="px-4 py-3 border-b border-border/5">
-                  <div className="flex items-center gap-4">
+                <div key={i} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3 border-b border-border/5")}>
+                  <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
                     <Skeleton className="h-5 w-16 rounded-full" />
                     <Skeleton className="h-4 w-40" />
                     <Skeleton className="h-5 w-20 rounded-full" />
@@ -258,13 +259,13 @@ export default function AgendamentosPage() {
         {!isLoading && filteredAgendamentos.length > 0 && (
           <GlassPanel depth={1} className="overflow-hidden">
             {/* Column Headers */}
-            <div className="grid grid-cols-[70px_1fr_100px_140px_100px_100px_44px] gap-3 items-center px-4 py-2.5 border-b border-foreground/5">
-              <span className="text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider">Status</span>
-              <span className="text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider">Nome / Tipo</span>
-              <span className="text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider">Frequência</span>
-              <span className="text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider">Próxima Exec.</span>
-              <span className="text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider">Última Exec.</span>
-              <span className="text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider">Advogado</span>
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "grid grid-cols-[70px_1fr_100px_140px_100px_100px_44px] gap-3 items-center px-4 py-2.5 border-b border-foreground/5")}>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider")}>Status</span>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider")}>Nome / Tipo</span>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider")}>Frequência</span>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider")}>Próxima Exec.</span>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider")}>Última Exec.</span>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider")}>Advogado</span>
               <div />
             </div>
 
@@ -281,12 +282,12 @@ export default function AgendamentosPage() {
                   {/* Status badge */}
                   <div>
                     {agendamento.ativo ? (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-medium text-success bg-success/8 border border-success/15 px-1.5 py-0.5 rounded-md">
+                      <span className={cn(/* design-system-escape: gap-1 gap sem token DS; font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center gap-1 text-[10px] font-medium text-success bg-success/8 border border-success/15 px-1.5 py-0.5 rounded-md")}>
                         <span className="size-1.5 rounded-full bg-success" />
                         Ativo
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-medium text-warning bg-warning/8 border border-warning/15 px-1.5 py-0.5 rounded-md">
+                      <span className={cn(/* design-system-escape: gap-1 gap sem token DS; font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center gap-1 text-[10px] font-medium text-warning bg-warning/8 border border-warning/15 px-1.5 py-0.5 rounded-md")}>
                         <Pause className="size-2.5" />
                         Pausado
                       </span>
@@ -294,7 +295,7 @@ export default function AgendamentosPage() {
                   </div>
 
                   {/* Nome + Tipo badge */}
-                  <div className="flex items-center gap-2 min-w-0">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
                     <span className={`inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wide border shrink-0 ${tipoColor}`}>
                       {TIPO_LABELS[agendamento.tipo_captura] ?? agendamento.tipo_captura}
                     </span>
@@ -302,28 +303,28 @@ export default function AgendamentosPage() {
 
                   {/* Frequência */}
                   <div>
-                    <span className="text-xs text-muted-foreground/70">
+                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/70")}>
                       {formatarPeriodicidade(agendamento)}
                     </span>
                   </div>
 
                   {/* Próxima Execução */}
                   <div>
-                    <span className="text-xs text-muted-foreground tabular-nums">
+                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground tabular-nums")}>
                       {formatarDataHora(agendamento.proxima_execucao)}
                     </span>
                   </div>
 
                   {/* Última Execução */}
                   <div>
-                    <span className="text-xs text-muted-foreground/60 tabular-nums">
+                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60 tabular-nums")}>
                       {formatarDataHora(agendamento.ultima_execucao)}
                     </span>
                   </div>
 
                   {/* Advogado */}
                   <div>
-                    <span className="text-xs text-muted-foreground/60 truncate block">
+                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60 truncate block")}>
                       {advNome ?? `ID ${agendamento.advogado_id}`}
                     </span>
                   </div>

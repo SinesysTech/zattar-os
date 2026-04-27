@@ -5,6 +5,7 @@
  * Fonte: useDashboard() → data.dadosFinanceiros.despesasPorCategoria
  */
 
+import { cn } from '@/lib/utils';
 import { PieChart } from 'lucide-react';
 import { WidgetContainer, MiniDonut, fmtMoeda } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
@@ -20,7 +21,7 @@ export function WidgetDespesasCategoria() {
   if (!data) {
     return (
       <WidgetContainer title="Despesas por Categoria" icon={PieChart} subtitle="Sem dados">
-        <p className="text-xs text-muted-foreground/60">Dados indisponíveis.</p>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60")}>Dados indisponíveis.</p>
       </WidgetContainer>
     );
   }
@@ -30,7 +31,7 @@ export function WidgetDespesasCategoria() {
   if (!categorias || categorias.length === 0) {
     return (
       <WidgetContainer title="Despesas por Categoria" icon={PieChart} subtitle="Distribuição">
-        <p className="text-xs text-muted-foreground/60">Nenhuma despesa categorizada.</p>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60")}>Nenhuma despesa categorizada.</p>
       </WidgetContainer>
     );
   }
@@ -44,7 +45,7 @@ export function WidgetDespesasCategoria() {
 
   return (
     <WidgetContainer title="Despesas por Categoria" icon={PieChart} subtitle="Distribuição">
-      <div className="flex items-center gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
         <MiniDonut
           segments={segments}
           size={80}
@@ -53,14 +54,14 @@ export function WidgetDespesasCategoria() {
         />
 
         {/* Legend */}
-        <div className="flex-1 flex flex-col gap-1.5 min-w-0">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex-1 flex flex-col gap-1.5 min-w-0")}>
           {categorias.map((c) => (
-            <div key={c.categoria} className="flex items-center gap-2">
+            <div key={c.categoria} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <ToneDot tone={c.tone} aria-label={c.categoria} />
               <span className="text-[10px] text-muted-foreground/70 truncate flex-1">
                 {c.categoria}
               </span>
-              <span className="text-[10px] font-medium tabular-nums shrink-0">
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums shrink-0")}>
                 {fmtMoeda(c.valor)}
               </span>
             </div>

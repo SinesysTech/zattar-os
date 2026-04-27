@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 
@@ -162,8 +163,8 @@ export function AdvogadoDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; py-4 padding direcional sem Inset equiv. */ "grid gap-4 py-4")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="nome_completo">Nome Completo *</Label>
               <Input
                 id="nome_completo"
@@ -175,7 +176,7 @@ export function AdvogadoDialog({
               />
             </div>
 
-            <div className="grid gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label htmlFor="cpf">CPF *</Label>
               <Input
                 id="cpf"
@@ -188,16 +189,16 @@ export function AdvogadoDialog({
             </div>
 
             {/* Seção de OABs */}
-            <div className="space-y-3">
+            <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
               <div className="flex items-center justify-between">
                 <Label>OABs *</Label>
-                <span className="text-xs text-muted-foreground">
+                <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                   Adicione as inscrições na OAB por estado
                 </span>
               </div>
 
               {formData.oabs.map((oab, index) => (
-                <div key={index} className="flex gap-2 items-end">
+                <div key={index} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2 items-end")}>
                   <div className="flex-1">
                     <Input
                       value={oab.numero}

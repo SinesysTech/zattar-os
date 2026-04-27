@@ -137,7 +137,7 @@ export function AudienciaIndicadorBadges({
     if (showPresencaDetail) {
       badges.push(
         <SemanticBadge key="hibrida" category="audiencia_indicador" value="presenca_hibrida">
-          <span className="flex flex-col items-start gap-0.5">
+          <span className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-start gap-0.5")}>
             <span className="flex items-center">
               <Layers size={ICON_SIZE} className="mr-1 inline-block" />
               Presença Híbrida
@@ -166,7 +166,7 @@ export function AudienciaIndicadorBadges({
   if (badges.length === 0) return null;
 
   return (
-    <div className={cn('flex flex-wrap gap-1.5', className)}>
+    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ 'flex flex-wrap gap-1.5', className)}>
       {badges}
     </div>
   );

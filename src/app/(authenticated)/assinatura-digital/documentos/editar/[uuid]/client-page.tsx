@@ -10,6 +10,7 @@
  * - Sidebar com divisor vertical ambient (sem border-l duro)
  */
 
+import { cn } from '@/lib/utils';
 import { useDocumentEditor } from '@/app/(authenticated)/assinatura-digital/components/editor/hooks/use-document-editor';
 import { PDF_CANVAS_SIZE } from '@/shared/assinatura-digital/types/pdf-preview.types';
 import EditorCanvas from '@/app/(authenticated)/assinatura-digital/components/editor/components/EditorCanvas';
@@ -93,7 +94,7 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
           {/* Indicador de salvamento — pill glass */}
           {isSaving && (
             <div className="absolute top-4 right-6 z-20">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full glass-kpi border border-info/25 bg-info/5 backdrop-blur-md text-xs font-medium text-info">
+              <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full glass-kpi border border-info/25 bg-info/5 backdrop-blur-md text-xs font-medium text-info")}>
                 <LoadingSpinner size="sm" />
                 Salvando...
               </span>
@@ -101,8 +102,8 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
           )}
 
           {/* PDF Canvas — scrollable */}
-          <div className="relative flex-1 overflow-auto p-6 scroll-smooth scrollbar-custom bg-muted/15">
-            <div className="flex justify-center min-h-full pb-20">
+          <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "relative flex-1 overflow-auto p-6 scroll-smooth scrollbar-custom bg-muted/15")}>
+            <div className={cn(/* design-system-escape: pb-20 padding direcional sem Inset equiv. */ "flex justify-center min-h-full pb-20")}>
               <EditorCanvas
                 canvasRef={canvasRef}
                 canvasSize={PDF_CANVAS_SIZE}

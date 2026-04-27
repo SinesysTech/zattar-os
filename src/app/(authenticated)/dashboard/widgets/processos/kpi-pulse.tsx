@@ -7,6 +7,7 @@
  *   - role=admin: data.metricas for taxaResolucao
  */
 
+import { cn } from '@/lib/utils';
 import { Activity } from 'lucide-react';
 import {
   WidgetContainer,
@@ -33,7 +34,7 @@ export function WidgetKpiPulse() {
         subtitle="Resumo operacional"
         depth={2}
       >
-        <p className="text-xs text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
           Nao foi possivel carregar os dados processuais.
         </p>
       </WidgetContainer>
@@ -110,15 +111,15 @@ export function WidgetKpiPulse() {
         />
       </div>
 
-      <div className="flex items-center gap-4 pt-3 border-t border-border/10">
-        <div className="flex items-center gap-3">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pt-3 padding direcional sem Inset equiv. */ "flex items-center gap-4 pt-3 border-t border-border/10")}>
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
           <ProgressRing
             percent={taxaResolucao}
             size={48}
             color="hsl(142 60% 45%)"
           />
           <div>
-            <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
               Taxa de Resolucao
             </p>
             <p className="text-[10px] text-muted-foreground/60 mt-0.5">
@@ -127,8 +128,8 @@ export function WidgetKpiPulse() {
           </div>
         </div>
         {tendenciaData.length >= 2 && (
-          <div className="flex-1 flex flex-col items-end gap-1">
-            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex-1 flex flex-col items-end gap-1")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Tendencia {tendenciaData.length}m
             </p>
             <Sparkline

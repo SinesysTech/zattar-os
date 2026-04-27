@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
@@ -21,7 +22,7 @@ import {
 
 export default function Orcamentos() {
   return (
-    <div className="space-y-10">
+    <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
       <div>
         <Heading level="page">Orçamentos</Heading>
         <p className="text-muted-foreground mt-2">
@@ -161,7 +162,7 @@ export default function Orcamentos() {
           Ao clicar em &quot;Ver Análise&quot;, o sistema exibe uma tabela e gráfico comparando o valor
           orçado com o realizado para cada categoria do plano de contas. São apresentados:
         </p>
-        <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+        <ul className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "space-y-2 text-sm text-muted-foreground list-disc list-inside")}>
           <li>Valor orçado por categoria e mês</li>
           <li>Valor realizado por categoria e mês (extraído dos lançamentos)</li>
           <li>Desvio absoluto (R$) e percentual (%)</li>

@@ -13,6 +13,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import React from 'react';
 
 // ─── Re-export: Glass Panel & Widget Container ─────────────────────────
@@ -129,10 +130,10 @@ export function MiniBar({
   const maxVal = Math.max(...data.flatMap((d) => [d.value, d.value2 || 0]));
 
   return (
-    <div className="flex items-end gap-2 w-full" style={{ height }}>
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-end gap-2 w-full")} style={{ height }}>
       {data.map((d, i) => (
-        <div key={`${i}-${d.label}`} className="flex-1 flex flex-col items-center gap-0.5">
-          <div className="flex gap-0.5 items-end w-full" style={{ height: height - 14 }}>
+        <div key={`${i}-${d.label}`} className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex-1 flex flex-col items-center gap-0.5")}>
+          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex gap-0.5 items-end w-full")} style={{ height: height - 14 }}>
             <div
               className={`flex-1 rounded-t-sm ${barColor} transition-all duration-500`}
               style={{ height: `${(d.value / maxVal) * 100}%` }}
@@ -195,7 +196,7 @@ export function MiniDonut({
       </svg>
       {centerLabel && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-[10px] font-medium text-muted-foreground">{centerLabel}</span>
+          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium text-muted-foreground")}>{centerLabel}</span>
         </div>
       )}
     </div>
@@ -267,8 +268,8 @@ export function Stat({
 
   return (
     <div>
-      <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">{label}</p>
-      <p className={`font-display font-bold mt-0.5 ${small ? 'text-lg' : 'text-xl'}`}>{value}</p>
+      <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>{label}</p>
+      <p className={`font-display font-bold mt-0.5 ${small ? /* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ 'text-lg' : /* design-system-escape: text-xl → migrar para <Heading level="..."> */ 'text-xl'}`}>{value}</p>
       {delta && (
         <p className={`text-[11px] mt-0.5 ${deltaColors[deltaType]}`}>{delta}</p>
       )}
@@ -301,7 +302,7 @@ export function ProgressRing({
         <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke={color} strokeWidth={sw} strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" className="transition-all duration-700" />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-[10px] font-bold">{percent}%</span>
+        <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[10px] font-bold")}>{percent}%</span>
       </div>
     </div>
   );
@@ -345,10 +346,10 @@ export function GallerySection({
   return (
     <section>
       <div className="mb-5">
-        <h2 className="text-card-title tracking-tight">{title}</h2>
-        {description && <p className="text-sm text-muted-foreground/50 mt-0.5">{description}</p>}
+        <h2 className={cn(/* design-system-escape: tracking-tight sem token DS */ "text-card-title tracking-tight")}>{title}</h2>
+        {description && <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 mt-0.5")}>{description}</p>}
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-auto">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-auto")}>
         {children}
       </div>
     </section>
@@ -453,8 +454,8 @@ export function CalendarHeatmap({
   }
 
   return (
-    <div className="flex gap-1">
-      <div className="flex flex-col gap-1 mr-0.5">
+    <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1")}>
+      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1 mr-0.5")}>
         {days.map((d, i) => (
           <div key={i} className="h-5 flex items-center text-[8px] text-muted-foreground/55">
             {i % 2 === 0 ? d : ''}
@@ -462,7 +463,7 @@ export function CalendarHeatmap({
         ))}
       </div>
       {Array.from({ length: weeks }).map((_, week) => (
-        <div key={week} className="flex flex-col gap-1 flex-1">
+        <div key={week} className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1 flex-1")}>
           {Array.from({ length: 7 }).map((_, day) => {
             const idx = week * 7 + day;
             const val = data[idx] ?? 0;
@@ -541,7 +542,7 @@ export function GaugeMeter({
         />
       </svg>
       <div className="flex flex-col items-center -mt-5">
-        <span className="font-display text-xl font-bold">{value}</span>
+        <span className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "font-display text-xl font-bold")}>{value}</span>
         {label && <span className="text-[9px] text-muted-foreground/60">{label}</span>}
       </div>
     </div>
@@ -583,7 +584,7 @@ export function TabToggle({
   onChangeAction: (id: string) => void;
 }) {
   return (
-    <div className="flex gap-0.5 p-0.5 rounded-lg bg-border/10">
+    <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS; p-0.5 → usar <Inset> */ "flex gap-0.5 p-0.5 rounded-lg bg-border/10")}>
       {tabs.map((tab) => (
         <button
           key={tab.id}
@@ -616,7 +617,7 @@ export function Treemap({
   if (total === 0) return null;
 
   return (
-    <div className="flex gap-0.5 rounded-lg overflow-hidden" style={{ height }}>
+    <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex gap-0.5 rounded-lg overflow-hidden")} style={{ height }}>
       {segments.map((seg, i) => (
         <div
           key={i}
@@ -629,8 +630,8 @@ export function Treemap({
         >
           {/* Label — only visible if segment wide enough */}
           {(seg.value / total) > 0.12 && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center p-1">
-              <span className="text-[9px] font-bold text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]">
+            <div className={cn(/* design-system-escape: p-1 → usar <Inset> */ "absolute inset-0 flex flex-col items-center justify-center p-1")}>
+              <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[9px] font-bold text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]")}>
                 {seg.value}
               </span>
               <span className="text-[7px] text-white/60 truncate max-w-full drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]">
@@ -668,10 +669,10 @@ export function ComparisonStat({
   };
 
   return (
-    <div className="flex flex-col gap-1">
-      <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">{label}</p>
-      <div className="flex items-baseline gap-2">
-        <span className="font-display text-lg font-bold">{fmt(current)}</span>
+    <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+      <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>{label}</p>
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-baseline gap-2")}>
+        <span className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold")}>{fmt(current)}</span>
         <span className={`text-[10px] font-medium ${isPositive ? 'text-success/70' : 'text-destructive/70'}`}>
           {isPositive ? '+' : ''}{pctChange.toFixed(1)}%
         </span>

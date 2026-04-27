@@ -48,14 +48,14 @@ export function WidgetWrapper({
   if (loading) {
     return (
       <Card className={className}>
-        <CardHeader className="pb-2">
+        <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
           <div className="flex items-center justify-between">
             <Skeleton className="h-5 w-32" />
             <Skeleton className="h-8 w-8 rounded-md" />
           </div>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
+          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-3/4" />
             <Skeleton className="h-20 w-full" />
@@ -68,17 +68,17 @@ export function WidgetWrapper({
   if (error) {
     return (
       <Card className={cn('border-destructive/50', className)}>
-        <CardHeader className="pb-2">
+        <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
           <div className="flex items-center justify-between">
-            <Heading level="widget" className="flex items-center gap-2">
+            <Heading level="widget" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               {Icon && <Icon className="h-4 w-4" />}
               {title}
             </Heading>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center py-6">
-            <p className="text-sm text-destructive">{error}</p>
+          <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex items-center justify-center py-6")}>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{error}</p>
           </div>
         </CardContent>
       </Card>
@@ -87,18 +87,18 @@ export function WidgetWrapper({
 
   return (
     <GlassPanel className={cn('group relative', className)}>
-      <CardHeader className={cn('pb-2', headerClassName)}>
+      <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ 'pb-2', headerClassName)}>
         <div className="flex items-center justify-between">
-          <Heading level="widget" className="flex items-center gap-2">
+          <Heading level="widget" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             {Icon && <Icon className="h-4 w-4 text-muted-foreground" />}
             {title}
           </Heading>
-          <div className="flex items-center gap-1">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
             {actions}
             {(onSettings || onRemove) && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                  <Button variant="ghost" size="sm" className={cn(/* design-system-escape: p-0 → usar <Inset> */ "h-8 w-8 p-0")}>
                     <MoreHorizontal className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -144,14 +144,14 @@ interface WidgetEmptyProps {
 
 export function WidgetEmpty({ icon: Icon, title, description, action }: WidgetEmptyProps) {
   return (
-    <div className="flex flex-col items-center justify-center py-8 text-center">
+    <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-8 text-center")}>
       {Icon && (
-        <div className="rounded-full bg-muted p-3 mb-3">
+        <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-full bg-muted p-3 mb-3")}>
           <Icon className="h-6 w-6 text-muted-foreground" />
         </div>
       )}
       <Heading level="widget">{title}</Heading>
-      {description && <p className="text-xs text-muted-foreground mt-1">{description}</p>}
+      {description && <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mt-1")}>{description}</p>}
       {action && <div className="mt-4">{action}</div>}
     </div>
   );

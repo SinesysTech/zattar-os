@@ -20,12 +20,12 @@ export function ScreenshareBanner({
 
   return (
     <div className={cn(
-      "absolute top-0 left-0 right-0 z-50 px-4 py-2 flex items-center justify-between text-sm shadow-md transition-transform duration-300 transform",
+      /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "absolute top-0 left-0 right-0 z-50 px-4 py-2 flex items-center justify-between text-sm shadow-md transition-transform duration-300 transform",
       isSelf ? "bg-info text-white" : "bg-video-surface-hover text-video-text"
     )}>
-      <div className="flex items-center gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
         <Monitor className="w-4 h-4" />
-        <span className="font-medium">
+        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
           {isSelf ? "Você está compartilhando sua tela" : `${participantName} está compartilhando a tela`}
         </span>
       </div>
@@ -35,7 +35,7 @@ export function ScreenshareBanner({
           variant="ghost"
           size="sm"
           onClick={onStop}
-          className="h-7 px-2 hover:bg-white/20 text-white hover:text-white"
+          className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-7 px-2 hover:bg-white/20 text-white hover:text-white")}
         >
           Parar
         </Button>

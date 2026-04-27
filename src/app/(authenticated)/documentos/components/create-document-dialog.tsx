@@ -4,6 +4,7 @@
  * Dialog para criar novo documento
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import {
@@ -97,8 +98,8 @@ export function CreateDocumentDialog({
 
         <form onSubmit={handleSubmit} className="flex flex-col flex-1">
           <ResponsiveDialogBody>
-            <div className="space-y-4">
-              <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                 <Label htmlFor="titulo">Título *</Label>
                 <Input
                   id="titulo"
@@ -110,7 +111,7 @@ export function CreateDocumentDialog({
                 />
               </div>
 
-              <div className="space-y-2">
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                 <Label htmlFor="descricao">Descrição (opcional)</Label>
                 <Textarea
                   id="descricao"

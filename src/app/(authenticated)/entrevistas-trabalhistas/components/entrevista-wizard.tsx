@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { ChevronLeft, ChevronRight, Save, CheckCircle2, Sparkles, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -197,9 +198,9 @@ export function EntrevistaWizard({ entrevista, contratoId, onFinish }: Entrevist
   };
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       {/* Stepper horizontal */}
-      <nav className="flex items-center justify-between gap-2">
+      <nav className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
         {modulos.map((modulo, index) => {
           const isActive = index === currentStep;
           const isComplete = index < currentStep;
@@ -240,14 +241,14 @@ export function EntrevistaWizard({ entrevista, contratoId, onFinish }: Entrevist
               >
                 {isComplete ? <CheckCircle2 className="h-4 w-4" /> : index + 1}
               </div>
-              <span className="hidden font-medium sm:block">{MODULO_LABELS[modulo]}</span>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "hidden font-medium sm:block")}>{MODULO_LABELS[modulo]}</span>
             </button>
           );
         })}
       </nav>
 
       {/* Conteúdo do módulo atual */}
-      <GlassPanel className="p-6">
+      <GlassPanel className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
         {renderModulo()}
         <div className="mt-6">
           <AnexoUploadZone
@@ -265,15 +266,15 @@ export function EntrevistaWizard({ entrevista, contratoId, onFinish }: Entrevist
 
       {/* Erro */}
       {error && (
-        <p className="text-sm text-destructive">{error}</p>
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{error}</p>
       )}
 
       {bloqueioFinalizacao && (
-        <p className="text-sm text-destructive">{bloqueioFinalizacao}</p>
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{bloqueioFinalizacao}</p>
       )}
 
       {currentModulo === 'consolidacao_final' && (
-        <div className="flex flex-wrap justify-end gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap justify-end gap-2")}>
           <Button variant="secondary" onClick={handleConsolidarIA} disabled={isLoading}>
             <Sparkles className="mr-2 h-4 w-4" />
             Consolidar com IA
@@ -286,7 +287,7 @@ export function EntrevistaWizard({ entrevista, contratoId, onFinish }: Entrevist
       )}
 
       {integracaoMensagem && (
-        <p className="text-sm text-muted-foreground">{integracaoMensagem}</p>
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{integracaoMensagem}</p>
       )}
 
       {/* Navegação */}

@@ -95,17 +95,17 @@ function SearchableCombobox({
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-[--radix-popover-trigger-width] p-0 rounded-2xl glass-dropdown overflow-hidden"
+        className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-[--radix-popover-trigger-width] p-0 rounded-2xl glass-dropdown overflow-hidden")}
         align="start"
       >
         <Command className="bg-transparent">
-          <div className="px-3 pt-3 pb-1.5">
+          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
             <CommandInput
               placeholder={searchPlaceholder}
-              className="h-8 text-xs rounded-lg"
+              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs rounded-lg")}
             />
           </div>
-          <CommandList className="max-h-60 px-1.5 pb-1.5">
+          <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-60 px-1.5 pb-1.5")}>
             <CommandEmpty>
               <span className="text-[11px] text-muted-foreground/40">
                 {emptyMessage}
@@ -122,7 +122,7 @@ function SearchableCombobox({
                       onChange(isSelected ? '' : opt.value);
                       setOpen(false);
                     }}
-                    className="gap-2 rounded-lg text-xs px-2 py-1.5"
+                    className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-xs px-2 py-1.5")}
                   >
                     <span className="truncate flex-1">{opt.label}</span>
                     {isSelected && (
@@ -151,7 +151,7 @@ function FieldLabel({
   required?: boolean;
 }) {
   return (
-    <label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70">
+    <label className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70")}>
       {children}
       {required && <span className="text-destructive ml-0.5">*</span>}
     </label>
@@ -290,9 +290,9 @@ export function PericiaCriarDialog({
         </>
       }
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
         {/* Número do Processo (col span 2) */}
-        <div className="md:col-span-2 grid gap-1.5">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "md:col-span-2 grid gap-1.5")}>
           <FieldLabel required>Número do Processo</FieldLabel>
           <Input
             value={numeroProcesso}
@@ -309,7 +309,7 @@ export function PericiaCriarDialog({
         </div>
 
         {/* TRT */}
-        <div className="grid gap-1.5">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "grid gap-1.5")}>
           <FieldLabel required>Tribunal</FieldLabel>
           <Select
             value={trt || '_none'}
@@ -330,7 +330,7 @@ export function PericiaCriarDialog({
         </div>
 
         {/* Grau */}
-        <div className="grid gap-1.5">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "grid gap-1.5")}>
           <FieldLabel required>Grau</FieldLabel>
           <Select
             value={grau || '_none'}
@@ -351,7 +351,7 @@ export function PericiaCriarDialog({
         </div>
 
         {/* Prazo de Entrega */}
-        <div className="grid gap-1.5">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "grid gap-1.5")}>
           <FieldLabel>Prazo de Entrega</FieldLabel>
           <DatePicker
             value={prazoEntrega}
@@ -361,7 +361,7 @@ export function PericiaCriarDialog({
         </div>
 
         {/* Situação */}
-        <div className="grid gap-1.5">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "grid gap-1.5")}>
           <FieldLabel>Situação inicial</FieldLabel>
           <Select value={situacaoCodigo} onValueChange={setSituacaoCodigo}>
             <SelectTrigger className="bg-card h-9">
@@ -378,7 +378,7 @@ export function PericiaCriarDialog({
         </div>
 
         {/* Especialidade (Combobox com busca) */}
-        <div className="grid gap-1.5">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "grid gap-1.5")}>
           <FieldLabel>Especialidade</FieldLabel>
           <SearchableCombobox
             value={especialidadeId}
@@ -392,7 +392,7 @@ export function PericiaCriarDialog({
         </div>
 
         {/* Perito (Combobox com busca) */}
-        <div className="grid gap-1.5">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "grid gap-1.5")}>
           <FieldLabel>Perito</FieldLabel>
           <SearchableCombobox
             value={peritoId}
@@ -406,7 +406,7 @@ export function PericiaCriarDialog({
         </div>
 
         {/* Observações */}
-        <div className="md:col-span-2 grid gap-1.5">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "md:col-span-2 grid gap-1.5")}>
           <FieldLabel>Observações</FieldLabel>
           <Textarea
             value={observacoes}
@@ -421,9 +421,9 @@ export function PericiaCriarDialog({
 
         {/* Error banner */}
         {error && (
-          <div className="md:col-span-2 flex items-start gap-2 px-3 py-2 rounded-lg bg-destructive/8 border border-destructive/20 text-destructive">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "md:col-span-2 flex items-start gap-2 px-3 py-2 rounded-lg bg-destructive/8 border border-destructive/20 text-destructive")}>
             <AlertCircle className="size-4 shrink-0 mt-0.5" />
-            <span className="text-xs">{error}</span>
+            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>{error}</span>
           </div>
         )}
       </div>

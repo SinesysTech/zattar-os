@@ -6,6 +6,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Text } from '@/components/ui/typography';
@@ -25,13 +26,13 @@ export function TimelineLoading({
 }: TimelineLoadingProps) {
   if (embedded) {
     return (
-      <div className="space-y-4">
-        <div className="grid gap-4 lg:grid-cols-[minmax(280px,0.36fr)_minmax(0,1fr)]">
-          <div className="rounded-2xl border bg-muted/20 p-4 space-y-3">
+      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 lg:grid-cols-[minmax(280px,0.36fr)_minmax(0,1fr)]")}>
+          <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-3 sem token DS */ "rounded-2xl border bg-muted/20 p-4 space-y-3")}>
             <Skeleton className="h-5 w-28" />
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               {[...Array(5)].map((_, index) => (
-                <div key={index} className="rounded-xl border bg-background p-3 space-y-2">
+                <div key={index} className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-2 → migrar para <Stack gap="tight"> */ "rounded-xl border bg-background p-3 space-y-2")}>
                   <Skeleton className="h-4 w-24" />
                   <Skeleton className="h-3 w-full" />
                 </div>
@@ -39,12 +40,12 @@ export function TimelineLoading({
             </div>
           </div>
 
-          <div className="rounded-2xl border bg-muted/10 p-5 space-y-5">
-            <div className="space-y-2">
+          <div className={cn(/* design-system-escape: p-5 → usar <Inset>; space-y-5 sem token DS */ "rounded-2xl border bg-muted/10 p-5 space-y-5")}>
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Skeleton className="h-6 w-1/3" />
               <Skeleton className="h-4 w-2/3" />
             </div>
-            <div className="rounded-2xl border bg-background p-5 space-y-4 min-h-120">
+            <div className={cn(/* design-system-escape: p-5 → usar <Inset>; space-y-4 → migrar para <Stack gap="default"> */ "rounded-2xl border bg-background p-5 space-y-4 min-h-120")}>
               <Skeleton className="h-5 w-40" />
               <Skeleton className="h-4 w-full" />
               <Skeleton className="h-4 w-5/6" />
@@ -53,15 +54,15 @@ export function TimelineLoading({
           </div>
         </div>
 
-        <div className="rounded-2xl border bg-card px-6 py-8">
-          <div className="flex items-center justify-center gap-3">
+        <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-8 padding direcional sem Inset equiv. */ "rounded-2xl border bg-card px-6 py-8")}>
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-center gap-3")}>
             <LoadingSpinner size="lg" className="text-primary" />
-            <div className="text-center space-y-2">
-              <Text variant="label" as="p" className="text-base font-medium">{message}</Text>
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "text-center space-y-2")}>
+              <Text variant="label" as="p" className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-medium → className de <Text>/<Heading> */ "text-base font-medium")}>{message}</Text>
               {isCapturing && (
                 <>
                   <Progress value={undefined} className="w-64 mx-auto" />
-                  <p className="text-sm text-muted-foreground">
+                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                     Você pode seguir navegando. A captura continua integrada ao workspace.
                   </p>
                 </>
@@ -74,24 +75,24 @@ export function TimelineLoading({
   }
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       {/* Header Skeleton */}
-      <Card className="p-6 space-y-4">
-        <div className="space-y-2">
+      <Card className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; space-y-4 → migrar para <Stack gap="default"> */ "p-6 space-y-4")}>
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Skeleton className="h-8 w-3/4" />
-          <div className="flex gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
             <Skeleton className="h-6 w-20" />
             <Skeleton className="h-6 w-32" />
             <Skeleton className="h-6 w-24" />
           </div>
         </div>
         <div className="h-px bg-border" />
-        <div className="grid gap-4 md:grid-cols-2">
-          <div className="space-y-2">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2")}>
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Skeleton className="h-4 w-24" />
             <Skeleton className="h-4 w-full" />
           </div>
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Skeleton className="h-4 w-24" />
             <Skeleton className="h-4 w-full" />
           </div>
@@ -99,15 +100,15 @@ export function TimelineLoading({
       </Card>
 
       {/* Timeline Loading Message */}
-      <Card className="p-6 space-y-4">
-        <div className="flex items-center justify-center gap-3 py-8">
+      <Card className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; space-y-4 → migrar para <Stack gap="default"> */ "p-6 space-y-4")}>
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-8 padding direcional sem Inset equiv. */ "flex items-center justify-center gap-3 py-8")}>
           <LoadingSpinner className="size-6 text-primary" />
-          <div className="text-center space-y-2">
-            <p className="text-base font-medium">{message}</p>
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "text-center space-y-2")}>
+            <p className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-medium → className de <Text>/<Heading> */ "text-base font-medium")}>{message}</p>
             {isCapturing && (
               <>
                 <Progress value={undefined} className="w-64 mx-auto" />
-                <p className="text-sm text-muted-foreground">
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                   Você pode navegar para outras páginas. A captura continuará em segundo
                   plano.
                 </p>
@@ -119,18 +120,18 @@ export function TimelineLoading({
 
       {/* Timeline Items Skeleton (apenas se não estiver capturando) */}
       {!isCapturing && (
-        <div className="space-y-4">
+        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="flex gap-4">
+            <div key={i} className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}>
               <div className="relative flex flex-col items-center">
                 <Skeleton className="w-10 h-10 rounded-full" />
                 <div className="w-0.5 h-20 bg-border" />
               </div>
-              <Card className="flex-1 p-4 space-y-3">
+              <Card className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-3 sem token DS */ "flex-1 p-4 space-y-3")}>
                 <Skeleton className="h-5 w-3/4" />
                 <Skeleton className="h-4 w-1/2" />
                 <Skeleton className="h-4 w-2/3" />
-                <div className="flex gap-2 mt-3">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2 mt-3")}>
                   <Skeleton className="h-9 w-32" />
                   <Skeleton className="h-9 w-24" />
                 </div>

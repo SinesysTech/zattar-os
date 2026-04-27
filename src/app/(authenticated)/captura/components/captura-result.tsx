@@ -1,45 +1,45 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { CheckCircle2, XCircle } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { CheckCircle2, XCircle, Clock, Database, Users, FileText, Layers } from 'lucide-react';
 
 export interface CapturaResultData {
-    total?: number;
-    processos?: unknown[];
-    audiencias?: unknown[];
-    persistencia?: {
-      total: number;
-      atualizados: number;
-      erros: number;
-      orgaosJulgadoresCriados?: number;
-    };
-    dataInicio?: string;
-    dataFim?: string;
-    filtroPrazo?: string;
-    credenciais_processadas?: number;
-    message?: string;
-    total_processos?: number;
-    total_partes?: number;
-    clientes?: number;
-    partes_contrarias?: number;
-    terceiros?: number;
-    representantes?: number;
-    vinculos?: number;
-    erros?: Array<{ processo_id: number; numero_processo: string; erro: string }>;
-    duracao_ms?: number;
-    timeline?: unknown[];
-    totalItens?: number;
-    totalDocumentos?: number;
-    totalMovimentos?: number;
-    documentosBaixados?: Array<{
-      detalhes: unknown;
-      pdfTamanho?: number;
-      erro?: string;
-    }>;
-    totalBaixadosSucesso?: number;
-    totalErros?: number;
-    mongoId?: string;
-  }
+  total?: number;
+  processos?: unknown[];
+  audiencias?: unknown[];
+  persistencia?: {
+    total: number;
+    atualizados: number;
+    erros: number;
+    orgaosJulgadoresCriados?: number;
+  };
+  dataInicio?: string;
+  dataFim?: string;
+  filtroPrazo?: string;
+  credenciais_processadas?: number;
+  message?: string;
+  total_processos?: number;
+  total_partes?: number;
+  clientes?: number;
+  partes_contrarias?: number;
+  terceiros?: number;
+  representantes?: number;
+  vinculos?: number;
+  erros?: Array<{ processo_id: number; numero_processo: string; erro: string }>;
+  duracao_ms?: number;
+  timeline?: unknown[];
+  totalItens?: number;
+  totalDocumentos?: number;
+  totalMovimentos?: number;
+  documentosBaixados?: Array<{
+    detalhes: unknown;
+    pdfTamanho?: number;
+    erro?: string;
+  }>;
+  totalBaixadosSucesso?: number;
+  totalErros?: number;
+  mongoId?: string;
+}
 
 interface CapturaResultProps {
   success: boolean | null;
@@ -48,90 +48,240 @@ interface CapturaResultProps {
   captureId?: number | null;
 }
 
-/**
- * Componente para exibir resultados de captura
- */
+interface StatCardProps {
+  icon: React.ReactNode;
+  label: string;
+  value: string | number;
+  variant?: 'default' | 'success' | 'warning' | 'info';
+}
+
+function StatCard({ icon, label, value, variant = 'default' }: StatCardProps) {
+  const variants = {
+    default: 'bg-muted/40 border-border',
+    success: 'bg-success/5 border-success/20',
+    warning: 'bg-warning/5 border-warning/20',
+    info: 'bg-info/5 border-info/20',
+  };
+
+  return (
+    <div className={`flex items-center gap-2.5 rounded-lg border p-2.5 ${variants[variant]}`}>
+      <div className="text-muted-foreground shrink-0">{icon}</div>
+      <div>
+        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground uppercase tracking-wider")}>{label}</p>
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold tabular-nums")}>{value}</p>
+      </div>
+    </div>
+  );
+}
+
 export function CapturaResult({ success, error, data, captureId }: CapturaResultProps) {
-  if (success === null) {
-    return null;
-  }
+  if (success === null) return null;
 
   if (!success) {
     return (
-      <Alert variant="destructive">
-        <XCircle className="h-4 w-4" />
-        <AlertTitle>Erro na Captura</AlertTitle>
-        <AlertDescription>{error || 'Erro desconhecido'}</AlertDescription>
-      </Alert>
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/[0.06] p-4")}>
+        <XCircle className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
+        <div>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold text-destructive")}>Erro na Captura</p>
+          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mt-1")}>{error || 'Erro desconhecido'}</p>
+        </div>
+      </div>
     );
   }
 
-  // Verificar se é resposta assíncrona (captura em progresso)
   const isAsync = data?.message?.includes('background') || data?.credenciais_processadas !== undefined;
 
+  const hasProcessStats =
+    data?.persistencia ||
+    data?.total !== undefined ||
+    data?.total_processos !== undefined ||
+    data?.totalItens !== undefined;
+
+  const hasParteStats =
+    data?.total_partes !== undefined ||
+    data?.clientes !== undefined ||
+    data?.representantes !== undefined;
+
+  const hasTimelineStats =
+    data?.totalDocumentos !== undefined ||
+    data?.totalMovimentos !== undefined;
+
+  const hasPeriodo = data?.dataInicio && data?.dataFim;
+
   return (
-    <Alert className={isAsync ? "border-info bg-info dark:bg-info" : "border-success bg-success dark:bg-success"}>
-      <CheckCircle2 className={`h-4 w-4 ${isAsync ? "text-info dark:text-info" : "text-success dark:text-success"}`} />
-      <AlertTitle className={isAsync ? "text-info dark:text-info" : "text-success dark:text-success"}>
-        {isAsync ? 'Captura Iniciada com Sucesso' : 'Captura Realizada com Sucesso'}
-      </AlertTitle>
-      <AlertDescription className={isAsync ? "text-info dark:text-info" : "text-success dark:text-success"}>
-        <div className="mt-2 space-y-2">
-          {isAsync ? (
-            <>
-              <p>{data?.message || 'A captura está sendo processada em background.'}</p>
-              {data?.credenciais_processadas !== undefined && (
-                <p>
-                  <strong>Credenciais processadas:</strong> {data.credenciais_processadas}
-                </p>
-              )}
-              {captureId && (
-                <p className="text-sm mt-2">
-                  <strong>ID da captura:</strong> {captureId} (consulte o histórico para acompanhar o progresso)
-                </p>
-              )}
-            </>
-          ) : (
-            <>
-              {data?.total !== undefined && (
-                <p>
-                  <strong>Total capturado:</strong> {data.total}
-                </p>
-              )}
-            </>
-          )}
-          {data?.persistencia && (
-            <div className="mt-3 space-y-1 text-sm">
-              <p>
-                <strong>Persistência:</strong>
-              </p>
-              <ul className="list-inside list-disc space-y-1">
-                <li>Total processado: {data.persistencia.total}</li>
-                <li>Atualizados: {data.persistencia.atualizados}</li>
-                {data.persistencia.erros > 0 && (
-                  <li className="text-warning dark:text-warning">
-                    Erros: {data.persistencia.erros}
-                  </li>
-                )}
-                {data.persistencia.orgaosJulgadoresCriados !== undefined && (
-                  <li>Órgãos julgadores criados: {data.persistencia.orgaosJulgadoresCriados}</li>
-                )}
-              </ul>
-            </div>
-          )}
-          {data?.dataInicio && data?.dataFim && (
-            <p className="mt-2 text-sm">
-              <strong>Período:</strong> {new Date(data.dataInicio).toLocaleDateString('pt-BR')} até{' '}
-              {new Date(data.dataFim).toLocaleDateString('pt-BR')}
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      {/* Banner de status */}
+      <div className={`flex items-start gap-3 rounded-lg border p-4 ${
+        isAsync
+          ? 'border-info/30 bg-info/[0.06]'
+          : 'border-success/30 bg-success/[0.06]'
+      }`}>
+        <CheckCircle2 className={`h-4 w-4 shrink-0 mt-0.5 ${isAsync ? 'text-info' : 'text-success'}`} />
+        <div>
+          <p className={`text-sm font-semibold ${isAsync ? 'text-info' : 'text-success'}`}>
+            {isAsync ? 'Captura iniciada em segundo plano' : 'Captura concluída com sucesso'}
+          </p>
+          {isAsync && (
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mt-1")}>
+              {data?.message || 'Os dados estão sendo processados. Consulte o histórico para acompanhar o progresso.'}
             </p>
           )}
-          {data?.filtroPrazo && (
-            <p className="mt-2 text-sm">
-              <strong>Filtro de prazo:</strong> {data.filtroPrazo === 'no_prazo' ? 'No Prazo' : 'Sem Prazo'}
+          {isAsync && captureId && (
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mt-0.5")}>
+              ID da captura: <span className="font-mono">#{captureId}</span>
             </p>
           )}
         </div>
-      </AlertDescription>
-    </Alert>
+      </div>
+
+      {/* Grade de métricas — processos */}
+      {hasProcessStats && (
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4")}>
+          {data?.total !== undefined && (
+            <StatCard
+              icon={<Database className="h-4 w-4" />}
+              label="Total capturado"
+              value={data.total}
+              variant="info"
+            />
+          )}
+          {data?.total_processos !== undefined && (
+            <StatCard
+              icon={<Database className="h-4 w-4" />}
+              label="Processos"
+              value={data.total_processos}
+              variant="info"
+            />
+          )}
+          {data?.totalItens !== undefined && (
+            <StatCard
+              icon={<Layers className="h-4 w-4" />}
+              label="Itens processados"
+              value={data.totalItens}
+              variant="info"
+            />
+          )}
+          {data?.credenciais_processadas !== undefined && (
+            <StatCard
+              icon={<Users className="h-4 w-4" />}
+              label="Credenciais"
+              value={data.credenciais_processadas}
+            />
+          )}
+          {data?.persistencia && (
+            <>
+              <StatCard
+                icon={<Database className="h-4 w-4" />}
+                label="Persistidos"
+                value={data.persistencia.total}
+                variant="success"
+              />
+              <StatCard
+                icon={<FileText className="h-4 w-4" />}
+                label="Atualizados"
+                value={data.persistencia.atualizados}
+                variant="info"
+              />
+              {data.persistencia.erros > 0 && (
+                <StatCard
+                  icon={<XCircle className="h-4 w-4" />}
+                  label="Erros"
+                  value={data.persistencia.erros}
+                  variant="warning"
+                />
+              )}
+              {data.persistencia.orgaosJulgadoresCriados !== undefined && (
+                <StatCard
+                  icon={<Layers className="h-4 w-4" />}
+                  label="Órgãos julgadores criados"
+                  value={data.persistencia.orgaosJulgadoresCriados}
+                />
+              )}
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Grade de métricas — partes */}
+      {hasParteStats && (
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4")}>
+          {data?.total_partes !== undefined && (
+            <StatCard icon={<Users className="h-4 w-4" />} label="Total de partes" value={data.total_partes} variant="info" />
+          )}
+          {data?.clientes !== undefined && (
+            <StatCard icon={<Users className="h-4 w-4" />} label="Clientes" value={data.clientes} variant="success" />
+          )}
+          {data?.partes_contrarias !== undefined && (
+            <StatCard icon={<Users className="h-4 w-4" />} label="Partes contrárias" value={data.partes_contrarias} />
+          )}
+          {data?.terceiros !== undefined && (
+            <StatCard icon={<Users className="h-4 w-4" />} label="Terceiros" value={data.terceiros} />
+          )}
+          {data?.representantes !== undefined && (
+            <StatCard icon={<Users className="h-4 w-4" />} label="Representantes" value={data.representantes} />
+          )}
+          {data?.vinculos !== undefined && (
+            <StatCard icon={<Layers className="h-4 w-4" />} label="Vínculos criados" value={data.vinculos} variant="success" />
+          )}
+        </div>
+      )}
+
+      {/* Grade de métricas — timeline/documentos */}
+      {hasTimelineStats && (
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4")}>
+          {data?.totalDocumentos !== undefined && (
+            <StatCard icon={<FileText className="h-4 w-4" />} label="Documentos" value={data.totalDocumentos} variant="info" />
+          )}
+          {data?.totalMovimentos !== undefined && (
+            <StatCard icon={<Layers className="h-4 w-4" />} label="Movimentos" value={data.totalMovimentos} />
+          )}
+          {data?.totalBaixadosSucesso !== undefined && (
+            <StatCard icon={<FileText className="h-4 w-4" />} label="Baixados" value={data.totalBaixadosSucesso} variant="success" />
+          )}
+          {data?.totalErros !== undefined && data.totalErros > 0 && (
+            <StatCard icon={<XCircle className="h-4 w-4" />} label="Erros de download" value={data.totalErros} variant="warning" />
+          )}
+        </div>
+      )}
+
+      {/* Período de referência */}
+      {hasPeriodo && (
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 rounded-lg border bg-muted/30 px-3 py-2.5")}>
+          <Clock className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+            Período: {new Date(data!.dataInicio!).toLocaleDateString('pt-BR')} até{' '}
+            {new Date(data!.dataFim!).toLocaleDateString('pt-BR')}
+            {data?.filtroPrazo && (
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "ml-1.5 font-medium")}>
+                ({data.filtroPrazo === 'no_prazo' ? 'No Prazo' : 'Sem Prazo'})
+              </span>
+            )}
+          </p>
+        </div>
+      )}
+
+      {/* Erros de processos específicos */}
+      {data?.erros && data.erros.length > 0 && (
+        <div>
+          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-semibold text-destructive uppercase tracking-wider mb-2")}>
+            Erros em processos ({data.erros.length})
+          </p>
+          <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+            {data.erros.slice(0, 5).map((e, i) => (
+              <div key={i} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2.5 → usar <Inset>; text-xs → migrar para <Text variant="caption"> */ "flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/[0.06] p-2.5 text-xs")}>
+                <XCircle className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />
+                <div>
+                  <span className="font-mono text-foreground/80">{e.numero_processo}</span>
+                  <span className="text-muted-foreground ml-1.5">— {e.erro}</span>
+                </div>
+              </div>
+            ))}
+            {data.erros.length > 5 && (
+              <p className="text-[11px] text-muted-foreground">+{data.erros.length - 5} erros adicionais nos logs detalhados</p>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

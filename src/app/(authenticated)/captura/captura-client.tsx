@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Heading } from '@/components/ui/typography';
@@ -129,16 +130,16 @@ export function CapturaClient() {
   };
 
   return (
-    <div className="space-y-5 relative">
+    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5 relative")}>
       {/* Atmospheric glow */}
       <div className="absolute -top-8 right-8 w-64 h-48 bg-primary/[0.04] rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-4 right-32 w-32 h-32 bg-info/[0.03] rounded-full blur-3xl pointer-events-none" />
 
       {/* Header */}
-      <div className="flex items-end justify-between gap-4 relative">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4 relative")}>
         <div>
           <Heading level="page">Captura</Heading>
-          <p className="text-sm text-muted-foreground/50 mt-0.5">
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 mt-0.5")}>
             Automação de captura judicial
           </p>
         </div>
@@ -167,7 +168,7 @@ export function CapturaClient() {
 
           {/* Insight Banner */}
           {kpiData.falhas > 0 && (
-            <div className="flex items-center gap-2 rounded-xl border border-warning/15 bg-warning/5 px-4 py-2.5 text-xs text-warning">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-2 rounded-xl border border-warning/15 bg-warning/5 px-4 py-2.5 text-xs text-warning")}>
               <AlertTriangle className="size-4 shrink-0" />
               <span>
                 <strong>{kpiData.falhas}</strong> captura(s) falharam nos últimos 7 dias — verifique os logs para detalhes.
@@ -176,9 +177,9 @@ export function CapturaClient() {
           )}
 
           {/* Filter Bar + Search + View Toggle */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
             <CapturaFilterBar filters={filters} onChange={setFilters} />
-            <div className="flex items-center gap-2 flex-1 justify-end">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
               <SearchInput
                 value={search}
                 onChange={setSearch}
@@ -259,8 +260,8 @@ export function CapturaClient() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="py-4">
-            <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "py-4")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label>Advogado</Label>
               <AdvogadoCombobox
                 advogados={advogadosList}

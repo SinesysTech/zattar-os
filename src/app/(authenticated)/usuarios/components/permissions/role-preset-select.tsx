@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Text } from '@/components/ui/typography';
 
@@ -19,10 +20,10 @@ export const ROLE_PRESETS: Record<string, { label: string; description: string }
 
 export function RolePresetSelect({ value, onValueChange, disabled }: RolePresetSelectProps) {
   return (
-    <div className="flex items-center gap-2.5">
+    <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
       <Text variant="caption" as="span" className="text-muted-foreground/40 shrink-0">Template de cargo:</Text>
       <Select value={value} onValueChange={onValueChange} disabled={disabled}>
-        <SelectTrigger className="h-8 w-56 text-xs bg-transparent">
+        <SelectTrigger className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 w-56 text-xs bg-transparent")}>
           <SelectValue placeholder="Selecionar preset..." />
         </SelectTrigger>
         <SelectContent>

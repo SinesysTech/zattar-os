@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { Upload, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -153,22 +154,22 @@ export function FileUploadDialogUnified({
                 >
                     <div className="text-center">
                         <Upload className="mx-auto h-10 w-10 opacity-25" aria-hidden="true" />
-                        <div className="mt-4 flex text-sm leading-none">
+                        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-none sem token DS */ "mt-4 flex text-sm leading-none")}>
                             <Label htmlFor="file-upload-unified" className="relative cursor-pointer text-primary">
                                 <span>Selecionar arquivos</span>
                                 <Input
                                     id="file-upload-unified"
                                     name="file-upload"
                                     type="file"
-                                    className="sr-only h-auto p-0"
+                                    className={cn(/* design-system-escape: p-0 → usar <Inset> */ "sr-only h-auto p-0")}
                                     onChange={handleChange}
                                     multiple
                                     disabled={uploading}
                                 />
                             </Label>
-                            <p className="pl-1 text-muted-foreground">ou arraste e solte</p>
+                            <p className={cn(/* design-system-escape: pl-1 padding direcional sem Inset equiv. */ "pl-1 text-muted-foreground")}>ou arraste e solte</p>
                         </div>
-                        <p className="mt-2 text-xs text-muted-foreground">
+                        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "mt-2 text-xs text-muted-foreground")}>
                             PDF, DOC, XLS, imagens e mais (até 50MB)
                         </p>
                     </div>
@@ -176,16 +177,16 @@ export function FileUploadDialogUnified({
 
                 {files.length > 0 && (
                     <div className="mt-4">
-                        <Typography.H4 className="text-sm">Arquivos Selecionados ({files.length})</Typography.H4>
+                        <Typography.H4 className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Arquivos Selecionados ({files.length})</Typography.H4>
                         <ul className="mt-2 max-h-40 divide-y overflow-auto rounded-md border">
                             {files.map((file, index) => (
                                 <li
                                     key={index}
-                                    className="flex items-center justify-between py-2 pl-4 pr-2 text-sm leading-6"
+                                    className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; pl-4 padding direcional sem Inset equiv.; pr-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; leading-6 sem token DS */ /* design-system-escape: py-2 padding direcional sem Inset equiv.; pl-4 padding direcional sem Inset equiv.; pr-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; leading-6 sem token DS */ "flex items-center justify-between py-2 pl-4 pr-2 text-sm leading-6")}
                                 >
                                     <div className="flex min-w-0 flex-1 items-center">
-                                        <div className="flex min-w-0 flex-1 gap-2">
-                                            <span className="truncate font-medium">{file.name}</span>
+                                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex min-w-0 flex-1 gap-2")}>
+                                            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "truncate font-medium")}>{file.name}</span>
                                             <span className="shrink-0 text-muted-foreground">
                                                 {(file.size / 1024).toFixed(1)} KB
                                             </span>

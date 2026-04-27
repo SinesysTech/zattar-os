@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
@@ -68,7 +69,7 @@ export function ConfiguracoesSettingsLayout({
   const currentItem = findNavItem(activeTab);
 
   return (
-    <div className="flex flex-col min-h-0 space-y-5">
+    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "flex flex-col min-h-0 space-y-5")}>
       {/* Page header */}
       <div>
         <Heading level="page">
@@ -83,7 +84,7 @@ export function ConfiguracoesSettingsLayout({
       <SettingsMobileNav activeTab={activeTab} onTabChange={handleTabChange} />
 
       {/* Desktop: sidebar + content */}
-      <div className="flex gap-6 min-h-0">
+      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "flex gap-6 min-h-0")}>
         <SettingsNav activeTab={activeTab} onTabChange={handleTabChange} />
 
         <div className="flex-1 min-w-0">
@@ -98,26 +99,26 @@ export function ConfiguracoesSettingsLayout({
           {activeTab === 'metricas' && (
             metricas
               ? <MetricasDBContent metricas={metricas} />
-              : <div className="p-4 text-center text-muted-foreground/50 text-sm">Carregando métricas...</div>
+              : <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; text-sm → migrar para <Text variant="body-sm"> */ "p-4 text-center text-muted-foreground/50 text-sm")}>Carregando métricas...</div>
           )}
 
           {activeTab === 'seguranca' && <BlockedIpsContent />}
 
           {activeTab === 'integracoes' && (
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 lg:grid-cols-3")}>
               <TwoFAuthIntegrationCard integracao={integracao2FAuth} />
               <ChatwootIntegrationCard integracao={integracaoChatwoot} />
               <DyteIntegrationCard integracao={integracaoDyte} />
               <EditorIAIntegrationCard integracao={integracaoEditorIA} />
-              <GlassPanel className="p-5 opacity-50 cursor-not-allowed">
-                <div className="flex items-center gap-2 mb-4">
+              <GlassPanel className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5 opacity-50 cursor-not-allowed")}>
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-4")}>
                   <Blocks className="size-4 text-muted-foreground/50" />
                   <div>
                     <Heading level="widget">Zapier</Heading>
                     <p className="text-[10px] text-muted-foreground/60">Em breve</p>
                   </div>
                 </div>
-                <p className="text-xs text-muted-foreground/50">
+                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/50")}>
                   Integração com milhares de apps via Zapier.
                 </p>
               </GlassPanel>
@@ -125,16 +126,16 @@ export function ConfiguracoesSettingsLayout({
           )}
 
           {activeTab === 'assistentes-ia' && (
-            <div className="grid gap-4 md:grid-cols-2">
-              <GlassPanel className="p-5 group cursor-pointer hover:border-border/40">
-                <div className="flex items-center gap-2 mb-4">
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2")}>
+              <GlassPanel className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5 group cursor-pointer hover:border-border/40")}>
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-4")}>
                   <Bot className="size-4 text-muted-foreground/50" />
                   <div>
                     <Heading level="widget">Apps Dify</Heading>
                     <p className="text-[10px] text-muted-foreground/60">Chatbots e workflows de automação</p>
                   </div>
                 </div>
-                <p className="text-xs text-muted-foreground/70 mb-4">
+                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/70 mb-4")}>
                   Gerencie múltiplos aplicativos de IA, incluindo chatbots e workflows de automação.
                 </p>
                 <Button variant="outline" size="sm" className="w-full border-border/20 bg-transparent hover:bg-foreground/4" asChild>
@@ -144,15 +145,15 @@ export function ConfiguracoesSettingsLayout({
                   </Link>
                 </Button>
               </GlassPanel>
-              <GlassPanel className="p-5 group cursor-pointer hover:border-border/40">
-                <div className="flex items-center gap-2 mb-4">
+              <GlassPanel className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5 group cursor-pointer hover:border-border/40")}>
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-4")}>
                   <Bot className="size-4 text-muted-foreground/50" />
                   <div>
                     <Heading level="widget">Vinculação por Tipo</Heading>
                     <p className="text-[10px] text-muted-foreground/60">Geração automática de peças</p>
                   </div>
                 </div>
-                <p className="text-xs text-muted-foreground/70 mb-4">
+                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/70 mb-4")}>
                   Vincule assistentes de IA a tipos de expedientes para geração automática de peças.
                 </p>
                 <Button variant="outline" size="sm" className="w-full border-border/20 bg-transparent hover:bg-foreground/4" asChild>

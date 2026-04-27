@@ -8,6 +8,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import { Activity } from 'lucide-react';
 import {
   MiniBar,
@@ -40,9 +41,9 @@ export function VolumeSemanal() {
         icon={Activity}
         subtitle="Recebidos vs baixados"
         depth={1}
-        className="h-auto! self-start p-4!"
+        className={cn(/* design-system-escape: p-4! → usar <Inset> */ "h-auto! self-start p-4!")}
       >
-        <p className="text-[11px] text-muted-foreground/60 py-6 text-center">
+        <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-6 text-center")}>
           Dados de volume semanal nao disponiveis.
         </p>
       </WidgetContainer>
@@ -64,7 +65,7 @@ export function VolumeSemanal() {
       icon={Activity}
       subtitle="Recebidos vs baixados"
       depth={1}
-      className="h-auto! self-start p-4!"
+      className={cn(/* design-system-escape: p-4! → usar <Inset> */ "h-auto! self-start p-4!")}
     >
       <div className="mt-2">
         <MiniBar
@@ -75,22 +76,22 @@ export function VolumeSemanal() {
         />
       </div>
 
-      <div className="mt-3 flex items-center justify-between border-t border-border/10 pt-2.5">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5">
+      <div className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "mt-3 flex items-center justify-between border-t border-border/10 pt-2.5")}>
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
             <div className="size-2 rounded-full bg-primary/60" />
             <span className="text-[9px] text-muted-foreground/60">
               Recebidos: {fmtNum(totalRecebidos)}
             </span>
           </div>
-          <div className="flex items-center gap-1.5">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
             <div className="size-2 rounded-full bg-success/50" />
             <span className="text-[9px] text-muted-foreground/60">
               Baixados: {fmtNum(totalBaixados)}
             </span>
           </div>
         </div>
-        <span className="text-[11px] font-bold tabular-nums">
+        <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[11px] font-bold tabular-nums")}>
           {fmtNum(totalRecebidos + totalBaixados)}
         </span>
       </div>

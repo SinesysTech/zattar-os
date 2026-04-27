@@ -8,6 +8,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Calendar, Clock, MapPin, Gavel, FileText, BarChart3, TrendingUp } from 'lucide-react';
 import {
   GallerySection,
@@ -159,7 +160,7 @@ export function ProximasAudiencias() {
       subtitle="Agenda dos próximos 30 dias"
       className="md:col-span-2"
     >
-      <div className="space-y-2">
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         {PROXIMAS_AUDIENCIAS.map((a) => (
           <div
             key={a.id}
@@ -169,37 +170,37 @@ export function ProximasAudiencias() {
               ${a.isNext ? `${a.bgColor} border rounded-lg border-border/20 pr-2` : ''}
             `}
           >
-            <div className="flex items-start justify-between gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
               <div className="min-w-0">
-                <div className="flex items-center gap-1.5 flex-wrap">
+                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 flex-wrap")}>
                   <span
                     className={`text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full ${a.pillColor}`}
                   >
                     {a.tipo}
                   </span>
                   {a.isNext && (
-                    <span className="text-[9px] font-medium text-primary/70 uppercase tracking-wider">
+                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[9px] font-medium text-primary/70 uppercase tracking-wider")}>
                       Próxima
                     </span>
                   )}
                 </div>
-                <p className="text-[11px] font-medium mt-1 truncate">{a.parte}</p>
+                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium mt-1 truncate")}>{a.parte}</p>
                 <p className="text-[9px] text-muted-foreground/60 font-mono truncate">
                   {a.processo}
                 </p>
               </div>
               <div className="text-right shrink-0">
-                <div className="flex items-center gap-1 justify-end text-[10px] text-muted-foreground/60">
+                <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 justify-end text-[10px] text-muted-foreground/60")}>
                   <Calendar className="size-2.5" />
                   <span>{a.date}</span>
                 </div>
-                <div className="flex items-center gap-1 justify-end text-[10px] text-muted-foreground/50 mt-0.5">
+                <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 justify-end text-[10px] text-muted-foreground/50 mt-0.5")}>
                   <Clock className="size-2.5" />
                   <span>{a.time}</span>
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-1 mt-1.5 text-[9px] text-muted-foreground/60">
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 mt-1.5 text-[9px] text-muted-foreground/60")}>
               <MapPin className="size-2.5 shrink-0" />
               <span className="truncate">{a.local}</span>
             </div>
@@ -221,27 +222,27 @@ export function ModalidadeDistribution() {
       icon={Gavel}
       subtitle="Distribuição por formato"
     >
-      <div className="flex flex-col items-center gap-4 py-2">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; py-2 padding direcional sem Inset equiv. */ "flex flex-col items-center gap-4 py-2")}>
         <MiniDonut
           segments={MODALIDADE_SEGMENTS}
           size={110}
           strokeWidth={14}
           centerLabel={`${fmtNum(total)}`}
         />
-        <div className="w-full space-y-3">
+        <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "w-full space-y-3")}>
           {MODALIDADE_SEGMENTS.map((seg) => (
-            <div key={seg.label} className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2 min-w-0">
+            <div key={seg.label} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
                 <div
                   className="size-2.5 rounded-full shrink-0"
                   style={{ backgroundColor: seg.color }}
                 />
-                <span className="text-xs text-muted-foreground/60 truncate">
+                <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60 truncate")}>
                   {seg.label}
                 </span>
               </div>
-              <div className="text-right shrink-0 flex items-baseline gap-1.5">
-                <span className="text-sm font-semibold font-display">{seg.value}</span>
+              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "text-right shrink-0 flex items-baseline gap-1.5")}>
+                <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold font-display")}>{seg.value}</span>
                 <span className="text-[10px] text-muted-foreground/60">
                   {Math.round((seg.value / total) * 100)}%
                 </span>
@@ -249,10 +250,10 @@ export function ModalidadeDistribution() {
             </div>
           ))}
         </div>
-        <div className="w-full pt-2 border-t border-border/15">
+        <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "w-full pt-2 border-t border-border/15")}>
           <div className="flex justify-between text-[10px] text-muted-foreground/60">
             <span>TOTAL</span>
-            <span className="font-semibold text-foreground/60">{fmtNum(total)}</span>
+            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-foreground/60")}>{fmtNum(total)}</span>
           </div>
         </div>
       </div>
@@ -269,31 +270,31 @@ export function StatusMensal() {
       icon={Calendar}
       subtitle="Últ. 6 meses — Marcadas vs Realizadas vs Canceladas"
     >
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <MiniBar
           data={STATUS_MENSAL_DATA}
           height={56}
           barColor="bg-primary/50"
           barColor2="bg-[hsl(142_60%_45%/0.5)]"
         />
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1.5">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
             <div className="size-2 rounded-sm bg-primary/50" />
             <span className="text-[9px] text-muted-foreground/50">Marcadas</span>
           </div>
-          <div className="flex items-center gap-1.5">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
             <div className="size-2 rounded-sm bg-[hsl(142_60%_45%/0.5)]" />
             <span className="text-[9px] text-muted-foreground/50">Realizadas</span>
           </div>
-          <div className="flex items-center gap-1.5">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
             <div className="size-2 rounded-sm bg-destructive/30" />
             <span className="text-[9px] text-muted-foreground/50">Canceladas</span>
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-2 pt-1 border-t border-border/15">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-1 padding direcional sem Inset equiv. */ "grid grid-cols-3 gap-2 pt-1 border-t border-border/15")}>
           {STATUS_MENSAL_DATA.slice(-3).map((d) => (
             <div key={d.label} className="text-center">
-              <p className="text-[10px] font-display font-bold">{d.value}</p>
+              <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[10px] font-display font-bold")}>{d.value}</p>
               <p className="text-[9px] text-muted-foreground/60">{d.label}</p>
             </div>
           ))}
@@ -308,18 +309,18 @@ export function StatusMensal() {
 export function KpiStrip() {
   return (
     <WidgetContainer title="Resumo do Período" icon={Clock} subtitle="Março 2026">
-      <div className="grid grid-cols-3 gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-3 gap-3")}>
         {/* KPI 1 */}
-        <div className="flex flex-col gap-1">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
           <Stat label="Este Mês" value="8" delta="+1 vs fev." deltaType="positive" small />
         </div>
         {/* KPI 2 */}
-        <div className="flex flex-col gap-1">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
           <Stat label="Próx. 7 dias" value="3" delta="2 virtual" deltaType="neutral" small />
         </div>
         {/* KPI 3 — com ProgressRing */}
-        <div className="flex flex-col items-center gap-1">
-          <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider self-start">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col items-center gap-1")}>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider self-start")}>
             Comparecimento
           </p>
           <ProgressRing
@@ -330,21 +331,21 @@ export function KpiStrip() {
           <p className="text-[9px] text-muted-foreground/60">de 8 aud.</p>
         </div>
       </div>
-      <div className="mt-4 grid grid-cols-2 gap-2 pt-3 border-t border-border/15">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-3 padding direcional sem Inset equiv. */ "mt-4 grid grid-cols-2 gap-2 pt-3 border-t border-border/15")}>
         <div>
-          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Adiamentos
           </p>
-          <p className="text-sm font-display font-bold mt-0.5">
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-display font-bold mt-0.5")}>
             2{' '}
             <span className="text-[10px] font-normal text-muted-foreground/60">este mês</span>
           </p>
         </div>
         <div>
-          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Duração Média
           </p>
-          <p className="text-sm font-display font-bold mt-0.5">
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-display font-bold mt-0.5")}>
             47{' '}
             <span className="text-[10px] font-normal text-muted-foreground/60">min</span>
           </p>
@@ -359,12 +360,12 @@ export function KpiStrip() {
 export function AudienciasPorTipo() {
   return (
     <WidgetContainer title="Por Tipo" icon={Gavel} subtitle="Distribuição histórica">
-      <div className="space-y-2.5">
+      <div className={cn(/* design-system-escape: space-y-2.5 sem token DS */ "space-y-2.5")}>
         {TIPO_BARS.map((bar) => (
-          <div key={bar.label} className="space-y-1">
+          <div key={bar.label} className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
             <div className="flex items-center justify-between">
               <span className="text-[10px] text-muted-foreground/60">{bar.label}</span>
-              <span className="text-[10px] font-semibold font-display">{bar.value}</span>
+              <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold font-display")}>{bar.value}</span>
             </div>
             <div className="h-1.5 rounded-full bg-border/15 overflow-hidden">
               <div
@@ -377,9 +378,9 @@ export function AudienciasPorTipo() {
             </div>
           </div>
         ))}
-        <div className="pt-2 border-t border-border/15 flex justify-between text-[9px] text-muted-foreground/60">
+        <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "pt-2 border-t border-border/15 flex justify-between text-[9px] text-muted-foreground/60")}>
           <span>TOTAL</span>
-          <span className="font-semibold text-foreground/50">
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-foreground/50")}>
             {fmtNum(TIPO_BARS.reduce((acc, b) => acc + b.value, 0))} audiências
           </span>
         </div>
@@ -413,8 +414,8 @@ export function TrendMensal() {
           small
         />
         <div className="text-right">
-          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Média</p>
-          <p className="text-sm font-display font-bold mt-0.5">
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>Média</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-display font-bold mt-0.5")}>
             {(TREND_MENSAL.reduce((a, b) => a + b, 0) / TREND_MENSAL.length).toFixed(1)}
           </p>
           <p className="text-[9px] text-muted-foreground/60">por mês</p>
@@ -426,7 +427,7 @@ export function TrendMensal() {
 
       <div className="flex justify-between mt-2">
         <span className="text-[9px] text-muted-foreground/60">{months[0]}</span>
-        <span className="text-[9px] text-primary/60 font-medium">{months[months.length - 1]}</span>
+        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[9px] text-primary/60 font-medium")}>{months[months.length - 1]}</span>
       </div>
     </WidgetContainer>
   );
@@ -502,7 +503,7 @@ export function WidgetComparativoMensal() {
       icon={BarChart3}
       subtitle="Março vs Fevereiro 2026"
     >
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         {COMPARATIVO_ITEMS.map((item) => {
           const diff = item.current - item.previous;
           const pct = item.previous !== 0 ? ((diff / item.previous) * 100) : 0;
@@ -511,17 +512,17 @@ export function WidgetComparativoMensal() {
           const fmtVal = (v: number) => item.unit === '%' ? `${v.toFixed(1)}${item.unit}` : `${v}${item.unit ? ' ' + item.unit : ''}`;
 
           return (
-            <div key={item.label} className="space-y-1.5">
+            <div key={item.label} className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
               <div className="flex items-center justify-between">
                 <span className="text-[10px] text-muted-foreground/60">{item.label}</span>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-sm font-semibold font-display tabular-nums">{fmtVal(item.current)}</span>
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-baseline gap-2")}>
+                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold font-display tabular-nums")}>{fmtVal(item.current)}</span>
                   <span className={`text-[10px] font-medium ${isPositive ? 'text-success/70' : 'text-destructive/70'}`}>
                     {pct >= 0 ? '+' : ''}{pct.toFixed(1)}%
                   </span>
                 </div>
               </div>
-              <div className="flex gap-1 h-1.5">
+              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1 h-1.5")}>
                 <div
                   className="rounded-full transition-all duration-500"
                   style={{ width: `${(item.current / maxVal) * 100}%`, backgroundColor: item.color }}
@@ -552,22 +553,22 @@ export function WidgetHeatmapSemanal() {
       icon={TrendingUp}
       subtitle="Audiências por dia — últimas 5 semanas"
     >
-      <div className="flex flex-col gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4")}>
         <CalendarHeatmap data={HEATMAP_DATA} colorScale="primary" />
-        <div className="grid grid-cols-1 gap-1.5 pt-1 border-t border-border/15">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; pt-1 padding direcional sem Inset equiv. */ "grid grid-cols-1 gap-1.5 pt-1 border-t border-border/15")}>
           <div className="flex items-center justify-between">
-            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Dia mais cheio
             </span>
-            <span className="text-[10px] font-semibold text-foreground/70">
+            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold text-foreground/70")}>
               Quarta (média 3.2)
             </span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Horário pico
             </span>
-            <span className="text-[10px] font-semibold text-foreground/70">
+            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold text-foreground/70")}>
               14h–16h
             </span>
           </div>
@@ -586,11 +587,11 @@ export function WidgetPreparacao() {
       icon={FileText}
       subtitle="Status documental das próximas audiências"
     >
-      <div className="space-y-3 mb-4">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3 mb-4")}>
         {PREPARACAO_ITEMS.map((item) => (
           <div
             key={item.nome}
-            className="flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-foreground/4 transition-colors duration-150"
+            className={cn(/* design-system-escape: gap-3 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-foreground/4 transition-colors duration-150")}
           >
             <ProgressRing
               percent={item.preparo}
@@ -598,8 +599,8 @@ export function WidgetPreparacao() {
               color={item.ringColor}
             />
             <div className="flex-1 min-w-0">
-              <p className="text-[10px] font-medium truncate leading-tight">{item.nome}</p>
-              <div className="flex items-center gap-1.5 mt-0.5">
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[10px] font-medium truncate leading-tight")}>{item.nome}</p>
+              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mt-0.5")}>
                 <span className={`text-[9px] font-medium ${item.statusColor}`}>
                   {item.statusText}
                 </span>

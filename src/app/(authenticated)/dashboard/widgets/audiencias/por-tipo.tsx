@@ -11,6 +11,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import { Gavel } from 'lucide-react';
 import {
   WidgetContainer,
@@ -44,7 +45,7 @@ export function AudienciasPorTipo() {
         icon={Gavel}
         subtitle="Distribuicao por tipo de audiencia"
       >
-        <div className="flex flex-col items-center justify-center py-6 gap-2">
+        <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center justify-center py-6 gap-2")}>
           <Gavel className="size-8 text-muted-foreground/45" />
           <p className="text-[11px] text-muted-foreground/60 text-center">
             Dados por tipo indisponiveis
@@ -63,17 +64,17 @@ export function AudienciasPorTipo() {
       icon={Gavel}
       subtitle="Distribuicao por tipo de audiencia"
     >
-      <div className="space-y-2.5">
+      <div className={cn(/* design-system-escape: space-y-2.5 sem token DS */ "space-y-2.5")}>
         {porTipo.map((item) => {
           const pct = total > 0 ? ((item.count / total) * 100).toFixed(1) : '0';
           return (
-            <div key={item.tipo} className="space-y-1">
+            <div key={item.tipo} className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
               <div className="flex items-center justify-between text-[11px]">
                 <span className="text-muted-foreground/70 truncate">
                   {item.tipo}
                 </span>
-                <div className="flex items-center gap-1.5 shrink-0">
-                  <span className="font-medium tabular-nums">
+                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 shrink-0")}>
+                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium tabular-nums")}>
                     {fmtNum(item.count)}
                   </span>
                   <span className="text-muted-foreground/50 text-[10px] tabular-nums">
@@ -95,11 +96,11 @@ export function AudienciasPorTipo() {
         })}
 
         {/* Total */}
-        <div className="flex items-center justify-between pt-2 border-t border-border/10">
-          <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">
+        <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between pt-2 border-t border-border/10")}>
+          <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
             Total
           </span>
-          <span className="text-[12px] font-bold tabular-nums">
+          <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[12px] font-bold tabular-nums")}>
             {fmtNum(total)}
           </span>
         </div>

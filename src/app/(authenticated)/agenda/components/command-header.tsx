@@ -51,15 +51,15 @@ export function CommandHeader({ summary, weekPulse }: CommandHeaderProps) {
   ];
 
   return (
-    <GlassPanel depth={2} className="p-4 sm:p-5">
+    <GlassPanel depth={2} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-5 sem equivalente DS */ "p-4 sm:p-5")}>
       {/* Stats row */}
-      <div className="flex items-center gap-4 sm:gap-5 overflow-x-auto pb-3 border-b border-border/10">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; sm:gap-5 sem equivalente DS; pb-3 padding direcional sem Inset equiv. */ "flex items-center gap-4 sm:gap-5 overflow-x-auto pb-3 border-b border-border/10")}>
         {stats.map((s, i) => (
-          <div key={s.label} className="flex items-center gap-2 min-w-max">
+          <div key={s.label} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-max")}>
             {i > 0 && <div className="w-px h-6 bg-border/8 shrink-0 hidden sm:block" />}
             <s.icon className={cn("size-3 opacity-40 shrink-0", s.color)} />
-            <div className="flex items-baseline gap-1.5">
-              <span className="font-display text-sm font-bold tabular-nums">{s.value}</span>
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5")}>
+              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "font-display text-sm font-bold tabular-nums")}>{s.value}</span>
               <span className="text-[9px] text-muted-foreground/55 hidden sm:inline">{s.label}</span>
             </div>
           </div>
@@ -67,13 +67,13 @@ export function CommandHeader({ summary, weekPulse }: CommandHeaderProps) {
       </div>
 
       {/* Week pulse row */}
-      <div className="flex items-end justify-between gap-1.5 sm:gap-2 pt-3">
+      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; sm:gap-2 sem equivalente DS; pt-3 padding direcional sem Inset equiv. */ "flex items-end justify-between gap-1.5 sm:gap-2 pt-3")}>
         {weekPulse.map((day) => {
           const h = day.horas > 0 ? Math.max(14, (day.horas / maxH) * 100) : 6;
           return (
-            <div key={day.dia} className="flex flex-col items-center gap-1 flex-1">
+            <div key={day.dia} className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col items-center gap-1 flex-1")}>
               <span className={cn(
-                "text-[9px] tabular-nums font-medium",
+                /* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[9px] tabular-nums font-medium",
                 day.hoje ? "text-primary" : day.eventos > 0 ? "text-muted-foreground/60" : "text-muted-foreground/60",
               )}>
                 {day.eventos || "–"}
@@ -87,8 +87,8 @@ export function CommandHeader({ summary, weekPulse }: CommandHeaderProps) {
                 style={{ height: `${h}%`, minHeight: 4, maxHeight: 36 }}
               />
               <span className={cn(
-                "text-[9px] font-medium",
-                day.hoje ? "text-primary font-semibold" : "text-muted-foreground/55",
+                /* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[9px] font-medium",
+                day.hoje ? /* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-primary font-semibold" : "text-muted-foreground/55",
               )}>
                 {day.dia}
               </span>

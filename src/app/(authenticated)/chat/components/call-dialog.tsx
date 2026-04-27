@@ -197,7 +197,7 @@ export function CallDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={cn(
-        "p-0 overflow-hidden bg-video-surface border-none text-video-text transition-all duration-300",
+        /* design-system-escape: p-0 → usar <Inset> */ "p-0 overflow-hidden bg-video-surface border-none text-video-text transition-all duration-300",
         showLarge ? "max-w-4xl h-[80vh]" : "max-w-md h-125"
       )}>
         <VisuallyHidden>
@@ -213,13 +213,13 @@ export function CallDialog({
         )}
 
         {error && (
-          <div className="flex flex-col items-center justify-center h-full gap-4 p-8 text-center bg-video-surface">
-            <div className="bg-destructive/10 p-4 rounded-full">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full gap-4 p-8 text-center bg-video-surface")}>
+            <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "bg-destructive/10 p-4 rounded-full")}>
               <RotateCcw className="w-12 h-12 text-destructive" />
             </div>
             <Heading level="card" className="text-video-text">Erro na Chamada</Heading>
             <p className="text-video-muted max-w-sm">{error}</p>
-            <div className="flex gap-4 mt-4">
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4 mt-4")}>
               <Button variant="outline" onClick={() => onOpenChange(false)} className="border-video-surface-hover hover:bg-video-surface-hover">
                 Cancelar
               </Button>

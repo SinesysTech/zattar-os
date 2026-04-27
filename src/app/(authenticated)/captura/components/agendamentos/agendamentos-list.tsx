@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 import {
@@ -177,7 +178,7 @@ export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Advogado ID" />
         ),
-        cell: ({ row }) => <span className="text-sm">{row.original.advogado_id}</span>,
+        cell: ({ row }) => <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{row.original.advogado_id}</span>,
         meta: { headerLabel: 'Advogado ID' },
       },
       {
@@ -185,7 +186,7 @@ export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Horário" />
         ),
-        cell: ({ row }) => <span className="text-sm tabular-nums">{row.original.horario}</span>,
+        cell: ({ row }) => <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm tabular-nums")}>{row.original.horario}</span>,
         meta: { headerLabel: 'Horário' },
       },
       {
@@ -194,7 +195,7 @@ export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
           <DataTableColumnHeader column={column} title="Próxima execução" />
         ),
         cell: ({ row }) => (
-          <span className="text-sm">
+          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
             {row.original.proxima_execucao ? new Date(row.original.proxima_execucao).toLocaleString('pt-BR') : '-'}
           </span>
         ),
@@ -217,7 +218,7 @@ export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
           <div className="flex justify-end">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
+                <Button variant="ghost" className={cn(/* design-system-escape: p-0 → usar <Inset> */ "h-8 w-8 p-0")}>
                   <span className="sr-only">Abrir menu</span>
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
@@ -261,7 +262,7 @@ export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
 
   if (isLoading) {
     return (
-      <div className="space-y-4">
+      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         <Skeleton className="h-10 w-full" />
         <Skeleton className="h-64 w-full" />
       </div>
@@ -286,7 +287,7 @@ export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
             }
           />
         ) : (
-          <div className="p-6" />
+          <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")} />
         )
       }
     >

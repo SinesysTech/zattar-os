@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -133,37 +134,37 @@ export function PlanoContaEditDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4 py-4">
+          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-4 padding direcional sem Inset equiv. */ "space-y-4 py-4")}>
             {Object.keys(errors).length > 0 && (
-              <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-3 text-sm text-destructive")}>
                 Corrija os erros no formulário antes de continuar.
               </div>
             )}
 
             {/* Código (somente leitura) */}
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label>Código</Label>
               <Input value={conta.codigo} disabled className="bg-muted" />
-              <p className="text-xs text-muted-foreground">
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                 O código não pode ser alterado.
               </p>
             </div>
 
             {/* Nível (somente leitura) */}
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label>Nível</Label>
               <Input
                 value={conta.nivel === 'sintetica' ? 'Sintética' : 'Analítica'}
                 disabled
                 className="bg-muted"
               />
-              <p className="text-xs text-muted-foreground">
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                 O nível não pode ser alterado após a criação.
               </p>
             </div>
 
             {/* Nome */}
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label htmlFor="nome">
                 Nome <span className="text-destructive">*</span>
               </Label>
@@ -174,12 +175,12 @@ export function PlanoContaEditDialog({
                 disabled={isSubmitting}
               />
               {errors.nome && (
-                <p className="text-sm text-destructive">{errors.nome.message}</p>
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.nome.message}</p>
               )}
             </div>
 
             {/* Descrição */}
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label htmlFor="descricao">Descrição</Label>
               <Textarea
                 id="descricao"
@@ -188,14 +189,14 @@ export function PlanoContaEditDialog({
                 disabled={isSubmitting}
               />
               {errors.descricao && (
-                <p className="text-sm text-destructive">{errors.descricao.message}</p>
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.descricao.message}</p>
               )}
             </div>
 
             {/* Grid para Tipo e Natureza */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
               {/* Tipo de Conta */}
-              <div className="space-y-2">
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                 <Label>
                   Tipo <span className="text-destructive">*</span>
                 </Label>
@@ -218,12 +219,12 @@ export function PlanoContaEditDialog({
                   </SelectContent>
                 </Select>
                 {errors.tipoConta && (
-                  <p className="text-sm text-destructive">{errors.tipoConta.message}</p>
+                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.tipoConta.message}</p>
                 )}
               </div>
 
               {/* Natureza */}
-              <div className="space-y-2">
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                 <Label>
                   Natureza <span className="text-destructive">*</span>
                 </Label>
@@ -244,13 +245,13 @@ export function PlanoContaEditDialog({
                   </SelectContent>
                 </Select>
                 {errors.natureza && (
-                  <p className="text-sm text-destructive">{errors.natureza.message}</p>
+                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.natureza.message}</p>
                 )}
               </div>
             </div>
 
             {/* Conta Pai */}
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label>Conta Pai</Label>
               <PlanoContaPaiSelect
                 value={watch('contaPaiId')}
@@ -258,15 +259,15 @@ export function PlanoContaEditDialog({
                 excluirId={conta.id}
                 disabled={isSubmitting}
               />
-              <p className="text-xs text-muted-foreground">
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                 Deixe vazio para contas de primeiro nível.
               </p>
             </div>
 
             {/* Grid para Ordem e Status */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
               {/* Ordem de Exibição */}
-              <div className="space-y-2">
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                 <Label htmlFor="ordemExibicao">Ordem de Exibição</Label>
                 <Input
                   id="ordemExibicao"
@@ -277,15 +278,15 @@ export function PlanoContaEditDialog({
                   placeholder="Ex: 1"
                   disabled={isSubmitting}
                 />
-                <p className="text-xs text-muted-foreground">
+                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                   Menor número aparece primeiro.
                 </p>
               </div>
 
               {/* Status Ativo */}
-              <div className="space-y-2">
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                 <Label>Status</Label>
-                <div className="flex items-center space-x-2 pt-2">
+                <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight">; pt-2 padding direcional sem Inset equiv. */ "flex items-center space-x-2 pt-2")}>
                   <Switch
                     id="ativo"
                     checked={watch('ativo')}

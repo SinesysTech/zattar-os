@@ -7,6 +7,7 @@
  * - primary (selection states, interactive elements)
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { FileText, CheckCircle2, AlertCircle} from 'lucide-react';
@@ -205,7 +206,7 @@ export function GerarPecaDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <FileText className="h-5 w-5" />
             Gerar Peça Jurídica
           </DialogTitle>
@@ -219,9 +220,9 @@ export function GerarPecaDialog({
 
         {/* Step 1: Selecionar Modelo */}
         {step === 'select-model' && (
-          <div className="space-y-4">
+          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             {/* Filtro por tipo */}
-            <div className="flex items-center gap-4">
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
               <Label>Filtrar por tipo:</Label>
               <Select
                 value={tipoFiltro}
@@ -244,17 +245,17 @@ export function GerarPecaDialog({
             {/* Lista de modelos */}
             <ScrollArea className="h-75 border rounded-md">
               {loadingModelos ? (
-                <div className="p-4 space-y-3">
+                <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-3 sem token DS */ "p-4 space-y-3")}>
                   {[1, 2, 3].map((i) => (
                     <Skeleton key={i} className="h-16 w-full" />
                   ))}
                 </div>
               ) : modelosFiltrados.length === 0 ? (
-                <div className="p-8 text-center text-muted-foreground">
+                <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "p-8 text-center text-muted-foreground")}>
                   Nenhum modelo encontrado
                 </div>
               ) : (
-                <div className="p-2 space-y-2">
+                <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-2 → migrar para <Stack gap="tight"> */ "p-2 space-y-2")}>
                   {modelosFiltrados.map((modelo) => (
                     <button
                       key={modelo.id}
@@ -265,11 +266,11 @@ export function GerarPecaDialog({
                           : 'border-border hover:border-primary/50'
                       }`}
                     >
-                      <div className="flex items-start justify-between gap-2">
+                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
                         <div>
-                          <p className="font-medium">{modelo.titulo}</p>
+                          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{modelo.titulo}</p>
                           {modelo.descricao && (
-                            <p className="text-sm text-muted-foreground line-clamp-1">
+                            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground line-clamp-1")}>
                               {modelo.descricao}
                             </p>
                           )}
@@ -286,7 +287,7 @@ export function GerarPecaDialog({
 
             {/* Título do documento */}
             {selectedModeloId && (
-              <div className="space-y-2">
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                 <Label htmlFor="titulo">Título do documento</Label>
                 <Input
                   id="titulo"
@@ -301,15 +302,15 @@ export function GerarPecaDialog({
 
         {/* Step 2: Preview */}
         {step === 'preview' && preview && (
-          <div className="space-y-4">
+          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             {/* Resumo */}
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 text-success">
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-success")}>
                 <CheckCircle2 className="h-4 w-4" />
                 <span>{preview.resolvidosCount} resolvidos</span>
               </div>
               {preview.naoResolvidosCount > 0 && (
-                <div className="flex items-center gap-2 text-warning">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-warning")}>
                   <AlertCircle className="h-4 w-4" />
                   <span>{preview.naoResolvidosCount} não resolvidos</span>
                 </div>
@@ -330,7 +331,7 @@ export function GerarPecaDialog({
 
             {/* Lista de placeholders */}
             <ScrollArea className="h-62.5 border rounded-md">
-              <div className="p-4 space-y-2">
+              <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-2 → migrar para <Stack gap="tight"> */ "p-4 space-y-2")}>
                 {preview.placeholders.map((p, i) => (
                   <div
                     key={i}
@@ -338,7 +339,7 @@ export function GerarPecaDialog({
                       p.resolved ? 'bg-success/5' : 'bg-warning/5'
                     }`}
                   >
-                    <code className="text-sm">{p.placeholder}</code>
+                    <code className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{p.placeholder}</code>
                     <span className={`text-sm ${p.resolved ? 'text-success' : 'text-warning'}`}>
                       {p.resolved ? p.value : '(não encontrado)'}
                     </span>
@@ -351,7 +352,7 @@ export function GerarPecaDialog({
 
         {/* Step 3: Generating */}
         {step === 'generating' && (
-          <div className="py-12 flex flex-col items-center justify-center gap-4">
+          <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv.; gap-4 → migrar para <Inline gap="default"> */ "py-12 flex flex-col items-center justify-center gap-4")}>
             <LoadingSpinner className="size-8 text-primary" />
             <p className="text-muted-foreground">Gerando peça jurídica...</p>
           </div>
@@ -359,13 +360,13 @@ export function GerarPecaDialog({
 
         {/* Step 4: Success */}
         {step === 'success' && result && (
-          <div className="py-8 space-y-4">
-            <div className="flex flex-col items-center gap-4">
+          <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv.; space-y-4 → migrar para <Stack gap="default"> */ "py-8 space-y-4")}>
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center gap-4")}>
               <CheckCircle2 className="h-12 w-12 text-success" />
-              <p className="text-lg font-medium">Peça gerada com sucesso!</p>
+              <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-medium → className de <Text>/<Heading> */ "text-lg font-medium")}>Peça gerada com sucesso!</p>
             </div>
 
-            <div className="bg-muted p-4 rounded-lg space-y-2">
+            <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-2 → migrar para <Stack gap="tight"> */ "bg-muted p-4 rounded-lg space-y-2")}>
               <p>
                 <strong>Título:</strong> {result.titulo}
               </p>

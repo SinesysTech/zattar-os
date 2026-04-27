@@ -59,8 +59,8 @@ export function TaskCard({ tarefa, isDragOverlay }: TaskCardProps) {
           isDragOverlay && "shadow-lg ring-2 ring-primary/20"
         )}
       >
-        <CardContent className="p-3">
-          <div className="flex items-start gap-2">
+        <CardContent className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2")}>
             <button
               className="text-muted-foreground mt-0.5 shrink-0 cursor-grab hover:text-foreground"
               {...(isDragOverlay ? {} : listeners)}
@@ -68,12 +68,12 @@ export function TaskCard({ tarefa, isDragOverlay }: TaskCardProps) {
               <GripVertical className="size-4" />
             </button>
 
-            <div className="min-w-0 flex-1 space-y-2">
-              <Text variant="label" as="p" className="font-medium leading-tight">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "min-w-0 flex-1 space-y-2")}>
+              <Text variant="label" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "font-medium leading-tight")}>
                 {tarefa.titulo}
               </Text>
 
-              <div className="flex items-center gap-2 flex-wrap">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
                 <PriorityIndicator
                   prioridade={tarefa.prioridade}
                   showLabel={false}
@@ -92,7 +92,7 @@ export function TaskCard({ tarefa, isDragOverlay }: TaskCardProps) {
                 )}
 
                 {(tarefa.subtarefasCount ?? 0) > 0 && (
-                  <span className="text-muted-foreground inline-flex items-center gap-1 text-xs">
+                  <span className={cn(/* design-system-escape: gap-1 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground inline-flex items-center gap-1 text-xs")}>
                     <ListTree className="size-3" />
                     {tarefa.subtarefasConcluidas ?? 0}/
                     {tarefa.subtarefasCount}
@@ -101,7 +101,7 @@ export function TaskCard({ tarefa, isDragOverlay }: TaskCardProps) {
               </div>
 
               {tarefa.responsavelNome && (
-                <div className="flex items-center gap-1.5">
+                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
                   <Avatar size="xs">
                     <AvatarImage
                       src={tarefa.responsavelAvatar ?? ""}
@@ -111,7 +111,7 @@ export function TaskCard({ tarefa, isDragOverlay }: TaskCardProps) {
                       {generateAvatarFallback(tarefa.responsavelNome)}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="text-muted-foreground text-xs truncate">
+                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground text-xs truncate")}>
                     {tarefa.responsavelNome}
                   </span>
                 </div>

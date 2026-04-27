@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -138,16 +139,16 @@ export function SystemBoardClient({ board, events, quadros }: SystemBoardClientP
   );
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col gap-1.5">
-        <Heading level="page" className="sm:text-3xl">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
+        <Heading level="page" className={cn(/* design-system-escape: sm:text-3xl sem equivalente DS */ "sm:text-3xl")}>
           Quadro - {board.titulo}
         </Heading>
       </div>
 
       {/* Toolbar */}
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           <QuadroSelector
             quadros={quadros}
             value={board.id}
@@ -173,7 +174,7 @@ export function SystemBoardClient({ board, events, quadros }: SystemBoardClientP
         getItemValue={(item: SystemBoardEventItem) => item.id}
         flatCursor={!board.dndEnabled}
       >
-        <Kanban.KanbanBoard className="overflow-x-auto pb-4">
+        <Kanban.KanbanBoard className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "overflow-x-auto pb-4")}>
           {board.columns.map((col) => (
             <Kanban.KanbanColumn
               key={col.id}
@@ -181,15 +182,15 @@ export function SystemBoardClient({ board, events, quadros }: SystemBoardClientP
               className="w-85 min-w-85 rounded-xl border border-border bg-card"
               disabled={!board.dndEnabled}
             >
-              <div className="flex items-center justify-between p-3 pb-0">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold">{col.label}</span>
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset>; pb-0 padding direcional sem Inset equiv. */ "flex items-center justify-between p-3 pb-0")}>
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold")}>{col.label}</span>
                   <AppBadge variant="outline">
                     {columns[col.id]?.length ?? 0}
                   </AppBadge>
                 </div>
               </div>
-              <div className="flex flex-col gap-2 p-3">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset> */ "flex flex-col gap-2 p-3")}>
                 {(columns[col.id] ?? []).map((item) => (
                   <Kanban.KanbanItem
                     key={item.id}
@@ -201,7 +202,7 @@ export function SystemBoardClient({ board, events, quadros }: SystemBoardClientP
                   </Kanban.KanbanItem>
                 ))}
                 {(columns[col.id]?.length ?? 0) === 0 && (
-                  <div className="text-muted-foreground text-sm text-center py-4">
+                  <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; py-4 padding direcional sem Inset equiv. */ "text-muted-foreground text-sm text-center py-4")}>
                     Nenhum item.
                   </div>
                 )}

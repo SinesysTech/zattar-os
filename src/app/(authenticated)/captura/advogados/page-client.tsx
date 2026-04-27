@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useState, useMemo, useCallback } from 'react';
 import { Plus, Users, ChevronRight, Lock, AlertTriangle, Trash2, ShieldCheck, ShieldAlert } from 'lucide-react';
@@ -186,18 +187,18 @@ export default function AdvogadosPage() {
 
   return (
     <>
-      <div className="space-y-5">
+      <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-1.5 text-xs text-muted-foreground/60">
+        <nav className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-1.5 text-xs text-muted-foreground/60")}>
           <a href="/captura" className="hover:text-foreground transition-colors">Captura</a>
           <ChevronRight className="size-3" />
           <a href="/captura?tab=credenciais" className="hover:text-foreground transition-colors">Credenciais</a>
           <ChevronRight className="size-3" />
-          <span className="text-foreground font-medium">Advogados</span>
+          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-foreground font-medium")}>Advogados</span>
         </nav>
 
         {/* Header */}
-        <div className="flex items-end justify-between gap-4">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
           <div>
             <Heading level="page">Advogados</Heading>
             <Text variant="caption" className="text-muted-foreground/50 mt-0.5">
@@ -218,21 +219,21 @@ export default function AdvogadosPage() {
         <PulseStrip items={kpiItems} />
 
         {/* Filter Bar */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
           <AdvogadosFilter
             title="UF"
             options={ufOptions}
             value={ufFilter}
             onValueChange={setUfFilter}
           />
-          <div className="flex items-center gap-2 flex-1 justify-end">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
             <SearchInput value={busca} onChange={setBusca} placeholder="Buscar advogados..." />
           </div>
         </div>
 
         {/* Insight: advogados sem credenciais */}
         {!isLoading && advogados.length > 0 && (
-          <div className="flex items-center gap-2 rounded-xl border border-warning/15 bg-warning/5 px-4 py-2.5 text-xs text-warning">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-2 rounded-xl border border-warning/15 bg-warning/5 px-4 py-2.5 text-xs text-warning")}>
             <AlertTriangle className="size-4 shrink-0" />
             <span>
               Alguns advogados podem não ter credenciais cadastradas — verifique na aba Credenciais.
@@ -242,7 +243,7 @@ export default function AdvogadosPage() {
 
         {/* Loading skeleton */}
         {isLoading && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3")}>
             {Array.from({ length: 6 }).map((_, i) => (
               <GlassPanel key={i} depth={1} className="h-48 animate-pulse" />
             ))}
@@ -251,7 +252,7 @@ export default function AdvogadosPage() {
 
         {/* Card Grid */}
         {!isLoading && advogados.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3")}>
             {advogados.map((advogado) => {
               const creds = credenciaisPorAdvogado.get(advogado.id);
               const ativas = creds?.ativas ?? 0;
@@ -259,70 +260,70 @@ export default function AdvogadosPage() {
               const temCredenciais = ativas > 0;
 
               return (
-                <GlassPanel key={advogado.id} depth={2} className="p-5">
+                <GlassPanel key={advogado.id} depth={2} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
                   {/* Header: Avatar + Name + Status badge */}
-                  <div className="flex items-center gap-3 mb-3">
+                  <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mb-3")}>
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                      <span className="text-sm font-bold text-primary font-heading">
+                      <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold text-primary font-heading")}>
                         {advogado.nome_completo.split(' ').map((n: string) => n[0]).slice(0, 2).join('').toUpperCase()}
                       </span>
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="text-sm font-semibold truncate font-heading">{advogado.nome_completo}</div>
-                      <div className="text-xs text-muted-foreground/55">
+                      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold truncate font-heading")}>{advogado.nome_completo}</div>
+                      <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/55")}>
                         {advogado.oabs.map((o: { numero: string; uf: string }) => `OAB/${o.uf} ${o.numero}`).join(', ') || 'Sem OAB'}
                       </div>
                     </div>
                     {temCredenciais ? (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-medium text-success bg-success/8 border border-success/15 px-1.5 py-0.5 rounded-md shrink-0">
+                      <span className={cn(/* design-system-escape: gap-1 gap sem token DS; font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center gap-1 text-[10px] font-medium text-success bg-success/8 border border-success/15 px-1.5 py-0.5 rounded-md shrink-0")}>
                         <ShieldCheck className="size-2.5" />
                         Ativo
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-medium text-warning bg-warning/8 border border-warning/15 px-1.5 py-0.5 rounded-md shrink-0">
+                      <span className={cn(/* design-system-escape: gap-1 gap sem token DS; font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center gap-1 text-[10px] font-medium text-warning bg-warning/8 border border-warning/15 px-1.5 py-0.5 rounded-md shrink-0")}>
                         <ShieldAlert className="size-2.5" />
                         Pendente
                       </span>
                     )}
                   </div>
 
-                  <div className="border-t border-border/10 my-2" />
+                  <div className={cn(/* design-system-escape: my-2 margin sem primitiva DS */ "border-t border-border/10 my-2")} />
 
                   {/* CPF */}
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground/60 mb-1.5">
-                    <span className="font-medium text-muted-foreground/40 uppercase tracking-wide text-[10px]">CPF</span>
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-2 text-xs text-muted-foreground/60 mb-1.5")}>
+                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wide sem token DS */ "font-medium text-muted-foreground/40 uppercase tracking-wide text-[10px]")}>CPF</span>
                     <span className="truncate">{advogado.cpf}</span>
                   </div>
 
-                  <div className="border-t border-border/10 my-2" />
+                  <div className={cn(/* design-system-escape: my-2 margin sem primitiva DS */ "border-t border-border/10 my-2")} />
 
                   {/* Credenciais count */}
-                  <div className="flex items-center gap-1.5 text-xs">
+                  <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-1.5 text-xs")}>
                     <Lock className="size-3.5 text-muted-foreground/45 shrink-0" />
                     {temCredenciais ? (
                       <span className="text-muted-foreground/70">
-                        <span className="text-success font-medium">{ativas} ativa{ativas !== 1 ? 's' : ''}</span>
+                        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-success font-medium")}>{ativas} ativa{ativas !== 1 ? 's' : ''}</span>
                         {inativas > 0 && (
                           <>
-                            <span className="text-muted-foreground/35 mx-1">/</span>
-                            <span className="text-warning font-medium">{inativas} inativa{inativas !== 1 ? 's' : ''}</span>
+                            <span className={cn(/* design-system-escape: mx-1 margin sem primitiva DS */ "text-muted-foreground/35 mx-1")}>/</span>
+                            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-warning font-medium")}>{inativas} inativa{inativas !== 1 ? 's' : ''}</span>
                           </>
                         )}
                       </span>
                     ) : (
-                      <span className="text-destructive/70 text-xs">Nenhuma credencial cadastrada</span>
+                      <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-destructive/70 text-xs")}>Nenhuma credencial cadastrada</span>
                     )}
                   </div>
 
-                  <div className="border-t border-border/10 mt-3 pt-3" />
+                  <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "border-t border-border/10 mt-3 pt-3")} />
 
                   {/* Actions */}
-                  <div className="flex items-center gap-2">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                     {temCredenciais ? (
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="flex-1 text-xs h-7 text-primary"
+                        className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex-1 text-xs h-7 text-primary")}
                         onClick={() => handleViewCredenciais(advogado)}
                       >
                         Ver Credenciais
@@ -331,7 +332,7 @@ export default function AdvogadosPage() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="flex-1 text-xs h-7 text-warning"
+                        className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex-1 text-xs h-7 text-warning")}
                         onClick={() => handleViewCredenciais(advogado)}
                       >
                         Adicionar Credenciais
@@ -340,7 +341,7 @@ export default function AdvogadosPage() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="text-xs h-7"
+                      className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs h-7")}
                       onClick={() => handleEdit(advogado)}
                     >
                       Editar
@@ -348,7 +349,7 @@ export default function AdvogadosPage() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="text-xs h-7 w-7 p-0 text-muted-foreground/45 hover:text-destructive"
+                      className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; p-0 → usar <Inset> */ "text-xs h-7 w-7 p-0 text-muted-foreground/45 hover:text-destructive")}
                       onClick={() => handleDelete(advogado)}
                       aria-label="Excluir"
                     >

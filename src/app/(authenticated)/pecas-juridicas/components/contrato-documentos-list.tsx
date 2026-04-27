@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import {
@@ -149,7 +150,7 @@ export function ContratoDocumentosList({ contratoId }: ContratoDocumentosListPro
   // Loading state
   if (loading) {
     return (
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         {[1, 2, 3].map((i) => (
           <Skeleton key={i} className="h-16 w-full" />
         ))}
@@ -160,10 +161,10 @@ export function ContratoDocumentosList({ contratoId }: ContratoDocumentosListPro
   // Empty state
   if (documentos.length === 0) {
     return (
-      <div className="py-12 text-center">
+      <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "py-12 text-center")}>
         <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
         <p className="text-muted-foreground">Nenhum documento vinculado a este contrato</p>
-        <p className="text-sm text-muted-foreground mt-1">
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground mt-1")}>
           Use o botão &ldquo;Novo Documento&rdquo; ou &ldquo;Gerar Peça&rdquo; para adicionar.
         </p>
       </div>
@@ -192,9 +193,9 @@ export function ContratoDocumentosList({ contratoId }: ContratoDocumentosListPro
                 <TableCell>
                   <button
                     onClick={() => handleOpenDocument(doc)}
-                    className="text-left hover:underline font-medium flex items-center gap-2"
+                    className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; gap-2 → migrar para <Inline gap="tight"> */ "text-left hover:underline font-medium flex items-center gap-2")}
                   >
-                    {doc.arquivo && <span className="text-xs px-1.5 py-0.5 rounded bg-muted">FILE</span>}
+                    {doc.arquivo && <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-xs px-1.5 py-0.5 rounded bg-muted")}>FILE</span>}
                     {titulo}
                   </button>
                 </TableCell>
@@ -204,14 +205,14 @@ export function ContratoDocumentosList({ contratoId }: ContratoDocumentosListPro
                       {TIPO_PECA_LABELS[doc.tipoPeca]}
                     </AppBadge>
                   ) : (
-                    <span className="text-muted-foreground text-xs">{tipo}</span>
+                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground text-xs")}>{tipo}</span>
                   )}
                 </TableCell>
                 <TableCell>
                   {doc.modelo ? (
-                    <span className="text-sm">{doc.modelo.titulo}</span>
+                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{doc.modelo.titulo}</span>
                   ) : (
-                    <span className="text-muted-foreground text-sm">Manual/Upload</span>
+                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>Manual/Upload</span>
                   )}
                 </TableCell>
                 <TableCell>

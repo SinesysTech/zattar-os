@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
@@ -18,15 +19,15 @@ export function ModuloConsolidacaoFinal({ data, onChange }: ModuloConsolidacaoFi
   const justificativas = data.justificativas_inconsistencias ?? {};
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <div>
         <Heading level="card">Consolidacao Final da Entrevista</Heading>
-        <p className="text-sm text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
           Sintetize o relato integral e anexe a entrevista completa (audio e manuscrito, quando houver).
         </p>
       </div>
 
-      <div className="space-y-2">
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Label htmlFor="relato-completo-texto">Relato completo em texto</Label>
         <Textarea
           id="relato-completo-texto"
@@ -37,7 +38,7 @@ export function ModuloConsolidacaoFinal({ data, onChange }: ModuloConsolidacaoFi
         />
       </div>
 
-      <div className="space-y-2">
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Label htmlFor="observacoes-finais">Observacoes finais do operador</Label>
         <Textarea
           id="observacoes-finais"
@@ -49,8 +50,8 @@ export function ModuloConsolidacaoFinal({ data, onChange }: ModuloConsolidacaoFi
       </div>
 
       {data.relato_consolidado_ia && (
-        <GlassPanel className="p-4">
-          <div className="space-y-2">
+        <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label htmlFor="relato-ia">Relato consolidado pela IA</Label>
             <Textarea
               id="relato-ia"
@@ -63,11 +64,11 @@ export function ModuloConsolidacaoFinal({ data, onChange }: ModuloConsolidacaoFi
       )}
 
       {inconsistencias.length > 0 && (
-        <div className="space-y-3 rounded-lg border border-warning/15 bg-warning/5 p-4">
-          <h4 className="text-sm font-semibold">Inconsistencias/lacunas apontadas pela IA</h4>
+        <div className={cn(/* design-system-escape: space-y-3 sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "space-y-3 rounded-lg border border-warning/15 bg-warning/5 p-4")}>
+          <h4 className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold")}>Inconsistencias/lacunas apontadas pela IA</h4>
           {inconsistencias.map((item, index) => (
-            <div key={`${item}-${index}`} className="space-y-2">
-              <p className="text-sm">{item}</p>
+            <div key={`${item}-${index}`} className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{item}</p>
               <Textarea
                 value={justificativas[item] ?? ''}
                 onChange={(e) =>

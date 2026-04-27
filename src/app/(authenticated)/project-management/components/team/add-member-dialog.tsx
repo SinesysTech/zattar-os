@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -76,9 +77,9 @@ export function AddMemberDialog({
           <DialogTitle>Adicionar Membro</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Usuário</label>
+        <form onSubmit={handleSubmit} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <label className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Usuário</label>
             <Combobox
               options={usuarios}
               value={selectedUser ? [selectedUser] : []}
@@ -89,8 +90,8 @@ export function AddMemberDialog({
             />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Papel</label>
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <label className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Papel</label>
             <Select
               value={papel}
               onValueChange={(v) => setPapel(v as PapelProjeto)}
@@ -108,7 +109,7 @@ export function AddMemberDialog({
             </Select>
           </div>
 
-          <div className="flex justify-end gap-3 pt-2">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS; pt-2 padding direcional sem Inset equiv. */ "flex justify-end gap-3 pt-2")}>
             <Button
               type="button"
               variant="outline"

@@ -6,6 +6,7 @@
  * Mostra status de sincronizacao automatica dos tribunais.
  */
 
+import { cn } from '@/lib/utils';
 import { RefreshCw } from 'lucide-react';
 import { WidgetContainer } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
@@ -55,7 +56,7 @@ export function WidgetCapturaStatus() {
         subtitle="Status de sincronizacao automatica"
         depth={1}
       >
-        <p className="text-xs text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
           Nao foi possivel carregar os dados.
         </p>
       </WidgetContainer>
@@ -70,7 +71,7 @@ export function WidgetCapturaStatus() {
         subtitle="Status de sincronizacao automatica"
         depth={1}
       >
-        <p className="text-xs text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
           Disponivel apenas para administradores.
         </p>
       </WidgetContainer>
@@ -87,7 +88,7 @@ export function WidgetCapturaStatus() {
         subtitle="Status de sincronizacao automatica"
         depth={1}
       >
-        <p className="text-xs text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
           Nenhuma captura configurada.
         </p>
       </WidgetContainer>
@@ -106,7 +107,7 @@ export function WidgetCapturaStatus() {
       depth={1}
     >
       {/* Resumo compacto */}
-      <div className="flex items-center gap-3 mb-3 text-[10px] text-muted-foreground/70">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mb-3 text-[10px] text-muted-foreground/70")}>
         <span>
           <span className="inline-block size-2 rounded-full bg-success/70 mr-1" />
           {totalSucesso} ok
@@ -121,7 +122,7 @@ export function WidgetCapturaStatus() {
       </div>
 
       {/* Lista de tribunais */}
-      <div className="flex flex-col gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
         {capturas.map((captura) => {
           const dotClass = STATUS_DOT_CLASSES[captura.status];
           const statusLabel = STATUS_LABELS[captura.status];
@@ -130,13 +131,13 @@ export function WidgetCapturaStatus() {
           return (
             <div
               key={`${captura.trt}-${captura.grau}`}
-              className="flex items-center gap-2.5 py-1.5 px-2 rounded-md hover:bg-border/5 transition-colors"
+              className={cn(/* design-system-escape: gap-2.5 gap sem token DS; py-1.5 padding direcional sem Inset equiv.; px-2 padding direcional sem Inset equiv. */ "flex items-center gap-2.5 py-1.5 px-2 rounded-md hover:bg-border/5 transition-colors")}
             >
               {/* Status dot */}
               <div className={`size-2.5 rounded-full shrink-0 ${dotClass}`} />
 
               {/* Sigla do tribunal */}
-              <span className="text-xs font-medium truncate min-w-0 flex-1">
+              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium truncate min-w-0 flex-1")}>
                 {sigla}
               </span>
 
@@ -164,7 +165,7 @@ export function WidgetCapturaStatus() {
 
       {/* Erro detalhado (se houver) */}
       {totalErro > 0 && (
-        <div className="mt-3 pt-3 border-t border-border/10">
+        <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 pt-3 border-t border-border/10")}>
           {capturas
             .filter((c) => c.status === 'erro' && c.mensagemErro)
             .slice(0, 2)

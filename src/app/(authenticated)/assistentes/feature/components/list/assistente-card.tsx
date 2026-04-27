@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -52,21 +53,21 @@ export function AssistenteCard({
         className="flex-1 overflow-hidden"
         onClick={() => onView(assistente)}
       >
-        <CardHeader className="px-4 pt-3 pb-2">
-          <div className="flex items-start justify-between gap-2 pr-8">
-            <CardTitle className="text-sm font-semibold leading-tight line-clamp-2">
+        <CardHeader className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "px-4 pt-3 pb-2")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pr-8 padding direcional sem Inset equiv. */ "flex items-start justify-between gap-2 pr-8")}>
+            <CardTitle className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-sm font-semibold leading-tight line-clamp-2")}>
               {assistente.nome}
             </CardTitle>
           </div>
           {/* Badge de tipo */}
           <div className="mt-1">
             {isDify && typeConfig ? (
-              <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4 gap-1">
+              <Badge variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv.; gap-1 gap sem token DS */ "text-[10px] px-1.5 py-0 h-4 gap-1")}>
                 {typeConfig.icon}
                 {typeConfig.label}
               </Badge>
             ) : (
-              <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4 gap-1">
+              <Badge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv.; gap-1 gap sem token DS */ "text-[10px] px-1.5 py-0 h-4 gap-1")}>
                 <Globe className="h-3 w-3" />
                 Iframe
               </Badge>
@@ -75,8 +76,8 @@ export function AssistenteCard({
         </CardHeader>
 
         {temDescricao && (
-          <CardContent className="px-4 pt-0 pb-2">
-            <p className="text-xs text-muted-foreground line-clamp-2" title={assistente.descricao || ''}>
+          <CardContent className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; pt-0 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "px-4 pt-0 pb-2")}>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground line-clamp-2")} title={assistente.descricao || ''}>
               {truncarDescricao(assistente.descricao || null, 120)}
             </p>
           </CardContent>

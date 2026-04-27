@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import type { ColumnDef } from "@tanstack/react-table";
 import {
   Eye,
@@ -70,7 +71,7 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
         <DataTableColumnHeader column={column} title="ID" />
       ),
       cell: ({ row }) => (
-        <div className="min-h-10 flex items-center text-sm font-medium">
+        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "min-h-10 flex items-center text-sm font-medium")}>
           #{row.getValue("id")}
         </div>
       ),
@@ -88,8 +89,8 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
         const titulo = row.getValue("titulo") as string | null;
         const id = row.original.id;
         return (
-          <div className="min-h-10 flex items-center text-sm">
-            <span className="max-w-75 truncate font-medium">
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "min-h-10 flex items-center text-sm")}>
+            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "max-w-75 truncate font-medium")}>
               {titulo || `Documento #${id}`}
             </span>
           </div>
@@ -118,7 +119,7 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
                   : "border-info/30 bg-info/10 text-info dark:text-info"
               }
             >
-              <span className="flex items-center gap-1.5">
+              <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
                 {isFormulario ? (
                   <ClipboardList className="h-3 w-3" />
                 ) : (
@@ -150,7 +151,7 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
         return (
           <div className="min-h-10 flex items-center">
             <Badge variant={getSemanticBadgeVariant("document_signature_status", statusValue)}>
-              <span className="flex items-center gap-1.5">
+              <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
                 {status.icon && <status.icon className="h-3.5 w-3.5" />}
                 {status.label}
               </span>
@@ -176,7 +177,7 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
         const concluidos = row.original._assinantes_concluidos ?? 0;
         const total = row.original._assinantes_count ?? 0;
         return (
-          <div className="min-h-10 flex items-center gap-1.5 text-sm text-muted-foreground">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "min-h-10 flex items-center gap-1.5 text-sm text-muted-foreground")}>
             <Users className="h-4 w-4" />
             {concluidos}/{total}
           </div>
@@ -194,7 +195,7 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
       cell: ({ row }) => {
         const date = row.getValue("created_at") as string;
         return (
-          <div className="min-h-10 flex items-center gap-1.5 text-sm text-muted-foreground">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "min-h-10 flex items-center gap-1.5 text-sm text-muted-foreground")}>
             <Calendar className="h-4 w-4" />
             {format(new Date(date), "dd/MM/yyyy HH:mm", { locale: ptBR })}
           </div>
@@ -206,7 +207,7 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
     },
     {
       id: "acoes",
-      header: () => <span className="text-sm font-medium">Ações</span>,
+      header: () => <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Ações</span>,
       cell: ({ row }) => {
         const doc = row.original;
         const isFormulario = doc._origem === "formulario";
@@ -221,7 +222,7 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
         const pdfUrl = doc.pdf_final_url || doc.pdf_original_url;
 
         return (
-          <div className="min-h-10 flex items-center gap-1">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "min-h-10 flex items-center gap-1")}>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button

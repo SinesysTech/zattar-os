@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import LixeiraClient from './page-client';
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
 
 function LixeiraLoading() {
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       <Skeleton className="h-10 w-full" />
       <Skeleton className="h-[400px] w-full" />
     </div>

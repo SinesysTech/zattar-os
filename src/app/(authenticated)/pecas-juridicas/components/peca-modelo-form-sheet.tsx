@@ -4,6 +4,7 @@
  * Sheet de Criação/Edição/Visualização de Modelos de Peças
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { FileText } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -248,9 +249,9 @@ export function PecaModeloFormSheet({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="glass-dialog max-w-2xl max-h-[90vh] p-0 flex flex-col">
-        <DialogHeader className="px-6 pt-6 pb-4 border-b border-border/30 shrink-0">
-          <DialogTitle className="flex items-center gap-2">
+      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "glass-dialog max-w-2xl max-h-[90vh] p-0 flex flex-col")}>
+        <DialogHeader className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; pt-6 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv. */ "px-6 pt-6 pb-4 border-b border-border/30 shrink-0")}>
+          <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <FileText className="h-5 w-5" />
             {title}
           </DialogTitle>
@@ -259,7 +260,7 @@ export function PecaModeloFormSheet({
 
         <ScrollArea className="flex-1">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 p-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose">; p-6 → migrar para <Inset variant="dialog"> */ "space-y-6 p-6")}>
               {/* Título */}
               <FormField
                 control={form.control}
@@ -300,7 +301,7 @@ export function PecaModeloFormSheet({
               />
 
               {/* Tipo e Visibilidade */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
                 <FormField
                   control={form.control}
                   name="tipoPeca"
@@ -382,7 +383,7 @@ export function PecaModeloFormSheet({
 
 {{autor_1.qualificacao_completa}}, vem, respeitosamente, perante V. Exa., por seu advogado que esta subscreve...`}
                         rows={15}
-                        className="font-mono text-sm"
+                        className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "font-mono text-sm")}
                         disabled={isViewMode || loading}
                       />
                     </FormControl>
@@ -393,21 +394,21 @@ export function PecaModeloFormSheet({
 
               {/* Placeholders detectados */}
               {form.watch('conteudo') && (
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-muted-foreground">
+                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground")}>
                     Placeholders detectados:
                   </p>
-                  <div className="flex flex-wrap gap-1">
+                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-wrap gap-1")}>
                     {extractPlaceholdersFromText(form.watch('conteudo') || '').map(
                       (p, i) => (
-                        <AppBadge key={i} variant="secondary" className="font-mono text-xs">
+                        <AppBadge key={i} variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "font-mono text-xs")}>
                           {p}
                         </AppBadge>
                       )
                     )}
                     {extractPlaceholdersFromText(form.watch('conteudo') || '').length ===
                       0 && (
-                      <span className="text-sm text-muted-foreground">Nenhum</span>
+                      <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Nenhum</span>
                     )}
                   </div>
                 </div>
@@ -415,7 +416,7 @@ export function PecaModeloFormSheet({
 
               {/* Botões */}
               {!isViewMode && (
-                <div className="flex justify-end gap-2 pt-4">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-4 padding direcional sem Inset equiv. */ "flex justify-end gap-2 pt-4")}>
                   <Button
                     type="button"
                     variant="outline"

@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/typography";
@@ -19,7 +20,7 @@ export function RecordingPlayer({ recordingUrl, chamadaId, titulo }: RecordingPl
   };
 
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       <div className="flex items-center justify-between">
         <Heading level="card">
           {titulo || `Gravação da Chamada #${chamadaId}`}
@@ -28,7 +29,7 @@ export function RecordingPlayer({ recordingUrl, chamadaId, titulo }: RecordingPl
           variant="outline"
           size="sm"
           onClick={handleDownload}
-          className="gap-2"
+          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}
         >
           <Download className="h-4 w-4" />
           Baixar
@@ -47,13 +48,13 @@ export function RecordingPlayer({ recordingUrl, chamadaId, titulo }: RecordingPl
       </div>
 
       {error && (
-        <div className="text-sm text-destructive flex items-center gap-2">
+        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; gap-2 → migrar para <Inline gap="tight"> */ "text-sm text-destructive flex items-center gap-2")}>
           <AlertCircle className="h-4 w-4" />
           {error}
         </div>
       )}
 
-      <p className="text-xs text-muted-foreground">
+      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
         Esta gravação ficará disponível por 7 dias a partir da data da chamada.
       </p>
     </div>

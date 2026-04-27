@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
@@ -21,7 +22,7 @@ import {
 
 export default function ContasPagar() {
   return (
-    <div className="space-y-10">
+    <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
       <div>
         <Heading level="page">Contas a Pagar</Heading>
         <p className="text-muted-foreground mt-2">
@@ -205,7 +206,7 @@ export default function ContasPagar() {
         <p className="text-muted-foreground">
           A listagem de contas a pagar oferece os seguintes filtros combinados:
         </p>
-        <ul className="mt-3 space-y-2 text-sm text-muted-foreground list-disc list-inside">
+        <ul className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "mt-3 space-y-2 text-sm text-muted-foreground list-disc list-inside")}>
           <li>Período de vencimento ou competência</li>
           <li>Status: Em aberto, Pago, Vencido</li>
           <li>Categoria do plano de contas</li>

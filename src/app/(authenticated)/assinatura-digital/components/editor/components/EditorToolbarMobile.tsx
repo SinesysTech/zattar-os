@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import ToolbarButtonsMobile from '../ToolbarButtonsMobile';
 import type { EditorMode } from '../types';
 
@@ -82,7 +83,7 @@ export default function EditorToolbarMobile({
   hasPreviewPdf = false,
 }: EditorToolbarMobileProps) {
   return (
-    <div className="shrink-0 border-b bg-card px-3 py-1.5 lg:hidden">
+    <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "shrink-0 border-b bg-card px-3 py-1.5 lg:hidden")}>
       <ToolbarButtonsMobile
         editorMode={editorMode}
         onModeChange={onModeChange}

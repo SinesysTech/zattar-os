@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { FileText } from "lucide-react";
 import { Card, CardAction, CardDescription, CardHeader } from "@/components/ui/card";
 import { actionContarContratosComEstatisticas } from "@/app/(authenticated)/contratos";
@@ -15,10 +16,10 @@ export async function TotalContractsCard({ dateFilter }: { dateFilter: CrmDateFi
     <Card>
       <CardHeader>
         <CardDescription>Total de Contratos</CardDescription>
-        <div className="flex flex-col gap-2">
-          <h4 className="font-display text-2xl lg:text-3xl">{total.toLocaleString("pt-BR")}</h4>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+          <h4 className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; lg:text-3xl sem equivalente DS */ "font-display text-2xl lg:text-3xl")}>{total.toLocaleString("pt-BR")}</h4>
           {variacao !== null && (
-            <div className="text-muted-foreground text-sm">
+            <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>
               <span className={variacao >= 0 ? "text-success" : "text-destructive"}>
                 {variacao >= 0 ? "+" : ""}
                 {variacao.toFixed(1)}%
@@ -27,13 +28,13 @@ export async function TotalContractsCard({ dateFilter }: { dateFilter: CrmDateFi
             </div>
           )}
           {!result.success && (
-            <div className="text-muted-foreground text-sm">
+            <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>
               <span className="text-destructive">Erro ao carregar</span>
             </div>
           )}
         </div>
         <CardAction>
-          <div className="flex gap-4">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}>
             <div className="bg-muted flex size-12 items-center justify-center rounded-full border">
               <FileText className="size-5" />
             </div>

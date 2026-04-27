@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import {
   ChevronLeft,
@@ -84,10 +85,10 @@ function AudienciaContent({
   return (
     <>
       {/* ── Processo + Status ── */}
-      <div className="flex items-start justify-between gap-3 mb-1">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3 mb-1")}>
         <div className="flex-1 min-w-0">
           <div
-            className="text-label font-semibold tabular-nums tracking-tight truncate"
+            className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-label font-semibold tabular-nums tracking-tight truncate")}
             title={audiencia.numeroProcesso}
           >
             {audiencia.numeroProcesso}
@@ -97,7 +98,7 @@ function AudienciaContent({
       </div>
 
       {/* ── Badges + meta inline ── */}
-      <div className="flex items-center gap-2 flex-wrap mb-5">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap mb-5")}>
         <SemanticBadge category="tribunal" value={audiencia.trt} className="text-micro-badge">
           {audiencia.trt}
         </SemanticBadge>
@@ -105,7 +106,7 @@ function AudienciaContent({
           {GRAU_TRIBUNAL_LABELS[audiencia.grau] || audiencia.grau}
         </SemanticBadge>
         <span className="text-muted-foreground/30">|</span>
-        <div className="flex items-center gap-1.5">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
           <Clock className="size-3.5 text-muted-foreground/50" />
           <span className="text-label tabular-nums">
             {formatarHora(audiencia.dataInicio)}
@@ -128,7 +129,7 @@ function AudienciaContent({
       />
 
       {activeTab === 'detalhes' && (
-        <div className="mt-5 space-y-5">
+        <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "mt-5 space-y-5")}>
           {/* Tipo */}
           {audiencia.tipoDescricao && (
             <div>
@@ -141,7 +142,7 @@ function AudienciaContent({
           {(audiencia.salaAudienciaNome || audiencia.urlAudienciaVirtual) && (
             <div>
               <div className="text-meta-label mb-1">Local</div>
-              <div className="flex items-center gap-1.5 text-sm">
+              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-1.5 text-sm")}>
                 {audiencia.modalidade === 'presencial' ? (
                   <Building2 className="size-3.5 text-muted-foreground/50 shrink-0" />
                 ) : (
@@ -155,7 +156,7 @@ function AudienciaContent({
                     href={audiencia.urlAudienciaVirtual}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-primary hover:underline inline-flex items-center gap-1"
+                    className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-primary hover:underline inline-flex items-center gap-1")}
                   >
                     Entrar na sala
                     <ExternalLink className="size-3" />
@@ -202,7 +203,7 @@ function AudienciaContent({
           {audiencia.observacoes && (
             <div>
               <div className="text-meta-label mb-1.5">Observações</div>
-              <p className="text-caption whitespace-pre-wrap leading-relaxed">
+              <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-caption whitespace-pre-wrap leading-relaxed")}>
                 {audiencia.observacoes}
               </p>
             </div>
@@ -251,12 +252,12 @@ export function AudienciasDiaDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-xl max-h-[85vh] flex flex-col p-0 gap-0 overflow-hidden">
+      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset>; gap-0 gap sem token DS */ "sm:max-w-xl max-h-[85vh] flex flex-col p-0 gap-0 overflow-hidden")}>
         <DialogDescription className="sr-only">Audiências do dia</DialogDescription>
         {/* ── HEADER ── */}
-        <div className="shrink-0 px-6 pt-5 pb-4 border-b border-border/20">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3 min-w-0">
+        <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; pt-5 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv. */ "shrink-0 px-6 pt-5 pb-4 border-b border-border/20")}>
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 min-w-0")}>
               <IconContainer size="md" className="bg-primary/10 shrink-0">
                 <Gavel className="size-4 text-primary" />
               </IconContainer>
@@ -270,7 +271,7 @@ export function AudienciasDiaDialog({
 
             {/* Navegação inline no header */}
             {total > 1 && (
-              <div className="flex items-center gap-1 shrink-0">
+              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 shrink-0")}>
                 <Button
                   variant="ghost"
                   size="icon"
@@ -299,7 +300,7 @@ export function AudienciasDiaDialog({
 
         {/* ── BODY — conteúdo direto, sem cards aninhados ── */}
         <ScrollArea className="flex-1 min-h-0">
-          <div className="px-6 py-5">
+          <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "px-6 py-5")}>
             <AudienciaContent
               audiencia={audienciaAtual}
               usuarios={usuarios}

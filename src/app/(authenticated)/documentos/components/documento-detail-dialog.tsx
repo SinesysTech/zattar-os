@@ -104,9 +104,9 @@ function SectionHeader({
   label: string;
 }) {
   return (
-    <div className="flex items-center gap-2 mb-2.5">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-2.5")}>
       <Icon className="size-3.5 text-primary" />
-      <h4 className="text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.08em]">
+      <h4 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.08em]")}>
         {label}
       </h4>
     </div>
@@ -134,9 +134,9 @@ function MetaRow({
   value: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center justify-between gap-3 py-1">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-1 padding direcional sem Inset equiv. */ "flex items-center justify-between gap-3 py-1")}>
       <span className="text-[11.5px] text-muted-foreground/70">{label}</span>
-      <span className="text-[12px] font-medium text-foreground text-right truncate">{value}</span>
+      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[12px] font-medium text-foreground text-right truncate")}>{value}</span>
     </div>
   );
 }
@@ -181,13 +181,13 @@ export function DocumentoDetailDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="glass-dialog max-w-md max-h-[90vh] overflow-hidden flex flex-col gap-0 p-0">
+      <DialogContent className={cn(/* design-system-escape: gap-0 gap sem token DS; p-0 → usar <Inset> */ "glass-dialog max-w-md max-h-[90vh] overflow-hidden flex flex-col gap-0 p-0")}>
         <DialogTitle className="sr-only">{nome}</DialogTitle>
 
         {/* ── Hero preview ───────────────────────────────────── */}
         <div
           className={cn(
-            'relative flex flex-col items-center justify-center gap-4 px-6 py-8',
+            /* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-6 padding direcional sem Inset equiv.; py-8 padding direcional sem Inset equiv. */ 'relative flex flex-col items-center justify-center gap-4 px-6 py-8',
             'border-b border-border/30',
             accentClasses.bg,
           )}
@@ -208,12 +208,12 @@ export function DocumentoDetailDialog({
             </IconContainer>
           )}
           <div className="text-center max-w-full">
-            <h3 className="text-[15px] font-semibold text-foreground leading-tight wrap-break-word">
+            <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[15px] font-semibold text-foreground leading-tight wrap-break-word")}>
               {nome}
             </h3>
             <span
               className={cn(
-                'inline-flex items-center rounded-md border px-1.5 py-0.5 mt-2 text-[10px] font-semibold tracking-[0.02em]',
+                /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center rounded-md border px-1.5 py-0.5 mt-2 text-[10px] font-semibold tracking-[0.02em]',
                 accentClasses.text,
                 'border-current/20 bg-current/5',
               )}
@@ -224,11 +224,11 @@ export function DocumentoDetailDialog({
         </div>
 
         {/* ── Body ───────────────────────────────────────────── */}
-        <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
+        <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv.; space-y-5 sem token DS */ "flex-1 overflow-y-auto px-6 py-5 space-y-5")}>
           {/* Informações gerais */}
           <div>
             <SectionHeader icon={Info} label="Informações" />
-            <SectionCard className="space-y-0.5">
+            <SectionCard className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
               <MetaRow label="Tipo" value={tipoLabel} />
               {item.tipo === 'arquivo' && (
                 <MetaRow label="Tamanho" value={formatFileSize(item.dados.tamanho_bytes)} />
@@ -255,7 +255,7 @@ export function DocumentoDetailDialog({
           {/* Timeline */}
           <div>
             <SectionHeader icon={Calendar} label="Datas" />
-            <SectionCard className="space-y-0.5">
+            <SectionCard className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
               <MetaRow
                 label="Criado em"
                 value={format(parseISO(item.dados.created_at), "dd 'de' MMM 'de' yyyy", {
@@ -277,15 +277,15 @@ export function DocumentoDetailDialog({
           <div>
             <SectionHeader icon={UserIcon} label="Criado por" />
             <SectionCard>
-              <div className="flex items-center gap-3">
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
                 <Avatar className="size-8">
                   {criadorAvatar && <AvatarImage src={criadorAvatar} alt={criadorNome} />}
-                  <AvatarFallback className="text-xs bg-primary/10 text-primary">
+                  <AvatarFallback className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs bg-primary/10 text-primary")}>
                     {criadorNome.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[12.5px] font-medium text-foreground truncate">{criadorNome}</p>
+                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[12.5px] font-medium text-foreground truncate")}>{criadorNome}</p>
                   {criadorNomeCompleto && criadorNome !== criadorNomeCompleto && (
                     <p className="text-[11px] text-muted-foreground/60 truncate">
                       {criadorNomeCompleto}
@@ -300,7 +300,7 @@ export function DocumentoDetailDialog({
           {item.tipo === 'arquivo' && (
             <div>
               <SectionHeader icon={HardDrive} label="Armazenamento" />
-              <SectionCard className="space-y-0.5">
+              <SectionCard className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
                 <MetaRow
                   label="Chave"
                   value={
@@ -315,7 +315,7 @@ export function DocumentoDetailDialog({
         </div>
 
         {/* ── Actions ────────────────────────────────────────── */}
-        <div className="flex items-center justify-end gap-2 border-t border-border/30 px-6 py-4">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "flex items-center justify-end gap-2 border-t border-border/30 px-6 py-4")}>
           {onShare && (
             <Button
               type="button"

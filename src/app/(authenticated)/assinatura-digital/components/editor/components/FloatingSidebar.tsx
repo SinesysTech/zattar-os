@@ -83,7 +83,7 @@ function FieldPaletteCard({
       }}
       onDragEnd={onDragEnd}
       className={cn(
-        'flex items-center gap-3 p-3 rounded-xl border backdrop-blur-md select-none',
+        /* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ 'flex items-center gap-3 p-3 rounded-xl border backdrop-blur-md select-none',
         'glass-kpi border-border/40 bg-card/55',
         'cursor-grab active:cursor-grabbing',
         'hover:border-primary/40 hover:-translate-y-px hover:shadow-sm',
@@ -98,7 +98,7 @@ function FieldPaletteCard({
       >
         <Icon className="size-4" />
       </span>
-      <span className="text-xs font-medium text-foreground">{label}</span>
+      <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-foreground")}>{label}</span>
     </div>
   );
 }
@@ -150,14 +150,14 @@ function SidebarContent(props: FloatingSidebarProps) {
   return (
     <div className="flex h-full min-h-0 flex-col bg-card/40 backdrop-blur-xl">
       {/* Scrollable content */}
-      <div className="flex-1 min-h-0 space-y-5 overflow-y-auto px-5 py-5">
+      <div className={cn(/* design-system-escape: space-y-5 sem token DS; px-5 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "flex-1 min-h-0 space-y-5 overflow-y-auto px-5 py-5")}>
         {/* ── Configurações ───────────────────────── */}
-        <section className="space-y-3">
+        <section className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
           <SectionHeader title="Configurações" />
 
-          <div className="space-y-2.5">
-            <div className="space-y-1.5">
-              <Label htmlFor="doc-titulo" className="flex items-center gap-1.5 text-xs">
+          <div className={cn(/* design-system-escape: space-y-2.5 sem token DS */ "space-y-2.5")}>
+            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+              <Label htmlFor="doc-titulo" className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-1.5 text-xs")}>
                 <FileText className="size-3.5" />
                 Título
               </Label>
@@ -166,17 +166,17 @@ function SidebarContent(props: FloatingSidebarProps) {
                 placeholder="Ex: Contrato de Prestação de Serviços"
                 defaultValue={documentTitle ?? ''}
                 onChange={(e) => handleTitleChange(e.target.value)}
-                className="h-9 text-sm"
+                className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "h-9 text-sm")}
               />
             </div>
 
-            <div className="flex items-center justify-between gap-3 rounded-xl border border-border/40 bg-card/55 backdrop-blur-md p-3 glass-kpi">
-              <div className="flex items-center gap-2.5 min-w-0">
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ "flex items-center justify-between gap-3 rounded-xl border border-border/40 bg-card/55 backdrop-blur-md p-3 glass-kpi")}>
+              <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5 min-w-0")}>
                 <span className="inline-flex size-7 items-center justify-center rounded-lg bg-info/10 shrink-0">
                   <Camera className="size-3.5 text-info/70" />
                 </span>
                 <div className="min-w-0">
-                  <p className="text-xs font-medium">Selfie de verificação</p>
+                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium")}>Selfie de verificação</p>
                   <p className="text-[11px] text-muted-foreground mt-0.5">
                     Exigir foto do assinante
                   </p>
@@ -196,34 +196,34 @@ function SidebarContent(props: FloatingSidebarProps) {
         <AmbientDivider />
 
         {/* ── Signatários ─────────────────────────── */}
-        <section className="space-y-3">
+        <section className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
           <SectionHeader
             title="Quem vai assinar?"
             action={
               signers.length > 0 ? (
-                <span className="text-[11px] tabular-nums px-1.5 py-0.5 rounded-full bg-foreground/8 text-muted-foreground">
+                <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[11px] tabular-nums px-1.5 py-0.5 rounded-full bg-foreground/8 text-muted-foreground")}>
                   {signers.length}
                 </span>
               ) : null
             }
           />
 
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             {signers.length === 0 ? (
-              <div className="flex flex-col items-center justify-center gap-2 p-5 border-2 border-dashed border-border/60 rounded-xl bg-card/30 text-center">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-5 → usar <Inset> */ "flex flex-col items-center justify-center gap-2 p-5 border-2 border-dashed border-border/60 rounded-xl bg-card/30 text-center")}>
                 <span className="inline-flex size-9 items-center justify-center rounded-lg bg-foreground/5">
                   <Settings className="size-4 text-muted-foreground" />
                 </span>
-                <p className="text-xs font-medium text-foreground">
+                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-foreground")}>
                   Nenhum assinante
                 </p>
-                <p className="text-[11px] text-muted-foreground max-w-45 leading-relaxed">
+                <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[11px] text-muted-foreground max-w-45 leading-relaxed")}>
                   Adicione as pessoas que precisam assinar este documento.
                 </p>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="w-full mt-1 gap-1.5"
+                  className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "w-full mt-1 gap-1.5")}
                   onClick={() => setIsAddSignerOpen(true)}
                 >
                   <Plus className="size-3.5" />
@@ -246,7 +246,7 @@ function SidebarContent(props: FloatingSidebarProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="w-full border-dashed gap-1.5"
+                  className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "w-full border-dashed gap-1.5")}
                   onClick={() => setIsAddSignerOpen(true)}
                 >
                   <Plus className="size-3.5" />
@@ -260,16 +260,16 @@ function SidebarContent(props: FloatingSidebarProps) {
         <AmbientDivider />
 
         {/* ── Campos ─────────────────────────────── */}
-        <section className="space-y-3">
-          <div className="flex flex-col gap-1">
+        <section className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
             <SectionHeader title="Campos" />
-            <p className="text-[11px] text-muted-foreground leading-relaxed">
+            <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[11px] text-muted-foreground leading-relaxed")}>
               Arraste para o documento e solte onde deseja que o assinante
               assine.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2")}>
             {FIELD_TYPES.map((ft) => (
               <FieldPaletteCard
                 key={ft.type}
@@ -286,9 +286,9 @@ function SidebarContent(props: FloatingSidebarProps) {
       </div>
 
       {/* ── Footer CTA ─────────────────────────────── */}
-      <div className="shrink-0 border-t border-border/30 p-4 bg-background/50 backdrop-blur-md">
+      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "shrink-0 border-t border-border/30 p-4 bg-background/50 backdrop-blur-md")}>
         <Button
-          className="w-full h-11 text-sm font-semibold shadow-sm gap-2"
+          className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading>; gap-2 → migrar para <Inline gap="tight"> */ "w-full h-11 text-sm font-semibold shadow-sm gap-2")}
           onClick={onReviewAndSend}
           disabled={!hasFieldsAndSigners}
         >
@@ -357,7 +357,7 @@ export default function FloatingSidebar(props: FloatingSidebarProps) {
               <Settings className="size-6" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="bottom" className="h-[85vh] p-0 rounded-t-xl">
+          <SheetContent side="bottom" className={cn(/* design-system-escape: p-0 → usar <Inset> */ "h-[85vh] p-0 rounded-t-xl")}>
             <SidebarContent {...props} />
           </SheetContent>
         </Sheet>

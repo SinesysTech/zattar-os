@@ -217,29 +217,29 @@ export function AudienciasSemanaView({
   const weekLabel = `${format(weekStart, "d 'de' MMM", { locale: ptBR })} — ${format(friday, "d 'de' MMM", { locale: ptBR })}`;
 
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       {/* Week Navigator */}
-      <div className="flex items-center gap-2">
-        <button onClick={handlePrevWeek} className="p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <button onClick={handlePrevWeek} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer")}>
           <ChevronLeft className="size-4" />
         </button>
         <button
           onClick={handleToday}
           className={cn(
-            'px-2.5 py-1 rounded-lg text-caption font-medium transition-colors cursor-pointer',
+            /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'px-2.5 py-1 rounded-lg text-caption font-medium transition-colors cursor-pointer',
             isCurrentWeek ? 'bg-primary/12 text-primary' : 'bg-border/8 text-muted-foreground/50 hover:bg-border/15',
           )}
         >
           Hoje
         </button>
-        <button onClick={handleNextWeek} className="p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer">
+        <button onClick={handleNextWeek} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer")}>
           <ChevronRight className="size-4" />
         </button>
-        <span className="text-sm font-medium capitalize ml-1">{weekLabel}</span>
+        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium capitalize ml-1")}>{weekLabel}</span>
       </div>
 
-      <Tabs value={selectedDay} onValueChange={setSelectedDay} className="space-y-4">
-        <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto rounded-2xl bg-transparent p-0">
+      <Tabs value={selectedDay} onValueChange={setSelectedDay} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+        <TabsList className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-0 → usar <Inset> */ "h-auto w-full justify-start gap-2 overflow-x-auto rounded-2xl bg-transparent p-0")}>
           {weekDays.map((day) => {
             const key = getDayKey(day);
             const dayAudiencias = audienciasByDay.get(key) ?? [];
@@ -254,25 +254,25 @@ export function AudienciasSemanaView({
                 key={key}
                 value={key}
                 className={cn(
-                  'min-w-40 rounded-2xl border border-border/30 bg-card/55 px-4 py-3 text-left data-[state=active]:border-primary/25 data-[state=active]:bg-card',
-                  'flex flex-col items-start gap-1.5',
+                  /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ 'min-w-40 rounded-2xl border border-border/30 bg-card/55 px-4 py-3 text-left data-[state=active]:border-primary/25 data-[state=active]:bg-card',
+                  /* design-system-escape: gap-1.5 gap sem token DS */ 'flex flex-col items-start gap-1.5',
                 )}
               >
-                <div className="flex w-full items-center justify-between gap-2">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex w-full items-center justify-between gap-2")}>
                   <span className={cn(
-                    'text-xs font-semibold uppercase tracking-wider',
+                    /* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ 'text-xs font-semibold uppercase tracking-wider',
                     today ? 'text-primary' : 'text-muted-foreground/60',
                   )}>
                     {format(day, 'EEEE', { locale: ptBR })}
                   </span>
                   <span className={cn(
-                    'rounded-full px-2 py-0.5 text-micro-caption tabular-nums',
+                    /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'rounded-full px-2 py-0.5 text-micro-caption tabular-nums',
                     today ? 'bg-primary/12 text-primary' : 'bg-muted/60 text-muted-foreground/70',
                   )}>
                     {format(day, 'd')}
                   </span>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground/65">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-2 text-xs text-muted-foreground/65")}>
                   <span>{dayAudiencias.length} no dia</span>
                   {ongoingCount > 0 && <span className="text-success">• {ongoingCount} em curso</span>}
                 </div>
@@ -299,34 +299,34 @@ export function AudienciasSemanaView({
           const nextAudiencia = daySummary.nextAudiencia;
 
           return (
-            <TabsContent key={key} value={key} className="mt-0 space-y-4">
-              <GlassPanel depth={dayIsToday ? 2 : 1} className="p-4">
-                <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
+            <TabsContent key={key} value={key} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "mt-0 space-y-4")}>
+              <GlassPanel depth={dayIsToday ? 2 : 1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between")}>
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                       <CalendarDays className="size-4 text-primary/70" />
                       <Text variant="overline" className="text-muted-foreground/70">
                         {dayIsToday ? 'Hoje' : 'Dia selecionado'}
                       </Text>
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold capitalize">
+                      <h3 className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "text-lg font-semibold capitalize")}>
                         {format(day, "EEEE, d 'de' MMMM", { locale: ptBR })}
                       </h3>
-                      <p className="text-sm text-muted-foreground/60">
+                      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/60")}>
                         {dayIsToday
                           ? 'Acompanhamento operacional da pauta do dia.'
                           : 'Visão do preparo, sequência e encerramento das audiências deste dia.'}
                       </p>
                     </div>
                     {nextAudiencia && (
-                      <p className="text-sm text-muted-foreground/70">
-                        Próxima prioridade: <span className="font-medium text-foreground/85">{fmtTime(nextAudiencia.dataInicio)}</span> · {nextAudiencia.tipoDescricao || 'Audiência'} · {nextAudiencia.numeroProcesso}
+                      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/70")}>
+                        Próxima prioridade: <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/85")}>{fmtTime(nextAudiencia.dataInicio)}</span> · {nextAudiencia.tipoDescricao || 'Audiência'} · {nextAudiencia.numeroProcesso}
                       </p>
                     )}
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 lg:w-105">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2 lg:w-105")}>
                     <SummaryMetric
                       icon={Clock3}
                       label="Em andamento"
@@ -355,7 +355,7 @@ export function AudienciasSemanaView({
                 </div>
 
                 {(daySummary.lowPrep.length > 0 || daySummary.semResponsavel.length > 0 || daySummary.semSala.length > 0) && (
-                  <div className="mt-4 flex flex-wrap gap-2">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-4 flex flex-wrap gap-2")}>
                     {daySummary.lowPrep.length > 0 && (
                       <StatusPill>
                         {daySummary.lowPrep.length} com preparo abaixo de 50%
@@ -376,27 +376,27 @@ export function AudienciasSemanaView({
               </GlassPanel>
 
               {dayAudiencias.length === 0 ? (
-                <GlassPanel className="p-10 text-center">
-                  <p className="text-sm font-medium text-foreground/75">
+                <GlassPanel className={cn(/* design-system-escape: p-10 → usar <Inset> */ "p-10 text-center")}>
+                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-foreground/75")}>
                     Nenhuma audiência neste dia útil.
                   </p>
-                  <p className="mt-1 text-sm text-muted-foreground/55">
+                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-1 text-sm text-muted-foreground/55")}>
                     Use as tabs para revisar outra pauta da semana.
                   </p>
                 </GlassPanel>
               ) : (
-                <div className="space-y-4">
+                <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
                   {groupedAudiencias.map((group) => (
-                    <section key={group.key} className="space-y-2">
-                      <div className="flex items-center justify-between gap-3">
-                        <div className="flex items-center gap-2">
+                    <section key={group.key} className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
+                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                           <span className={cn(
                             'size-2 rounded-full',
                             group.tone === 'success' && 'bg-success',
                             group.tone === 'primary' && 'bg-primary',
                             group.tone === 'muted' && 'bg-muted-foreground/35',
                           )} />
-                          <h4 className="text-sm font-semibold text-foreground/85">
+                          <h4 className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold text-foreground/85")}>
                             {group.title}
                           </h4>
                         </div>
@@ -404,7 +404,7 @@ export function AudienciasSemanaView({
                           {group.items.length}
                         </span>
                       </div>
-                      <div className="space-y-2">
+                      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                         {group.items.map((a) => (
                           <WeekDayCard
                             key={a.id}
@@ -440,9 +440,9 @@ function SummaryMetric({
   tone: 'primary' | 'success' | 'warning' | 'muted';
 }) {
   return (
-    <div className="rounded-2xl border border-border/30 bg-background/55 px-3 py-2.5">
-      <div className="flex items-center justify-between gap-2">
-        <span className="text-micro-caption uppercase tracking-wider text-muted-foreground/55">
+    <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "rounded-2xl border border-border/30 bg-background/55 px-3 py-2.5")}>
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
+        <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption uppercase tracking-wider text-muted-foreground/55")}>
           {label}
         </span>
         <Icon className={cn(
@@ -453,7 +453,7 @@ function SummaryMetric({
           tone === 'muted' && 'text-muted-foreground/55',
         )} />
       </div>
-      <div className="mt-1 text-lg font-semibold tabular-nums text-foreground/85">
+      <div className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "mt-1 text-lg font-semibold tabular-nums text-foreground/85")}>
         {value}
       </div>
     </div>
@@ -462,7 +462,7 @@ function SummaryMetric({
 
 function StatusPill({ children }: { children: React.ReactNode }) {
   return (
-    <span className="rounded-full border border-border/30 bg-background/60 px-2.5 py-1 text-micro-caption text-muted-foreground/70">
+    <span className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "rounded-full border border-border/30 bg-background/60 px-2.5 py-1 text-micro-caption text-muted-foreground/70")}>
       {children}
     </span>
   );
@@ -491,7 +491,7 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
       onClick={onClick}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); } }}
       className={cn(
-        'w-full text-left p-3 rounded-xl border transition-all duration-200 cursor-pointer',
+        /* design-system-escape: p-3 → usar <Inset> */ 'w-full text-left p-3 rounded-xl border transition-all duration-200 cursor-pointer',
         'bg-card/80 border-border/40 hover:border-border/60 hover:shadow-sm hover:scale-[1.01]',
         'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
         (isPast || isFinalizada) && 'opacity-60',
@@ -499,18 +499,18 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
       )}
     >
       {/* 1. Hora + Status */}
-      <div className="flex items-center justify-between gap-1">
-        <span className="text-xs tabular-nums font-semibold text-foreground/80">
+      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center justify-between gap-1")}>
+        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs tabular-nums font-semibold text-foreground/80")}>
           {fmtTime(audiencia.dataInicio)} – {fmtTime(audiencia.dataFim)}
         </span>
-        <div className="flex items-center gap-1.5">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
           {isOngoing && <span className="size-2 rounded-full bg-success animate-pulse" />}
-          {isFinalizada && <span className="text-micro-caption font-semibold text-success px-1.5 py-0.5 rounded-full bg-success/15">OK</span>}
+          {isFinalizada && <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-micro-caption font-semibold text-success px-1.5 py-0.5 rounded-full bg-success/15")}>OK</span>}
           <Text
             variant="micro-badge"
             as="span"
             className={cn(
-            'font-semibold tabular-nums px-1.5 py-0.5 rounded-full',
+            /* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'font-semibold tabular-nums px-1.5 py-0.5 rounded-full',
             prepStatus === 'good' ? 'bg-success/15 text-success' : prepStatus === 'warning' ? 'bg-warning/15 text-warning' : 'bg-destructive/15 text-destructive',
           )}
           >
@@ -520,33 +520,33 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
       </div>
 
       {/* 2. Tipo + Modalidade (mesma linha) */}
-      <div className="flex items-center gap-1.5 mt-1.5 min-w-0">
-        <p className="text-xs font-medium text-foreground wrap-break-word leading-snug truncate">
+      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mt-1.5 min-w-0")}>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; leading-snug sem token DS */ "text-xs font-medium text-foreground wrap-break-word leading-snug truncate")}>
           {audiencia.tipoDescricao || 'Audiência'}
         </p>
-        <div className="flex items-center gap-1 shrink-0">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 shrink-0")}>
           {isVirtual ? <Video className="size-2.5 text-info/60" /> : audiencia.modalidade === 'presencial' ? <Building2 className="size-2.5 text-warning/60" /> : null}
           <span className="text-micro-caption text-muted-foreground/60">
             {audiencia.modalidade === 'virtual' ? 'Virtual' : audiencia.modalidade === 'presencial' ? 'Presencial' : audiencia.modalidade === 'hibrida' ? 'Híbrida' : ''}
           </span>
         </div>
         {audiencia.urlAudienciaVirtual && isVirtual && (
-          <span className="text-micro-caption font-semibold px-1.5 py-0.5 rounded bg-info/15 text-info/70 shrink-0">Sala</span>
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-micro-caption font-semibold px-1.5 py-0.5 rounded bg-info/15 text-info/70 shrink-0")}>Sala</span>
         )}
       </div>
 
       {/* 3. Partes */}
       {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
-        <p className="text-micro-caption text-muted-foreground/65 mt-1 wrap-break-word leading-snug">
+        <p className={cn(/* design-system-escape: leading-snug sem token DS */ "text-micro-caption text-muted-foreground/65 mt-1 wrap-break-word leading-snug")}>
           {audiencia.poloAtivoNome || '—'} <span className="text-muted-foreground/35">vs</span> {audiencia.poloPassivoNome || '—'}
         </p>
       )}
 
       {/* 4. TRT badge + Grau + Número do processo (mesma linha) */}
       {audiencia.numeroProcesso && (
-        <div className="flex items-center gap-1.5 mt-1 min-w-0">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mt-1 min-w-0")}>
           {audiencia.trt && (
-            <span className="text-micro-caption font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary/70 shrink-0">{audiencia.trt}</span>
+            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-micro-caption font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary/70 shrink-0")}>{audiencia.trt}</span>
           )}
           {audiencia.grau && (
             <span className="text-micro-caption text-muted-foreground/50 shrink-0">{GRAU_TRIBUNAL_LABELS[audiencia.grau]}</span>

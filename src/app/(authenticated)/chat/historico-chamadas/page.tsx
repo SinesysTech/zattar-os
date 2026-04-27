@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth/server';
@@ -37,7 +38,7 @@ async function HistoricoChamadasContent({ searchParams }: PageProps) {
 
   if (!result.success) {
     return (
-      <div className="p-4 rounded-md bg-destructive/10 text-destructive">
+      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 rounded-md bg-destructive/10 text-destructive")}>
         Erro ao carregar histórico: {result.message}
       </div>
     );

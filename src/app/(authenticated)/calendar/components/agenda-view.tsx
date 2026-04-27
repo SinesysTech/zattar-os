@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import { useMemo } from "react";
 import { addDays, format, isToday } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
@@ -30,11 +31,11 @@ export function AgendaView({ currentDate, events, onEventSelect, onEventCreate }
   const hasEvents = days.some((day) => getAgendaEventsForDay(events, day).length > 0);
 
   return (
-    <div className="border-border/70 border-t px-4">
+    <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "border-border/70 border-t px-4")}>
       {!hasEvents ? (
-        <div className="flex min-h-[70svh] flex-col items-center justify-center py-16 text-center">
+        <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex min-h-[70svh] flex-col items-center justify-center py-16 text-center")}>
           <Calendar size={32} className="text-muted-foreground/50 mb-2" />
-          <h3 className="text-lg font-medium">Nenhum evento encontrado</h3>
+          <h3 className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-medium → className de <Text>/<Heading> */ "text-lg font-medium")}>Nenhum evento encontrado</h3>
           <p className="text-muted-foreground">
             Não há eventos agendados para este período.
           </p>
@@ -46,10 +47,10 @@ export function AgendaView({ currentDate, events, onEventSelect, onEventCreate }
           if (dayEvents.length === 0) return null;
 
           return (
-            <div key={day.toString()} className="group border-border/70 relative my-8 first:mt-4 border-t">
-              <div className="bg-background absolute -top-3 left-0 flex h-6 items-center gap-1 pe-4 sm:pe-4">
+            <div key={day.toString()} className={cn(/* design-system-escape: my-8 margin sem primitiva DS */ "group border-border/70 relative my-8 first:mt-4 border-t")}>
+              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "bg-background absolute -top-3 left-0 flex h-6 items-center gap-1 pe-4 sm:pe-4")}>
                 <span
-                  className="text-[10px] uppercase data-today:font-medium sm:text-xs"
+                  className={cn(/* design-system-escape: data-today:font-medium sem equivalente DS; sm:text-xs sem equivalente DS */ "text-[10px] uppercase data-today:font-medium sm:text-xs")}
                   data-today={isToday(day) || undefined}>
                   {format(day, "d 'de' MMM, EEEE", { locale: ptBR })}
                 </span>
@@ -69,11 +70,11 @@ export function AgendaView({ currentDate, events, onEventSelect, onEventCreate }
                         <PlusIcon size={12} />
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent side="right" className="text-xs">Novo evento</TooltipContent>
+                    <TooltipContent side="right" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>Novo evento</TooltipContent>
                   </Tooltip>
                 )}
               </div>
-              <div className="mt-6 space-y-2">
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "mt-6 space-y-2")}>
                 {dayEvents.map((event) => (
                   <EventItem
                     key={event.id}

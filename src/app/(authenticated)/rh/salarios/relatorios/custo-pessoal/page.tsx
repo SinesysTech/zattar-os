@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -37,7 +38,7 @@ export default function RelatorioCustoPessoalPage() {
       ?.totalFuncionarios ?? 0;
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <div className="flex items-center justify-between">
         <div>
           <Heading level="page">Custo Total com Pessoal</Heading>
@@ -51,9 +52,9 @@ export default function RelatorioCustoPessoalPage() {
         <CardHeader>
           <CardTitle>Filtros</CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <CardContent className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 md:grid-cols-2")}>
           <div>
-            <label className="text-sm text-muted-foreground">Ano</label>
+            <label className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Ano</label>
             <Select value={ano.toString()} onValueChange={(value) => setAno(Number(value))}>
               <SelectTrigger>
                 <SelectValue />
@@ -68,7 +69,7 @@ export default function RelatorioCustoPessoalPage() {
             </Select>
           </div>
           <div>
-            <label className="text-sm text-muted-foreground">Periodicidade</label>
+            <label className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Periodicidade</label>
             <Select
               value={periodicidade}
               onValueChange={(value: 'mensal' | 'trimestral' | 'anual') => setPeriodicidade(value)}
@@ -88,23 +89,23 @@ export default function RelatorioCustoPessoalPage() {
 
       {isLoading && (
         <Card>
-          <CardContent className="p-6 text-muted-foreground">Carregando dados...</CardContent>
+          <CardContent className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 text-muted-foreground")}>Carregando dados...</CardContent>
         </Card>
       )}
 
       {error && (
         <Card>
-          <CardContent className="p-6 text-destructive">{error}</CardContent>
+          <CardContent className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 text-destructive")}>{error}</CardContent>
         </Card>
       )}
 
       {!isLoading && !error && (
-        <div className="grid gap-4 md:grid-cols-4">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-4")}>
           <Card>
             <CardHeader>
               <CardTitle>Custo Total ({ano})</CardTitle>
             </CardHeader>
-            <CardContent className="text-xl font-semibold text-success">
+            <CardContent className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-semibold → className de <Text>/<Heading> */ "text-xl font-semibold text-success")}>
               {formatCurrency(custoTotal)}
             </CardContent>
           </Card>
@@ -112,7 +113,7 @@ export default function RelatorioCustoPessoalPage() {
             <CardHeader>
               <CardTitle>Custo Médio Mensal</CardTitle>
             </CardHeader>
-            <CardContent className="text-xl font-semibold">
+            <CardContent className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-semibold → className de <Text>/<Heading> */ "text-xl font-semibold")}>
               {formatCurrency(mediaMensal)}
             </CardContent>
           </Card>
@@ -120,7 +121,7 @@ export default function RelatorioCustoPessoalPage() {
             <CardHeader>
               <CardTitle>Projeção Anual</CardTitle>
             </CardHeader>
-            <CardContent className="text-xl font-semibold">
+            <CardContent className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-semibold → className de <Text>/<Heading> */ "text-xl font-semibold")}>
               {formatCurrency(custoProjetadoAnual)}
             </CardContent>
           </Card>
@@ -128,7 +129,7 @@ export default function RelatorioCustoPessoalPage() {
             <CardHeader>
               <CardTitle>Total de Funcionários</CardTitle>
             </CardHeader>
-            <CardContent className="text-xl font-semibold">{totalFuncionarios}</CardContent>
+            <CardContent className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-semibold → className de <Text>/<Heading> */ "text-xl font-semibold")}>{totalFuncionarios}</CardContent>
           </Card>
         </div>
       )}

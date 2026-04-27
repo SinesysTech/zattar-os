@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { AppBadge } from '@/components/ui/app-badge';
 import { ExpedienteDetalhesDialog } from './expediente-detalhes-dialog';
@@ -178,7 +179,7 @@ export function ExpedientesCalendarMonth({
             {/* Weekday Headers */}
             <div className="grid grid-cols-7 bg-muted/50 border-b">
                 {['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'].map((dia) => (
-                    <div key={dia} className="p-2 text-center text-sm font-medium text-muted-foreground">{dia}</div>
+                    <div key={dia} className={cn(/* design-system-escape: p-2 → usar <Inset>; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "p-2 text-center text-sm font-medium text-muted-foreground")}>{dia}</div>
                 ))}
             </div>
             
@@ -206,7 +207,7 @@ export function ExpedientesCalendarMonth({
                                     </div>
                                     
                                     {hasExps && (
-                                        <div className="space-y-1">
+                                        <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
                                             {exps.slice(0, 3).map(e => (
                                                 <div 
                                                     key={e.id}

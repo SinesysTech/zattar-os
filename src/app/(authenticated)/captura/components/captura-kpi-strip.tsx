@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useMemo } from 'react';
 import { Database, CheckCircle2, Loader2, AlertTriangle } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
@@ -30,16 +31,16 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
   );
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 lg:grid-cols-4 gap-3")}>
       {/* Total Capturas */}
-      <GlassPanel className="px-4 py-3">
-        <div className="flex items-start justify-between gap-2">
+      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Total Capturas
             </p>
-            <div className="flex items-baseline gap-1.5 mt-1">
-              <p className="font-display text-xl font-bold tabular-nums leading-none">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
                 <AnimatedNumber value={data.total} />
               </p>
             </div>
@@ -48,7 +49,7 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
             <Database className="size-4 text-primary/50" />
           </IconContainer>
         </div>
-        <div className="mt-2.5 flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full bg-primary/25 transition-all duration-500"
@@ -60,14 +61,14 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
       </GlassPanel>
 
       {/* Taxa de Sucesso */}
-      <GlassPanel className="px-4 py-3">
-        <div className="flex items-start justify-between gap-2">
+      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Taxa de Sucesso
             </p>
-            <div className="flex items-baseline gap-1.5 mt-1">
-              <p className="font-display text-xl font-bold tabular-nums leading-none">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
                 <AnimatedNumber value={data.taxaSucesso} />
               </p>
               <span className="text-[10px] text-muted-foreground/40">%</span>
@@ -77,7 +78,7 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
             <CheckCircle2 className="size-4 text-success/50" />
           </IconContainer>
         </div>
-        <div className="mt-2.5 flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full bg-success/25 transition-all duration-500"
@@ -91,14 +92,14 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
       </GlassPanel>
 
       {/* Em Andamento */}
-      <GlassPanel className="px-4 py-3">
-        <div className="flex items-start justify-between gap-2">
+      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Em Andamento
             </p>
-            <div className="flex items-baseline gap-1.5 mt-1">
-              <p className="font-display text-xl font-bold tabular-nums leading-none">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
                 <AnimatedNumber value={data.emAndamento} />
               </p>
             </div>
@@ -107,7 +108,7 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
             <Loader2 className="size-4 text-info/50" />
           </IconContainer>
         </div>
-        <div className="mt-2.5 flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full bg-info/25 transition-all duration-500"
@@ -121,14 +122,14 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
       </GlassPanel>
 
       {/* Falhas */}
-      <GlassPanel className="px-4 py-3">
-        <div className="flex items-start justify-between gap-2">
+      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Falhas (7d)
             </p>
-            <div className="flex items-baseline gap-1.5 mt-1">
-              <p className="font-display text-xl font-bold tabular-nums leading-none">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
                 <AnimatedNumber value={data.falhas} />
               </p>
             </div>
@@ -137,7 +138,7 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
             <AlertTriangle className="size-4 text-destructive/50" />
           </IconContainer>
         </div>
-        <div className="mt-2.5 flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full bg-destructive/25 transition-all duration-500"

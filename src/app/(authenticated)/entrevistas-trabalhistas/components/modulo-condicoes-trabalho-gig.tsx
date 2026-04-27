@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import {
   Select,
@@ -32,16 +33,16 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
   const mostrarAssistencia = data.sofreu_acidente === true;
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <div>
         <Heading level="card">Precarização do Trabalho</Heading>
-        <p className="text-sm text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
           Condições reais de trabalho: jornada, segurança e dignidade do trabalhador de plataforma
         </p>
       </div>
 
       {/* B.3.1: Horas por dia */}
-      <div className="space-y-2">
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Label htmlFor="horas-dia">Quantas horas por dia trabalhava em média na plataforma?</Label>
         <Select
           value={data.horas_dia ?? ''}
@@ -61,7 +62,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
       </div>
 
       {/* B.3.2: Dias por semana */}
-      <div className="space-y-2">
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Label htmlFor="dias-semana">Quantos dias por semana?</Label>
         <Select
           value={data.dias_semana ?? ''}
@@ -87,7 +88,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
       )}
 
       {/* B.3.3: Acesso a banheiro/descanso */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>Tinha acesso a banheiro e local de descanso durante o trabalho?</Label>
         <SimNaoRadio
           id="acesso-banheiro"
@@ -97,7 +98,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
       </div>
 
       {/* B.3.4: Acidente de trabalho */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>Já sofreu acidente durante o trabalho na plataforma?</Label>
         <SimNaoRadio
           id="acidente"
@@ -106,7 +107,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
         />
 
         {mostrarAssistencia && (
-          <div className="space-y-3">
+          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
             <Label>A plataforma prestou alguma assistência após o acidente?</Label>
             <SimNaoRadio
               id="assistencia-acidente"
@@ -118,7 +119,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
       </div>
 
       {/* B.3.5: EPI */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>A plataforma fornecia equipamento de segurança (capacete, colete, etc.)?</Label>
         <SimNaoRadio
           id="fornece-epi"
@@ -128,7 +129,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
       </div>
 
       {/* B.3.6: Seguro */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>Existia algum seguro oferecido pela plataforma?</Label>
         <SimNaoRadio
           id="seguro"
@@ -138,7 +139,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
       </div>
 
       {/* B.3.7: Narrativa */}
-      <div className="space-y-2">
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Label htmlFor="narrativa-condicoes">Descreva suas condições de trabalho na plataforma</Label>
         <Textarea
           id="narrativa-condicoes"

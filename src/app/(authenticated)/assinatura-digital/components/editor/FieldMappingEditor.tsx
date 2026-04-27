@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -582,10 +583,10 @@ export default function FieldMappingEditor({
   if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <div className="space-y-4 text-center">
+        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4 text-center")}>
           <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-primary" />
-          <p className="font-medium text-muted-foreground">Carregando {template.nome}...</p>
-          <p className="text-sm text-muted-foreground/80">Preparando editor de campos.</p>
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground")}>Carregando {template.nome}...</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/80")}>Preparando editor de campos.</p>
         </div>
       </div>
     );
@@ -640,7 +641,7 @@ export default function FieldMappingEditor({
   };
 
   return (
-    <div className="-m-6 flex flex-col overflow-hidden" style={{ height: 'calc(100vh - 3.5rem)' }}>
+    <div className={cn(/* design-system-escape: -m-6 sem equivalente DS */ "-m-6 flex flex-col overflow-hidden")} style={{ height: 'calc(100vh - 3.5rem)' }}>
       {/* Mobile Toolbar (horizontal at top) */}
       <EditorToolbarMobile {...toolbarProps} />
 
@@ -675,7 +676,7 @@ export default function FieldMappingEditor({
         />
 
         {/* Centered PDF Canvas */}
-        <div className="flex min-h-full items-start justify-center p-8">
+        <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex min-h-full items-start justify-center p-8")}>
           <EditorCanvas
             canvasRef={canvasRef}
             canvasSize={canvasSize}
@@ -723,7 +724,7 @@ export default function FieldMappingEditor({
               Você tem alterações não salvas. Deseja sair sem salvar?
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="flex flex-col gap-2 sm:flex-row sm:justify-end">
+          <DialogFooter className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2 sm:flex-row sm:justify-end")}>
             <Button variant="outline" onClick={() => setShowExitConfirmation(false)}>
               Continuar editando
             </Button>

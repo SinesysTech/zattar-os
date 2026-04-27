@@ -62,14 +62,14 @@ function TribunalGrauBadge({ trt, grau }: { trt: string; grau: GrauTribunal }) {
   };
 
   return (
-    <div className="inline-flex items-center text-xs font-medium shrink-0">
+    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "inline-flex items-center text-xs font-medium shrink-0")}>
       {/* Tribunal (lado esquerdo - azul, arredondado à esquerda) */}
-      <span className="bg-info/15 text-info px-2 py-0.5 rounded-l-full">
+      <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "bg-info/15 text-info px-2 py-0.5 rounded-l-full")}>
         {trt}
       </span>
       {/* Grau (lado direito - cor baseada no grau, arredondado à direita) */}
       <span className={cn(
-        'px-2 py-0.5 border-l border-background/50 rounded-r-full',
+        /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'px-2 py-0.5 border-l border-background/50 rounded-r-full',
         grauColorClasses[grau] || 'bg-muted text-muted-foreground'
       )}>
         {grauLabel}
@@ -105,14 +105,14 @@ function ResponsavelCell({
       <button
         type="button"
         onClick={() => setIsDialogOpen(true)}
-        className="flex items-center justify-start gap-2 text-sm w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1 cursor-pointer"
+        className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm">; px-1 padding direcional sem Inset equiv.; -mx-1 sem equivalente DS */ "flex items-center justify-start gap-2 text-sm w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1 cursor-pointer")}
         title={nomeExibicao !== '-' ? `Clique para alterar responsável: ${nomeExibicao}` : 'Clique para atribuir responsável'}
       >
         {responsavel || pericia.responsavelId ? (
           <>
             <Avatar size="sm">
               <AvatarImage src={responsavel?.avatarUrl || undefined} alt={nomeExibicao} />
-              <AvatarFallback className="text-[10px] font-medium">
+              <AvatarFallback className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium")}>
                 {getInitials(nomeExibicao)}
               </AvatarFallback>
             </Avatar>
@@ -215,11 +215,11 @@ export const columns: ColumnDef<Pericia>[] = [
       const vencido = prazo && isVencido(prazo) && !p.laudoJuntado;
 
       return (
-        <div className="flex flex-col gap-1 items-start py-2">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex flex-col gap-1 items-start py-2")}>
           {/* Data do prazo */}
           <span className={cn(
-            'text-sm font-medium',
-            vencido && 'text-destructive font-semibold'
+            /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ 'text-sm font-medium',
+            vencido && /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-destructive font-semibold'
           )}>
             {prazo ? formatarDataCurta(prazo) : '-'}
           </span>
@@ -250,28 +250,28 @@ export const columns: ColumnDef<Pericia>[] = [
       const nomeParteRe = p.processo?.nomeParteRe || '-';
 
       return (
-        <div className="flex flex-col gap-1.5 items-start py-2 max-w-[min(92vw,20rem)] min-w-0">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex flex-col gap-1.5 items-start py-2 max-w-[min(92vw,20rem)] min-w-0")}>
           {/* Linha 1: Badge Tribunal + Grau */}
-          <div className="flex items-center gap-1.5 flex-wrap">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 flex-wrap")}>
             <TribunalGrauBadge trt={p.trt} grau={p.grau} />
           </div>
 
           {/* Linha 2: Número do processo */}
-          <span className="text-xs font-mono font-medium text-foreground break-all" title={p.numeroProcesso}>
+          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-mono font-medium text-foreground break-all")} title={p.numeroProcesso}>
             {p.numeroProcesso}
           </span>
 
           {/* Partes com badges de polo */}
-          <div className="flex flex-col gap-0.5">
+          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
             <ParteBadge
               polo="ATIVO"
-              className="flex whitespace-normal wrap-break-word text-left font-normal text-xs"
+              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex whitespace-normal wrap-break-word text-left font-normal text-xs")}
             >
               {nomeParteAutora}
             </ParteBadge>
             <ParteBadge
               polo="PASSIVO"
-              className="flex whitespace-normal wrap-break-word text-left font-normal text-xs"
+              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex whitespace-normal wrap-break-word text-left font-normal text-xs")}
             >
               {nomeParteRe}
             </ParteBadge>
@@ -293,7 +293,7 @@ export const columns: ColumnDef<Pericia>[] = [
       headerLabel: 'Especialidade',
     },
     cell: ({ row }) => (
-      <div className="flex items-center py-2">
+      <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
         <span className="max-w-60 truncate">
           {row.original.especialidade?.descricao || '-'}
         </span>
@@ -313,7 +313,7 @@ export const columns: ColumnDef<Pericia>[] = [
       headerLabel: 'Perito',
     },
     cell: ({ row }) => (
-      <div className="flex items-center py-2">
+      <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
         <span className="max-w-50 truncate">{row.original.perito?.nome || '-'}</span>
       </div>
     ),
@@ -333,7 +333,7 @@ export const columns: ColumnDef<Pericia>[] = [
     cell: ({ row, table }) => {
       const meta = table.options.meta as PericiasTableMeta | undefined;
       return (
-        <div className="flex items-center py-2">
+        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
           <ResponsavelCell
             pericia={row.original}
             usuarios={meta?.usuarios}
@@ -358,7 +358,7 @@ export const columns: ColumnDef<Pericia>[] = [
     cell: ({ row, table }) => {
       const meta = table.options.meta as PericiasTableMeta | undefined;
       return (
-        <div className="flex items-center py-2">
+        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
           <ActionsCell
             pericia={row.original}
             onSuccess={meta?.onSuccess}

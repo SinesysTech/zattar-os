@@ -25,19 +25,19 @@ export default function NoteContent() {
 
   return (
     <div className="flex-1">
-      <div className="mb-4 space-y-3">
-        <div className="flex items-center gap-2">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "mb-4 space-y-3")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           <div className="relative flex-1 sm:max-w-md">
             <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
             <Input
-              className="w-full bg-card pl-10"
+              className={cn(/* design-system-escape: pl-10 padding direcional sem Inset equiv. */ "w-full bg-card pl-10")}
               placeholder="Buscar notas"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
 
-          <div className="ml-auto flex shrink-0 items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "ml-auto flex shrink-0 items-center gap-2")}>
             <div className="hidden overflow-hidden rounded-md border sm:flex">
               <Button
                 variant="ghost"
@@ -88,8 +88,8 @@ export default function NoteContent() {
       </div>
 
       {searchQuery && filteredNotes.length === 0 && (
-        <div className="flex flex-col items-center justify-center p-4 text-center">
-          <div className="bg-muted/30 mb-4 rounded-full p-6">
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex flex-col items-center justify-center p-4 text-center")}>
+          <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "bg-muted/30 mb-4 rounded-full p-6")}>
             <FileSearchIcon className="text-muted-foreground h-12 w-12" />
           </div>
           <Typography.H3 className="mb-2">Nenhuma nota encontrada</Typography.H3>
@@ -107,7 +107,7 @@ export default function NoteContent() {
       <div
         data-view-mode={viewMode}
         className={cn("group", {
-          "box-border columns-1 gap-4 [column-fill:_balance] group-data-[theme-content-layout=centered]/layout:columns-3 group-data-[theme-content-layout=full]/layout:columns-1 sm:group-data-[theme-content-layout=full]:columns-2 md:group-data-[theme-content-layout=full]/layout:columns-3 lg:columns-2 xl:group-data-[theme-content-layout=full]/layout:columns-4":
+          /* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "box-border columns-1 gap-4 [column-fill:_balance] group-data-[theme-content-layout=centered]/layout:columns-3 group-data-[theme-content-layout=full]/layout:columns-1 sm:group-data-[theme-content-layout=full]:columns-2 md:group-data-[theme-content-layout=full]/layout:columns-3 lg:columns-2 xl:group-data-[theme-content-layout=full]/layout:columns-4":
             viewMode === "masonry"
         })}>
         {filteredNotes.map((note: Note, key: number) => (

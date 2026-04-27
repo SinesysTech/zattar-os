@@ -38,7 +38,7 @@ export function LembretesWidget({ lembretes: initialReminders = [] }: LembretesW
   return (
     <GlassPanel>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           <Bell className="size-5" />
           Lembretes
         </CardTitle>
@@ -48,20 +48,20 @@ export function LembretesWidget({ lembretes: initialReminders = [] }: LembretesW
       </CardHeader>
       <CardContent>
         {lembretes.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-8 text-center">
+          <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-8 text-center")}>
             <Bell className="size-12 text-muted-foreground/55" />
-            <p className="mt-4 text-sm text-muted-foreground">Nenhum lembrete por aqui!</p>
-            <p className="text-sm text-muted-foreground">
-              Clique no <span className="font-medium text-primary">+</span> para criar um.
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-4 text-sm text-muted-foreground")}>Nenhum lembrete por aqui!</p>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+              Clique no <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-primary")}>+</span> para criar um.
             </p>
           </div>
         ) : (
           <>
-            <div className="space-y-3">
+            <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
               {lembretes.slice(0, 3).map((lembrete) => (
                 <div
                   key={lembrete.id}
-                  className="flex items-start gap-3 rounded-md border bg-background p-3"
+                  className={cn(/* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ "flex items-start gap-3 rounded-md border bg-background p-3")}
                 >
                   <span
                     className={cn('mt-1.5 size-2 shrink-0 rounded-full', {
@@ -70,18 +70,18 @@ export function LembretesWidget({ lembretes: initialReminders = [] }: LembretesW
                       'bg-destructive': lembrete.prioridade === 'high',
                     })}
                   />
-                  <div className="min-w-0 flex-1 space-y-1">
-                    <p className={cn('text-sm', { 'line-through opacity-60': lembrete.concluido })}>
+                  <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "min-w-0 flex-1 space-y-1")}>
+                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ 'text-sm', { 'line-through opacity-60': lembrete.concluido })}>
                       {lembrete.texto}
                     </p>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-xs text-muted-foreground">
+                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap items-center gap-2")}>
+                      <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                         {formatarDataLembrete(lembrete.data_lembrete)}
                       </span>
-                      <Badge variant="outline" className="text-xs">{lembrete.categoria}</Badge>
+                      <Badge variant="outline" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>{lembrete.categoria}</Badge>
                     </div>
                   </div>
-                  <div className="flex shrink-0 gap-1">
+                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex shrink-0 gap-1")}>
                     <button
                       onClick={() => marcarConcluido(lembrete.id, !lembrete.concluido)}
                       disabled={isPending}

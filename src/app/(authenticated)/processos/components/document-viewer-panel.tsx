@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -118,11 +119,11 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
   // Estado vazio — nenhum documento selecionado
   if (!item) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-center gap-3 p-8">
-        <div className="rounded-full bg-muted p-4">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full text-center gap-3 p-8")}>
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-full bg-muted p-4")}>
           <MousePointerClick className="h-8 w-8 text-muted-foreground" />
         </div>
-        <p className="text-sm text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
           Selecione um documento na timeline para visualizar
         </p>
       </div>
@@ -132,13 +133,13 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
   // Documento sigiloso sem Backblaze
   if (item.documentoSigiloso && !item.backblaze) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-center gap-3 p-8">
-        <div className="rounded-full bg-destructive/10 p-4">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full text-center gap-3 p-8")}>
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-full bg-destructive/10 p-4")}>
           <Lock className="h-8 w-8 text-destructive" />
         </div>
-        <div className="space-y-1">
-          <p className="text-sm font-medium">{item.titulo}</p>
-          <p className="text-sm text-muted-foreground">
+        <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{item.titulo}</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
             Documento sigiloso — visualização restrita
           </p>
         </div>
@@ -149,16 +150,16 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
   // Documento sem Backblaze (não capturado)
   if (!item.backblaze) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-center gap-4 p-8">
-        <div className="rounded-full bg-muted p-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full text-center gap-4 p-8")}>
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-full bg-muted p-4")}>
           <FileText className="h-8 w-8 text-muted-foreground" />
         </div>
-        <div className="space-y-1">
-          <p className="text-sm font-medium">{item.titulo}</p>
-          <p className="text-sm text-muted-foreground">
+        <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{item.titulo}</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
             Documento não foi capturado ou enviado para armazenamento
           </p>
-          <p className="text-xs text-muted-foreground/70">
+          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/70")}>
             Atualize a timeline para tentar capturar este documento novamente.
           </p>
         </div>
@@ -168,7 +169,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
             size="sm"
             onClick={onRecapture}
             disabled={isCapturing}
-            className="gap-2"
+            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}
           >
             {isCapturing ? (
               <LoadingSpinner size="sm" />
@@ -193,24 +194,24 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
   return (
     <div className="flex flex-col h-full">
       {/* Header do documento */}
-      <div className="flex-none border-b p-3 space-y-1.5">
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 min-w-0 flex-1">
+      <div className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-1.5 sem token DS */ "flex-none border-b p-3 space-y-1.5")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0 flex-1")}>
             {item.grauOrigem && (
               <SemanticBadge
                 category="grau"
                 value={item.grauOrigem}
-                className="text-xs shrink-0"
+                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs shrink-0")}
               >
                 {formatarGrauComOrdinal(item.grauOrigem)}
               </SemanticBadge>
             )}
-            <Heading level="card" className="text-sm truncate">{item.titulo}</Heading>
+            <Heading level="card" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm truncate")}>{item.titulo}</Heading>
             {item.documentoSigiloso && (
               <Lock className="h-3.5 w-3.5 text-destructive shrink-0" />
             )}
           </div>
-          <div className="flex items-center gap-1 shrink-0">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 shrink-0")}>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -244,7 +245,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
             </TooltipProvider>
           </div>
         </div>
-        <div className="text-xs text-muted-foreground space-x-2">
+        <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; space-x-2 → migrar para <Inline gap="tight"> */ "text-xs text-muted-foreground space-x-2")}>
           <span>{formatarDataHora(item.data)}</span>
           {(item.nomeSignatario || item.nomeResponsavel) && (
             <>
@@ -264,9 +265,9 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
         )}
 
         {error ? (
-          <div className="flex flex-col items-center justify-center h-full gap-3 p-8">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full gap-3 p-8")}>
             <FileText className="h-12 w-12 text-destructive" />
-            <p className="text-sm text-destructive text-center">{error}</p>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive text-center")}>{error}</p>
           </div>
         ) : (
           presignedUrl && (

@@ -102,13 +102,13 @@ function DetalheItem({
   value: React.ReactNode;
 }) {
   return (
-    <div className="flex items-start gap-3">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3")}>
       <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted shrink-0">
         <Icon className="h-4 w-4 text-muted-foreground" />
       </div>
-      <div className="space-y-0.5 min-w-0">
-        <p className="text-xs text-muted-foreground">{label}</p>
-        <div className="text-sm font-medium">{value}</div>
+      <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5 min-w-0")}>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{label}</p>
+        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{value}</div>
       </div>
     </div>
   );
@@ -214,7 +214,7 @@ export function OrigemLancamentoSection({
       <Card className={cn('border-info/30', className)}>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-info">
+            <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-info")}>
               <Scale className="h-5 w-5" />
               Origem: Acordo Judicial
             </CardTitle>
@@ -227,18 +227,18 @@ export function OrigemLancamentoSection({
             Este lançamento foi gerado automaticamente a partir de um acordo/condenação
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
             {acordo && (
               <DetalheItem
                 icon={Scale}
                 label="Acordo/Condenação"
                 value={
-                  <div className="flex items-center gap-2">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                     <span>
                       {acordo.tipo === 'acordo' ? 'Acordo' : 'Condenação'} #{acordo.id}
                     </span>
-                    <Badge variant="outline" className="text-xs">
+                    <Badge variant="outline" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                       {acordo.direcao === 'recebimento' ? 'Recebimento' : 'Pagamento'}
                     </Badge>
                   </div>
@@ -284,7 +284,7 @@ export function OrigemLancamentoSection({
           </div>
 
           {/* Links de navegação */}
-          <div className="flex flex-wrap gap-2 pt-2 border-t">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-2 padding direcional sem Inset equiv. */ "flex flex-wrap gap-2 pt-2 border-t")}>
             {acordo && (
               <Button variant="outline" size="sm" asChild>
                 <Link href={`/obrigacoes/${acordo.id}`}>
@@ -332,7 +332,7 @@ export function OrigemLancamentoSection({
   return (
     <Card className={className}>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           <FileText className="h-5 w-5" />
           Origem: {origemInfo.label}
         </CardTitle>

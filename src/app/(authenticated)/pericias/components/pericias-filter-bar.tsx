@@ -86,7 +86,7 @@ function FilterDropdownTrigger({ label, active, open, onClear }: TriggerProps) {
   return (
     <div
       className={cn(
-        'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
+        /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
         active
           ? 'border-primary/20 bg-primary/5 text-primary'
           : 'border-border/15 text-muted-foreground/60 hover:bg-muted/30',
@@ -101,7 +101,7 @@ function FilterDropdownTrigger({ label, active, open, onClear }: TriggerProps) {
             e.stopPropagation();
             onClear();
           }}
-          className="ml-0.5 rounded-full p-0.5 hover:bg-primary/10 transition-colors"
+          className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-0.5 rounded-full p-0.5 hover:bg-primary/10 transition-colors")}
         >
           <X className="size-2.5" />
         </span>
@@ -118,7 +118,7 @@ function FilterDropdownTrigger({ label, active, open, onClear }: TriggerProps) {
 // PRIMITIVA INTERNA: SimpleSelect (para enums)
 // =============================================================================
 
-const POPOVER_CLASSES = 'rounded-2xl glass-dropdown overflow-hidden p-0';
+const POPOVER_CLASSES = /* design-system-escape: p-0 → usar <Inset> */ 'rounded-2xl glass-dropdown overflow-hidden p-0';
 
 interface SimpleSelectProps<TValue extends string> {
   label: string;
@@ -157,7 +157,7 @@ function SimpleSelect<TValue extends string>({
         align="start"
         side="bottom"
       >
-        <div className="p-2 space-y-0.5 max-h-64 overflow-y-auto">
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-0.5 sem token DS */ "p-2 space-y-0.5 max-h-64 overflow-y-auto")}>
           {options.map((opt) => (
             <button
               key={opt.value}
@@ -167,7 +167,7 @@ function SimpleSelect<TValue extends string>({
                 setOpen(false);
               }}
               className={cn(
-                'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer text-left',
+                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer text-left',
                 selected === opt.value
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70',
@@ -230,13 +230,13 @@ function SearchableSelect({
         side="bottom"
       >
         <Command className="bg-transparent">
-          <div className="px-3 pt-3 pb-1.5">
+          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
             <CommandInput
               placeholder={placeholder}
-              className="h-8 text-xs rounded-lg"
+              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs rounded-lg")}
             />
           </div>
-          <CommandList className="max-h-56 px-1.5 pb-1.5">
+          <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-56 px-1.5 pb-1.5")}>
             <CommandEmpty>
               <span className="text-[11px] text-muted-foreground/40">
                 Nenhum resultado
@@ -253,7 +253,7 @@ function SearchableSelect({
                       onChange(isSelected ? '' : opt.value);
                       setOpen(false);
                     }}
-                    className="gap-2 rounded-lg text-xs px-2 py-1.5"
+                    className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-xs px-2 py-1.5")}
                   >
                     <span className="truncate">{opt.label}</span>
                     {isSelected && (
@@ -374,7 +374,7 @@ export function PericiasFilterBar({
   };
 
   return (
-    <div className="flex items-center gap-2 flex-wrap">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
       <SimpleSelect
         label="Situação"
         options={SITUACAO_OPTIONS}
@@ -487,7 +487,7 @@ export function DateRangePill({
         <button type="button">
           <div
             className={cn(
-              'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
+              /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
               active
                 ? 'border-primary/20 bg-primary/5 text-primary'
                 : 'border-border/15 text-muted-foreground/60 hover:bg-muted/30',
@@ -502,7 +502,7 @@ export function DateRangePill({
                   e.stopPropagation();
                   onChange(undefined);
                 }}
-                className="ml-0.5 rounded-full p-0.5 hover:bg-primary/10 transition-colors"
+                className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-0.5 rounded-full p-0.5 hover:bg-primary/10 transition-colors")}
               >
                 <X className="size-2.5" />
               </span>
@@ -515,7 +515,7 @@ export function DateRangePill({
         </button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-auto p-0 rounded-2xl glass-dropdown border-border/40"
+        className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto p-0 rounded-2xl glass-dropdown border-border/40")}
         align="start"
         side="bottom"
       >

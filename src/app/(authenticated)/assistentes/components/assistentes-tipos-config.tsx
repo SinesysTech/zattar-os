@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -156,7 +157,7 @@ export function AssistentesTiposConfig({
   if (loading) {
     return (
       <Card>
-        <CardContent className="flex items-center justify-center p-12">
+        <CardContent className={cn(/* design-system-escape: p-12 → usar <Inset> */ "flex items-center justify-center p-12")}>
           <LoadingSpinner className="size-8 text-muted-foreground" />
         </CardContent>
       </Card>
@@ -164,7 +165,7 @@ export function AssistentesTiposConfig({
   }
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       {/* Mensagens */}
       {error && (
         <Alert variant="destructive">
@@ -180,7 +181,7 @@ export function AssistentesTiposConfig({
       {/* Formulário de Criação */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <Settings className="h-5 w-5" />
             Nova Configuração
           </CardTitle>
@@ -190,9 +191,9 @@ export function AssistentesTiposConfig({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Assistente</label>
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-3")}>
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <label className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Assistente</label>
               <Select value={assistenteId} onValueChange={setAssistenteId}>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione o assistente" />
@@ -200,9 +201,9 @@ export function AssistentesTiposConfig({
                 <SelectContent>
                   {assistentesFiltrados.map((assistente) => (
                     <SelectItem key={assistente.id} value={String(assistente.id)}>
-                      <span className="flex items-center gap-2">
+                      <span className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                         {assistente.nome}
-                        <span className="text-xs text-muted-foreground">({assistente.tipo})</span>
+                        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>({assistente.tipo})</span>
                       </span>
                     </SelectItem>
                   ))}
@@ -210,8 +211,8 @@ export function AssistentesTiposConfig({
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Tipo de Expediente</label>
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <label className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Tipo de Expediente</label>
               <Select value={tipoExpedienteId} onValueChange={setTipoExpedienteId}>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione o tipo" />
@@ -261,22 +262,22 @@ export function AssistentesTiposConfig({
         </CardHeader>
         <CardContent>
           {relacoes.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
+            <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "text-center py-8 text-muted-foreground")}>
               <p>Nenhuma configuração encontrada.</p>
-              <p className="text-sm mt-2">
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm mt-2")}>
                 Crie uma configuração para habilitar a geração automática de peças.
               </p>
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
               {relacoes.map((relacao) => (
                 <div
                   key={relacao.id}
-                  className="flex items-center justify-between p-4 border rounded-lg"
+                  className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex items-center justify-between p-4 border rounded-lg")}
                 >
-                  <div className="flex-1 space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium">{relacao.assistente_nome}</span>
+                  <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "flex-1 space-y-1")}>
+                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{relacao.assistente_nome}</span>
                       {relacao.ativo ? (
                         <SemanticBadge category="status" value="success">
                           <Check className="h-3 w-3 mr-1" />
@@ -289,15 +290,15 @@ export function AssistentesTiposConfig({
                         </SemanticBadge>
                       )}
                     </div>
-                    <p className="text-sm text-muted-foreground">
+                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                       Tipo de Expediente: <strong>{relacao.tipo_expediente_nome}</strong>
                     </p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                       Criado em {new Date(relacao.created_at).toLocaleDateString('pt-BR')}
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                     <Button
                       variant={relacao.ativo ? 'outline' : 'default'}
                       size="sm"

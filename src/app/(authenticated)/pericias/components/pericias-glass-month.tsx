@@ -184,7 +184,7 @@ function DayCell({ day, periciasDia, isCurrentMonth, onSelect }: DayCellProps) {
       type="button"
       onClick={() => count > 0 && onSelect(day, periciasDia)}
       className={cn(
-        'relative w-full min-h-25 sm:min-h-30 p-2.5 rounded-xl transition-all duration-150 text-left flex flex-col h-full',
+        /* design-system-escape: p-2.5 → usar <Inset> */ 'relative w-full min-h-25 sm:min-h-30 p-2.5 rounded-xl transition-all duration-150 text-left flex flex-col h-full',
         'border border-border/40',
         'hover:bg-accent/40 hover:border-border/60',
         'active:bg-accent/20 active:scale-[0.98]',
@@ -197,9 +197,9 @@ function DayCell({ day, periciasDia, isCurrentMonth, onSelect }: DayCellProps) {
     >
       <div
         className={cn(
-          'text-sm font-semibold w-7 h-7 flex items-center justify-center',
+          /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ 'text-sm font-semibold w-7 h-7 flex items-center justify-center',
           today
-            ? 'bg-primary text-primary-foreground rounded-full font-bold'
+            ? /* design-system-escape: font-bold → className de <Text>/<Heading> */ 'bg-primary text-primary-foreground rounded-full font-bold'
             : 'text-foreground/85',
         )}
       >
@@ -207,7 +207,7 @@ function DayCell({ day, periciasDia, isCurrentMonth, onSelect }: DayCellProps) {
       </div>
 
       {count > 0 && count < 3 && (
-        <div className="flex gap-1 mt-auto pt-1.5 flex-wrap">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS; pt-1.5 padding direcional sem Inset equiv. */ "flex gap-1 mt-auto pt-1.5 flex-wrap")}>
           {periciasDia.map((p) => (
             <div
               key={p.id}
@@ -221,8 +221,8 @@ function DayCell({ day, periciasDia, isCurrentMonth, onSelect }: DayCellProps) {
       )}
 
       {count >= 3 && (
-        <div className="flex gap-1 mt-auto pt-1.5">
-          <span className="text-[10px] font-bold text-primary bg-primary/15 rounded-full px-1.5 py-0.5 inline-flex items-center justify-center min-w-4.5">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS; pt-1.5 padding direcional sem Inset equiv. */ "flex gap-1 mt-auto pt-1.5")}>
+          <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] font-bold text-primary bg-primary/15 rounded-full px-1.5 py-0.5 inline-flex items-center justify-center min-w-4.5")}>
             {count}
           </span>
         </div>
@@ -241,26 +241,26 @@ function PericiaItem({ pericia }: { pericia: Pericia }) {
   return (
     <div
       className={cn(
-        'rounded-lg p-2.5 border border-border/30 border-l-2 bg-muted/15',
+        /* design-system-escape: p-2.5 → usar <Inset> */ 'rounded-lg p-2.5 border border-border/30 border-l-2 bg-muted/15',
         'hover:bg-accent/40 transition-colors cursor-pointer',
         getSituacaoBorderClass(pericia.situacaoCodigo),
       )}
     >
       {/* Linha principal: prazo + processo + badge */}
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-1.5 min-w-0">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 min-w-0")}>
           {overdue ? (
             <AlertTriangle className="w-3 h-3 text-destructive shrink-0" />
           ) : (
             <Clock className="w-3 h-3 text-foreground/40 shrink-0" />
           )}
-          <span className="text-xs font-semibold text-foreground/85 truncate">
+          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-foreground/85 truncate")}>
             {pericia.especialidade?.descricao || 'Perícia técnica'}
           </span>
         </div>
         <span
           className={cn(
-            'text-[10px] font-semibold tracking-[0.03em] px-1.75 py-0.5 rounded-full border shrink-0',
+            /* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.75 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'text-[10px] font-semibold tracking-[0.03em] px-1.75 py-0.5 rounded-full border shrink-0',
             getSituacaoBadgeClass(pericia.situacaoCodigo),
           )}
         >
@@ -269,13 +269,13 @@ function PericiaItem({ pericia }: { pericia: Pericia }) {
       </div>
 
       {/* Processo + grau */}
-      <div className="flex items-center gap-1.5 mt-1.5 ml-4.5 min-w-0">
+      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mt-1.5 ml-4.5 min-w-0")}>
         {pericia.grau && (
           <span className="text-[9px] text-foreground/30 shrink-0">
             {pericia.grau === 'primeiro_grau' ? '1º grau' : '2º grau'}
           </span>
         )}
-        <span className="text-xs text-foreground/45 tabular-nums truncate">
+        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/45 tabular-nums truncate")}>
           {pericia.numeroProcesso}
         </span>
       </div>
@@ -291,7 +291,7 @@ function PericiaItem({ pericia }: { pericia: Pericia }) {
       )}
 
       {/* Perito + TRT */}
-      <div className="flex items-center gap-3 mt-1.5 ml-4.5 text-foreground/35">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mt-1.5 ml-4.5 text-foreground/35")}>
         {pericia.perito?.nome && (
           <span className="text-[11px] truncate">
             Perito: {pericia.perito.nome}
@@ -358,10 +358,10 @@ export function PericiasGlassMonth({
 
   return (
     <>
-      <GlassPanel depth={1} className="p-6 flex flex-col">
+      <GlassPanel depth={1} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 flex flex-col")}>
         {/* ── Month Navigator ───────────────────────────────── */}
         <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-2 flex-1">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1")}>
             <Button
               variant="ghost"
               size="icon"
@@ -382,14 +382,14 @@ export function PericiasGlassMonth({
             </Button>
             <Button
               size="sm"
-              className="ml-1 rounded-full px-4 text-xs font-semibold"
+              className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "ml-1 rounded-full px-4 text-xs font-semibold")}
               onClick={() => onMonthChange(new Date())}
             >
               Hoje
             </Button>
           </div>
 
-          <span className="text-base font-bold tracking-tight text-center capitalize">
+          <span className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-bold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-base font-bold tracking-tight text-center capitalize")}>
             {format(currentMonth, 'MMMM yyyy', { locale: ptBR })}
           </span>
 
@@ -397,31 +397,31 @@ export function PericiasGlassMonth({
         </div>
 
         {/* ── Legend ────────────────────────────────────────── */}
-        <div className="flex items-center gap-4 mb-4 px-1 flex-wrap">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-1 padding direcional sem Inset equiv. */ "flex items-center gap-4 mb-4 px-1 flex-wrap")}>
           {[
             { color: 'bg-primary', label: 'Aguardando Laudo' },
             { color: 'bg-warning', label: 'Esclarecimentos' },
             { color: 'bg-info', label: 'Laudo Juntado' },
             { color: 'bg-success', label: 'Finalizada' },
           ].map(({ color, label }) => (
-            <div key={label} className="flex items-center gap-1.5">
+            <div key={label} className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
               <div className={cn('w-1.75 h-1.75 rounded-full', color)} />
               <span className="text-[11px] text-foreground/45">{label}</span>
             </div>
           ))}
-          <div className="flex items-center gap-1.5">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
             <div className="w-1.75 h-1.75 rounded-full bg-destructive" />
             <span className="text-[11px] text-foreground/45">Vencida</span>
           </div>
         </div>
 
         {/* ── Weekday Headers ───────────────────────────────── */}
-        <div className="grid grid-cols-7 gap-1.5 mb-1">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "grid grid-cols-7 gap-1.5 mb-1")}>
           {WEEKDAY_HEADERS.map((label, idx) => (
             <div
               key={label}
               className={cn(
-                'text-center py-2 text-xs font-semibold uppercase tracking-widest',
+                /* design-system-escape: py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading>; tracking-widest sem token DS */ 'text-center py-2 text-xs font-semibold uppercase tracking-widest',
                 idx >= 5 ? 'text-foreground/35' : 'text-foreground/50',
               )}
             >
@@ -432,7 +432,7 @@ export function PericiasGlassMonth({
 
         {/* ── Calendar Grid ─────────────────────────────────── */}
         <div
-          className="grid grid-cols-7 gap-1.5 flex-1"
+          className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "grid grid-cols-7 gap-1.5 flex-1")}
           style={{ gridAutoRows: '1fr' }}
         >
           {days.map((day) => {
@@ -460,17 +460,17 @@ export function PericiasGlassMonth({
                       </div>
                     </PopoverTrigger>
                     <PopoverContent
-                      className="w-80 p-4 bg-background/95 backdrop-blur-3xl border-border/50 rounded-2xl shadow-lg"
+                      className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "w-80 p-4 bg-background/95 backdrop-blur-3xl border-border/50 rounded-2xl shadow-lg")}
                       side="bottom"
                       align="start"
                       sideOffset={6}
                     >
-                      <div className="flex items-center justify-between gap-3 mb-3">
+                      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3 mb-3")}>
                         <div>
-                          <p className="text-sm font-bold capitalize">
+                          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold capitalize")}>
                             {format(day, "d 'de' MMMM", { locale: ptBR })}
                           </p>
-                          <p className="text-xs text-foreground/40 mt-0.5 capitalize">
+                          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/40 mt-0.5 capitalize")}>
                             {format(day, 'EEEE', { locale: ptBR })} ·{' '}
                             {dayPericias.length} perícia
                             {dayPericias.length > 1 ? 's' : ''}
@@ -485,7 +485,7 @@ export function PericiasGlassMonth({
                           <X className="w-3.5 h-3.5 text-foreground/50" />
                         </button>
                       </div>
-                      <div className="space-y-2 max-h-72 overflow-y-auto pr-0.5">
+                      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; pr-0.5 padding direcional sem Inset equiv. */ "space-y-2 max-h-72 overflow-y-auto pr-0.5")}>
                         {popoverPericias.map((p) => (
                           <button
                             key={p.id}
@@ -513,41 +513,41 @@ export function PericiasGlassMonth({
         </div>
 
         {/* ── Summary Strip ─────────────────────────────────── */}
-        <div className="mt-5 pt-4 border-t border-border/30 flex items-center justify-between flex-wrap gap-3">
-          <div className="flex items-center gap-5 flex-wrap">
+        <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "mt-5 pt-4 border-t border-border/30 flex items-center justify-between flex-wrap gap-3")}>
+          <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5 flex-wrap")}>
             <div className="text-center">
-              <p className="text-lg font-bold">{summary.total}</p>
-              <p className="text-xs text-foreground/40 mt-0.5">Total no mês</p>
+              <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold")}>{summary.total}</p>
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/40 mt-0.5")}>Total no mês</p>
             </div>
             <div className="w-px h-8 bg-border/50" />
             <div className="text-center">
-              <p className="text-lg font-bold text-primary">
+              <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold text-primary")}>
                 {summary.aguardandoLaudo}
               </p>
-              <p className="text-xs text-foreground/40 mt-0.5">Aguardando</p>
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/40 mt-0.5")}>Aguardando</p>
             </div>
             <div className="w-px h-8 bg-border/50" />
             <div className="text-center">
-              <p className="text-lg font-bold text-info">
+              <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold text-info")}>
                 {summary.laudoJuntado}
               </p>
-              <p className="text-xs text-foreground/40 mt-0.5">Laudo Juntado</p>
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/40 mt-0.5")}>Laudo Juntado</p>
             </div>
             <div className="w-px h-8 bg-border/50" />
             <div className="text-center">
-              <p className="text-lg font-bold text-success">
+              <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold text-success")}>
                 {summary.finalizadas}
               </p>
-              <p className="text-xs text-foreground/40 mt-0.5">Finalizadas</p>
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/40 mt-0.5")}>Finalizadas</p>
             </div>
             {summary.vencidas > 0 && (
               <>
                 <div className="w-px h-8 bg-border/50" />
                 <div className="text-center">
-                  <p className="text-lg font-bold text-destructive">
+                  <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold text-destructive")}>
                     {summary.vencidas}
                   </p>
-                  <p className="text-xs text-foreground/40 mt-0.5">Vencidas</p>
+                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/40 mt-0.5")}>Vencidas</p>
                 </div>
               </>
             )}

@@ -59,15 +59,15 @@ export function AcordoPulseStrip({ acordo }: AcordoPulseStripProps) {
       : 0;
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 lg:grid-cols-4 gap-3")}>
       {/* 1. Saldo devedor */}
-      <GlassPanel depth={1} className="px-4 py-3.5">
-        <div className="flex items-start justify-between gap-2">
+      <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate">
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
               Saldo devedor
             </p>
-            <p className="font-display text-2xl font-bold tabular-nums leading-none tracking-tight mt-1">
+            <p className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ "font-display text-2xl font-bold tabular-nums leading-none tracking-tight mt-1")}>
               {CURRENCY.format(saldoDevedor)}
             </p>
             <p className="text-[10px] text-muted-foreground/45 mt-0.5">
@@ -81,17 +81,17 @@ export function AcordoPulseStrip({ acordo }: AcordoPulseStripProps) {
       </GlassPanel>
 
       {/* 2. Parcelas pagas (progresso) */}
-      <GlassPanel depth={1} className="px-4 py-3.5">
-        <div className="flex items-start justify-between gap-2">
+      <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate">
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
               Parcelas pagas
             </p>
-            <div className="flex items-baseline gap-1.5 mt-1">
-              <p className="font-display text-2xl font-bold tabular-nums leading-none tracking-tight">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+              <p className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ "font-display text-2xl font-bold tabular-nums leading-none tracking-tight")}>
                 <AnimatedNumber value={acordo.parcelasPagas} />
               </p>
-              <span className="text-sm text-muted-foreground/50 tabular-nums">
+              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 tabular-nums")}>
                 / {acordo.totalParcelas}
               </span>
             </div>
@@ -100,7 +100,7 @@ export function AcordoPulseStrip({ acordo }: AcordoPulseStripProps) {
             <CheckCircle2 className="size-4 text-success/60" />
           </IconContainer>
         </div>
-        <div className="mt-2.5 flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full bg-success/35 transition-all duration-700"
@@ -117,18 +117,18 @@ export function AcordoPulseStrip({ acordo }: AcordoPulseStripProps) {
       <GlassPanel
         depth={parcelasAtrasadas > 0 ? 2 : 1}
         className={cn(
-          'px-4 py-3.5',
+          /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ 'px-4 py-3.5',
           parcelasAtrasadas > 0 && 'border-destructive/15',
         )}
       >
-        <div className="flex items-start justify-between gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate">
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
               Em atraso
             </p>
             <p
               className={cn(
-                'font-display text-2xl font-bold tabular-nums leading-none tracking-tight mt-1',
+                /* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ 'font-display text-2xl font-bold tabular-nums leading-none tracking-tight mt-1',
                 parcelasAtrasadas > 0 && 'text-destructive/80',
               )}
             >
@@ -155,15 +155,15 @@ export function AcordoPulseStrip({ acordo }: AcordoPulseStripProps) {
       </GlassPanel>
 
       {/* 4. Próxima parcela */}
-      <GlassPanel depth={1} className="px-4 py-3.5">
-        <div className="flex items-start justify-between gap-2">
+      <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate">
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
               Próxima parcela
             </p>
             {proximaParcela ? (
               <>
-                <p className="font-display text-xl font-bold tabular-nums leading-none tracking-tight mt-1">
+                <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ "font-display text-xl font-bold tabular-nums leading-none tracking-tight mt-1")}>
                   {format(parseISO(proximaParcela.dataVencimento), "dd 'de' MMM", {
                     locale: ptBR,
                   })}
@@ -174,7 +174,7 @@ export function AcordoPulseStrip({ acordo }: AcordoPulseStripProps) {
               </>
             ) : (
               <>
-                <p className="font-display text-xl font-bold leading-none tracking-tight mt-1 text-muted-foreground/40">
+                <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ "font-display text-xl font-bold leading-none tracking-tight mt-1 text-muted-foreground/40")}>
                   —
                 </p>
                 <p className="text-[10px] text-muted-foreground/45 mt-0.5">

@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { actionBuscarProcesso } from "@/app/(authenticated)/processos";
@@ -34,11 +35,11 @@ export function ChatContextBar({ documentoId }: ChatContextBarProps) {
 
   return (
     <div
-      className="relative z-[9] flex items-center gap-3 px-5 py-2 border-b border-border/40 dark:border-white/[0.06]"
+      className={cn(/* design-system-escape: gap-3 gap sem token DS; px-5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "relative z-[9] flex items-center gap-3 px-5 py-2 border-b border-border/40 dark:border-white/[0.06]")}
       style={{ background: "rgba(139,92,246,0.03)" }}
     >
       <span
-        className="text-[0.6rem] font-semibold px-2 py-0.5 rounded-md shrink-0"
+        className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[0.6rem] font-semibold px-2 py-0.5 rounded-md shrink-0")}
         style={{
           background: "rgba(139,92,246,0.08)",
           color: "rgba(139,92,246,0.7)",

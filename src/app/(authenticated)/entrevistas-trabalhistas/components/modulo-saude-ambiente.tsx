@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
@@ -26,19 +27,19 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
   };
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <div>
         <Heading level="card">O Corpo e o Ambiente</Heading>
-        <p className="text-sm text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
           Exposição a riscos, insalubridade, periculosidade e assédio
         </p>
       </div>
 
       {/* A.3.1: Exposição a riscos */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>
           No dia a dia, lidava com situações perigosas ou prejudiciais à saúde?
-          <span className="ml-1 text-xs text-muted-foreground">
+          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "ml-1 text-xs text-muted-foreground")}>
             (Ex: Produtos químicos, câmara fria, eletricidade, moto, hospital)
           </span>
         </Label>
@@ -46,11 +47,11 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
           value={data.exposicao_riscos === undefined ? '' : data.exposicao_riscos ? 'sim' : 'nao'}
           onValueChange={(v) => onChange({ ...data, exposicao_riscos: v === 'sim' })}
         >
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <RadioGroupItem value="sim" id="risco-sim" />
             <Label htmlFor="risco-sim" className="cursor-pointer font-normal">Sim</Label>
           </div>
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <RadioGroupItem value="nao" id="risco-nao" />
             <Label htmlFor="risco-nao" className="cursor-pointer font-normal">Não</Label>
           </div>
@@ -60,17 +61,17 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
       {/* Condicional: Tipificação de riscos */}
       {data.exposicao_riscos && (
         <>
-          <div className="space-y-3">
+          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
             <Label>Tipo de risco (selecione todos aplicáveis)</Label>
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2 sm:grid-cols-3")}>
               {TIPO_RISCO_OPTIONS.map((opt) => (
-                <div key={opt.value} className="flex items-center gap-2">
+                <div key={opt.value} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                   <Checkbox
                     id={`risco-${opt.value}`}
                     checked={tiposRisco.includes(opt.value)}
                     onCheckedChange={(checked) => toggleRisco(opt.value, checked === true)}
                   />
-                  <Label htmlFor={`risco-${opt.value}`} className="cursor-pointer text-sm font-normal">
+                  <Label htmlFor={`risco-${opt.value}`} className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "cursor-pointer text-sm font-normal")}>
                     {opt.label}
                   </Label>
                 </div>
@@ -78,7 +79,7 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
             </div>
           </div>
 
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label htmlFor="desc-risco">Descreva detalhadamente a exposição ao risco</Label>
             <Textarea
               id="desc-risco"
@@ -92,7 +93,7 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
       )}
 
       {/* A.3.2: Assédio e danos morais */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>
           Sofria xingamentos, humilhações constantes do chefe/colegas ou cobranças de metas abusivas?
         </Label>
@@ -100,11 +101,11 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
           value={data.assedio_moral === undefined ? '' : data.assedio_moral ? 'sim' : 'nao'}
           onValueChange={(v) => onChange({ ...data, assedio_moral: v === 'sim' })}
         >
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <RadioGroupItem value="sim" id="assedio-sim" />
             <Label htmlFor="assedio-sim" className="cursor-pointer font-normal">Sim</Label>
           </div>
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <RadioGroupItem value="nao" id="assedio-nao" />
             <Label htmlFor="assedio-nao" className="cursor-pointer font-normal">Não</Label>
           </div>
@@ -114,7 +115,7 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
       {/* Condicional: Detalhamento do assédio */}
       {data.assedio_moral && (
         <>
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label htmlFor="relato-assedio">Relato detalhado do(s) evento(s)</Label>
             <Textarea
               id="relato-assedio"
@@ -125,7 +126,7 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
             />
           </div>
 
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label htmlFor="testemunhas-assedio">
               Existem testemunhas ou gravações de áudio/vídeo?
             </Label>

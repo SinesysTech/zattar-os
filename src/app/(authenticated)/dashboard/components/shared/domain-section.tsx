@@ -56,18 +56,18 @@ export function DomainSection({
   };
 
   return (
-    <section className={cn('space-y-4', className)}>
+    <section className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ 'space-y-4', className)}>
       {/* Header da seção */}
-      <div className="flex items-center gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
         {Icon && (
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
             <Icon className="h-5 w-5 text-primary" />
           </div>
         )}
         <div className="flex-1">
-          <Typography.H4 className="text-lg font-semibold">{title}</Typography.H4>
+          <Typography.H4 className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "text-lg font-semibold")}>{title}</Typography.H4>
           {description && (
-            <Typography.Muted className="text-sm">{description}</Typography.Muted>
+            <Typography.Muted className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{description}</Typography.Muted>
           )}
         </div>
       </div>
@@ -75,7 +75,7 @@ export function DomainSection({
       <Separator />
 
       {/* Grid de widgets */}
-      <div className={cn('grid gap-4', gridCols[columns])}>
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ 'grid gap-4', gridCols[columns])}>
         {children}
       </div>
     </section>

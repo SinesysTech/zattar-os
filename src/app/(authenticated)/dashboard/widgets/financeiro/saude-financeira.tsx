@@ -7,6 +7,7 @@
  *   - useFluxoCaixa(12) → trend para insight
  */
 
+import { cn } from '@/lib/utils';
 import { Activity } from 'lucide-react';
 import {
   WidgetContainer,
@@ -109,7 +110,7 @@ export function WidgetSaúdeFinanceira() {
       className="md:col-span-2"
       depth={2}
     >
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "flex flex-col sm:flex-row items-start sm:items-center gap-6")}>
 
         {/* Gauge */}
         <div className="shrink-0">
@@ -126,10 +127,10 @@ export function WidgetSaúdeFinanceira() {
         <div className="hidden sm:block w-px self-stretch bg-border/15" aria-hidden="true" />
 
         {/* Stats horizontais */}
-        <div className="flex flex-wrap sm:flex-nowrap items-center gap-6 flex-1 min-w-0">
+        <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "flex flex-wrap sm:flex-nowrap items-center gap-6 flex-1 min-w-0")}>
 
-          <div className="flex flex-col gap-0.5">
-            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Saldo
             </p>
             <p className={`font-display text-base font-bold tabular-nums ${saldo < 0 ? 'text-destructive/80' : ''}`}>
@@ -144,11 +145,11 @@ export function WidgetSaúdeFinanceira() {
 
           <div className="w-px self-stretch bg-border/10" aria-hidden="true" />
 
-          <div className="flex flex-col gap-0.5">
-            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               A receber
             </p>
-            <p className="font-display text-base font-bold tabular-nums text-success/80">
+            <p className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-bold → className de <Text>/<Heading> */ "font-display text-base font-bold tabular-nums text-success/80")}>
               <AnimatedNumber
                 value={receber}
                 prefix={"R$\u00a0"}
@@ -162,11 +163,11 @@ export function WidgetSaúdeFinanceira() {
 
           <div className="w-px self-stretch bg-border/10" aria-hidden="true" />
 
-          <div className="flex flex-col gap-0.5">
-            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               A pagar
             </p>
-            <p className="font-display text-base font-bold tabular-nums text-destructive/70">
+            <p className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-bold → className de <Text>/<Heading> */ "font-display text-base font-bold tabular-nums text-destructive/70")}>
               <AnimatedNumber
                 value={pagar}
                 prefix={"R$\u00a0"}
@@ -180,8 +181,8 @@ export function WidgetSaúdeFinanceira() {
 
           <div className="w-px self-stretch bg-border/10" aria-hidden="true" />
 
-          <div className="flex flex-col gap-0.5">
-            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Resultado
             </p>
             <p className={`font-display text-base font-bold tabular-nums ${resultado >= 0 ? 'text-primary/90' : 'text-destructive/80'}`}>

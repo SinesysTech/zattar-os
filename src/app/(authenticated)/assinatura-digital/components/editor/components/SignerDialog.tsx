@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -75,8 +76,8 @@ export default function SignerDialog({
         </Button>
       }
     >
-      <form id="signer-form" onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4">
-        <div className="space-y-2">
+      <form id="signer-form" onSubmit={handleSubmit(onSubmit)} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; space-y-4 → migrar para <Stack gap="default"> */ "p-6 space-y-4")}>
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label htmlFor="nome">Nome</Label>
           <Input
             id="nome"
@@ -86,11 +87,11 @@ export default function SignerDialog({
             aria-invalid={!!errors.nome}
           />
           {errors.nome && (
-            <p className="text-xs text-destructive">{errors.nome.message}</p>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-destructive")}>{errors.nome.message}</p>
           )}
         </div>
 
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label htmlFor="email">Email</Label>
           <Input
             id="email"
@@ -100,7 +101,7 @@ export default function SignerDialog({
             aria-invalid={!!errors.email}
           />
           {errors.email && (
-            <p className="text-xs text-destructive">{errors.email.message}</p>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-destructive")}>{errors.email.message}</p>
           )}
         </div>
       </form>

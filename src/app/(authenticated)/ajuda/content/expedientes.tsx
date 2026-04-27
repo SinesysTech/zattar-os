@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
@@ -145,10 +146,10 @@ const actions: ActionDef[] = [
 
 export default function ExpedientesDoc() {
   return (
-    <div className="space-y-10">
-      <div className="space-y-2">
+    <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Heading level="page">Expedientes</Heading>
-        <p className="text-muted-foreground text-lg">
+        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-muted-foreground text-lg")}>
           Controle de intimações, citações, prazos e comunicações processuais.
         </p>
       </div>
@@ -182,7 +183,7 @@ export default function ExpedientesDoc() {
         <p className="text-muted-foreground">
           O sistema calcula automaticamente a data de vencimento do prazo levando em consideração:
         </p>
-        <ul className="list-disc list-inside space-y-1 text-muted-foreground text-sm mt-2">
+        <ul className={cn(/* design-system-escape: space-y-1 sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "list-disc list-inside space-y-1 text-muted-foreground text-sm mt-2")}>
           <li>Apenas dias úteis (exclui sábados e domingos).</li>
           <li>Feriados nacionais e estaduais configurados no sistema.</li>
           <li>Suspensões de prazo (férias forenses, recesso do judiciário).</li>

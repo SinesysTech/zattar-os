@@ -9,18 +9,18 @@ export function MeetingSkeleton({ className }: MeetingSkeletonProps) {
   return (
     <div className={cn("relative w-full h-full bg-video-bg flex flex-col overflow-hidden", className)}>
       {/* Header / Top Bar */}
-      <div className="h-16 border-b border-video-border flex items-center justify-between px-4">
-        <div className="flex items-center gap-2">
+      <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "h-16 border-b border-video-border flex items-center justify-between px-4")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           <Skeleton className="h-8 w-8 rounded-full bg-video-skeleton" />
           <Skeleton className="h-4 w-32 bg-video-skeleton" />
         </div>
-        <div className="flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           <Skeleton className="h-8 w-20 rounded-md bg-video-skeleton" />
         </div>
       </div>
 
       {/* Main Grid */}
-      <div className="flex-1 p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; gap-4 → migrar para <Inline gap="default"> */ "flex-1 p-4 grid grid-cols-1 md:grid-cols-2 gap-4")}>
         {/* Mock Participant 1 (Self) */}
         <div className="relative bg-video-surface rounded-lg overflow-hidden border border-video-border">
           <div className="absolute inset-0 flex items-center justify-center">
@@ -43,7 +43,7 @@ export function MeetingSkeleton({ className }: MeetingSkeletonProps) {
       </div>
 
       {/* Control Bar */}
-      <div className="h-20 border-t border-video-border flex items-center justify-center gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "h-20 border-t border-video-border flex items-center justify-center gap-4")}>
         {[1, 2, 3, 4, 5].map((i) => (
           <Skeleton key={i} className="w-12 h-12 rounded-full bg-video-skeleton" />
         ))}
@@ -51,7 +51,7 @@ export function MeetingSkeleton({ className }: MeetingSkeletonProps) {
 
       {/* Loading overlay for additional feedback */}
       <div className="absolute inset-0 flex items-center justify-center bg-black/20 pointer-events-none">
-        <div className="px-4 py-2 bg-video-surface/80 rounded-full backdrop-blur-sm border border-video-border text-sm text-video-muted animate-pulse">
+        <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "px-4 py-2 bg-video-surface/80 rounded-full backdrop-blur-sm border border-video-border text-sm text-video-muted animate-pulse")}>
           Preparando interface...
         </div>
       </div>

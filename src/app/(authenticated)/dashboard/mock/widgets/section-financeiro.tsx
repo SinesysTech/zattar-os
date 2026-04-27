@@ -8,6 +8,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import React, { useState } from 'react';
 import {
   TrendingUp,
@@ -98,7 +99,7 @@ export function WidgetSaúdeFinanceira() {
       className="md:col-span-3"
       depth={2}
     >
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "flex flex-col sm:flex-row items-start sm:items-center gap-6")}>
 
         {/* Gauge */}
         <div className="shrink-0">
@@ -115,10 +116,10 @@ export function WidgetSaúdeFinanceira() {
         <div className="hidden sm:block w-px self-stretch bg-border/15" />
 
         {/* Stats horizontais */}
-        <div className="flex flex-wrap sm:flex-nowrap items-center gap-6 flex-1 min-w-0">
-          <div className="flex flex-col gap-0.5">
-            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Saldo</p>
-            <p className="font-display text-base font-bold tabular-nums">
+        <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "flex flex-wrap sm:flex-nowrap items-center gap-6 flex-1 min-w-0")}>
+          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>Saldo</p>
+            <p className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-bold → className de <Text>/<Heading> */ "font-display text-base font-bold tabular-nums")}>
               <AnimatedNumber value={124350} prefix={"R$\u00a0"} duration={1200} />
             </p>
             <p className="text-[10px] text-success/60">+12% mês</p>
@@ -126,9 +127,9 @@ export function WidgetSaúdeFinanceira() {
 
           <div className="w-px self-stretch bg-border/10" />
 
-          <div className="flex flex-col gap-0.5">
-            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">A receber</p>
-            <p className="font-display text-base font-bold tabular-nums text-success/80">
+          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>A receber</p>
+            <p className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-bold → className de <Text>/<Heading> */ "font-display text-base font-bold tabular-nums text-success/80")}>
               <AnimatedNumber value={67500} prefix={"R$\u00a0"} duration={1400} />
             </p>
             <p className="text-[10px] text-muted-foreground/55">carteira ativa</p>
@@ -136,9 +137,9 @@ export function WidgetSaúdeFinanceira() {
 
           <div className="w-px self-stretch bg-border/10" />
 
-          <div className="flex flex-col gap-0.5">
-            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">A pagar</p>
-            <p className="font-display text-base font-bold tabular-nums text-destructive/70">
+          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>A pagar</p>
+            <p className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-bold → className de <Text>/<Heading> */ "font-display text-base font-bold tabular-nums text-destructive/70")}>
               <AnimatedNumber value={32100} prefix={"R$\u00a0"} duration={1600} />
             </p>
             <p className="text-[10px] text-muted-foreground/55">vencimentos próx.</p>
@@ -146,9 +147,9 @@ export function WidgetSaúdeFinanceira() {
 
           <div className="w-px self-stretch bg-border/10" />
 
-          <div className="flex flex-col gap-0.5">
-            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Resultado mês</p>
-            <p className="font-display text-base font-bold tabular-nums text-primary/90">
+          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>Resultado mês</p>
+            <p className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-bold → className de <Text>/<Heading> */ "font-display text-base font-bold tabular-nums text-primary/90")}>
               <AnimatedNumber value={35400} prefix={"R$\u00a0"} duration={1800} />
             </p>
             <p className="text-[10px] text-success/60">margem 52,4%</p>
@@ -179,12 +180,12 @@ export function WidgetFluxoCaixa() {
       icon={Wallet}
       className="md:col-span-2"
     >
-      <div className="flex items-center gap-3 mb-3">
-        <div className="flex items-center gap-1.5">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mb-3")}>
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
           <span className="inline-block size-2 rounded-sm bg-primary/60" />
           <span className="text-[10px] text-muted-foreground/50 tabular-nums">Receita</span>
         </div>
-        <div className="flex items-center gap-1.5">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
           <span className="inline-block size-2 rounded-sm bg-chart-2/60" />
           <span className="text-[10px] text-muted-foreground/50 tabular-nums">Despesa</span>
         </div>
@@ -195,14 +196,14 @@ export function WidgetFluxoCaixa() {
         barColor="bg-primary/60"
         barColor2="bg-chart-2/60"
       />
-      <div className="flex justify-between mt-3 pt-3 border-t border-border/10">
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex justify-between mt-3 pt-3 border-t border-border/10")}>
         <div>
-          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Receita mar</p>
-          <p className="text-sm font-semibold font-display tabular-nums">{fmtMoeda(67500)}</p>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>Receita mar</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold font-display tabular-nums")}>{fmtMoeda(67500)}</p>
         </div>
         <div className="text-right">
-          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Despesa mar</p>
-          <p className="text-sm font-semibold font-display tabular-nums">{fmtMoeda(32100)}</p>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>Despesa mar</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold font-display tabular-nums")}>{fmtMoeda(32100)}</p>
         </div>
       </div>
     </WidgetContainer>
@@ -218,16 +219,16 @@ export function WidgetSaldoTrend() {
       subtitle="Conta corrente consolidada"
       icon={TrendingUp}
     >
-      <div className="flex items-end justify-between gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
         <Stat
           label="Saldo disponível"
           value={fmtMoeda(124350.80)}
           delta="+12% vs mês anterior"
           deltaType="positive"
         />
-        <div className="flex items-center gap-1 text-success/60 shrink-0 mb-1">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 text-success/60 shrink-0 mb-1")}>
           <TrendingUp className="size-3.5" />
-          <span className="text-[10px] font-medium">+12%</span>
+          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium")}>+12%</span>
         </div>
       </div>
       <div className="mt-4 w-full">
@@ -258,17 +259,17 @@ export function WidgetContasReceber() {
       subtitle="Aging por vencimento"
       icon={ArrowUpRight}
       action={
-        <span className="text-xs font-semibold tabular-nums text-success/70">
+        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold tabular-nums text-success/70")}>
           {fmtMoeda(total)}
         </span>
       }
     >
-      <div className="flex flex-col gap-2 mt-1">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2 mt-1")}>
         {contasReceberAging.map((item) => (
           <div key={item.label}>
             <div className="flex justify-between mb-0.5">
               <span className="text-[10px] text-muted-foreground/50">{item.label}</span>
-              <span className="text-[10px] tabular-nums font-medium" style={{ color: item.color }}>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] tabular-nums font-medium")} style={{ color: item.color }}>
                 {fmtMoeda(item.value)}
               </span>
             </div>
@@ -301,17 +302,17 @@ export function WidgetContasPagar() {
       subtitle="Aging por vencimento"
       icon={ArrowDownLeft}
       action={
-        <span className="text-xs font-semibold tabular-nums text-destructive/60">
+        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold tabular-nums text-destructive/60")}>
           {fmtMoeda(total)}
         </span>
       }
     >
-      <div className="flex flex-col gap-2 mt-1">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2 mt-1")}>
         {contasPagarAging.map((item) => (
           <div key={item.label}>
             <div className="flex justify-between mb-0.5">
               <span className="text-[10px] text-muted-foreground/50">{item.label}</span>
-              <span className="text-[10px] tabular-nums font-medium" style={{ color: item.color }}>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] tabular-nums font-medium")} style={{ color: item.color }}>
                 {fmtMoeda(item.value)}
               </span>
             </div>
@@ -343,24 +344,24 @@ export function WidgetDespesasCategoria() {
       subtitle="Por categoria — março"
       icon={PieChart}
     >
-      <div className="flex items-center gap-5 mt-1">
+      <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5 mt-1")}>
         <MiniDonut
           segments={despesasSegmentos}
           size={84}
           strokeWidth={12}
           centerLabel={fmtMoeda(total).replace('R$\u00a0', 'R$\n')}
         />
-        <div className="flex flex-col gap-1.5 flex-1 min-w-0">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5 flex-1 min-w-0")}>
           {despesasSegmentos.map((seg) => (
-            <div key={seg.label} className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-1.5 min-w-0">
+            <div key={seg.label} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
+              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 min-w-0")}>
                 <span
                   className="size-1.5 rounded-full shrink-0"
                   style={{ backgroundColor: seg.color }}
                 />
                 <span className="text-[10px] text-muted-foreground/60 truncate">{seg.label}</span>
               </div>
-              <span className="text-[10px] tabular-nums text-muted-foreground/80 font-medium shrink-0">
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] tabular-nums text-muted-foreground/80 font-medium shrink-0")}>
                 {fmtMoeda(seg.value)}
               </span>
             </div>
@@ -380,10 +381,10 @@ export function WidgetDREComparativo() {
       subtitle="Março vs fevereiro"
       icon={TrendingUp}
     >
-      <div className="grid grid-cols-3 gap-3 mt-1 divide-x divide-border/10">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-3 gap-3 mt-1 divide-x divide-border/10")}>
 
         {/* Receita */}
-        <div className="pr-3">
+        <div className={cn(/* design-system-escape: pr-3 padding direcional sem Inset equiv. */ "pr-3")}>
           <Stat
             label="Receita"
             value={fmtMoeda(67500)}
@@ -402,7 +403,7 @@ export function WidgetDREComparativo() {
         </div>
 
         {/* Despesa */}
-        <div className="px-3">
+        <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "px-3")}>
           <Stat
             label="Despesa"
             value={fmtMoeda(32100)}
@@ -421,7 +422,7 @@ export function WidgetDREComparativo() {
         </div>
 
         {/* Resultado */}
-        <div className="pl-3">
+        <div className={cn(/* design-system-escape: pl-3 padding direcional sem Inset equiv. */ "pl-3")}>
           <Stat
             label="Resultado"
             value={fmtMoeda(35400)}
@@ -440,12 +441,12 @@ export function WidgetDREComparativo() {
         </div>
 
       </div>
-      <div className="flex items-center justify-between mt-4 pt-3 border-t border-border/10">
-        <div className="flex items-center gap-1.5 text-success/60">
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex items-center justify-between mt-4 pt-3 border-t border-border/10")}>
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 text-success/60")}>
           <TrendingUp className="size-3.5" />
           <span className="text-[10px]">Margem líquida</span>
         </div>
-        <span className="text-sm font-bold tabular-nums font-display text-success/80">52,4%</span>
+        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold tabular-nums font-display text-success/80")}>52,4%</span>
       </div>
     </WidgetContainer>
   );
@@ -463,29 +464,29 @@ export function WidgetInadimplencia() {
       subtitle="Sobre carteira a receber"
       icon={AlertTriangle}
     >
-      <div className="flex items-center gap-5 mt-1">
+      <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5 mt-1")}>
         <ProgressRing
           percent={INADIMPLENCIA_PERCENT}
           size={72}
           color={ringColor}
         />
-        <div className="flex flex-col gap-1">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
           <div>
-            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider mb-0.5">
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider mb-0.5")}>
               Em atraso
             </p>
             <p
-              className="text-lg font-bold font-display tabular-nums"
+              className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold font-display tabular-nums")}
               style={{ color: ringColor }}
             >
               {fmtMoeda(VALOR_EM_ATRASO)}
             </p>
           </div>
           <div>
-            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider mb-0.5">
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider mb-0.5")}>
               Carteira total
             </p>
-            <p className="text-sm font-semibold font-display tabular-nums text-muted-foreground/70">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold font-display tabular-nums text-muted-foreground/70")}>
               {fmtMoeda(TOTAL_A_RECEBER)}
             </p>
           </div>
@@ -493,7 +494,7 @@ export function WidgetInadimplencia() {
       </div>
 
       {isAlert && (
-        <div className="flex items-center gap-2 mt-4 px-3 py-2 rounded-lg bg-destructive/8 border border-destructive/15">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 mt-4 px-3 py-2 rounded-lg bg-destructive/8 border border-destructive/15")}>
           <AlertTriangle className="size-3.5 text-destructive/70 shrink-0" />
           <p className="text-[10px] text-destructive/70">
             Inadimplência acima do limite recomendado de 10%.
@@ -502,8 +503,8 @@ export function WidgetInadimplencia() {
       )}
 
       {!isAlert && (
-        <div className="mt-4 pt-3 border-t border-border/10">
-          <div className="flex items-center gap-1.5 text-success/60">
+        <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-4 pt-3 border-t border-border/10")}>
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 text-success/60")}>
             <TrendingDown className="size-3.5" />
             <span className="text-[10px]">Dentro da meta de 10%</span>
           </div>
@@ -535,16 +536,16 @@ export function WidgetDespesasTreemap() {
         <Treemap segments={treemapSegmentos} height={100} />
       </div>
 
-      <div className="mt-4 pt-3 border-t border-border/10 flex items-end justify-between gap-4">
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; gap-4 → migrar para <Inline gap="default"> */ "mt-4 pt-3 border-t border-border/10 flex items-end justify-between gap-4")}>
         <ComparisonStat
           label="Total mês"
           current={32100}
           previous={34800}
           format="currency"
         />
-        <div className="flex flex-wrap gap-1.5 justify-end">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-wrap gap-1.5 justify-end")}>
           {treemapSegmentos.map((seg) => (
-            <div key={seg.label} className="flex items-center gap-1">
+            <div key={seg.label} className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
               <span
                 className="size-1.5 rounded-full shrink-0"
                 style={{ backgroundColor: seg.color }}
@@ -601,12 +602,12 @@ export function WidgetFluxoComTabs() {
     >
       {tab === 'mensal' && (
         <div>
-          <div className="flex items-center gap-3 mb-3">
-            <div className="flex items-center gap-1.5">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mb-3")}>
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
               <span className="inline-block size-2 rounded-sm bg-primary/60" />
               <span className="text-[10px] text-muted-foreground/50">Receita</span>
             </div>
-            <div className="flex items-center gap-1.5">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
               <span className="inline-block size-2 rounded-sm bg-chart-2/60" />
               <span className="text-[10px] text-muted-foreground/50">Despesa</span>
             </div>
@@ -617,14 +618,14 @@ export function WidgetFluxoComTabs() {
             barColor="bg-primary/60"
             barColor2="bg-chart-2/60"
           />
-          <div className="flex justify-between mt-3 pt-3 border-t border-border/10">
+          <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex justify-between mt-3 pt-3 border-t border-border/10")}>
             <div>
-              <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Receita mar</p>
-              <p className="text-sm font-semibold font-display tabular-nums">{fmtMoeda(67500)}</p>
+              <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>Receita mar</p>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold font-display tabular-nums")}>{fmtMoeda(67500)}</p>
             </div>
             <div className="text-right">
-              <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Despesa mar</p>
-              <p className="text-sm font-semibold font-display tabular-nums">{fmtMoeda(32100)}</p>
+              <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>Despesa mar</p>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold font-display tabular-nums")}>{fmtMoeda(32100)}</p>
             </div>
           </div>
         </div>
@@ -647,14 +648,14 @@ export function WidgetFluxoComTabs() {
               <span className="text-[9px] text-muted-foreground/55 tabular-nums">Mar/26</span>
             </div>
           </div>
-          <div className="mt-3 pt-3 border-t border-border/10 flex items-end justify-between">
+          <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 pt-3 border-t border-border/10 flex items-end justify-between")}>
             <div>
-              <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Acumulado total</p>
-              <p className="text-sm font-semibold font-display tabular-nums text-success/80">{fmtMoeda(108400)}</p>
+              <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>Acumulado total</p>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold font-display tabular-nums text-success/80")}>{fmtMoeda(108400)}</p>
             </div>
             <div className="text-right">
-              <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Crescimento</p>
-              <p className="text-sm font-semibold font-display tabular-nums text-success/80">+734%</p>
+              <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>Crescimento</p>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold font-display tabular-nums text-success/80")}>+734%</p>
             </div>
           </div>
         </div>

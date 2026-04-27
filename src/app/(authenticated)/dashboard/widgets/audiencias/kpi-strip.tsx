@@ -11,6 +11,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import { Calendar, Clock } from 'lucide-react';
 import {
   WidgetContainer,
@@ -52,7 +53,7 @@ export function KpiStrip() {
       icon={Calendar}
       subtitle="Indicadores-chave"
     >
-      <div className="grid grid-cols-4 gap-3 items-center">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-4 gap-3 items-center")}>
         <Stat
           label="Este Mes"
           value={fmtNum(audiencias.proximos30dias)}
@@ -73,7 +74,7 @@ export function KpiStrip() {
           small
         />
 
-        <div className="flex flex-col items-center gap-1">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col items-center gap-1")}>
           <ProgressRing
             percent={comparecimento}
             size={44}
@@ -84,10 +85,10 @@ export function KpiStrip() {
           </p>
         </div>
 
-        <div className="flex flex-col items-center gap-0.5">
-          <div className="flex items-center gap-1">
+        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-center gap-0.5")}>
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
             <Clock className="size-3 text-muted-foreground/50" />
-            <span className="font-display text-lg font-bold tabular-nums">
+            <span className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold tabular-nums")}>
               {duracaoMedia > 0 ? `${duracaoMedia}` : '--'}
             </span>
           </div>

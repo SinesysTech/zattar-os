@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { AcordoDetalhesV2Client } from '../_v2/acordo-detalhes-v2-client';
 import { MOCK_ACORDO } from '../_v2/mock-data';
 import { Text } from '@/components/ui/typography';
@@ -35,8 +36,8 @@ export default async function ObrigacaoDetalhesPreviewPage({
 
 function PreviewBanner() {
   return (
-    <div className="mb-3 rounded-xl border border-primary/20 bg-primary/5 px-4 py-2.5 flex items-center justify-between gap-3 flex-wrap">
-      <div className="flex items-center gap-2 min-w-0">
+    <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "mb-3 rounded-xl border border-primary/20 bg-primary/5 px-4 py-2.5 flex items-center justify-between gap-3 flex-wrap")}>
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
         <span className="size-1.5 rounded-full bg-primary animate-pulse shrink-0" />
         <Text variant="overline" as="p" className="text-primary/80 shrink-0">
           Preview · Glass Briefing

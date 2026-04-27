@@ -5,6 +5,7 @@
  * Fonte: useDashboard() → data.dadosFinanceiros.contasReceberAging
  */
 
+import { cn } from '@/lib/utils';
 import { ArrowUpRight } from 'lucide-react';
 import { WidgetContainer, fmtMoeda } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
@@ -19,7 +20,7 @@ export function WidgetContasReceber() {
   if (!data) {
     return (
       <WidgetContainer title="Contas a Receber" icon={ArrowUpRight} subtitle="Sem dados">
-        <p className="text-xs text-muted-foreground/60">Dados indisponíveis.</p>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60")}>Dados indisponíveis.</p>
       </WidgetContainer>
     );
   }
@@ -34,9 +35,9 @@ export function WidgetContasReceber() {
         title="Contas a Receber"
         icon={ArrowUpRight}
         subtitle="Aging"
-        action={<span className="text-[11px] font-semibold text-success/70">{fmtMoeda(total)}</span>}
+        action={<span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[11px] font-semibold text-success/70")}>{fmtMoeda(total)}</span>}
       >
-        <p className="text-xs text-muted-foreground/60">Nenhum dado de aging disponível.</p>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60")}>Nenhum dado de aging disponível.</p>
       </WidgetContainer>
     );
   }
@@ -48,11 +49,11 @@ export function WidgetContasReceber() {
       title="Contas a Receber"
       icon={ArrowUpRight}
       subtitle="Aging"
-      action={<span className="text-[11px] font-semibold text-success/70">{fmtMoeda(total)}</span>}
+      action={<span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[11px] font-semibold text-success/70")}>{fmtMoeda(total)}</span>}
     >
-      <div className="flex flex-col gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
         {aging.map((item) => (
-          <div key={item.faixa} className="flex items-center gap-3">
+          <div key={item.faixa} className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
             <span className="text-[10px] text-muted-foreground/60 w-20 shrink-0 truncate">
               {item.faixa}
             </span>
@@ -65,7 +66,7 @@ export function WidgetContasReceber() {
                 }}
               />
             </div>
-            <span className="text-[10px] font-medium tabular-nums w-20 text-right shrink-0">
+            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums w-20 text-right shrink-0")}>
               {fmtMoeda(item.valor)}
             </span>
           </div>

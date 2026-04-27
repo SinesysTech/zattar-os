@@ -102,11 +102,11 @@ interface HeroStatFieldProps {
 
 function HeroStatField({ label, icon: Icon, value, muted }: HeroStatFieldProps) {
   return (
-    <div className="flex flex-col gap-1.5 min-w-0">
+    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5 min-w-0")}>
       <Text variant="meta-label" className="text-muted-foreground/70">
         {label}
       </Text>
-      <div className="flex items-center gap-2 min-w-0">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
         <Icon
           className={cn(
             'size-3.5 shrink-0',
@@ -168,20 +168,20 @@ export function ContratoDetalhesHeader({
       <button
         type="button"
         onClick={() => router.push('/app/contratos')}
-        className="inline-flex items-center gap-1.5 self-start -ml-1 px-2 py-1 rounded-lg text-caption font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors cursor-pointer"
+        className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1.5 self-start -ml-1 px-2 py-1 rounded-lg text-caption font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors cursor-pointer")}
       >
         <ArrowLeft className="size-3.5" />
         Voltar para contratos
       </button>
 
-      <GlassPanel depth={2} className="p-6 gap-5">
+      <GlassPanel depth={2} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; gap-5 gap sem token DS */ "p-6 gap-5")}>
         {/* ── Linha 1: identidade + ações ────────────────────────── */}
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex-1 min-w-0 flex flex-col gap-2">
-            <div className="flex items-center gap-3 flex-wrap">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start justify-between gap-4")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex-1 min-w-0 flex flex-col gap-2")}>
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 flex-wrap")}>
               <Heading
                 level="section"
-                className="min-w-0 truncate flex items-center gap-2 flex-wrap"
+                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "min-w-0 truncate flex items-center gap-2 flex-wrap")}
               >
                 <span className="min-w-0 truncate">{clienteNome}</span>
                 {parteContraria && (
@@ -233,7 +233,7 @@ export function ContratoDetalhesHeader({
           </div>
 
           {/* Ações no canto direito */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 shrink-0")}>
             {onEdit && (
               <Button
                 size="sm"

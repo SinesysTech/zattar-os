@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { LayoutGrid, List, GitBranch } from 'lucide-react';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-toggle';
@@ -47,9 +48,9 @@ export function UsuariosToolbar({
   ];
 
   return (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
       {/* Left: tabs + filter */}
-      <div className="flex items-center gap-2 flex-wrap">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
         <TabPills tabs={tabs} active={activeTab} onChange={onTabChange} />
         <FilterPopover
           label="Cargo"
@@ -61,7 +62,7 @@ export function UsuariosToolbar({
       </div>
 
       {/* Right: search + view toggle */}
-      <div className="flex items-center gap-2 flex-1 justify-end">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
         <SearchInput
           value={search}
           onChange={onSearchChange}

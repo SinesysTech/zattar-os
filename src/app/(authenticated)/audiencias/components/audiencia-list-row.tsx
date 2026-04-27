@@ -117,7 +117,7 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
     <button
       onClick={() => onClick?.(audiencia)}
       className={cn(
-        'w-full flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer transition-all outline-none text-left',
+        /* design-system-escape: gap-3 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ 'w-full flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer transition-all outline-none text-left',
         'focus-visible:ring-1 focus-visible:ring-primary/30 hover:bg-foreground/4',
         selected && 'bg-primary/6',
         (isPast || isFinalizada || isCancelada) && 'opacity-55',
@@ -134,7 +134,7 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
 
       {/* Main info */}
       <div className="flex-1 min-w-0">
-        <Text variant="caption" as="p" className="font-medium truncate text-foreground/80">{audiencia.tipoDescricao || 'Audiência'}</Text>
+        <Text variant="caption" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium truncate text-foreground/80")}>{audiencia.tipoDescricao || 'Audiência'}</Text>
         <p className="text-micro-caption text-muted-foreground/45 truncate">
           {audiencia.poloAtivoNome || '—'} vs {audiencia.poloPassivoNome || '—'}
         </p>
@@ -148,7 +148,7 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
 
       {/* Date/Time */}
       <div className="text-right shrink-0 hidden sm:block">
-        <p className="text-micro-caption font-medium tabular-nums">
+        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-micro-caption font-medium tabular-nums")}>
           {(() => {
             try {
               return parseISO(audiencia.dataInicio).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
@@ -163,15 +163,15 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
       </div>
 
       {/* Modalidade */}
-      <div className="flex items-center gap-1 shrink-0 md:flex w-20">
+      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 shrink-0 md:flex w-20")}>
         <ModalIcon className="size-2.5 text-muted-foreground/40" />
         <span className="text-micro-caption text-muted-foreground/60">{modalidadeLabel}</span>
       </div>
 
       {/* TRT + Grau */}
       {audiencia.trt && (
-        <div className="flex items-center gap-1 shrink-0 md:flex">
-          <span className="text-micro-caption font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 shrink-0 md:flex")}>
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-caption font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40")}>
             {audiencia.trt}
           </span>
           {audiencia.grau && (
@@ -197,7 +197,7 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
             <span className={cn(
-              'font-bold tabular-nums text-micro-badge',
+              /* design-system-escape: font-bold → className de <Text>/<Heading> */ 'font-bold tabular-nums text-micro-badge',
               prepStatus === 'good' ? 'text-success' : prepStatus === 'warning' ? 'text-warning' : 'text-destructive',
             )}>
               {prepScore}%
@@ -208,7 +208,7 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
 
       {/* Countdown or status */}
       <span className={cn(
-        'text-micro-caption shrink-0 w-16 text-right tabular-nums font-medium',
+        /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-micro-caption shrink-0 w-16 text-right tabular-nums font-medium',
         isFinalizada ? 'text-success/50' :
         isCancelada ? 'text-destructive/50' :
         !isPast ? (timeUntil.totalMs <= 60 * 60 * 1000 ? 'text-warning/60' : 'text-muted-foreground/40') :

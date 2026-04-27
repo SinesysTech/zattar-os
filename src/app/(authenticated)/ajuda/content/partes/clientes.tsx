@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
@@ -128,10 +129,10 @@ const actions: ActionDef[] = [
 
 export default function ClientesDoc() {
   return (
-    <div className="space-y-10">
-      <div className="space-y-2">
+    <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Heading level="page">Clientes</Heading>
-        <p className="text-muted-foreground text-lg">
+        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-muted-foreground text-lg")}>
           Cadastro centralizado de clientes pessoas físicas e jurídicas do escritório.
         </p>
       </div>

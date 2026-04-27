@@ -1,6 +1,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
@@ -58,7 +59,7 @@ export function UploadDeclaracaoDialog({ open, onOpenChange, parcelaId, onSucces
             <DialogTitle>Anexar Declaração</DialogTitle>
             <DialogDescription>Upload da declaração assinada.</DialogDescription>
          </DialogHeader>
-         <div className="space-y-4 py-4">
+         <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-4 padding direcional sem Inset equiv. */ "space-y-4 py-4")}>
              <Input type="file" accept=".pdf,.jpg,.png" onChange={handleFileChange} disabled={isUploading} />
              {file && <Text variant="caption" as="div">{file.name}</Text>}
          </div>

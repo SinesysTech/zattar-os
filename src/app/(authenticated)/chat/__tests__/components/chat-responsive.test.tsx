@@ -3,6 +3,7 @@
  * Feature: responsividade-frontend
  */
 
+import { cn } from '@/lib/utils';
 import * as fc from 'fast-check';
 import { cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom';
@@ -79,7 +80,7 @@ const MockAttachment = ({
             )}
             {type === 'video' && <video src="/test.mp4" className={isMobile ? 'w-full' : 'max-w-sm'} />}
             {type === 'document' && (
-                <div className="flex items-center gap-2">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                     <span>Document</span>
                     <button className={isMobile ? 'shrink-0' : ''}>
                         {isMobile ? '⬇' : 'Baixar'}

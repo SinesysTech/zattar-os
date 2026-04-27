@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useEffect, useMemo, useState } from 'react';
 import { LayoutGrid, List, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -205,14 +206,14 @@ export function CapturadasClient() {
       }`;
 
   return (
-    <div className="space-y-5">
+    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       <DiarioOficialPageNav
         active="capturadas"
         subtitle={subtitle}
         action={
           <GazetteSyncDialog
             trigger={
-              <Button variant="outline" size="sm" className="gap-1.5 rounded-xl">
+              <Button variant="outline" size="sm" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5 rounded-xl")}>
                 <RefreshCw className="size-3.5" aria-hidden />
                 Sincronizar
               </Button>
@@ -237,7 +238,7 @@ export function CapturadasClient() {
       />
 
       {/* Toolbar unificada: FilterBar + Search + ViewToggle */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
         <CapturadasFilterBar
           filtros={filtros}
           onChange={setFiltros}
@@ -248,7 +249,7 @@ export function CapturadasClient() {
           onStatusChange={(v) => setViewAtiva(statusToView(v))}
           statusCounts={statusCounts}
         />
-        <div className="flex items-center gap-2 flex-1 justify-end">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
           <SearchInput
             value={search}
             onChange={setSearch}
@@ -264,7 +265,7 @@ export function CapturadasClient() {
 
       {/* Content */}
       {isLoading ? (
-        <div className="space-y-3">
+        <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}

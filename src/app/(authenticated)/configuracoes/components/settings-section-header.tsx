@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import type { LucideIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Heading } from '@/components/ui/typography';
@@ -17,7 +18,7 @@ export function SettingsSectionHeader({
 }: SettingsSectionHeaderProps) {
   return (
     <div className="flex items-center justify-between mb-4">
-      <div className="flex items-center gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
         <Icon className="size-4 text-muted-foreground/50" />
         <div>
           <Heading level="widget">{title}</Heading>

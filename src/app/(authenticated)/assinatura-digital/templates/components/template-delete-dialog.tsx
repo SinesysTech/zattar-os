@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -112,7 +113,7 @@ export function TemplateDeleteDialog({
               : `Tem certeza que deseja excluir o template '${templateList[0].nome}'? Esta ação não pode ser desfeita.`}
             {getTemplateNamesList()}
             {error && (
-              <p className="text-destructive text-sm mt-2">{error}</p>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-destructive text-sm mt-2")}>{error}</p>
             )}
           </AlertDialogDescription>
         </AlertDialogHeader>

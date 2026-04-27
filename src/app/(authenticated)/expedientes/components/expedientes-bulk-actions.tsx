@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { Users, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -30,16 +31,16 @@ export function ExpedientesBulkActions({
 
   return (
     <>
-      <div className="flex items-center gap-2">
-        <AppBadge variant="secondary" className="font-medium">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <AppBadge variant="secondary" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
           {selectedCount} {selectedCount === 1 ? 'expediente selecionado' : 'expedientes selecionados'}
         </AppBadge>
-        <div className="flex items-center gap-2 ml-auto">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 ml-auto")}>
           <Button
             variant="outline"
             size="sm"
             onClick={() => setIsTransferirOpen(true)}
-            className="gap-2"
+            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}
           >
             <Users className="h-4 w-4" />
             Transferir Responsável
@@ -48,7 +49,7 @@ export function ExpedientesBulkActions({
             variant="outline"
             size="sm"
             onClick={() => setIsBaixarOpen(true)}
-            className="gap-2"
+            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}
           >
             <CheckCircle2 className="h-4 w-4" />
             Baixar em Massa

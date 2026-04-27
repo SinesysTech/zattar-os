@@ -82,7 +82,7 @@ export function SignatureFlowShell({
         className={cn(
           "sticky top-0 z-40 flex items-center shrink-0",
           "bg-background",
-          "h-14 px-4 lg:px-6"
+          /* design-system-escape: px-4 padding direcional sem Inset equiv.; lg:px-6 sem equivalente DS */ "h-14 px-4 lg:px-6"
         )}
       >
         {/* Botao Sair */}
@@ -117,7 +117,7 @@ export function SignatureFlowShell({
         className={cn(
           mode === "fullscreen"
             ? "flex-1 min-h-0 relative flex"
-            : "flex-1 p-6 space-y-6"
+            : /* design-system-escape: p-6 → migrar para <Inset variant="dialog">; space-y-6 → migrar para <Stack gap="loose"> */ "flex-1 p-6 space-y-6"
         )}
       >
         {children}

@@ -65,13 +65,13 @@ function AtaAudienciaButton({ audiencia }: { audiencia: AudienciaComResponsavel 
         </TooltipTrigger>
         <TooltipContent>Ata de Audiência</TooltipContent>
       </Tooltip>
-      <PopoverContent className="w-72 p-4" align="start">
-        <div className="space-y-3">
-          <div className="flex items-center gap-2">
+      <PopoverContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "w-72 p-4")} align="start">
+        <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <FileText className="h-5 w-5 text-success" />
-            <Heading level="subsection" className="text-sm">Ata de Audiência</Heading>
+            <Heading level="subsection" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Ata de Audiência</Heading>
           </div>
-          <p className="text-xs text-muted-foreground">
+          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
             A ata desta audiência está disponível para visualização.
           </p>
           {audiencia.urlAtaAudiencia ? (
@@ -86,7 +86,7 @@ function AtaAudienciaButton({ audiencia }: { audiencia: AudienciaComResponsavel 
               </a>
             </Button>
           ) : (
-            <p className="text-xs text-muted-foreground italic">
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground italic")}>
               Ata registrada (ID: {audiencia.ataAudienciaId})
             </p>
           )}
@@ -112,14 +112,14 @@ function TribunalGrauBadge({ trt, grau }: { trt: string; grau: GrauTribunal }) {
   };
 
   return (
-    <div className="inline-flex items-center text-xs font-medium shrink-0">
+    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "inline-flex items-center text-xs font-medium shrink-0")}>
       {/* Tribunal (lado esquerdo - azul, arredondado à esquerda) */}
-      <span className="bg-info/15 text-info dark:text-info px-2 py-0.5 rounded-l-full">
+      <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "bg-info/15 text-info dark:text-info px-2 py-0.5 rounded-l-full")}>
         {trt}
       </span>
       {/* Grau (lado direito - cor baseada no grau, arredondado à direita) */}
       <span className={cn(
-        'px-2 py-0.5 border-l border-background/50 rounded-r-full',
+        /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'px-2 py-0.5 border-l border-background/50 rounded-r-full',
         grauColorClasses[grau] || 'bg-muted text-muted-foreground'
       )}>
         {grauLabel}
@@ -184,7 +184,7 @@ function ObservacoesCell({
         <button
           type="button"
           className={cn(
-            'text-sm w-full min-w-0 text-left rounded px-1 -mx-1 transition-colors',
+            /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; px-1 padding direcional sem Inset equiv.; -mx-1 sem equivalente DS */ 'text-sm w-full min-w-0 text-left rounded px-1 -mx-1 transition-colors',
             'hover:bg-muted/50 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1',
             hasObservacoes ? 'text-foreground' : 'text-muted-foreground'
           )}
@@ -197,11 +197,11 @@ function ObservacoesCell({
           )}
         </button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-4" align="start">
-        <div className="space-y-3">
-          <div className="flex items-center gap-2">
+      <PopoverContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "w-80 p-4")} align="start">
+        <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <MessageSquareText className="h-4 w-4 text-primary" />
-            <Heading level="subsection" className="text-sm">Observações</Heading>
+            <Heading level="subsection" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Observações</Heading>
           </div>
           <Textarea
             value={value}
@@ -211,7 +211,7 @@ function ObservacoesCell({
             disabled={isSaving}
             autoFocus
           />
-          <div className="flex justify-end gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex justify-end gap-2")}>
             <Button
               variant="ghost"
               size="sm"
@@ -332,23 +332,23 @@ function ModalidadeCell({
           <AudienciaModalidadeBadge modalidade={audiencia.modalidade} />
         </button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-4" align="start">
-        <div className="space-y-3">
+      <PopoverContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "w-80 p-4")} align="start">
+        <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
           {/* Seção Virtual */}
           {isVirtual && (
-            <div className="space-y-2">
-              <Heading level="subsection" className="text-sm flex items-center gap-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <Heading level="subsection" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; gap-2 → migrar para <Inline gap="tight"> */ "text-sm flex items-center gap-2")}>
                 <ExternalLink className="h-4 w-4 text-primary" />
                 Link da Audiência Virtual
               </Heading>
               {audiencia.urlAudienciaVirtual ? (
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
+                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                     <a
                       href={audiencia.urlAudienciaVirtual}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs text-primary underline truncate flex-1"
+                      className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-primary underline truncate flex-1")}
                       title={audiencia.urlAudienciaVirtual}
                     >
                       {audiencia.urlAudienciaVirtual}
@@ -373,10 +373,10 @@ function ModalidadeCell({
                 value={urlValue}
                 onChange={(e) => setUrlValue(e.target.value)}
                 placeholder="https://..."
-                className="h-8 text-xs"
+                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
                 disabled={isSaving}
               />
-              <div className="flex justify-end gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex justify-end gap-2")}>
                 <Button variant="ghost" size="sm" onClick={() => setIsOpen(false)} disabled={isSaving}>
                   Cancelar
                 </Button>
@@ -390,15 +390,15 @@ function ModalidadeCell({
 
           {/* Seção Presencial */}
           {isPresencial && (
-            <div className="space-y-2">
-              {isVirtual && <div className="border-t pt-3" />}
-              <Heading level="subsection" className="text-sm flex items-center gap-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              {isVirtual && <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "border-t pt-3")} />}
+              <Heading level="subsection" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; gap-2 → migrar para <Inline gap="tight"> */ "text-sm flex items-center gap-2")}>
                 <MapPin className="h-4 w-4 text-primary" />
                 Endereço Presencial
               </Heading>
               {audiencia.enderecoPresencial ? (
-                <div className="flex items-start gap-2">
-                  <p className="text-xs text-muted-foreground flex-1">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2")}>
+                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground flex-1")}>
                     {formatEndereco(audiencia.enderecoPresencial)}
                   </p>
                   <Tooltip>
@@ -420,10 +420,10 @@ function ModalidadeCell({
                 value={enderecoValue}
                 onChange={(e) => setEnderecoValue(e.target.value)}
                 placeholder="Endereço completo..."
-                className="min-h-16 resize-y text-xs"
+                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "min-h-16 resize-y text-xs")}
                 disabled={isSaving}
               />
-              <div className="flex justify-end gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex justify-end gap-2")}>
                 <Button variant="ghost" size="sm" onClick={() => setIsOpen(false)} disabled={isSaving}>
                   Cancelar
                 </Button>
@@ -545,12 +545,12 @@ export function getAudienciasColumns(
           (audiencia.ataAudienciaId || audiencia.urlAtaAudiencia);
 
         return (
-          <div className="flex items-start gap-2 py-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-2 padding direcional sem Inset equiv. */ "flex items-start gap-2 py-2")}>
             {/* Botão de Ata (aparece apenas se disponível) */}
             {hasAta && <AtaAudienciaButton audiencia={audiencia} />}
 
-            <div className="flex flex-col items-start gap-1.5">
-              <span className="text-sm text-muted-foreground whitespace-nowrap">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col items-start gap-1.5")}>
+              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground whitespace-nowrap")}>
                 {formatarDataHora(audiencia.dataInicio)}
               </span>
               {audiencia.status && (
@@ -577,28 +577,28 @@ export function getAudienciasColumns(
       cell: ({ row }) => {
         const a = row.original;
         return (
-          <div className="flex flex-col gap-1.5 items-start py-2 max-w-[min(92vw,20rem)] min-w-0">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex flex-col gap-1.5 items-start py-2 max-w-[min(92vw,20rem)] min-w-0")}>
             {/* Linha 1: Badge Tribunal + Grau */}
-            <div className="flex items-center gap-1.5 flex-wrap">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 flex-wrap")}>
               <TribunalGrauBadge trt={a.trt} grau={a.grau} />
             </div>
 
             {/* Linha 2: Número do processo */}
-            <span className="text-mono-num font-medium text-foreground break-all" title={a.numeroProcesso}>
+            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-mono-num font-medium text-foreground break-all")} title={a.numeroProcesso}>
               {a.numeroProcesso}
             </span>
 
             {/* Partes com badges de polo */}
-            <div className="flex flex-col gap-0.5">
+            <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
               <ParteBadge
                 polo="ATIVO"
-                className="flex whitespace-normal wrap-break-word text-left font-normal text-xs"
+                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex whitespace-normal wrap-break-word text-left font-normal text-xs")}
               >
                 {a.poloAtivoOrigem || a.poloAtivoNome || '-'}
               </ParteBadge>
               <ParteBadge
                 polo="PASSIVO"
-                className="flex whitespace-normal wrap-break-word text-left font-normal text-xs"
+                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex whitespace-normal wrap-break-word text-left font-normal text-xs")}
               >
                 {a.poloPassivoOrigem || a.poloPassivoNome || '-'}
               </ParteBadge>
@@ -624,20 +624,20 @@ export function getAudienciasColumns(
         const onSuccessAction = meta?.onSuccessAction;
 
         return (
-          <div className="flex flex-col gap-1.5 py-2 min-w-0">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex flex-col gap-1.5 py-2 min-w-0")}>
             {/* Modalidade - clicável com popover para link/endereço */}
             {audiencia.modalidade ? (
               <ModalidadeCell audiencia={audiencia} onSuccessAction={onSuccessAction} />
             ) : null}
             {/* Tipo segundo */}
             {audiencia.tipoDescricao ? (
-              <span className="text-sm text-muted-foreground whitespace-normal wrap-break-word">
+              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground whitespace-normal wrap-break-word")}>
                 {audiencia.tipoDescricao}
               </span>
             ) : null}
             {/* Fallback se ambos estiverem vazios */}
             {!audiencia.modalidade && !audiencia.tipoDescricao && (
-              <span className="text-sm text-muted-foreground">-</span>
+              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>-</span>
             )}
           </div>
         );
@@ -660,7 +660,7 @@ export function getAudienciasColumns(
         const onSuccessAction = meta?.onSuccessAction;
 
         return (
-          <div className="py-2">
+          <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "py-2")}>
             <ObservacoesCell
               audiencia={audiencia}
               onSuccessAction={onSuccessAction}
@@ -687,7 +687,7 @@ export function getAudienciasColumns(
         const onSuccessAction = meta?.onSuccessAction;
 
         return (
-          <div className="flex items-center py-2">
+          <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
             <ResponsavelCell
               audiencia={audiencia}
               usuarios={usuarios}
@@ -709,7 +709,7 @@ export function getAudienciasColumns(
       },
       size: 100,
       cell: ({ row }) => (
-        <div className="flex items-center py-2">
+        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
           <AudienciaActions
             audiencia={row.original}
             onView={onView}

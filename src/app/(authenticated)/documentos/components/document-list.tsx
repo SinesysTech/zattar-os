@@ -5,6 +5,7 @@
  * Exibe lista de documentos com filtros, busca, paginação e ações
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import {
@@ -147,16 +148,16 @@ export function DocumentList() {
       {/* Sidebar - Árvore de pastas */}
       <div className="w-80 border-r bg-muted/10">
         <div className="flex h-full flex-col">
-          <div className="border-b p-4">
-            <Typography.H2 className="text-sm">Documentos</Typography.H2>
+          <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "border-b p-4")}>
+            <Typography.H2 className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Documentos</Typography.H2>
           </div>
-          <div className="flex-1 overflow-auto p-2">
+          <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex-1 overflow-auto p-2")}>
             <FolderTree
               onFolderSelect={setPastaAtual}
               selectedFolderId={pastaAtual}
             />
           </div>
-          <div className="space-y-2 border-t p-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; p-2 → usar <Inset> */ "space-y-2 border-t p-2")}>
             <Button
               variant="outline"
               size="sm"
@@ -182,9 +183,9 @@ export function DocumentList() {
       {/* Main content */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Toolbar */}
-        <div className="border-b p-4">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex flex-1 items-center gap-2">
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "border-b p-4")}>
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center justify-between gap-4")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-1 items-center gap-2")}>
               {/* Busca */}
               <div className="relative flex-1 max-w-sm">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -192,7 +193,7 @@ export function DocumentList() {
                   placeholder="Buscar documentos..."
                   value={busca}
                   onChange={(e) => setBusca(e.target.value)}
-                  className="pl-9"
+                  className={cn(/* design-system-escape: pl-9 padding direcional sem Inset equiv. */ "pl-9")}
                 />
                 {busca && (
                   <Button
@@ -220,17 +221,17 @@ export function DocumentList() {
               </Select>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               {/* View mode toggle */}
               <Tabs
                 value={viewMode}
                 onValueChange={(v) => setViewMode(v as 'grid' | 'list')}
               >
                 <TabsList>
-                  <TabsTrigger value="list" className="px-3">
+                  <TabsTrigger value="list" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "px-3")}>
                     <LayoutList className="h-4 w-4" />
                   </TabsTrigger>
-                  <TabsTrigger value="grid" className="px-3">
+                  <TabsTrigger value="grid" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "px-3")}>
                     <LayoutGrid className="h-4 w-4" />
                   </TabsTrigger>
                 </TabsList>
@@ -246,10 +247,10 @@ export function DocumentList() {
 
           {/* Tags ativas */}
           {tagsAtivas.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-2">
-              <span className="text-sm text-muted-foreground">Tags:</span>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-3 flex flex-wrap gap-2")}>
+              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Tags:</span>
               {tagsAtivas.map((tag) => (
-                <Badge key={tag} variant="secondary" className="gap-1">
+                <Badge key={tag} variant="secondary" className={cn(/* design-system-escape: gap-1 gap sem token DS */ "gap-1")}>
                   {tag}
                   <button
                     type="button"
@@ -265,7 +266,7 @@ export function DocumentList() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-6 px-2 text-xs"
+                className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "h-6 px-2 text-xs")}
                 onClick={() => setTagsAtivas([])}
               >
                 Limpar
@@ -275,9 +276,9 @@ export function DocumentList() {
         </div>
 
         {/* Lista/Grid de documentos */}
-        <div className="flex-1 overflow-auto p-4">
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex-1 overflow-auto p-4")}>
           {loading ? (
-            <div className="space-y-4">
+            <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
               <Skeleton className="h-20 w-full" />
               <Skeleton className="h-20 w-full" />
               <Skeleton className="h-20 w-full" />
@@ -289,7 +290,7 @@ export function DocumentList() {
                 <Typography.H3 className="mt-4">
                   Nenhum documento encontrado
                 </Typography.H3>
-                <p className="mt-2 text-sm text-muted-foreground">
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-2 text-sm text-muted-foreground")}>
                   {busca
                     ? 'Tente buscar com outros termos'
                     : filtroTipo === 'compartilhados'
@@ -308,7 +309,7 @@ export function DocumentList() {
               </div>
             </div>
           ) : viewMode === 'grid' ? (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4")}>
               {documentos.map((doc) => (
                 <DocumentCard
                   key={doc.id}
@@ -327,14 +328,14 @@ export function DocumentList() {
 
         {/* Paginação */}
         {!loading && documentos.length > 0 && total > ITEMS_PER_PAGE && (
-          <div className="border-t px-4 py-3">
+          <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "border-t px-4 py-3")}>
             <div className="flex items-center justify-between">
-              <p className="text-sm text-muted-foreground">
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                 Mostrando {(params.offset || 0) + 1} -{' '}
                 {Math.min((params.offset || 0) + documentos.length, total)} de{' '}
                 {total} documentos
               </p>
-              <div className="flex items-center gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <Button
                   variant="outline"
                   size="sm"
@@ -344,7 +345,7 @@ export function DocumentList() {
                   <ChevronLeft className="mr-1 h-4 w-4" />
                   Anterior
                 </Button>
-                <span className="text-sm text-muted-foreground">
+                <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                   Página {currentPage} de {totalPages}
                 </span>
                 <Button

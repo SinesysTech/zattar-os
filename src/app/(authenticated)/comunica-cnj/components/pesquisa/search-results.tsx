@@ -44,13 +44,13 @@ function ResultadoCard({
         'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40',
       )}
     >
-      <GlassPanel className="gap-3 p-4 group-hover:border-primary/30 group-hover:shadow-[0_4px_24px_color-mix(in_oklch,var(--primary)_6%,transparent)]">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-            <div className="flex flex-wrap items-center gap-2">
+      <GlassPanel className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "gap-3 p-4 group-hover:border-primary/30 group-hover:shadow-[0_4px_24px_color-mix(in_oklch,var(--primary)_6%,transparent)]")}>
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex min-w-0 flex-1 flex-col gap-1.5")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap items-center gap-2")}>
               <TribunalBadge codigo={item.siglaTribunal} />
               {item.tipoComunicacao && (
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="outline" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                   {item.tipoComunicacao}
                 </Badge>
               )}
@@ -82,7 +82,7 @@ function ResultadoCard({
         {item.texto && (
           <Text
             variant="micro-caption"
-            className="line-clamp-2 border-t border-border/30 pt-2 text-muted-foreground/80"
+            className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "line-clamp-2 border-t border-border/30 pt-2 text-muted-foreground/80")}
           >
             {item.texto.replace(/<[^>]+>/g, '').slice(0, 240)}
           </Text>
@@ -109,8 +109,8 @@ export function SearchResults() {
 
   if (isBuscando) {
     return (
-      <div className="mx-auto w-full max-w-3xl py-8">
-        <div className="flex flex-col items-center gap-3">
+      <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "mx-auto w-full max-w-3xl py-8")}>
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col items-center gap-3")}>
           <LoadingSpinner className="size-6" />
           <Text variant="caption" className="text-muted-foreground">
             Consultando Comunica CNJ...
@@ -123,7 +123,7 @@ export function SearchResults() {
   if (erro) {
     return (
       <div className="mx-auto w-full max-w-3xl">
-        <GlassPanel className="gap-2 border-destructive/30 bg-destructive/5 p-5 text-center">
+        <GlassPanel className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-5 → usar <Inset> */ "gap-2 border-destructive/30 bg-destructive/5 p-5 text-center")}>
           <Heading level="widget" className="text-destructive">
             Não foi possível consultar
           </Heading>
@@ -152,12 +152,12 @@ export function SearchResults() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-3xl space-y-3">
+    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "mx-auto w-full max-w-3xl space-y-3")}>
       <div className="flex items-center justify-between">
         <Text variant="overline" className="text-muted-foreground/70">
           {total.toLocaleString('pt-BR')} resultado{total === 1 ? '' : 's'}
         </Text>
-        <Button variant="ghost" size="sm" asChild className="text-xs">
+        <Button variant="ghost" size="sm" asChild className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
           <a
             href="https://comunica.pje.jus.br/"
             target="_blank"
@@ -169,7 +169,7 @@ export function SearchResults() {
         </Button>
       </div>
 
-      <div className="flex flex-col gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
         {resultados.map((item) => (
           <ResultadoCard
             key={item.hash}

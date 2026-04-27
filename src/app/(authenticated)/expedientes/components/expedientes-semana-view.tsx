@@ -180,19 +180,19 @@ export function ExpedientesSemanaView({
   const weekLabel = `${format(weekStart, "d 'de' MMM", { locale: ptBR })} — ${format(friday, "d 'de' MMM", { locale: ptBR })}`;
 
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       {/* Week Navigator */}
-      <div className="flex items-center gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
         <button
           onClick={handlePrevWeek}
-          className="p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer"
+          className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer")}
         >
           <ChevronLeft className="size-4" />
         </button>
         <button
           onClick={handleToday}
           className={cn(
-            'px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer',
+            /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer',
             isCurrentWeek
               ? 'bg-primary/12 text-primary'
               : 'bg-border/8 text-muted-foreground/50 hover:bg-border/15',
@@ -202,15 +202,15 @@ export function ExpedientesSemanaView({
         </button>
         <button
           onClick={handleNextWeek}
-          className="p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer"
+          className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer")}
         >
           <ChevronRight className="size-4" />
         </button>
-        <span className="text-sm font-medium capitalize ml-1">{weekLabel}</span>
+        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium capitalize ml-1")}>{weekLabel}</span>
       </div>
 
       {/* Week Grid — 5 colunas (seg-sex) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-start">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-start")}>
         {weekDays.map((day) => {
           const key = format(day, 'yyyy-MM-dd');
           const dayExps = expedientesByDay.get(key) ?? [];
@@ -220,14 +220,14 @@ export function ExpedientesSemanaView({
             <GlassPanel
               key={key}
               depth={today ? 2 : 1}
-              className="p-4 min-h-40"
+              className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 min-h-40")}
             >
               {/* Day header */}
               <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                   <span
                     className={cn(
-                      'text-[10px] font-semibold uppercase tracking-wider',
+                      /* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ 'text-[10px] font-semibold uppercase tracking-wider',
                       today ? 'text-primary' : 'text-muted-foreground/55',
                     )}
                   >
@@ -235,7 +235,7 @@ export function ExpedientesSemanaView({
                   </span>
                   <span
                     className={cn(
-                      'text-sm font-bold tabular-nums',
+                      /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ 'text-sm font-bold tabular-nums',
                       today
                         ? 'bg-primary text-primary-foreground size-6 rounded-full flex items-center justify-center text-[11px]'
                         : 'text-foreground/80',
@@ -245,7 +245,7 @@ export function ExpedientesSemanaView({
                   </span>
                 </div>
                 {dayExps.length > 0 && (
-                  <span className="text-[10px] tabular-nums text-muted-foreground/45 font-medium">
+                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] tabular-nums text-muted-foreground/45 font-medium")}>
                     {dayExps.length}
                   </span>
                 )}
@@ -253,11 +253,11 @@ export function ExpedientesSemanaView({
 
               {/* Expedientes */}
               {dayExps.length === 0 ? (
-                <div className="flex-1 flex items-center justify-center py-6">
-                  <span className="text-xs text-muted-foreground/30">—</span>
+                <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex-1 flex items-center justify-center py-6")}>
+                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/30")}>—</span>
                 </div>
               ) : (
-                <div className="space-y-2">
+                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                   {dayExps.map((exp) => (
                     <WeekDayCard
                       key={exp.id}
@@ -314,7 +314,7 @@ function WeekDayCard({
         }
       }}
       className={cn(
-        'w-full text-left p-3 rounded-xl border border-l-[3px] transition-all duration-200 cursor-pointer',
+        /* design-system-escape: p-3 → usar <Inset> */ 'w-full text-left p-3 rounded-xl border border-l-[3px] transition-all duration-200 cursor-pointer',
         'bg-card/80 border-border/40 hover:border-border/60 hover:shadow-sm hover:scale-[1.01]',
         'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
         URGENCY_BORDER[urgency],
@@ -322,18 +322,18 @@ function WeekDayCard({
       )}
     >
       {/* Row 1: Prazo date + Urgency indicators */}
-      <div className="flex items-center justify-between gap-1">
-        <span className="text-xs tabular-nums font-semibold text-foreground/80">
+      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center justify-between gap-1")}>
+        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs tabular-nums font-semibold text-foreground/80")}>
           {prazoLabel ?? <span className="italic text-muted-foreground/40">Sem prazo</span>}
         </span>
-        <div className="flex items-center gap-1.5">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
           {!isBaixado && urgency !== 'ok' && (
             <span className={cn('size-2 rounded-full', URGENCY_DOT[urgency])} />
           )}
           {countdownLabel && (
             <span
               className={cn(
-                'text-[9px] font-bold tabular-nums px-1.5 py-0.5 rounded-full',
+                /* design-system-escape: font-bold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'text-[9px] font-bold tabular-nums px-1.5 py-0.5 rounded-full',
                 URGENCY_BADGE[urgency],
               )}
             >
@@ -369,9 +369,9 @@ function WeekDayCard({
       )}
 
       {/* Row 4: TRT + Grau + Processo */}
-      <div className="flex items-center gap-1.5 mt-1 min-w-0">
+      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mt-1 min-w-0")}>
         {expediente.trt && (
-          <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary/70 shrink-0">
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary/70 shrink-0")}>
             {expediente.trt}
           </span>
         )}
@@ -397,12 +397,12 @@ function WeekDayCard({
 
       {/* Row 6: Descrição + Observações editáveis */}
       <div
-        className="mt-2 space-y-1.5"
+        className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "mt-2 space-y-1.5")}
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}
       >
         <div>
-          <p className="text-[8px] font-medium text-muted-foreground/40 uppercase tracking-wider mb-0.5">
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[8px] font-medium text-muted-foreground/40 uppercase tracking-wider mb-0.5")}>
             Descrição
           </p>
           <ExpedienteTextEditor
@@ -415,7 +415,7 @@ function WeekDayCard({
           />
         </div>
         <div>
-          <p className="text-[8px] font-medium text-muted-foreground/40 uppercase tracking-wider mb-0.5">
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[8px] font-medium text-muted-foreground/40 uppercase tracking-wider mb-0.5")}>
             Observações
           </p>
           <ExpedienteTextEditor

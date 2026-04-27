@@ -53,7 +53,7 @@ export function TimelineSidebarItem({
       disabled={!isClickable}
       onClick={() => isClickable && onSelect(item)}
       className={cn(
-        'w-full text-left px-3 py-2 flex items-start gap-2 transition-colors border-l-2',
+        /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ 'w-full text-left px-3 py-2 flex items-start gap-2 transition-colors border-l-2',
         isClickable
           ? 'cursor-pointer hover:bg-accent/50'
           : 'cursor-default opacity-60',
@@ -79,16 +79,16 @@ export function TimelineSidebarItem({
       </div>
 
       {/* Conteúdo */}
-      <div className="flex-1 min-w-0 space-y-0.5">
-        <div className="flex items-center gap-1">
-          <span className="text-xs text-muted-foreground shrink-0">
+      <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "flex-1 min-w-0 space-y-0.5")}>
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground shrink-0")}>
             {formatarHora(item.data)}
           </span>
           {item.grauOrigem && (
             <SemanticBadge
               category="grau"
               value={item.grauOrigem}
-              className="text-[10px] px-1 py-0 h-4 shrink-0"
+              className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1 py-0 h-4 shrink-0")}
             >
               {formatarGrauCurto(item.grauOrigem)}
             </SemanticBadge>
@@ -100,7 +100,7 @@ export function TimelineSidebarItem({
             <Lock className="h-3 w-3 text-muted-foreground shrink-0" />
           )}
         </div>
-        <p className="text-xs leading-tight truncate">{item.titulo}</p>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; leading-tight sem token DS */ "text-xs leading-tight truncate")}>{item.titulo}</p>
       </div>
     </button>
   );

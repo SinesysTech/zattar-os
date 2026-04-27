@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 
 import {
@@ -29,17 +30,17 @@ export function AdvogadoViewDialog({ credencial, open, onOpenChange }: Props) {
         </DialogHeader>
 
         {!credencial ? (
-          <div className="text-sm text-muted-foreground">Nenhum advogado selecionado.</div>
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Nenhum advogado selecionado.</div>
         ) : (
-          <div className="space-y-3">
+          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
             <div>
-              <p className="text-sm font-medium">{credencial.advogado_nome}</p>
-              <p className="text-xs text-muted-foreground">
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{credencial.advogado_nome}</p>
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                 CPF {credencial.advogado_cpf} • OAB {formatOabs(credencial.advogado_oabs)}
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2")}>
               <Badge variant="outline">{credencial.tribunal}</Badge>
               <Badge variant="outline">{credencial.grau}</Badge>
               {credencial.active ? <Badge variant="success">Ativa</Badge> : <Badge variant="neutral">Inativa</Badge>}

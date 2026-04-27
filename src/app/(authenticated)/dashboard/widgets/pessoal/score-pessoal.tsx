@@ -7,6 +7,7 @@
  *   - useReminders() → count de pendentes
  */
 
+import { cn } from '@/lib/utils';
 import { Target } from 'lucide-react';
 import {
   WidgetContainer,
@@ -56,9 +57,9 @@ export function WidgetScorePessoal() {
         className="md:col-span-3"
         depth={2}
       >
-        <div className="flex items-center gap-5 flex-wrap">
-          <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+        <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5 flex-wrap")}>
+          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Lembretes pendentes
             </span>
             <Text variant="kpi-value">
@@ -107,7 +108,7 @@ export function WidgetScorePessoal() {
       className="md:col-span-3"
       depth={2}
     >
-      <div className="flex flex-col sm:flex-row items-center gap-5">
+      <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex flex-col sm:flex-row items-center gap-5")}>
 
         {/* Gauge compacto */}
         <GaugeMeter
@@ -122,42 +123,42 @@ export function WidgetScorePessoal() {
         <div className="hidden sm:block w-px self-stretch bg-border/10" aria-hidden="true" />
 
         {/* Stats em linha */}
-        <div className="flex items-center gap-5 flex-1 min-w-0 flex-wrap">
-          <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+        <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5 flex-1 min-w-0 flex-wrap")}>
+          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Baixas hoje
             </span>
-            <span className="font-display text-lg font-bold tabular-nums">
+            <span className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold tabular-nums")}>
               <AnimatedNumber value={baixasHoje} duration={800} />
             </span>
             <span className="text-[9px] text-muted-foreground/55">concluídas</span>
           </div>
 
-          <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Lembretes
             </span>
-            <span className="font-display text-lg font-bold tabular-nums">
+            <span className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold tabular-nums")}>
               <AnimatedNumber value={isPending ? 0 : lembretePendentes} duration={900} />
             </span>
             <span className="text-[9px] text-muted-foreground/55">pendentes</span>
           </div>
 
-          <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Audiências
             </span>
-            <span className="font-display text-lg font-bold tabular-nums">
+            <span className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold tabular-nums")}>
               <AnimatedNumber value={audienciasHoje} duration={1000} />
             </span>
             <span className="text-[9px] text-muted-foreground/55">hoje</span>
           </div>
 
-          <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Documentos
             </span>
-            <span className="font-display text-lg font-bold tabular-nums">
+            <span className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold tabular-nums")}>
               <AnimatedNumber value={0} duration={1100} />
             </span>
             <span className="text-[9px] text-muted-foreground/55">editados</span>

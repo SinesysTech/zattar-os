@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import * as React from "react";
 import Link from "next/link";
 import {
@@ -97,9 +98,9 @@ export function TeamView({ projeto, membros, usuarios }: TeamViewProps) {
   };
 
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
           <Button variant="ghost" size="icon" aria-label="Voltar" asChild>
             <Link href={`/app/project-management/projects/${projeto.id}`}>
               <ArrowLeft className="size-4" />
@@ -107,7 +108,7 @@ export function TeamView({ projeto, membros, usuarios }: TeamViewProps) {
           </Button>
           <div>
             <Heading level="page">Equipe</Heading>
-            <p className="text-muted-foreground text-sm">{projeto.nome}</p>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>{projeto.nome}</p>
           </div>
         </div>
 
@@ -124,7 +125,7 @@ export function TeamView({ projeto, membros, usuarios }: TeamViewProps) {
         return (
           <Card key={papel}>
             <CardHeader>
-              <CardTitle className="text-lg">
+              <CardTitle className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-lg")}>
                 {PAPEL_PROJETO_LABELS[papel]}s ({group.length})
               </CardTitle>
             </CardHeader>
@@ -141,9 +142,9 @@ export function TeamView({ projeto, membros, usuarios }: TeamViewProps) {
                   return (
                     <div
                       key={membro.id}
-                      className="flex items-center justify-between py-3"
+                      className={cn(/* design-system-escape: py-3 padding direcional sem Inset equiv. */ "flex items-center justify-between py-3")}
                     >
-                      <div className="flex items-center gap-3">
+                      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
                         <Avatar size="lg">
                           {membro.usuarioAvatar && (
                             <AvatarImage src={membro.usuarioAvatar} />
@@ -151,11 +152,11 @@ export function TeamView({ projeto, membros, usuarios }: TeamViewProps) {
                           <AvatarFallback>{initials}</AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="text-sm font-medium">
+                          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>
                             {membro.usuarioNome ?? "Usuário"}
                           </p>
                           {membro.usuarioEmail && (
-                            <p className="text-muted-foreground text-xs">
+                            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground text-xs")}>
                               {membro.usuarioEmail}
                             </p>
                           )}
@@ -214,7 +215,7 @@ export function TeamView({ projeto, membros, usuarios }: TeamViewProps) {
 
       {membros.length === 0 && (
         <Card>
-          <CardContent className="py-12 text-center">
+          <CardContent className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "py-12 text-center")}>
             <p className="text-muted-foreground">
               Nenhum membro na equipe. Clique em &quot;Adicionar Membro&quot;
               para começar.

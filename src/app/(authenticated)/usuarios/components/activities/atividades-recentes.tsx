@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useEffect, useState, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from '@/components/ui/empty';
@@ -145,11 +146,11 @@ export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
           <Skeleton className="h-4 w-full mt-2" />
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             {[1, 2, 3].map((i) => (
-              <div key={i} className="flex gap-4">
+              <div key={i} className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}>
                 <Skeleton className="h-10 w-10 rounded-full" />
-                <div className="flex-1 space-y-2">
+                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "flex-1 space-y-2")}>
                   <Skeleton className="h-4 w-32" />
                   <Skeleton className="h-3 w-full" />
                 </div>
@@ -164,7 +165,7 @@ export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           <Clock className="h-5 w-5" />
           Atividades Recentes
         </CardTitle>
@@ -174,7 +175,7 @@ export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
       </CardHeader>
       <CardContent>
         {error && (
-          <Text variant="caption" as="div" className="text-destructive p-4 bg-destructive/10 rounded-lg">
+          <Text variant="caption" as="div" className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "text-destructive p-4 bg-destructive/10 rounded-lg")}>
             {error}
           </Text>
         )}
@@ -198,7 +199,7 @@ export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
             {/* Linha vertical da timeline */}
             <div className="absolute left-5 top-0 bottom-0 w-px bg-border" />
 
-            <div className="space-y-6">
+            <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
               {atividades.map((atividade) => {
                 const Icon = EVENT_ICONS[atividade.tipoEvento] ?? Activity;
                 const label = EVENT_LABELS[atividade.tipoEvento] ?? 'Atividade registrada';
@@ -207,7 +208,7 @@ export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
                 const descricao = gerarDescricaoEvento(atividade);
 
                 return (
-                  <div key={atividade.id} className="relative flex gap-4">
+                  <div key={atividade.id} className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "relative flex gap-4")}>
                     {/* Ícone do evento */}
                     <div
                       className={`relative z-10 flex h-10 w-10 items-center justify-center rounded-full bg-background border-2 ${colorClass}`}
@@ -216,19 +217,19 @@ export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
                     </div>
 
                     {/* Conteúdo */}
-                    <div className="flex-1 pb-6">
-                      <div className="rounded-lg border bg-card p-4">
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-2">
+                    <div className={cn(/* design-system-escape: pb-6 padding direcional sem Inset equiv. */ "flex-1 pb-6")}>
+                      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-lg border bg-card p-4")}>
+                        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start justify-between gap-4")}>
+                          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+                            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                               <p className={`font-medium ${colorClass}`}>{label}</p>
-                              <AppBadge variant="outline" className="text-xs">
+                              <AppBadge variant="outline" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                                 {entidadeLabel}
                               </AppBadge>
                             </div>
-                            <p className="text-sm text-muted-foreground">{descricao}</p>
+                            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{descricao}</p>
                           </div>
-                          <p className="text-xs text-muted-foreground whitespace-nowrap">
+                          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground whitespace-nowrap")}>
                             {formatDistanceToNow(new Date(atividade.createdAt), {
                               addSuffix: true,
                               locale: ptBR,
@@ -244,7 +245,7 @@ export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
 
             {/* Botão Carregar mais */}
             {temMais && (
-              <div className="flex justify-center pt-2">
+              <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex justify-center pt-2")}>
                 <Button
                   variant="outline"
                   size="sm"

@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 
@@ -7,11 +8,11 @@ import { Card, CardHeader, CardContent } from '@/components/ui/card';
  */
 export function DashboardSkeleton() {
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       {/* Tier 1: KPI Strip */}
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6")}>
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="rounded-xl border bg-card p-4 sm:p-6 space-y-3">
+          <div key={i} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-6 sem equivalente DS; space-y-3 sem token DS */ "rounded-xl border bg-card p-4 sm:p-6 space-y-3")}>
             <Skeleton className="h-4 w-20" />
             <Skeleton className="h-8 w-28" />
             <Skeleton className="h-3 w-16" />
@@ -20,9 +21,9 @@ export function DashboardSkeleton() {
       </div>
 
       {/* Tier 2: Charts row */}
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 lg:grid-cols-3")}>
         <Card className="lg:col-span-2">
-          <CardHeader className="pb-2">
+          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
             <Skeleton className="h-5 w-48" />
           </CardHeader>
           <CardContent>
@@ -30,10 +31,10 @@ export function DashboardSkeleton() {
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="pb-2">
+          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
             <Skeleton className="h-5 w-40" />
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             <Skeleton className="h-40 w-40 rounded-full mx-auto" />
             {Array.from({ length: 4 }).map((_, i) => (
               <Skeleton key={i} className="h-6 w-full" />
@@ -43,9 +44,9 @@ export function DashboardSkeleton() {
       </div>
 
       {/* Tier 3: Second charts row */}
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 lg:grid-cols-3")}>
         <Card className="lg:col-span-2">
-          <CardHeader className="pb-2">
+          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
             <Skeleton className="h-5 w-36" />
           </CardHeader>
           <CardContent>
@@ -53,10 +54,10 @@ export function DashboardSkeleton() {
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="pb-2">
+          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
             <Skeleton className="h-5 w-44" />
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
             <Skeleton className="h-6 w-full" />
             <Skeleton className="h-2.5 w-full rounded-full" />
             <Skeleton className="h-20 w-full" />
@@ -65,17 +66,17 @@ export function DashboardSkeleton() {
       </div>
 
       {/* Tier 4: Bottom cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 lg:grid-cols-3")}>
         {Array.from({ length: 3 }).map((_, i) => (
           <Card key={i}>
-            <CardHeader className="pb-2">
+            <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
               <Skeleton className="h-5 w-32" />
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
               {Array.from({ length: 3 }).map((_, j) => (
-                <div key={j} className="flex gap-3 rounded-lg border p-3">
+                <div key={j} className={cn(/* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ "flex gap-3 rounded-lg border p-3")}>
                   <Skeleton className="h-8 w-8 rounded-md" />
-                  <div className="space-y-1.5 flex-1">
+                  <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5 flex-1")}>
                     <Skeleton className="h-3 w-16" />
                     <Skeleton className="h-5 w-24" />
                   </div>

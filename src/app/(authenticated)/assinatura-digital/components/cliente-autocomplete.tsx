@@ -53,7 +53,7 @@ export function ClienteAutocomplete({ value, onChange }: Props) {
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-75 p-0">
+      <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-75 p-0")}>
         <Command>
           <CommandInput placeholder="Buscar cliente" />
           <CommandList>
@@ -70,9 +70,9 @@ export function ClienteAutocomplete({ value, onChange }: Props) {
                 >
                   <Check className={cn("mr-2 h-4 w-4", value === String(opt.id) ? "opacity-100" : "opacity-0")} />
                   <div className="flex flex-col">
-                    <span className="font-medium">{opt.label}</span>
+                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{opt.label}</span>
                     {(opt.cpf || opt.cnpj) && (
-                      <span className="text-xs text-muted-foreground">{opt.cpf || opt.cnpj}</span>
+                      <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{opt.cpf || opt.cnpj}</span>
                     )}
                   </div>
                 </CommandItem>

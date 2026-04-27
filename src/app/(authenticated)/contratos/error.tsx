@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useEffect } from 'react';
 import { AlertTriangle, RotateCcw } from 'lucide-react';
 
@@ -20,14 +21,14 @@ export default function ContratosError({
 
   return (
     <div className="flex items-center justify-center min-h-[50vh]">
-      <GlassPanel className="max-w-md w-full p-6">
+      <GlassPanel className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "max-w-md w-full p-6")}>
         <div className="text-center">
           <div className="mx-auto mb-4 w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center">
             <AlertTriangle className="size-6 text-destructive" />
           </div>
           <Heading level="card" className="mb-4">Erro ao carregar contratos</Heading>
         </div>
-        <div className="space-y-4">
+        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           <p className="text-center text-muted-foreground">
             Ocorreu um erro ao tentar carregar a lista de contratos.
             Por favor, tente novamente.

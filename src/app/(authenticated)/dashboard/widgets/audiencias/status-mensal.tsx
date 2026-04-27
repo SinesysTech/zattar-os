@@ -11,6 +11,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import { BarChart3 } from 'lucide-react';
 import {
   WidgetContainer,
@@ -49,7 +50,7 @@ export function StatusMensal() {
         icon={BarChart3}
         subtitle="Marcadas vs realizadas vs canceladas"
       >
-        <div className="flex flex-col items-center justify-center py-6 gap-2">
+        <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center justify-center py-6 gap-2")}>
           <BarChart3 className="size-8 text-muted-foreground/45" />
           <p className="text-[11px] text-muted-foreground/60 text-center">
             Dados de status mensal indisponiveis
@@ -80,7 +81,7 @@ export function StatusMensal() {
       icon={BarChart3}
       subtitle="Marcadas vs realizadas vs canceladas"
     >
-      <div className="space-y-4">
+      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         <MiniBar
           data={barData}
           height={56}
@@ -89,12 +90,12 @@ export function StatusMensal() {
         />
 
         {/* Canceladas mini-bar below */}
-        <div className="flex items-end gap-2 w-full" style={{ height: 24 }}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-end gap-2 w-full")} style={{ height: 24 }}>
           {statusMensal.map((item) => {
             const maxCanc = Math.max(...statusMensal.map((s) => s.canceladas), 1);
             return (
-              <div key={`canc-${item.mes}`} className="flex-1 flex flex-col items-center gap-0.5">
-                <div className="flex gap-0.5 items-end w-full" style={{ height: 16 }}>
+              <div key={`canc-${item.mes}`} className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex-1 flex flex-col items-center gap-0.5")}>
+                <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex gap-0.5 items-end w-full")} style={{ height: 16 }}>
                   <div
                     className="flex-1 rounded-t-sm bg-destructive/50 transition-all duration-500"
                     style={{ height: `${(item.canceladas / maxCanc) * 100}%` }}
@@ -106,9 +107,9 @@ export function StatusMensal() {
         </div>
 
         {/* Legend */}
-        <div className="flex items-center gap-4 justify-center">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4 justify-center")}>
           {LEGEND_ITEMS.map((item) => (
-            <div key={item.label} className="flex items-center gap-1.5">
+            <div key={item.label} className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
               <div className={`size-2 rounded-sm ${item.color}`} />
               <span className="text-[9px] text-muted-foreground/60">
                 {item.label}

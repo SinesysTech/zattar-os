@@ -118,12 +118,12 @@ export function ContratosContent({
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
-    <div className="space-y-5">
+    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       {/* ── Header ──────────────────────────────────────────────── */}
-      <div className="flex items-end justify-between gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
         <div>
           <Heading level="page">Contratos</Heading>
-          <p className="text-sm text-muted-foreground mt-0.5">
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground mt-0.5")}>
             {stats?.ativos ?? 0} ativos &middot; {totalContratos} total
           </p>
         </div>
@@ -146,7 +146,7 @@ export function ContratosContent({
       ) : null}
 
       {/* ── Insight Banners ─────────────────────────────────────── */}
-      <div role="status" aria-live="polite" className="space-y-2 empty:hidden">
+      <div role="status" aria-live="polite" className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 empty:hidden")}>
         {stats && stats.vencendo30d > 0 && (
           <InsightBanner type="warning">
             {stats.vencendo30d} contrato{stats.vencendo30d !== 1 ? 's' : ''} vence
@@ -172,14 +172,14 @@ export function ContratosContent({
       ) : null}
 
       {/* ── View Controls (FilterBar + Search + ViewToggle + Settings) ─────── */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
         <ContratosFilterBar
           filters={filters}
           onChange={setFilters}
           sort={viewMode !== 'kanban' ? sort : undefined}
           onSortChange={viewMode !== 'kanban' ? setSort : undefined}
         />
-        <div className="flex items-center gap-2 flex-1 justify-end flex-wrap">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end flex-wrap")}>
           <SearchInput
             value={search}
             onChange={setSearch}
@@ -189,7 +189,7 @@ export function ContratosContent({
                 : 'Buscar cliente, parte, processo...'
             }
           />
-          <div className="flex items-center gap-0.5 p-0.5 rounded-lg bg-border/6">
+          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS; p-0.5 → usar <Inset> */ "flex items-center gap-0.5 p-0.5 rounded-lg bg-border/6")}>
             {VIEW_OPTIONS.map((opt) => (
               <button
                 key={opt.id}
@@ -197,7 +197,7 @@ export function ContratosContent({
                 onClick={() => handleViewChange(opt.id)}
                 aria-label={opt.label}
                 className={cn(
-                  'p-1.5 rounded-md transition-all cursor-pointer',
+                  /* design-system-escape: p-1.5 → usar <Inset> */ 'p-1.5 rounded-md transition-all cursor-pointer',
                   viewMode === opt.id
                     ? 'bg-primary/12 text-primary'
                     : 'text-muted-foreground/55 hover:text-muted-foreground',
@@ -206,13 +206,13 @@ export function ContratosContent({
                 <opt.icon className="size-3.5" />
               </button>
             ))}
-            <span className="mx-0.5 h-4 w-px bg-border/40" aria-hidden="true" />
+            <span className={cn(/* design-system-escape: mx-0.5 margin sem primitiva DS */ "mx-0.5 h-4 w-px bg-border/40")} aria-hidden="true" />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
                   aria-label="Configurações de contratos"
-                  className="p-1.5 rounded-md text-muted-foreground/55 hover:text-muted-foreground transition-all cursor-pointer"
+                  className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-md text-muted-foreground/55 hover:text-muted-foreground transition-all cursor-pointer")}
                 >
                   <SlidersHorizontal className="size-3.5" />
                 </button>

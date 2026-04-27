@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { DataTable } from '@/components/shared/data-shell';
@@ -57,7 +58,7 @@ export function TransacoesImportadasTable({
     {
       accessorKey: 'dataTransacao',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Data" />,
-      cell: ({ row }) => <span className="text-sm">{formatarData(row.original.dataTransacao)}</span>,
+      cell: ({ row }) => <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{formatarData(row.original.dataTransacao)}</span>,
       enableSorting: true,
       size: 100,
     },
@@ -65,7 +66,7 @@ export function TransacoesImportadasTable({
       accessorKey: 'descricao',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Descrição" />,
       cell: ({ row }) => (
-        <div className="max-w-md truncate text-sm" title={row.original.descricao}>
+        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "max-w-md truncate text-sm")} title={row.original.descricao}>
           {row.original.descricao}
         </div>
       ),
@@ -75,7 +76,7 @@ export function TransacoesImportadasTable({
       accessorKey: 'valor',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Valor" />,
       cell: ({ row }) => (
-        <div className="text-right font-mono text-sm">
+        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-right font-mono text-sm")}>
           {formatarValor(row.original.valor, row.original.tipoTransacao)}
         </div>
       ),
@@ -98,7 +99,7 @@ export function TransacoesImportadasTable({
     },
     {
       id: 'status',
-      header: () => <div className="text-sm font-medium">Conciliação</div>,
+      header: () => <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Conciliação</div>,
       cell: ({ row }) => {
         const status = row.original.conciliacao?.status || 'pendente';
         const config = STATUS_VARIANTS[status] || STATUS_VARIANTS.pendente;
@@ -112,22 +113,22 @@ export function TransacoesImportadasTable({
     },
     {
       id: 'lancamento',
-      header: () => <div className="text-sm font-medium">Lançamento</div>,
+      header: () => <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Lançamento</div>,
       cell: ({ row }) => {
         const lanc = row.original.lancamentoVinculado;
         return lanc ? (
-          <div className="max-w-xs truncate text-sm" title={lanc.descricao}>
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "max-w-xs truncate text-sm")} title={lanc.descricao}>
             {lanc.descricao}
           </div>
         ) : (
-          <span className="text-muted-foreground text-sm">Não conciliado</span>
+          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>Não conciliado</span>
         );
       },
       size: 200,
     },
     {
       id: 'actions',
-      header: () => <div className="text-sm font-medium">Ações</div>,
+      header: () => <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Ações</div>,
       cell: ({ row }) => {
         const transacao = row.original;
         const status = transacao.conciliacao?.status || 'pendente';

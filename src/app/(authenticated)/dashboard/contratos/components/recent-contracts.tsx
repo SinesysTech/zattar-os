@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import * as React from "react";
 import Link from "next/link";
 import {
@@ -77,7 +78,7 @@ export const columns: ColumnDef<RecentContractRow>[] = [
   {
     accessorKey: "cliente",
     header: ({ column }) => (
-      <Button variant="ghost" className="p-0!" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+      <Button variant="ghost" className={cn(/* design-system-escape: p-0! → usar <Inset> */ "p-0!")} onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
         Cliente <ChevronsUpDown className="size-3!" />
       </Button>
     ),
@@ -88,7 +89,7 @@ export const columns: ColumnDef<RecentContractRow>[] = [
     header: "Tipo",
     cell: ({ row }) => {
       const tipo = String(row.getValue("tipoContrato"));
-      return <SemanticBadge category="tipo_contrato" value={tipo} className="text-xs" />;
+      return <SemanticBadge category="tipo_contrato" value={tipo} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")} />;
     },
   },
   {
@@ -163,7 +164,7 @@ export function RecentContractsCard({ data }: { data: RecentContractRow[] }) {
         <CardTitle>Contratos recentes</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="mb-4 flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mb-4 flex items-center gap-2")}>
           <Input
             placeholder="Filtrar por cliente..."
             value={(table.getColumn("cliente")?.getFilterValue() as string) ?? ""}
@@ -199,7 +200,7 @@ export function RecentContractsCard({ data }: { data: RecentContractRow[] }) {
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id} className="[&:has([role=checkbox])]:pl-3">
+                    <TableHead key={header.id} className={cn(/* design-system-escape: [&:has([role=checkbox])]:pl-3 sem equivalente DS */ "[&:has([role=checkbox])]:pl-3")}>
                       {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   ))}
@@ -211,7 +212,7 @@ export function RecentContractsCard({ data }: { data: RecentContractRow[] }) {
                 table.getRowModel().rows.map((row) => (
                   <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} className="[&:has([role=checkbox])]:pl-3">
+                      <TableCell key={cell.id} className={cn(/* design-system-escape: [&:has([role=checkbox])]:pl-3 sem equivalente DS */ "[&:has([role=checkbox])]:pl-3")}>
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </TableCell>
                     ))}

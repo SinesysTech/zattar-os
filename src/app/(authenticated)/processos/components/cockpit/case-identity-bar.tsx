@@ -91,24 +91,24 @@ export function CaseIdentityBar({
   if (isReadingFocused) {
     return (
       <GlassPanel
-        className="rounded-none border-0 border-b border-border/20 px-4 py-1.5 flex-row items-center gap-3 shrink-0"
+        className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "rounded-none border-0 border-b border-border/20 px-4 py-1.5 flex-row items-center gap-3 shrink-0")}
       >
-        <span className="font-mono text-xs text-muted-foreground">{numeroProcesso}</span>
+        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "font-mono text-xs text-muted-foreground")}>{numeroProcesso}</span>
         <span className="w-px h-4 bg-border/10" />
-        <span className="text-xs text-muted-foreground/60 truncate">{tituloPartes}</span>
+        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60 truncate")}>{tituloPartes}</span>
       </GlassPanel>
     );
   }
 
   return (
     <GlassPanel
-      className="rounded-none border-0 border-b border-border/20 px-4 py-2.5 flex-row items-center gap-3 shrink-0"
+      className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "rounded-none border-0 border-b border-border/20 px-4 py-2.5 flex-row items-center gap-3 shrink-0")}
     >
       <Button variant="ghost" size="icon-sm" onClick={onVoltar} title="Voltar">
         <ArrowLeft className="size-4" />
       </Button>
 
-      <Heading level="page" className="text-base tracking-tight truncate max-w-[35%] min-w-0">
+      <Heading level="page" className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; tracking-tight sem token DS */ "text-base tracking-tight truncate max-w-[35%] min-w-0")}>
         {tituloPartes}
       </Heading>
 
@@ -125,8 +125,8 @@ export function CaseIdentityBar({
 
       <span className="w-px h-5 bg-border/10 shrink-0" />
 
-      <div className="flex items-center gap-1 shrink-0">
-        <span className="font-mono text-sm text-foreground/80">{numeroProcesso}</span>
+      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 shrink-0")}>
+        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "font-mono text-sm text-foreground/80")}>{numeroProcesso}</span>
         <CopyButton text={numeroProcesso} label="Copiar número" />
       </div>
 
@@ -151,7 +151,7 @@ export function CaseIdentityBar({
       )}
 
       {instancias && instancias.length > 1 && (
-        <span className="inline-flex items-center gap-1 rounded-full border bg-muted/20 px-2 py-0.5 text-[10px] text-muted-foreground shrink-0">
+        <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center gap-1 rounded-full border bg-muted/20 px-2 py-0.5 text-[10px] text-muted-foreground shrink-0")}>
           <Layers className="size-3" />
           {instancias.length}
         </span>
@@ -168,7 +168,7 @@ export function CaseIdentityBar({
             >
               <Avatar className="h-7 w-7 border">
                 <AvatarImage src={responsavel?.avatarUrl || undefined} alt={responsavel?.nomeExibicao || 'Não atribuído'} />
-                <AvatarFallback className="text-[9px] font-medium">
+                <AvatarFallback className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[9px] font-medium")}>
                   {responsavel ? getInitials(responsavel.nomeExibicao) : 'NA'}
                 </AvatarFallback>
               </Avatar>

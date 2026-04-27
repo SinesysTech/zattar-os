@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -81,7 +82,7 @@ export function TaskDialog({ open, onOpenChange }: TaskDialogProps) {
             }
         >
             <form id="nova-tarefa-form" onSubmit={handleCreate}>
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 md:grid-cols-2")}>
                     <div className="md:col-span-2">
                         <Label htmlFor="title">Título</Label>
                         <Input
@@ -156,7 +157,7 @@ export function TaskDialog({ open, onOpenChange }: TaskDialogProps) {
                 </div>
 
                 {errorMessage && (
-                    <p className="mt-4 text-sm text-destructive" role="alert">
+                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-4 text-sm text-destructive")} role="alert">
                         {errorMessage}
                     </p>
                 )}

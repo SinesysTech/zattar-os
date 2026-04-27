@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { Suspense } from 'react';
 import { authenticateRequest } from '@/lib/auth/session';
 import { fetchAudienciasPageData } from '@/app/(authenticated)/audiencias/queries';
@@ -9,19 +10,19 @@ export const revalidate = 0;
 
 function AudienciasLoading() {
   return (
-    <div className="space-y-5">
-      <div className="flex items-end justify-between gap-4">
+    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
         <Skeleton className="h-9 w-40" />
         <Skeleton className="h-9 w-9 rounded-lg" />
       </div>
       <Skeleton className="h-14 w-full rounded-2xl" />
-      <div className="flex items-center gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
         <Skeleton className="h-9 w-60 rounded-xl" />
         <div className="flex-1" />
         <Skeleton className="h-9 w-56 rounded-lg" />
         <Skeleton className="h-9 w-20 rounded-lg" />
       </div>
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         {Array.from({ length: 4 }).map((_, i) => (
           <Skeleton key={i} className="h-20 w-full rounded-2xl" />
         ))}

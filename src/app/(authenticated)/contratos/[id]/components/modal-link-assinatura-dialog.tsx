@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import {
   Dialog,
@@ -48,7 +49,7 @@ export function ModalLinkAssinaturaDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="glass-dialog">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <CheckCircle2 className="size-5 text-success" />
             {reaproveitado ? 'Link existente reutilizado' : 'Documentos prontos para assinatura'}
           </DialogTitle>
@@ -59,8 +60,8 @@ export function ModalLinkAssinaturaDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-3">
-          <div className="flex gap-2">
+        <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
             <Input readOnly value={urlAbsoluta} />
             <Button size="sm" onClick={handleCopy}>
               <Copy className="size-4 mr-1" />
@@ -68,7 +69,7 @@ export function ModalLinkAssinaturaDialog({
             </Button>
           </div>
           <Text variant="caption" className="text-muted-foreground">
-            Expira em: <span className="font-medium">{dataFormatada}</span>
+            Expira em: <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{dataFormatada}</span>
           </Text>
         </div>
 

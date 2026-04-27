@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { forwardRef, useImperativeHandle, useState, useMemo, useEffect, useCallback } from 'react';
 import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaResult, CapturaResultData } from './captura-result';
@@ -189,7 +190,7 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
     }), [handleCaptura, isLoading]);
 
     return (
-      <div className="space-y-6">
+      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
         <CapturaFormBase
           advogadoId={advogadoId}
           credenciaisSelecionadas={credenciaisSelecionadas}
@@ -208,8 +209,8 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
               </AlertDescription>
             </Alert>
           )}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:col-span-2">
-            <div className="space-y-3">
+          <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "grid grid-cols-1 md:grid-cols-2 gap-6 md:col-span-2")}>
+            <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
               <Label htmlFor="processo-id">Número do Processo *</Label>
               <Input
                 id="processo-id"
@@ -218,11 +219,11 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
                 onChange={(e) => setProcessoId(e.target.value)}
                 disabled={isLoading}
               />
-              <p className="text-xs text-muted-foreground">
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                 Apenas números (ID do processo no PJE)
               </p>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
               <Checkbox
                 id="baixar-documentos"
                 checked={baixarDocumentos}
@@ -231,22 +232,22 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
               />
               <Label
                 htmlFor="baixar-documentos"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading>; leading-none sem token DS */ "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer")}
               >
                 Baixar documentos (PDFs)
               </Label>
             </div>
             {baixarDocumentos && (
               <Collapsible open={filtrosAbertos} onOpenChange={setFiltrosAbertos} className="md:col-span-2">
-                <CollapsibleTrigger className="flex items-center gap-2 text-sm font-medium hover:underline">
+                <CollapsibleTrigger className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "flex items-center gap-2 text-sm font-medium hover:underline")}>
                   <ChevronDown
                     className={`h-4 w-4 transition-transform ${filtrosAbertos ? 'rotate-180' : ''
                       }`}
                   />
                   Filtros Avançados
                 </CollapsibleTrigger>
-                <CollapsibleContent className="space-y-4 pt-4">
-                  <div className="flex items-center space-x-2">
+                <CollapsibleContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; pt-4 padding direcional sem Inset equiv. */ "space-y-4 pt-4")}>
+                  <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
                     <Checkbox
                       id="apenas-assinados"
                       checked={apenasAssinados}
@@ -255,13 +256,13 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
                     />
                     <Label
                       htmlFor="apenas-assinados"
-                      className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                      className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-none sem token DS */ "text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer")}
                     >
                       Apenas documentos assinados
                     </Label>
                   </div>
 
-                  <div className="flex items-center space-x-2">
+                  <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
                     <Checkbox
                       id="apenas-nao-sigilosos"
                       checked={apenasNaoSigilosos}
@@ -270,14 +271,14 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
                     />
                     <Label
                       htmlFor="apenas-nao-sigilosos"
-                      className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                      className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-none sem token DS */ "text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer")}
                     >
                       Apenas documentos não sigilosos
                     </Label>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="tipos-documento" className="text-sm">
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                    <Label htmlFor="tipos-documento" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
                       Tipos de Documento (separados por vírgula)
                     </Label>
                     <Input
@@ -289,9 +290,9 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="data-inicial" className="text-sm">
+                  <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+                    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                      <Label htmlFor="data-inicial" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
                         Data Inicial
                       </Label>
                       <FormDatePicker
@@ -301,8 +302,8 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
                       />
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="data-final" className="text-sm">
+                    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                      <Label htmlFor="data-final" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
                         Data Final
                       </Label>
                       <FormDatePicker

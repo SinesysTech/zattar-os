@@ -53,12 +53,12 @@ export function RhythmStrip({ audiencias, className }: RhythmStripProps) {
   const hasOverload = maxInDay >= 4;
 
   return (
-    <GlassPanel className={cn('p-4', className)}>
-      <div className="flex items-center gap-2 mb-3">
+    <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'p-4', className)}>
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
         <Zap className="size-3 text-primary/40" />
-        <Text variant="caption" as="span" className="font-medium text-muted-foreground/60">Ritmo de audiências</Text>
+        <Text variant="caption" as="span" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground/60")}>Ritmo de audiências</Text>
         {hasOverload && (
-          <span className="text-micro-badge font-semibold px-1.5 py-px rounded-full bg-warning/10 text-warning ml-auto">
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-badge font-semibold px-1.5 py-px rounded-full bg-warning/10 text-warning ml-auto")}>
             Pico: {maxInDay}/dia
           </span>
         )}
@@ -66,7 +66,7 @@ export function RhythmStrip({ audiencias, className }: RhythmStripProps) {
       <CalendarHeatmap data={heatmapData} colorScale={hasOverload ? 'warning' : 'primary'} />
       <div className="flex items-center justify-between mt-2">
         <span className="text-micro-badge text-muted-foreground/45">Menos</span>
-        <div className="flex gap-0.5">
+        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex gap-0.5")}>
           {['bg-border/10', 'bg-primary/15', 'bg-primary/30', 'bg-primary/50', 'bg-primary/80'].map((c, i) => (
             <div key={i} className={cn('size-2.5 rounded-[2px]', c)} />
           ))}

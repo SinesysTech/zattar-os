@@ -97,7 +97,7 @@ export function UsuarioCard({
 
       {/* Inactive badge */}
       {!isAtivo && (
-        <span className="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-destructive/15 text-destructive text-[10px] font-semibold backdrop-blur-sm">
+        <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "absolute top-2 right-2 px-2 py-0.5 rounded-md bg-destructive/15 text-destructive text-[10px] font-semibold backdrop-blur-sm")}>
           Inativo
         </span>
       )}
@@ -106,7 +106,7 @@ export function UsuarioCard({
       {isAtivo && (
         <span
           className={cn(
-            'absolute top-1 right-3 text-[9px] font-semibold',
+            /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'absolute top-1 right-3 text-[9px] font-semibold',
             completenessTextColor,
           )}
         >
@@ -115,7 +115,7 @@ export function UsuarioCard({
       )}
 
       {/* Avatar area — overlaps banner */}
-      <div className="px-4 -mt-7 relative">
+      <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "px-4 -mt-7 relative")}>
         {/* Completeness ring + avatar wrapper */}
         <div className="relative inline-block" style={{ width: ringSize, height: ringSize }}>
           <UserCompletenessRing score={score} size={ringSize} strokeWidth={2} />
@@ -133,7 +133,7 @@ export function UsuarioCard({
                 src={getAvatarUrl(usuario.avatarUrl) || undefined}
                 alt={usuario.nomeExibicao ?? usuario.nomeCompleto}
               />
-              <AvatarFallback className="text-xs font-medium">
+              <AvatarFallback className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium")}>
                 {getInitials(usuario.nomeExibicao ?? usuario.nomeCompleto ?? '')}
               </AvatarFallback>
             </Avatar>
@@ -148,10 +148,10 @@ export function UsuarioCard({
       </div>
 
       {/* Main content */}
-      <div className="px-4 pb-3 pt-2 flex flex-col gap-1 flex-1">
+      <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; pb-3 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv.; gap-1 gap sem token DS */ "px-4 pb-3 pt-2 flex flex-col gap-1 flex-1")}>
         {/* Name + SuperAdmin icon */}
-        <div className="flex items-center gap-1.5">
-          <span className="text-sm font-semibold truncate leading-tight">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-sm font-semibold truncate leading-tight")}>
             {usuario.nomeCompleto}
           </span>
           {usuario.isSuperAdmin && (
@@ -160,16 +160,16 @@ export function UsuarioCard({
         </div>
 
         {/* Email */}
-        <Text variant="caption" as="span" className="text-muted-foreground/40 truncate leading-tight">
+        <Text variant="caption" as="span" className={cn(/* design-system-escape: leading-tight sem token DS */ "text-muted-foreground/40 truncate leading-tight")}>
           {usuario.emailCorporativo}
         </Text>
 
         {/* Role + OAB badges */}
-        <div className="flex flex-row gap-1.5 mt-2 flex-wrap">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-row gap-1.5 mt-2 flex-wrap")}>
           {cargoNome && (
             <span
               className={cn(
-                'px-2 py-0.5 rounded-md text-[10px] font-semibold',
+                /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'px-2 py-0.5 rounded-md text-[10px] font-semibold',
                 roleBadgeClass,
               )}
             >
@@ -177,7 +177,7 @@ export function UsuarioCard({
             </span>
           )}
           {deveExibirOab && (
-            <span className="px-1.5 py-0.5 rounded bg-info/8 text-[9px] text-info/70">
+            <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "px-1.5 py-0.5 rounded bg-info/8 text-[9px] text-info/70")}>
               {formatarOab(usuario.oab, usuario.ufOab)}
             </span>
           )}
@@ -185,7 +185,7 @@ export function UsuarioCard({
 
         {/* Stats row */}
         {stats && (
-          <div className="flex gap-1.5 border-t border-border/10 pt-2.5 mt-2.5">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; pt-2.5 padding direcional sem Inset equiv. */ "flex gap-1.5 border-t border-border/10 pt-2.5 mt-2.5")}>
             {(
               [
                 { label: 'Processos', value: stats.processos },
@@ -194,10 +194,10 @@ export function UsuarioCard({
               ] as const
             ).map(({ label, value }) => (
               <div key={label} className="flex-1 text-center">
-                <div className="text-sm font-bold tabular-nums leading-tight">
+                <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-sm font-bold tabular-nums leading-tight")}>
                   {isAtivo ? value : '—'}
                 </div>
-                <div className="text-[8px] uppercase tracking-wider text-muted-foreground/35 leading-tight">
+                <div className={cn(/* design-system-escape: tracking-wider sem token DS; leading-tight sem token DS */ "text-[8px] uppercase tracking-wider text-muted-foreground/35 leading-tight")}>
                   {label}
                 </div>
               </div>

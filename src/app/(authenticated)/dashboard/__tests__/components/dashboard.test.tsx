@@ -5,6 +5,7 @@
  * Uses fast-check for property-based testing to verify properties hold across many inputs.
  */
 
+import { cn } from '@/lib/utils';
 import React from 'react';
 import { render } from '@testing-library/react';
 import * as fc from 'fast-check';
@@ -33,7 +34,7 @@ const DashboardFilters = ({ children, activeFiltersCount }: {
     }
     return (
         <div>
-            <h3 className="text-sm">Filtros</h3>
+            <h3 className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Filtros</h3>
             {children}
         </div>
     );
@@ -233,12 +234,12 @@ describe('Dashboard Responsive Properties', () => {
                         // Renderizar card de métrica
                         const { container } = render(
                             <Card>
-                                <CardContent className="pt-4 sm:pt-6">
-                                    <div className="space-y-1 sm:space-y-2">
-                                        <p className="text-sm font-medium text-muted-foreground truncate">
+                                <CardContent className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv.; sm:pt-6 sem equivalente DS */ "pt-4 sm:pt-6")}>
+                                    <div className={cn(/* design-system-escape: space-y-1 sem token DS; sm:space-y-2 sem equivalente DS */ "space-y-1 sm:space-y-2")}>
+                                        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground truncate")}>
                                             {title}
                                         </p>
-                                        <p className="text-2xl sm:text-3xl font-bold">
+                                        <p className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; sm:text-3xl sem equivalente DS; font-bold → className de <Text>/<Heading> */ "text-2xl sm:text-3xl font-bold")}>
                                             {value.toLocaleString('pt-BR')}
                                         </p>
                                     </div>
@@ -254,7 +255,7 @@ describe('Dashboard Responsive Properties', () => {
                         expect(hasTitleWithTruncate).toBe(true);
 
                         // Verificar que o valor está presente com tamanho responsivo
-                        const valueElements = container.querySelectorAll('.text-2xl');
+                        const valueElements = container.querySelectorAll(/* design-system-escape: .text-2xl sem equivalente DS */ '.text-2xl');
                         const hasValueWithResponsiveSize = Array.from(valueElements).some(
                             el => el.textContent === value.toLocaleString('pt-BR')
                         );
@@ -426,7 +427,7 @@ describe('Dashboard Responsive Properties', () => {
                             </DashboardFilters>
                         );
 
-                        const filterTitle = desktopContainer.querySelector('h3.text-sm');
+                        const filterTitle = desktopContainer.querySelector(/* design-system-escape: h3.text-sm sem equivalente DS */ 'h3.text-sm');
                         expect(filterTitle).toBeInTheDocument();
                         expect(filterTitle?.textContent).toBe('Filtros');
 

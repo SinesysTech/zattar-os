@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import {
   Select,
@@ -50,16 +51,16 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
   };
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <div>
         <Heading level="card">O Que Você Perdeu</Heading>
-        <p className="text-sm text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
           Calcular os prejuízos trabalhistas decorrentes da pejotização
         </p>
       </div>
 
       {/* C.4.1: Valor mensal fixo */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>Recebia um valor mensal fixo (como um salário)?</Label>
         <SimNaoRadio
           id="fixo"
@@ -68,7 +69,7 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
         />
 
         {data.valor_mensal_fixo === true && (
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label htmlFor="valor-aprox">Valor aproximado</Label>
             <Input
               id="valor-aprox"
@@ -82,11 +83,11 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
       </div>
 
       {/* C.4.2: Benefícios recebidos */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>Recebia algum desses benefícios da empresa?</Label>
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           {BENEFICIO_RECEBIDO_OPTIONS.map((opt) => (
-            <div key={opt.value} className="flex items-center gap-2">
+            <div key={opt.value} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <Checkbox
                 id={`beneficio-${opt.value}`}
                 checked={beneficios.includes(opt.value)}
@@ -94,7 +95,7 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
                   toggleBeneficio(opt.value, checked === true)
                 }
               />
-              <Label htmlFor={`beneficio-${opt.value}`} className="cursor-pointer text-sm font-normal">
+              <Label htmlFor={`beneficio-${opt.value}`} className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "cursor-pointer text-sm font-normal")}>
                 {opt.label}
               </Label>
             </div>
@@ -103,7 +104,7 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
       </div>
 
       {/* C.4.3: 13° disfarçado */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>Havia algum &quot;bônus de fim de ano&quot; que funcionava como 13° salário?</Label>
         <SimNaoRadio
           id="decimo-terceiro"
@@ -113,7 +114,7 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
       </div>
 
       {/* C.4.4: Férias */}
-      <div className="space-y-2">
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Label htmlFor="ferias">Como funcionavam as férias?</Label>
         <Select
           value={data.regime_ferias ?? ''}
@@ -133,7 +134,7 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
       </div>
 
       {/* C.4.5: Verbas rescisórias */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>Ao sair da empresa, recebeu alguma verba rescisória?</Label>
         <SimNaoRadio
           id="rescisao"
@@ -143,7 +144,7 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
       </div>
 
       {/* C.4.6: Controle como CLT */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>O pagamento era feito na PJ, mas o controle do trabalho era como CLT?</Label>
         <SimNaoRadio
           id="controle-clt"

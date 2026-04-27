@@ -56,11 +56,11 @@ function KanbanColumn({
         isOver && "ring-2 ring-primary/20"
       )}
     >
-      <div className="flex items-center justify-between px-3 py-2">
-        <Heading level="subsection" className="text-sm">
+      <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center justify-between px-3 py-2")}>
+        <Heading level="subsection" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
           {STATUS_TAREFA_LABELS[status]}
         </Heading>
-        <span className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs">
+        <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs")}>
           {tarefas.length}
         </span>
       </div>
@@ -69,7 +69,7 @@ function KanbanColumn({
         items={tarefas.map((t) => t.id)}
         strategy={verticalListSortingStrategy}
       >
-        <div className="flex flex-col gap-2 p-2 min-h-25">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2 → usar <Inset> */ "flex flex-col gap-2 p-2 min-h-25")}>
           {tarefas.map((tarefa) => (
             <TaskCard key={tarefa.id} tarefa={tarefa} />
           ))}
@@ -105,7 +105,7 @@ export function TaskBoard({ tarefas }: TaskBoardProps) {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <div className="flex gap-4 overflow-x-auto pb-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pb-4 padding direcional sem Inset equiv. */ "flex gap-4 overflow-x-auto pb-4")}>
         {KANBAN_COLUMNS.map((status) => (
           <KanbanColumn
             key={status}

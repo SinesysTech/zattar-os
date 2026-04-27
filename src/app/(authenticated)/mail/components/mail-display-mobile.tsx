@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import React, { useEffect, useRef } from "react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -101,7 +102,7 @@ function MailBodyMobile({ mail }: { mail: MailMessagePreview }) {
 
   if (isLoadingBody && !isLoaded) {
     return (
-      <div className="flex flex-col gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
         <Skeleton className="h-4 w-full" />
         <Skeleton className="h-4 w-5/6" />
         <Skeleton className="h-4 w-4/6" />
@@ -121,7 +122,7 @@ function MailBodyMobile({ mail }: { mail: MailMessagePreview }) {
     );
   }
 
-  return <div className="text-sm whitespace-pre-wrap">{textContent}</div>;
+  return <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm whitespace-pre-wrap")}>{textContent}</div>;
 }
 
 export function MailDisplayMobile({ mail }: MailDisplayProps) {
@@ -183,8 +184,8 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
         </VisuallyHidden>
 
         <div className="flex h-full flex-col">
-          <div className="flex items-center p-2">
-            <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-center p-2")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <Button
                 variant="ghost"
                 size="icon"
@@ -225,7 +226,7 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
               </Button>
             </div>
 
-            <div className="ml-auto flex items-center gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "ml-auto flex items-center gap-2")}>
               <Button
                 variant="ghost"
                 size="icon"
@@ -251,7 +252,7 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
               </Button>
             </div>
 
-            <Separator orientation="vertical" className="mx-2 h-6" />
+            <Separator orientation="vertical" className={cn(/* design-system-escape: mx-2 margin sem primitiva DS */ "mx-2 h-6")} />
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -274,41 +275,41 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
 
           {mail && (
             <div className="flex flex-1 flex-col overflow-hidden">
-              <div className="flex flex-wrap items-start gap-3 p-4">
-                <div className="flex min-w-0 flex-1 items-start gap-4 text-sm">
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex flex-wrap items-start gap-3 p-4")}>
+                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; text-sm → migrar para <Text variant="body-sm"> */ "flex min-w-0 flex-1 items-start gap-4 text-sm")}>
                   <Avatar>
                     <AvatarFallback>{participantInitials}</AvatarFallback>
                   </Avatar>
-                  <div className="min-w-0 grid flex-1 gap-1">
-                    <div className="whitespace-normal wrap-break-word font-semibold">{participantName}</div>
-                    <div className="text-xs whitespace-normal wrap-break-word">{mail.subject}</div>
-                    <div className="text-xs whitespace-normal wrap-break-word">
-                      <span className="font-medium">{participantLabel}:</span> {participantLine}
+                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "min-w-0 grid flex-1 gap-1")}>
+                    <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "whitespace-normal wrap-break-word font-semibold")}>{participantName}</div>
+                    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs whitespace-normal wrap-break-word")}>{mail.subject}</div>
+                    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs whitespace-normal wrap-break-word")}>
+                      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{participantLabel}:</span> {participantLine}
                     </div>
                   </div>
                 </div>
-                <div className="text-muted-foreground text-xs whitespace-normal wrap-break-word sm:ml-auto sm:pl-4 sm:text-right">
+                <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; sm:pl-4 sem equivalente DS */ "text-muted-foreground text-xs whitespace-normal wrap-break-word sm:ml-auto sm:pl-4 sm:text-right")}>
                   {format(new Date(mail.date), "PPpp", { locale: ptBR })}
                 </div>
               </div>
 
               <Separator />
 
-              <div className="flex-1 overflow-auto p-4">
+              <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex-1 overflow-auto p-4")}>
                 <MailBodyMobile mail={mail} />
               </div>
 
               <Separator className="mt-auto" />
 
               {replyMode ? (
-                <div ref={replyAreaRef} className="p-4">
+                <div ref={replyAreaRef} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
                   <form onSubmit={handleReply}>
-                    <div className="grid gap-3">
-                      <div className="text-sm text-muted-foreground">
+                    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3")}>
+                      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                         {replyMode === "reply-all"
                           ? "Responder a todos"
                           : "Responder para"}{" "}
-                        <span className="font-medium text-foreground">
+                        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>
                           {participantName}
                         </span>
                       </div>
@@ -317,7 +318,7 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
                         editorRef={editorRef}
                         placeholder="Escreva sua resposta..."
                       />
-                      <div className="flex items-center gap-2 justify-end">
+                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 justify-end")}>
                         <Button
                           type="button"
                           variant="ghost"
@@ -341,8 +342,8 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
                   </form>
                 </div>
               ) : (
-                <div className="p-4">
-                  <div className="flex items-center gap-2">
+                <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                     <Button
                       variant="outline"
                       size="sm"

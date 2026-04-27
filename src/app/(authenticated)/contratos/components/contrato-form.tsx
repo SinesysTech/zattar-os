@@ -256,8 +256,8 @@ export function ContratoForm({
     >
       <form ref={formRef} action={formAction} className="space-y-(--density-field-gap)">
         {/* Linha 1: Tipo de Contrato + Tipo de Cobrança */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="grid gap-2">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
             <Label htmlFor="tipoContrato">
               Tipo de Contrato <span className="text-destructive">*</span>
             </Label>
@@ -278,14 +278,14 @@ export function ContratoForm({
             </Select>
             <input type="hidden" name="tipoContrato" value={formData.tipoContrato} />
             {getFieldError('tipoContrato') && (
-              <Text variant="caption" className="text-destructive flex items-center gap-1">
+              <Text variant="caption" className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-destructive flex items-center gap-1")}>
                 <AlertCircle className="h-3 w-3" />
                 {getFieldError('tipoContrato')}
               </Text>
             )}
           </div>
 
-          <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
             <Label htmlFor="tipoCobranca">
               Tipo de Cobrança <span className="text-destructive">*</span>
             </Label>
@@ -306,7 +306,7 @@ export function ContratoForm({
             </Select>
             <input type="hidden" name="tipoCobranca" value={formData.tipoCobranca} />
             {getFieldError('tipoCobranca') && (
-              <Text variant="caption" className="text-destructive flex items-center gap-1">
+              <Text variant="caption" className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-destructive flex items-center gap-1")}>
                 <AlertCircle className="h-3 w-3" />
                 {getFieldError('tipoCobranca')}
               </Text>
@@ -315,8 +315,8 @@ export function ContratoForm({
         </div>
 
         {/* Linha 2: Segmento + Status */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="grid gap-2">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
             <Label htmlFor="segmentoId">
               Segmento <span className="text-destructive">*</span>
             </Label>
@@ -337,14 +337,14 @@ export function ContratoForm({
             </Select>
             <input type="hidden" name="segmentoId" value={formData.segmentoId} />
             {getFieldError('segmentoId') && (
-              <Text variant="caption" className="text-destructive flex items-center gap-1">
+              <Text variant="caption" className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-destructive flex items-center gap-1")}>
                 <AlertCircle className="h-3 w-3" />
                 {getFieldError('segmentoId')}
               </Text>
             )}
           </div>
 
-          <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
             <Label htmlFor="status">Status</Label>
             <Select
               value={formData.status}
@@ -366,8 +366,8 @@ export function ContratoForm({
         </div>
 
         {/* Linha 3: Cliente + Polo do Cliente */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="grid gap-2">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
             <Label htmlFor="clienteId">
               Cliente <span className="text-destructive">*</span>
             </Label>
@@ -395,14 +395,14 @@ export function ContratoForm({
             />
             <input type="hidden" name="clienteId" value={formData.clienteId} />
             {getFieldError('clienteId') && (
-              <Text variant="caption" className="text-destructive flex items-center gap-1">
+              <Text variant="caption" className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-destructive flex items-center gap-1")}>
                 <AlertCircle className="h-3 w-3" />
                 {getFieldError('clienteId')}
               </Text>
             )}
           </div>
 
-          <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
             <Label htmlFor="papelClienteNoContrato">
               Polo do Cliente <span className="text-destructive">*</span>
             </Label>
@@ -423,7 +423,7 @@ export function ContratoForm({
             </Select>
             <input type="hidden" name="papelClienteNoContrato" value={formData.papelClienteNoContrato} />
             {getFieldError('papelClienteNoContrato') && (
-              <Text variant="caption" className="text-destructive flex items-center gap-1">
+              <Text variant="caption" className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-destructive flex items-center gap-1")}>
                 <AlertCircle className="h-3 w-3" />
                 {getFieldError('papelClienteNoContrato')}
               </Text>
@@ -432,8 +432,8 @@ export function ContratoForm({
         </div>
 
         {/* Linha 4: Parte Contrária + Responsável */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="grid gap-2">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
             <Label htmlFor="partesContrariasIds">Partes Contrárias</Label>
             <ServerCombobox
               onSearch={async (query) => {
@@ -473,7 +473,7 @@ export function ContratoForm({
             />
           </div>
 
-          <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
             <Label htmlFor="responsavelId">Responsável</Label>
             <Select
               value={formData.responsavelId || '__none__'}
@@ -496,7 +496,7 @@ export function ContratoForm({
         </div>
 
         {/* Linha 5: Cadastrado em */}
-        <div className="grid gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
           <Label htmlFor="cadastradoEm">Cadastrado em</Label>
           <FormDatePicker
             id="cadastradoEm"
@@ -507,7 +507,7 @@ export function ContratoForm({
         </div>
 
         {/* Linha 7: Observações (largura total) */}
-        <div className="grid gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
           <Label htmlFor="observacoes">Observações</Label>
           <Textarea
             id="observacoes"

@@ -234,7 +234,7 @@ const MonthGrid = React.memo(function MonthGrid({
             aria-label={tooltipText}
           />
         </TooltipTrigger>
-        <TooltipContent side="top" className="text-[10px] px-2 py-1">
+        <TooltipContent side="top" className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "text-[10px] px-2 py-1")}>
           {tooltipText}
         </TooltipContent>
       </Tooltip>,
@@ -243,10 +243,10 @@ const MonthGrid = React.memo(function MonthGrid({
 
   return (
     <div>
-      <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5">
+      <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5")}>
         {MONTH_NAMES[monthIndex]}
       </div>
-      <div className="grid grid-cols-7 gap-0.5 mb-1">
+      <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "grid grid-cols-7 gap-0.5 mb-1")}>
         {WEEKDAY_LABELS.map((lbl, i) => (
           <div
             key={i}
@@ -256,7 +256,7 @@ const MonthGrid = React.memo(function MonthGrid({
           </div>
         ))}
       </div>
-      <div className="grid grid-cols-7 gap-0.5">{cells}</div>
+      <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "grid grid-cols-7 gap-0.5")}>{cells}</div>
     </div>
   );
 });
@@ -281,12 +281,12 @@ function StatCard({
   children,
 }: StatCardProps) {
   return (
-    <GlassPanel depth={2} className="p-4 px-5">
-      <div className="flex items-center gap-2 mb-3">
+    <GlassPanel depth={2} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; px-5 padding direcional sem Inset equiv. */ "p-4 px-5")}>
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
         <IconContainer size="md" className={iconBg}>
           <Icon className={cn('w-3.5 h-3.5', iconColor)} />
         </IconContainer>
-        <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
+        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70")}>
           {label}
         </span>
       </div>
@@ -329,12 +329,12 @@ export function PericiasYearHeatmap({
     <TooltipProvider delayDuration={100}>
       <div className="w-full">
         {/* Main Layout: Heatmap + Stats Sidebar */}
-        <div className="flex gap-5 flex-wrap xl:flex-nowrap">
+        <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex gap-5 flex-wrap xl:flex-nowrap")}>
           {/* Heatmap Panel */}
-          <GlassPanel depth={1} className="p-6 flex-1 min-w-0">
+          <GlassPanel depth={1} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 flex-1 min-w-0")}>
             {/* Year Navigator (padrão audiências/expedientes — inline no painel) */}
             <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2 flex-1">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1")}>
                 <Button
                   variant="ghost"
                   size="icon"
@@ -355,14 +355,14 @@ export function PericiasYearHeatmap({
                 </Button>
                 <Button
                   size="sm"
-                  className="ml-1 rounded-full px-4 text-xs font-semibold"
+                  className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "ml-1 rounded-full px-4 text-xs font-semibold")}
                   onClick={() => onYearChange(new Date().getFullYear())}
                 >
                   Hoje
                 </Button>
               </div>
 
-              <span className="text-base font-bold tracking-tight text-center tabular-nums">
+              <span className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-bold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-base font-bold tracking-tight text-center tabular-nums")}>
                 {year}
               </span>
 
@@ -382,19 +382,19 @@ export function PericiasYearHeatmap({
             </div>
 
             {/* Legend */}
-            <div className="mt-8 flex items-center gap-3 flex-wrap">
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "mt-8 flex items-center gap-3 flex-wrap")}>
               <span className="text-[10px] text-muted-foreground/60">
                 Menos
               </span>
-              <div className="flex items-center gap-1">
+              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
                 <div className="w-2.5 h-2.5 rounded-[2px] bg-muted/30" />
                 <div className="w-2.5 h-2.5 rounded-[2px] bg-primary/30" />
                 <div className="w-2.5 h-2.5 rounded-[2px] bg-primary/55" />
                 <div className="w-2.5 h-2.5 rounded-[2px] bg-primary/85" />
               </div>
               <span className="text-[10px] text-muted-foreground/60">Mais</span>
-              <span className="text-muted-foreground/40 mx-2 text-[10px]">·</span>
-              <div className="flex items-center gap-1.5">
+              <span className={cn(/* design-system-escape: mx-2 margin sem primitiva DS */ "text-muted-foreground/40 mx-2 text-[10px]")}>·</span>
+              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
                 <div className="w-2.5 h-2.5 rounded-[2px] bg-muted/30 ring-[1.5px] ring-primary ring-offset-1 ring-offset-transparent" />
                 <span className="text-[10px] text-muted-foreground/60">Hoje</span>
               </div>
@@ -402,14 +402,14 @@ export function PericiasYearHeatmap({
           </GlassPanel>
 
           {/* Stats Sidebar */}
-          <div className="flex flex-col gap-3 w-full xl:w-64 shrink-0">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3 w-full xl:w-64 shrink-0")}>
             <StatCard
               icon={CalendarDays}
               iconBg="bg-primary/15"
               iconColor="text-primary"
               label="Total no Ano"
             >
-              <div className="font-display text-2xl font-bold tabular-nums leading-none">
+              <div className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-2xl font-bold tabular-nums leading-none")}>
                 {stats.total}
               </div>
               <div className="text-[11px] text-muted-foreground/60 mt-1">
@@ -423,7 +423,7 @@ export function PericiasYearHeatmap({
               iconColor="text-warning"
               label="Mês Mais Intenso"
             >
-              <div className="text-sm font-semibold tracking-tight">
+              <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-sm font-semibold tracking-tight")}>
                 {MONTH_NAMES[stats.maxMonth]}
               </div>
               <div className="text-[11px] text-muted-foreground/60 mt-0.5">
@@ -445,7 +445,7 @@ export function PericiasYearHeatmap({
               iconColor="text-success"
               label="Média Semanal"
             >
-              <div className="font-display text-2xl font-bold tabular-nums leading-none">
+              <div className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-2xl font-bold tabular-nums leading-none")}>
                 {stats.weekAvg}
               </div>
               <div className="text-[11px] text-muted-foreground/60 mt-1">
@@ -459,9 +459,9 @@ export function PericiasYearHeatmap({
               iconColor="text-primary"
               label="Taxa de Entrega"
             >
-              <div className="font-display text-2xl font-bold tabular-nums leading-none">
+              <div className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-2xl font-bold tabular-nums leading-none")}>
                 {stats.taxaEntrega}
-                <span className="text-base text-muted-foreground/60 ml-0.5">
+                <span className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base text-muted-foreground/60 ml-0.5")}>
                   %
                 </span>
               </div>
@@ -483,7 +483,7 @@ export function PericiasYearHeatmap({
                 iconColor="text-info"
                 label="Próxima Entrega"
               >
-                <div className="text-sm font-semibold tracking-tight">
+                <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-sm font-semibold tracking-tight")}>
                   {format(parseISO(stats.proxima.prazoEntrega!), "dd 'de' MMM", {
                     locale: ptBR,
                   })}

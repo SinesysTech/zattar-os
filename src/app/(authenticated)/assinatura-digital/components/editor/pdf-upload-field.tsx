@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { toast } from 'sonner';
 import { FileUp, X, FileText} from 'lucide-react';
@@ -124,13 +125,13 @@ export function PdfUploadField({
   const displayError = error || uploadError;
 
   return (
-    <div className="space-y-2">
+    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
       <Label>
         {label} {required && <span className="text-destructive">*</span>}
       </Label>
 
       {!hasValidFile ? (
-        <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center hover:border-muted-foreground/50 transition-colors">
+        <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center hover:border-muted-foreground/50 transition-colors")}>
           <input
             ref={fileInputRef}
             type="file"
@@ -142,30 +143,30 @@ export function PdfUploadField({
           />
           <label
             htmlFor="pdf-upload-field"
-            className="cursor-pointer flex flex-col items-center gap-2"
+            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "cursor-pointer flex flex-col items-center gap-2")}
           >
             {isUploading ? (
               <>
                 <LoadingSpinner className="size-8 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">Enviando arquivo...</span>
+                <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Enviando arquivo...</span>
               </>
             ) : (
               <>
                 <FileUp className="h-8 w-8 text-muted-foreground" />
-                <span className="text-sm font-medium">Clique para selecionar um PDF</span>
-                <span className="text-xs text-muted-foreground">Máximo 10MB</span>
+                <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Clique para selecionar um PDF</span>
+                <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Máximo 10MB</span>
               </>
             )}
           </label>
         </div>
       ) : (
-        <div className="border rounded-lg p-4 bg-muted/50">
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "border rounded-lg p-4 bg-muted/50")}>
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
               <FileText className="h-8 w-8 text-destructive" />
               <div>
-                <p className="text-sm font-medium">{value?.nome}</p>
-                <p className="text-xs text-muted-foreground">
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{value?.nome}</p>
+                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                   {formatFileSize(value?.tamanho || 0)}
                 </p>
               </div>
@@ -186,7 +187,7 @@ export function PdfUploadField({
       )}
 
       {displayError && (
-        <p className="text-sm text-destructive">{displayError}</p>
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{displayError}</p>
       )}
     </div>
   );

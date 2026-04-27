@@ -93,12 +93,12 @@ export function ClienteSelect({
 
   if (error && options.length === 0) {
     return (
-      <div className="flex items-center gap-2 text-sm text-destructive">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2 text-sm text-destructive")}>
         <span>{error}</span>
         <button
           type="button"
           onClick={() => fetchOptions()}
-          className="text-primary hover:underline inline-flex items-center gap-1"
+          className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-primary hover:underline inline-flex items-center gap-1")}
         >
           <RefreshCw className="h-3 w-3" />
           Tentar novamente
@@ -117,13 +117,13 @@ export function ClienteSelect({
           disabled={disabled}
           className="w-full justify-between"
         >
-          <div className="flex items-center gap-2 truncate">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 truncate")}>
             {selectedOption ? (
               <>
                 <User className="h-4 w-4 shrink-0 opacity-50" />
                 <span className="truncate">{selectedOption.label}</span>
                 {(selectedOption.cpf || selectedOption.cnpj) && (
-                  <span className="text-xs text-muted-foreground">
+                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                     ({formatDocument(selectedOption.cpf, selectedOption.cnpj)})
                   </span>
                 )}
@@ -135,7 +135,7 @@ export function ClienteSelect({
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[400px] p-0" align="start">
+      <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-[400px] p-0")} align="start">
         <Command shouldFilter={false}>
           <CommandInput
             placeholder="Buscar por nome ou CPF/CNPJ..."
@@ -145,7 +145,7 @@ export function ClienteSelect({
           <CommandList>
             <CommandEmpty>
               {loading ? (
-                <div className="flex items-center justify-center gap-2 py-4">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-4 padding direcional sem Inset equiv. */ "flex items-center justify-center gap-2 py-4")}>
                   <RefreshCw className="h-4 w-4 animate-spin" />
                   <span>Carregando...</span>
                 </div>
@@ -165,7 +165,7 @@ export function ClienteSelect({
                     setOpen(false);
                     setSearchQuery("");
                   }}
-                  className="flex items-center gap-2"
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}
                 >
                   <Check
                     className={cn(
@@ -174,9 +174,9 @@ export function ClienteSelect({
                     )}
                   />
                   <div className="flex flex-col min-w-0 flex-1">
-                    <span className="font-medium truncate">{opt.label}</span>
+                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium truncate")}>{opt.label}</span>
                     {(opt.cpf || opt.cnpj) && (
-                      <span className="text-xs text-muted-foreground">
+                      <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                         {formatDocument(opt.cpf, opt.cnpj)}
                       </span>
                     )}

@@ -117,7 +117,7 @@ const MailEditorKit = [
 
 function MailToolbarButtons() {
   return (
-    <div className="flex items-center gap-0.5">
+    <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center gap-0.5")}>
       <ToolbarGroup>
         <UndoToolbarButton />
         <RedoToolbarButton />
@@ -258,7 +258,7 @@ function MailEditorContent({
     <Editor
       variant="none"
       className={cn(
-        "overflow-y-auto px-3 py-2 text-sm",
+        /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "overflow-y-auto px-3 py-2 text-sm",
         variant === 'default' && "min-h-30 max-h-75",
         variant === 'inline' && "min-h-40",
         variant === 'compose' && "min-h-0 flex-1"
@@ -291,7 +291,7 @@ export function MailEditor({
       >
         <Toolbar
           className={cn(
-            "scrollbar-hide flex-wrap justify-start p-1",
+            /* design-system-escape: p-1 → usar <Inset> */ "scrollbar-hide flex-wrap justify-start p-1",
             variant !== 'compose' && "border-b border-border bg-muted/30",
             variant === 'compose' && "shrink-0 border-b border-border"
           )}

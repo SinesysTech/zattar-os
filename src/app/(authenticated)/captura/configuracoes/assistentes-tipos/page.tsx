@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { createDbClient } from '@/lib/supabase';
 import { AssistentesTiposConfig } from '@/app/(authenticated)/assistentes';
 import { Button } from '@/components/ui/button';
@@ -49,8 +50,8 @@ export default async function ConfiguracoesAssistentesTiposPage() {
   ]);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center justify-between gap-4")}>
         <Heading level="page">Geração Automática de Peças</Heading>
         <Button variant="outline" size="sm" asChild>
           <Link href="/app/configuracoes?tab=integracoes">

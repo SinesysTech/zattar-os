@@ -70,14 +70,14 @@ function TribunalGrauBadge({ trt, grau }: { trt: string; grau: GrauTribunal }) {
   };
 
   return (
-    <div className="inline-flex items-center text-xs font-medium shrink-0">
+    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "inline-flex items-center text-xs font-medium shrink-0")}>
       {/* Tribunal (lado esquerdo - azul, arredondado à esquerda) */}
-      <span className="bg-info/15 text-info px-2 py-0.5 rounded-l-full">
+      <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "bg-info/15 text-info px-2 py-0.5 rounded-l-full")}>
         {trt}
       </span>
       {/* Grau (lado direito - cor baseada no grau, arredondado à direita) */}
       <span className={cn(
-        'px-2 py-0.5 border-l border-background/50 rounded-r-full',
+        /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'px-2 py-0.5 border-l border-background/50 rounded-r-full',
         grauColorClasses[grau] || 'bg-muted text-muted-foreground'
       )}>
         {grauLabel}
@@ -174,16 +174,16 @@ export function TipoDescricaoCell({
 
   return (
     <>
-      <div className="flex flex-col items-start gap-0.5 w-full">
+      <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-start gap-0.5 w-full")}>
         {/* Badge de tipo (clicável - abre popover) + ícone de documento */}
-        <div className="flex items-center gap-1.5">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
           <Popover open={isTipoPopoverOpen} onOpenChange={setIsTipoPopoverOpen}>
             <PopoverTrigger asChild>
               <button type="button" className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded">
                 {badgeVariant === 'outline' ? (
                   <AppBadge
                     variant="outline"
-                    className="w-fit text-xs shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
+                    className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "w-fit text-xs shrink-0 cursor-pointer hover:opacity-80 transition-opacity")}
                   >
                     {tipoNome}
                   </AppBadge>
@@ -191,22 +191,22 @@ export function TipoDescricaoCell({
                   <SemanticBadge
                     category="expediente_tipo"
                     value={expediente.tipoExpedienteId}
-                    className="w-fit text-xs shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
+                    className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "w-fit text-xs shrink-0 cursor-pointer hover:opacity-80 transition-opacity")}
                   >
                     {tipoNome}
                   </SemanticBadge>
                 )}
               </button>
             </PopoverTrigger>
-            <PopoverContent className="w-64 p-2" align="start" onInteractOutside={(e) => e.preventDefault()}>
-              <div className="space-y-2">
-                <p className="text-xs font-medium text-muted-foreground">Tipo de Expediente</p>
+            <PopoverContent className={cn(/* design-system-escape: p-2 → usar <Inset> */ "w-64 p-2")} align="start" onInteractOutside={(e) => e.preventDefault()}>
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-muted-foreground")}>Tipo de Expediente</p>
                 <Select
                   value={expediente.tipoExpedienteId?.toString() || 'null'}
                   onValueChange={handleSaveTipo}
                   disabled={isLoadingTipo || tiposExpedientes.length === 0}
                 >
-                  <SelectTrigger className="w-full h-8 text-sm">
+                  <SelectTrigger className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "w-full h-8 text-sm")}>
                     <SelectValue placeholder="Selecione o tipo" />
                   </SelectTrigger>
                   <SelectContent className="max-h-50">
@@ -216,7 +216,7 @@ export function TipoDescricaoCell({
                         <SelectItem key={tipo.id} value={tipo.id.toString()}>{tipo.tipoExpediente}</SelectItem>
                       ))
                     ) : (
-                      <div className="px-2 py-1.5 text-sm text-muted-foreground">
+                      <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "px-2 py-1.5 text-sm text-muted-foreground")}>
                         {isLoadingTipos ? 'Carregando...' : 'Nenhum tipo'}
                       </div>
                     )}
@@ -229,7 +229,7 @@ export function TipoDescricaoCell({
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); setIsPdfViewerOpen(true); }}
-              className="p-1 hover:bg-accent rounded-md transition-colors"
+              className={cn(/* design-system-escape: p-1 → usar <Inset> */ "p-1 hover:bg-accent rounded-md transition-colors")}
               title="Visualizar documento"
             >
               <FileText className="h-3.5 w-3.5 text-primary" />
@@ -241,7 +241,7 @@ export function TipoDescricaoCell({
         <button
           type="button"
           onClick={() => setIsDescricaoDialogOpen(true)}
-          className="text-xs text-muted-foreground w-full text-justify whitespace-pre-wrap leading-relaxed cursor-pointer hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded"
+          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; leading-relaxed sem token DS */ "text-xs text-muted-foreground w-full text-justify whitespace-pre-wrap leading-relaxed cursor-pointer hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded")}
         >
           {descricaoExibicao}
         </button>
@@ -259,7 +259,7 @@ export function TipoDescricaoCell({
           </Button>
         }
       >
-        <div className="py-2">
+        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "py-2")}>
           <Textarea
             value={descricao}
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescricao(e.target.value)}
@@ -301,19 +301,19 @@ function PrazoBadge({ dataInicio, dataFim, baixado }: {
 
   // Se não tem nenhuma data, mostra placeholder
   if (!dataInicio && !dataFim) {
-    return <span className="text-xs text-muted-foreground">-</span>;
+    return <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>-</span>;
   }
 
   const opacityClass = baixado ? 'opacity-50' : '';
 
   return (
-    <div className={cn("inline-flex flex-col items-center text-xs font-medium shrink-0 gap-0.5", opacityClass)}>
+    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; gap-0.5 gap sem token DS */ "inline-flex flex-col items-center text-xs font-medium shrink-0 gap-0.5", opacityClass)}>
       {/* Data Início (verde - arredondado) */}
-      <span className="bg-success/15 text-success px-2 py-0.5 rounded-full">
+      <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "bg-success/15 text-success px-2 py-0.5 rounded-full")}>
         {formatDate(dataInicio)}
       </span>
       {/* Data Fim (vermelho - arredondado) */}
-      <span className="bg-destructive/15 text-destructive px-2 py-0.5 rounded-full">
+      <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "bg-destructive/15 text-destructive px-2 py-0.5 rounded-full")}>
         {formatDate(dataFim)}
       </span>
     </div>
@@ -324,14 +324,14 @@ export function PrazoCell({ expediente }: { expediente: Expediente }) {
   const baixado = !!expediente.baixadoEm;
 
   return (
-    <div className="flex flex-col items-center gap-0.5">
+    <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-center gap-0.5")}>
       <PrazoBadge
         dataInicio={expediente.dataCienciaParte}
         dataFim={expediente.dataPrazoLegalParte}
         baixado={baixado}
       />
       {baixado && (
-        <span className="text-xs text-muted-foreground">
+        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
           (Baixado)
         </span>
       )}
@@ -503,7 +503,7 @@ export const columns: ColumnDef<Expediente>[] = [
       headerLabel: 'Prazo',
     },
     cell: ({ row }) => (
-      <div className="flex items-center py-2">
+      <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
         <PrazoCell expediente={row.original} />
       </div>
     ),
@@ -523,7 +523,7 @@ export const columns: ColumnDef<Expediente>[] = [
     cell: ({ row, table }) => {
       const meta = table.options.meta as ExpedientesTableMeta;
       return (
-        <div className="flex items-center py-2">
+        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
           <TipoDescricaoCell
             expediente={row.original}
             onSuccessAction={meta?.onSuccessAction || (() => { })}
@@ -549,28 +549,28 @@ export const columns: ColumnDef<Expediente>[] = [
     cell: ({ row }) => {
       const e = row.original;
       return (
-        <div className="flex flex-col gap-1.5 items-start py-2 max-w-[min(92vw,20rem)] min-w-0">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex flex-col gap-1.5 items-start py-2 max-w-[min(92vw,20rem)] min-w-0")}>
           {/* Linha 1: Badge Tribunal + Grau */}
-          <div className="flex items-center gap-1.5 flex-wrap">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 flex-wrap")}>
             <TribunalGrauBadge trt={e.trt} grau={e.grau} />
           </div>
 
           {/* Linha 2: Número do processo */}
-          <span className="text-xs font-mono font-medium text-foreground break-all" title={e.numeroProcesso}>
+          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-mono font-medium text-foreground break-all")} title={e.numeroProcesso}>
             {e.numeroProcesso}
           </span>
 
           {/* Partes com badges de polo */}
-          <div className="flex flex-col gap-0.5">
+          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
             <ParteBadge
               polo="ATIVO"
-              className="flex whitespace-normal wrap-break-word text-left font-normal text-xs"
+              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex whitespace-normal wrap-break-word text-left font-normal text-xs")}
             >
               {e.nomeParteAutoraOrigem || e.nomeParteAutora || '-'}
             </ParteBadge>
             <ParteBadge
               polo="PASSIVO"
-              className="flex whitespace-normal wrap-break-word text-left font-normal text-xs"
+              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex whitespace-normal wrap-break-word text-left font-normal text-xs")}
             >
               {e.nomeParteReOrigem || e.nomeParteRe || '-'}
             </ParteBadge>
@@ -594,7 +594,7 @@ export const columns: ColumnDef<Expediente>[] = [
     cell: ({ row, table }) => {
       const meta = table.options.meta as ExpedientesTableMeta;
       return (
-        <div className="flex items-center py-2">
+        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
           <ObservacoesCell expediente={row.original} onSuccessAction={meta?.onSuccessAction} />
         </div>
       );
@@ -615,7 +615,7 @@ export const columns: ColumnDef<Expediente>[] = [
     cell: ({ row, table }) => {
       const meta = table.options.meta as ExpedientesTableMeta;
       return (
-        <div className="flex items-center py-2">
+        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
           <ResponsavelCell expediente={row.original} usuarios={meta?.usuarios} onSuccessAction={meta?.onSuccessAction} />
         </div>
       );
@@ -636,7 +636,7 @@ export const columns: ColumnDef<Expediente>[] = [
     cell: ({ row, table }) => {
       const meta = table.options.meta as ExpedientesTableMeta;
       return (
-        <div className="flex items-center py-2">
+        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
           <ExpedienteActions
             expediente={row.original}
             onSuccessAction={meta?.onSuccessAction}

@@ -3,7 +3,7 @@
 import React from "react";
 import { ArrowLeft, Ellipsis, Video, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { generateAvatarFallback } from "@/lib/utils";
+import { generateAvatarFallback, cn } from '@/lib/utils';
 import useChatStore from "../hooks/use-chat-store";
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -29,9 +29,9 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare: _onS
 
   return (
     <div
-      className="relative z-10 flex items-center justify-between px-5 py-3 border-b border-border/40 dark:border-white/6 backdrop-blur-[20px] bg-white/85 dark:bg-[rgba(22,18,34,0.8)]"
+      className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "relative z-10 flex items-center justify-between px-5 py-3 border-b border-border/40 dark:border-white/6 backdrop-blur-[20px] bg-white/85 dark:bg-[rgba(22,18,34,0.8)]")}
     >
-      <div className="flex gap-3 items-center">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex gap-3 items-center")}>
         <Button
           size="icon"
           variant="ghost"
@@ -43,18 +43,18 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare: _onS
         <button
           type="button"
           onClick={() => toggleProfileSheet(!showProfileSheet)}
-          className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity duration-150 rounded-lg px-1 -mx-1"
+          className={cn(/* design-system-escape: gap-3 gap sem token DS; px-1 padding direcional sem Inset equiv.; -mx-1 sem equivalente DS */ "flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity duration-150 rounded-lg px-1 -mx-1")}
           aria-label="Ver perfil"
         >
           <Avatar className="size-8 rounded-full overflow-visible shrink-0">
             <AvatarImage src={image} alt={name} className="rounded-full" />
-            <AvatarFallback className="bg-primary/10 text-primary text-[11px] font-semibold rounded-full">
+            <AvatarFallback className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "bg-primary/10 text-primary text-[11px] font-semibold rounded-full")}>
               {generateAvatarFallback(name)}
             </AvatarFallback>
             {!isGroup && <AvatarIndicator variant={onlineStatus} />}
           </Avatar>
-          <div className="flex flex-col gap-0.5">
-            <span className="text-[0.8125rem] font-semibold text-foreground leading-[1.2]">{name}</span>
+          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[0.8125rem] font-semibold text-foreground leading-[1.2]")}>{name}</span>
             {!isGroup && (
               onlineStatus === "online" ? (
                 <span className="text-[0.625rem] leading-[1.4] text-success">
@@ -74,8 +74,8 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare: _onS
           </div>
         </button>
       </div>
-      <div className="flex gap-1 items-center">
-        <div className="hidden lg:flex lg:gap-1">
+      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1 items-center")}>
+        <div className={cn(/* design-system-escape: lg:gap-1 sem equivalente DS */ "hidden lg:flex lg:gap-1")}>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>

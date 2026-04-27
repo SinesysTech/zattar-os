@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -97,7 +98,7 @@ export function AgendamentoDialog({ open, onOpenChange, onSuccess }: Props) {
       title={<Typography.H3 as="span">Novo agendamento</Typography.H3>}
       maxWidth="2xl"
       footer={
-        <div className="flex w-full justify-end gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex w-full justify-end gap-2")}>
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isSaving}>
             Cancelar
           </Button>
@@ -107,9 +108,9 @@ export function AgendamentoDialog({ open, onOpenChange, onSuccess }: Props) {
         </div>
       }
     >
-      <div className="p-6 space-y-6">
-        <div className="grid gap-4 md:grid-cols-2">
-          <div className="space-y-2">
+      <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; space-y-6 → migrar para <Stack gap="loose"> */ "p-6 space-y-6")}>
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2")}>
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label>Tipo de captura</Label>
             <TipoCapturaSelect
               value={tipoCaptura}
@@ -119,7 +120,7 @@ export function AgendamentoDialog({ open, onOpenChange, onSuccess }: Props) {
             />
           </div>
 
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label>Periodicidade</Label>
             <Select value={periodicidade} onValueChange={(v) => setPeriodicidade(v as 'diario' | 'a_cada_N_dias')}>
               <SelectTrigger className="bg-background">
@@ -132,7 +133,7 @@ export function AgendamentoDialog({ open, onOpenChange, onSuccess }: Props) {
             </Select>
           </div>
 
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label>Horário (HH:mm)</Label>
             <Input
               value={horario}
@@ -143,7 +144,7 @@ export function AgendamentoDialog({ open, onOpenChange, onSuccess }: Props) {
           </div>
 
           {periodicidade === 'a_cada_N_dias' && (
-            <div className="space-y-2 md:col-span-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 md:col-span-2")}>
               <Label>Dias de intervalo</Label>
               <Input
                 value={diasIntervalo}
@@ -162,10 +163,10 @@ export function AgendamentoDialog({ open, onOpenChange, onSuccess }: Props) {
           onCredenciaisChange={setCredencialIds}
         />
 
-        <div className="flex items-center justify-between rounded-md border p-3 bg-background">
-          <div className="space-y-1">
-            <Typography.Small className="font-semibold">Ativo</Typography.Small>
-            <Typography.Muted className="text-xs">
+        <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between rounded-md border p-3 bg-background")}>
+          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+            <Typography.Small className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Ativo</Typography.Small>
+            <Typography.Muted className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
               Agendamentos inativos não executam automaticamente.
             </Typography.Muted>
           </div>

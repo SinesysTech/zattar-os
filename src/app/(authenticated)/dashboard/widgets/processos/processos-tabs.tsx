@@ -7,6 +7,7 @@
  *   - data.processos.porSegmento -> Treemap (tab "segmento")
  */
 
+import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { Layers } from 'lucide-react';
 import {
@@ -43,7 +44,7 @@ export function WidgetProcessosComTabs() {
         subtitle="Visualizacao interativa por agrupamento"
         depth={1}
       >
-        <p className="text-xs text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
           Nao foi possivel carregar os dados processuais.
         </p>
       </WidgetContainer>
@@ -115,12 +116,12 @@ export function WidgetProcessosComTabs() {
         />
       }
     >
-      <div className="flex flex-col gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
         <Treemap segments={treemapData} height={84} />
         {/* Legend row */}
-        <div className="flex flex-wrap gap-x-3 gap-y-1 pt-1">
+        <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "flex flex-wrap gap-x-3 gap-y-1 pt-1")}>
           {treemapData.map((seg) => (
-            <div key={seg.label} className="flex items-center gap-1">
+            <div key={seg.label} className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
               <span
                 className="size-1.5 rounded-full shrink-0"
                 style={{ backgroundColor: seg.color }}

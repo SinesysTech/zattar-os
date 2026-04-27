@@ -1,6 +1,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Combobox } from '@/components/ui/combobox';
@@ -94,11 +95,11 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
       maxWidth="3xl"
       hideFooter
     >
-      <div className="space-y-6 px-6 py-5 md:px-8 md:py-6">
+      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose">; px-6 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv.; md:px-8 sem equivalente DS; md:py-6 sem equivalente DS */ /* design-system-escape: space-y-6 → migrar para <Stack gap="loose">; px-6 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv.; md:px-8 sem equivalente DS; md:py-6 sem equivalente DS */ "space-y-6 px-6 py-5 md:px-8 md:py-6")}>
         {!selectedProcessoId && (
-          <div className="space-y-5 rounded-lg border bg-muted/20 p-4 md:p-5">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-5 sem token DS; p-4 → migrar para <Inset variant="card-compact">; md:p-5 sem equivalente DS */ "space-y-5 rounded-lg border bg-muted/20 p-4 md:p-5")}>
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 md:grid-cols-2")}>
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                 <Label>Tribunal</Label>
                 <Select value={trt} onValueChange={setTrt}>
                   <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
@@ -109,7 +110,7 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
                   </SelectContent>
                 </Select>
               </div>
-              <div className="space-y-2">
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                 <Label>Grau</Label>
                 <Select value={grau} onValueChange={setGrau}>
                   <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
@@ -120,7 +121,7 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
                 </Select>
               </div>
             </div>
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label>Buscar Processo</Label>
               <Input
                 variant="glass"
@@ -142,7 +143,7 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
                 />
               )}
               {debouncedBusca.length >= 3 && !isLoading && processos.length === 0 && (
-                <p className="text-xs text-muted-foreground">
+                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                   Nenhum processo encontrado. Tente ajustar o tribunal, grau ou termo de busca.
                 </p>
               )}
@@ -151,7 +152,7 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
         )}
 
         {selectedProcessoId ? (
-          <div className="rounded-lg border bg-background p-4 md:p-5">
+          <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; md:p-5 sem equivalente DS */ "rounded-lg border bg-background p-4 md:p-5")}>
             <AcordoForm
               processoId={selectedProcessoId}
               onSuccess={() => { onSuccess(); handleClose(); }}
@@ -159,7 +160,7 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
             />
           </div>
         ) : (
-          <div className="rounded-lg border border-dashed bg-muted/10 py-10 text-center text-sm text-muted-foreground">
+          <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "rounded-lg border border-dashed bg-muted/10 py-10 text-center text-sm text-muted-foreground")}>
             Selecione um processo para continuar
           </div>
         )}

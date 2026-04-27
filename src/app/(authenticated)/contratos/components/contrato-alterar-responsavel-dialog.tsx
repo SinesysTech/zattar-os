@@ -6,6 +6,7 @@
  * Segue o mesmo padrão de audiencias-alterar-responsavel-dialog.
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -81,7 +82,7 @@ export function ContratoAlterarResponsavelDialog({
         </Button>
       }
     >
-      <div className="space-y-2">
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Label htmlFor="responsavel-contrato">Responsável</Label>
         <Select
           value={responsavelId || 'null'}

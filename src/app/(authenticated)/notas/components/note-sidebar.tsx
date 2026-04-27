@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import React from "react";
 import { Archive, Edit3, PenSquare } from "lucide-react";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
@@ -14,7 +15,7 @@ import { useNotes } from "../notes-context";
 
 export default function NoteSidebar() {
   return (
-    <div className="sticky top-18 hidden space-y-4 xl:block">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "sticky top-18 hidden space-y-4 xl:block")}>
       <NoteSidebarContent />
     </div>
   );
@@ -24,7 +25,7 @@ export function NoteMobileSidebar({ children }: { children?: React.ReactNode }) 
   return (
     <Sheet>
       <SheetTrigger asChild>{children}</SheetTrigger>
-      <SheetContent className="bg-card px-0">
+      <SheetContent className={cn(/* design-system-escape: px-0 padding direcional sem Inset equiv. */ "bg-card px-0")}>
         <VisuallyHidden>
           <DialogHeader>
             <DialogTitle>Menu de notas</DialogTitle>
@@ -39,8 +40,8 @@ export function NoteMobileSidebar({ children }: { children?: React.ReactNode }) 
 export function NoteSidebarContent() {
   const { labels, mode, setMode } = useNotes();
   return (
-    <div className="flex flex-col rounded-md bg-card p-2 xl:w-64 xl:border">
-      <div className="space-y-1">
+    <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col rounded-md bg-card p-2 xl:w-64 xl:border")}>
+      <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
         <Button
           variant={mode === "notas" ? "secondary" : "ghost"}
           className="w-full justify-start"
@@ -63,10 +64,10 @@ export function NoteSidebarContent() {
         </EditLabelsModal>
       </div>
 
-      <Separator className="my-4" />
+      <Separator className={cn(/* design-system-escape: my-4 margin sem primitiva DS */ "my-4")} />
 
       <div className="flex-1">
-        <div className="text-muted-foreground mb-3 px-2 text-sm font-medium">Etiquetas</div>
+        <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-muted-foreground mb-3 px-2 text-sm font-medium")}>Etiquetas</div>
         <nav>
           {labels.map((label) => (
             <Button key={label.id} variant="ghost" className="w-full justify-start font-normal">

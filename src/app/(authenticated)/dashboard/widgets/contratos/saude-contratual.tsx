@@ -12,6 +12,7 @@
  */
 
 
+import { cn } from '@/lib/utils';
 import { HeartPulse } from 'lucide-react';
 import {
   GaugeMeter,
@@ -72,8 +73,8 @@ export function WidgetSaudeContratual() {
       depth={2}
       className="md:col-span-2"
     >
-      <div className="flex flex-col items-center gap-4 mt-1">
-        <div className="flex flex-col items-center gap-1">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center gap-4 mt-1")}>
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col items-center gap-1")}>
           <GaugeMeter
             value={score}
             max={100}
@@ -83,17 +84,17 @@ export function WidgetSaudeContratual() {
           />
         </div>
 
-        <div className="grid grid-cols-3 gap-4 w-full pt-3 border-t border-border/10">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pt-3 padding direcional sem Inset equiv. */ "grid grid-cols-3 gap-4 w-full pt-3 border-t border-border/10")}>
           {[
             { label: 'Contratos Ativos', value: fmtNum(ativos) },
             { label: 'Novos no Mês', value: fmtNum(novosMes) },
             { label: 'Em Contratação', value: fmtNum(emContratacao) },
           ].map((item) => (
-            <div key={item.label} className="flex flex-col items-center gap-0.5">
-              <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider text-center">
+            <div key={item.label} className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-center gap-0.5")}>
+              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider text-center")}>
                 {item.label}
               </span>
-              <span className="font-display text-xl font-bold">
+              <span className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "font-display text-xl font-bold")}>
                 {item.value}
               </span>
             </div>

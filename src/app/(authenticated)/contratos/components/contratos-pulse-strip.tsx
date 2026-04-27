@@ -45,16 +45,16 @@ export function ContratosPulseStrip({
   const pctNovos = total > 0 ? Math.round((novosMes / total) * 100) : 0;
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 lg:grid-cols-4 gap-3")}>
       {/* ── Ativos ─────────────────────────────────────────────────── */}
-      <GlassPanel depth={1} className="px-4 py-3.5">
-        <div className="flex items-start justify-between gap-2">
+      <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
             <p className="text-meta-label text-muted-foreground/50 truncate">
               Ativos
             </p>
-            <div className="flex items-baseline gap-1.5 mt-1">
-              <p className="font-display text-2xl font-bold tabular-nums leading-none tracking-tight">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+              <p className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ "font-display text-2xl font-bold tabular-nums leading-none tracking-tight")}>
                 <AnimatedNumber value={ativos} />
               </p>
             </div>
@@ -65,7 +65,7 @@ export function ContratosPulseStrip({
         </div>
 
         {/* Barra de proporcao */}
-        <div className="mt-2.5 flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full transition-all duration-700 bg-primary/25"
@@ -79,14 +79,14 @@ export function ContratosPulseStrip({
       </GlassPanel>
 
       {/* ── Valor Total ────────────────────────────────────────────── */}
-      <GlassPanel depth={1} className="px-4 py-3.5">
-        <div className="flex items-start justify-between gap-2">
+      <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
             <p className="text-meta-label text-muted-foreground/50 truncate">
               Valor Total
             </p>
-            <div className="flex items-baseline gap-1.5 mt-1">
-              <p className="font-display text-2xl font-bold tabular-nums leading-none tracking-tight">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+              <p className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ "font-display text-2xl font-bold tabular-nums leading-none tracking-tight")}>
                 {fmtMoeda(valorTotal)}
               </p>
             </div>
@@ -110,18 +110,18 @@ export function ContratosPulseStrip({
       <GlassPanel
         depth={vencendo30d > 0 ? 2 : 1}
         className={cn(
-          'px-4 py-3.5',
+          /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ 'px-4 py-3.5',
           vencendo30d > 0 && 'border-warning/15',
         )}
       >
-        <div className="flex items-start justify-between gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
             <p className="text-meta-label text-muted-foreground/50 truncate">
               Vencendo 30d
             </p>
-            <div className="flex items-baseline gap-1.5 mt-1">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
               <p className={cn(
-                'font-display text-2xl font-bold tabular-nums leading-none tracking-tight',
+                /* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ 'font-display text-2xl font-bold tabular-nums leading-none tracking-tight',
                 vencendo30d > 0 && 'text-warning/80',
               )}>
                 <AnimatedNumber value={vencendo30d} />
@@ -137,7 +137,7 @@ export function ContratosPulseStrip({
         </div>
 
         {/* Barra de proporcao */}
-        <div className="mt-2.5 flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full transition-all duration-700 bg-warning/25"
@@ -151,14 +151,14 @@ export function ContratosPulseStrip({
       </GlassPanel>
 
       {/* ── Novos/Mes ──────────────────────────────────────────────── */}
-      <GlassPanel depth={1} className="px-4 py-3.5">
-        <div className="flex items-start justify-between gap-2">
+      <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
             <p className="text-meta-label text-muted-foreground/50 truncate">
               Novos/Mes
             </p>
-            <div className="flex items-baseline gap-1.5 mt-1">
-              <p className="font-display text-2xl font-bold tabular-nums leading-none tracking-tight">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+              <p className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ "font-display text-2xl font-bold tabular-nums leading-none tracking-tight")}>
                 <AnimatedNumber value={novosMes} />
               </p>
             </div>
@@ -169,7 +169,7 @@ export function ContratosPulseStrip({
         </div>
 
         {/* Barra de proporcao */}
-        <div className="mt-2.5 flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full transition-all duration-700 bg-success/25"

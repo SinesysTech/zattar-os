@@ -69,23 +69,23 @@ export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
       )}
       onClick={disabled ? undefined : onClick}
     >
-      <CardHeader className="p-3 pb-1">
-        <div className="flex items-center gap-1.5 flex-wrap">
+      <CardHeader className={cn(/* design-system-escape: p-3 → usar <Inset>; pb-1 padding direcional sem Inset equiv. */ "p-3 pb-1")}>
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 flex-wrap")}>
           {/* Label badge */}
-          <AppBadge variant="outline" className="text-[10px] px-1 py-0 capitalize">
+          <AppBadge variant="outline" className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1 py-0 capitalize")}>
             {tarefa.label}
           </AppBadge>
 
           {/* Virtual event indicator */}
           {tarefa.isVirtual && (
-            <AppBadge variant="secondary" className="text-[10px] px-1 py-0">
+            <AppBadge variant="secondary" className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1 py-0")}>
               Evento
             </AppBadge>
           )}
 
           {/* Overdue indicator */}
           {tarefa.prazoVencido && (
-            <AppBadge variant="destructive" className="text-[10px] px-1 py-0">
+            <AppBadge variant="destructive" className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1 py-0")}>
               Vencido
             </AppBadge>
           )}
@@ -96,22 +96,22 @@ export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
           )}
         </div>
 
-        <CardTitle className="text-sm font-medium leading-tight line-clamp-2">
+        <CardTitle className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-sm font-medium leading-tight line-clamp-2")}>
           {tarefa.title}
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="p-3 pt-0 space-y-2">
+      <CardContent className={cn(/* design-system-escape: p-3 → usar <Inset>; pt-0 padding direcional sem Inset equiv.; space-y-2 → migrar para <Stack gap="tight"> */ "p-3 pt-0 space-y-2")}>
         {/* Description */}
         {tarefa.description && (
-          <p className="text-xs text-muted-foreground line-clamp-2">
+          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground line-clamp-2")}>
             {tarefa.description}
           </p>
         )}
 
         {/* Assignees */}
         {tarefa.assignees.length > 0 && (
-          <div className="flex -space-x-2 overflow-hidden">
+          <div className={cn(/* design-system-escape: -space-x-2 sem equivalente DS */ "flex -space-x-2 overflow-hidden")}>
             {tarefa.assignees.slice(0, 3).map((assignee, index) => (
               <Tooltip key={index}>
                 <TooltipTrigger asChild>
@@ -139,11 +139,11 @@ export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
         <Separator />
 
         {/* Footer metadata */}
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <div className="flex items-center gap-2">
+        <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex items-center justify-between text-xs text-muted-foreground")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             {/* Due date */}
             {dueDate && (
-              <span className="flex items-center gap-1">
+              <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
                 <Calendar className="h-3 w-3" />
                 {dueDate}
               </span>
@@ -151,19 +151,19 @@ export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
 
             {/* Responsible (for virtual events) */}
             {tarefa.responsavelNome && (
-              <span className="flex items-center gap-1">
+              <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
                 <User className="h-3 w-3" />
                 {tarefa.responsavelNome}
               </span>
             )}
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             {/* Subtasks */}
             {totalSubtasks > 0 && (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <span className="flex items-center gap-1">
+                  <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
                     <CheckSquare className="h-3 w-3" />
                     {completedSubtasks}/{totalSubtasks}
                   </span>
@@ -176,7 +176,7 @@ export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
             {tarefa.comments.length > 0 && (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <span className="flex items-center gap-1">
+                  <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
                     <MessageSquare className="h-3 w-3" />
                     {tarefa.comments.length}
                   </span>
@@ -189,7 +189,7 @@ export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
             {tarefa.files.length > 0 && (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <span className="flex items-center gap-1">
+                  <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
                     <Paperclip className="h-3 w-3" />
                     {tarefa.files.length}
                   </span>
@@ -212,7 +212,7 @@ export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
 
         {/* Priority badge */}
         <div className="flex items-center justify-between">
-          <AppBadge variant="outline" className="text-[10px] px-1.5 py-0.5">
+          <AppBadge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0.5")}>
             {PRIORITY_LABELS[tarefa.priority]}
           </AppBadge>
         </div>

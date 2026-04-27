@@ -201,12 +201,12 @@ export function PericiasSemanaView({
   const weekLabel = `${format(weekStart, "d 'de' MMM", { locale: ptBR })} — ${format(friday, "d 'de' MMM", { locale: ptBR })}`;
 
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       {/* Week Navigator */}
-      <div className="flex items-center gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
         <button
           onClick={handlePrevWeek}
-          className="p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer"
+          className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer")}
           aria-label="Semana anterior"
         >
           <ChevronLeft className="size-4" />
@@ -214,7 +214,7 @@ export function PericiasSemanaView({
         <button
           onClick={handleToday}
           className={cn(
-            'px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer',
+            /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer',
             isCurrentWeek
               ? 'bg-primary/12 text-primary'
               : 'bg-border/8 text-muted-foreground/50 hover:bg-border/15',
@@ -224,16 +224,16 @@ export function PericiasSemanaView({
         </button>
         <button
           onClick={handleNextWeek}
-          className="p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer"
+          className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer")}
           aria-label="Próxima semana"
         >
           <ChevronRight className="size-4" />
         </button>
-        <span className="text-sm font-medium capitalize ml-1">{weekLabel}</span>
+        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium capitalize ml-1")}>{weekLabel}</span>
       </div>
 
       {/* Week Grid — 5 colunas (seg-sex) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-start">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-start")}>
         {weekDays.map((day) => {
           const key = format(day, 'yyyy-MM-dd');
           const dayPericias = periciasByDay.get(key) ?? [];
@@ -243,14 +243,14 @@ export function PericiasSemanaView({
             <GlassPanel
               key={key}
               depth={today ? 2 : 1}
-              className="p-4 min-h-40"
+              className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 min-h-40")}
             >
               {/* Day header */}
               <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                   <span
                     className={cn(
-                      'text-[10px] font-semibold uppercase tracking-wider',
+                      /* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ 'text-[10px] font-semibold uppercase tracking-wider',
                       today ? 'text-primary' : 'text-muted-foreground/55',
                     )}
                   >
@@ -258,7 +258,7 @@ export function PericiasSemanaView({
                   </span>
                   <span
                     className={cn(
-                      'text-sm font-bold tabular-nums',
+                      /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ 'text-sm font-bold tabular-nums',
                       today
                         ? 'bg-primary text-primary-foreground size-6 rounded-full flex items-center justify-center text-[11px]'
                         : 'text-foreground/80',
@@ -268,7 +268,7 @@ export function PericiasSemanaView({
                   </span>
                 </div>
                 {dayPericias.length > 0 && (
-                  <span className="text-[10px] tabular-nums text-muted-foreground/45 font-medium">
+                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] tabular-nums text-muted-foreground/45 font-medium")}>
                     {dayPericias.length}
                   </span>
                 )}
@@ -276,11 +276,11 @@ export function PericiasSemanaView({
 
               {/* Pericias */}
               {dayPericias.length === 0 ? (
-                <div className="flex items-center justify-center py-6">
-                  <span className="text-xs text-muted-foreground/30">—</span>
+                <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex items-center justify-center py-6")}>
+                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/30")}>—</span>
                 </div>
               ) : (
-                <div className="space-y-2">
+                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                   {dayPericias.map((pericia) => (
                     <WeekDayCard
                       key={pericia.id}
@@ -339,7 +339,7 @@ function WeekDayCard({
         }
       }}
       className={cn(
-        'w-full text-left p-3 rounded-xl border border-l-[3px] transition-all duration-200 cursor-pointer',
+        /* design-system-escape: p-3 → usar <Inset> */ 'w-full text-left p-3 rounded-xl border border-l-[3px] transition-all duration-200 cursor-pointer',
         'bg-card border-border/40 hover:border-border/60 hover:shadow-sm hover:scale-[1.01]',
         'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
         URGENCY_BORDER[urgency],
@@ -347,20 +347,20 @@ function WeekDayCard({
       )}
     >
       {/* Row 1: prazo + urgency indicator */}
-      <div className="flex items-center justify-between gap-1">
-        <span className="text-xs tabular-nums font-semibold text-foreground/80">
+      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center justify-between gap-1")}>
+        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs tabular-nums font-semibold text-foreground/80")}>
           {prazoLabel ?? (
             <span className="italic text-muted-foreground/40">Sem prazo</span>
           )}
         </span>
-        <div className="flex items-center gap-1.5">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
           {!finalizada && urgency !== 'ok' && (
             <span className={cn('size-2 rounded-full', URGENCY_DOT[urgency])} />
           )}
           {countdownLabel && (
             <span
               className={cn(
-                'text-[9px] font-bold tabular-nums px-1.5 py-0.5 rounded-full',
+                /* design-system-escape: font-bold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'text-[9px] font-bold tabular-nums px-1.5 py-0.5 rounded-full',
                 URGENCY_BADGE[urgency],
               )}
             >
@@ -371,29 +371,29 @@ function WeekDayCard({
       </div>
 
       {/* Row 2: Situação badge + flags */}
-      <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
+      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mt-1.5 flex-wrap")}>
         <span
           className={cn(
-            'inline-flex items-center rounded px-1.5 py-0.5 text-[9px] font-semibold border',
+            /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center rounded px-1.5 py-0.5 text-[9px] font-semibold border',
             situacaoTone,
           )}
         >
           {situacaoLabel}
         </span>
         {pericia.segredoJustica && (
-          <span className="inline-flex items-center gap-1 bg-warning/10 border border-warning/20 text-warning rounded px-1.5 py-0.5 text-[9px] font-semibold">
+          <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-warning/10 border border-warning/20 text-warning rounded px-1.5 py-0.5 text-[9px] font-semibold")}>
             <Lock className="size-2.5" />
             Sigilo
           </span>
         )}
         {pericia.juizoDigital && (
-          <span className="inline-flex items-center gap-1 bg-info/10 border border-info/20 text-info rounded px-1.5 py-0.5 text-[9px] font-semibold">
+          <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-info/10 border border-info/20 text-info rounded px-1.5 py-0.5 text-[9px] font-semibold")}>
             <Monitor className="size-2.5" />
             Digital
           </span>
         )}
         {pericia.prioridadeProcessual && (
-          <span className="inline-flex items-center gap-1 bg-destructive/10 border border-destructive/20 text-destructive rounded px-1.5 py-0.5 text-[9px] font-semibold">
+          <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-destructive/10 border border-destructive/20 text-destructive rounded px-1.5 py-0.5 text-[9px] font-semibold")}>
             <AlertTriangle className="size-2.5" />
             Prioridade
           </span>
@@ -404,7 +404,7 @@ function WeekDayCard({
       {especialidade && (
         <p
           className={cn(
-            'text-xs font-medium text-foreground truncate mt-1.5',
+            /* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ 'text-xs font-medium text-foreground truncate mt-1.5',
             finalizada && 'line-through',
           )}
         >
@@ -422,9 +422,9 @@ function WeekDayCard({
       )}
 
       {/* Row 5: TRT + Grau + Processo */}
-      <div className="flex items-center gap-1.5 mt-1 min-w-0">
+      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mt-1 min-w-0")}>
         {pericia.trt && (
-          <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary/70 shrink-0">
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary/70 shrink-0")}>
             {pericia.trt}
           </span>
         )}

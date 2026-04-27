@@ -8,6 +8,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -86,14 +87,14 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="space-y-2">
-      <header className="flex items-center gap-2">
+    <section className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <header className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
         {icon}
-        <h3 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+        <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70")}>
           {title}
         </h3>
       </header>
-      <div className="pl-5.5">{children}</div>
+      <div className={cn(/* design-system-escape: pl-5.5 padding direcional sem Inset equiv. */ "pl-5.5")}>{children}</div>
     </section>
   );
 }
@@ -106,9 +107,9 @@ function InfoRow({
   children: React.ReactNode;
 }) {
   return (
-    <div className="grid grid-cols-[120px_1fr] gap-3 py-1.5 text-sm">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "grid grid-cols-[120px_1fr] gap-3 py-1.5 text-sm")}>
       <dt className="text-[12px] text-muted-foreground/60">{label}</dt>
-      <dd className="font-medium text-foreground/90">{children}</dd>
+      <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/90")}>{children}</dd>
     </div>
   );
 }
@@ -121,11 +122,11 @@ function MetaItem({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col gap-1 min-w-0">
-      <span className="text-[10px] uppercase tracking-wider text-muted-foreground/55">
+    <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1 min-w-0")}>
+      <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/55")}>
         {label}
       </span>
-      <div className="flex items-center gap-1.5 text-sm">{children}</div>
+      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-1.5 text-sm")}>{children}</div>
     </div>
   );
 }
@@ -138,9 +139,9 @@ function PericiaListItem({ pericia }: { pericia: Pericia }) {
   const { logs, isLoading: loadingLogs } = useAuditLogs('pericias', pericia.id);
 
   return (
-    <GlassPanel depth={1} className="p-4 mb-3">
+    <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 mb-3")}>
       <Tabs defaultValue="detalhes" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 mb-4 bg-muted/40 p-1">
+        <TabsList className={cn(/* design-system-escape: p-1 → usar <Inset> */ "grid w-full grid-cols-2 mb-4 bg-muted/40 p-1")}>
           <TabsTrigger value="detalhes" className="rounded-md">
             Detalhes
           </TabsTrigger>
@@ -149,10 +150,10 @@ function PericiaListItem({ pericia }: { pericia: Pericia }) {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="detalhes" className="space-y-4 mt-0">
-          <div className="flex items-start justify-between gap-3">
+        <TabsContent value="detalhes" className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4 mt-0")}>
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
             <div className="min-w-0">
-              <div className="text-sm font-semibold tabular-nums tracking-tight text-foreground truncate">
+              <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-sm font-semibold tabular-nums tracking-tight text-foreground truncate")}>
                 {pericia.numeroProcesso}
               </div>
               <div className="text-[11px] text-muted-foreground/60 mt-0.5">
@@ -174,7 +175,7 @@ function PericiaListItem({ pericia }: { pericia: Pericia }) {
               <div className="text-[11px] text-muted-foreground/60 mb-0.5">
                 Prazo Entrega
               </div>
-              <div className="font-medium text-foreground/90">
+              <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/90")}>
                 {formatarData(pericia.prazoEntrega)}
               </div>
             </div>
@@ -182,7 +183,7 @@ function PericiaListItem({ pericia }: { pericia: Pericia }) {
               <div className="text-[11px] text-muted-foreground/60 mb-0.5">
                 Laudo Juntado
               </div>
-              <div className="font-medium text-foreground/90">
+              <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/90")}>
                 {pericia.laudoJuntado ? 'Sim' : 'Não'}
               </div>
             </div>
@@ -190,7 +191,7 @@ function PericiaListItem({ pericia }: { pericia: Pericia }) {
               <div className="text-[11px] text-muted-foreground/60 mb-0.5">
                 Especialidade
               </div>
-              <div className="font-medium text-foreground/90">
+              <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/90")}>
                 {pericia.especialidade?.descricao || '-'}
               </div>
             </div>
@@ -198,18 +199,18 @@ function PericiaListItem({ pericia }: { pericia: Pericia }) {
               <div className="text-[11px] text-muted-foreground/60 mb-0.5">
                 Perito
               </div>
-              <div className="font-medium text-foreground/90">
+              <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/90")}>
                 {pericia.perito?.nome || '-'}
               </div>
             </div>
           </div>
 
           {pericia.observacoes && (
-            <GlassPanel depth={1} className="p-3 bg-muted/20">
-              <div className="font-semibold text-foreground/70 mb-1 text-[11px] uppercase tracking-wider">
+            <GlassPanel depth={1} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3 bg-muted/20")}>
+              <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "font-semibold text-foreground/70 mb-1 text-[11px] uppercase tracking-wider")}>
                 Observações
               </div>
-              <div className="whitespace-pre-wrap text-foreground/80 text-xs leading-relaxed">
+              <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; leading-relaxed sem token DS */ "whitespace-pre-wrap text-foreground/80 text-xs leading-relaxed")}>
                 {pericia.observacoes}
               </div>
             </GlassPanel>
@@ -240,19 +241,19 @@ function PericiaSingleDetails({ pericia }: { pericia: Pericia }) {
     ?.avatarUrl;
 
   return (
-    <div className="space-y-6 pb-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose">; pb-6 padding direcional sem Inset equiv. */ "space-y-6 pb-6")}>
       {/* Meta Grid */}
-      <GlassPanel depth={1} className="p-4 bg-muted/20">
-        <div className="grid grid-cols-3 gap-3">
+      <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 bg-muted/20")}>
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-3 gap-3")}>
           <MetaItem label="Prazo">
             <CalendarIcon className="size-3.5 text-muted-foreground/50" />
-            <span className="tabular-nums font-medium text-foreground/90">
+            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "tabular-nums font-medium text-foreground/90")}>
               {formatarData(pericia.prazoEntrega)}
             </span>
           </MetaItem>
           <MetaItem label="Laudo Juntado">
             <FileCheck2 className="size-3.5 text-muted-foreground/50" />
-            <span className="font-medium text-foreground/90">
+            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/90")}>
               {pericia.laudoJuntado ? 'Sim' : 'Não'}
             </span>
           </MetaItem>
@@ -263,7 +264,7 @@ function PericiaSingleDetails({ pericia }: { pericia: Pericia }) {
                 {getInitials(responsavelNome)}
               </AvatarFallback>
             </Avatar>
-            <span className="truncate font-medium text-foreground/90">
+            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "truncate font-medium text-foreground/90")}>
               {responsavelNome}
             </span>
           </MetaItem>
@@ -284,8 +285,8 @@ function PericiaSingleDetails({ pericia }: { pericia: Pericia }) {
         icon={<Building2 className="size-3.5 text-muted-foreground/50" />}
         title="Processo"
       >
-        <div className="space-y-0.5">
-          <span className="block text-sm font-semibold tabular-nums tracking-tight text-foreground">
+        <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
+          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "block text-sm font-semibold tabular-nums tracking-tight text-foreground")}>
             {pericia.numeroProcesso}
           </span>
           <span className="block text-[11px] text-muted-foreground/60 mt-1">
@@ -299,7 +300,7 @@ function PericiaSingleDetails({ pericia }: { pericia: Pericia }) {
           icon={<ListTodo className="size-3.5 text-muted-foreground/50" />}
           title="Observações"
         >
-          <p className="text-sm text-foreground/80 whitespace-pre-wrap leading-relaxed">
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-relaxed sem token DS */ "text-sm text-foreground/80 whitespace-pre-wrap leading-relaxed")}>
             {pericia.observacoes}
           </p>
         </Section>
@@ -337,12 +338,12 @@ export function PericiaDetalhesDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="glass-dialog max-w-3xl max-h-[90vh] flex flex-col">
         <DialogHeader>
-          <div className="flex items-start gap-3">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3")}>
             <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
               <ClipboardList className="size-4.5 text-primary" />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 flex-wrap">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
                 <DialogTitle>
                   {titulo ||
                     (exibirLista ? 'Perícias do Dia' : 'Detalhes da Perícia')}
@@ -371,9 +372,9 @@ export function PericiaDetalhesDialog({
         </DialogHeader>
 
         {/* Scrollable content */}
-        <div className="flex-1 overflow-y-auto px-1 pt-2">
+        <div className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv. */ "flex-1 overflow-y-auto px-1 pt-2")}>
           {exibirLista ? (
-            <div className="space-y-1">
+            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
               {pericias!.map((p) => (
                 <PericiaListItem key={p.id} pericia={p} />
               ))}

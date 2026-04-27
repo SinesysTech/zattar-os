@@ -67,11 +67,11 @@ function buildTimelineItems(logs: SyncLogEntry[]): TimelineItem[] {
           : 'Em andamento';
 
     const badge = (
-      <div className="flex items-center gap-1">
-        <span className="text-[9px] px-1.5 py-0.5 rounded bg-muted/40 text-muted-foreground border border-border/30 font-medium">
+      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+        <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "text-[9px] px-1.5 py-0.5 rounded bg-muted/40 text-muted-foreground border border-border/30 font-medium")}>
           {tipoLabel}
         </span>
-        <span className={cn('text-[9px] px-1.5 py-0.5 rounded font-medium', statusColor)}>
+        <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'text-[9px] px-1.5 py-0.5 rounded font-medium', statusColor)}>
           {statusLabel}
         </span>
       </div>
@@ -105,10 +105,10 @@ function SyncResultGrid({ result }: { result: MockSyncResult }) {
   ] as const;
 
   return (
-    <div className="grid grid-cols-5 gap-1.5 rounded-lg bg-muted/20 border border-border/30 p-3">
+    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; p-3 → usar <Inset> */ "grid grid-cols-5 gap-1.5 rounded-lg bg-muted/20 border border-border/30 p-3")}>
       {items.map(({ label, value, color }) => (
-        <div key={label} className="flex flex-col items-center gap-0.5">
-          <span className={cn('text-base font-semibold tabular-nums', color)}>
+        <div key={label} className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-center gap-0.5")}>
+          <span className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ 'text-base font-semibold tabular-nums', color)}>
             {value}
           </span>
           <span className="text-[9px] text-muted-foreground">{label}</span>
@@ -157,12 +157,12 @@ export function GazetteSyncDialog({ trigger }: GazetteSyncDialogProps) {
         </DialogHeader>
 
         {/* Section toggle */}
-        <div className="flex items-center p-0.5 bg-muted/30 rounded-md w-fit">
+        <div className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "flex items-center p-0.5 bg-muted/30 rounded-md w-fit")}>
           <button
             type="button"
             onClick={() => setSection('sincronizar')}
             className={cn(
-              'px-3 py-1.5 rounded-sm text-xs font-medium transition-all',
+              /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ 'px-3 py-1.5 rounded-sm text-xs font-medium transition-all',
               section === 'sincronizar'
                 ? 'bg-background shadow-sm text-foreground'
                 : 'text-muted-foreground hover:text-foreground',
@@ -174,7 +174,7 @@ export function GazetteSyncDialog({ trigger }: GazetteSyncDialogProps) {
             type="button"
             onClick={() => setSection('historico')}
             className={cn(
-              'px-3 py-1.5 rounded-sm text-xs font-medium transition-all',
+              /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ 'px-3 py-1.5 rounded-sm text-xs font-medium transition-all',
               section === 'historico'
                 ? 'bg-background shadow-sm text-foreground'
                 : 'text-muted-foreground hover:text-foreground',
@@ -186,8 +186,8 @@ export function GazetteSyncDialog({ trigger }: GazetteSyncDialogProps) {
 
         {/* ── Section: Sincronizar ── */}
         {section === 'sincronizar' && (
-          <div className="flex flex-col gap-4 pt-1">
-            <Text variant="caption" className="text-muted-foreground leading-relaxed">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pt-1 padding direcional sem Inset equiv. */ "flex flex-col gap-4 pt-1")}>
+            <Text variant="caption" className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-muted-foreground leading-relaxed")}>
               Dispare uma sincronização manual para buscar novas publicações
               do Comunicação CNJ.
             </Text>
@@ -199,12 +199,12 @@ export function GazetteSyncDialog({ trigger }: GazetteSyncDialogProps) {
               className="w-full"
             >
               {isSyncing ? (
-                <span className="flex items-center gap-2">
+                <span className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                   <LoadingSpinner />
                   Sincronizando...
                 </span>
               ) : result ? (
-                <span className="flex items-center gap-2">
+                <span className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                   <CheckCircle2 className="size-4 text-success" />
                   Sincronizar novamente
                 </span>
@@ -215,8 +215,8 @@ export function GazetteSyncDialog({ trigger }: GazetteSyncDialogProps) {
 
             {/* Results grid */}
             {result && !isSyncing && (
-              <div className="flex flex-col gap-2">
-                <p className="text-xs text-muted-foreground font-medium">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs text-muted-foreground font-medium")}>
                   Resultado da sincronização
                 </p>
                 <SyncResultGrid result={result} />
@@ -227,13 +227,13 @@ export function GazetteSyncDialog({ trigger }: GazetteSyncDialogProps) {
 
         {/* ── Section: Histórico ── */}
         {section === 'historico' && (
-          <div className="flex flex-col gap-3 pt-1">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS; pt-1 padding direcional sem Inset equiv. */ "flex flex-col gap-3 pt-1")}>
             {syncLogs.length === 0 ? (
-              <p className="text-sm text-muted-foreground py-4 text-center">
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; py-4 padding direcional sem Inset equiv. */ "text-sm text-muted-foreground py-4 text-center")}>
                 Nenhuma sincronização registrada
               </p>
             ) : (
-              <div className="max-h-80 overflow-y-auto pr-1">
+              <div className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "max-h-80 overflow-y-auto pr-1")}>
                 <GazetteTimeline items={timelineItems} />
               </div>
             )}

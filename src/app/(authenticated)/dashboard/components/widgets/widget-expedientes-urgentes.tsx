@@ -34,7 +34,7 @@ export function WidgetExpedientesUrgentes({ data, loading, error }: WidgetExpedi
     return (
       <GlassPanel>
         <CardHeader><Skeleton className="h-5 w-44" /></CardHeader>
-        <CardContent className="space-y-3">
+        <CardContent className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
           {[1, 2, 3].map((i) => <Skeleton key={i} className="h-20 rounded-lg" />)}
         </CardContent>
       </GlassPanel>
@@ -45,7 +45,7 @@ export function WidgetExpedientesUrgentes({ data, loading, error }: WidgetExpedi
     return (
       <GlassPanel>
         <CardHeader><CardTitle>Expedientes Urgentes</CardTitle></CardHeader>
-        <CardContent><p className="text-sm text-destructive">{error}</p></CardContent>
+        <CardContent><p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{error}</p></CardContent>
       </GlassPanel>
     );
   }
@@ -62,12 +62,12 @@ export function WidgetExpedientesUrgentes({ data, loading, error }: WidgetExpedi
       </CardHeader>
       <CardContent>
         {data.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-8 text-center">
+          <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-8 text-center")}>
             <AlertTriangle className="h-10 w-10 text-muted-foreground/55 mb-3" />
-            <p className="text-sm text-muted-foreground">Nenhum expediente urgente</p>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Nenhum expediente urgente</p>
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             {data.slice(0, 5).map((exp) => {
               const urgency = getUrgency(exp.dias_restantes);
               const partes = formatarPartes(exp.nome_parte_autora, exp.nome_parte_re);
@@ -77,27 +77,27 @@ export function WidgetExpedientesUrgentes({ data, loading, error }: WidgetExpedi
                 <div
                   key={exp.id}
                   className={cn(
-                    'flex gap-3 rounded-lg border border-l-[3px] p-3 transition-colors hover:bg-muted/50',
+                    /* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ 'flex gap-3 rounded-lg border border-l-[3px] p-3 transition-colors hover:bg-muted/50',
                     urgency.border,
                     urgency.bg,
                   )}
                 >
-                  <div className={cn('flex flex-col items-center justify-center rounded-lg px-2 py-1.5 text-center min-w-14', urgency.color)}>
+                  <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ 'flex flex-col items-center justify-center rounded-lg px-2 py-1.5 text-center min-w-14', urgency.color)}>
                     <Clock className="h-3 w-3 mb-0.5" />
-                    <span className="text-[10px] font-bold leading-tight whitespace-nowrap">{urgency.label}</span>
+                    <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[10px] font-bold leading-tight whitespace-nowrap")}>{urgency.label}</span>
                   </div>
 
-                  <div className="flex-1 min-w-0 space-y-1">
-                    <p className="text-sm font-medium leading-tight">{exp.tipo_expediente}</p>
+                  <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "flex-1 min-w-0 space-y-1")}>
+                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-sm font-medium leading-tight")}>{exp.tipo_expediente}</p>
                     {partes && (
-                      <p className="text-xs text-foreground/70 leading-tight">{partes}</p>
+                      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; leading-tight sem token DS */ "text-xs text-foreground/70 leading-tight")}>{partes}</p>
                     )}
                     {contextoProcesso && (
-                      <p className="text-xs text-muted-foreground leading-tight">{contextoProcesso}</p>
+                      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; leading-tight sem token DS */ "text-xs text-muted-foreground leading-tight")}>{contextoProcesso}</p>
                     )}
-                    <p className="text-xs text-muted-foreground font-mono break-all leading-relaxed">{exp.numero_processo}</p>
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
-                      <span className="inline-flex items-center gap-1">
+                    <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; leading-relaxed sem token DS */ "text-xs text-muted-foreground font-mono break-all leading-relaxed")}>{exp.numero_processo}</p>
+                    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground")}>
+                      <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "inline-flex items-center gap-1")}>
                         <Calendar className="h-3 w-3" />
                         Prazo: {formatDate(exp.prazo_fatal)}
                       </span>

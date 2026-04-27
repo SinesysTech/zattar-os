@@ -21,20 +21,20 @@ export function NavDesktop({ isCollapsed }: NavDesktopProps) {
   const currentAccount = accounts.find((a) => a.id === selectedAccountId) ?? accounts[0] ?? null;
 
   const accountSwitcherPopover = (
-    <PopoverContent className="w-72 p-0" align="start">
+    <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-72 p-0")} align="start">
       {accounts.length > 0 && (
-        <div className="border-b p-1">
+        <div className={cn(/* design-system-escape: p-1 → usar <Inset> */ "border-b p-1")}>
           {accounts.map((acc) => (
             <button
               key={acc.id}
-              className="flex w-full items-center gap-3 rounded-md px-2 py-2 text-left transition-colors hover:bg-muted"
+              className={cn(/* design-system-escape: gap-3 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex w-full items-center gap-3 rounded-md px-2 py-2 text-left transition-colors hover:bg-muted")}
               onClick={() => setSelectedAccountId(acc.id)}>
               <div className="bg-primary/10 text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
                 <MailIcon className="h-4 w-4" />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium">{acc.nome_conta || acc.email}</p>
-                <p className="text-muted-foreground truncate text-xs">{acc.email}</p>
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "truncate text-sm font-medium")}>{acc.nome_conta || acc.email}</p>
+                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground truncate text-xs")}>{acc.email}</p>
               </div>
               {acc.id === selectedAccountId && (
                 <Check className="text-primary h-4 w-4 shrink-0" />
@@ -43,14 +43,14 @@ export function NavDesktop({ isCollapsed }: NavDesktopProps) {
           ))}
         </div>
       )}
-      <div className="p-1">
-        <Button variant="ghost" size="sm" className="w-full justify-start gap-2" asChild>
+      <div className={cn(/* design-system-escape: p-1 → usar <Inset> */ "p-1")}>
+        <Button variant="ghost" size="sm" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "w-full justify-start gap-2")} asChild>
           <Link href="/app/mail/configurar">
             <Settings className="h-4 w-4" />
             Configurar conta
           </Link>
         </Button>
-        <Button variant="ghost" size="sm" className="text-muted-foreground w-full justify-start gap-2" asChild>
+        <Button variant="ghost" size="sm" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "text-muted-foreground w-full justify-start gap-2")} asChild>
           <Link href="/app/mail/configurar">
             <Plus className="h-4 w-4" />
             Adicionar conta
@@ -65,14 +65,14 @@ export function NavDesktop({ isCollapsed }: NavDesktopProps) {
       <div
         className={cn(
           "flex h-13 shrink-0 items-center",
-          isCollapsed ? "justify-center" : "px-4"
+          isCollapsed ? "justify-center" : /* design-system-escape: px-4 padding direcional sem Inset equiv. */ "px-4"
         )}>
         <Popover>
           {isCollapsed ? (
             <Tooltip>
               <TooltipTrigger asChild>
                 <PopoverTrigger asChild>
-                  <button className="flex items-center justify-center rounded-md p-1.5 transition-colors hover:bg-muted">
+                  <button className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "flex items-center justify-center rounded-md p-1.5 transition-colors hover:bg-muted")}>
                     <MailIcon className="h-4 w-4" />
                   </button>
                 </PopoverTrigger>
@@ -83,7 +83,7 @@ export function NavDesktop({ isCollapsed }: NavDesktopProps) {
             </Tooltip>
           ) : (
             <PopoverTrigger asChild>
-              <button className="flex items-center gap-1.5 rounded-md px-2 py-1 text-sm font-semibold transition-colors hover:bg-muted">
+              <button className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "flex items-center gap-1.5 rounded-md px-2 py-1 text-sm font-semibold transition-colors hover:bg-muted")}>
                 <span className="truncate">{currentAccount?.nome_conta || currentAccount?.email || "E-mail"}</span>
                 <ChevronDown className="text-muted-foreground h-3.5 w-3.5 shrink-0" />
               </button>
@@ -95,7 +95,7 @@ export function NavDesktop({ isCollapsed }: NavDesktopProps) {
 
       <Separator />
 
-      <div className={cn("shrink-0 px-2 py-2", isCollapsed && "px-1")}>
+      <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "shrink-0 px-2 py-2", isCollapsed && /* design-system-escape: px-1 padding direcional sem Inset equiv. */ "px-1")}>
         {isCollapsed ? (
           <Tooltip>
             <TooltipTrigger asChild>
@@ -107,7 +107,7 @@ export function NavDesktop({ isCollapsed }: NavDesktopProps) {
             <TooltipContent side="right">Novo E-mail</TooltipContent>
           </Tooltip>
         ) : (
-          <Button variant="default" className="w-full gap-2" onClick={() => setIsComposing(true)}>
+          <Button variant="default" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "w-full gap-2")} onClick={() => setIsComposing(true)}>
             <Pencil className="h-4 w-4" />
             Novo E-mail
           </Button>

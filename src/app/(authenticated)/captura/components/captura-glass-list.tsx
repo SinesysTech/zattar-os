@@ -191,7 +191,7 @@ function GlassRow({
       onClick={onView}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onView(); } }}
       className={cn(
-        'w-full text-left rounded-2xl border p-4 cursor-pointer glass-widget bg-transparent',
+        /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'w-full text-left rounded-2xl border p-4 cursor-pointer glass-widget bg-transparent',
         'transition-all duration-200 ease-out',
         'hover:scale-[1.0025] hover:-translate-y-px hover:shadow-lg',
         captura.status === 'failed'
@@ -201,19 +201,19 @@ function GlassRow({
             : 'border-border/20 hover:border-border/40',
       )}
     >
-      <div className="grid grid-cols-[90px_1fr_200px_120px_80px_56px] gap-3 items-center">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-[90px_1fr_200px_120px_80px_56px] gap-3 items-center")}>
         {/* Data + hora (ancoragem temporal) */}
-        <div className="flex flex-col leading-tight">
-          <span className="text-xs font-medium text-foreground/80 tabular-nums">{data}</span>
+        <div className={cn(/* design-system-escape: leading-tight sem token DS */ "flex flex-col leading-tight")}>
+          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-foreground/80 tabular-nums")}>{data}</span>
           <span className="text-[11px] text-muted-foreground/60 tabular-nums">{hora}</span>
         </div>
 
         {/* Ícone + tipo */}
-        <div className="flex items-center gap-3 min-w-0">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 min-w-0")}>
           <div className={cn('w-9 h-9 rounded-[0.625rem] flex items-center justify-center shrink-0', getTipoIconBg(captura.tipo_captura))}>
             <TipoIcon className={cn('w-4 h-4', getTipoIconColor(captura.tipo_captura))} />
           </div>
-          <span className="text-sm font-semibold truncate min-w-0">
+          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold truncate min-w-0")}>
             {formatarTipo(captura.tipo_captura)}
           </span>
         </div>
@@ -235,13 +235,13 @@ function GlassRow({
 
         {/* Duração */}
         <div className="text-right">
-          <span className="text-xs text-muted-foreground/60 tabular-nums">
+          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60 tabular-nums")}>
             {calcularDuracao(captura)}
           </span>
         </div>
 
         {/* Actions */}
-        <div className="flex items-center justify-end gap-1">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center justify-end gap-1")}>
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); onView(); }}
@@ -272,15 +272,15 @@ function GlassRow({
 
 function ListSkeleton() {
   return (
-    <div className="flex flex-col gap-2">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
       {Array.from({ length: 5 }, (_, i) => (
-        <GlassPanel key={i} depth={1} className="p-4">
-          <div className="grid grid-cols-[90px_1fr_200px_120px_80px_56px] gap-3 items-center">
-            <div className="flex flex-col gap-1">
+        <GlassPanel key={i} depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-[90px_1fr_200px_120px_80px_56px] gap-3 items-center")}>
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
               <Skeleton className="h-3 w-10" />
               <Skeleton className="h-3 w-10" />
             </div>
-            <div className="flex items-center gap-3">
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
               <Skeleton className="w-9 h-9 rounded-[0.625rem]" />
               <Skeleton className="h-4 w-40" />
             </div>
@@ -316,17 +316,17 @@ function PaginationBar({
   const fim = Math.min(pagina * paginacao.limite, paginacao.total);
 
   return (
-    <div className="flex items-center justify-between mt-4 px-1">
-      <span className="text-xs text-muted-foreground/60">
+    <div className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv. */ "flex items-center justify-between mt-4 px-1")}>
+      <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60")}>
         {paginacao.total > 0 ? `${inicio}–${fim} de ${paginacao.total}` : '0 resultados'}
       </span>
-      <div className="flex items-center gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
         <button
           type="button"
           onClick={onPrev}
           disabled={pagina <= 1}
           className={cn(
-            'inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium',
+            /* design-system-escape: gap-1 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ 'inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium',
             'border border-foreground/8 transition-all duration-150',
             'disabled:opacity-30 disabled:cursor-not-allowed',
             'hover:bg-foreground/6 hover:border-foreground/14',
@@ -340,7 +340,7 @@ function PaginationBar({
           onClick={onNext}
           disabled={pagina >= paginacao.totalPaginas}
           className={cn(
-            'inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium',
+            /* design-system-escape: gap-1 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ 'inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium',
             'border border-foreground/8 transition-all duration-150',
             'disabled:opacity-30 disabled:cursor-not-allowed',
             'hover:bg-foreground/6 hover:border-foreground/14',
@@ -441,7 +441,7 @@ export function CapturaGlassList({
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
         {filtered.map((captura) => (
           <GlassRow
             key={captura.id}

@@ -124,24 +124,24 @@ const MonthGrid = React.memo(function MonthGrid({
   return (
     <div>
       <div className="flex items-center justify-between mb-1.5">
-        <span className="text-[11px] font-semibold capitalize text-foreground">
+        <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[11px] font-semibold capitalize text-foreground")}>
           {monthName}
         </span>
         <span className="text-[9px] tabular-nums text-muted-foreground/50">
           {monthTotal}
         </span>
       </div>
-      <div className="grid grid-cols-7 gap-0.5 mb-0.5">
+      <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "grid grid-cols-7 gap-0.5 mb-0.5")}>
         {WEEKDAY_LABELS.map((d, i) => (
           <span
             key={i}
-            className="text-[7px] font-semibold text-center text-muted-foreground/30 uppercase"
+            className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[7px] font-semibold text-center text-muted-foreground/30 uppercase")}
           >
             {d}
           </span>
         ))}
       </div>
-      <div className="grid grid-cols-7 gap-0.5">
+      <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "grid grid-cols-7 gap-0.5")}>
         {Array.from({ length: offset }).map((_, i) => (
           <div key={`e${i}`} className="aspect-square" />
         ))}
@@ -172,7 +172,7 @@ const MonthGrid = React.memo(function MonthGrid({
                   )}
                 />
               </TooltipTrigger>
-              <TooltipContent side="top" className="text-xs">
+              <TooltipContent side="top" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                 {format(new Date(year, monthIndex, day), "d 'de' MMMM", {
                   locale: ptBR,
                 })}{" "}
@@ -202,12 +202,12 @@ function StatCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-border/40 bg-muted/30 p-4 px-5">
-      <div className="flex items-center gap-2 mb-2">
+    <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; px-5 padding direcional sem Inset equiv. */ "rounded-2xl border border-border/40 bg-muted/30 p-4 px-5")}>
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-2")}>
         <IconContainer size="sm" className={iconBg}>
           <Icon className={cn("size-3.5", iconColor)} />
         </IconContainer>
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">
+        <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60")}>
           {label}
         </span>
       </div>
@@ -247,7 +247,7 @@ function DayDetailDialog({
           </DialogDescription>
         </DialogHeader>
         <ScrollArea className="max-h-[60vh]">
-          <div className="space-y-2 pr-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; pr-2 padding direcional sem Inset equiv. */ "space-y-2 pr-2")}>
             {sorted.map((evt) => {
               const colors = getSourceColors(evt.source);
               const cfg = SOURCE_CONFIGS[evt.source as AgendaSource];
@@ -260,12 +260,12 @@ function DayDetailDialog({
                     onEventClick?.(evt);
                     onOpenChange(false);
                   }}
-                  className="w-full text-left rounded-xl border border-border/40 bg-muted/30 p-3 space-y-1.5 transition-colors hover:bg-muted/50 cursor-pointer"
+                  className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-1.5 sem token DS */ "w-full text-left rounded-xl border border-border/40 bg-muted/30 p-3 space-y-1.5 transition-colors hover:bg-muted/50 cursor-pointer")}
                 >
-                  <div className="flex items-center gap-2">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                     <span
                       className={cn(
-                        "inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium border",
+                        /* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium border",
                         colors.bg,
                         colors.text,
                         colors.border,
@@ -280,7 +280,7 @@ function DayDetailDialog({
                       {time}
                     </span>
                   </div>
-                  <p className="text-[12px] font-medium text-foreground truncate">
+                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[12px] font-medium text-foreground truncate")}>
                     {evt.title}
                   </p>
                   {evt.meta?.processo && (
@@ -394,9 +394,9 @@ export function AnoView({
 
   return (
     <TooltipProvider delayDuration={100}>
-      <div className={cn("flex flex-col gap-5", className)}>
+      <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex flex-col gap-5", className)}>
         {/* Year Navigator */}
-        <div className="flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           <Button
             variant="ghost"
             size="icon"
@@ -422,7 +422,7 @@ export function AnoView({
             <Button
               variant="ghost"
               size="sm"
-              className="text-xs border border-border/40 bg-primary/8 text-primary hover:bg-primary/14 rounded-lg"
+              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs border border-border/40 bg-primary/8 text-primary hover:bg-primary/14 rounded-lg")}
               onClick={() => onDateChange?.(new Date())}
             >
               Hoje
@@ -431,11 +431,11 @@ export function AnoView({
         </div>
 
         {/* Main Layout */}
-        <div className="flex gap-5 flex-wrap xl:flex-nowrap">
+        <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex gap-5 flex-wrap xl:flex-nowrap")}>
           {/* Stats Sidebar */}
           <GlassPanel
             depth={2}
-            className="w-full xl:w-64 shrink-0 p-5 space-y-3"
+            className={cn(/* design-system-escape: p-5 → usar <Inset>; space-y-3 sem token DS */ "w-full xl:w-64 shrink-0 p-5 space-y-3")}
           >
             {/* Total no Ano */}
             <StatCard
@@ -458,7 +458,7 @@ export function AnoView({
                 iconColor="text-info"
                 label="Por Tipo"
               >
-                <div className="space-y-1.5 mt-1">
+                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5 mt-1")}>
                   {BREAKDOWN_ORDER.filter(
                     (src) => stats.breakdown[src] > 0,
                   ).map((src) => {
@@ -468,7 +468,7 @@ export function AnoView({
                     const colors = getSourceColors(src);
                     const cfg = SOURCE_CONFIGS[src];
                     return (
-                      <div key={src} className="flex items-center gap-2">
+                      <div key={src} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                         <span
                           className={cn(
                             "size-1.5 rounded-full shrink-0",
@@ -487,7 +487,7 @@ export function AnoView({
                             style={{ width: `${pct}%` }}
                           />
                         </div>
-                        <span className="text-[10px] font-semibold tabular-nums w-6 text-right">
+                        <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold tabular-nums w-6 text-right")}>
                           {count}
                         </span>
                       </div>
@@ -540,17 +540,17 @@ export function AnoView({
 
             {/* Ranking por Volume */}
             {topMonths.length > 0 && (
-              <div className="pt-1">
-                <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/40">
+              <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "pt-1")}>
+                <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/40")}>
                   Ranking por Volume
                 </span>
-                <div className="mt-2 space-y-1.5">
+                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "mt-2 space-y-1.5")}>
                   {topMonths.map((m, i) => (
-                    <div key={m.idx} className="flex items-center gap-2">
-                      <span className="text-[9px] font-bold text-muted-foreground/40 w-3 text-right">
+                    <div key={m.idx} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                      <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[9px] font-bold text-muted-foreground/40 w-3 text-right")}>
                         {i + 1}
                       </span>
-                      <span className="text-[11px] font-medium w-10 capitalize">
+                      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium w-10 capitalize")}>
                         {format(new Date(year, m.idx, 1), "MMM", {
                           locale: ptBR,
                         })}
@@ -563,7 +563,7 @@ export function AnoView({
                           }}
                         />
                       </div>
-                      <span className="text-[10px] font-semibold tabular-nums w-7 text-right">
+                      <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold tabular-nums w-7 text-right")}>
                         {m.count}
                       </span>
                     </div>
@@ -574,7 +574,7 @@ export function AnoView({
           </GlassPanel>
 
           {/* Heatmap Panel */}
-          <GlassPanel depth={1} className="flex-1 min-w-0 p-6">
+          <GlassPanel depth={1} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "flex-1 min-w-0 p-6")}>
             <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8">
               {Array.from({ length: 12 }, (_, i) => (
                 <MonthGrid
@@ -588,7 +588,7 @@ export function AnoView({
             </div>
 
             {/* Legend */}
-            <div className="flex items-center gap-1 justify-end mt-6 flex-wrap">
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 justify-end mt-6 flex-wrap")}>
               <span className="text-[9px] text-muted-foreground/40 mr-1">
                 Menos
               </span>
@@ -600,8 +600,8 @@ export function AnoView({
               <span className="text-[9px] text-muted-foreground/40 ml-1">
                 Mais
               </span>
-              <span className="text-muted-foreground/40 mx-2 text-[9px]">·</span>
-              <div className="flex items-center gap-1.5">
+              <span className={cn(/* design-system-escape: mx-2 margin sem primitiva DS */ "text-muted-foreground/40 mx-2 text-[9px]")}>·</span>
+              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
                 <div className="size-3 rounded-[2px] bg-muted/50 ring-[1.5px] ring-primary ring-offset-1 ring-offset-transparent" />
                 <span className="text-[9px] text-muted-foreground/50">Hoje</span>
               </div>

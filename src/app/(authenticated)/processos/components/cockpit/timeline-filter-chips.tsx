@@ -48,22 +48,22 @@ export function TimelineFilterChips({
   const showGrauFilter = graus && graus.length > 1;
 
   return (
-    <div className="flex-none border-b px-3 py-2.5 space-y-2">
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-3 text-xs text-muted-foreground">
-          <span className="inline-flex items-center gap-1">
+    <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; space-y-2 → migrar para <Stack gap="tight"> */ "flex-none border-b px-3 py-2.5 space-y-2")}>
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-3 text-xs text-muted-foreground")}>
+          <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "inline-flex items-center gap-1")}>
             <FileText className="size-3" />
             {counts.docs} {counts.docs === 1 ? 'doc' : 'docs'}
           </span>
           <Text variant="caption" as="span" className="text-muted-foreground/30">·</Text>
           <span>{counts.movs} {counts.movs === 1 ? 'mov' : 'movs'}</span>
         </div>
-        <kbd className="flex items-center gap-0.5 rounded border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+        <kbd className={cn(/* design-system-escape: gap-0.5 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex items-center gap-0.5 rounded border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground")}>
           <span className="text-[9px]">&#x2318;</span>K
         </kbd>
       </div>
 
-      <div className="flex gap-1 p-0.5 rounded-lg bg-border/6 overflow-x-auto" role="tablist">
+      <div className={cn(/* design-system-escape: gap-1 gap sem token DS; p-0.5 → usar <Inset> */ "flex gap-1 p-0.5 rounded-lg bg-border/6 overflow-x-auto")} role="tablist">
         {FILTER_CHIPS.map((chip) => {
           const isActive = activeFilter === chip.id;
           const Icon = chip.icon;
@@ -74,7 +74,7 @@ export function TimelineFilterChips({
               aria-selected={isActive}
               onClick={() => onFilterChange(chip.id)}
               className={cn(
-                'flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-medium whitespace-nowrap transition-all duration-200 cursor-pointer',
+                /* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-medium whitespace-nowrap transition-all duration-200 cursor-pointer',
                 isActive
                   ? 'bg-primary/12 text-primary shadow-sm'
                   : 'text-muted-foreground/50 hover:text-muted-foreground/70 hover:bg-foreground/4'
@@ -88,7 +88,7 @@ export function TimelineFilterChips({
       </div>
 
       {showGrauFilter && onGrauChange && (
-        <div className="flex gap-1 p-0.5 rounded-md bg-border/4 w-fit" role="tablist" aria-label="Filtro de grau">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS; p-0.5 → usar <Inset> */ "flex gap-1 p-0.5 rounded-md bg-border/4 w-fit")} role="tablist" aria-label="Filtro de grau">
           {(['todos', ...graus] as const).map((grau) => {
             const isActive = activeGrau === grau;
             return (
@@ -98,7 +98,7 @@ export function TimelineFilterChips({
                 aria-selected={isActive}
                 onClick={() => onGrauChange(grau as GrauProcesso | 'todos')}
                 className={cn(
-                  'px-2 py-0.5 rounded text-[9px] font-medium transition-all cursor-pointer',
+                  /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'px-2 py-0.5 rounded text-[9px] font-medium transition-all cursor-pointer',
                   isActive
                     ? 'bg-primary/10 text-primary'
                     : 'text-muted-foreground/40 hover:text-muted-foreground/60'

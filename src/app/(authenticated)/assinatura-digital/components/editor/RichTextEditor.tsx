@@ -147,7 +147,7 @@ export function RichTextEditor({ value, onChange, formularios, toolbarExtra, cla
   return (
     <div className={cn("border rounded-lg flex flex-col", className)}>
       {/* Toolbar - fixa no topo */}
-      <div className="border-b p-2 flex flex-wrap items-center gap-1 shrink-0">
+      <div className={cn(/* design-system-escape: p-2 → usar <Inset>; gap-1 gap sem token DS */ "border-b p-2 flex flex-wrap items-center gap-1 shrink-0")}>
         {/* Formatting buttons */}
         <Button
           variant={editor.isActive('bold') ? 'default' : 'ghost'}
@@ -300,7 +300,7 @@ export function RichTextEditor({ value, onChange, formularios, toolbarExtra, cla
               <VariableIcon className="h-4 w-4" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-80 p-0" align="start">
+          <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-80 p-0")} align="start">
             <Command>
               <CommandInput placeholder="Buscar variável..." />
               <CommandList>
@@ -339,7 +339,7 @@ export function RichTextEditor({ value, onChange, formularios, toolbarExtra, cla
       </div>
 
       {/* Editor - área scrollável */}
-      <div className="flex-1 min-h-0 overflow-y-auto p-4">
+      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex-1 min-h-0 overflow-y-auto p-4")}>
         <EditorContent editor={editor} />
       </div>
     </div>

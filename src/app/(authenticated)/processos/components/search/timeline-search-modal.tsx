@@ -10,6 +10,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useEffect, useRef } from 'react';
 import { Search, ArrowUp, ArrowDown, CornerDownLeft } from 'lucide-react';
 import { Text } from '@/components/ui/typography';
@@ -115,10 +116,10 @@ export function TimelineSearchModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-120 p-0 gap-0 overflow-hidden">
+      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset>; gap-0 gap sem token DS */ "max-w-120 p-0 gap-0 overflow-hidden")}>
         {/* Campo de busca */}
         <div
-          className="flex items-center px-4 border-b h-16"
+          className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "flex items-center px-4 border-b h-16")}
           onKeyDown={(e) =>
             handleKeyDown(
               e,
@@ -137,9 +138,9 @@ export function TimelineSearchModal({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Buscar na linha do tempo..."
-            className="flex-1 bg-transparent border-none text-lg placeholder:text-muted-foreground p-0 outline-none focus:ring-0"
+            className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; p-0 → usar <Inset> */ "flex-1 bg-transparent border-none text-lg placeholder:text-muted-foreground p-0 outline-none focus:ring-0")}
           />
-          <kbd className="hidden sm:flex items-center ml-3 px-1.5 py-0.5 rounded border bg-muted text-xs text-muted-foreground font-mono tracking-tight">
+          <kbd className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; tracking-tight sem token DS */ "hidden sm:flex items-center ml-3 px-1.5 py-0.5 rounded border bg-muted text-xs text-muted-foreground font-mono tracking-tight")}>
             ESC
           </kbd>
         </div>
@@ -153,12 +154,12 @@ export function TimelineSearchModal({
         {/* Lista de resultados */}
         <div
           ref={resultsRef}
-          className="max-h-[70vh] overflow-y-auto p-2 space-y-1"
+          className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-1 sem token DS */ "max-h-[70vh] overflow-y-auto p-2 space-y-1")}
           role="listbox"
           aria-label="Resultados da busca"
         >
           {results.length === 0 ? (
-            <div className="py-8 text-center">
+            <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "py-8 text-center")}>
               <Text variant="caption" className="text-muted-foreground">
                 {query.trim() || activeFilters.size > 0
                   ? 'Nenhum resultado encontrado'
@@ -179,18 +180,18 @@ export function TimelineSearchModal({
         </div>
 
         {/* Rodapé com contagem e atalhos */}
-        <div className="px-4 py-2 border-t bg-muted/30 flex justify-between items-center text-[12px] text-muted-foreground">
+        <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "px-4 py-2 border-t bg-muted/30 flex justify-between items-center text-[12px] text-muted-foreground")}>
           <span>
             <strong className="text-foreground">{results.length}</strong>{' '}
             {results.length === 1 ? 'resultado' : 'resultados'}
           </span>
-          <div className="flex items-center gap-3">
-            <span className="inline-flex items-center gap-0.5">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+            <span className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "inline-flex items-center gap-0.5")}>
               <ArrowUp className="size-3" />
               <ArrowDown className="size-3" />
               <span className="ml-0.5">Navegar</span>
             </span>
-            <span className="inline-flex items-center gap-0.5">
+            <span className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "inline-flex items-center gap-0.5")}>
               <CornerDownLeft className="size-3" />
               <span className="ml-0.5">Selecionar</span>
             </span>

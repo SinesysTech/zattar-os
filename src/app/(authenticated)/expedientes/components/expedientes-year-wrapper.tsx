@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { ExpedientesYearHeatmap } from './expedientes-year-heatmap';
 import type { Expediente } from '../domain';
 
@@ -13,7 +14,7 @@ export function ExpedientesYearWrapper({
   currentDate = new Date(),
 }: ExpedientesYearWrapperProps) {
   return (
-    <div className="flex flex-col gap-4">
+    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4")}>
       <ExpedientesYearHeatmap
         expedientes={expedientes}
         currentDate={currentDate}

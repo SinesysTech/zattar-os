@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { RefreshCw } from 'lucide-react';
 import {
@@ -37,7 +38,7 @@ export function WidgetFluxoComTabs() {
         subtitle="Receita vs despesa — 6 meses"
         icon={RefreshCw}
       >
-        <p className="text-[11px] text-muted-foreground/60 py-6 text-center">
+        <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-6 text-center")}>
           Dados de fluxo de caixa indisponíveis.
         </p>
       </WidgetContainer>
@@ -79,12 +80,12 @@ export function WidgetFluxoComTabs() {
     >
       {tab === 'mensal' && (
         <div>
-          <div className="flex items-center gap-3 mb-3">
-            <div className="flex items-center gap-1.5">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mb-3")}>
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
               <span className="inline-block size-2 rounded-sm bg-primary/60" />
               <span className="text-[10px] text-muted-foreground/50">Receita</span>
             </div>
-            <div className="flex items-center gap-1.5">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
               <span className="inline-block size-2 rounded-sm bg-chart-2/60" />
               <span className="text-[10px] text-muted-foreground/50">Despesa</span>
             </div>
@@ -95,20 +96,20 @@ export function WidgetFluxoComTabs() {
             barColor="bg-primary/60"
             barColor2="bg-chart-2/60"
           />
-          <div className="flex justify-between mt-3 pt-3 border-t border-border/10">
+          <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex justify-between mt-3 pt-3 border-t border-border/10")}>
             <div>
-              <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+              <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
                 Receita {ultimoLabel}
               </p>
-              <p className="text-sm font-semibold font-display tabular-nums">
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold font-display tabular-nums")}>
                 {fmtMoeda(ultimoPeriodo?.receitas ?? 0)}
               </p>
             </div>
             <div className="text-right">
-              <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+              <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
                 Despesa {ultimoLabel}
               </p>
-              <p className="text-sm font-semibold font-display tabular-nums">
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold font-display tabular-nums")}>
                 {fmtMoeda(ultimoPeriodo?.despesas ?? 0)}
               </p>
             </div>
@@ -133,20 +134,20 @@ export function WidgetFluxoComTabs() {
               <span className="text-[9px] text-muted-foreground/55 tabular-nums">{ultimoLabel}</span>
             </div>
           </div>
-          <div className="mt-3 pt-3 border-t border-border/10 flex items-end justify-between">
+          <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 pt-3 border-t border-border/10 flex items-end justify-between")}>
             <div>
-              <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+              <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
                 Acumulado total
               </p>
-              <p className="text-sm font-semibold font-display tabular-nums text-success/80">
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold font-display tabular-nums text-success/80")}>
                 {fmtMoeda(acumuladoTotal)}
               </p>
             </div>
             <div className="text-right">
-              <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+              <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
                 Saldo último período
               </p>
-              <p className="text-sm font-semibold font-display tabular-nums text-success/80">
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold font-display tabular-nums text-success/80")}>
                 {fmtMoeda(ultimoPeriodo?.saldo ?? (ultimoPeriodo?.receitas ?? 0) - (ultimoPeriodo?.despesas ?? 0))}
               </p>
             </div>

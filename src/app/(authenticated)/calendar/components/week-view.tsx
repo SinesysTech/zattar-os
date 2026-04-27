@@ -89,11 +89,11 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
   return (
     <div data-slot="week-view" className="flex h-full flex-col">
       <div className="bg-background/80 border-border/70 sticky top-0 z-30 grid grid-cols-8 border-b backdrop-blur-md">
-        <div className="py-2" />
+        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "py-2")} />
         {days.map((day) => (
           <div
             key={day.toString()}
-            className="data-today:text-foreground text-muted-foreground/70 py-2 text-center text-sm data-today:font-medium"
+            className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; data-today:font-medium sem equivalente DS */ "data-today:text-foreground text-muted-foreground/70 py-2 text-center text-sm data-today:font-medium")}
             data-today={isToday(day) || undefined}>
             <span className="sm:hidden" aria-hidden="true">
               {capitalizeFirst(format(day, "EEEEE", { locale: ptBR }))} {format(day, "d")}
@@ -107,7 +107,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
         <div className="border-border/70 bg-muted/50 border-b">
           <div className="grid grid-cols-8">
             <div className="border-border/70 flex items-center justify-end border-r pe-2 sm:pe-4">
-              <span className="text-muted-foreground/70 text-[10px] sm:text-xs">
+              <span className={cn(/* design-system-escape: sm:text-xs sem equivalente DS */ "text-muted-foreground/70 text-[10px] sm:text-xs")}>
                 Dia inteiro
               </span>
             </div>
@@ -125,7 +125,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
               return (
                 <div
                   key={day.toString()}
-                  className="border-border/70 relative border-r p-1 last:border-r-0"
+                  className={cn(/* design-system-escape: p-1 → usar <Inset> */ "border-border/70 relative border-r p-1 last:border-r-0")}
                   data-today={isToday(day) || undefined}>
                   {dayAllDayEvents.map((event) => {
                     const eventStart = new Date(event.start);
@@ -168,7 +168,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
               key={hour.toString()}
               className="border-border/70 relative min-h-(--week-cells-height) border-b last:border-b-0">
               {index > 0 && (
-                <span className="bg-background text-muted-foreground/70 absolute -top-3 left-0 flex h-6 w-16 max-w-full items-center justify-end pe-2 text-[10px] sm:pe-4 sm:text-xs">
+                <span className={cn(/* design-system-escape: sm:text-xs sem equivalente DS */ "bg-background text-muted-foreground/70 absolute -top-3 left-0 flex h-6 w-16 max-w-full items-center justify-end pe-2 text-[10px] sm:pe-4 sm:text-xs")}>
                   {format(hour, "HH:mm")}
                 </span>
               )}
@@ -185,7 +185,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
             {(processedDayEvents[dayIndex] ?? []).map((positionedEvent) => (
               <div
                 key={positionedEvent.event.id}
-                className="absolute z-10 px-0.5"
+                className={cn(/* design-system-escape: px-0.5 padding direcional sem Inset equiv. */ "absolute z-10 px-0.5")}
                 style={{
                   top: `${positionedEvent.top}px`,
                   height: `${positionedEvent.height}px`,

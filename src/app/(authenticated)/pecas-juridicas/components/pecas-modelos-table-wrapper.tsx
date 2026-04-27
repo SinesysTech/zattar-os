@@ -11,6 +11,7 @@
  * - Sheet de visualização
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { FileText, Eye, Pencil, Trash2, MoreHorizontal } from 'lucide-react';
@@ -101,12 +102,12 @@ function getPecasModelosColumns(
       cell: ({ row }) => {
         const modelo = row.original;
         return (
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <FileText className="h-4 w-4 text-muted-foreground" />
             <div>
-              <p className="font-medium">{modelo.titulo}</p>
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{modelo.titulo}</p>
               {modelo.descricao && (
-                <p className="text-sm text-muted-foreground line-clamp-1">
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground line-clamp-1")}>
                   {modelo.descricao}
                 </p>
               )}
@@ -150,7 +151,7 @@ function getPecasModelosColumns(
       accessorKey: 'createdAt',
       header: 'Criado em',
       cell: ({ row }) => (
-        <span className="text-sm text-muted-foreground">
+        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
           {format(new Date(row.original.createdAt), 'dd/MM/yyyy', { locale: ptBR })}
         </span>
       ),
@@ -161,7 +162,7 @@ function getPecasModelosColumns(
       cell: ({ row }) => {
         const modelo = row.original;
         return (
-          <div className="flex items-center justify-end gap-1">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center justify-end gap-1")}>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -436,7 +437,7 @@ export function PecasModelosTableWrapper({
           isLoading={isLoading}
           emptyMessage="Nenhum modelo encontrado"
           emptyComponent={
-            <div className="flex flex-col items-center gap-2 py-8">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-8 padding direcional sem Inset equiv. */ "flex flex-col items-center gap-2 py-8")}>
               <FileText className="h-12 w-12 text-muted-foreground" />
               <span className="text-muted-foreground">Nenhum modelo encontrado</span>
             </div>

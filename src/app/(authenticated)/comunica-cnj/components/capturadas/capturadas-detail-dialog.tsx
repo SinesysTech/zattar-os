@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import {
   Dialog,
@@ -30,9 +31,9 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div className="space-y-2">
+    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
       <Heading level="widget">{title}</Heading>
-      <div className="rounded-xl border border-border/40 bg-card/60 p-4">
+      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-xl border border-border/40 bg-card/60 p-4")}>
         {children}
       </div>
     </div>
@@ -53,7 +54,7 @@ function Field({
       <Text variant="meta-label" className="text-muted-foreground">
         {label}
       </Text>
-      <div className="mt-1 text-sm text-foreground">{children}</div>
+      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-1 text-sm text-foreground")}>{children}</div>
     </div>
   );
 }
@@ -96,7 +97,7 @@ export function CapturadasDetailDialog({
           </DialogHeader>
 
           {/* Status + Badges principais */}
-          <div className="flex flex-wrap items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap items-center gap-2")}>
             {comunicacao.statusVinculacao === 'vinculado' && (
               <Badge variant="info">
                 <Link2 className="mr-1 size-3" aria-hidden />
@@ -116,9 +117,9 @@ export function CapturadasDetailDialog({
           </div>
 
           <Section title="Processo">
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 gap-3 sm:grid-cols-2")}>
               <Field label="Número" span={2}>
-                <span className="break-all font-medium tabular-nums">
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "break-all font-medium tabular-nums")}>
                   {processoNumero}
                 </span>
               </Field>
@@ -129,13 +130,13 @@ export function CapturadasDetailDialog({
 
           {(partesAutor || partesReu) && (
             <Section title="Partes">
-              <div className="space-y-3">
+              <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
                 {partesAutor && (
                   <div>
                     <Text variant="meta-label" className="text-muted-foreground">
                       Polo ativo
                     </Text>
-                    <p className="mt-1 text-sm text-foreground">{partesAutor}</p>
+                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-1 text-sm text-foreground")}>{partesAutor}</p>
                   </div>
                 )}
                 {partesReu && (
@@ -143,7 +144,7 @@ export function CapturadasDetailDialog({
                     <Text variant="meta-label" className="text-muted-foreground">
                       Polo passivo
                     </Text>
-                    <p className="mt-1 text-sm text-foreground">{partesReu}</p>
+                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-1 text-sm text-foreground")}>{partesReu}</p>
                   </div>
                 )}
               </div>
@@ -153,7 +154,7 @@ export function CapturadasDetailDialog({
           {comunicacao.texto && (
             <Section title="Conteúdo">
               <div
-                className="prose prose-sm max-w-none text-sm dark:prose-invert"
+                className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "prose prose-sm max-w-none text-sm dark:prose-invert")}
                 dangerouslySetInnerHTML={{
                   __html: comunicacao.texto,
                 }}
@@ -161,7 +162,7 @@ export function CapturadasDetailDialog({
             </Section>
           )}
 
-          <div className="flex flex-col gap-2 border-t border-border/40 pt-4 sm:flex-row sm:justify-end">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-4 padding direcional sem Inset equiv. */ "flex flex-col gap-2 border-t border-border/40 pt-4 sm:flex-row sm:justify-end")}>
             <Button
               variant="outline"
               size="sm"

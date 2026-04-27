@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useActionState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -105,9 +106,9 @@ export function ExpedientesBulkBaixarDialog({
       maxWidth="md"
       footer={footerButtons}
     >
-      <form id="bulk-baixar-form" onSubmit={handleSubmit} className="space-y-4">
+      <form id="bulk-baixar-form" onSubmit={handleSubmit} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         <BulkSelectionPreview expedientes={selectedExpedientes} />
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label htmlFor="justificativaBaixa">
             Justificativa da Baixa <span className="text-destructive">*</span>
           </Label>
@@ -120,11 +121,11 @@ export function ExpedientesBulkBaixarDialog({
             disabled={isPending}
             required
           />
-          <p className="text-xs text-muted-foreground">
+          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
             Esta justificativa será aplicada a todos os {expedienteIds.length} expediente(s) selecionado(s).
           </p>
           {generalError && (
-            <p role="alert" className="text-sm font-medium text-destructive">{generalError}</p>
+            <p role="alert" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}>{generalError}</p>
           )}
         </div>
       </form>

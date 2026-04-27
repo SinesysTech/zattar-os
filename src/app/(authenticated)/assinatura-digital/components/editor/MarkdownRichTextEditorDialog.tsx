@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -83,7 +84,7 @@ export function MarkdownRichTextEditorDialog({
               />
             </TabsContent>
             <TabsContent value="preview" className="h-full mt-4 overflow-y-auto">
-              <div className="prose prose-sm max-w-none p-4 border rounded-md bg-muted/50">
+              <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "prose prose-sm max-w-none p-4 border rounded-md bg-muted/50")}>
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   rehypePlugins={[rehypeRaw, rehypeSanitize]}
@@ -95,10 +96,10 @@ export function MarkdownRichTextEditorDialog({
           </div>
         </Tabs>
         <div className="flex items-center justify-between mt-4">
-          <div className="text-sm text-muted-foreground">
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
             {characterCount.toLocaleString()} / {maxCharacters.toLocaleString()} caracteres
           </div>
-          <div className="flex gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
             <Button variant="outline" onClick={handleCancel} disabled={isSaving}>
               Cancelar
             </Button>

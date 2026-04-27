@@ -46,7 +46,7 @@ export function CapturadasGlassCards({
   }
 
   return (
-    <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3")}>
       {comunicacoes.map((c) => {
         const partesAutor = c.partesAutor.slice(0, 2).join(' · ');
         const partesReu = c.partesReu.slice(0, 2).join(' · ');
@@ -68,19 +68,19 @@ export function CapturadasGlassCards({
           >
             <GlassPanel
               className={cn(
-                'gap-2 p-4 transition-all duration-200',
+                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-4 → migrar para <Inset variant="card-compact"> */ 'gap-2 p-4 transition-all duration-200',
                 'hover:border-primary/30 hover:shadow-[0_4px_24px_rgba(85,35,235,0.06)]',
                 isSelected && 'border-primary/40 bg-primary/5',
               )}
             >
-              <div className="flex items-center gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <TribunalBadge codigo={c.siglaTribunal} />
                 {c.tipoComunicacao && (
                   <Badge variant="outline" className="text-[10px]">
                     {c.tipoComunicacao}
                   </Badge>
                 )}
-                <div className="ml-auto flex items-center gap-1.5">
+                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "ml-auto flex items-center gap-1.5")}>
                   <StatusIcon
                     status={c.statusVinculacao}
                     diasParaPrazo={c.diasParaPrazo}
@@ -102,7 +102,7 @@ export function CapturadasGlassCards({
               )}
 
               {c.nomeOrgao && (
-                <Text variant="micro-caption" className="truncate border-t border-border/30 pt-2">
+                <Text variant="micro-caption" className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "truncate border-t border-border/30 pt-2")}>
                   {c.nomeOrgao}
                 </Text>
               )}

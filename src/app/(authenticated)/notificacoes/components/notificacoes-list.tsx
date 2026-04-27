@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import * as React from "react";
 import Link from "next/link";
 import { AppBadge as Badge } from "@/components/ui/app-badge";
@@ -122,7 +123,7 @@ function criarColunas(
         return (
           <Link
             href={link}
-            className="text-sm font-medium hover:underline"
+            className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium hover:underline")}
             onClick={() => {
               if (!notificacao.lida) {
                 onMarcarComoLida(notificacao.id);
@@ -142,7 +143,7 @@ function criarColunas(
       enableSorting: false,
       size: 400,
       cell: ({ row }) => (
-        <span className="text-sm text-muted-foreground line-clamp-2">
+        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground line-clamp-2")}>
           {row.original.descricao}
         </span>
       ),
@@ -157,7 +158,7 @@ function criarColunas(
       enableSorting: true,
       size: 150,
       cell: ({ row }) => (
-        <div className="flex items-center justify-center gap-1 text-sm text-muted-foreground">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center justify-center gap-1 text-sm text-muted-foreground")}>
           <ClockIcon className="size-3" />
           {formatarData(row.original.created_at)}
         </div>

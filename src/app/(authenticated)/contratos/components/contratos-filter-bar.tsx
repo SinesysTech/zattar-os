@@ -70,7 +70,7 @@ interface ContratosFilterBarProps {
 
 // ── Shared helpers ─────────────────────────────────────────────────────
 
-const POPOVER_CLASSES = 'rounded-2xl glass-dropdown overflow-hidden p-0';
+const POPOVER_CLASSES = /* design-system-escape: p-0 → usar <Inset> */ 'rounded-2xl glass-dropdown overflow-hidden p-0';
 
 function FilterDropdownTrigger({
   label,
@@ -88,7 +88,7 @@ function FilterDropdownTrigger({
   return (
     <div
       className={cn(
-        'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
+        /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
         active
           ? 'border-primary/20 bg-primary/5 text-primary'
           : 'border-border/15 text-muted-foreground/60 hover:bg-muted/30',
@@ -104,7 +104,7 @@ function FilterDropdownTrigger({
             e.stopPropagation();
             onClear();
           }}
-          className="ml-0.5 rounded-full p-0.5 hover:bg-primary/10 transition-colors"
+          className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-0.5 rounded-full p-0.5 hover:bg-primary/10 transition-colors")}
         >
           <X className="size-2.5" />
         </span>
@@ -166,12 +166,12 @@ function SegmentoFilter({
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-56')} align="start" side="bottom">
         <Command className="bg-transparent">
-          <div className="px-3 pt-3 pb-1.5">
-            <CommandInput placeholder="Buscar segmento..." className="h-8 text-xs rounded-lg" />
+          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
+            <CommandInput placeholder="Buscar segmento..." className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs rounded-lg")} />
           </div>
-          <CommandList className="max-h-52 px-1.5 pb-1.5">
+          <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-52 px-1.5 pb-1.5")}>
             {isLoading ? (
-              <Text variant="caption" as="div" className="py-6 text-center text-muted-foreground/40">Carregando...</Text>
+              <Text variant="caption" as="div" className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "py-6 text-center text-muted-foreground/40")}>Carregando...</Text>
             ) : (
               <>
                 <CommandEmpty>
@@ -189,7 +189,7 @@ function SegmentoFilter({
                           onChange(isSelected ? '' : segId);
                           setOpen(false);
                         }}
-                        className="gap-2 rounded-lg text-xs px-2 py-1.5"
+                        className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-xs px-2 py-1.5")}
                       >
                         <span>{segmento.nome}</span>
                         {isSelected && <Check className="size-3 ml-auto text-primary shrink-0" />}
@@ -239,7 +239,7 @@ function TipoContratoFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-48')} align="start" side="bottom">
-        <div className="p-2 space-y-0.5">
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-0.5 sem token DS */ "p-2 space-y-0.5")}>
           {options.map(([value, optLabel]) => (
             <button
               key={value}
@@ -249,7 +249,7 @@ function TipoContratoFilter({
                 setOpen(false);
               }}
               className={cn(
-                'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
+                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
                 selected === value
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70',
@@ -298,7 +298,7 @@ function TipoCobrancaFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-48')} align="start" side="bottom">
-        <div className="p-2 space-y-0.5">
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-0.5 sem token DS */ "p-2 space-y-0.5")}>
           {options.map(([value, optLabel]) => (
             <button
               key={value}
@@ -308,7 +308,7 @@ function TipoCobrancaFilter({
                 setOpen(false);
               }}
               className={cn(
-                'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
+                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
                 selected === value
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70',
@@ -349,8 +349,8 @@ function SortFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-56')} align="start" side="bottom">
-        <div className="p-2 space-y-0.5">
-          <div className="px-2 pt-1 pb-1.5 text-meta-label text-muted-foreground/50">
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-0.5 sem token DS */ "p-2 space-y-0.5")}>
+          <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; pt-1 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-2 pt-1 pb-1.5 text-meta-label text-muted-foreground/50")}>
             Ordenar por
           </div>
           {CONTRATOS_SORT_OPTIONS.map(({ campo, label: optLabel }) => (
@@ -362,7 +362,7 @@ function SortFilter({
                 setOpen(false);
               }}
               className={cn(
-                'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
+                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
                 sort.campo === campo
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70',
@@ -372,8 +372,8 @@ function SortFilter({
               {sort.campo === campo && <Check className="size-3 ml-auto" />}
             </button>
           ))}
-          <div className="h-px bg-border/40 my-1.5 mx-1" />
-          <div className="px-2 pb-1 text-meta-label text-muted-foreground/50">
+          <div className={cn(/* design-system-escape: my-1.5 margin sem primitiva DS; mx-1 margin sem primitiva DS */ "h-px bg-border/40 my-1.5 mx-1")} />
+          <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; pb-1 padding direcional sem Inset equiv. */ "px-2 pb-1 text-meta-label text-muted-foreground/50")}>
             Direção
           </div>
           {(['desc', 'asc'] as const).map((ord) => (
@@ -385,7 +385,7 @@ function SortFilter({
                 setOpen(false);
               }}
               className={cn(
-                'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
+                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
                 sort.ordem === ord
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70',
@@ -411,7 +411,7 @@ export function ContratosFilterBar({
   onSortChange,
 }: ContratosFilterBarProps) {
   return (
-    <div className="flex items-center gap-2 flex-wrap">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
       <SegmentoFilter
         selected={filters.segmentoId}
         onChange={(segmentoId) => onChange({ ...filters, segmentoId })}

@@ -59,7 +59,7 @@ function StepPill({
     <div
       aria-current={isCurrent ? "step" : undefined}
       className={cn(
-        "inline-flex items-center gap-2 rounded-full border pl-1.5 pr-3.5 py-1 text-sm font-medium transition-all duration-200",
+        /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pl-1.5 padding direcional sem Inset equiv.; pr-3.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pl-1.5 padding direcional sem Inset equiv.; pr-3.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-2 rounded-full border pl-1.5 pr-3.5 py-1 text-sm font-medium transition-all duration-200",
         isCurrent &&
           "glass-kpi border-border/50 text-foreground shadow-md",
         isDone && "border-transparent text-foreground/75",
@@ -68,7 +68,7 @@ function StepPill({
     >
       <span
         className={cn(
-          "flex size-6 items-center justify-center rounded-full text-xs font-semibold transition-all duration-200",
+          /* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "flex size-6 items-center justify-center rounded-full text-xs font-semibold transition-all duration-200",
           isCurrent && "bg-foreground text-background",
           isDone && "bg-success/15 text-success",
           !isCurrent && !isDone && "bg-foreground/8 text-muted-foreground",
@@ -101,14 +101,14 @@ function FlowStepper({ currentStep }: { currentStep: number }) {
   return (
     <nav
       aria-label="Progresso do fluxo de assinatura"
-      className="flex items-center gap-1"
+      className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}
     >
       <div aria-live="polite" aria-atomic="true" className="sr-only">
         Etapa {currentStep + 1} de {FLOW_STEPS.length}:{" "}
         {FLOW_STEPS[currentStep]?.label}
       </div>
       {FLOW_STEPS.map((step, idx) => (
-        <div key={step.id} className="flex items-center gap-1">
+        <div key={step.id} className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
           <StepPill step={step} index={idx} currentStep={currentStep} />
           {idx < FLOW_STEPS.length - 1 && (
             <StepConnector done={idx < currentStep} />
@@ -128,13 +128,13 @@ function FlowMobileProgress({ currentStep }: { currentStep: number }) {
   const stepLabel = FLOW_STEPS[currentStep]?.label;
 
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
       <div className="flex items-center justify-between">
-        <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wide sem token DS */ "text-[11px] font-medium uppercase tracking-wide text-muted-foreground")}>
           Etapa {currentStep + 1} de {FLOW_STEPS.length}
         </span>
         {stepLabel && (
-          <span className="text-xs font-semibold text-foreground">
+          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-foreground")}>
             {stepLabel}
           </span>
         )}
@@ -168,20 +168,20 @@ export function DocumentFlowShell({
 
   return (
     <div
-      className="-m-6 flex flex-col overflow-hidden"
+      className={cn(/* design-system-escape: -m-6 sem equivalente DS */ "-m-6 flex flex-col overflow-hidden")}
       style={{ height: "calc(100% + 3rem)", minHeight: "calc(100% + 3rem)" }}
     >
       {/* Header transparente — integrado ao AmbientBackdrop global */}
       <header className="shrink-0">
-        <div className="px-6 sm:px-8 pt-5 pb-4 sm:pb-5">
-          <div className="flex items-center justify-between gap-4">
+        <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; sm:px-8 sem equivalente DS; pt-5 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv.; sm:pb-5 sem equivalente DS */ /* design-system-escape: px-6 padding direcional sem Inset equiv.; sm:px-8 sem equivalente DS; pt-5 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv.; sm:pb-5 sem equivalente DS */ "px-6 sm:px-8 pt-5 pb-4 sm:pb-5")}>
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center justify-between gap-4")}>
             <Button
               type="button"
               variant="outline"
               onClick={() =>
                 router.push("/app/assinatura-digital/documentos/lista")
               }
-              className="h-10 gap-2 rounded-full border-outline-variant/40 bg-surface-container-lowest/60 px-4 text-muted-foreground backdrop-blur-sm hover:border-outline-variant/70 hover:bg-surface-container-lowest hover:text-foreground cursor-pointer transition-colors"
+              className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-4 padding direcional sem Inset equiv. */ "h-10 gap-2 rounded-full border-outline-variant/40 bg-surface-container-lowest/60 px-4 text-muted-foreground backdrop-blur-sm hover:border-outline-variant/70 hover:bg-surface-container-lowest hover:text-foreground cursor-pointer transition-colors")}
             >
               <ArrowLeft className="size-4" />
               <span>Voltar</span>
@@ -207,7 +207,7 @@ export function DocumentFlowShell({
       <div
         className={cn(
           "flex-1 min-h-0 overflow-auto",
-          !fullHeight && "p-6",
+          !fullHeight && /* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6",
         )}
       >
         {children}

@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
@@ -22,7 +23,7 @@ export function HistoricoSalarios({ usuarioId }: HistoricoSalariosProps) {
 
   if (isLoading) {
     return (
-      <div className="rounded-lg border bg-card p-6 text-center text-muted-foreground">
+      <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "rounded-lg border bg-card p-6 text-center text-muted-foreground")}>
         Carregando histórico salarial...
       </div>
     );
@@ -30,7 +31,7 @@ export function HistoricoSalarios({ usuarioId }: HistoricoSalariosProps) {
 
   if (error) {
     return (
-      <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-6 text-destructive">
+      <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "rounded-lg border border-destructive/50 bg-destructive/10 p-6 text-destructive")}>
         {error}
       </div>
     );
@@ -38,7 +39,7 @@ export function HistoricoSalarios({ usuarioId }: HistoricoSalariosProps) {
 
   if (salarios.length === 0) {
       return (
-        <div className="rounded-lg border bg-card p-6 text-center text-muted-foreground">
+        <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "rounded-lg border bg-card p-6 text-center text-muted-foreground")}>
             Nenhum histórico salarial encontrado.
         </div>
       );
@@ -47,13 +48,13 @@ export function HistoricoSalarios({ usuarioId }: HistoricoSalariosProps) {
   const usuarioNome = salarios[0]?.usuario?.nomeExibicao ?? `Usuário ${usuarioId}`;
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <div className="flex items-center justify-between">
         <div>
           <Heading level="page">Histórico Salarial - {usuarioNome}</Heading>
         </div>
         <button
-          className="text-sm text-primary underline"
+          className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-primary underline")}
           type="button"
           onClick={() => refetch()}
         >
@@ -61,7 +62,7 @@ export function HistoricoSalarios({ usuarioId }: HistoricoSalariosProps) {
         </button>
       </div>
 
-      <div className="space-y-4">
+      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         {salarios.map((salario) => {
           const vigente = !salario.dataFimVigencia;
           const duracao = calcularDuracaoVigencia(
@@ -72,8 +73,8 @@ export function HistoricoSalarios({ usuarioId }: HistoricoSalariosProps) {
             <Card key={salario.id}>
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg">{formatCurrency(salario.salarioBruto)}</CardTitle>
-                  <p className="text-sm text-muted-foreground">
+                  <CardTitle className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-lg")}>{formatCurrency(salario.salarioBruto)}</CardTitle>
+                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                     Vigência: {new Date(salario.dataInicioVigencia).toLocaleDateString('pt-BR')} {' '}
                     {salario.dataFimVigencia
                       ? `até ${new Date(salario.dataFimVigencia).toLocaleDateString('pt-BR')}`
@@ -84,12 +85,12 @@ export function HistoricoSalarios({ usuarioId }: HistoricoSalariosProps) {
                   {vigente ? 'Vigente' : 'Encerrado'} · {duracao.texto}
                 </Badge>
               </CardHeader>
-              <CardContent className="space-y-2">
-                <p className="text-sm text-muted-foreground">
+              <CardContent className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                   Cargo: {salario.cargo?.nome ?? 'Não informado'}
                 </p>
                 {salario.observacoes && (
-                  <p className="text-sm text-muted-foreground">Observações: {salario.observacoes}</p>
+                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Observações: {salario.observacoes}</p>
                 )}
               </CardContent>
             </Card>

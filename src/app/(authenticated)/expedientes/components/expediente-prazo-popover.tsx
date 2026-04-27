@@ -88,7 +88,7 @@ export function ExpedientePrazoPopover({
           type="button"
           onClick={(e) => e.stopPropagation()}
           className={cn(
-            'inline-flex items-center gap-1.5 rounded-md px-1.5 py-0.5 -mx-1.5 -my-0.5',
+            /* design-system-escape: gap-1.5 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; -mx-1.5 sem equivalente DS; -my-0.5 sem equivalente DS */ 'inline-flex items-center gap-1.5 rounded-md px-1.5 py-0.5 -mx-1.5 -my-0.5',
             'transition-colors hover:bg-muted/50 cursor-pointer',
             'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
             isPending && 'opacity-60 pointer-events-none',
@@ -98,14 +98,14 @@ export function ExpedientePrazoPopover({
         </button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-auto p-0 rounded-2xl glass-dropdown overflow-hidden"
+        className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto p-0 rounded-2xl glass-dropdown overflow-hidden")}
         align={align}
         side="bottom"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}
       >
-        <div className="px-3 pt-3 pb-1.5">
-          <p className="text-[10px] font-medium text-muted-foreground/40 uppercase tracking-wider">
+        <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/40 uppercase tracking-wider")}>
             Prazo legal
           </p>
         </div>
@@ -116,7 +116,7 @@ export function ExpedientePrazoPopover({
           initialFocus
         />
         {allowClear && dataPrazoLegalParte && (
-          <div className="border-t border-border/30 p-2">
+          <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "border-t border-border/30 p-2")}>
             <Button
               type="button"
               variant="ghost"
@@ -158,15 +158,15 @@ export function PrazoTriggerContent({
       {label ? (
         <span className={cn(
           'tabular-nums',
-          size === 'sm' ? 'text-[11px] font-medium' : 'text-sm font-medium',
-          vencido && 'text-destructive font-semibold',
+          size === 'sm' ? /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[11px] font-medium' : /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ 'text-sm font-medium',
+          vencido && /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-destructive font-semibold',
         )}>
           {label}
         </span>
       ) : (
         <span className={cn(
           'italic text-muted-foreground/50',
-          size === 'sm' ? 'text-[11px]' : 'text-sm',
+          size === 'sm' ? 'text-[11px]' : /* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ 'text-sm',
         )}>
           Sem prazo
         </span>

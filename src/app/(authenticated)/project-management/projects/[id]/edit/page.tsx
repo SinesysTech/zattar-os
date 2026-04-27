@@ -1,6 +1,6 @@
 import { redirect, notFound } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth/server";
-import { generateMeta } from "@/lib/utils";
+import { generateMeta, cn } from '@/lib/utils';
 import { createDbClient } from "@/lib/supabase";
 import * as projectService from "../../../lib/services/project.service";
 import { ProjectForm } from "../../../components/projects/project-form";
@@ -57,7 +57,7 @@ export default async function EditProjectPage({ params }: Props) {
   if (!projetoResult.success) notFound();
 
   return (
-    <div className="mx-auto max-w-3xl space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "mx-auto max-w-3xl space-y-4")}>
       <ProjectForm
         projeto={projetoResult.data}
         clientes={clientes}

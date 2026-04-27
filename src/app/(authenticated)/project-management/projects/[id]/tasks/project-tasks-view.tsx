@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import * as React from "react";
 import Link from "next/link";
 import { ArrowLeft, KanbanSquare, List, Plus } from "lucide-react";
@@ -31,9 +32,9 @@ export function ProjectTasksView({
   const [formOpen, setFormOpen] = React.useState(false);
 
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
           <Button variant="ghost" size="icon" aria-label="Voltar" asChild>
             <Link
               href={`/app/project-management/projects/${projeto.id}`}
@@ -45,13 +46,13 @@ export function ProjectTasksView({
             <Heading level="page">
               Tarefas
             </Heading>
-            <p className="text-muted-foreground text-sm">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>
               {projeto.nome}
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           <ToggleGroup
             type="single"
             value={viewMode}

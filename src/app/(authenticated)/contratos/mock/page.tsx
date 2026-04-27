@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -113,8 +114,8 @@ function PipelineFunnel() {
   const desistencias = getStageContratos('desistencia');
 
   return (
-    <GlassPanel className="p-5">
-      <div className="flex items-center gap-2 mb-5">
+    <GlassPanel className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-5")}>
         <GitBranch className="size-4 text-muted-foreground/50" />
         <Heading level="widget">Pipeline de Conversão</Heading>
         <span className="text-[10px] text-muted-foreground/55 ml-auto">
@@ -122,7 +123,7 @@ function PipelineFunnel() {
         </span>
       </div>
 
-      <div className="flex items-stretch gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-stretch gap-2")}>
         {stages.map((stage, i) => {
           const contratos = getStageContratos(stage.id);
           const valor = getStageTotal(stage.id);
@@ -132,12 +133,12 @@ function PipelineFunnel() {
           const convRate = prevCount > 0 ? Math.round((count / prevCount) * 100) : 100;
 
           return (
-            <div key={stage.id} className="flex-1 flex flex-col items-center gap-2">
+            <div key={stage.id} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex-1 flex flex-col items-center gap-2")}>
               {/* Stage header */}
               <div className="text-center">
-                <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">{stage.label}</p>
-                <p className="font-display text-2xl font-bold mt-0.5">{count}</p>
-                <p className="text-xs text-muted-foreground/50 tabular-nums">{fmtMoeda(valor)}</p>
+                <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>{stage.label}</p>
+                <p className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "font-display text-2xl font-bold mt-0.5")}>{count}</p>
+                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/50 tabular-nums")}>{fmtMoeda(valor)}</p>
               </div>
 
               {/* Funnel bar */}
@@ -152,7 +153,7 @@ function PipelineFunnel() {
 
               {/* Conversion rate */}
               {i > 0 && (
-                <div className="flex items-center gap-1 text-[10px]">
+                <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 text-[10px]")}>
                   <ArrowRight className="size-2.5 text-muted-foreground/55" />
                   <span className={convRate >= 70 ? 'text-success/60' : convRate >= 50 ? 'text-warning/60' : 'text-destructive/60'}>
                     {convRate}%
@@ -174,27 +175,27 @@ function KanbanColumn({ stage, contratos }: { stage: typeof PIPELINE_STAGES[0]; 
   const total = contratos.reduce((sum, c) => sum + c.valor, 0);
 
   return (
-    <div className="flex-1 min-w-65 flex flex-col gap-2">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex-1 min-w-65 flex flex-col gap-2")}>
       {/* Column header */}
-      <div className="flex items-center justify-between px-1 pb-2 border-b-2" style={{ borderColor: stage.color }}>
-        <div className="flex items-center gap-2">
-          <span className="font-heading text-xs font-semibold">{stage.label}</span>
-          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-border/10 text-muted-foreground/50 tabular-nums">
+      <div className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "flex items-center justify-between px-1 pb-2 border-b-2")} style={{ borderColor: stage.color }}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "font-heading text-xs font-semibold")}>{stage.label}</span>
+          <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0.5 rounded-full bg-border/10 text-muted-foreground/50 tabular-nums")}>
             {contratos.length}
           </span>
         </div>
-        <span className="text-[10px] text-muted-foreground/60 tabular-nums font-medium">
+        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] text-muted-foreground/60 tabular-nums font-medium")}>
           {fmtMoeda(total)}
         </span>
       </div>
 
       {/* Cards */}
-      <div className="flex flex-col gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
         {contratos.map(c => (
           <KanbanCard key={c.id} contrato={c} stageColor={stage.color} />
         ))}
         {contratos.length === 0 && (
-          <div className="py-8 text-center text-[10px] text-muted-foreground/50">
+          <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "py-8 text-center text-[10px] text-muted-foreground/50")}>
             Nenhum contrato
           </div>
         )}
@@ -208,29 +209,29 @@ function KanbanCard({ contrato: c, stageColor: _stageColor }: { contrato: Contra
 
   return (
     <GlassPanel className={`p-3 cursor-pointer hover:scale-[1.01] ${isStuck ? 'ring-1 ring-warning/20' : ''}`}>
-      <div className="flex items-start gap-2.5">
+      <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-start gap-2.5")}>
         {/* Avatar */}
         <div className="size-8 rounded-lg bg-primary/8 flex items-center justify-center shrink-0">
           {c.clienteTipo === 'pj' ? (
             <Building2 className="size-3.5 text-primary/60" />
           ) : (
-            <span className="text-[9px] font-bold text-primary/60">{getInitials(c.cliente)}</span>
+            <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[9px] font-bold text-primary/60")}>{getInitials(c.cliente)}</span>
           )}
         </div>
 
         <div className="flex-1 min-w-0">
           {/* Client name */}
-          <p className="text-[11px] font-semibold truncate leading-tight">{c.cliente}</p>
+          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[11px] font-semibold truncate leading-tight")}>{c.cliente}</p>
           {c.parteContraria && (
             <p className="text-[9px] text-muted-foreground/55 truncate">vs. {c.parteContraria}</p>
           )}
 
           {/* Tags */}
-          <div className="flex items-center gap-1 mt-1.5 flex-wrap">
-            <span className="text-[8px] px-1.5 py-0.5 rounded bg-primary/6 text-primary/50">{c.tipo}</span>
-            <span className="text-[8px] px-1.5 py-0.5 rounded bg-border/10 text-muted-foreground/60">{c.cobranca}</span>
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 mt-1.5 flex-wrap")}>
+            <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[8px] px-1.5 py-0.5 rounded bg-primary/6 text-primary/50")}>{c.tipo}</span>
+            <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[8px] px-1.5 py-0.5 rounded bg-border/10 text-muted-foreground/60")}>{c.cobranca}</span>
             {c.processosVinculados > 0 && (
-              <span className="text-[8px] px-1.5 py-0.5 rounded bg-info/6 text-info/50">
+              <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[8px] px-1.5 py-0.5 rounded bg-info/6 text-info/50")}>
                 {c.processosVinculados} proc.
               </span>
             )}
@@ -238,7 +239,7 @@ function KanbanCard({ contrato: c, stageColor: _stageColor }: { contrato: Contra
 
           {/* Bottom: valor + dias */}
           <div className="flex items-center justify-between mt-2">
-            <span className="text-[11px] font-bold tabular-nums text-primary/70">{fmtMoeda(c.valor)}</span>
+            <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[11px] font-bold tabular-nums text-primary/70")}>{fmtMoeda(c.valor)}</span>
             <span className={`text-[9px] flex items-center gap-0.5 ${isStuck ? 'text-warning/60' : 'text-muted-foreground/55'}`}>
               <Clock className="size-2.5" />
               {c.diasNoEstagio}d
@@ -266,24 +267,24 @@ function ContratoListRow({ contrato: c }: { contrato: ContratoCard }) {
         {c.clienteTipo === 'pj' ? (
           <Building2 className="size-3.5 text-primary/60" />
         ) : (
-          <span className="text-[9px] font-bold text-primary/60">{getInitials(c.cliente)}</span>
+          <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[9px] font-bold text-primary/60")}>{getInitials(c.cliente)}</span>
         )}
       </div>
 
       {/* Name */}
       <div className="flex-1 min-w-0">
-        <p className="text-xs font-medium truncate">{c.cliente}</p>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium truncate")}>{c.cliente}</p>
         {c.parteContraria && <p className="text-[10px] text-muted-foreground/55 truncate">vs. {c.parteContraria}</p>}
       </div>
 
       {/* Type */}
-      <span className="text-[9px] px-1.5 py-0.5 rounded bg-primary/6 text-primary/50 shrink-0 hidden sm:block">{c.tipo}</span>
+      <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] px-1.5 py-0.5 rounded bg-primary/6 text-primary/50 shrink-0 hidden sm:block")}>{c.tipo}</span>
 
       {/* Stage */}
-      <span className="text-[9px] font-medium shrink-0 hidden md:block w-24 text-right" style={{ color: stage.color }}>{stage.label}</span>
+      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[9px] font-medium shrink-0 hidden md:block w-24 text-right")} style={{ color: stage.color }}>{stage.label}</span>
 
       {/* Value */}
-      <span className="text-[11px] font-bold tabular-nums shrink-0 w-24 text-right">{fmtMoeda(c.valor)}</span>
+      <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[11px] font-bold tabular-nums shrink-0 w-24 text-right")}>{fmtMoeda(c.valor)}</span>
 
       {/* Days */}
       <span className={`text-[9px] shrink-0 w-10 text-right ${isStuck ? 'text-warning/60' : 'text-muted-foreground/50'}`}>
@@ -299,13 +300,13 @@ function ContratoListRow({ contrato: c }: { contrato: ContratoCard }) {
 
 function FinancialStrip() {
   return (
-    <GlassPanel className="px-5 py-3">
-      <div className="flex items-center gap-6 overflow-x-auto">
-        <div className="flex items-center gap-2 shrink-0">
+    <GlassPanel className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-5 py-3")}>
+      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "flex items-center gap-6 overflow-x-auto")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 shrink-0")}>
           <DollarSign className="size-4 text-muted-foreground/55" />
           <div>
-            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Em Carteira</p>
-            <p className="font-display text-lg font-bold tabular-nums">
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>Em Carteira</p>
+            <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold tabular-nums")}>
               <AnimatedNumber value={STATS.emCarteira} prefix="R$ " duration={1200} />
             </p>
           </div>
@@ -314,26 +315,26 @@ function FinancialStrip() {
         <div className="w-px h-8 bg-border/10 shrink-0" />
 
         <div className="shrink-0">
-          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Ticket Médio</p>
-          <p className="font-display text-base font-bold tabular-nums">{fmtMoeda(STATS.ticketMedio)}</p>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>Ticket Médio</p>
+          <p className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-bold → className de <Text>/<Heading> */ "font-display text-base font-bold tabular-nums")}>{fmtMoeda(STATS.ticketMedio)}</p>
         </div>
 
         <div className="w-px h-8 bg-border/10 shrink-0" />
 
         <div className="shrink-0">
-          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Conversão</p>
-          <div className="flex items-center gap-2">
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>Conversão</p>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <ProgressRing percent={STATS.taxaConversao} size={32} color="var(--success)" />
-            <span className="text-xs font-bold text-success/70">{STATS.taxaConversao}%</span>
+            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-bold → className de <Text>/<Heading> */ "text-xs font-bold text-success/70")}>{STATS.taxaConversao}%</span>
           </div>
         </div>
 
         <div className="w-px h-8 bg-border/10 shrink-0" />
 
-        <div className="flex items-center gap-3 shrink-0">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 shrink-0")}>
           <div>
-            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Tendência 6m</p>
-            <p className="text-xs font-semibold text-success/60">+{STATS.novosMes} este mês</p>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>Tendência 6m</p>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-success/60")}>+{STATS.novosMes} este mês</p>
           </div>
           <Sparkline data={STATS.trendMensal} width={60} height={20} color="var(--success)" />
         </div>
@@ -363,12 +364,12 @@ export default function ContratosMockPage() {
   const stuckContratos = CONTRATOS.filter(c => c.diasNoEstagio > 30 && c.status === 'em_contratacao');
 
   return (
-    <div className="space-y-5">
+    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       {/* ── Header ──────────────────────────────────────── */}
-      <div className="flex items-end justify-between gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
         <div>
           <Heading level="page">Contratos</Heading>
-          <p className="text-sm text-muted-foreground/50 mt-0.5">
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 mt-0.5")}>
             {STATS.total} contratos &middot; {fmtMoeda(STATS.emCarteira)} em carteira
           </p>
         </div>
@@ -392,7 +393,7 @@ export default function ContratosMockPage() {
       )}
 
       {/* ── View Controls ───────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
         <TabPills
           tabs={[
             { id: 'todos', label: 'Todos', count: STATS.total },
@@ -405,10 +406,10 @@ export default function ContratosMockPage() {
           onChange={setActiveSegmento}
         />
 
-        <div className="flex items-center gap-2 flex-1 justify-end">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
           <SearchInput value={search} onChange={setSearch} placeholder="Buscar cliente, parte, tipo..." />
           {/* View toggle */}
-          <div className="flex p-0.5 rounded-lg bg-border/6">
+          <div className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "flex p-0.5 rounded-lg bg-border/6")}>
             {([
               { mode: 'pipeline' as ViewMode, icon: GitBranch, label: 'Pipeline' },
               { mode: 'kanban' as ViewMode, icon: Kanban, label: 'Kanban' },
@@ -429,9 +430,9 @@ export default function ContratosMockPage() {
 
       {/* ── Content ─────────────────────────────────────── */}
       {viewMode === 'pipeline' && (
-        <div className="space-y-4">
+        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           {/* Pipeline visual — kanban-style but with financial emphasis */}
-          <div className="flex gap-3 overflow-x-auto pb-2">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex gap-3 overflow-x-auto pb-2")}>
             {PIPELINE_STAGES.map(stage => (
               <KanbanColumn key={stage.id} stage={stage} contratos={filteredContratos.filter(c => c.status === stage.id)} />
             ))}
@@ -440,7 +441,7 @@ export default function ContratosMockPage() {
       )}
 
       {viewMode === 'kanban' && (
-        <div className="flex gap-3 overflow-x-auto pb-2">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex gap-3 overflow-x-auto pb-2")}>
           {PIPELINE_STAGES.filter(s => s.id !== 'desistencia').map(stage => (
             <KanbanColumn key={stage.id} stage={stage} contratos={filteredContratos.filter(c => c.status === stage.id)} />
           ))}
@@ -448,21 +449,21 @@ export default function ContratosMockPage() {
       )}
 
       {viewMode === 'lista' && (
-        <div className="flex flex-col gap-1">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
           {filteredContratos.map(c => (
             <ContratoListRow key={c.id} contrato={c} />
           ))}
           {filteredContratos.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-16 text-center">
+            <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 text-center")}>
               <FileText className="size-8 text-muted-foreground/45 mb-3" />
-              <p className="text-sm font-medium text-muted-foreground/50">Nenhum contrato encontrado</p>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/50")}>Nenhum contrato encontrado</p>
             </div>
           )}
         </div>
       )}
 
       {/* ── Footer ──────────────────────────────────────── */}
-      <p className="text-center text-[10px] text-muted-foreground/50 pb-4">
+      <p className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "text-center text-[10px] text-muted-foreground/50 pb-4")}>
         {'Protótipo — Contract Pipeline Intelligence — dados fictícios'}
       </p>
     </div>

@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { BarChart2 } from 'lucide-react';
 import {
   WidgetContainer,
@@ -29,7 +30,7 @@ function getSegmentColor(index: number): string {
 
 function EmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center py-8 gap-2">
+    <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center justify-center py-8 gap-2")}>
       <BarChart2 className="size-8 text-muted-foreground/45" />
       <p className="text-[11px] text-muted-foreground/60 text-center">
         Nenhuma despesa por categoria disponível
@@ -54,7 +55,7 @@ export function WidgetDespesasTreemap() {
         subtitle="Proporção visual por categoria"
         icon={BarChart2}
       >
-        <p className="text-[11px] text-muted-foreground/60 py-6 text-center">
+        <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-6 text-center")}>
           Dados de despesas indisponíveis.
         </p>
       </WidgetContainer>
@@ -94,16 +95,16 @@ export function WidgetDespesasTreemap() {
         <Treemap segments={segments} height={100} />
       </div>
 
-      <div className="mt-4 pt-3 border-t border-border/10 flex items-end justify-between gap-4">
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; gap-4 → migrar para <Inline gap="default"> */ "mt-4 pt-3 border-t border-border/10 flex items-end justify-between gap-4")}>
         <ComparisonStat
           label="Total mês"
           current={totalAtual}
           previous={totalAtual}
           format="currency"
         />
-        <div className="flex flex-wrap gap-1.5 justify-end">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-wrap gap-1.5 justify-end")}>
           {segments.map((seg) => (
-            <div key={seg.label} className="flex items-center gap-1">
+            <div key={seg.label} className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
               <span
                 className="size-1.5 rounded-full shrink-0"
                 style={{ backgroundColor: seg.color }}

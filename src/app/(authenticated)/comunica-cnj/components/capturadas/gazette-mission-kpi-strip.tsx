@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useMemo } from 'react';
 import { CalendarClock, Clock, Link2, AlertTriangle } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
@@ -95,14 +96,14 @@ export function GazetteMissionKpiStrip({
   return (
     <div className={`grid grid-cols-2 lg:grid-cols-4 gap-3 ${className ?? ''}`}>
       {/* ── Publicações hoje ───────────────────────────── */}
-      <GlassPanel className="px-4 py-3">
-        <div className="flex items-start justify-between gap-2">
+      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Publicações hoje
             </p>
-            <div className="flex items-baseline gap-1.5 mt-1">
-              <p className="font-display text-xl font-bold tabular-nums leading-none">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
                 <AnimatedNumber value={stats.publicacoesHoje} />
               </p>
               <span className="text-[10px] text-muted-foreground/40">
@@ -115,7 +116,7 @@ export function GazetteMissionKpiStrip({
           </IconContainer>
         </div>
         {/* Sparkline 7 dias */}
-        <div className="mt-2.5 flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
           <Sparkline
             data={stats.trend.length >= 2 ? stats.trend : [0, 0]}
             width={80}
@@ -140,14 +141,14 @@ export function GazetteMissionKpiStrip({
       </GlassPanel>
 
       {/* ── Próximo prazo ──────────────────────────────── */}
-      <GlassPanel className="px-4 py-3">
-        <div className="flex items-start justify-between gap-2">
+      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Próximo prazo
             </p>
-            <div className="flex items-baseline gap-1.5 mt-1">
-              <p className="font-display text-xl font-bold tabular-nums leading-none">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
                 {stats.proximoLabel}
               </p>
             </div>
@@ -164,14 +165,14 @@ export function GazetteMissionKpiStrip({
       </GlassPanel>
 
       {/* ── Vinculação ─────────────────────────────────── */}
-      <GlassPanel className="px-4 py-3">
-        <div className="flex items-start justify-between gap-2">
+      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Vinculadas
             </p>
-            <div className="flex items-baseline gap-1.5 mt-1">
-              <p className="font-display text-xl font-bold tabular-nums leading-none">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
                 <AnimatedNumber value={stats.vinculados} />
               </p>
               <span className="text-[10px] text-muted-foreground/40">
@@ -184,7 +185,7 @@ export function GazetteMissionKpiStrip({
           </IconContainer>
         </div>
         {/* Barra de taxa de vinculação */}
-        <div className="mt-2.5 flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full bg-success/25 transition-all duration-500"
@@ -198,14 +199,14 @@ export function GazetteMissionKpiStrip({
       </GlassPanel>
 
       {/* ── Prazos críticos ────────────────────────────── */}
-      <GlassPanel className="px-4 py-3">
-        <div className="flex items-start justify-between gap-2">
+      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Prazos críticos
             </p>
-            <div className="flex items-baseline gap-1.5 mt-1">
-              <p className="font-display text-xl font-bold tabular-nums leading-none">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
                 <AnimatedNumber value={stats.prazosCriticos} />
               </p>
               <span className="text-[10px] text-muted-foreground/40">
@@ -218,7 +219,7 @@ export function GazetteMissionKpiStrip({
           </IconContainer>
         </div>
         {/* Barra dos prazos críticos no universo de órfãos */}
-        <div className="mt-2.5 flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full bg-destructive/30 transition-all duration-500"

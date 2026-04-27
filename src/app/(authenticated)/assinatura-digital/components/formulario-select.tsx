@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import { useEffect, useState, useCallback } from "react";
 import {
   Select,
@@ -79,7 +80,7 @@ export function FormularioSelect({
 
   if (error) {
     return (
-      <div className="text-sm text-destructive">
+      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
         {error}
         <button
           type="button"
@@ -113,15 +114,15 @@ export function FormularioSelect({
           ) : (
             formularios.map((formulario) => (
               <SelectItem key={formulario.id} value={String(formulario.id)}>
-                <div className="flex items-center gap-2">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                   <span>{formulario.nome}</span>
                   {formulario.descricao && (
-                    <span className="text-xs text-muted-foreground truncate max-w-50">
+                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground truncate max-w-50")}>
                       {formulario.descricao}
                     </span>
                   )}
                   {!formulario.ativo && (
-                    <span className="text-xs text-muted-foreground">(Inativo)</span>
+                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>(Inativo)</span>
                   )}
                 </div>
               </SelectItem>

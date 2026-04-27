@@ -10,6 +10,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAgentContext } from '@copilotkit/react-core/v2';
@@ -255,7 +256,7 @@ export function AudienciasClient({
 
       {/* ── View Controls ──────────────────────────────────── */}
       {/* design-system-escape: layout responsivo complexo stack-to-inline */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
         <AudienciasFilterBar
           filters={filters}
           onChange={setFilters}

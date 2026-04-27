@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import {
     ColumnDef,
@@ -71,7 +72,7 @@ export const columns: ColumnDef<TipoExpediente>[] = [
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
+                        <Button variant="ghost" className={cn(/* design-system-escape: p-0 → usar <Inset> */ "h-8 w-8 p-0")}>
                             <span className="sr-only">Abrir menu</span>
                             <MoreHorizontal className="h-4 w-4" />
                         </Button>
@@ -183,7 +184,7 @@ export function TiposExpedientesList({ initialData }: TiposExpedientesListProps)
     };
 
     return (
-        <div className="flex flex-col h-full space-y-4">
+        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "flex flex-col h-full space-y-4")}>
             <DataShell
                 header={
                     <DataTableToolbar

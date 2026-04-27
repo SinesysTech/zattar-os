@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { Users } from 'lucide-react';
 import { UsuarioCard } from '../shared/usuario-card';
@@ -24,7 +25,7 @@ interface CardGridProps {
 
 function CardGrid({ usuarios, lastLoginMap, statsMap, onView }: CardGridProps) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3")}>
       {usuarios.map((usuario) => (
         <UsuarioCard
           key={usuario.id}
@@ -84,7 +85,7 @@ export function UsuariosGridView({
   });
 
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       {sortedKeys.map((cargoNome) => {
         const members = groups.get(cargoNome)!;
         return (

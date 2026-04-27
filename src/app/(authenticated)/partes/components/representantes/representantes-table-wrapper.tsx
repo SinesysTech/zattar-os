@@ -108,14 +108,14 @@ function OabSituacaoBadge({
   };
 
   return (
-    <div className="inline-flex items-center text-xs font-medium rounded-full overflow-hidden shrink-0">
+    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "inline-flex items-center text-xs font-medium rounded-full overflow-hidden shrink-0")}>
       {/* Lado esquerdo: OAB (azul/info) */}
-      <span className="bg-info/15 text-info px-2 py-0.5">
+      <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "bg-info/15 text-info px-2 py-0.5")}>
         {numeroFormatado} OAB-{uf}
       </span>
       {/* Separador e lado direito: Situação */}
       {situacaoLabel && (
-        <span className={cn('px-2 py-0.5 border-l border-background/50', toneClasses[situacaoTone])}>
+        <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'px-2 py-0.5 border-l border-background/50', toneClasses[situacaoTone])}>
           {situacaoLabel}
         </span>
       )}
@@ -134,7 +134,7 @@ function OabsBadges({ oabs }: { oabs: InscricaoOAB[] }) {
   const oabsRestantes = oabs.length - 2;
 
   return (
-    <div className="flex flex-wrap gap-1 items-center">
+    <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-wrap gap-1 items-center")}>
       {oabsVisiveis.map((oab, index) => (
         <OabSituacaoBadge
           key={index}
@@ -256,7 +256,7 @@ export function RepresentantesTableWrapper() {
           const cpfRaw = representante.cpf;
 
           return (
-            <div className="flex flex-col items-start gap-0.5 max-w-full overflow-hidden">
+            <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-start gap-0.5 max-w-full overflow-hidden")}>
               {/* Linha 1: Badges de OABs */}
               {representante.oabs && representante.oabs.length > 0 && (
                 <div className="mb-1">
@@ -264,16 +264,16 @@ export function RepresentantesTableWrapper() {
                 </div>
               )}
               {/* Linha 2: Nome */}
-              <div className="flex items-center gap-1">
-                <span className="font-medium text-sm" title={nome}>
+              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm"> */ "font-medium text-sm")} title={nome}>
                   {nome}
                 </span>
                 <CopyButton text={representante.nome} label="Copiar nome" />
               </div>
               {/* Linha 3: CPF */}
               {cpf && (
-                <div className="flex items-center gap-1">
-                  <span className="text-xs text-muted-foreground">{cpf}</span>
+                <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{cpf}</span>
                   {cpfRaw && <CopyButton text={cpfRaw} label="Copiar CPF" />}
                 </div>
               )}
@@ -398,7 +398,7 @@ export function RepresentantesTableWrapper() {
               }
             />
           ) : (
-            <div className="p-6" />
+            <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")} />
           )
         }
         footer={

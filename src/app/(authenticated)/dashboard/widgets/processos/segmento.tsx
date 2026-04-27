@@ -6,6 +6,7 @@
  *   - data.processos.porSegmento (segmento/count/color)
  */
 
+import { cn } from '@/lib/utils';
 import { LayoutGrid } from 'lucide-react';
 import {
   WidgetContainer,
@@ -30,7 +31,7 @@ export function WidgetSegmento() {
         subtitle="Distribuicao por area juridica"
         depth={1}
       >
-        <p className="text-xs text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
           Nao foi possivel carregar os dados processuais.
         </p>
       </WidgetContainer>
@@ -77,18 +78,18 @@ export function WidgetSegmento() {
       subtitle="Distribuicao por area juridica"
       depth={1}
     >
-      <div className="flex items-center gap-5">
+      <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5")}>
         <MiniDonut
           segments={segments}
           size={88}
           strokeWidth={11}
           centerLabel={total > 0 && dominant ? `${Math.round((dominant.value / total) * 100)}%` : '0%'}
         />
-        <div className="flex flex-col gap-2 flex-1 min-w-0">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2 flex-1 min-w-0")}>
           {segments.map((seg) => {
             const pct = total > 0 ? Math.round((seg.value / total) * 100) : 0;
             return (
-              <div key={seg.label} className="flex items-center gap-2">
+              <div key={seg.label} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <ToneDot tone={seg.tone} aria-label={seg.label} />
                 <span className="text-[10px] text-muted-foreground/60 flex-1 truncate">
                   {seg.label}
@@ -101,7 +102,7 @@ export function WidgetSegmento() {
           })}
         </div>
       </div>
-      <div className="mt-3 pt-3 border-t border-border/10">
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 pt-3 border-t border-border/10")}>
         <StackedBar segments={segments} height={8} />
       </div>
     </WidgetContainer>

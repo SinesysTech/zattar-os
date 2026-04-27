@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Users, CheckCircle, Scale, AlertTriangle } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { IconContainer } from '@/components/ui/icon-container';
@@ -68,16 +69,16 @@ export function UserKpiStrip({ usuarios }: UserKpiStripProps) {
   ];
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 lg:grid-cols-4 gap-3")}>
       {cards.map((card) => (
-        <GlassPanel key={card.label} depth={2} className="px-4 py-3.5">
+        <GlassPanel key={card.label} depth={2} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
           {/* Top row */}
-          <div className="flex items-start justify-between gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
             <div className="flex flex-col min-w-0">
-              <span className="text-[10px] uppercase tracking-wider text-muted-foreground/40 font-semibold truncate">
+              <span className={cn(/* design-system-escape: tracking-wider sem token DS; font-semibold → className de <Text>/<Heading> */ "text-[10px] uppercase tracking-wider text-muted-foreground/40 font-semibold truncate")}>
                 {card.label}
               </span>
-              <span className="text-2xl font-bold mt-1">
+              <span className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-bold mt-1")}>
                 <AnimatedNumber value={card.value} />
               </span>
             </div>
@@ -87,7 +88,7 @@ export function UserKpiStrip({ usuarios }: UserKpiStripProps) {
           </div>
 
           {/* Bottom proportion bar */}
-          <div className="mt-3 space-y-1">
+          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "mt-3 space-y-1")}>
             <div className="h-1 bg-muted/30 rounded-full overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all duration-700 ${card.barColor}`}

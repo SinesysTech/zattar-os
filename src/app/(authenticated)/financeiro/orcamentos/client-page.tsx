@@ -7,6 +7,7 @@
  * REFATORADO: Migrado de TableToolbar (deprecated) para DataTableToolbar (Data Shell)
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
@@ -234,9 +235,9 @@ function criarColunas(
         const orcamento = row.original;
         return (
           <div className="flex flex-col justify-center">
-            <span className="text-sm font-medium">{orcamento.nome}</span>
+            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{orcamento.nome}</span>
             {orcamento.descricao && (
-              <span className="text-xs text-muted-foreground line-clamp-1">
+              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground line-clamp-1")}>
                 {orcamento.descricao}
               </span>
             )}
@@ -254,7 +255,7 @@ function criarColunas(
       meta: { align: 'left' as const, headerLabel: 'Ano' },
       cell: ({ row }) => {
         return (
-          <div className="flex items-center font-medium">
+          <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "flex items-center font-medium")}>
             {row.getValue('ano')}
           </div>
         );
@@ -287,7 +288,7 @@ function criarColunas(
       cell: ({ row }) => {
         const orcamento = row.original;
         return (
-          <div className="flex items-center text-sm">
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex items-center text-sm")}>
             {formatarData(orcamento.dataInicio)} - {formatarData(orcamento.dataFim)}
           </div>
         );
@@ -303,7 +304,7 @@ function criarColunas(
       cell: ({ row }) => {
         const total = calcularTotalOrcado(row.original);
         return (
-          <div className="flex items-center font-mono text-sm font-medium">
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "flex items-center font-mono text-sm font-medium")}>
             {formatarValor(total)}
           </div>
         );
@@ -312,7 +313,7 @@ function criarColunas(
     {
       id: 'itens',
       header: () => (
-        <div className="text-sm font-medium">Itens</div>
+        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Itens</div>
       ),
       size: 70,
       meta: { align: 'left' as const },
@@ -350,7 +351,7 @@ function criarColunas(
     {
       id: 'acoes',
       header: () => (
-        <div className="text-sm font-medium">Ações</div>
+        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Ações</div>
       ),
       enableSorting: false,
       size: 80,
@@ -709,7 +710,7 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
               }
             />
           ) : (
-            <div className="p-6" />
+            <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")} />
           )
         }
         footer={
@@ -764,7 +765,7 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
             <AlertDialogDescription>
               Tem certeza que deseja aprovar este orçamento?
               {selectedOrcamento && (
-                <span className="block mt-2 font-medium text-foreground">
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "block mt-2 font-medium text-foreground")}>
                   {selectedOrcamento.nome} - {selectedOrcamento.ano}
                 </span>
               )}
@@ -788,7 +789,7 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
             <AlertDialogDescription>
               Tem certeza que deseja iniciar a execução deste orçamento?
               {selectedOrcamento && (
-                <span className="block mt-2 font-medium text-foreground">
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "block mt-2 font-medium text-foreground")}>
                   {selectedOrcamento.nome} - {selectedOrcamento.ano}
                 </span>
               )}
@@ -812,7 +813,7 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
             <AlertDialogDescription>
               Tem certeza que deseja encerrar este orçamento?
               {selectedOrcamento && (
-                <span className="block mt-2 font-medium text-foreground">
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "block mt-2 font-medium text-foreground")}>
                   {selectedOrcamento.nome} - {selectedOrcamento.ano}
                 </span>
               )}
@@ -836,11 +837,11 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
             <AlertDialogDescription>
               Tem certeza que deseja excluir este orçamento?
               {selectedOrcamento && (
-                <span className="block mt-2 font-medium text-foreground">
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "block mt-2 font-medium text-foreground")}>
                   {selectedOrcamento.nome} - {selectedOrcamento.ano}
                 </span>
               )}
-              <span className="block mt-2 text-destructive font-medium">
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "block mt-2 text-destructive font-medium")}>
                 Esta ação não pode ser desfeita!
               </span>
             </AlertDialogDescription>

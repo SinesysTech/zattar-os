@@ -127,31 +127,31 @@ export function PostHearingFlow({
       {/* Subtle top accent */}
       <div className="h-px bg-linear-to-r from-transparent via-warning/20 to-transparent" />
 
-      <div className="p-4 sm:p-5">
+      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-5 sem equivalente DS */ "p-4 sm:p-5")}>
         {/* Header */}
         <div className="flex items-start justify-between mb-3">
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <div className="size-1.5 rounded-full bg-warning/50" />
-            <span className="text-micro-caption font-semibold uppercase tracking-wider text-warning/60">
+            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-micro-caption font-semibold uppercase tracking-wider text-warning/60")}>
               Concluída
             </span>
             <span className="text-micro-caption text-muted-foreground/60">
               {audiencia.tipoDescricao} · {format(dataFim, "HH:mm", { locale: ptBR })}
             </span>
           </div>
-          <div className="flex items-center gap-1">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
             <Clock className={cn("size-2.5", urgencyColor)} />
-            <span className={cn("text-micro-caption tabular-nums font-medium", urgencyColor)}>
+            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-micro-caption tabular-nums font-medium", urgencyColor)}>
               há {elapsedLabel}
             </span>
           </div>
         </div>
 
         {/* Process info */}
-        <div className="flex items-center gap-2 mb-3">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
           <span className="text-mono-num text-muted-foreground/60">{audiencia.numeroProcesso}</span>
           {audiencia.trt && (
-            <span className="text-micro-badge font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40">{audiencia.trt}</span>
+            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-badge font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40")}>{audiencia.trt}</span>
           )}
         </div>
 
@@ -165,14 +165,14 @@ export function PostHearingFlow({
         {/* Result selector */}
         {!isFinalized && (
           <div className="mb-4">
-            <span className="text-micro-caption text-muted-foreground/60 uppercase tracking-wider">Resultado</span>
-            <div className="flex items-center gap-1.5 mt-1.5">
+            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Resultado</span>
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mt-1.5")}>
               {RESULT_OPTIONS.map((opt) => (
                 <button
                   key={opt.value}
                   onClick={() => handleSelectResult(opt.value)}
                   className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-micro-caption font-medium border transition-all cursor-pointer",
+                    /* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-micro-caption font-medium border transition-all cursor-pointer",
                     selectedResult === opt.value
                       ? "border-primary/30 bg-primary/8 text-primary"
                       : "border-border/15 text-muted-foreground/50 hover:text-foreground/70 hover:border-border/25",
@@ -189,7 +189,7 @@ export function PostHearingFlow({
         {/* Post-action checklist */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <span className="text-micro-caption text-muted-foreground/60 uppercase tracking-wider">Ações pós-audiência</span>
+            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Ações pós-audiência</span>
             <span className="text-micro-caption tabular-nums text-muted-foreground/60">{completedCount}/{postActions.length}</span>
           </div>
 
@@ -201,14 +201,14 @@ export function PostHearingFlow({
             />
           </div>
 
-          <div className="space-y-0.5">
+          <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
             {postActions.map((action) => (
               <button
                 key={action.id}
                 onClick={() => !action.done && handleActionClick(action.id)}
                 disabled={action.done}
                 className={cn(
-                  "w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-micro-caption transition-all",
+                  /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-micro-caption transition-all",
                   action.done
                     ? "text-muted-foreground/55"
                     : "text-foreground/60 hover:bg-foreground/4or-pointer",

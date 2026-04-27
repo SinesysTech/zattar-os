@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
@@ -146,10 +147,10 @@ const actions: ActionDef[] = [
 
 export default function PericiasDoc() {
   return (
-    <div className="space-y-10">
-      <div className="space-y-2">
+    <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Heading level="page">Perícias</Heading>
-        <p className="text-muted-foreground text-lg">
+        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-muted-foreground text-lg")}>
           Gestão de perícias judiciais, quesitos, peritos e laudos periciais.
         </p>
       </div>
@@ -183,7 +184,7 @@ export default function PericiasDoc() {
         <p className="text-muted-foreground">
           Uma perícia judicial tipicamente passa pelas seguintes etapas no sistema:
         </p>
-        <ul className="list-disc list-inside space-y-1 text-muted-foreground text-sm mt-2">
+        <ul className={cn(/* design-system-escape: space-y-1 sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "list-disc list-inside space-y-1 text-muted-foreground text-sm mt-2")}>
           <li><strong>Aguardando Nomeação:</strong> perícia determinada, mas perito ainda não nomeado.</li>
           <li><strong>Agendada:</strong> perito nomeado e data definida.</li>
           <li><strong>Em Andamento:</strong> perícia em execução.</li>

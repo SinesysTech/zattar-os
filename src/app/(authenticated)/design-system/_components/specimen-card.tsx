@@ -19,9 +19,9 @@ export function SpecimenCard({
   children,
 }: SpecimenCardProps) {
   return (
-    <GlassPanel depth={1} className={cn("p-5 gap-4", className)}>
-      <div className="flex items-baseline justify-between gap-4">
-        <div className="space-y-0.5">
+    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset>; gap-4 → migrar para <Inline gap="default"> */ "p-5 gap-4", className)}>
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-baseline justify-between gap-4")}>
+        <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
           <Text variant="meta-label">{eyebrow}</Text>
           {title && <Heading level="card">{title}</Heading>}
         </div>

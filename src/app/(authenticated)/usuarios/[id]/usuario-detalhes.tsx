@@ -1,6 +1,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, AlertCircle, User, Shield} from 'lucide-react';
@@ -56,9 +57,9 @@ interface UsuarioDetalhesProps {
 
 function DataField({ label, value }: { label: string; value: string | null | undefined }) {
   return (
-    <div className="space-y-1">
-      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{label}</p>
-      <p className="text-sm">{value || '-'}</p>
+    <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wide sem token DS */ "text-xs font-medium text-muted-foreground uppercase tracking-wide")}>{label}</p>
+      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{value || '-'}</p>
     </div>
   );
 }
@@ -154,8 +155,8 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
   if (isLoadingUsuario) {
     return (
-      <div className="py-8 space-y-4">
-        <div className="flex items-center gap-2.5">
+      <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv.; space-y-4 → migrar para <Stack gap="default"> */ "py-8 space-y-4")}>
+        <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
           <Button
             variant="ghost"
             size="icon"
@@ -167,10 +168,10 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
           </Button>
           <div className="h-5 w-48 bg-muted/40 animate-pulse rounded" />
         </div>
-        <GlassPanel depth={1} className="p-12">
-          <div className="flex items-center justify-center gap-3">
+        <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12")}>
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-center gap-3")}>
             <LoadingSpinner size="lg" className="text-primary" />
-            <p className="text-sm text-muted-foreground">Carregando dados do usuário...</p>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Carregando dados do usuário...</p>
           </div>
         </GlassPanel>
       </div>
@@ -181,8 +182,8 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
   if (errorUsuario || !usuario) {
     return (
-      <div className="py-8 space-y-4">
-        <div className="flex items-center gap-2.5">
+      <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv.; space-y-4 → migrar para <Stack gap="default"> */ "py-8 space-y-4")}>
+        <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
           <Button
             variant="ghost"
             size="icon"
@@ -194,7 +195,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
           </Button>
           <Heading level="section">Usuário</Heading>
         </div>
-        <GlassPanel depth={1} className="p-6 space-y-4">
+        <GlassPanel depth={1} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; space-y-4 → migrar para <Stack gap="default"> */ "p-6 space-y-4")}>
           <Alert variant="destructive">
             <AlertCircle className="size-4" />
             <AlertTitle>Erro ao carregar usuário</AlertTitle>
@@ -202,7 +203,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
               {errorUsuario || 'Usuário não encontrado ou você não tem permissão para acessá-lo.'}
             </AlertDescription>
           </Alert>
-          <Button onClick={() => router.push('/app/usuarios')} className="gap-2">
+          <Button onClick={() => router.push('/app/usuarios')} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}>
             <ArrowLeft className="size-4" />
             Voltar para Usuários
           </Button>
@@ -214,9 +215,9 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
   // ─── Main Layout ────────────────────────────────────────────────────────────
 
   return (
-    <div className="py-8 space-y-6">
+    <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv.; space-y-6 → migrar para <Stack gap="loose"> */ "py-8 space-y-6")}>
       {/* Two-column grid: sidebar (sticky) + content */}
-      <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-4 items-start">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-4 items-start")}>
 
         {/* ── Left: ProfileSidebar ─────────────────────────────────────────── */}
         <ProfileSidebar
@@ -229,10 +230,10 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
         />
 
         {/* ── Right: Breadcrumb + Tabs + Content ───────────────────────────── */}
-        <div className="space-y-4 min-w-0">
+        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4 min-w-0")}>
 
           {/* Breadcrumb */}
-          <div className="flex items-center gap-2.5">
+          <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
             <Button
               variant="ghost"
               size="icon"
@@ -242,15 +243,15 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
             >
               <ArrowLeft className="size-4" />
             </Button>
-            <div className="text-sm text-muted-foreground/50">
+            <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50")}>
               <span
                 className="hover:text-foreground cursor-pointer transition-colors"
                 onClick={() => router.push('/app/usuarios')}
               >
                 Usuários
               </span>
-              <span className="mx-1.5">/</span>
-              <span className="text-foreground font-medium">{usuario.nomeCompleto}</span>
+              <span className={cn(/* design-system-escape: mx-1.5 margin sem primitiva DS */ "mx-1.5")}>/</span>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-foreground font-medium")}>{usuario.nomeCompleto}</span>
             </div>
           </div>
 
@@ -269,7 +270,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
           {/* ── Tab: Visão Geral ─────────────────────────────────────────── */}
           {activeTab === 'visao-geral' && (
-            <div className="space-y-4">
+            <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
               <AtividadesCards usuarioId={usuario.id} />
               <ActivityHeatmap data={[]} />
             </div>
@@ -277,8 +278,8 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
           {/* ── Tab: Dados Cadastrais ────────────────────────────────────── */}
           {activeTab === 'dados' && (
-            <GlassPanel depth={1} className="p-6">
-              <div className="flex items-center gap-2 mb-5">
+            <GlassPanel depth={1} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-5")}>
                 <User className="size-4 text-muted-foreground/50" />
                 <Heading level="card">Informações Pessoais</Heading>
               </div>
@@ -297,11 +298,11 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
                   label="OAB"
                   value={usuario.oab && usuario.ufOab ? `${usuario.oab} / ${usuario.ufOab}` : null}
                 />
-                <div className="space-y-1">
-                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Cargo</p>
-                  <p className="text-sm">{usuario.cargo ? usuario.cargo.nome : '-'}</p>
+                <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wide sem token DS */ "text-xs font-medium text-muted-foreground uppercase tracking-wide")}>Cargo</p>
+                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{usuario.cargo ? usuario.cargo.nome : '-'}</p>
                   {usuario.cargo?.descricao && (
-                    <p className="text-xs text-muted-foreground">{usuario.cargo.descricao}</p>
+                    <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{usuario.cargo.descricao}</p>
                   )}
                 </div>
                 <div className="md:col-span-2 lg:col-span-3">
@@ -313,7 +314,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
           {/* ── Tab: Atividades ──────────────────────────────────────────── */}
           {activeTab === 'atividades' && (
-            <div className="space-y-4">
+            <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
               <AtividadesCards usuarioId={usuario.id} />
               <AtividadesRecentes usuarioId={usuario.id} />
             </div>
@@ -339,14 +340,14 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
           {/* ── Tab: Segurança ───────────────────────────────────────────── */}
           {activeTab === 'seguranca' && (
-            <div className="space-y-4">
+            <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
               {/* Credentials */}
-              <GlassPanel depth={1} className="p-6">
+              <GlassPanel depth={1} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
                 <Heading level="card" className="mb-4">Credenciais de Acesso</Heading>
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="space-y-1">
-                    <div className="text-sm font-medium">Redefinir Senha</div>
-                    <div className="text-sm text-muted-foreground">
+                <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between")}>
+                  <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+                    <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Redefinir Senha</div>
+                    <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                       Define uma nova senha para o usuário selecionado.
                     </div>
                   </div>
@@ -365,19 +366,19 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
               {/* Super Admin toggle — only for super admins */}
               {usuarioLogado?.isSuperAdmin && (
-                <GlassPanel depth={1} className="p-6">
-                  <div className="flex items-center gap-2 mb-4">
+                <GlassPanel depth={1} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-4")}>
                     <Shield className="size-4 text-muted-foreground/50" />
                     <Heading level="card">Configurações de Segurança</Heading>
                   </div>
-                  <div className="flex items-center justify-between p-4 border border-border/20 rounded-xl">
-                    <div className="space-y-0.5">
-                      <div className="text-sm font-medium">Super Administrador</div>
-                      <div className="text-sm text-muted-foreground">
+                  <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex items-center justify-between p-4 border border-border/20 rounded-xl")}>
+                    <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
+                      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Super Administrador</div>
+                      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                         Super Admins possuem acesso total ao sistema e bypassam todas as permissões.
                       </div>
                       {usuario.id === usuarioLogado.id && (
-                        <div className="text-xs text-warning mt-2">
+                        <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-warning mt-2")}>
                           Você não pode remover seu próprio status de Super Admin
                         </div>
                       )}

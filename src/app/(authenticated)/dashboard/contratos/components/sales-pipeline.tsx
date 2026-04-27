@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -39,7 +40,7 @@ export async function SalesPipeline({ dateFilter }: { dateFilter: CrmDateFilter 
           <CardDescription>Contratos por estágio</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
             Erro ao carregar dados: {result.error || result.message || 'Erro desconhecido'}
           </p>
         </CardContent>
@@ -55,7 +56,7 @@ export async function SalesPipeline({ dateFilter }: { dateFilter: CrmDateFilter 
           <CardDescription>Contratos por estágio</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
             Nenhum dado disponível
           </p>
         </CardContent>
@@ -84,7 +85,7 @@ export async function SalesPipeline({ dateFilter }: { dateFilter: CrmDateFilter 
           <CardDescription>Contratos por estágio</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
             Nenhum contrato encontrado
           </p>
         </CardContent>
@@ -111,9 +112,9 @@ export async function SalesPipeline({ dateFilter }: { dateFilter: CrmDateFilter 
                       style={{ width: `${percentage}%` }}></div>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <div className="text-sm">
-                      <p className="font-medium">{stage.name}</p>
-                      <p className="text-muted-foreground text-xs">
+                    <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
+                      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{stage.name}</p>
+                      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground text-xs")}>
                         {stage.count} {stage.count === 1 ? 'contrato' : 'contratos'}
                       </p>
                     </div>
@@ -124,26 +125,26 @@ export async function SalesPipeline({ dateFilter }: { dateFilter: CrmDateFilter 
           </div>
         </TooltipProvider>
 
-        <div className="space-y-4">
+        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           {pipelineData.map((stage) => {
             const percentage = totalCount > 0 ? (stage.count / totalCount) * 100 : 0;
             return (
-              <div key={stage.id} className="flex items-center gap-4">
+              <div key={stage.id} className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
                 <div className={`h-3 w-3 rounded-full ${stage.color}`}></div>
                 <div className="flex flex-1 items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium">{stage.name}</p>
-                    <p className="text-muted-foreground text-xs">
+                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{stage.name}</p>
+                    <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground text-xs")}>
                       {stage.count} {stage.count === 1 ? 'contrato' : 'contratos'}
                     </p>
                   </div>
-                  <div className="flex w-24 items-center gap-2">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex w-24 items-center gap-2")}>
                     <Progress
                       value={percentage}
                       className="h-2"
                       indicatorColor={stage.color}
                     />
-                    <span className="text-muted-foreground w-10 text-right text-xs">
+                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground w-10 text-right text-xs")}>
                       {Math.round(percentage)}%
                     </span>
                   </div>

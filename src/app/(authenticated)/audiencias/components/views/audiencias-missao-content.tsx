@@ -128,22 +128,22 @@ export function AudienciasMissaoContent({
   const dateLabel = format(currentDate, "EEEE, d 'de' MMMM", { locale: ptBR });
 
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       {/* Date Navigator */}
-      <div className="flex items-center gap-2">
-        <button onClick={handlePrev} className="p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <button onClick={handlePrev} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer")}>
           <ChevronLeft className="size-4" />
         </button>
         <button onClick={handleToday} className={cn(
-          'px-2.5 py-1 rounded-lg text-caption font-medium transition-colors cursor-pointer',
+          /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'px-2.5 py-1 rounded-lg text-caption font-medium transition-colors cursor-pointer',
           isCurrentDay ? 'bg-primary/12 text-primary' : 'bg-border/8 text-muted-foreground/50 hover:bg-border/15',
         )}>
           Hoje
         </button>
-        <button onClick={handleNext} className="p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer">
+        <button onClick={handleNext} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer")}>
           <ChevronRight className="size-4" />
         </button>
-        <span className="text-sm font-medium capitalize ml-1">{dateLabel}</span>
+        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium capitalize ml-1")}>{dateLabel}</span>
       </div>
 
       {/* Hero Card */}
@@ -160,14 +160,14 @@ export function AudienciasMissaoContent({
       )}
 
       {/* Main Grid: Timeline + Sidebar */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 lg:grid-cols-3 gap-4")}>
         {/* Timeline (2/3) */}
         <div className="lg:col-span-2">
-          <GlassPanel className="p-4 sm:p-5">
+          <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-5 sem equivalente DS */ "p-4 sm:p-5")}>
             <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <Clock className="size-3 text-muted-foreground/50" />
-                <Text variant="caption" as="span" className="font-medium text-muted-foreground/60">Timeline do dia</Text>
+                <Text variant="caption" as="span" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground/60")}>Timeline do dia</Text>
               </div>
               <span className="text-micro-caption tabular-nums text-muted-foreground/60">
                 {dayAudiencias.length} audiência{dayAudiencias.length !== 1 ? 's' : ''}
@@ -175,12 +175,12 @@ export function AudienciasMissaoContent({
             </div>
 
             {dayAudiencias.length === 0 ? (
-              <div className="py-12 text-center">
+              <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "py-12 text-center")}>
                 <CalendarDays className="size-8 text-muted-foreground/10 mx-auto mb-2" />
                 <Text variant="caption" as="p" className="text-muted-foreground/60">Nenhuma audiência neste dia</Text>
               </div>
             ) : (
-              <div className="space-y-0">
+              <div className={cn(/* design-system-escape: space-y-0 sem token DS */ "space-y-0")}>
                 {morning.length > 0 && (
                   <>
                     <SectionHeader label="Manhã" icon={Sun} />
@@ -194,9 +194,9 @@ export function AudienciasMissaoContent({
                 )}
 
                 {morning.length > 0 && afternoon.length > 0 && (
-                  <div className="flex items-center gap-2 py-3 px-2">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-3 padding direcional sem Inset equiv.; px-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 py-3 px-2")}>
                     <div className="flex-1 h-px bg-border/8" />
-                    <span className="text-micro-badge text-muted-foreground/45 uppercase tracking-widest">Intervalo</span>
+                    <span className={cn(/* design-system-escape: tracking-widest sem token DS */ "text-micro-badge text-muted-foreground/45 uppercase tracking-widest")}>Intervalo</span>
                     <div className="flex-1 h-px bg-border/8" />
                   </div>
                 )}
@@ -224,9 +224,9 @@ export function AudienciasMissaoContent({
 
                 {finalizadas.length > 0 && (
                   <>
-                    <div className="flex items-center gap-2 py-2 mt-2">
+                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 py-2 mt-2")}>
                       <div className="flex-1 h-px bg-border/8" />
-                      <span className="text-micro-caption text-muted-foreground/60 uppercase tracking-wider">Concluídas</span>
+                      <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Concluídas</span>
                       <div className="flex-1 h-px bg-border/8" />
                     </div>
                     {finalizadas.map((a) => (
@@ -240,7 +240,7 @@ export function AudienciasMissaoContent({
         </div>
 
         {/* Sidebar (1/3) */}
-        <div className="space-y-4">
+        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           <RhythmStrip audiencias={audiencias} />
           <LoadHeatmap audiencias={audiencias} responsavelNomes={responsavelNomes} />
         </div>
@@ -253,9 +253,9 @@ export function AudienciasMissaoContent({
 
 function SectionHeader({ label, icon: Icon }: { label: string; icon: typeof Sun }) {
   return (
-    <div className="flex items-center gap-2 py-2">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 py-2")}>
       <Icon className="size-3 text-muted-foreground/40" />
-      <span className="text-micro-caption font-semibold text-muted-foreground/60 uppercase tracking-wider">{label}</span>
+      <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-micro-caption font-semibold text-muted-foreground/60 uppercase tracking-wider")}>{label}</span>
       <div className="flex-1 h-px bg-border/6" />
     </div>
   );
@@ -265,7 +265,7 @@ function renderBuffer(prevEnd: string, nextStart: string) {
   const buffer = getBufferMinutes(prevEnd, nextStart);
   if (buffer <= 0 || buffer >= 180) return null;
   return (
-    <div className="flex items-center gap-2 py-1 pl-16">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-1 padding direcional sem Inset equiv.; pl-16 padding direcional sem Inset equiv. */ "flex items-center gap-2 py-1 pl-16")}>
       <div className="w-px h-4 bg-border/10 ml-0.5" />
       <span className="text-micro-caption text-muted-foreground/45">{getBufferLabel(buffer)} buffer</span>
     </div>
@@ -286,15 +286,15 @@ function TimelineCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: (
   const prepStatus = prepScore >= 80 ? 'good' : prepScore >= 50 ? 'warning' : 'danger';
 
   return (
-    <div className="flex items-stretch gap-3 py-1 group">
-      <div className="w-12 shrink-0 flex flex-col items-end pt-2.5">
-        <span className={cn('text-caption tabular-nums font-medium', isPast ? 'text-muted-foreground/55' : 'text-foreground/60')}>
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-1 padding direcional sem Inset equiv. */ "flex items-stretch gap-3 py-1 group")}>
+      <div className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "w-12 shrink-0 flex flex-col items-end pt-2.5")}>
+        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-caption tabular-nums font-medium', isPast ? 'text-muted-foreground/55' : 'text-foreground/60')}>
           {fmtTime(audiencia.dataInicio)}
         </span>
         <span className="text-micro-caption tabular-nums text-muted-foreground/60">{fmtTime(audiencia.dataFim)}</span>
       </div>
 
-      <div className="flex flex-col items-center pt-3 shrink-0">
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex flex-col items-center pt-3 shrink-0")}>
         <div className={cn('size-2 rounded-full', isOngoing ? 'bg-success animate-pulse' : isPast ? 'bg-muted-foreground/20' : 'bg-primary/50')} />
         <div className="flex-1 w-px bg-border/8 mt-1" />
       </div>
@@ -302,20 +302,20 @@ function TimelineCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: (
       <button
         onClick={onClick}
         className={cn(
-          'flex-1 rounded-xl p-3 transition-all duration-200 min-w-0 text-left cursor-pointer',
+          /* design-system-escape: p-3 → usar <Inset> */ 'flex-1 rounded-xl p-3 transition-all duration-200 min-w-0 text-left cursor-pointer',
           'border border-border/12 hover:border-border/20 hover:shadow-sm hover:scale-[1.005]',
           isPast && 'opacity-50',
           isOngoing && 'ring-1 ring-success/20 border-success/15',
         )}
       >
-        <div className="flex items-start justify-between gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <Gavel className="size-3 text-primary/40 shrink-0" />
               <Text variant="label" as="span" className="truncate text-foreground">{audiencia.tipoDescricao || 'Audiência'}</Text>
-              {isOngoing && <span className="text-micro-badge font-semibold text-success px-1.5 py-px rounded-full bg-success/10">Agora</span>}
+              {isOngoing && <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-badge font-semibold text-success px-1.5 py-px rounded-full bg-success/10")}>Agora</span>}
               <Text variant="micro-badge" as="span" className={cn(
-                'inline-flex items-center gap-0.5 px-1.5 py-px rounded-full font-semibold tabular-nums shrink-0',
+                /* design-system-escape: gap-0.5 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center gap-0.5 px-1.5 py-px rounded-full font-semibold tabular-nums shrink-0',
                 prepStatus === 'good' ? 'bg-success/10 text-success' : prepStatus === 'warning' ? 'bg-warning/10 text-warning' : 'bg-destructive/10 text-destructive',
               )}>
                 {prepStatus === 'good' ? <CheckCircle2 className="size-2" /> : <AlertTriangle className="size-2" />}
@@ -333,17 +333,17 @@ function TimelineCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: (
           </p>
         )}
 
-        <div className="flex items-center gap-2 mt-2 ml-5 flex-wrap">
-          <div className="flex items-center gap-1">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-2 ml-5 flex-wrap")}>
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
             <ModalIcon className="size-2 text-muted-foreground/50" />
             <span className="text-micro-caption text-muted-foreground/60">
               {audiencia.modalidade === 'presencial' ? 'Presencial' : audiencia.modalidade === 'hibrida' ? 'Híbrida' : 'Virtual'}
             </span>
           </div>
-          {audiencia.trt && <span className="text-micro-badge font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40">{audiencia.trt}</span>}
+          {audiencia.trt && <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-badge font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40")}>{audiencia.trt}</span>}
           {audiencia.urlAudienciaVirtual && (audiencia.modalidade === 'virtual' || audiencia.modalidade === 'hibrida') && (
             <a href={audiencia.urlAudienciaVirtual} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}
-              className="text-micro-badge font-semibold px-1.5 py-px rounded bg-info/8 text-info/50 hover:bg-info/15 transition-colors">
+              className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-badge font-semibold px-1.5 py-px rounded bg-info/8 text-info/50 hover:bg-info/15 transition-colors")}>
               Entrar na sala
             </a>
           )}

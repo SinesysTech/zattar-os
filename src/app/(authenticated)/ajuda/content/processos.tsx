@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
@@ -183,10 +184,10 @@ const captureSteps: StepDef[] = [
 
 export default function ProcessosDoc() {
   return (
-    <div className="space-y-10">
-      <div className="space-y-2">
+    <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Heading level="page">Processos</Heading>
-        <p className="text-muted-foreground text-lg">
+        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-muted-foreground text-lg")}>
           Gestão completa dos processos judiciais do escritório com captura automática do PJe.
         </p>
       </div>
@@ -228,7 +229,7 @@ export default function ProcessosDoc() {
         <p className="text-muted-foreground">
           A lista de processos pode ser filtrada e ordenada por múltiplos critérios simultaneamente:
         </p>
-        <ul className="list-disc list-inside space-y-1 text-muted-foreground text-sm mt-2">
+        <ul className={cn(/* design-system-escape: space-y-1 sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "list-disc list-inside space-y-1 text-muted-foreground text-sm mt-2")}>
           <li>Tribunal (TJSP, TRT, STJ, STF, TRF, etc.)</li>
           <li>Status do processo (Em Andamento, Arquivado, Encerrado)</li>
           <li>Área do direito (Cível, Trabalhista, Criminal, etc.)</li>

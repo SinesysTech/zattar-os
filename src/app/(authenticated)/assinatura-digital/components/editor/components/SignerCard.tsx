@@ -42,7 +42,7 @@ const SignerCard = memo(function SignerCard({
   return (
     <div
       className={cn(
-        'group relative flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-200',
+        /* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ 'group relative flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-200',
         'border backdrop-blur-md',
         isActive
           ? 'glass-kpi border-primary/40 bg-primary/5 shadow-sm'
@@ -72,7 +72,7 @@ const SignerCard = memo(function SignerCard({
 
       {/* Avatar com iniciais */}
       <div
-        className="flex items-center justify-center size-8 rounded-full shrink-0 font-semibold text-[11px] text-white"
+        className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "flex items-center justify-center size-8 rounded-full shrink-0 font-semibold text-[11px] text-white")}
         style={{ backgroundColor: signer.cor }}
       >
         {getInitials(signer.nome)}
@@ -80,7 +80,7 @@ const SignerCard = memo(function SignerCard({
 
       {/* Info */}
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-foreground truncate">
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-foreground truncate")}>
           {signer.nome}
           {isCurrentUser && ' (Você)'}
         </p>
@@ -92,7 +92,7 @@ const SignerCard = memo(function SignerCard({
       {/* Actions — visíveis on hover (ou sempre no ativo) */}
       <div
         className={cn(
-          'flex items-center gap-0.5 transition-opacity',
+          /* design-system-escape: gap-0.5 gap sem token DS */ 'flex items-center gap-0.5 transition-opacity',
           isActive
             ? 'opacity-100'
             : 'opacity-0 group-hover:opacity-100 focus-within:opacity-100',

@@ -120,7 +120,7 @@ function CountdownBadge({
   return (
     <span
       className={cn(
-        'text-[11px] font-semibold tabular-nums px-2 py-0.5 rounded-md',
+        /* design-system-escape: font-semibold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'text-[11px] font-semibold tabular-nums px-2 py-0.5 rounded-md',
         URGENCY_COUNTDOWN[urgency],
       )}
     >
@@ -146,14 +146,14 @@ function ResponsavelCell({ responsavelId, usuarios }: ResponsavelCellProps) {
 
   if (responsavel && nome) {
     return (
-      <div className="flex items-center gap-2 min-w-0">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
         <Avatar size="xs" className="shrink-0 size-6">
           <AvatarImage src={responsavel.avatarUrl || undefined} alt={nome} />
           <AvatarFallback className="text-[9px]">
             {getInitials(nome)}
           </AvatarFallback>
         </Avatar>
-        <span className="text-[12px] font-medium text-foreground/85 truncate">
+        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[12px] font-medium text-foreground/85 truncate")}>
           {nome}
         </span>
       </div>
@@ -161,7 +161,7 @@ function ResponsavelCell({ responsavelId, usuarios }: ResponsavelCellProps) {
   }
 
   return (
-    <div className="flex items-center gap-2 min-w-0">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
       <div className="size-6 rounded-full bg-muted/40 flex items-center justify-center shrink-0">
         <User className="size-3 text-muted-foreground/40" />
       </div>
@@ -209,7 +209,7 @@ function GlassRow({ pericia, usuarios, onViewDetail }: GlassRowProps) {
         }
       }}
       className={cn(
-        'group w-full text-left rounded-2xl border border-border/60 bg-card p-4 cursor-pointer',
+        /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'group w-full text-left rounded-2xl border border-border/60 bg-card p-4 cursor-pointer',
         'transition-all duration-180 ease-out',
         'hover:border-border hover:shadow-[0_4px_14px_rgba(0,0,0,0.06)] hover:-translate-y-px',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
@@ -217,25 +217,25 @@ function GlassRow({ pericia, usuarios, onViewDetail }: GlassRowProps) {
       )}
     >
       {/* ── Linha 1: Partes (título) · Perito · Especialidade · Situação ── */}
-      <div className="flex items-start justify-between gap-3 flex-wrap">
-        <div className="flex-1 min-w-0 flex items-baseline gap-3 flex-wrap">
-          <h3 className="text-sm font-semibold text-foreground leading-snug wrap-break-word">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3 flex-wrap")}>
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex-1 min-w-0 flex items-baseline gap-3 flex-wrap")}>
+          <h3 className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading>; leading-snug sem token DS */ "text-sm font-semibold text-foreground leading-snug wrap-break-word")}>
             {parteAutora || 'Autor não informado'}
-            <span className="mx-2 text-muted-foreground/50 font-medium">×</span>
+            <span className={cn(/* design-system-escape: mx-2 margin sem primitiva DS; font-medium → className de <Text>/<Heading> */ "mx-2 text-muted-foreground/50 font-medium")}>×</span>
             {parteRe || 'Réu não informado'}
           </h3>
 
           {perito && (
-            <span className="inline-flex items-baseline gap-1.5 text-[12px] text-foreground/70 wrap-break-word">
+            <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "inline-flex items-baseline gap-1.5 text-[12px] text-foreground/70 wrap-break-word")}>
               <Briefcase className="size-3 text-muted-foreground/50 translate-y-0.5 shrink-0" />
               <span className="wrap-break-word">{perito}</span>
             </span>
           )}
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 shrink-0")}>
           {especialidade && (
-            <span className="inline-flex items-center rounded bg-muted border border-border/50 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
+            <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "inline-flex items-center rounded bg-muted border border-border/50 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground")}>
               {especialidade}
             </span>
           )}
@@ -244,7 +244,7 @@ function GlassRow({ pericia, usuarios, onViewDetail }: GlassRowProps) {
               'pericia_situacao',
               pericia.situacaoCodigo,
             )}
-            className="text-[10px] px-2 py-0.5 font-semibold uppercase tracking-wider"
+            className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] px-2 py-0.5 font-semibold uppercase tracking-wider")}
           >
             {SITUACAO_PERICIA_LABELS[pericia.situacaoCodigo]}
           </AppBadge>
@@ -252,38 +252,38 @@ function GlassRow({ pericia, usuarios, onViewDetail }: GlassRowProps) {
       </div>
 
       {/* ── Linha 2: # Processo + TRT badge + Grau badge ───────── */}
-      <div className="mt-2 flex flex-wrap items-center gap-1.5">
-        <span className="text-[12px] font-medium tabular-nums text-muted-foreground">
+      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "mt-2 flex flex-wrap items-center gap-1.5")}>
+        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[12px] font-medium tabular-nums text-muted-foreground")}>
           {pericia.numeroProcesso}
         </span>
         {pericia.trt && (
-          <span className="inline-flex items-center rounded bg-primary/8 border border-primary/15 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-primary/80">
+          <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "inline-flex items-center rounded bg-primary/8 border border-primary/15 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-primary/80")}>
             {pericia.trt}
           </span>
         )}
         {grauLabel && (
-          <span className="inline-flex items-center rounded bg-muted border border-border/50 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
+          <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "inline-flex items-center rounded bg-muted border border-border/50 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground")}>
             {grauLabel}
           </span>
         )}
       </div>
 
       {/* ── Footer: Prazo · Responsável · Countdown ── */}
-      <div className="mt-3 pt-3 border-t border-border/40 flex items-center justify-between gap-3 flex-wrap">
-        <div className="flex items-center gap-4 min-w-0 flex-wrap">
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "mt-3 pt-3 border-t border-border/40 flex items-center justify-between gap-3 flex-wrap")}>
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4 min-w-0 flex-wrap")}>
           {prazoFormatted && (
-            <div className="flex items-center gap-1.5">
-              <span className="text-[10px] uppercase tracking-wider text-muted-foreground/55 font-medium">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+              <span className={cn(/* design-system-escape: tracking-wider sem token DS; font-medium → className de <Text>/<Heading> */ "text-[10px] uppercase tracking-wider text-muted-foreground/55 font-medium")}>
                 Prazo
               </span>
-              <span className="text-[12px] font-medium tabular-nums text-foreground/85">
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[12px] font-medium tabular-nums text-foreground/85")}>
                 {prazoFormatted}
               </span>
             </div>
           )}
         </div>
 
-        <div className="flex items-center gap-3 shrink-0">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 shrink-0")}>
           <ResponsavelCell
             responsavelId={pericia.responsavelId}
             usuarios={usuarios}
@@ -316,7 +316,7 @@ export function PericiasGlassList({
 }: PericiasGlassListProps) {
   if (isLoading) {
     return (
-      <div className="space-y-2">
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         {Array.from({ length: 6 }).map((_, i) => (
           <Skeleton key={i} className="h-28 w-full rounded-2xl" />
         ))}
@@ -328,16 +328,16 @@ export function PericiasGlassList({
     return (
       <GlassPanel
         depth={1}
-        className="p-12 flex flex-col items-center justify-center text-center"
+        className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12 flex flex-col items-center justify-center text-center")}
       >
         <Sparkles className="size-10 text-primary/30 mb-3" />
-        <p className="text-sm text-muted-foreground">{emptyMessage}</p>
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{emptyMessage}</p>
       </GlassPanel>
     );
   }
 
   return (
-    <div className="space-y-2">
+    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
       {pericias.map((pericia) => (
         <GlassRow
           key={pericia.id}

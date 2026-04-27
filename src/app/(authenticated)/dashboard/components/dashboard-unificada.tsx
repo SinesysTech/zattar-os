@@ -100,10 +100,10 @@ function Kpi({ label, value, description, trend, icon: Icon, href }: KpiProps) {
     )}>
       <CardHeader>
         <CardDescription>{label}</CardDescription>
-        <div className="flex flex-col gap-2">
-          <h4 className="font-display text-2xl lg:text-3xl">{value}</h4>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+          <h4 className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; lg:text-3xl sem equivalente DS */ "font-display text-2xl lg:text-3xl")}>{value}</h4>
           {trend && (
-            <div className="text-muted-foreground text-sm">
+            <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>
               <span className={trend.value >= 0 ? 'text-success' : 'text-destructive'}>
                 {trend.value >= 0 ? '+' : ''}{trend.value.toFixed(1)}%
               </span>{' '}
@@ -111,7 +111,7 @@ function Kpi({ label, value, description, trend, icon: Icon, href }: KpiProps) {
             </div>
           )}
           {description && !trend && (
-            <div className="text-muted-foreground text-sm">{description}</div>
+            <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>{description}</div>
           )}
         </div>
         <CardAction>
@@ -142,9 +142,9 @@ function ProgressKpi({ progresso }: { progresso: ProgressoDiario }) {
     <GlassPanel depth={2} className="transition-all duration-200">
       <CardHeader>
         <CardDescription>Progresso do Dia</CardDescription>
-        <div className="flex flex-col gap-2">
-          <h4 className="font-display text-2xl lg:text-3xl">{progresso.percentual}%</h4>
-          <div className="text-muted-foreground text-sm">{desc}</div>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+          <h4 className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; lg:text-3xl sem equivalente DS */ "font-display text-2xl lg:text-3xl")}>{progresso.percentual}%</h4>
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>{desc}</div>
         </div>
         <CardAction>
           <div className="size-12">
@@ -162,14 +162,14 @@ function ProgressKpi({ progresso }: { progresso: ProgressoDiario }) {
 
 function DashboardSkeleton() {
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       <Skeleton className="h-8 w-56" />
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 xl:grid-cols-4")}>
         {[1, 2, 3, 4].map((i) => (
           <GlassPanel key={i} depth={2}>
             <CardHeader>
               <Skeleton className="h-4 w-28" />
-              <div className="flex flex-col gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
                 <Skeleton className="h-9 w-24" />
                 <Skeleton className="h-4 w-36" />
               </div>
@@ -180,7 +180,7 @@ function DashboardSkeleton() {
           </GlassPanel>
         ))}
       </div>
-      <div className="grid gap-4 grid-cols-1 lg:grid-cols-7">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 grid-cols-1 lg:grid-cols-7")}>
         <Skeleton className="lg:col-span-4 h-80 rounded-xl" />
         <Skeleton className="lg:col-span-3 h-80 rounded-xl" />
       </div>
@@ -194,27 +194,27 @@ function DashboardSkeleton() {
 
 function DashboardError({ error, onRetry }: { error: string; onRetry: () => void }) {
   return (
-    <div className="flex flex-col items-center justify-center py-20 text-center">
-      <div className="rounded-full bg-destructive/10 p-5 mb-5">
+    <div className={cn(/* design-system-escape: py-20 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-20 text-center")}>
+      <div className={cn(/* design-system-escape: p-5 → usar <Inset> */ "rounded-full bg-destructive/10 p-5 mb-5")}>
         <FileWarning className="h-10 w-10 text-destructive" />
       </div>
-      <h3 className="text-lg font-semibold mb-2">Erro ao carregar dashboard</h3>
-      <p className="text-sm text-muted-foreground mb-6 max-w-md">{error}</p>
-      <button onClick={onRetry} className="text-sm text-primary hover:underline cursor-pointer">Tentar novamente</button>
+      <h3 className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "text-lg font-semibold mb-2")}>Erro ao carregar dashboard</h3>
+      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground mb-6 max-w-md")}>{error}</p>
+      <button onClick={onRetry} className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-primary hover:underline cursor-pointer")}>Tentar novamente</button>
     </div>
   );
 }
 
 function SemPermissoes({ nome }: { nome: string }) {
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       <Heading level="page">{getSaudacao()}, {nome}!</Heading>
-      <div className="flex flex-col items-center justify-center py-20 text-center">
-        <div className="rounded-full bg-muted p-5 mb-5">
+      <div className={cn(/* design-system-escape: py-20 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-20 text-center")}>
+        <div className={cn(/* design-system-escape: p-5 → usar <Inset> */ "rounded-full bg-muted p-5 mb-5")}>
           <FileWarning className="h-10 w-10 text-muted-foreground" />
         </div>
-        <h3 className="text-lg font-semibold mb-2">Sem permissões</h3>
-        <p className="text-sm text-muted-foreground max-w-md">
+        <h3 className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "text-lg font-semibold mb-2")}>Sem permissões</h3>
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground max-w-md")}>
           Você não possui permissões para visualizar dados do dashboard. Entre em contato com o administrador.
         </p>
       </div>
@@ -250,13 +250,13 @@ function UserContent({ data, progresso, lembretes, tarefas, currentUserId, curre
   if (!temAlgumaPermissao) return <SemPermissoes nome={d.usuario.nome} />;
 
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       <Heading level="page">
         {getSaudacao()}, {d.usuario.nome}!
       </Heading>
 
       {/* KPI Cards — mesmo padrão visual de contratos */}
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 xl:grid-cols-4")}>
         <ProgressKpi progresso={progresso} />
 
         {podeVerProcessos && (
@@ -311,7 +311,7 @@ function UserContent({ data, progresso, lembretes, tarefas, currentUserId, curre
 
       {/* Audiências & Expedientes */}
       {(podeVerAudiencias || podeVerExpedientes) && (
-        <div className="grid gap-4 grid-cols-1 lg:grid-cols-7">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 grid-cols-1 lg:grid-cols-7")}>
           {podeVerAudiencias && (
             <div className="lg:col-span-4">
               <WidgetAudienciasProximas data={d.proximasAudiencias} />
@@ -330,7 +330,7 @@ function UserContent({ data, progresso, lembretes, tarefas, currentUserId, curre
 
       {/* Processos & Produtividade */}
       {podeVerProcessos && (
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 grid-cols-1 md:grid-cols-2")}>
           <WidgetProcessosResumo data={d.processos} />
           <WidgetProdutividade data={d.produtividade} />
         </div>
@@ -339,7 +339,7 @@ function UserContent({ data, progresso, lembretes, tarefas, currentUserId, curre
       {/* Financeiro */}
       {podeVerFinanceiro && (
         <>
-          <div className="grid gap-4 grid-cols-1 lg:grid-cols-7">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 grid-cols-1 lg:grid-cols-7")}>
             <div className="lg:col-span-4">
               <WidgetFluxoCaixa />
             </div>
@@ -352,13 +352,13 @@ function UserContent({ data, progresso, lembretes, tarefas, currentUserId, curre
       )}
 
       {/* Pessoal */}
-      <div className="grid gap-4 grid-cols-1 lg:grid-cols-3">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 grid-cols-1 lg:grid-cols-3")}>
         <TarefasWidget initialTasks={tarefas} />
         <LembretesWidget lembretes={lembretes} />
         {currentUserId > 0 && <ChatWidget currentUserId={currentUserId} currentUserName={currentUserName} />}
       </div>
 
-      <p className="text-center text-xs text-muted-foreground/50">
+      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-center text-xs text-muted-foreground/50")}>
         Atualizado em {new Date(d.ultimaAtualizacao).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}
       </p>
     </div>
@@ -373,12 +373,12 @@ function AdminContent({ data, progresso, lembretes, tarefas, currentUserId, curr
   const d = data as DashboardAdminData;
 
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       <Heading level="page">
         {getSaudacao()}, {d.usuario.nome}!
       </Heading>
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 xl:grid-cols-4")}>
         <ProgressKpi progresso={progresso} />
         <Kpi
           label="Processos"
@@ -417,7 +417,7 @@ function AdminContent({ data, progresso, lembretes, tarefas, currentUserId, curr
         <Kpi label="Usuários Ativos" value={fmtNum(d.metricas.totalUsuarios)} icon={Users} />
       </div>
 
-      <div className="grid gap-4 grid-cols-1 lg:grid-cols-7">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 grid-cols-1 lg:grid-cols-7")}>
         <div className="lg:col-span-4">
           <WidgetAudienciasProximas data={d.proximasAudiencias} />
         </div>
@@ -426,7 +426,7 @@ function AdminContent({ data, progresso, lembretes, tarefas, currentUserId, curr
         </div>
       </div>
 
-      <div className="grid gap-4 grid-cols-1 lg:grid-cols-7">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 grid-cols-1 lg:grid-cols-7")}>
         <div className="lg:col-span-4">
           <WidgetFluxoCaixa />
         </div>
@@ -442,13 +442,13 @@ function AdminContent({ data, progresso, lembretes, tarefas, currentUserId, curr
         statusCapturas={d.statusCapturas}
       />
 
-      <div className="grid gap-4 grid-cols-1 lg:grid-cols-3">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 grid-cols-1 lg:grid-cols-3")}>
         <TarefasWidget initialTasks={tarefas} />
         <LembretesWidget lembretes={lembretes} />
         {currentUserId > 0 && <ChatWidget currentUserId={currentUserId} currentUserName={currentUserName} />}
       </div>
 
-      <p className="text-center text-xs text-muted-foreground/50">
+      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-center text-xs text-muted-foreground/50")}>
         Atualizado em {new Date(d.ultimaAtualizacao).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}
       </p>
     </div>

@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useState, useMemo, useCallback } from 'react';
 import { GlassPanel } from '@/components/shared/glass-panel';
@@ -123,13 +124,13 @@ export default function TribunaisPage() {
 
   return (
     <>
-      <div className="space-y-5">
+      <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
         {/* KPI Strip */}
         <PulseStrip items={kpiItems} />
 
         {/* Filter Bar */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          <div className="flex items-center gap-2 flex-wrap">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
             <AdvogadosFilter
               title="Tribunal"
               options={tribunalOptions}
@@ -143,14 +144,14 @@ export default function TribunaisPage() {
               onValueChange={setTipoAcessoFilter}
             />
           </div>
-          <div className="flex items-center gap-2 flex-1 justify-end">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
             <SearchInput value={busca} onChange={setBusca} placeholder="Buscar tribunais..." />
           </div>
         </div>
 
         {/* Loading skeleton */}
         {isLoading && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3")}>
             {Array.from({ length: 8 }).map((_, i) => (
               <GlassPanel key={i} depth={1} className="h-44 animate-pulse" />
             ))}
@@ -159,7 +160,7 @@ export default function TribunaisPage() {
 
         {/* Card Grid */}
         {!isLoading && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3")}>
             {tribunaisFiltrados.map((tribunal) => (
               <div
                 key={tribunal.id}
@@ -168,30 +169,30 @@ export default function TribunaisPage() {
               >
               <GlassPanel
                 depth={2}
-                className="p-4 h-full"
+                className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 h-full")}
               >
                 {/* Header: Acronym + Name + Grau badge */}
-                <div className="flex items-start justify-between gap-2 mb-3">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2 mb-3")}>
                   <div className="min-w-0">
-                    <div className="text-lg font-bold text-primary font-heading leading-none">
+                    <div className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "text-lg font-bold text-primary font-heading leading-none")}>
                       {tribunal.tribunal_codigo}
                     </div>
-                    <div className="text-xs text-muted-foreground/55 mt-1 truncate">
+                    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/55 mt-1 truncate")}>
                       {tribunal.tribunal_nome}
                     </div>
                   </div>
-                  <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-[5px] border border-border/15 bg-muted/20 text-muted-foreground shrink-0">
+                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] font-medium px-1.5 py-0.5 rounded-[5px] border border-border/15 bg-muted/20 text-muted-foreground shrink-0")}>
                     {TIPO_ACESSO_LABELS[tribunal.tipo_acesso] ?? tribunal.tipo_acesso}
                   </span>
                 </div>
 
                 {/* Divider */}
-                <div className="border-t border-border/10 my-2" />
+                <div className={cn(/* design-system-escape: my-2 margin sem primitiva DS */ "border-t border-border/10 my-2")} />
 
                 {/* Meta rows */}
-                <div className="space-y-1.5">
+                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
                   {/* Status */}
-                  <div className="flex items-center gap-1.5 text-[11px]">
+                  <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 text-[11px]")}>
                     <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${(credenciaisPorTribunal.get(tribunal.tribunal_codigo) ?? 0) > 0 ? 'bg-success' : 'bg-warning'}`} />
                     <span className="text-muted-foreground/70">
                       {(credenciaisPorTribunal.get(tribunal.tribunal_codigo) ?? 0) > 0 ? 'Ativo' : 'Sem cobertura'}
@@ -199,13 +200,13 @@ export default function TribunaisPage() {
                   </div>
 
                   {/* Credenciais count */}
-                  <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground/70">
+                  <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 text-[11px] text-muted-foreground/70")}>
                     <Lock className="size-3 opacity-50 shrink-0" />
-                    <span>Credenciais: <strong className="text-foreground font-medium">{credenciaisPorTribunal.get(tribunal.tribunal_codigo) ?? 0}</strong></span>
+                    <span>Credenciais: <strong className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-foreground font-medium")}>{credenciaisPorTribunal.get(tribunal.tribunal_codigo) ?? 0}</strong></span>
                   </div>
 
                   {/* URL base (truncated) */}
-                  <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground/70">
+                  <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 text-[11px] text-muted-foreground/70")}>
                     <Clock className="size-3 opacity-50 shrink-0" />
                     <span className="truncate max-w-40" title={tribunal.url_base}>
                       {tribunal.url_base.replace(/^https?:\/\//, '')}
@@ -214,14 +215,14 @@ export default function TribunaisPage() {
                 </div>
 
                 {/* Action */}
-                <div className="border-t border-border/10 mt-3 pt-3">
+                <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "border-t border-border/10 mt-3 pt-3")}>
                   {(credenciaisPorTribunal.get(tribunal.tribunal_codigo) ?? 0) > 0 ? (
-                    <Button variant="ghost" size="sm" className="w-full text-xs h-7 text-primary">
+                    <Button variant="ghost" size="sm" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "w-full text-xs h-7 text-primary")}>
                       <Settings className="size-3 mr-1" />
                       Configurar
                     </Button>
                   ) : (
-                    <Button variant="ghost" size="sm" className="w-full text-xs h-7 text-warning">
+                    <Button variant="ghost" size="sm" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "w-full text-xs h-7 text-warning")}>
                       <Plus className="size-3 mr-1" />
                       Adicionar Credencial
                     </Button>

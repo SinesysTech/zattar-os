@@ -7,6 +7,7 @@
  * via ExpedientesFilterBar in expedientes-content.tsx.
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { DataPagination } from '@/components/shared/data-shell';
 import { useExpedientes } from '../hooks/use-expedientes';
@@ -84,7 +85,7 @@ export function ExpedientesListWrapper({
   // ─── Render ──────────────────────────────────────────────────────────────
 
   return (
-    <div className="space-y-3">
+    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
       <ExpedientesGlassList
         expedientes={expedientes}
         isLoading={isLoading}

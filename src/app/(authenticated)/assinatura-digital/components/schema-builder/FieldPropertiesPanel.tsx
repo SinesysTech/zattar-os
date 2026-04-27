@@ -268,9 +268,9 @@ export default function FieldPropertiesPanel({
   if (!field) {
     return (
       <div className="h-full flex items-center justify-center border rounded-lg bg-card">
-        <div className="text-center space-y-2 px-6">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; px-6 padding direcional sem Inset equiv. */ "text-center space-y-2 px-6")}>
           <Info className="size-8 text-muted-foreground/60 mx-auto" />
-          <p className="text-xs font-medium text-muted-foreground">Nenhum campo selecionado</p>
+          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-muted-foreground")}>Nenhum campo selecionado</p>
           <p className="text-[11px] text-muted-foreground/70">
             Selecione um campo no canvas para editar suas propriedades
           </p>
@@ -287,22 +287,22 @@ export default function FieldPropertiesPanel({
 
   return (
     <div className="h-full flex flex-col border rounded-lg bg-card overflow-hidden">
-      <div className="shrink-0 px-3 pt-3 pb-2 border-b">
-        <Heading level="card" className="text-xs uppercase tracking-wider text-muted-foreground">Propriedades do Campo</Heading>
-        <p className="text-xs text-foreground mt-0.5 truncate font-medium">{field.label}</p>
+      <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "shrink-0 px-3 pt-3 pb-2 border-b")}>
+        <Heading level="card" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; tracking-wider sem token DS */ "text-xs uppercase tracking-wider text-muted-foreground")}>Propriedades do Campo</Heading>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs text-foreground mt-0.5 truncate font-medium")}>{field.label}</p>
       </div>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleApply)} className="flex-1 flex flex-col overflow-hidden">
           <ScrollArea className="flex-1">
-            <div className="px-3 pt-2 space-y-3 **:data-[slot=form-item-label]:text-xs **:data-[slot=form-item-label]:text-muted-foreground [&_input]:text-xs [&_input]:h-8 [&_textarea]:text-xs **:data-[slot=select-trigger]:text-xs **:data-[slot=select-trigger]:h-8">
+            <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv.; space-y-3 sem token DS; **:data-[slot=form-item-label]:text-xs sem equivalente DS; [&_input]:text-xs sem equivalente DS; [&_textarea]:text-xs sem equivalente DS; **:data-[slot=select-trigger]:text-xs sem equivalente DS */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv.; space-y-3 sem token DS; **:data-[slot=form-item-label]:text-xs sem equivalente DS; [&_input]:text-xs sem equivalente DS; [&_textarea]:text-xs sem equivalente DS; **:data-[slot=select-trigger]:text-xs sem equivalente DS */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv.; space-y-3 sem token DS; **:data-[slot=form-item-label]:text-xs sem equivalente DS; [&_input]:text-xs sem equivalente DS; [&_textarea]:text-xs sem equivalente DS; **:data-[slot=select-trigger]:text-xs sem equivalente DS */ "px-3 pt-2 space-y-3 **:data-[slot=form-item-label]:text-xs **:data-[slot=form-item-label]:text-muted-foreground [&_input]:text-xs [&_input]:h-8 [&_textarea]:text-xs **:data-[slot=select-trigger]:text-xs **:data-[slot=select-trigger]:h-8")}>
             {/* Seção Básico */}
             <Collapsible
               open={expandedSections.has('basico')}
               onOpenChange={() => toggleSection('basico')}
             >
-              <CollapsibleTrigger className="flex items-center gap-2 w-full px-1 py-1.5 rounded-md hover:bg-muted/50 transition-colors">
-                <span className="text-xs font-semibold flex-1 text-left">Básico</span>
+              <CollapsibleTrigger className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-1 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 w-full px-1 py-1.5 rounded-md hover:bg-muted/50 transition-colors")}>
+                <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold flex-1 text-left")}>Básico</span>
                 <ChevronDown
                   className={cn(
                     "size-3.5 transition-transform text-muted-foreground",
@@ -310,7 +310,7 @@ export default function FieldPropertiesPanel({
                   )}
                 />
               </CollapsibleTrigger>
-              <CollapsibleContent className="pt-2 space-y-3">
+              <CollapsibleContent className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv.; space-y-3 sem token DS */ "pt-2 space-y-3")}>
                 <FormField
                   control={form.control}
                   name="label"
@@ -334,7 +334,7 @@ export default function FieldPropertiesPanel({
                       <FormControl>
                         <Input {...formField} placeholder="campo_id" readOnly className="bg-muted" />
                       </FormControl>
-                      <FormDescription className="text-xs">
+                      <FormDescription className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                         Identificador único gerado automaticamente
                       </FormDescription>
                       <FormMessage />
@@ -351,7 +351,7 @@ export default function FieldPropertiesPanel({
                       <FormControl>
                         <Input {...formField} placeholder="campo_nome" />
                       </FormControl>
-                      <FormDescription className="text-xs">
+                      <FormDescription className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                         Nome do campo usado na submissão do formulário
                       </FormDescription>
                       <FormMessage />
@@ -436,12 +436,12 @@ export default function FieldPropertiesPanel({
                             onChange={(v) => formField.onChange(v || undefined)}
                           />
                         ) : fieldType === FormFieldType.CHECKBOX ? (
-                          <div className="flex items-center space-x-2">
+                          <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
                             <Checkbox
                               checked={Boolean(formField.value)}
                               onCheckedChange={(checked) => formField.onChange(checked)}
                             />
-                            <Label className="text-sm font-normal">Marcado por padrão</Label>
+                            <Label className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm font-normal")}>Marcado por padrão</Label>
                           </div>
                         ) : (fieldType === FormFieldType.SELECT || fieldType === FormFieldType.RADIO) && options.length > 0 ? (
                           <Select
@@ -469,7 +469,7 @@ export default function FieldPropertiesPanel({
                           />
                         )}
                       </FormControl>
-                      <FormDescription className="text-xs">
+                      <FormDescription className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                         Valor inicial do campo ao carregar o formulário
                       </FormDescription>
                       <FormMessage />
@@ -481,16 +481,16 @@ export default function FieldPropertiesPanel({
                   control={form.control}
                   name="hidden"
                   render={({ field: formField }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                    <FormItem className={cn(/* design-system-escape: space-x-3 sem token DS; space-y-0 sem token DS */ "flex flex-row items-start space-x-3 space-y-0")}>
                       <FormControl>
                         <Checkbox
                           checked={formField.value}
                           onCheckedChange={formField.onChange}
                         />
                       </FormControl>
-                      <div className="space-y-1 leading-none">
+                      <div className={cn(/* design-system-escape: space-y-1 sem token DS; leading-none sem token DS */ "space-y-1 leading-none")}>
                         <FormLabel>Campo Oculto</FormLabel>
-                        <FormDescription className="text-xs">
+                        <FormDescription className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                           Campo não será exibido no formulário público, mas estará no schema
                         </FormDescription>
                       </div>
@@ -507,8 +507,8 @@ export default function FieldPropertiesPanel({
               open={expandedSections.has('validacao')}
               onOpenChange={() => toggleSection('validacao')}
             >
-              <CollapsibleTrigger className="flex items-center gap-2 w-full px-1 py-1.5 rounded-md hover:bg-muted/50 transition-colors">
-                <span className="text-xs font-semibold flex-1 text-left">Validação</span>
+              <CollapsibleTrigger className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-1 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 w-full px-1 py-1.5 rounded-md hover:bg-muted/50 transition-colors")}>
+                <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold flex-1 text-left")}>Validação</span>
                 <ChevronDown
                   className={cn(
                     "size-3.5 transition-transform text-muted-foreground",
@@ -516,19 +516,19 @@ export default function FieldPropertiesPanel({
                   )}
                 />
               </CollapsibleTrigger>
-              <CollapsibleContent className="pt-2 space-y-3">
+              <CollapsibleContent className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv.; space-y-3 sem token DS */ "pt-2 space-y-3")}>
                 <FormField
                   control={form.control}
                   name="required"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                    <FormItem className={cn(/* design-system-escape: space-x-3 sem token DS; space-y-0 sem token DS */ "flex flex-row items-start space-x-3 space-y-0")}>
                       <FormControl>
                         <Checkbox
                           checked={field.value}
                           onCheckedChange={field.onChange}
                         />
                       </FormControl>
-                      <div className="space-y-1 leading-none">
+                      <div className={cn(/* design-system-escape: space-y-1 sem token DS; leading-none sem token DS */ "space-y-1 leading-none")}>
                         <FormLabel>Campo Obrigatório</FormLabel>
                       </div>
                     </FormItem>
@@ -589,7 +589,7 @@ export default function FieldPropertiesPanel({
                         <FormControl>
                           <Input {...field} placeholder="^[A-Za-z]+$" />
                         </FormControl>
-                        <FormDescription className="text-xs">
+                        <FormDescription className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                           Expressão regular para validação
                         </FormDescription>
                         <FormMessage />
@@ -652,8 +652,8 @@ export default function FieldPropertiesPanel({
                   open={expandedSections.has('condicional')}
                   onOpenChange={() => toggleSection('condicional')}
                 >
-                  <CollapsibleTrigger className="flex items-center gap-2 w-full p-2 rounded-md hover:bg-muted/50 transition-colors">
-                    <span className="text-sm font-semibold flex-1 text-left">Condicional</span>
+                  <CollapsibleTrigger className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2 → usar <Inset> */ "flex items-center gap-2 w-full p-2 rounded-md hover:bg-muted/50 transition-colors")}>
+                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold flex-1 text-left")}>Condicional</span>
                     <ChevronDown
                       className={cn(
                         "size-3.5 transition-transform text-muted-foreground",
@@ -661,7 +661,7 @@ export default function FieldPropertiesPanel({
                       )}
                     />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className="pt-2 space-y-3">
+                  <CollapsibleContent className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv.; space-y-3 sem token DS */ "pt-2 space-y-3")}>
                     <FormField
                       control={form.control}
                       name="conditionalField"
@@ -686,7 +686,7 @@ export default function FieldPropertiesPanel({
                               ))}
                             </SelectContent>
                           </Select>
-                          <FormDescription className="text-xs">
+                          <FormDescription className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                             Campo que controla a visibilidade deste campo
                           </FormDescription>
                           <FormMessage />
@@ -759,8 +759,8 @@ export default function FieldPropertiesPanel({
                   open={expandedSections.has('opcoes')}
                   onOpenChange={() => toggleSection('opcoes')}
                 >
-                  <CollapsibleTrigger className="flex items-center gap-2 w-full p-2 rounded-md hover:bg-muted/50 transition-colors">
-                    <span className="text-sm font-semibold flex-1 text-left">
+                  <CollapsibleTrigger className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2 → usar <Inset> */ "flex items-center gap-2 w-full p-2 rounded-md hover:bg-muted/50 transition-colors")}>
+                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold flex-1 text-left")}>
                       Opções {options.length > 0 && `(${options.length})`}
                     </span>
                     <ChevronDown
@@ -770,10 +770,10 @@ export default function FieldPropertiesPanel({
                       )}
                     />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className="pt-2 space-y-2">
+                  <CollapsibleContent className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv.; space-y-2 → migrar para <Stack gap="tight"> */ "pt-2 space-y-2")}>
                     {options.map((option, index) => (
-                      <div key={index} className="flex items-start gap-2 p-2 border rounded-lg">
-                        <div className="flex flex-col gap-1 shrink-0">
+                      <div key={index} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2 → usar <Inset> */ "flex items-start gap-2 p-2 border rounded-lg")}>
+                        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1 shrink-0")}>
                           <Button
                             type="button"
                             variant="ghost"
@@ -797,7 +797,7 @@ export default function FieldPropertiesPanel({
                             <ChevronDown className="w-3 h-3" />
                           </Button>
                         </div>
-                        <div className="flex-1 space-y-2">
+                        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "flex-1 space-y-2")}>
                           <Input
                             value={option.label}
                             onChange={e => updateOption(index, 'label', e.target.value)}
@@ -810,12 +810,12 @@ export default function FieldPropertiesPanel({
                             placeholder="Valor"
                             className="h-8"
                           />
-                          <div className="flex items-center space-x-2">
+                          <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
                             <Checkbox
                               checked={option.disabled || false}
                               onCheckedChange={checked => updateOption(index, 'disabled', checked as boolean)}
                             />
-                            <Label className="text-xs">Desabilitado</Label>
+                            <Label className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>Desabilitado</Label>
                           </div>
                         </div>
                         <Button
@@ -854,8 +854,8 @@ export default function FieldPropertiesPanel({
                   open={expandedSections.has('entitySearch')}
                   onOpenChange={() => toggleSection('entitySearch')}
                 >
-                  <CollapsibleTrigger className="flex items-center gap-2 w-full p-2 rounded-md hover:bg-muted/50 transition-colors">
-                    <span className="text-sm font-semibold flex-1 text-left">Busca de Entidade</span>
+                  <CollapsibleTrigger className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2 → usar <Inset> */ "flex items-center gap-2 w-full p-2 rounded-md hover:bg-muted/50 transition-colors")}>
+                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold flex-1 text-left")}>Busca de Entidade</span>
                     <ChevronDown
                       className={cn(
                         "size-3.5 transition-transform text-muted-foreground",
@@ -863,10 +863,10 @@ export default function FieldPropertiesPanel({
                       )}
                     />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className="pt-2 space-y-3">
-                    <div className="space-y-2">
-                      <Label className="text-xs text-muted-foreground">Buscar por</Label>
-                      <div className="space-y-2">
+                  <CollapsibleContent className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv.; space-y-3 sem token DS */ "pt-2 space-y-3")}>
+                    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                      <Label className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Buscar por</Label>
+                      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                         {(['cpf', 'cnpj', 'nome'] as const).map((searchType) => {
                           const isRelevant = 
                             (fieldType === FormFieldType.CLIENT_SEARCH && searchType === 'cpf') ||
@@ -875,7 +875,7 @@ export default function FieldPropertiesPanel({
                           if (!isRelevant) return null;
 
                           return (
-                            <div key={searchType} className="flex items-center space-x-2">
+                            <div key={searchType} className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
                               <Checkbox
                                 checked={searchBy.includes(searchType)}
                                 onCheckedChange={(checked) => {
@@ -886,7 +886,7 @@ export default function FieldPropertiesPanel({
                                   }
                                 }}
                               />
-                              <Label className="text-xs font-normal capitalize">
+                              <Label className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs font-normal capitalize")}>
                                 {searchType === 'cpf' ? 'CPF' : searchType === 'cnpj' ? 'CNPJ' : 'Nome'}
                               </Label>
                             </div>
@@ -895,9 +895,9 @@ export default function FieldPropertiesPanel({
                       </div>
                     </div>
 
-                    <div className="space-y-2">
+                    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                       <div className="flex items-center justify-between">
-                        <Label className="text-xs text-muted-foreground">Mapeamento Auto-fill</Label>
+                        <Label className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Mapeamento Auto-fill</Label>
                         <Button
                           type="button"
                           variant="outline"
@@ -912,9 +912,9 @@ export default function FieldPropertiesPanel({
                           Adicionar
                         </Button>
                       </div>
-                      <div className="space-y-2">
+                      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                         {Object.entries(autoFillMappings).map(([entityField, formFieldId], index) => (
-                          <div key={index} className="flex gap-2 items-center">
+                          <div key={index} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2 items-center")}>
                             <Input
                               value={entityField}
                               onChange={(e) => {
@@ -966,7 +966,7 @@ export default function FieldPropertiesPanel({
                           </div>
                         ))}
                         {Object.keys(autoFillMappings).length === 0 && (
-                          <p className="text-xs text-muted-foreground">
+                          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                             Adicione mapeamentos para preencher campos automaticamente quando a entidade for encontrada
                           </p>
                         )}
@@ -979,11 +979,11 @@ export default function FieldPropertiesPanel({
           </div>
           </ScrollArea>
 
-          <div className="shrink-0 border-t px-3 py-2.5 flex gap-2">
+          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "shrink-0 border-t px-3 py-2.5 flex gap-2")}>
             <Button
               type="submit"
               size="sm"
-              className="flex-1 text-xs"
+              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex-1 text-xs")}
             >
               <Save className="size-3.5" />
               Aplicar
@@ -993,7 +993,7 @@ export default function FieldPropertiesPanel({
               variant="destructive"
               size="sm"
               onClick={onDelete}
-              className="text-xs"
+              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}
             >
               <Trash2 className="size-3.5" />
               Deletar

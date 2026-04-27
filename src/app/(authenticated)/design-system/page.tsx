@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import type { Metadata } from "next";
 import { PageShell } from "@/components/shared/page-shell";
 import { Heading, Text } from "@/components/ui/typography";
@@ -26,7 +27,7 @@ const SECTIONS = [
 export default function DesignSystemPage() {
   return (
     <PageShell>
-      <header className="space-y-2">
+      <header className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Text variant="meta-label">DESIGN SYSTEM · GLASS BRIEFING</Text>
         <Heading level="page">Fundação visual do ZattarOS</Heading>
         <Text variant="caption" className="max-w-3xl">
@@ -38,14 +39,14 @@ export default function DesignSystemPage() {
 
       <nav
         aria-label="Navegação do design system"
-        className="sticky top-0 z-20 -mx-1 overflow-x-auto rounded-xl border border-border/20 bg-background/80 px-1 py-2 backdrop-blur"
+        className={cn(/* design-system-escape: -mx-1 sem equivalente DS; px-1 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "sticky top-0 z-20 -mx-1 overflow-x-auto rounded-xl border border-border/20 bg-background/80 px-1 py-2 backdrop-blur")}
       >
-        <ul className="flex gap-1.5">
+        <ul className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex gap-1.5")}>
           {SECTIONS.map((s) => (
             <li key={s.id}>
               <a
                 href={`#${s.id}`}
-                className="inline-flex items-center whitespace-nowrap rounded-lg px-3 py-1.5 text-[12px] font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center whitespace-nowrap rounded-lg px-3 py-1.5 text-[12px] font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground")}
               >
                 {s.label}
               </a>
@@ -59,7 +60,7 @@ export default function DesignSystemPage() {
           key={id}
           id={id}
           aria-labelledby={`${id}-title`}
-          className="scroll-mt-20 space-y-4 pt-4"
+          className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; pt-4 padding direcional sem Inset equiv. */ "scroll-mt-20 space-y-4 pt-4")}
         >
           <Heading
             level="section"

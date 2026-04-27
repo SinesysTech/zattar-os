@@ -7,6 +7,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useMemo, useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { AlertCircle } from 'lucide-react';
@@ -276,17 +277,17 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
   // Loading inicial
   if (isLoading) {
     return (
-      <div className="flex w-full min-h-[calc(100vh-7rem)] flex-col gap-4 pb-8">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pb-8 padding direcional sem Inset equiv. */ "flex w-full min-h-[calc(100vh-7rem)] flex-col gap-4 pb-8")}>
         <section className="rounded-2xl border bg-card shadow-sm">
-          <div className="px-5 py-5 sm:px-6 space-y-4">
-            <div className="space-y-2">
+          <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv.; sm:px-6 sem equivalente DS; space-y-4 → migrar para <Stack gap="default"> */ "px-5 py-5 sm:px-6 space-y-4")}>
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Skeleton className="h-3 w-36" />
               <Skeleton className="h-10 w-3/4" />
-              <div className="flex items-center gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <Skeleton className="h-4 w-52" />
                 <Skeleton className="h-4 w-56" />
               </div>
-              <div className="flex items-center gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <Skeleton className="h-6 w-16" />
                 <Skeleton className="h-6 w-16" />
                 <Skeleton className="h-6 w-28" />
@@ -294,21 +295,21 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
             </div>
           </div>
 
-          <div className="border-t bg-muted/20 px-5 py-4 sm:px-6">
-            <div className="space-y-3">
-              <div className="flex items-center gap-4">
+          <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv.; sm:px-6 sem equivalente DS */ "border-t bg-muted/20 px-5 py-4 sm:px-6")}>
+            <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+              <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
                 <Skeleton className="h-7 w-28" />
                 <Skeleton className="h-7 w-24" />
                 <Skeleton className="h-7 w-20" />
               </div>
-              <div className="rounded-xl border bg-background/70 p-3 space-y-3">
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-3 sem token DS */ "rounded-xl border bg-background/70 p-3 space-y-3")}>
                 {[...Array(3)].map((_, index) => (
-                  <div key={index} className="rounded-lg border p-3 space-y-2">
-                    <div className="flex items-center justify-between gap-3">
+                  <div key={index} className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-2 → migrar para <Stack gap="tight"> */ "rounded-lg border p-3 space-y-2")}>
+                    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
                       <Skeleton className="h-4 w-32" />
                       <Skeleton className="h-6 w-28" />
                     </div>
-                    <div className="flex gap-2">
+                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
                       <Skeleton className="h-3 w-28" />
                       <Skeleton className="h-3 w-28" />
                     </div>
@@ -318,14 +319,14 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
             </div>
           </div>
 
-          <div className="border-t px-5 py-5 sm:px-6">
-            <div className="rounded-xl border bg-card px-4 py-3 mb-5">
-              <div className="flex items-center justify-between gap-3">
-                <div className="space-y-2">
+          <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv.; sm:px-6 sem equivalente DS */ "border-t px-5 py-5 sm:px-6")}>
+            <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "rounded-xl border bg-card px-4 py-3 mb-5")}>
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
+                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                   <Skeleton className="h-4 w-36" />
                   <Skeleton className="h-3 w-72" />
                 </div>
-                <div className="flex items-center gap-2">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                   <Skeleton className="h-9 w-24" />
                   <Skeleton className="h-9 w-28" />
                   <Skeleton className="h-9 w-32" />
@@ -343,7 +344,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
   // Erro ao carregar
   if (error && !processo) {
     return (
-      <div className="w-full space-y-6">
+      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "w-full space-y-6")}>
         <TimelineError error={error} onRetry={refetch} />
       </div>
     );
@@ -352,7 +353,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
   // Processo não encontrado
   if (!processo) {
     return (
-      <div className="w-full space-y-6">
+      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "w-full space-y-6")}>
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Processo não encontrado</AlertTitle>
@@ -405,7 +406,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
           {/* Desktop: Split panel */}
           <div className="hidden md:flex flex-1 min-h-0">
             {isCapturing ? (
-              <div className="w-full px-5 py-5">
+              <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "w-full px-5 py-5")}>
                 <TimelineLoading
                   message={
                     timeline === null
@@ -448,7 +449,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
           </div>
 
           {/* Mobile: Tabs */}
-          <div className="md:hidden flex-1 min-h-0 overflow-auto px-4 py-4">
+          <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "md:hidden flex-1 min-h-0 overflow-auto px-4 py-4")}>
             {isCapturing ? (
               <TimelineLoading
                 message={

@@ -36,15 +36,15 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
   if (isLoading) {
     return (
       <Card className="h-full">
-        <CardHeader className="pb-2">
+        <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
           <Skeleton className="h-5 w-44" />
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             <Skeleton className="h-6 w-full" />
             <Skeleton className="h-4 w-full" />
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="space-y-1.5">
+              <div key={i} className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
                 <Skeleton className="h-3 w-32" />
                 <Skeleton className="h-2.5 w-full rounded-full" />
               </div>
@@ -59,18 +59,18 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
   if (!data || !data.resumo) {
     return (
       <Card className="h-full flex flex-col">
-        <CardHeader className="pb-2">
-          <CardTitle className="flex items-center gap-2 text-sm font-medium">
+        <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+          <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "flex items-center gap-2 text-sm font-medium")}>
             <Target className="h-4 w-4 text-muted-foreground" />
             Orçamento vs Realizado
           </CardTitle>
         </CardHeader>
         <CardContent className="flex-1 flex items-center justify-center">
-          <div className="text-center space-y-2">
-            <div className="rounded-full bg-muted p-3 mx-auto w-fit">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "text-center space-y-2")}>
+            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-full bg-muted p-3 mx-auto w-fit")}>
               <Target className="h-5 w-5 text-muted-foreground" />
             </div>
-            <p className="text-sm text-muted-foreground">Nenhum orçamento em execução</p>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Nenhum orçamento em execução</p>
           </div>
         </CardContent>
       </Card>
@@ -88,41 +88,41 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
 
   return (
     <Card className="h-full flex flex-col">
-      <CardHeader className="pb-2">
-        <CardTitle className="flex items-center gap-2 text-sm font-medium">
+      <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+        <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "flex items-center gap-2 text-sm font-medium")}>
           <Target className="h-4 w-4 text-muted-foreground" />
           Orçamento vs Realizado
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex-1 space-y-4">
+      <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "flex-1 space-y-4")}>
         {/* Resumo geral */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between text-sm">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex items-center justify-between text-sm")}>
             <span className="text-muted-foreground">Execução Geral</span>
-            <div className="flex items-center gap-2">
-              <SemanticBadge category="status" value={Math.round(resumo.percentualExecutado)} variantOverride={isOverBudget ? 'destructive' : 'secondary'} className="text-xs">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <SemanticBadge category="status" value={Math.round(resumo.percentualExecutado)} variantOverride={isOverBudget ? 'destructive' : 'secondary'} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                 {Math.round(resumo.percentualExecutado)}%
               </SemanticBadge>
             </div>
           </div>
           <Progress value={percentualExec} className="h-2.5" />
-          <div className="flex justify-between text-xs text-muted-foreground">
+          <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex justify-between text-xs text-muted-foreground")}>
             <span>Realizado: {formatarMoeda(resumo.totalRealizado)}</span>
             <span>Previsto: {formatarMoeda(resumo.totalPrevisto)}</span>
           </div>
         </div>
 
         {/* Status badges */}
-        <div className="flex gap-2 flex-wrap">
-          <SemanticBadge category="status" value="acima" variantOverride="outline" className="text-xs gap-1">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2 flex-wrap")}>
+          <SemanticBadge category="status" value="acima" variantOverride="outline" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; gap-1 gap sem token DS */ "text-xs gap-1")}>
             <TrendingUp className="h-3 w-3 text-destructive" />
             {resumo.itensAcimaMeta} acima
           </SemanticBadge>
-          <SemanticBadge category="status" value="alvo" variantOverride="outline" className="text-xs gap-1">
+          <SemanticBadge category="status" value="alvo" variantOverride="outline" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; gap-1 gap sem token DS */ "text-xs gap-1")}>
             <Minus className="h-3 w-3 text-success" />
             {resumo.itensDentroMeta} no alvo
           </SemanticBadge>
-          <SemanticBadge category="status" value="abaixo" variantOverride="outline" className="text-xs gap-1">
+          <SemanticBadge category="status" value="abaixo" variantOverride="outline" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; gap-1 gap sem token DS */ "text-xs gap-1")}>
             <TrendingDown className="h-3 w-3 text-info" />
             {resumo.itensAbaixoMeta} abaixo
           </SemanticBadge>
@@ -130,8 +130,8 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
 
         {/* Top itens com maior desvio */}
         {topItens.length > 0 && (
-          <div className="space-y-2.5">
-            <p className="text-xs font-medium text-muted-foreground">Maiores Desvios</p>
+          <div className={cn(/* design-system-escape: space-y-2.5 sem token DS */ "space-y-2.5")}>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-muted-foreground")}>Maiores Desvios</p>
             {topItens.map((item) => {
               const percentExec = item.valorPrevisto > 0
                 ? Math.min((item.valorRealizado / item.valorPrevisto) * 100, 150)
@@ -142,11 +142,11 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
                 : item.descricao || String(item.contaContabil);
 
               return (
-                <div key={item.id} className="space-y-1">
-                  <div className="flex items-center justify-between text-xs">
+                <div key={item.id} className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+                  <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex items-center justify-between text-xs")}>
                     <span className="truncate max-w-[60%] text-muted-foreground">{descricao}</span>
                     <span className={cn(
-                      'font-medium tabular-nums',
+                      /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'font-medium tabular-nums',
                       isOver ? 'text-destructive' : 'text-muted-foreground'
                     )}>
                       {Math.round(percentExec)}%

@@ -10,6 +10,7 @@
  */
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useEffect } from 'react';
 import { AlertCircle } from 'lucide-react';
 import { Label } from '@/components/ui/label';
@@ -72,10 +73,10 @@ export function CapturaFormBase({
 
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "grid grid-cols-1 md:grid-cols-2 gap-6")}>
         {/* Passo 1: Selecionar Advogado */}
-        <div className="space-y-3">
+        <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
           <Label>Advogado *</Label>
           <AdvogadoCombobox
             advogados={advogados}
@@ -86,13 +87,13 @@ export function CapturaFormBase({
             placeholder="Selecione um advogado"
           />
           {advogados.length === 0 && !isLoadingAdvogados && (
-            <Empty className="border-0 py-4">
+            <Empty className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "border-0 py-4")}>
               <EmptyHeader>
                 <EmptyMedia variant="icon">
                   <AlertCircle className="h-6 w-6" />
                 </EmptyMedia>
-                <EmptyTitle className="text-base">Nenhum advogado encontrado</EmptyTitle>
-                <EmptyDescription className="text-sm">
+                <EmptyTitle className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>Nenhum advogado encontrado</EmptyTitle>
+                <EmptyDescription className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
                   Nenhum advogado com credenciais cadastradas encontrado. Cadastre credenciais antes de iniciar capturas.
                 </EmptyDescription>
               </EmptyHeader>
@@ -102,18 +103,18 @@ export function CapturaFormBase({
 
         {/* Passo 2: Selecionar Credenciais do Advogado */}
         {advogadoId && (
-          <div className="space-y-3">
+          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
             <Label>Credenciais *</Label>
             {isLoadingCredenciais ? (
-              <div className="text-sm text-muted-foreground">Carregando credenciais...</div>
+              <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Carregando credenciais...</div>
             ) : credenciais.length === 0 ? (
-              <Empty className="border-0 py-4">
+              <Empty className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "border-0 py-4")}>
                 <EmptyHeader>
                   <EmptyMedia variant="icon">
                     <AlertCircle className="h-6 w-6" />
                   </EmptyMedia>
-                  <EmptyTitle className="text-base">Nenhuma credencial ativa encontrada</EmptyTitle>
-                  <EmptyDescription className="text-sm">
+                  <EmptyTitle className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>Nenhuma credencial ativa encontrada</EmptyTitle>
+                  <EmptyDescription className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
                     Não há credenciais ativas para este advogado.
                   </EmptyDescription>
                 </EmptyHeader>

@@ -4,6 +4,7 @@
  * Gerencia modelos de peças jurídicas para geração de documentos.
  */
 
+import { cn } from '@/lib/utils';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PecasModelosTableWrapper } from '@/app/(authenticated)/pecas-juridicas';
@@ -11,7 +12,7 @@ import { listarPecasModelos } from './service';
 
 function PecasModelosLoading() {
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       <Skeleton className="h-10 w-full max-w-3xl" />
       <Skeleton className="h-100 w-full" />
     </div>

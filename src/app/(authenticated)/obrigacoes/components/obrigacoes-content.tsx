@@ -11,6 +11,7 @@
  * - Main content: switch por viewMode
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import {
@@ -141,20 +142,20 @@ export function ObrigacoesContent({
   // =========================================================================
 
   return (
-    <div className="space-y-5">
+    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       {/* 1. Header */}
-      <div className="flex items-end justify-between gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
         <div>
           <Heading level="page">Obrigações</Heading>
           <p
-            className="text-sm text-muted-foreground mt-0.5"
+            className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground mt-0.5")}
             aria-live="polite"
           >
             {subtitle}
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           <Button
             size="sm"
             className="rounded-xl"
@@ -170,9 +171,9 @@ export function ObrigacoesContent({
       <ObrigacoesPulseStrip resumo={resumo} isLoading={isResumoLoading} />
 
       {/* 3. Controls Row: filters (esquerda) + search + view toggle (direita) */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
         <ObrigacoesFilterBar filters={filters} onChange={setFilters} />
-        <div className="flex items-center gap-2 flex-1 justify-end">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
           <SearchInput
             value={busca}
             onChange={setBusca}

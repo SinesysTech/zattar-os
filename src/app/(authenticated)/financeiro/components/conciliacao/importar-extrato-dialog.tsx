@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useState, useMemo } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'sonner';
@@ -97,8 +98,8 @@ export function ImportarExtratoDialog({ open, onOpenChange, onSuccess }: Props) 
           <DialogTitle>Importar Extrato</DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4">
-          <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label htmlFor="conta">Conta bancária</Label>
             <Select onValueChange={(val) => setContaId(Number(val))} value={contaId?.toString()}>
               <SelectTrigger id="conta">
@@ -114,7 +115,7 @@ export function ImportarExtratoDialog({ open, onOpenChange, onSuccess }: Props) 
             </Select>
           </div>
 
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label>Tipo de arquivo</Label>
             <Select onValueChange={(val) => setTipoArquivo(val as 'ofx' | 'csv')} value={tipoArquivo || undefined}>
               <SelectTrigger>
@@ -134,10 +135,10 @@ export function ImportarExtratoDialog({ open, onOpenChange, onSuccess }: Props) 
           >
             <input {...getInputProps()} />
             {file ? (
-              <div className="flex items-center justify-between gap-3">
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
                 <div className="text-left">
-                  <p className="text-sm font-medium">{file.name}</p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{file.name}</p>
+                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                     {(file.size / 1024).toFixed(1)} KB
                   </p>
                 </div>
@@ -146,14 +147,14 @@ export function ImportarExtratoDialog({ open, onOpenChange, onSuccess }: Props) 
                 </Button>
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground">
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                 Arraste e solte o arquivo aqui ou clique para selecionar (OFX, CSV, TXT)
               </p>
             )}
           </div>
 
           {isUploading && (
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label>Carregando...</Label>
               <Progress value={progress} />
             </div>

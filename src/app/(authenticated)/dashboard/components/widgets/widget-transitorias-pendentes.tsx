@@ -71,7 +71,7 @@ export function WidgetTransitoriasPendentes({ className }: WidgetTransitoriasPen
           <Skeleton className="h-5 w-56" />
           <Skeleton className="h-4 w-32" />
         </CardHeader>
-        <CardContent className="space-y-2">
+        <CardContent className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           {[1, 2, 3].map((i) => (
             <Skeleton key={i} className="h-14 rounded-lg" />
           ))}
@@ -87,7 +87,7 @@ export function WidgetTransitoriasPendentes({ className }: WidgetTransitoriasPen
     <>
       <GlassPanel className={className}>
         <CardHeader>
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <span
               aria-hidden="true"
               className="inline-flex size-7 items-center justify-center rounded-lg bg-warning/15 ring-1 ring-warning/30"
@@ -103,12 +103,12 @@ export function WidgetTransitoriasPendentes({ className }: WidgetTransitoriasPen
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <ul className="space-y-1.5">
+          <ul className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
             {rows.map((t) => (
               <li
                 key={t.id}
                 className={cn(
-                  'flex items-center justify-between gap-3 rounded-lg border px-3 py-2.5 transition-colors',
+                  /* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ 'flex items-center justify-between gap-3 rounded-lg border px-3 py-2.5 transition-colors',
                   'hover:bg-muted/40'
                 )}
               >

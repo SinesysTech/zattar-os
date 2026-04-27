@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { forwardRef, useImperativeHandle, useState, useEffect, useCallback } from 'react';
 import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaResult, CapturaResultData } from './captura-result';
@@ -79,7 +80,7 @@ export const AcervoGeralForm = forwardRef<CapturaFormHandle, AcervoGeralFormProp
     }), [handleCaptura, isLoading]);
 
     return (
-      <div className="space-y-6">
+      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
         <CapturaFormBase
           advogadoId={advogadoId}
           credenciaisSelecionadas={credenciaisSelecionadas}

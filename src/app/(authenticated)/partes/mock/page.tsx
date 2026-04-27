@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Heading, Text } from '@/components/ui/typography';
@@ -128,7 +129,7 @@ const TABS: { id: TabId; label: string; count: number }[] = [
 
 function TabPills({ active, onChange }: { active: TabId; onChange: (id: TabId) => void }) {
   return (
-    <div className="flex gap-1 p-1 rounded-xl bg-border/6 overflow-x-auto">
+    <div className={cn(/* design-system-escape: gap-1 gap sem token DS; p-1 → usar <Inset> */ "flex gap-1 p-1 rounded-xl bg-border/6 overflow-x-auto")}>
       {TABS.map((tab) => (
         <button
           key={tab.id}
@@ -158,10 +159,10 @@ function EntityCard({ parte, onSelect }: { parte: Parte; onSelect: (p: Parte) =>
   const config = TIPO_ENTIDADE_CONFIG[parte.tipoEntidade];
 
   return (
-    <GlassPanel className="p-4 hover:scale-[1.01] cursor-pointer group">
+    <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 hover:scale-[1.01] cursor-pointer group")}>
       <div onClick={() => onSelect(parte)}>
         {/* Header: Avatar + Name + Type badge */}
-        <div className="flex items-start gap-3">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3")}>
           {/* Avatar */}
           <div className={`size-10 rounded-xl ${config.bg} flex items-center justify-center shrink-0`}>
             {parte.tipo === 'pj' ? (
@@ -172,16 +173,16 @@ function EntityCard({ parte, onSelect }: { parte: Parte; onSelect: (p: Parte) =>
           </div>
 
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <h3 className="text-sm font-semibold truncate">{parte.nome}</h3>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <h3 className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold truncate")}>{parte.nome}</h3>
               {!parte.ativo && (
-                <span className="text-[9px] px-1.5 py-0.5 rounded bg-muted-foreground/10 text-muted-foreground/50">Inativo</span>
+                <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] px-1.5 py-0.5 rounded bg-muted-foreground/10 text-muted-foreground/50")}>Inativo</span>
               )}
             </div>
             {parte.nomeSocial && (
               <p className="text-[10px] text-muted-foreground/60 truncate">{parte.nomeSocial}</p>
             )}
-            <div className="flex items-center gap-2 mt-1">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-1")}>
               <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded ${config.bg} ${config.color}`}>
                 {config.label}
               </span>
@@ -195,33 +196,33 @@ function EntityCard({ parte, onSelect }: { parte: Parte; onSelect: (p: Parte) =>
         {/* Contact info */}
         <div className="flex flex-wrap gap-x-3 gap-y-1 mt-3 text-[10px] text-muted-foreground/50">
           {parte.email && (
-            <span className="flex items-center gap-1 truncate max-w-45">
+            <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 truncate max-w-45")}>
               <Mail className="size-2.5 shrink-0" />
               {parte.email}
             </span>
           )}
           {parte.telefone && (
-            <span className="flex items-center gap-1">
+            <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
               <Phone className="size-2.5 shrink-0" />
               {parte.telefone}
             </span>
           )}
-          <span className="flex items-center gap-1">
+          <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
             <MapPin className="size-2.5 shrink-0" />
             {parte.cidade}, {parte.estado}
           </span>
         </div>
 
         {/* Footer: Processos + atualização */}
-        <div className="flex items-center justify-between mt-3 pt-3 border-t border-border/10">
-          <div className="flex items-center gap-1.5">
+        <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex items-center justify-between mt-3 pt-3 border-t border-border/10")}>
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
             <Scale className="size-3 text-muted-foreground/55" />
-            <span className="text-[10px] font-medium">
+            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium")}>
               {parte.processosAtivos}
               <span className="text-muted-foreground/55"> / {parte.processosTotal} processos</span>
             </span>
           </div>
-          <span className="text-[9px] text-muted-foreground/55 flex items-center gap-1">
+          <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-[9px] text-muted-foreground/55 flex items-center gap-1")}>
             <Clock className="size-2.5" />
             {timeAgo(parte.ultimaAtualizacao)}
           </span>
@@ -229,9 +230,9 @@ function EntityCard({ parte, onSelect }: { parte: Parte; onSelect: (p: Parte) =>
 
         {/* Tags */}
         {parte.tags && parte.tags.length > 0 && (
-          <div className="flex gap-1 mt-2">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1 mt-2")}>
             {parte.tags.map((tag) => (
-              <span key={tag} className="text-[9px] px-1.5 py-0.5 rounded bg-primary/5 text-primary/50">
+              <span key={tag} className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] px-1.5 py-0.5 rounded bg-primary/5 text-primary/50")}>
                 {tag}
               </span>
             ))}
@@ -261,10 +262,10 @@ function EntityDetail({ parte, onClose }: { parte: Parte; onClose: () => void })
   ];
 
   return (
-    <GlassPanel className="p-5 md:col-span-2 lg:col-span-1">
+    <GlassPanel className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5 md:col-span-2 lg:col-span-1")}>
       {/* Header */}
       <div className="flex items-start justify-between mb-5">
-        <div className="flex items-center gap-3">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
           <div className={`size-12 rounded-xl ${config.bg} flex items-center justify-center`}>
             {parte.tipo === 'pj' ? (
               <Building2 className={`size-5 ${config.color}`} />
@@ -273,8 +274,8 @@ function EntityDetail({ parte, onClose }: { parte: Parte; onClose: () => void })
             )}
           </div>
           <div>
-            <h2 className="text-base font-heading font-semibold">{parte.nome}</h2>
-            <div className="flex items-center gap-2 mt-0.5">
+            <h2 className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ "text-base font-heading font-semibold")}>{parte.nome}</h2>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-0.5")}>
               <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded ${config.bg} ${config.color}`}>
                 {config.label}
               </span>
@@ -282,13 +283,13 @@ function EntityDetail({ parte, onClose }: { parte: Parte; onClose: () => void })
             </div>
           </div>
         </div>
-        <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-foreground/4 transition-colors cursor-pointer">
+        <button onClick={onClose} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors cursor-pointer")}>
           <X className="size-4 text-muted-foreground/60" />
         </button>
       </div>
 
       {/* Info grid */}
-      <div className="grid grid-cols-2 gap-3 mb-5">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3 mb-5")}>
         <InfoRow icon={FileText} label="Documento" value={parte.documento} copyable />
         <InfoRow icon={MapPin} label="Localidade" value={`${parte.cidade}, ${parte.estado}`} />
         {parte.email && <InfoRow icon={Mail} label="E-mail" value={parte.email} copyable />}
@@ -296,32 +297,32 @@ function EntityDetail({ parte, onClose }: { parte: Parte; onClose: () => void })
       </div>
 
       {/* Stats */}
-      <div className="flex gap-4 p-3 rounded-xl bg-foreground/3 border border-border/10 mb-5">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; p-3 → usar <Inset> */ "flex gap-4 p-3 rounded-xl bg-foreground/3 border border-border/10 mb-5")}>
         <div className="flex-1 text-center">
-          <p className="font-display text-xl font-bold">{parte.processosAtivos}</p>
+          <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "font-display text-xl font-bold")}>{parte.processosAtivos}</p>
           <p className="text-[9px] text-muted-foreground/60">Ativos</p>
         </div>
         <div className="w-px bg-border/10" />
         <div className="flex-1 text-center">
-          <p className="font-display text-xl font-bold text-muted-foreground/50">{parte.processosTotal - parte.processosAtivos}</p>
+          <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "font-display text-xl font-bold text-muted-foreground/50")}>{parte.processosTotal - parte.processosAtivos}</p>
           <p className="text-[9px] text-muted-foreground/60">Encerrados</p>
         </div>
         <div className="w-px bg-border/10" />
         <div className="flex-1 text-center">
-          <p className="font-display text-xl font-bold text-primary/70">{parte.processosTotal}</p>
+          <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "font-display text-xl font-bold text-primary/70")}>{parte.processosTotal}</p>
           <p className="text-[9px] text-muted-foreground/60">Total</p>
         </div>
       </div>
 
       {/* Processos relacionados */}
       <div className="mb-5">
-        <h3 className="text-xs font-heading font-semibold mb-2 flex items-center gap-1.5">
+        <h3 className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading>; gap-1.5 gap sem token DS */ "text-xs font-heading font-semibold mb-2 flex items-center gap-1.5")}>
           <Scale className="size-3.5 text-muted-foreground/60" />
           Processos
         </h3>
-        <div className="space-y-1.5">
+        <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
           {mockProcessos.map((p) => (
-            <div key={p.numero} className="flex items-center gap-2 p-2 rounded-lg hover:bg-foreground/4 transition-colors cursor-pointer">
+            <div key={p.numero} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2 → usar <Inset> */ "flex items-center gap-2 p-2 rounded-lg hover:bg-foreground/4 transition-colors cursor-pointer")}>
               <div className={`size-1.5 rounded-full ${p.status === 'Ativo' ? 'bg-success/60' : 'bg-muted-foreground/20'}`} />
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] font-mono text-muted-foreground/60 truncate">{p.numero}</p>
@@ -335,14 +336,14 @@ function EntityDetail({ parte, onClose }: { parte: Parte; onClose: () => void })
 
       {/* Timeline */}
       <div>
-        <h3 className="text-xs font-heading font-semibold mb-2 flex items-center gap-1.5">
+        <h3 className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading>; gap-1.5 gap sem token DS */ "text-xs font-heading font-semibold mb-2 flex items-center gap-1.5")}>
           <Clock className="size-3.5 text-muted-foreground/60" />
           Atividade Recente
         </h3>
         <div className="relative">
           <div className="absolute left-1.25 top-2 bottom-2 w-px bg-border/15" />
           {mockTimeline.map((ev, i) => (
-            <div key={i} className="flex items-start gap-3 py-1.5 relative">
+            <div key={i} className={cn(/* design-system-escape: gap-3 gap sem token DS; py-1.5 padding direcional sem Inset equiv. */ "flex items-start gap-3 py-1.5 relative")}>
               <div className="size-2.5 rounded-full bg-primary/30 mt-1 relative z-10" />
               <div className="flex-1 min-w-0">
                 <p className="text-[10px]">{ev.acao}</p>
@@ -354,12 +355,12 @@ function EntityDetail({ parte, onClose }: { parte: Parte; onClose: () => void })
       </div>
 
       {/* Actions */}
-      <div className="flex gap-2 mt-5 pt-4 border-t border-border/10">
-        <button className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary/10 text-primary/70 text-xs font-medium hover:bg-primary/15 transition-colors cursor-pointer">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-4 padding direcional sem Inset equiv. */ "flex gap-2 mt-5 pt-4 border-t border-border/10")}>
+        <button className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary/10 text-primary/70 text-xs font-medium hover:bg-primary/15 transition-colors cursor-pointer")}>
           <ExternalLink className="size-3" />
           Ver perfil completo
         </button>
-        <button className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/50 text-xs font-medium hover:bg-foreground/6 transition-colors cursor-pointer">
+        <button className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/50 text-xs font-medium hover:bg-foreground/6 transition-colors cursor-pointer")}>
           <Copy className="size-3" />
         </button>
       </div>
@@ -369,11 +370,11 @@ function EntityDetail({ parte, onClose }: { parte: Parte; onClose: () => void })
 
 function InfoRow({ icon: Icon, label, value }: { icon: typeof Mail; label: string; value: string; copyable?: boolean }) {
   return (
-    <div className="flex items-start gap-2">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2")}>
       <Icon className="size-3 text-muted-foreground/55 mt-0.5 shrink-0" />
       <div className="min-w-0">
-        <p className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">{label}</p>
-        <p className="text-[11px] font-medium truncate">{value}</p>
+        <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/55 uppercase tracking-wider")}>{label}</p>
+        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium truncate")}>{value}</p>
       </div>
     </div>
   );
@@ -411,9 +412,9 @@ export default function PartesMockPage() {
   const novosEsteMes = STATS.clientes.novosMes + STATS.partesContrarias.novosMes + STATS.terceiros.novosMes + STATS.representantes.novosMes;
 
   return (
-    <div className="space-y-5">
+    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       {/* ── Header ──────────────────────────────────────────────── */}
-      <div className="flex items-end justify-between gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
         <div>
           <Heading level="page">Partes</Heading>
           <Text variant="caption" className="text-muted-foreground/50 mt-0.5">
@@ -427,19 +428,19 @@ export default function PartesMockPage() {
       </div>
 
       {/* ── Pulse Strip ─────────────────────────────────────────── */}
-      <GlassPanel className="px-5 py-3">
-        <div className="flex items-center gap-6 overflow-x-auto">
+      <GlassPanel className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-5 py-3")}>
+        <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "flex items-center gap-6 overflow-x-auto")}>
           {([
             { label: 'Clientes', total: STATS.clientes.total, novos: STATS.clientes.novosMes, icon: User, color: 'text-primary' },
             { label: 'Partes Contrárias', total: STATS.partesContrarias.total, novos: STATS.partesContrarias.novosMes, icon: Gavel, color: 'text-warning' },
             { label: 'Terceiros', total: STATS.terceiros.total, novos: STATS.terceiros.novosMes, icon: Shield, color: 'text-info' },
             { label: 'Representantes', total: STATS.representantes.total, novos: STATS.representantes.novosMes, icon: Scale, color: 'text-success' },
           ] as const).map((s, i) => (
-            <div key={s.label} className="flex items-center gap-3 shrink-0">
+            <div key={s.label} className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 shrink-0")}>
               {i > 0 && <div className="w-px h-8 bg-border/10 -ml-3" />}
               <s.icon className={`size-4 ${s.color}/40`} />
               <div>
-                <p className="font-display text-lg font-bold tabular-nums">{s.total}</p>
+                <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold tabular-nums")}>{s.total}</p>
                 <p className="text-[10px] text-muted-foreground/60">
                   {s.label}
                   {s.novos > 0 && <span className="text-success/60 ml-1">+{s.novos}</span>}
@@ -451,16 +452,16 @@ export default function PartesMockPage() {
       </GlassPanel>
 
       {/* ── Insight Banner ──────────────────────────────────────── */}
-      <div className="rounded-lg border border-primary/10 bg-primary/4 px-3.5 py-2 text-[11px] font-medium text-primary/70 flex items-center gap-2">
+      <div className={cn(/* design-system-escape: px-3.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading>; gap-2 → migrar para <Inline gap="tight"> */ "rounded-lg border border-primary/10 bg-primary/4 px-3.5 py-2 text-[11px] font-medium text-primary/70 flex items-center gap-2")}>
         <AlertCircle className="size-3.5 shrink-0" />
         <span>5 clientes sem processos ativos há 90+ dias &middot; 2 partes contrárias com dados incompletos</span>
         <ChevronRight className="size-3 ml-auto shrink-0" />
       </div>
 
       {/* ── Tabs + Search + View Toggle ─────────────────────────── */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
         <TabPills active={activeTab} onChange={setActiveTab} />
-        <div className="flex items-center gap-2 flex-1 justify-end">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
           {/* Search */}
           <div className="relative">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/55" />
@@ -469,11 +470,11 @@ export default function PartesMockPage() {
               placeholder="Buscar por nome, CPF, CNPJ..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-56 pl-8 pr-3 py-1.5 rounded-lg bg-foreground/4 border border-border/15 text-xs placeholder:text-muted-foreground/55 focus:outline-none focus:ring-1 focus:ring-primary/20 focus:border-primary/20 transition-all"
+              className={cn(/* design-system-escape: pl-8 padding direcional sem Inset equiv.; pr-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "w-56 pl-8 pr-3 py-1.5 rounded-lg bg-foreground/4 border border-border/15 text-xs placeholder:text-muted-foreground/55 focus:outline-none focus:ring-1 focus:ring-primary/20 focus:border-primary/20 transition-all")}
             />
           </div>
           {/* View toggle */}
-          <div className="flex p-0.5 rounded-lg bg-border/6">
+          <div className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "flex p-0.5 rounded-lg bg-border/6")}>
             <button
               onClick={() => setViewMode('cards')}
               className={`p-1.5 rounded-md transition-all cursor-pointer ${viewMode === 'cards' ? 'bg-primary/12 text-primary' : 'text-muted-foreground/55 hover:text-muted-foreground/50'}`}
@@ -495,7 +496,7 @@ export default function PartesMockPage() {
         {/* Cards/List Grid */}
         <div className={viewMode === 'cards'
           ? `grid grid-cols-1 sm:grid-cols-2 ${selectedParte ? '' : 'lg:grid-cols-3'} gap-3`
-          : 'flex flex-col gap-1.5'
+          : /* design-system-escape: gap-1.5 gap sem token DS */ 'flex flex-col gap-1.5'
         }>
           {filteredPartes.map((parte) =>
             viewMode === 'cards' ? (
@@ -506,10 +507,10 @@ export default function PartesMockPage() {
           )}
 
           {filteredPartes.length === 0 && (
-            <div className="col-span-full flex flex-col items-center justify-center py-16 text-center">
+            <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "col-span-full flex flex-col items-center justify-center py-16 text-center")}>
               <Users className="size-8 text-muted-foreground/45 mb-3" />
-              <p className="text-sm font-medium text-muted-foreground/50">Nenhuma parte encontrada</p>
-              <p className="text-xs text-muted-foreground/55 mt-1">Tente ajustar os filtros ou a busca</p>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/50")}>Nenhuma parte encontrada</p>
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/55 mt-1")}>Tente ajustar os filtros ou a busca</p>
             </div>
           )}
         </div>
@@ -523,7 +524,7 @@ export default function PartesMockPage() {
       </div>
 
       {/* ── Footer ──────────────────────────────────────────────── */}
-      <p className="text-center text-[10px] text-muted-foreground/50 pb-4">
+      <p className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "text-center text-[10px] text-muted-foreground/50 pb-4")}>
         {'Protótipo — Partes com Glass Briefing — dados fictícios'}
       </p>
     </div>
@@ -554,7 +555,7 @@ function EntityListRow({ parte, onSelect, selected }: { parte: Parte; onSelect: 
 
       {/* Name + doc */}
       <div className="flex-1 min-w-0">
-        <p className="text-xs font-medium truncate">{parte.nome}</p>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium truncate")}>{parte.nome}</p>
         <p className="text-[10px] text-muted-foreground/55 tabular-nums">{parte.documentoMasked}</p>
       </div>
 
@@ -567,7 +568,7 @@ function EntityListRow({ parte, onSelect, selected }: { parte: Parte; onSelect: 
       <span className="text-[10px] text-muted-foreground/55 shrink-0 hidden md:block w-16 text-right">{parte.estado}</span>
 
       {/* Processos */}
-      <span className="text-[10px] font-medium tabular-nums shrink-0 w-12 text-right">
+      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums shrink-0 w-12 text-right")}>
         {parte.processosAtivos}
         <span className="text-muted-foreground/50"> proc</span>
       </span>

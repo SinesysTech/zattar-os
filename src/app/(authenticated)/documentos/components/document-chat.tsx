@@ -6,6 +6,7 @@
  * @see https://supabase.com/ui/docs/nextjs/realtime-chat
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { MessageSquare } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -72,10 +73,10 @@ export function DocumentChat({ documentoId, currentUserName, currentUserId }: Do
   if (loading || !sala) {
     return (
       <div className="flex flex-col h-full">
-        <div className="border-b p-4">
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "border-b p-4")}>
           <Skeleton className="h-5 w-32" />
         </div>
-        <div className="flex-1 p-4 space-y-4">
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-4 → migrar para <Stack gap="default"> */ "flex-1 p-4 space-y-4")}>
           <Skeleton className="h-12 w-3/4" />
           <Skeleton className="h-12 w-1/2 ml-auto" />
           <Skeleton className="h-12 w-2/3" />
@@ -90,12 +91,12 @@ export function DocumentChat({ documentoId, currentUserName, currentUserId }: Do
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="border-b p-4">
-        <Typography.H3 className="flex items-center gap-2">
+      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "border-b p-4")}>
+        <Typography.H3 className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           <MessageSquare className="h-4 w-4" />
           Chat do Documento
         </Typography.H3>
-        <p className="text-xs text-muted-foreground mt-1">
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mt-1")}>
           Conversa em tempo real
         </p>
       </div>

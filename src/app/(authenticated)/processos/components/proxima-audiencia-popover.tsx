@@ -108,7 +108,7 @@ export function ProximaAudienciaPopover({
               <Button
                 variant="ghost"
                 size="icon" aria-label="Ver próxima audiência"
-                className={cn('h-5 w-5 p-0', getUrgenciaColor(), className)}
+                className={cn(/* design-system-escape: p-0 → usar <Inset> */ 'h-5 w-5 p-0', getUrgenciaColor(), className)}
                 onClick={(e) => e.stopPropagation()}
               >
                 <Calendar className="h-3.5 w-3.5" />
@@ -122,20 +122,20 @@ export function ProximaAudienciaPopover({
         </Tooltip>
       </TooltipProvider>
       <PopoverContent
-        className="w-64 p-3"
+        className={cn(/* design-system-escape: p-3 → usar <Inset> */ "w-64 p-3")}
         align="start"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <Calendar className={cn('h-4 w-4', getUrgenciaColor())} />
-            <Heading level="subsection" className="text-sm">Próxima Audiência</Heading>
+            <Heading level="subsection" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Próxima Audiência</Heading>
           </div>
           {clientData && (
-            <div className="space-y-1 text-sm">
+            <div className={cn(/* design-system-escape: space-y-1 sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "space-y-1 text-sm")}>
               <p className="text-muted-foreground capitalize">{clientData.data}</p>
-              <p className="font-medium">às {clientData.hora}</p>
-              <p className={cn('text-xs font-medium', getUrgenciaColor())}>
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>às {clientData.hora}</p>
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ 'text-xs font-medium', getUrgenciaColor())}>
                 {getUrgenciaLabel()}
               </p>
             </div>

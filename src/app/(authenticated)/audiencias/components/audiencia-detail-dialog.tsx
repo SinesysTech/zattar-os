@@ -73,7 +73,7 @@ function SectionHeader({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="mb-2.5 flex items-center gap-2">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mb-2.5 flex items-center gap-2")}>
       <Icon className="size-3.5 text-primary" />
       <Text variant="overline" className="text-muted-foreground">
         {label}
@@ -365,7 +365,7 @@ export function AudienciaDetailDialog({
   const titleNode = (
     <>
       {poloAtivo}
-      <span className="mx-1.5 font-medium text-muted-foreground/70">×</span>
+      <span className={cn(/* design-system-escape: mx-1.5 margin sem primitiva DS; font-medium → className de <Text>/<Heading> */ "mx-1.5 font-medium text-muted-foreground/70")}>×</span>
       {poloPassivo}
     </>
   );
@@ -407,9 +407,9 @@ export function AudienciaDetailDialog({
 
   const heroNode =
     audiencia && !isLoading && !error ? (
-      <div className="mx-5 mt-3 rounded-xl border border-primary/15 bg-primary/5 p-4">
+      <div className={cn(/* design-system-escape: mx-5 margin sem primitiva DS; p-4 → migrar para <Inset variant="card-compact"> */ "mx-5 mt-3 rounded-xl border border-primary/15 bg-primary/5 p-4")}>
         <div className="mb-3.5 min-w-0">
-          <Heading level="subsection" as="h4" className="leading-tight">
+          <Heading level="subsection" as="h4" className={cn(/* design-system-escape: leading-tight sem token DS */ "leading-tight")}>
             {audiencia.tipoDescricao || 'Audiência'}
           </Heading>
           {dataInicio && dataFim && (
@@ -423,9 +423,9 @@ export function AudienciaDetailDialog({
           )}
         </div>
 
-        <div className="mb-3.5 grid grid-cols-2 gap-x-5 gap-y-2.5 border-b border-border/40 pb-3.5 sm:grid-cols-4">
+        <div className={cn(/* design-system-escape: pb-3.5 padding direcional sem Inset equiv. */ "mb-3.5 grid grid-cols-2 gap-x-5 gap-y-2.5 border-b border-border/40 pb-3.5 sm:grid-cols-4")}>
           {/* Modalidade */}
-          <div className="flex flex-col gap-1">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
             <Text variant="label" className="text-muted-foreground/80">
               Modalidade
             </Text>
@@ -443,7 +443,7 @@ export function AudienciaDetailDialog({
                       : undefined
                   }
                   className={cn(
-                    'inline-flex w-fit items-center gap-1.5 rounded-full border border-border/60 bg-card pl-2.5 pr-2 py-1 text-micro-caption font-medium text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60',
+                    /* design-system-escape: gap-1.5 gap sem token DS; pl-2.5 padding direcional sem Inset equiv.; pr-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; pl-2.5 padding direcional sem Inset equiv.; pr-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'inline-flex w-fit items-center gap-1.5 rounded-full border border-border/60 bg-card pl-2.5 pr-2 py-1 text-micro-caption font-medium text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60',
                     !modalidadePopoverDisabled && 'cursor-pointer hover:border-border hover:bg-muted/60',
                     modalidadePopoverDisabled && 'cursor-not-allowed'
                   )}
@@ -468,11 +468,11 @@ export function AudienciaDetailDialog({
                   )}
                 </button>
               </PopoverTrigger>
-              <PopoverContent className="w-44 rounded-xl p-1.5 glass-dropdown" align="start">
+              <PopoverContent className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "w-44 rounded-xl p-1.5 glass-dropdown")} align="start">
                 <Text
                   variant="overline"
                   as="p"
-                  className="px-2 pt-1 pb-1.5 text-muted-foreground/60"
+                  className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; pt-1 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-2 pt-1 pb-1.5 text-muted-foreground/60")}
                 >
                   Modalidade
                 </Text>
@@ -483,7 +483,7 @@ export function AudienciaDetailDialog({
                       key={m}
                       type="button"
                       onClick={() => handleChangeModalidade(m)}
-                      className="flex w-full cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-micro-caption transition-colors hover:bg-muted/60"
+                      className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex w-full cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-micro-caption transition-colors hover:bg-muted/60")}
                     >
                       <Icon className="size-3.5 text-muted-foreground" />
                       <span>{MODALIDADE_LABELS[m]}</span>
@@ -498,7 +498,7 @@ export function AudienciaDetailDialog({
           </div>
 
           {/* Responsável */}
-          <div className="flex flex-col gap-1">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
             <Text variant="label" className="text-muted-foreground/80">
               Responsável
             </Text>
@@ -521,13 +521,13 @@ export function AudienciaDetailDialog({
         </div>
 
         {/* Ações */}
-        <div className="flex flex-wrap gap-1.5">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-wrap gap-1.5")}>
           {(isVirtual || isHibrida) && (
             audiencia.urlAudienciaVirtual ? (
               <Button
                 size="sm"
                 asChild
-                className="h-8 gap-1.5 rounded-lg px-3 text-caption"
+                className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv. */ "h-8 gap-1.5 rounded-lg px-3 text-caption")}
               >
                 <a
                   href={audiencia.urlAudienciaVirtual}
@@ -542,7 +542,7 @@ export function AudienciaDetailDialog({
               <Button
                 size="sm"
                 disabled
-                className="h-8 gap-1.5 rounded-lg px-3 text-caption"
+                className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv. */ "h-8 gap-1.5 rounded-lg px-3 text-caption")}
               >
                 <Video className="size-3" />
                 Entrar na sala virtual
@@ -554,7 +554,7 @@ export function AudienciaDetailDialog({
               size="sm"
               variant="outline"
               asChild
-              className="h-8 gap-1.5 rounded-lg px-3 text-caption"
+              className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv. */ "h-8 gap-1.5 rounded-lg px-3 text-caption")}
             >
               <a href={pjeUrl} target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="size-3" />
@@ -566,7 +566,7 @@ export function AudienciaDetailDialog({
               size="sm"
               variant="outline"
               disabled
-              className="h-8 gap-1.5 rounded-lg px-3 text-caption"
+              className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv. */ "h-8 gap-1.5 rounded-lg px-3 text-caption")}
             >
               <ExternalLink className="size-3" />
               Abrir no PJe
@@ -582,18 +582,18 @@ export function AudienciaDetailDialog({
           open: true,
           content: (
             <>
-              <div className="flex items-center justify-between px-4 py-3 border-b border-border/40 bg-card">
-                <div className="flex items-center gap-2 text-label font-semibold">
+              <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-center justify-between px-4 py-3 border-b border-border/40 bg-card")}>
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; font-semibold → className de <Text>/<Heading> */ "flex items-center gap-2 text-label font-semibold")}>
                   <FileText className="size-3.5 text-success" />
                   Ata{' '}
                   {dataInicio && (
-                    <Text variant="caption" as="span" className="font-medium">
+                    <Text variant="caption" as="span" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
                       · {format(dataInicio, 'dd MMM yyyy', { locale: ptBR })}
                     </Text>
                   )}
                 </div>
-                <div className="flex items-center gap-1">
-                  <Button variant="ghost" size="sm" asChild className="h-7 px-2 text-micro-caption">
+                <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+                  <Button variant="ghost" size="sm" asChild className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-7 px-2 text-micro-caption")}>
                     <a href={audiencia.urlAtaAudiencia} target="_blank" rel="noopener noreferrer">
                       Baixar
                     </a>
@@ -640,19 +640,19 @@ export function AudienciaDetailDialog({
       }
     >
       {isLoading && (
-        <div className="flex items-center justify-center py-10">
+        <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv. */ "flex items-center justify-center py-10")}>
           <LoadingSpinner className="size-6 text-muted-foreground" />
         </div>
       )}
       {error && !isLoading && (
-        <div className="flex flex-col items-center justify-center gap-2 py-10 text-center">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-10 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center gap-2 py-10 text-center")}>
           <AlertCircle className="size-6 text-destructive" />
           <Text variant="caption" className="text-destructive">{error}</Text>
         </div>
       )}
 
       {audiencia && !isLoading && !error && (
-        <div className="space-y-5">
+        <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
           {/* ATA · só quando existe */}
           {hasAta && (
             <div>
@@ -660,7 +660,7 @@ export function AudienciaDetailDialog({
               <button
                 type="button"
                 onClick={() => setAtaOpen((v) => !v)}
-                className="flex w-full cursor-pointer items-center gap-3 rounded-xl border border-success/25 bg-success/8 p-2.5 text-left transition-colors hover:bg-success/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className={cn(/* design-system-escape: gap-3 gap sem token DS; p-2.5 → usar <Inset> */ "flex w-full cursor-pointer items-center gap-3 rounded-xl border border-success/25 bg-success/8 p-2.5 text-left transition-colors hover:bg-success/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
               >
                 <span className="inline-flex size-7 shrink-0 items-center justify-center rounded-lg bg-success/18 text-success">
                   <FileText className="size-3.5" />
@@ -688,15 +688,15 @@ export function AudienciaDetailDialog({
             <SectionHeader icon={Building2} label="Local / Acesso" />
             <SectionCard>
               {(isVirtual || isHibrida) && (
-                <div className={isHibrida ? 'mb-3 pb-3 border-b border-border/40' : ''}>
+                <div className={isHibrida ? /* design-system-escape: pb-3 padding direcional sem Inset equiv. */ 'mb-3 pb-3 border-b border-border/40' : ''}>
                   <div className="flex items-center justify-between mb-1.5">
-                    <div className="flex items-center gap-1.5">
+                    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
                       <Text variant="caption" as="span" className="text-muted-foreground">
                         Link da sala virtual
                       </Text>
                       {urlObrigatoriaFaltando && (
                         <span
-                          className="inline-flex items-center gap-1 rounded-full bg-warning/12 px-1.5 py-px text-micro-badge font-semibold uppercase tracking-[0.08em] text-warning"
+                          className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 rounded-full bg-warning/12 px-1.5 py-px text-micro-badge font-semibold uppercase tracking-[0.08em] text-warning")}
                           role="status"
                           aria-label="Campo obrigatório não preenchido"
                         >
@@ -709,7 +709,7 @@ export function AudienciaDetailDialog({
                       <button
                         type="button"
                         onClick={handleStartEditUrl}
-                        className="flex cursor-pointer items-center gap-1 text-micro-caption font-semibold uppercase tracking-wider text-primary/70 transition-colors hover:text-primary"
+                        className={cn(/* design-system-escape: gap-1 gap sem token DS; font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "flex cursor-pointer items-center gap-1 text-micro-caption font-semibold uppercase tracking-wider text-primary/70 transition-colors hover:text-primary")}
                       >
                         <Pencil className="size-2.5" />
                         {audiencia.urlAudienciaVirtual ? 'Editar' : 'Adicionar'}
@@ -717,13 +717,13 @@ export function AudienciaDetailDialog({
                     )}
                   </div>
                   {editingUrl ? (
-                    <div className="flex items-center gap-2">
+                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                       <Input
                         type="url"
                         placeholder="https://..."
                         value={urlDraft}
                         onChange={(e) => setUrlDraft(e.target.value)}
-                        className="h-8 text-xs flex-1"
+                        className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs flex-1")}
                         autoFocus
                       />
                       <Button
@@ -749,7 +749,7 @@ export function AudienciaDetailDialog({
                       </Button>
                     </div>
                   ) : audiencia.urlAudienciaVirtual ? (
-                    <div className="flex items-center gap-2 min-w-0">
+                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
                       <Video className="size-3.5 text-muted-foreground/60 shrink-0" />
                       <a
                         href={audiencia.urlAudienciaVirtual}
@@ -783,13 +783,13 @@ export function AudienciaDetailDialog({
               {(isPresencial || isHibrida) && (
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
-                    <div className="flex items-center gap-1.5">
+                    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
                       <Text variant="caption" as="span" className="text-muted-foreground">
                         Endereço presencial
                       </Text>
                       {enderecoObrigatorioFaltando && (
                         <span
-                          className="inline-flex items-center gap-1 rounded-full bg-warning/12 px-1.5 py-px text-micro-badge font-semibold uppercase tracking-[0.08em] text-warning"
+                          className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 rounded-full bg-warning/12 px-1.5 py-px text-micro-badge font-semibold uppercase tracking-[0.08em] text-warning")}
                           role="status"
                           aria-label="Campo obrigatório não preenchido"
                         >
@@ -802,7 +802,7 @@ export function AudienciaDetailDialog({
                       <button
                         type="button"
                         onClick={handleStartEditEndereco}
-                        className="flex cursor-pointer items-center gap-1 text-micro-caption font-semibold uppercase tracking-wider text-primary/70 transition-colors hover:text-primary"
+                        className={cn(/* design-system-escape: gap-1 gap sem token DS; font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "flex cursor-pointer items-center gap-1 text-micro-caption font-semibold uppercase tracking-wider text-primary/70 transition-colors hover:text-primary")}
                       >
                         <Pencil className="size-2.5" />
                         {audiencia.enderecoPresencial ? 'Editar' : 'Adicionar'}
@@ -810,15 +810,15 @@ export function AudienciaDetailDialog({
                     )}
                   </div>
                   {editingEndereco ? (
-                    <div className="space-y-2">
-                      <div className="grid grid-cols-[1fr_80px] gap-2">
+                    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-[1fr_80px] gap-2")}>
                         <Input
                           placeholder="Logradouro"
                           value={enderecoDraft.logradouro}
                           onChange={(e) =>
                             setEnderecoDraft((d) => ({ ...d, logradouro: e.target.value }))
                           }
-                          className="h-8 text-xs"
+                          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
                           autoFocus
                         />
                         <Input
@@ -827,17 +827,17 @@ export function AudienciaDetailDialog({
                           onChange={(e) =>
                             setEnderecoDraft((d) => ({ ...d, numero: e.target.value }))
                           }
-                          className="h-8 text-xs"
+                          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
                         />
                       </div>
-                      <div className="grid grid-cols-2 gap-2">
+                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2")}>
                         <Input
                           placeholder="Complemento"
                           value={enderecoDraft.complemento || ''}
                           onChange={(e) =>
                             setEnderecoDraft((d) => ({ ...d, complemento: e.target.value }))
                           }
-                          className="h-8 text-xs"
+                          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
                         />
                         <Input
                           placeholder="Bairro"
@@ -845,17 +845,17 @@ export function AudienciaDetailDialog({
                           onChange={(e) =>
                             setEnderecoDraft((d) => ({ ...d, bairro: e.target.value }))
                           }
-                          className="h-8 text-xs"
+                          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
                         />
                       </div>
-                      <div className="grid grid-cols-[1fr_60px_100px] gap-2">
+                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-[1fr_60px_100px] gap-2")}>
                         <Input
                           placeholder="Cidade"
                           value={enderecoDraft.cidade}
                           onChange={(e) =>
                             setEnderecoDraft((d) => ({ ...d, cidade: e.target.value }))
                           }
-                          className="h-8 text-xs"
+                          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
                         />
                         <Input
                           placeholder="UF"
@@ -867,7 +867,7 @@ export function AudienciaDetailDialog({
                               uf: e.target.value.toUpperCase(),
                             }))
                           }
-                          className="h-8 text-xs"
+                          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
                         />
                         <Input
                           placeholder="CEP"
@@ -875,15 +875,15 @@ export function AudienciaDetailDialog({
                           onChange={(e) =>
                             setEnderecoDraft((d) => ({ ...d, cep: e.target.value }))
                           }
-                          className="h-8 text-xs"
+                          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
                         />
                       </div>
-                      <div className="flex justify-end gap-1.5 mt-1">
+                      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex justify-end gap-1.5 mt-1")}>
                         <Button
                           size="sm"
                           variant="ghost"
                           onClick={() => setEditingEndereco(false)}
-                          className="h-7 text-xs"
+                          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-7 text-xs")}
                         >
                           Cancelar
                         </Button>
@@ -891,7 +891,7 @@ export function AudienciaDetailDialog({
                           size="sm"
                           onClick={handleSaveEndereco}
                           disabled={savingEndereco}
-                          className="h-7 text-xs"
+                          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-7 text-xs")}
                         >
                           {savingEndereco && (
                             <LoadingSpinner size="sm" className="mr-1" />
@@ -901,7 +901,7 @@ export function AudienciaDetailDialog({
                       </div>
                     </div>
                   ) : audiencia.enderecoPresencial ? (
-                    <Text variant="caption" className="text-foreground/90 leading-relaxed">
+                    <Text variant="caption" className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-foreground/90 leading-relaxed")}>
                       {audiencia.enderecoPresencial.logradouro},{' '}
                       {audiencia.enderecoPresencial.numero}
                       {audiencia.enderecoPresencial.complemento &&
@@ -925,11 +925,11 @@ export function AudienciaDetailDialog({
 
               {/* Híbrida: quem é presencial? */}
               {isHibrida && (
-                <div className="mt-3 pt-3 border-t border-border/40">
+                <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 pt-3 border-t border-border/40")}>
                   <Text variant="caption" as="span" className="mb-2 block text-muted-foreground">
                     Quem participa presencialmente?
                   </Text>
-                  <div className="inline-flex gap-1 p-1 rounded-lg bg-muted/60 border border-border/40">
+                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS; p-1 → usar <Inset> */ "inline-flex gap-1 p-1 rounded-lg bg-muted/60 border border-border/40")}>
                     {(
                       [
                         { v: PresencaHibrida.Advogado, label: 'Advogados' },
@@ -947,7 +947,7 @@ export function AudienciaDetailDialog({
                             : undefined
                         }
                         className={cn(
-                          'rounded-md px-3 py-1 text-overline transition-colors',
+                          /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'rounded-md px-3 py-1 text-overline transition-colors',
                           audiencia.presencaHibrida === v
                             ? 'bg-card text-foreground shadow-sm'
                             : 'text-muted-foreground hover:text-foreground',
@@ -958,7 +958,7 @@ export function AudienciaDetailDialog({
                       </button>
                     ))}
                   </div>
-                  <p className="text-micro-caption mt-2 leading-relaxed text-muted-foreground/80">
+                  <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-micro-caption mt-2 leading-relaxed text-muted-foreground/80")}>
                     Os demais participam por videoconferência.
                   </p>
                 </div>
@@ -989,7 +989,7 @@ export function AudienciaDetailDialog({
                   <button
                     type="button"
                     onClick={handleStartEditObs}
-                    className="text-micro-caption font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center gap-1"
+                    className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; gap-1 gap sem token DS */ "text-micro-caption font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center gap-1")}
                   >
                     <Pencil className="size-2.5" />
                     {audiencia.observacoes ? 'Editar' : 'Adicionar'}
@@ -999,21 +999,21 @@ export function AudienciaDetailDialog({
             />
             <SectionCard>
               {editingObs ? (
-                <div className="space-y-2">
+                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                   <Textarea
                     placeholder="Anotações sobre a audiência..."
                     value={obsDraft}
                     onChange={(e) => setObsDraft(e.target.value)}
                     rows={3}
-                    className="text-sm"
+                    className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}
                     autoFocus
                   />
-                  <div className="flex justify-end gap-1.5">
+                  <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex justify-end gap-1.5")}>
                     <Button
                       size="sm"
                       variant="ghost"
                       onClick={() => setEditingObs(false)}
-                      className="h-7 text-xs"
+                      className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-7 text-xs")}
                     >
                       Cancelar
                     </Button>
@@ -1021,7 +1021,7 @@ export function AudienciaDetailDialog({
                       size="sm"
                       onClick={handleSaveObs}
                       disabled={savingObs}
-                      className="h-7 text-xs"
+                      className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-7 text-xs")}
                     >
                       {savingObs && <LoadingSpinner size="sm" className="mr-1" />}
                       Salvar
@@ -1029,7 +1029,7 @@ export function AudienciaDetailDialog({
                   </div>
                 </div>
               ) : audiencia.observacoes ? (
-                <p className="text-body-sm leading-relaxed whitespace-pre-wrap">
+                <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-body-sm leading-relaxed whitespace-pre-wrap")}>
                   {audiencia.observacoes}
                 </p>
               ) : (

@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { ChevronLeft, ChevronRight, Ellipsis } from "lucide-react";
@@ -42,7 +43,7 @@ function ProjectActions({ projetoId }: { projetoId: string }) {
     <div className="text-end">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
+          <Button variant="ghost" className={cn(/* design-system-escape: p-0 → usar <Inset> */ "h-8 w-8 p-0")}>
             <span className="sr-only">Abrir menu</span>
             <Ellipsis className="h-4 w-4" />
           </Button>
@@ -196,12 +197,12 @@ export function TableRecentProjects({ projetos }: TableRecentProjectsProps) {
             </TableBody>
           </Table>
         </div>
-        <div className="flex items-center justify-end space-x-2 pt-4">
-          <div className="text-muted-foreground flex-1 text-sm">
+        <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight">; pt-4 padding direcional sem Inset equiv. */ "flex items-center justify-end space-x-2 pt-4")}>
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground flex-1 text-sm")}>
             Página {table.getState().pagination.pageIndex + 1} de{" "}
             {table.getPageCount()} ({projetos.length} projetos)
           </div>
-          <div className="space-x-2">
+          <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "space-x-2")}>
             <Button
               variant="outline"
               size="icon" aria-label="Voltar"

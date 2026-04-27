@@ -70,7 +70,7 @@ const FieldsListItem = memo(function FieldsListItem({
   return (
     <div
       className={cn(
-        'group flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors',
+        /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2 → usar <Inset> */ 'group flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors',
         isSelected
           ? 'bg-primary/10 border border-primary/20'
           : 'hover:bg-muted/50 border border-transparent',
@@ -100,14 +100,14 @@ const FieldsListItem = memo(function FieldsListItem({
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium truncate">{field.nome}</p>
-        <p className="text-xs text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")}>{field.nome}</p>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
           {getFieldTypeLabel(field.tipo)} • Pág. {field.posicao.pagina}
         </p>
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity")}>
         {!isOnCurrentPage && (
           <Button
             variant="ghost"
@@ -178,23 +178,23 @@ export default function FieldsList({
 
   if (fields.length === 0) {
     return (
-      <div className="p-4 text-center text-muted-foreground">
+      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 text-center text-muted-foreground")}>
         <AlignLeft className="h-8 w-8 mx-auto mb-2 opacity-50" />
-        <p className="text-sm">Nenhum campo adicionado</p>
-        <p className="text-xs mt-1">Clique no canvas para adicionar campos</p>
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Nenhum campo adicionado</p>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs mt-1")}>Clique no canvas para adicionar campos</p>
       </div>
     );
   }
 
   return (
     <ScrollArea className="h-full">
-      <div className="p-3 space-y-4">
+      <div className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-4 → migrar para <Stack gap="default"> */ "p-3 space-y-4")}>
         {pages.map((page) => (
           <div key={page}>
-            <Heading level="subsection" className="text-xs text-muted-foreground uppercase tracking-wider mb-2 px-1">
+            <Heading level="subsection" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; tracking-wider sem token DS; px-1 padding direcional sem Inset equiv. */ "text-xs text-muted-foreground uppercase tracking-wider mb-2 px-1")}>
               Página {page}
             </Heading>
-            <div className="space-y-1">
+            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
               {fieldsByPage[page].map((field) => (
                 <FieldsListItem
                   key={field.id}
@@ -211,8 +211,8 @@ export default function FieldsList({
         ))}
 
         {/* Summary */}
-        <div className="pt-3 border-t text-center">
-          <p className="text-xs text-muted-foreground">
+        <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "pt-3 border-t text-center")}>
+          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
             {fields.length} campo{fields.length !== 1 ? 's' : ''} no total
           </p>
         </div>

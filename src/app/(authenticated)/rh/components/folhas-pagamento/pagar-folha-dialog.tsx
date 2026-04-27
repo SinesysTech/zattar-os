@@ -1,6 +1,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -93,8 +94,8 @@ export function PagarFolhaDialog({
           <DialogDescription>Confirme a forma de pagamento e a data de efetivação.</DialogDescription>
         </DialogHeader>
 
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          <div className="space-y-2">
+        <form className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")} onSubmit={handleSubmit}>
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label>Forma de Pagamento</Label>
             <Controller
               name="formaPagamento"
@@ -119,7 +120,7 @@ export function PagarFolhaDialog({
             />
           </div>
 
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label>Conta Bancária</Label>
             <Controller
               name="contaBancariaId"
@@ -144,12 +145,12 @@ export function PagarFolhaDialog({
             />
           </div>
 
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label>Data de Efetivação</Label>
             <Input type="date" {...form.register('dataEfetivacao')} />
           </div>
 
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label>Observações</Label>
             <Textarea rows={3} {...form.register('observacoes')} />
           </div>

@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useEffect } from 'react';
 import { AlertTriangle, RotateCcw } from 'lucide-react';
 
@@ -26,7 +27,7 @@ export default function ExpedientesError({
           </div>
           <CardTitle>Erro ao carregar expedientes</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           <p className="text-center text-muted-foreground">
             Ocorreu um erro ao tentar carregar os expedientes.
             Por favor, tente novamente.

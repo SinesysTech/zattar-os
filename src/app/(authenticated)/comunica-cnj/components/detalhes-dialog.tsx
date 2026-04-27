@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import DOMPurify from 'dompurify';
 import {
   Dialog,
@@ -36,7 +37,7 @@ function DetailRow({
       <Text variant="meta-label" className="text-muted-foreground">
         {label}
       </Text>
-      <div className="mt-1 text-sm text-foreground">{children}</div>
+      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-1 text-sm text-foreground")}>{children}</div>
     </div>
   );
 }
@@ -72,13 +73,13 @@ export function ComunicacaoDetalhesDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-6">
+        <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
           {/* Processo */}
           <div>
             <SectionHeading>Processo</SectionHeading>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 gap-3 sm:grid-cols-2")}>
               <DetailRow label="Número">
-                <span className="break-all font-medium tabular-nums">
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "break-all font-medium tabular-nums")}>
                   {comunicacao.numeroProcessoComMascara}
                 </span>
               </DetailRow>
@@ -93,7 +94,7 @@ export function ComunicacaoDetalhesDialog({
           {/* Comunicação */}
           <div>
             <SectionHeading>Comunicação</SectionHeading>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 gap-3 sm:grid-cols-2")}>
               <DetailRow label="Tipo">
                 <Badge variant="outline">{comunicacao.tipoComunicacao}</Badge>
               </DetailRow>
@@ -113,7 +114,7 @@ export function ComunicacaoDetalhesDialog({
                 </DetailRow>
               )}
               <DetailRow label="Hash" span={2}>
-                <span className="break-all text-xs tabular-nums text-muted-foreground">
+                <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "break-all text-xs tabular-nums text-muted-foreground")}>
                   {comunicacao.hash}
                 </span>
               </DetailRow>
@@ -123,7 +124,7 @@ export function ComunicacaoDetalhesDialog({
           {/* Partes */}
           <div>
             <SectionHeading>Partes</SectionHeading>
-            <div className="space-y-3 text-sm">
+            <div className={cn(/* design-system-escape: space-y-3 sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "space-y-3 text-sm")}>
               {comunicacao.partesAutoras && comunicacao.partesAutoras.length > 0 && (
                 <div>
                   <Text variant="meta-label" className="text-muted-foreground">
@@ -161,7 +162,7 @@ export function ComunicacaoDetalhesDialog({
           {comunicacao.advogados && comunicacao.advogados.length > 0 && (
             <div>
               <SectionHeading>Advogados</SectionHeading>
-              <ul className="ml-4 list-disc text-sm">
+              <ul className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "ml-4 list-disc text-sm")}>
                 {comunicacao.advogados.map((advogado, idx) => (
                   <li key={idx}>
                     {advogado}
@@ -181,14 +182,14 @@ export function ComunicacaoDetalhesDialog({
             <div>
               <SectionHeading>Conteúdo</SectionHeading>
               <div
-                className="prose prose-sm max-w-none rounded-md border border-border/40 bg-muted/40 p-3 text-sm dark:prose-invert"
+                className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "prose prose-sm max-w-none rounded-md border border-border/40 bg-muted/40 p-3 text-sm dark:prose-invert")}
                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(comunicacao.texto) }}
               />
             </div>
           )}
 
           {/* Ações */}
-          <div className="flex flex-col gap-2 border-t border-border/40 pt-4 sm:flex-row">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-4 padding direcional sem Inset equiv. */ "flex flex-col gap-2 border-t border-border/40 pt-4 sm:flex-row")}>
             <Button
               variant="outline"
               size="sm"

@@ -7,6 +7,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -111,7 +112,7 @@ export function CallDetailSheet({
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="glass-dialog max-w-3xl max-h-[90vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             {Icon && <Icon className="h-5 w-5" />}
             Detalhes da Chamada
           </DialogTitle>
@@ -121,7 +122,7 @@ export function CallDetailSheet({
         </DialogHeader>
 
         {isLoading ? (
-          <div className="flex flex-1 items-center justify-center py-10">
+          <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv. */ "flex flex-1 items-center justify-center py-10")}>
             <LoadingSpinner className="size-8 text-muted-foreground" />
           </div>
         ) : chamada ? (
@@ -132,18 +133,18 @@ export function CallDetailSheet({
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="geral">Geral</TabsTrigger>
               <TabsTrigger value="participantes">Participantes</TabsTrigger>
-              <TabsTrigger value="transcricao" className="gap-2">
+              <TabsTrigger value="transcricao" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}>
                 <FileText className="w-3 h-3" /> Transcrição
               </TabsTrigger>
             </TabsList>
 
             <TabsContent
               value="geral"
-              className="space-y-4 mt-4 flex-1 overflow-auto"
+              className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4 mt-4 flex-1 overflow-auto")}
             >
-              <GlassPanel depth={1} className="p-4 space-y-3">
+              <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-3 sem token DS */ "p-4 space-y-3")}>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium">Status</span>
+                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Status</span>
                   <Badge
                     variant={getStatusBadgeVariant(
                       chamada.status as StatusChamada,
@@ -154,8 +155,8 @@ export function CallDetailSheet({
                 </div>
 
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium">Iniciada em</span>
-                  <span className="text-sm text-muted-foreground">
+                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Iniciada em</span>
+                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                     {format(
                       new Date(chamada.iniciadaEm),
                       "dd/MM/yyyy 'às' HH:mm",
@@ -166,8 +167,8 @@ export function CallDetailSheet({
 
                 {chamada.finalizadaEm && (
                   <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Finalizada em</span>
-                    <span className="text-sm text-muted-foreground">
+                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Finalizada em</span>
+                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                       {format(
                         new Date(chamada.finalizadaEm),
                         "dd/MM/yyyy 'às' HH:mm",
@@ -178,8 +179,8 @@ export function CallDetailSheet({
                 )}
 
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium">Duração</span>
-                  <span className="text-sm text-muted-foreground">
+                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Duração</span>
+                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                     {chamada.duracaoSegundos
                       ? formatarDuracao(chamada.duracaoSegundos)
                       : '-'}
@@ -187,16 +188,16 @@ export function CallDetailSheet({
                 </div>
 
                 {chamada.iniciador && (
-                  <div className="flex justify-between items-center pt-2 border-t border-border/20">
-                    <span className="text-sm font-medium">Iniciado por</span>
-                    <div className="flex items-center gap-2">
+                  <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex justify-between items-center pt-2 border-t border-border/20")}>
+                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Iniciado por</span>
+                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                       <Avatar size="sm">
                         <AvatarImage src={chamada.iniciador.avatar} />
                         <AvatarFallback>
                           {chamada.iniciador.nomeCompleto.charAt(0)}
                         </AvatarFallback>
                       </Avatar>
-                      <span className="text-sm">
+                      <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
                         {chamada.iniciador.nomeExibicao ||
                           chamada.iniciador.nomeCompleto}
                       </span>
@@ -206,7 +207,7 @@ export function CallDetailSheet({
               </GlassPanel>
 
               {/* Integração Dyte */}
-              <GlassPanel depth={1} className="p-4 space-y-3 bg-muted/30">
+              <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-3 sem token DS */ "p-4 space-y-3 bg-muted/30")}>
                 <div className="flex items-center justify-between">
                   <Heading level="widget" as="h4">Status no Dyte</Heading>
                   <Button
@@ -224,7 +225,7 @@ export function CallDetailSheet({
                 </div>
 
                 {dyteDetails ? (
-                  <div className="space-y-2 text-sm">
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "space-y-2 text-sm")}>
                     <div className="flex justify-between">
                       <span>Status API:</span>
                       <Badge variant="outline">{dyteDetails.status}</Badge>
@@ -235,7 +236,7 @@ export function CallDetailSheet({
                     </div>
                   </div>
                 ) : (
-                  <p className="text-xs text-muted-foreground">
+                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                     Clique no botão de atualizar para buscar dados em tempo real
                     da API do Dyte.
                   </p>
@@ -247,23 +248,23 @@ export function CallDetailSheet({
               value="participantes"
               className="mt-4 flex-1 overflow-hidden"
             >
-              <ScrollArea className="h-full pr-4">
-                <div className="space-y-2">
+              <ScrollArea className={cn(/* design-system-escape: pr-4 padding direcional sem Inset equiv. */ "h-full pr-4")}>
+                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                   {chamada.participantes.map((p) => (
                     <GlassPanel
                       key={p.id}
                       depth={1}
-                      className="flex items-center justify-between p-3"
+                      className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between p-3")}
                     >
-                      <div className="flex items-center gap-3">
+                      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
                         <Avatar>
                           <AvatarFallback>U</AvatarFallback>
                         </Avatar>
                         <div className="flex flex-col">
-                          <span className="text-sm font-medium">
+                          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>
                             Usuário #{p.usuarioId}
                           </span>
-                          <span className="text-xs text-muted-foreground">
+                          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                             {p.entrouEm
                               ? `Entrou: ${format(new Date(p.entrouEm), 'HH:mm')}`
                               : 'Não entrou'}
@@ -272,7 +273,7 @@ export function CallDetailSheet({
                       </div>
                       <div className="text-right">
                         {p.duracaoSegundos ? (
-                          <span className="text-xs font-mono">
+                          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs font-mono")}>
                             {formatarDuracao(p.duracaoSegundos)}
                           </span>
                         ) : p.entrouEm && !p.saiuEm ? (
@@ -280,7 +281,7 @@ export function CallDetailSheet({
                             Online
                           </Badge>
                         ) : (
-                          <span className="text-xs text-muted-foreground">
+                          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                             -
                           </span>
                         )}
@@ -299,7 +300,7 @@ export function CallDetailSheet({
             </TabsContent>
           </Tabs>
         ) : (
-          <div className="py-10 text-center text-muted-foreground">
+          <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv. */ "py-10 text-center text-muted-foreground")}>
             Chamada não encontrada.
           </div>
         )}

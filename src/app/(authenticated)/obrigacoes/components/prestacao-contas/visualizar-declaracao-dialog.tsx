@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import {
   Dialog,
   DialogContent,
@@ -26,8 +27,8 @@ export function VisualizarDeclaracaoDialog({
 }: Props) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="glass-dialog max-w-4xl max-h-[90vh] flex flex-col p-0 overflow-hidden">
-        <DialogHeader className="p-6 pb-3 shrink-0">
+      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "glass-dialog max-w-4xl max-h-[90vh] flex flex-col p-0 overflow-hidden")}>
+        <DialogHeader className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; pb-3 padding direcional sem Inset equiv. */ "p-6 pb-3 shrink-0")}>
           <DialogTitle>Declaração de prestação de contas assinada</DialogTitle>
           <DialogDescription>
             {tituloProcesso
@@ -36,7 +37,7 @@ export function VisualizarDeclaracaoDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex-1 px-6 min-h-0">
+        <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv. */ "flex-1 px-6 min-h-0")}>
           <iframe
             src={pdfUrl}
             className="w-full h-full min-h-[60vh] rounded-lg border border-border"
@@ -44,12 +45,12 @@ export function VisualizarDeclaracaoDialog({
           />
         </div>
 
-        <DialogFooter className="p-6 pt-3 shrink-0 gap-2">
+        <DialogFooter className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; pt-3 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "p-6 pt-3 shrink-0 gap-2")}>
           <Button
             variant="outline"
             size="sm"
             asChild
-            className="rounded-xl gap-1.5"
+            className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "rounded-xl gap-1.5")}
           >
             <a href={pdfUrl} download target="_blank" rel="noopener noreferrer">
               <Download className="size-3.5" />
@@ -60,7 +61,7 @@ export function VisualizarDeclaracaoDialog({
             variant="outline"
             size="sm"
             asChild
-            className="rounded-xl gap-1.5"
+            className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "rounded-xl gap-1.5")}
           >
             <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
               <ExternalLink className="size-3.5" />

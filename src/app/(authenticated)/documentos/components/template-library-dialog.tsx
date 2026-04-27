@@ -5,6 +5,7 @@
  * Permite buscar, filtrar e usar templates para criar novos documentos
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import {
@@ -134,7 +135,7 @@ export function TemplateLibraryDialog({
     <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
       <ResponsiveDialogContent className="sm:max-w-4xl">
         <ResponsiveDialogHeader>
-          <ResponsiveDialogTitle className="flex items-center gap-2">
+          <ResponsiveDialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <FileText className="h-5 w-5" />
             Biblioteca de Templates
           </ResponsiveDialogTitle>
@@ -153,16 +154,16 @@ export function TemplateLibraryDialog({
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="todos" className="mt-0 space-y-4">
+            <TabsContent value="todos" className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "mt-0 space-y-4")}>
               {/* Filtros */}
-              <div className="flex flex-wrap gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2")}>
                 <div className="relative flex-1 min-w-[200px]">
                   <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     placeholder="Buscar templates..."
                     value={busca}
                     onChange={(e) => setBusca(e.target.value)}
-                    className="pl-9"
+                    className={cn(/* design-system-escape: pl-9 padding direcional sem Inset equiv. */ "pl-9")}
                   />
                 </div>
 
@@ -193,13 +194,13 @@ export function TemplateLibraryDialog({
                   <SelectContent>
                     <SelectItem value="__all__">Todas</SelectItem>
                     <SelectItem value="publico">
-                      <div className="flex items-center gap-2">
+                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                         <Globe className="h-4 w-4" />
                         Público
                       </div>
                     </SelectItem>
                     <SelectItem value="privado">
-                      <div className="flex items-center gap-2">
+                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                         <Lock className="h-4 w-4" />
                         Privado
                       </div>
@@ -217,7 +218,7 @@ export function TemplateLibraryDialog({
               {/* Lista de templates */}
               <ScrollArea className="h-[400px]">
                 {templatesLoading ? (
-                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 lg:grid-cols-3 gap-4")}>
                     {[1, 2, 3, 4, 5, 6].map((i) => (
                       <Skeleton key={i} className="h-48 w-full" />
                     ))}
@@ -226,14 +227,14 @@ export function TemplateLibraryDialog({
                   <div className="flex flex-col items-center justify-center h-64 text-center">
                     <FileText className="h-12 w-12 text-muted-foreground mb-4" />
                     <Typography.H3>Nenhum template encontrado</Typography.H3>
-                    <p className="text-sm text-muted-foreground mt-1">
+                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground mt-1")}>
                       {hasFilters
                         ? 'Tente ajustar os filtros de busca'
                         : 'Crie seu primeiro template para reutilizar'}
                     </p>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 pr-4">
+                  <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pr-4 padding direcional sem Inset equiv. */ "grid grid-cols-2 lg:grid-cols-3 gap-4 pr-4")}>
                     {templates.map((template) => (
                       <TemplateCard
                         key={template.id}
@@ -252,12 +253,12 @@ export function TemplateLibraryDialog({
                   <div className="flex flex-col items-center justify-center h-64 text-center">
                     <Star className="h-12 w-12 text-muted-foreground mb-4" />
                     <Typography.H3>Nenhum template popular ainda</Typography.H3>
-                    <p className="text-sm text-muted-foreground mt-1">
+                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground mt-1")}>
                       Templates mais usados aparecerão aqui
                     </p>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 pr-4">
+                  <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pr-4 padding direcional sem Inset equiv. */ "grid grid-cols-2 lg:grid-cols-3 gap-4 pr-4")}>
                     {maisUsados.map((template) => (
                       <TemplateCard
                         key={template.id}
@@ -274,9 +275,9 @@ export function TemplateLibraryDialog({
           {/* Loading overlay */}
           {creating && (
             <div className="absolute inset-0 bg-background/80 flex items-center justify-center rounded-lg">
-              <div className="flex flex-col items-center gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center gap-2")}>
                 <LoadingSpinner className="size-8 text-primary" />
-                <p className="text-sm text-muted-foreground">Criando documento...</p>
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Criando documento...</p>
               </div>
             </div>
           )}

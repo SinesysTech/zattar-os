@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useState, useEffect, useMemo, useCallback, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { LayoutGrid, List } from 'lucide-react';
@@ -182,14 +183,14 @@ export function ProcessosClient({
       <div className="flex items-end justify-between">
         <div>
           <Heading level="page">Processos</Heading>
-          <p className="text-sm text-muted-foreground/50 mt-0.5">{subtitle}</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 mt-0.5")}>{subtitle}</p>
         </div>
       </div>
 
       <ProcessosPulseStrip stats={stats} />
 
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
           <ProcessosFilterBar
             filters={filters}
             onChange={handleFiltersChange}
@@ -197,7 +198,7 @@ export function ProcessosClient({
             currentUserId={currentUserId}
             stats={stats}
           />
-          <div className="flex items-center gap-2 sm:ml-auto">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 sm:ml-auto")}>
             <SearchInput
               value={search}
               onChange={setSearch}
@@ -214,7 +215,7 @@ export function ProcessosClient({
 
       <div className={isPending ? 'opacity-60 pointer-events-none transition-opacity' : 'transition-opacity'}>
         {viewMode === 'cards' && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3")}>
             {processos.map((processo) => (
               <ProcessoCard
                 key={processo.id}
@@ -229,7 +230,7 @@ export function ProcessosClient({
         )}
 
         {viewMode === 'lista' && (
-          <div className="space-y-1">
+          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
             {processos.map((processo) => (
               <ProcessoListRow
                 key={processo.id}
@@ -244,9 +245,9 @@ export function ProcessosClient({
         )}
 
         {processos.length === 0 && !isPending && (
-          <div className="flex flex-col items-center justify-center py-16 text-center">
-            <p className="text-sm font-medium text-muted-foreground/50">Nenhum processo encontrado</p>
-            <p className="text-xs text-muted-foreground/40 mt-1">Tente ajustar os filtros ou a busca</p>
+          <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 text-center")}>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/50")}>Nenhum processo encontrado</p>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/40 mt-1")}>Tente ajustar os filtros ou a busca</p>
           </div>
         )}
       </div>

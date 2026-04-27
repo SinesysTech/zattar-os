@@ -24,16 +24,16 @@ interface StatCardProps {
 
 function StatCard({ title, value, icon, href, color }: StatCardProps) {
   const content = (
-    <GlassPanel depth={2} className={cn('p-4 transition-all hover:shadow-md', href && 'cursor-pointer')}>
-      <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <p className="text-sm font-medium">{title}</p>
+    <GlassPanel depth={2} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'p-4 transition-all hover:shadow-md', href && 'cursor-pointer')}>
+      <div className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{title}</p>
         <IconContainer size="md" className={color}>
           {icon}
         </IconContainer>
       </div>
       <div>
         <div className="flex items-baseline justify-between">
-          <AnimatedNumber value={value} className="text-2xl font-bold" />
+          <AnimatedNumber value={value} className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-bold")} />
           {href && <ExternalLink className="h-4 w-4 text-muted-foreground" />}
         </div>
         {href && (
@@ -77,10 +77,10 @@ export function AtividadesCards({ usuarioId }: AtividadesCardsProps) {
 
   if (isLoading) {
     return (
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 lg:grid-cols-4")}>
         {[1, 2, 3, 4].map((i) => (
-          <GlassPanel key={i} depth={2} className="p-4">
-            <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <GlassPanel key={i} depth={2} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+            <div className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
               <Skeleton className="h-4 w-24" />
               <Skeleton className="h-8 w-8 rounded-lg" />
             </div>
@@ -94,7 +94,7 @@ export function AtividadesCards({ usuarioId }: AtividadesCardsProps) {
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 lg:grid-cols-4")}>
       <StatCard
         title="Processos"
         value={stats.processos}

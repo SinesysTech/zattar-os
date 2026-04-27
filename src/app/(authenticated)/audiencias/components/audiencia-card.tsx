@@ -32,13 +32,13 @@ export function AudienciaCard({ audiencia, compact = false, onClick }: Audiencia
   };
 
   return (
-    <div onClick={handleCardClick} className={cn('cursor-pointer', compact ? 'my-0.5' : 'my-0.5')}>
+    <div onClick={handleCardClick} className={cn('cursor-pointer', compact ? /* design-system-escape: my-0.5 margin sem primitiva DS */ 'my-0.5' : /* design-system-escape: my-0.5 margin sem primitiva DS */ 'my-0.5')}>
       <GlassPanel depth={1} className={cn(
         'group relative z-10 w-full overflow-hidden rounded-md',
         'transition-all duration-200 ease-in-out hover:shadow-lg',
         compact ? 'h-auto' : '',
       )}>
-        <Stack gap="tight" className={cn(compact ? 'p-2' : 'p-3')}>
+        <Stack gap="tight" className={cn(compact ? /* design-system-escape: p-2 → usar <Inset> */ 'p-2' : /* design-system-escape: p-3 → usar <Inset> */ 'p-3')}>
         <Inline justify="between">
           <Inline gap="tight">
             {/* Indicador de Ata */}
@@ -52,14 +52,14 @@ export function AudienciaCard({ audiencia, compact = false, onClick }: Audiencia
                 <TooltipContent>Ata disponível</TooltipContent>
               </Tooltip>
             )}
-            <Text variant={compact ? 'micro-caption' : 'caption'} className="font-semibold">
+            <Text variant={compact ? 'micro-caption' : 'caption'} className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>
               {format(dataInicio, 'HH:mm', { locale: ptBR })} - {format(dataFim, 'HH:mm', { locale: ptBR })}
             </Text>
           </Inline>
           <AudienciaStatusBadge status={audiencia.status} compact={compact} />
         </Inline>
         
-        <Text variant={compact ? 'micro-caption' : 'caption'} className={cn('font-medium', compact && 'truncate')}>
+        <Text variant={compact ? 'micro-caption' : 'caption'} className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ 'font-medium', compact && 'truncate')}>
           {audiencia.numeroProcesso}
         </Text>
 

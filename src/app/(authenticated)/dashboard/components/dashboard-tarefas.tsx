@@ -124,7 +124,7 @@ export function TarefasWidget({ initialTasks }: TarefasWidgetProps) {
   return (
     <GlassPanel className="h-full">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           <CheckSquare className="size-5" />
           Tarefas
         </CardTitle>
@@ -140,13 +140,13 @@ export function TarefasWidget({ initialTasks }: TarefasWidgetProps) {
           </Button>
         </CardAction>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         {tasks.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-8 text-center">
+          <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-8 text-center")}>
             <CheckSquare className="size-12 text-muted-foreground/55" />
-            <p className="mt-4 text-sm text-muted-foreground">Nenhuma tarefa por aqui!</p>
-            <p className="text-sm text-muted-foreground">
-              Clique no <span className="font-medium text-primary">+</span> para criar uma.
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-4 text-sm text-muted-foreground")}>Nenhuma tarefa por aqui!</p>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+              Clique no <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-primary")}>+</span> para criar uma.
             </p>
           </div>
         ) : (
@@ -156,16 +156,16 @@ export function TarefasWidget({ initialTasks }: TarefasWidgetProps) {
               <div
                 key={task.id}
                 className={cn(
-                  'flex items-start gap-3 rounded-md border bg-background p-3 transition-colors',
+                  /* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ 'flex items-start gap-3 rounded-md border bg-background p-3 transition-colors',
                   done && 'bg-muted/50'
                 )}
               >
                 <Checkbox checked={done} onCheckedChange={() => handleToggleDone(task)} className="mt-1" />
-                <div className="min-w-0 flex-1 space-y-2">
-                  <p className={cn('text-sm font-medium leading-none', done && 'text-muted-foreground line-through')}>
+                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "min-w-0 flex-1 space-y-2")}>
+                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading>; leading-none sem token DS */ 'text-sm font-medium leading-none', done && 'text-muted-foreground line-through')}>
                     {task.title}
                   </p>
-                  <div className="flex flex-wrap items-center gap-2">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap items-center gap-2")}>
                     <Badge variant="secondary">{STATUS_LABEL[task.status]}</Badge>
                     <Badge variant="outline">{LABEL_LABEL[task.label]}</Badge>
                     <Badge variant="outline">Prioridade: {PRIORITY_LABEL[task.priority]}</Badge>
@@ -190,8 +190,8 @@ export function TarefasWidget({ initialTasks }: TarefasWidgetProps) {
           </Button>
         }
       >
-        <form id="dashboard-nova-tarefa-form" onSubmit={handleCreate} className="px-6 py-4">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <form id="dashboard-nova-tarefa-form" onSubmit={handleCreate} className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "px-6 py-4")}>
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 md:grid-cols-2")}>
             <div className="md:col-span-2">
               <Label htmlFor="dashboard-task-title">Título</Label>
               <Input
@@ -244,7 +244,7 @@ export function TarefasWidget({ initialTasks }: TarefasWidgetProps) {
             </div>
           </div>
           {errorMessage && (
-            <p className="mt-4 text-sm text-destructive" role="alert">{errorMessage}</p>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-4 text-sm text-destructive")} role="alert">{errorMessage}</p>
           )}
         </form>
       </DialogFormShell>

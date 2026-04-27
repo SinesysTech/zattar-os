@@ -76,7 +76,7 @@ export function TransitoriasListClient() {
       title="Cadastros pendentes"
       description="Partes contrárias que aguardam preenchimento completo para serem vinculadas aos seus contratos."
     >
-      <div className="flex flex-col gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4")}>
         <SearchInput
           value={search}
           onChange={setSearch}
@@ -86,7 +86,7 @@ export function TransitoriasListClient() {
 
         <GlassPanel>
           <CardHeader>
-            <div className="flex items-center gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <span
                 aria-hidden="true"
                 className="inline-flex size-7 items-center justify-center rounded-lg bg-warning/15 ring-1 ring-warning/30"
@@ -106,13 +106,13 @@ export function TransitoriasListClient() {
           </CardHeader>
           <CardContent>
             {loading ? (
-              <div className="space-y-2">
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                 {[1, 2, 3, 4].map((i) => (
                   <Skeleton key={i} className="h-14 rounded-xl" />
                 ))}
               </div>
             ) : rows.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-10 text-center">
+              <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-10 text-center")}>
                 <AlertTriangle
                   aria-hidden="true"
                   className="size-10 text-muted-foreground/40 mb-3"
@@ -124,12 +124,12 @@ export function TransitoriasListClient() {
                 </Text>
               </div>
             ) : (
-              <ul className="space-y-1.5">
+              <ul className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
                 {rows.map((t) => (
                   <li
                     key={t.id}
                     className={cn(
-                      'flex items-center justify-between gap-3 rounded-xl border px-3 py-2.5',
+                      /* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ 'flex items-center justify-between gap-3 rounded-xl border px-3 py-2.5',
                       'transition-colors hover:bg-muted/40'
                     )}
                   >
@@ -137,7 +137,7 @@ export function TransitoriasListClient() {
                       <Text variant="label" className="truncate text-foreground">
                         {t.nome}
                       </Text>
-                      <div className="mt-0.5 flex items-center gap-3">
+                      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "mt-0.5 flex items-center gap-3")}>
                         {t.criado_em_contrato_id && (
                           <Text variant="micro-caption" className="text-muted-foreground">
                             <Clock className="inline size-3 -mt-0.5" aria-hidden="true" /> Contrato #

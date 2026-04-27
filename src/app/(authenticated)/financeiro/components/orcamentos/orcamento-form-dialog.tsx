@@ -220,9 +220,9 @@ export function OrcamentoFormDialog({
                         </DialogDescription>
                     </DialogHeader>
 
-                    <div className="grid gap-4 py-4">
+                    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; py-4 padding direcional sem Inset equiv. */ "grid gap-4 py-4")}>
                         {/* Nome */}
-                        <div className="grid gap-2">
+                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                             <Label htmlFor="nome">Nome *</Label>
                             <Input
                                 id="nome"
@@ -234,7 +234,7 @@ export function OrcamentoFormDialog({
                         </div>
 
                         {/* Descrição */}
-                        <div className="grid gap-2">
+                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                             <Label htmlFor="descricao">Descrição</Label>
                             <Textarea
                                 id="descricao"
@@ -247,8 +247,8 @@ export function OrcamentoFormDialog({
                         </div>
 
                         {/* Ano e Período */}
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="grid gap-2">
+                        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+                            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                                 <Label htmlFor="ano">Ano *</Label>
                                 <Select
                                     value={formData.ano.toString()}
@@ -268,7 +268,7 @@ export function OrcamentoFormDialog({
                                 </Select>
                             </div>
 
-                            <div className="grid gap-2">
+                            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                                 <Label htmlFor="periodo">Período *</Label>
                                 <Select
                                     value={formData.periodo}
@@ -292,8 +292,8 @@ export function OrcamentoFormDialog({
                         </div>
 
                         {/* Datas */}
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="grid gap-2">
+                        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+                            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                                 <Label>Data Início *</Label>
                                 <Popover>
                                     <PopoverTrigger asChild>
@@ -311,7 +311,7 @@ export function OrcamentoFormDialog({
                                                 : 'Selecione'}
                                         </Button>
                                     </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
+                                    <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto p-0")} align="start">
                                         <Calendar
                                             mode="single"
                                             selected={formData.dataInicio}
@@ -322,7 +322,7 @@ export function OrcamentoFormDialog({
                                 </Popover>
                             </div>
 
-                            <div className="grid gap-2">
+                            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                                 <Label>Data Fim *</Label>
                                 <Popover>
                                     <PopoverTrigger asChild>
@@ -340,7 +340,7 @@ export function OrcamentoFormDialog({
                                                 : 'Selecione'}
                                         </Button>
                                     </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
+                                    <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto p-0")} align="start">
                                         <Calendar
                                             mode="single"
                                             selected={formData.dataFim}
@@ -356,7 +356,7 @@ export function OrcamentoFormDialog({
                         </div>
 
                         {/* Observações */}
-                        <div className="grid gap-2">
+                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                             <Label htmlFor="observacoes">Observações</Label>
                             <Textarea
                                 id="observacoes"

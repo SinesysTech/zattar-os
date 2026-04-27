@@ -47,14 +47,14 @@ export function UsuariosListView({
           const status = getStatusFromLastLogin(lastLoginAt);
           const displayName = usuario.nomeExibicao ?? usuario.nomeCompleto;
           return (
-            <div className={cn('flex items-center gap-2.5 min-w-0', !isAtivo && 'opacity-50')}>
+            <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ 'flex items-center gap-2.5 min-w-0', !isAtivo && 'opacity-50')}>
               <div className="relative shrink-0">
                 <Avatar style={{ width: 34, height: 34 }}>
                   <AvatarImage
                     src={getAvatarUrl(usuario.avatarUrl) ?? undefined}
                     alt={displayName}
                   />
-                  <AvatarFallback className="text-[11px] font-medium">
+                  <AvatarFallback className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium")}>
                     {getInitials(displayName)}
                   </AvatarFallback>
                 </Avatar>
@@ -65,8 +65,8 @@ export function UsuariosListView({
                 />
               </div>
               <div className="flex flex-col min-w-0">
-                <div className="flex items-center gap-1">
-                  <span className="text-sm font-semibold truncate">
+                <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold truncate")}>
                     {usuario.nomeCompleto}
                   </span>
                   {usuario.isSuperAdmin && (
@@ -99,7 +99,7 @@ export function UsuariosListView({
           return (
             <span
               className={cn(
-                'px-2 py-0.5 rounded-md text-[11px] font-medium bg-muted/8 text-muted-foreground',
+                /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'px-2 py-0.5 rounded-md text-[11px] font-medium bg-muted/8 text-muted-foreground',
                 !isAtivo && 'opacity-50',
               )}
             >
@@ -125,7 +125,7 @@ export function UsuariosListView({
           return (
             <span
               className={cn(
-                'px-1.5 py-0.5 rounded bg-info/8 text-[11px] text-info/70',
+                /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'px-1.5 py-0.5 rounded bg-info/8 text-[11px] text-info/70',
                 !usuario.ativo && 'opacity-50',
               )}
             >
@@ -144,7 +144,7 @@ export function UsuariosListView({
           return (
             <span
               className={cn(
-                'px-2 py-0.5 rounded-md text-[11px] font-semibold',
+                /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'px-2 py-0.5 rounded-md text-[11px] font-semibold',
                 ativo
                   ? 'bg-success/10 text-success'
                   : 'bg-destructive/10 text-destructive',
@@ -170,7 +170,7 @@ export function UsuariosListView({
               </span>
             );
           return (
-            <span className={cn('tabular-nums font-semibold text-sm', !usuario.ativo && 'opacity-50')}>
+            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm"> */ 'tabular-nums font-semibold text-sm', !usuario.ativo && 'opacity-50')}>
               {stats.processos}
             </span>
           );
@@ -198,14 +198,14 @@ export function UsuariosListView({
                 ? 'text-warning'
                 : 'text-destructive';
           return (
-            <div className={cn('flex items-center gap-2', !usuario.ativo && 'opacity-50')}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ 'flex items-center gap-2', !usuario.ativo && 'opacity-50')}>
               <div className="w-12 h-1 rounded-full bg-muted/20 overflow-hidden shrink-0">
                 <div
                   className={cn('h-full rounded-full', barColorClass)}
                   style={{ width: `${score}%` }}
                 />
               </div>
-              <span className={cn('text-[11px] font-medium tabular-nums', textColorClass)}>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[11px] font-medium tabular-nums', textColorClass)}>
                 {score}%
               </span>
             </div>
@@ -221,7 +221,7 @@ export function UsuariosListView({
         cell: ({ row }) => {
           const usuario = row.original;
           return (
-            <div className="flex items-center gap-1 justify-end">
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 justify-end")}>
               <Button
                 variant="ghost"
                 size="icon"

@@ -140,10 +140,10 @@ function SectionDivider({ urgencia, count }: { urgencia: Urgencia; count: number
   const Icon = config.icon;
 
   return (
-    <div className="flex items-center gap-2.5 py-1.5">
-      <div className={cn('flex items-center gap-1.5 rounded-md px-2 py-1', config.bgColor)}>
+    <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; py-1.5 padding direcional sem Inset equiv. */ "flex items-center gap-2.5 py-1.5")}>
+      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'flex items-center gap-1.5 rounded-md px-2 py-1', config.bgColor)}>
         <Icon className={cn('size-3.5', config.color)} />
-        <span className={cn('text-[11px] font-semibold uppercase tracking-wider', config.color)}>
+        <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ 'text-[11px] font-semibold uppercase tracking-wider', config.color)}>
           {config.label}
         </span>
       </div>
@@ -184,7 +184,7 @@ function MissionItem({
       type="button"
       onClick={onSelect}
       className={cn(
-        'flex w-full cursor-pointer items-center gap-3 rounded-xl border bg-card px-3 py-2.5 text-left shadow-sm transition-all duration-150',
+        /* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ 'flex w-full cursor-pointer items-center gap-3 rounded-xl border bg-card px-3 py-2.5 text-left shadow-sm transition-all duration-150',
         'border-border/40 hover:border-primary/30 hover:bg-accent/50 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
         'border-l-[3px]',
         borderColor,
@@ -192,53 +192,53 @@ function MissionItem({
       )}
     >
       <UrgencyDot level={urgencyLevel} />
-      <div className="flex min-w-0 flex-1 items-start gap-3">
-        <div className="min-w-0 flex-1 space-y-1">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex min-w-0 flex-1 items-start gap-3")}>
+        <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "min-w-0 flex-1 space-y-1")}>
           {/* Tipo de expediente */}
-          <p className={cn('text-sm font-medium', isBaixado && 'line-through')}>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ 'text-sm font-medium', isBaixado && 'line-through')}>
             {tipoExpedienteNome || 'Sem tipo'}
           </p>
 
           {/* Cabeçalho: Partes (autora vs ré) */}
           {(expediente.nomeParteAutoraOrigem || expediente.nomeParteAutora || expediente.nomeParteReOrigem || expediente.nomeParteRe) && (
-            <p className="text-sm font-medium text-foreground">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-foreground")}>
               <span>{expediente.nomeParteAutoraOrigem || expediente.nomeParteAutora || '—'}</span>
-              <span className="mx-1.5 font-normal text-muted-foreground/60">vs</span>
+              <span className={cn(/* design-system-escape: mx-1.5 margin sem primitiva DS */ "mx-1.5 font-normal text-muted-foreground/60")}>vs</span>
               <span>{expediente.nomeParteReOrigem || expediente.nomeParteRe || '—'}</span>
             </p>
           )}
 
           {/* Cabeçalho: Número do processo (sem font-mono) */}
-          <p className="text-xs text-foreground/75">
+          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/75")}>
             Nº {expediente.numeroProcesso}
           </p>
 
           {/* Cabeçalho: Órgão jurisdicional */}
           {(expediente.descricaoOrgaoJulgador || expediente.siglaOrgaoJulgador) && (
-            <p className="text-xs text-muted-foreground">
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
               {expediente.descricaoOrgaoJulgador || expediente.siglaOrgaoJulgador}
             </p>
           )}
 
           {/* Corpo: Resumo (descrição IA) — só renderiza se houver */}
           {expediente.descricaoArquivos && (
-            <p className="pt-1.5 text-[12px] leading-relaxed text-foreground/85 whitespace-pre-wrap">
+            <p className={cn(/* design-system-escape: pt-1.5 padding direcional sem Inset equiv.; leading-relaxed sem token DS */ "pt-1.5 text-[12px] leading-relaxed text-foreground/85 whitespace-pre-wrap")}>
               {expediente.descricaoArquivos}
             </p>
           )}
 
           {/* Corpo: Observações — só renderiza se houver */}
           {expediente.observacoes && (
-            <p className="text-[11px] leading-relaxed text-muted-foreground/75 whitespace-pre-wrap">
+            <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[11px] leading-relaxed text-muted-foreground/75 whitespace-pre-wrap")}>
               {expediente.observacoes}
             </p>
           )}
         </div>
-        <div className="hidden items-center gap-2 sm:flex">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "hidden items-center gap-2 sm:flex")}>
           {expediente.trt && (
-            <AppBadge variant="outline" className="px-1.5 text-[10px]">{expediente.trt}</AppBadge>
+            <AppBadge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "px-1.5 text-[10px]")}>{expediente.trt}</AppBadge>
           )}
-          <AppBadge variant="outline" className="px-1.5 text-[10px]">{GRAU_TRIBUNAL_LABELS[expediente.grau]}</AppBadge>
+          <AppBadge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "px-1.5 text-[10px]")}>{GRAU_TRIBUNAL_LABELS[expediente.grau]}</AppBadge>
         </div>
         {responsavelNome && (
           <p className="hidden max-w-32 truncate text-[11px] text-muted-foreground/45 lg:block">{responsavelNome}</p>
@@ -250,7 +250,7 @@ function MissionItem({
             </p>
           ) : expediente.dataPrazoLegalParte ? (
             <p className={cn(
-              'text-[10px] tabular-nums font-medium',
+              /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[10px] tabular-nums font-medium',
               urgencia === 'urgente' ? 'text-destructive/70' : 'text-muted-foreground/50',
             )}>
               {getDiasLabel(dias, expediente.prazoVencido)}
@@ -398,7 +398,7 @@ export function ExpedientesWeekMission({
   }, [selectedDate]);
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex flex-col gap-5")}>
       {/* Header */}
       {/* Week Navigator */}
       <WeekNavigator
@@ -423,18 +423,18 @@ export function ExpedientesWeekMission({
       ) : null}
 
       {/* Day Mission KPIs */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 lg:grid-cols-4 gap-3")}>
         {[
           { label: 'Total', value: kpis.total, icon: FileText, color: 'text-muted-foreground/60' },
           { label: 'Vencidos', value: kpis.vencidos, icon: AlertTriangle, color: 'text-destructive/60', highlight: kpis.vencidos > 0 },
           { label: 'Baixados', value: kpis.baixados, icon: CheckCircle2, color: 'text-success/60' },
           { label: 'Pendentes', value: kpis.pendentes, icon: CalendarClock, color: 'text-primary/60' },
         ].map((kpi) => (
-          <GlassPanel key={kpi.label} depth={kpi.highlight ? 2 : 1} className={cn('px-4 py-3', kpi.highlight && 'border-destructive/15')}>
-            <div className="flex items-center justify-between gap-2">
+          <GlassPanel key={kpi.label} depth={kpi.highlight ? 2 : 1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ 'px-4 py-3', kpi.highlight && 'border-destructive/15')}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
               <div>
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground/45">{kpi.label}</p>
-                <p className={cn('mt-1 text-xl font-bold tabular-nums tracking-tight', kpi.highlight && 'text-destructive/80')}>
+                <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/45")}>{kpi.label}</p>
+                <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; tracking-tight sem token DS */ 'mt-1 text-xl font-bold tabular-nums tracking-tight', kpi.highlight && 'text-destructive/80')}>
                   <AnimatedNumber value={kpi.value} />
                 </p>
               </div>
@@ -445,17 +445,17 @@ export function ExpedientesWeekMission({
       </div>
 
       {/* Day Label */}
-      <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground/40">
+      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[11px] font-medium uppercase tracking-wider text-muted-foreground/40")}>
         {dateLabel}
       </p>
 
       {/* Timeline por urgência */}
-      <div className="flex flex-col gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
         {doDia.length === 0 ? (
-          <GlassPanel depth={1} className="flex min-h-45 flex-col items-center justify-center p-8 text-center">
+          <GlassPanel depth={1} className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex min-h-45 flex-col items-center justify-center p-8 text-center")}>
             <CalendarClock className="size-10 text-muted-foreground/20" />
-            <Heading level="card" className="mt-4 text-sm">Nenhum expediente neste dia</Heading>
-            <p className="mt-1.5 max-w-sm text-sm text-muted-foreground/55">
+            <Heading level="card" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-4 text-sm")}>Nenhum expediente neste dia</Heading>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-1.5 max-w-sm text-sm text-muted-foreground/55")}>
               Selecione outro dia na barra de semana acima.
             </p>
           </GlassPanel>
@@ -464,7 +464,7 @@ export function ExpedientesWeekMission({
             {grupos.urgente.length > 0 && (
               <>
                 <SectionDivider urgencia="urgente" count={grupos.urgente.length} />
-                <div className="flex flex-col gap-1.5">
+                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
                   {grupos.urgente.map((exp) => (
                     <MissionItem
                       key={exp.id}
@@ -481,7 +481,7 @@ export function ExpedientesWeekMission({
             {grupos.no_prazo.length > 0 && (
               <>
                 <SectionDivider urgencia="no_prazo" count={grupos.no_prazo.length} />
-                <div className="flex flex-col gap-1.5">
+                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
                   {grupos.no_prazo.map((exp) => (
                     <MissionItem
                       key={exp.id}
@@ -498,7 +498,7 @@ export function ExpedientesWeekMission({
             {grupos.sem_prazo.length > 0 && (
               <>
                 <SectionDivider urgencia="sem_prazo" count={grupos.sem_prazo.length} />
-                <div className="flex flex-col gap-1.5">
+                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
                   {grupos.sem_prazo.map((exp) => (
                     <MissionItem
                       key={exp.id}
@@ -515,7 +515,7 @@ export function ExpedientesWeekMission({
             {grupos.baixado.length > 0 && (
               <>
                 <SectionDivider urgencia="baixado" count={grupos.baixado.length} />
-                <div className="flex flex-col gap-1.5">
+                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
                   {grupos.baixado.map((exp) => (
                     <MissionItem
                       key={exp.id}

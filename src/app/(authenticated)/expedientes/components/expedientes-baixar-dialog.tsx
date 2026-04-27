@@ -2,6 +2,7 @@
 
 // Componente de diálogo para baixar expediente
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useActionState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -110,31 +111,31 @@ export function ExpedientesBaixarDialog({
       maxWidth="lg"
       footer={footerButtons}
     >
-      <form id="baixar-expediente-form" action={formAction} className="space-y-6">
+      <form id="baixar-expediente-form" action={formAction} className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
         {/* Hidden input para o ID do expediente */}
         <input type="hidden" name="expedienteId" value={expediente.id} />
 
         {/* Informações do expediente */}
-        <div className="space-y-2 rounded-lg border p-4 bg-muted/50">
-          <div className="text-sm font-medium">Expediente</div>
-          <div className="text-sm space-y-1">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; p-4 → migrar para <Inset variant="card-compact"> */ "space-y-2 rounded-lg border p-4 bg-muted/50")}>
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Expediente</div>
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; space-y-1 sem token DS */ "text-sm space-y-1")}>
             <div>
-              <span className="font-medium">Processo:</span> {expediente.numeroProcesso}
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Processo:</span> {expediente.numeroProcesso}
             </div>
             <div>
-              <span className="font-medium">Parte Autora:</span> {expediente.nomeParteAutora}
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Parte Autora:</span> {expediente.nomeParteAutora}
             </div>
             <div>
-              <span className="font-medium">Parte Ré:</span> {expediente.nomeParteRe}
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Parte Ré:</span> {expediente.nomeParteRe}
             </div>
           </div>
         </div>
 
         {/* Modo de baixa */}
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label>Forma de Baixa</Label>
-          <div className="flex gap-4">
-            <label className="flex items-center space-x-2 cursor-pointer">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}>
+            <label className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2 cursor-pointer")}>
               <input
                 type="radio"
                 name="modo"
@@ -143,9 +144,9 @@ export function ExpedientesBaixarDialog({
                 onChange={(e) => setModo(e.target.value as 'protocolo')}
                 className="h-4 w-4"
               />
-              <span className="text-sm">Com Protocolo</span>
+              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Com Protocolo</span>
             </label>
-            <label className="flex items-center space-x-2 cursor-pointer">
+            <label className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2 cursor-pointer")}>
               <input
                 type="radio"
                 name="modo"
@@ -154,14 +155,14 @@ export function ExpedientesBaixarDialog({
                 onChange={(e) => setModo(e.target.value as 'justificativa')}
                 className="h-4 w-4"
               />
-              <span className="text-sm">Sem Protocolo</span>
+              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Sem Protocolo</span>
             </label>
           </div>
         </div>
 
         {/* Campo de protocolo */}
         {modo === 'protocolo' && (
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label htmlFor="protocoloId">ID do Protocolo *</Label>
             <Input
               id="protocoloId"
@@ -172,9 +173,9 @@ export function ExpedientesBaixarDialog({
               required={modo === 'protocolo'}
             />
             {protocoloIdError && (
-              <p role="alert" className="text-sm font-medium text-destructive">{protocoloIdError}</p>
+              <p role="alert" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}>{protocoloIdError}</p>
             )}
-            <p className="text-xs text-muted-foreground">
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
               Informe o ID do protocolo da peça protocolada em resposta ao expediente (pode conter números e letras).
             </p>
           </div>
@@ -182,7 +183,7 @@ export function ExpedientesBaixarDialog({
 
         {/* Campo de justificativa */}
         {modo === 'justificativa' && (
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label htmlFor="justificativaBaixa">Justificativa da Baixa *</Label>
             <textarea
               id="justificativaBaixa"
@@ -191,12 +192,12 @@ export function ExpedientesBaixarDialog({
               disabled={isPending}
               rows={4}
               required={modo === 'justificativa'}
-              className="flex min-h-20 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "flex min-h-20 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50")}
             />
             {justificativaBaixaError && (
-              <p role="alert" className="text-sm font-medium text-destructive">{justificativaBaixaError}</p>
+              <p role="alert" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}>{justificativaBaixaError}</p>
             )}
-            <p className="text-xs text-muted-foreground">
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
               Informe o motivo pelo qual o expediente está sendo baixado sem protocolo de peça.
             </p>
           </div>
@@ -204,8 +205,8 @@ export function ExpedientesBaixarDialog({
 
         {/* Informações da Decisão — obrigatório para tipos recursais */}
         {requiresDecisao && (
-          <div className="space-y-3 pt-2 border-t">
-            <div className="flex items-start gap-2 pt-3 rounded-md bg-muted/40 p-3 text-xs text-muted-foreground">
+          <div className={cn(/* design-system-escape: space-y-3 sem token DS; pt-2 padding direcional sem Inset equiv. */ "space-y-3 pt-2 border-t")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-3 padding direcional sem Inset equiv.; p-3 → usar <Inset>; text-xs → migrar para <Text variant="caption"> */ "flex items-start gap-2 pt-3 rounded-md bg-muted/40 p-3 text-xs text-muted-foreground")}>
               <Info className="h-4 w-4 shrink-0 mt-0.5 text-primary" />
               <span>
                 Este campo é obrigatório porque o tipo atual é{' '}
@@ -216,8 +217,8 @@ export function ExpedientesBaixarDialog({
               </span>
             </div>
             <Label>Resultado da Decisão *</Label>
-            <div className="flex flex-col gap-3">
-              <label className="flex items-center space-x-2 cursor-pointer border rounded-md p-3 hover:bg-muted/50 transition-colors">
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
+              <label className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset> */ "flex items-center space-x-2 cursor-pointer border rounded-md p-3 hover:bg-muted/50 transition-colors")}>
                 <input
                   type="radio"
                   name="resultadoDecisao"
@@ -225,9 +226,9 @@ export function ExpedientesBaixarDialog({
                   required
                   className="h-4 w-4"
                 />
-                <span className="text-sm font-medium">{RESULTADO_DECISAO_LABELS[ResultadoDecisao.FAVORAVEL]}</span>
+                <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{RESULTADO_DECISAO_LABELS[ResultadoDecisao.FAVORAVEL]}</span>
               </label>
-              <label className="flex items-center space-x-2 cursor-pointer border rounded-md p-3 hover:bg-muted/50 transition-colors">
+              <label className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset> */ "flex items-center space-x-2 cursor-pointer border rounded-md p-3 hover:bg-muted/50 transition-colors")}>
                 <input
                   type="radio"
                   name="resultadoDecisao"
@@ -235,9 +236,9 @@ export function ExpedientesBaixarDialog({
                   required
                   className="h-4 w-4"
                 />
-                <span className="text-sm font-medium">{RESULTADO_DECISAO_LABELS[ResultadoDecisao.PARCIALMENTE_FAVORAVEL]}</span>
+                <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{RESULTADO_DECISAO_LABELS[ResultadoDecisao.PARCIALMENTE_FAVORAVEL]}</span>
               </label>
-              <label className="flex items-center space-x-2 cursor-pointer border rounded-md p-3 hover:bg-muted/50 transition-colors">
+              <label className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset> */ "flex items-center space-x-2 cursor-pointer border rounded-md p-3 hover:bg-muted/50 transition-colors")}>
                 <input
                   type="radio"
                   name="resultadoDecisao"
@@ -245,18 +246,18 @@ export function ExpedientesBaixarDialog({
                   required
                   className="h-4 w-4"
                 />
-                <span className="text-sm font-medium">{RESULTADO_DECISAO_LABELS[ResultadoDecisao.DESFAVORAVEL]}</span>
+                <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{RESULTADO_DECISAO_LABELS[ResultadoDecisao.DESFAVORAVEL]}</span>
               </label>
             </div>
             {resultadoDecisaoError && (
-              <p role="alert" className="text-sm font-medium text-destructive">{resultadoDecisaoError}</p>
+              <p role="alert" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}>{resultadoDecisaoError}</p>
             )}
           </div>
         )}
 
         {/* Mensagem de erro */}
         {generalError && (
-          <div role="alert" className="rounded-lg border border-destructive bg-destructive/10 p-3 text-sm text-destructive">
+          <div role="alert" className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-lg border border-destructive bg-destructive/10 p-3 text-sm text-destructive")}>
             {generalError}
           </div>
         )}

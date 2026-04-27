@@ -8,6 +8,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import { Activity } from 'lucide-react';
 import {
   ProgressRing,
@@ -41,9 +42,9 @@ export function ResultadoDecisao() {
         icon={Activity}
         subtitle="Distribuicao por resultado"
         depth={1}
-        className="h-auto! self-start p-4!"
+        className={cn(/* design-system-escape: p-4! → usar <Inset> */ "h-auto! self-start p-4!")}
       >
-        <p className="text-[11px] text-muted-foreground/60 py-6 text-center">
+        <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-6 text-center")}>
           Dados de resultado nao disponiveis.
         </p>
       </WidgetContainer>
@@ -63,24 +64,24 @@ export function ResultadoDecisao() {
       icon={Activity}
       subtitle="Distribuicao por resultado"
       depth={1}
-      className="h-auto! self-start p-4!"
+      className={cn(/* design-system-escape: p-4! → usar <Inset> */ "h-auto! self-start p-4!")}
     >
       <div className="mt-2">
         <StackedBar segments={segments} height={10} />
       </div>
 
-      <div className="mt-3 space-y-2">
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "mt-3 space-y-2")}>
         {resultados.map((r) => {
           const percent = total > 0 ? Math.round((r.count / total) * 100) : 0;
           return (
-            <div key={r.resultado} className="flex items-center gap-3">
+            <div key={r.resultado} className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
               <ProgressRing
                 percent={percent}
                 size={32}
                 color={r.color}
               />
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] font-medium truncate">{r.resultado}</p>
+                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium truncate")}>{r.resultado}</p>
                 <p className="text-[9px] text-muted-foreground/55">
                   {fmtNum(r.count)} expediente{r.count !== 1 ? 's' : ''}
                 </p>

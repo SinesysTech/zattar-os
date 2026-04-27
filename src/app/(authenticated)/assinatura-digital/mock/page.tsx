@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -187,8 +188,8 @@ function SignaturePipeline() {
   const maxCount = Math.max(...stages.map(s => s.count));
 
   return (
-    <GlassPanel className="p-5">
-      <div className="flex items-center gap-2 mb-4">
+    <GlassPanel className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-4")}>
         <GitBranch className="size-4 text-muted-foreground/50" />
         <Heading level="section" className="text-widget-title">Pipeline de Assinaturas</Heading>
         <span className="text-[10px] text-muted-foreground/55 ml-auto">
@@ -196,7 +197,7 @@ function SignaturePipeline() {
         </span>
       </div>
 
-      <div className="flex items-stretch gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-stretch gap-3")}>
         {stages.map((stage, i) => {
           const cfg = STATUS_CONFIG[stage.status];
           const Icon = cfg.icon;
@@ -205,12 +206,12 @@ function SignaturePipeline() {
           const barWidth = maxCount > 0 ? Math.max(15, (stage.count / maxCount) * 100) : 15;
 
           return (
-            <div key={stage.status} className="flex-1 flex flex-col items-center gap-2">
-              <div className="flex items-center gap-1.5">
+            <div key={stage.status} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex-1 flex flex-col items-center gap-2")}>
+              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
                 <Icon className={`size-3.5 ${cfg.color}`} />
                 <span className="text-[10px] text-muted-foreground/50">{cfg.label}</span>
               </div>
-              <p className="font-display text-2xl font-bold">{stage.count}</p>
+              <p className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "font-display text-2xl font-bold")}>{stage.count}</p>
               <div
                 className="h-2.5 rounded-full transition-all duration-700"
                 style={{ width: `${barWidth}%`, backgroundColor: cfg.cssColor, opacity: 0.5 }}
@@ -234,13 +235,13 @@ function SignaturePipeline() {
 
 function StatsStrip() {
   return (
-    <GlassPanel className="px-5 py-3">
-      <div className="flex items-center gap-6 overflow-x-auto">
-        <div className="flex items-center gap-2 shrink-0">
+    <GlassPanel className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-5 py-3")}>
+      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "flex items-center gap-6 overflow-x-auto")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 shrink-0")}>
           <FileSignature className="size-4 text-muted-foreground/55" />
           <div>
-            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Total</p>
-            <p className="font-display text-lg font-bold tabular-nums">
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>Total</p>
+            <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold tabular-nums")}>
               <AnimatedNumber value={STATS.total} />
             </p>
           </div>
@@ -249,27 +250,27 @@ function StatsStrip() {
         <div className="w-px h-8 bg-border/10 shrink-0" />
 
         <div className="shrink-0">
-          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Taxa Conclusão</p>
-          <div className="flex items-center gap-2">
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>Taxa Conclusão</p>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <ProgressRing percent={STATS.taxaConclusao} size={32} color="var(--success)" />
-            <span className="text-xs font-bold text-success/70">{STATS.taxaConclusao}%</span>
+            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-bold → className de <Text>/<Heading> */ "text-xs font-bold text-success/70")}>{STATS.taxaConclusao}%</span>
           </div>
         </div>
 
         <div className="w-px h-8 bg-border/10 shrink-0" />
 
         <div className="shrink-0">
-          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Tempo Médio</p>
-          <p className="font-display text-base font-bold tabular-nums">{STATS.tempoMedio}d</p>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>Tempo Médio</p>
+          <p className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-bold → className de <Text>/<Heading> */ "font-display text-base font-bold tabular-nums")}>{STATS.tempoMedio}d</p>
           <p className="text-[9px] text-muted-foreground/55">para conclusão</p>
         </div>
 
         <div className="w-px h-8 bg-border/10 shrink-0" />
 
-        <div className="flex items-center gap-3 shrink-0">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 shrink-0")}>
           <div>
-            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Tendência 6m</p>
-            <p className="text-xs font-semibold text-success/60">+3 este mês</p>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>Tendência 6m</p>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-success/60")}>+3 este mês</p>
           </div>
           <Sparkline data={STATS.trendMensal} width={60} height={20} color="var(--success)" />
         </div>
@@ -289,33 +290,33 @@ function DocumentCard({ doc, onSelect }: { doc: Documento; onSelect: (d: Documen
   return (
     <GlassPanel className={`p-4 cursor-pointer hover:scale-[1.01] ${hasPendingLong ? 'ring-1 ring-warning/15' : ''}`}>
       <div onClick={() => onSelect(doc)}>
-        <div className="flex items-start gap-3">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3")}>
           <div className={`size-9 rounded-xl ${cfg.bg} flex items-center justify-center shrink-0`}>
             <Icon className={`size-4 ${cfg.color}`} />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-semibold truncate leading-tight">{doc.titulo}</p>
-            <div className="flex items-center gap-2 mt-1">
+            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[11px] font-semibold truncate leading-tight")}>{doc.titulo}</p>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-1")}>
               <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded ${cfg.bg} ${cfg.color}`}>
                 {cfg.label}
               </span>
               {doc.selfieHabilitada && <Camera className="size-3 text-muted-foreground/50" />}
               {doc.origem === 'formulario' && (
-                <span className="text-[8px] px-1 py-0.5 rounded bg-info/6 text-info/40">formulário</span>
+                <span className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[8px] px-1 py-0.5 rounded bg-info/6 text-info/40")}>formulário</span>
               )}
             </div>
           </div>
         </div>
 
         {doc.assinantes.length > 0 && (
-          <div className="mt-3 flex items-center gap-3">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "mt-3 flex items-center gap-3")}>
             <ProgressRing
               percent={progress.percent}
               size={36}
               color={progress.percent === 100 ? 'var(--success)' : 'var(--primary)'}
             />
             <div className="flex-1 min-w-0">
-              <div className="flex flex-wrap gap-1">
+              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-wrap gap-1")}>
                 {doc.assinantes.map((a, i) => (
                   <SignerPill key={i} assinante={a} />
                 ))}
@@ -325,15 +326,15 @@ function DocumentCard({ doc, onSelect }: { doc: Documento; onSelect: (d: Documen
         )}
 
         {doc.assinantes.length === 0 && doc.status === 'rascunho' && (
-          <div className="mt-3 flex items-center gap-2 text-[10px] text-muted-foreground/55">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-3 flex items-center gap-2 text-[10px] text-muted-foreground/55")}>
             <Users className="size-3" />
             Sem assinantes configurados
           </div>
         )}
 
-        <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-border/10">
+        <div className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "flex items-center justify-between mt-3 pt-2.5 border-t border-border/10")}>
           <span className="text-[9px] text-muted-foreground/55">{doc.criadoPor}</span>
-          <span className="text-[9px] text-muted-foreground/50 flex items-center gap-1">
+          <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-[9px] text-muted-foreground/50 flex items-center gap-1")}>
             <Clock className="size-2.5" />
             {timeAgo(doc.atualizadoEm)}
           </span>
@@ -372,47 +373,47 @@ function DocumentDetail({ doc, onClose }: { doc: Documento; onClose: () => void 
   const progress = getSignerProgress(doc);
 
   return (
-    <GlassPanel className="p-5">
+    <GlassPanel className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-3">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
           <div className={`size-10 rounded-xl ${cfg.bg} flex items-center justify-center shrink-0`}>
             <Icon className={`size-5 ${cfg.color}`} />
           </div>
           <div className="min-w-0">
-            <Heading level="section" className="text-sm leading-tight">{doc.titulo}</Heading>
-            <div className="flex items-center gap-2 mt-1">
+            <Heading level="section" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-tight sem token DS */ "text-sm leading-tight")}>{doc.titulo}</Heading>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-1")}>
               <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded ${cfg.bg} ${cfg.color}`}>
                 {cfg.label}
               </span>
               {doc.selfieHabilitada && (
-                <span className="text-[8px] flex items-center gap-0.5 text-muted-foreground/55">
+                <span className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "text-[8px] flex items-center gap-0.5 text-muted-foreground/55")}>
                   <Camera className="size-2.5" /> Selfie
                 </span>
               )}
               {doc.origem === 'formulario' && (
-                <span className="text-[8px] flex items-center gap-0.5 text-info/40">
+                <span className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "text-[8px] flex items-center gap-0.5 text-info/40")}>
                   <FileText className="size-2.5" /> Formulário
                 </span>
               )}
             </div>
           </div>
         </div>
-        <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-foreground/4 transition-colors cursor-pointer">
+        <button onClick={onClose} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors cursor-pointer")}>
           <X className="size-4 text-muted-foreground/60" />
         </button>
       </div>
 
       {/* Progress */}
       {doc.assinantes.length > 0 && (
-        <div className="flex items-center gap-3 p-3 rounded-xl bg-foreground/3 border border-border/10 mb-4">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ "flex items-center gap-3 p-3 rounded-xl bg-foreground/3 border border-border/10 mb-4")}>
           <ProgressRing
             percent={progress.percent}
             size={48}
             color={progress.percent === 100 ? 'var(--success)' : 'var(--primary)'}
           />
           <div>
-            <p className="text-sm font-bold">{progress.signed}/{progress.total} assinantes</p>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold")}>{progress.signed}/{progress.total} assinantes</p>
             <p className="text-[10px] text-muted-foreground/60">
               {progress.percent === 100 ? 'Todos assinaram' : `${progress.total - progress.signed} pendente${progress.total - progress.signed > 1 ? 's' : ''}`}
             </p>
@@ -422,23 +423,23 @@ function DocumentDetail({ doc, onClose }: { doc: Documento; onClose: () => void 
 
       {/* Signers list */}
       <div className="mb-4">
-        <Heading level="card" className="text-xs mb-2 flex items-center gap-1.5">
+        <Heading level="card" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; gap-1.5 gap sem token DS */ "text-xs mb-2 flex items-center gap-1.5")}>
           <Users className="size-3.5 text-muted-foreground/60" />
           Assinantes
         </Heading>
-        <div className="space-y-1.5">
+        <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
           {doc.assinantes.map((a, i) => {
             const isDone = a.status === 'concluido';
             const isLate = !isDone && (a.diasPendente ?? 0) > 7;
 
             return (
-              <div key={i} className="flex items-center gap-2.5 p-2 rounded-lg hover:bg-foreground/3 transition-colors">
+              <div key={i} className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-2 → usar <Inset> */ "flex items-center gap-2.5 p-2 rounded-lg hover:bg-foreground/3 transition-colors")}>
                 <div className={`size-2 rounded-full shrink-0 ${isDone ? 'bg-success/60' : isLate ? 'bg-warning/60 animate-pulse' : 'bg-muted-foreground/20'}`} />
                 <div className="flex-1 min-w-0">
-                  <p className="text-[11px] font-medium">{a.nome}</p>
-                  <div className="flex items-center gap-2 mt-0.5">
+                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium")}>{a.nome}</p>
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-0.5")}>
                     {a.email && (
-                      <span className="text-[9px] text-muted-foreground/55 flex items-center gap-0.5">
+                      <span className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "text-[9px] text-muted-foreground/55 flex items-center gap-0.5")}>
                         <Mail className="size-2" />{a.email}
                       </span>
                     )}
@@ -446,7 +447,7 @@ function DocumentDetail({ doc, onClose }: { doc: Documento; onClose: () => void 
                 </div>
                 <div className="text-right shrink-0">
                   {isDone ? (
-                    <span className="text-[9px] text-success/60 flex items-center gap-0.5">
+                    <span className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "text-[9px] text-success/60 flex items-center gap-0.5")}>
                       <CheckCircle2 className="size-2.5" />
                       {a.concluidoEm ? timeAgo(a.concluidoEm) : 'Assinado'}
                     </span>
@@ -460,49 +461,49 @@ function DocumentDetail({ doc, onClose }: { doc: Documento; onClose: () => void 
             );
           })}
           {doc.assinantes.length === 0 && (
-            <p className="text-[10px] text-muted-foreground/55 text-center py-4">Sem assinantes configurados</p>
+            <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-[10px] text-muted-foreground/55 text-center py-4")}>Sem assinantes configurados</p>
           )}
         </div>
       </div>
 
       {/* Metadata */}
-      <div className="grid grid-cols-2 gap-2 mb-4 text-[10px]">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2 mb-4 text-[10px]")}>
         <div>
-          <p className="text-muted-foreground/55 uppercase tracking-wider text-[9px]">Criado por</p>
-          <p className="font-medium mt-0.5">{doc.criadoPor}</p>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-muted-foreground/55 uppercase tracking-wider text-[9px]")}>Criado por</p>
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mt-0.5")}>{doc.criadoPor}</p>
         </div>
         <div>
-          <p className="text-muted-foreground/55 uppercase tracking-wider text-[9px]">Criado em</p>
-          <p className="font-medium mt-0.5">{new Date(doc.criadoEm).toLocaleDateString('pt-BR')}</p>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-muted-foreground/55 uppercase tracking-wider text-[9px]")}>Criado em</p>
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mt-0.5")}>{new Date(doc.criadoEm).toLocaleDateString('pt-BR')}</p>
         </div>
         <div>
-          <p className="text-muted-foreground/55 uppercase tracking-wider text-[9px]">Atualizado</p>
-          <p className="font-medium mt-0.5">{timeAgo(doc.atualizadoEm)}</p>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-muted-foreground/55 uppercase tracking-wider text-[9px]")}>Atualizado</p>
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mt-0.5")}>{timeAgo(doc.atualizadoEm)}</p>
         </div>
         <div>
-          <p className="text-muted-foreground/55 uppercase tracking-wider text-[9px]">Verificação</p>
-          <p className="font-medium mt-0.5 flex items-center gap-1 text-success/60">
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-muted-foreground/55 uppercase tracking-wider text-[9px]")}>Verificação</p>
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; gap-1 gap sem token DS */ "font-medium mt-0.5 flex items-center gap-1 text-success/60")}>
             <Shield className="size-2.5" /> Íntegro
           </p>
         </div>
       </div>
 
       {/* Actions */}
-      <div className="flex gap-2 pt-3 border-t border-border/10">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-3 padding direcional sem Inset equiv. */ "flex gap-2 pt-3 border-t border-border/10")}>
         {doc.status === 'pronto' && doc.assinantes.some(a => a.status === 'pendente') && (
-          <button className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-warning/10 text-warning/70 text-xs font-medium hover:bg-warning/15 transition-colors cursor-pointer">
+          <button className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-warning/10 text-warning/70 text-xs font-medium hover:bg-warning/15 transition-colors cursor-pointer")}>
             <RotateCcw className="size-3" />
             Reenviar convites
           </button>
         )}
-        <button className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary/10 text-primary/70 text-xs font-medium hover:bg-primary/15 transition-colors cursor-pointer">
+        <button className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary/10 text-primary/70 text-xs font-medium hover:bg-primary/15 transition-colors cursor-pointer")}>
           <ExternalLink className="size-3" />
           Ver documento
         </button>
-        <button className="flex items-center justify-center px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/50 hover:bg-foreground/6 transition-colors cursor-pointer">
+        <button className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center justify-center px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/50 hover:bg-foreground/6 transition-colors cursor-pointer")}>
           <Download className="size-3" />
         </button>
-        <button className="flex items-center justify-center px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/50 hover:bg-foreground/6 transition-colors cursor-pointer">
+        <button className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center justify-center px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/50 hover:bg-foreground/6 transition-colors cursor-pointer")}>
           <Copy className="size-3" />
         </button>
       </div>
@@ -528,12 +529,12 @@ function DocumentListRow({ doc, onSelect, selected }: { doc: Documento; onSelect
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className="text-xs font-medium truncate">{doc.titulo}</p>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium truncate")}>{doc.titulo}</p>
         <p className="text-[10px] text-muted-foreground/55">{doc.criadoPor} &middot; {timeAgo(doc.criadoEm)}</p>
       </div>
 
       {doc.assinantes.length > 0 && (
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 shrink-0")}>
           <ProgressRing percent={progress.percent} size={24} color={progress.percent === 100 ? 'var(--success)' : 'var(--primary)'} />
           <span className="text-[10px] tabular-nums text-muted-foreground/60">{progress.signed}/{progress.total}</span>
         </div>
@@ -543,7 +544,7 @@ function DocumentListRow({ doc, onSelect, selected }: { doc: Documento; onSelect
         {cfg.label}
       </span>
 
-      <div className="items-center gap-1 shrink-0 hidden md:flex">
+      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "items-center gap-1 shrink-0 hidden md:flex")}>
         {doc.selfieHabilitada && <Camera className="size-3 text-muted-foreground/45" />}
         {doc.origem === 'formulario' && <FileText className="size-3 text-info/30" />}
       </div>
@@ -586,12 +587,12 @@ export default function AssinaturaDigitalMockPage() {
   };
 
   return (
-    <div className="space-y-5">
+    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       {/* ── Header ──────────────────────────────────────── */}
-      <div className="flex items-end justify-between gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
         <div>
-          <Heading level="page" className="text-2xl tracking-tight">Assinatura Digital</Heading>
-          <p className="text-sm text-muted-foreground/50 mt-0.5">
+          <Heading level="page" className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; tracking-tight sem token DS */ "text-2xl tracking-tight")}>Assinatura Digital</Heading>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 mt-0.5")}>
             {STATS.total} documentos &middot; {STATS.aguardando} aguardando assinatura
           </p>
         </div>
@@ -615,7 +616,7 @@ export default function AssinaturaDigitalMockPage() {
       )}
 
       {/* ── Controls ────────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
         <TabPills
           tabs={[
             { id: 'todos', label: 'Todos', count: STATS.total },
@@ -627,7 +628,7 @@ export default function AssinaturaDigitalMockPage() {
           active={activeStatus}
           onChange={setActiveStatus}
         />
-        <div className="flex items-center gap-2 flex-1 justify-end">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
           <SearchInput value={search} onChange={setSearch} placeholder="Buscar documento, assinante..." />
           <ViewToggle mode={viewMode} onChange={setViewMode} options={VIEW_OPTIONS} />
         </div>
@@ -645,17 +646,17 @@ export default function AssinaturaDigitalMockPage() {
                 ))}
               </div>
             ) : (
-              <div className="flex flex-col gap-1">
+              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
                 {filteredDocs.map(doc => (
                   <DocumentListRow key={doc.id} doc={doc} onSelect={handleSelect} selected={selectedDoc?.id === doc.id} />
                 ))}
               </div>
             )
           ) : (
-            <div className="flex flex-col items-center justify-center py-16 text-center">
+            <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 text-center")}>
               <FileSignature className="size-8 text-muted-foreground/45 mb-3" />
-              <p className="text-sm font-medium text-muted-foreground/50">Nenhum documento encontrado</p>
-              <p className="text-xs text-muted-foreground/55 mt-1">Tente ajustar os filtros ou a busca</p>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/50")}>Nenhum documento encontrado</p>
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/55 mt-1")}>Tente ajustar os filtros ou a busca</p>
             </div>
           )}
         </div>
@@ -669,7 +670,7 @@ export default function AssinaturaDigitalMockPage() {
       </div>
 
       {/* ── Footer ──────────────────────────────────────── */}
-      <p className="text-center text-[10px] text-muted-foreground/50 pb-4">
+      <p className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "text-center text-[10px] text-muted-foreground/50 pb-4")}>
         {'Protótipo — Signature Command Center — dados fictícios'}
       </p>
     </div>

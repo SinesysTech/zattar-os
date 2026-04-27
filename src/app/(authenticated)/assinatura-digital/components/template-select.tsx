@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import { useEffect, useState, useCallback } from "react";
 import {
   Select,
@@ -90,7 +91,7 @@ export function TemplateSelect({
 
   if (error) {
     return (
-      <div className="text-sm text-destructive">
+      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
         {error}
         <button
           type="button"
@@ -125,20 +126,20 @@ export function TemplateSelect({
                 key={template.template_uuid || template.id}
                 value={template.template_uuid || String(template.id)}
               >
-                <div className="flex items-center gap-2">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                   <span>{template.nome}</span>
                   {template.tipo_template && (
                     <Badge
                       variant={
                         template.tipo_template === "pdf" ? "default" : "secondary"
                       }
-                      className="text-xs"
+                      className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}
                     >
                       {template.tipo_template.toUpperCase()}
                     </Badge>
                   )}
                   {!template.ativo && (
-                    <span className="text-xs text-muted-foreground">(Inativo)</span>
+                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>(Inativo)</span>
                   )}
                 </div>
               </SelectItem>

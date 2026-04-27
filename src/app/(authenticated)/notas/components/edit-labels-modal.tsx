@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import React, { useState } from "react";
 import { Trash2, Edit2, Check, X } from "lucide-react";
 
@@ -38,9 +39,9 @@ export function EditLabelsModal({ children }: Props) {
 
         <div>
           {/* Existing labels */}
-          <div className="space-y-1">
+          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
             {noteLabels.map((label) => (
-              <div key={label.id} className="flex items-center justify-between rounded-md py-1">
+              <div key={label.id} className={cn(/* design-system-escape: py-1 padding direcional sem Inset equiv. */ "flex items-center justify-between rounded-md py-1")}>
                 {editingLabelId && editingLabelId === label.id ? (
                   <div className="flex flex-1 items-center">
                     <Input
@@ -81,10 +82,10 @@ export function EditLabelsModal({ children }: Props) {
                   </div>
                 ) : (
                   <>
-                    <div className="flex items-center gap-2">
+                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                       <div className={`size-3 shrink-0 rounded-full ${normalizeLabelColor(label.color)}`} />
                       <span>{label.title}</span>
-                      <span className="text-muted-foreground text-xs">
+                      <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground text-xs")}>
                         {notes.filter((n) => n.labels.includes(label.id)).length}
                       </span>
                     </div>
@@ -114,9 +115,9 @@ export function EditLabelsModal({ children }: Props) {
           </div>
 
           {/* Add new label */}
-          <div className="border-t pt-6">
-            <h4 className="mb-2 text-sm font-medium">Adicionar nova etiqueta</h4>
-            <div className="relative flex items-center gap-2">
+          <div className={cn(/* design-system-escape: pt-6 padding direcional sem Inset equiv. */ "border-t pt-6")}>
+            <h4 className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "mb-2 text-sm font-medium")}>Adicionar nova etiqueta</h4>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "relative flex items-center gap-2")}>
               <div className="absolute start-3 shrink-0">
                 <div className={`size-3 rounded-full ${normalizeLabelColor(newLabelColor)}`} />
               </div>
@@ -140,9 +141,9 @@ export function EditLabelsModal({ children }: Props) {
             </div>
 
             {/* Color picker */}
-            <div className="mt-4 flex items-center gap-2">
-              <Label className="text-muted-foreground block text-xs">Selecionar cor</Label>
-              <div className="flex flex-wrap gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-4 flex items-center gap-2")}>
+              <Label className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground block text-xs")}>Selecionar cor</Label>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2")}>
                 {AVAILABLE_LABEL_COLORS.map((color) => (
                   <button
                     key={color}

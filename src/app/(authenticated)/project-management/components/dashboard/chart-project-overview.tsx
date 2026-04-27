@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import * as React from "react";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import { useIsMobile } from "@/hooks/use-breakpoint";
@@ -57,7 +58,7 @@ export function ChartProjectOverview({ data }: ChartProjectOverviewProps) {
         <CardHeader>
           <CardTitle>Visão Geral dos Projetos</CardTitle>
         </CardHeader>
-        <CardContent className="flex items-center justify-center py-12">
+        <CardContent className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "flex items-center justify-center py-12")}>
           <Text variant="caption" className="text-muted-foreground">
             Nenhum dado disponível para o período.
           </Text>
@@ -82,7 +83,7 @@ export function ChartProjectOverview({ data }: ChartProjectOverviewProps) {
             value={timeRange}
             onValueChange={(v) => v && setTimeRange(v)}
             variant="outline"
-            className="hidden *:data-[slot=toggle-group-item]:px-4! @[767px]/card:flex"
+            className={cn(/* design-system-escape: *:data-[slot=toggle-group-item]:px-4! sem equivalente DS */ "hidden *:data-[slot=toggle-group-item]:px-4! @[767px]/card:flex")}
           >
             <ToggleGroupItem value="12m">12 meses</ToggleGroupItem>
             <ToggleGroupItem value="6m">6 meses</ToggleGroupItem>
@@ -110,7 +111,7 @@ export function ChartProjectOverview({ data }: ChartProjectOverviewProps) {
           </Select>
         </CardAction>
       </CardHeader>
-      <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+      <CardContent className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; pt-4 padding direcional sem Inset equiv.; sm:px-6 sem equivalente DS; sm:pt-6 sem equivalente DS */ "px-2 pt-4 sm:px-6 sm:pt-6")}>
         <ChartContainer
           config={chartConfig}
           className="aspect-auto h-50 w-full lg:h-62.5"

@@ -7,6 +7,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useMemo } from 'react';
 import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
 import { TimelineItem } from './timeline-item';
@@ -30,12 +31,12 @@ export function TimelineContainer({ items, isLoading = false }: TimelineContaine
 
   if (isLoading) {
     return (
-      <Card className="p-6">
-        <div className="space-y-4">
+      <Card className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
+        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="flex gap-4">
+            <div key={i} className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}>
               <div className="w-10 h-10 rounded-full bg-muted animate-pulse" />
-              <div className="flex-1 space-y-2">
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "flex-1 space-y-2")}>
                 <div className="h-4 bg-muted rounded animate-pulse w-3/4" />
                 <div className="h-3 bg-muted rounded animate-pulse w-1/2" />
                 <div className="h-3 bg-muted rounded animate-pulse w-2/3" />
@@ -52,11 +53,11 @@ export function TimelineContainer({ items, isLoading = false }: TimelineContaine
   }
 
   return (
-    <div className="space-y-0">
+    <div className={cn(/* design-system-escape: space-y-0 sem token DS */ "space-y-0")}>
       {/* Header da timeline */}
       <div className="mb-6">
         <Heading level="section">Timeline do Processo</Heading>
-        <p className="text-sm text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
           {sortedItems.length} {sortedItems.length === 1 ? 'item' : 'itens'} •{' '}
           {sortedItems.filter((i) => i.documento).length} documentos •{' '}
           {sortedItems.filter((i) => !i.documento).length} movimentos
@@ -70,14 +71,14 @@ export function TimelineContainer({ items, isLoading = false }: TimelineContaine
         ))}
 
         {/* Final da timeline */}
-        <div className="relative flex gap-4">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "relative flex gap-4")}>
           <div className="flex flex-col items-center">
             <div className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-muted-foreground bg-muted">
               <div className="w-2 h-2 rounded-full bg-muted-foreground" />
             </div>
           </div>
-          <div className="flex-1 pb-4">
-            <p className="text-sm text-muted-foreground italic">
+          <div className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "flex-1 pb-4")}>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground italic")}>
               Início do processo
             </p>
           </div>

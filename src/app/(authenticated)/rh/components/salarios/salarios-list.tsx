@@ -1,6 +1,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -116,11 +117,11 @@ function criarColunas(
         const salario = row.original;
         return (
           <div className="flex min-h-10 flex-col justify-center">
-            <span className="text-sm font-medium leading-tight">
+            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-sm font-medium leading-tight")}>
               {salario.usuario?.nomeExibicao || `Usuário ${salario.usuarioId}`}
             </span>
             {salario.cargo && (
-              <span className="text-xs leading-tight text-muted-foreground">
+              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; leading-tight sem token DS */ "text-xs leading-tight text-muted-foreground")}>
                 {salario.cargo.nome}
               </span>
             )}
@@ -137,7 +138,7 @@ function criarColunas(
       size: 150,
       meta: { align: 'right' as const },
       cell: ({ row }) => (
-        <span className="text-sm font-medium tabular-nums">
+        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium tabular-nums")}>
           {formatarValor(row.original.salarioBruto)}
         </span>
       ),
@@ -151,7 +152,7 @@ function criarColunas(
       size: 120,
       meta: { align: 'left' as const },
       cell: ({ row }) => (
-        <span className="text-sm tabular-nums">
+        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm tabular-nums")}>
           {formatarData(row.original.dataInicioVigencia)}
         </span>
       ),
@@ -168,13 +169,13 @@ function criarColunas(
         const salario = row.original;
         const vigente = isVigente(salario);
         return salario.dataFimVigencia ? (
-          <span className="text-sm tabular-nums">{formatarData(salario.dataFimVigencia)}</span>
+          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm tabular-nums")}>{formatarData(salario.dataFimVigencia)}</span>
         ) : vigente ? (
           <Badge variant={getSemanticBadgeVariant('salario_status', 'VIGENTE')}>
             Vigente
           </Badge>
         ) : (
-          <span className="text-sm text-muted-foreground">-</span>
+          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>-</span>
         );
       },
     },
@@ -204,7 +205,7 @@ function criarColunas(
       id: 'acoes',
       header: () => (
         <div className="flex items-center">
-          <span className="text-sm font-medium text-muted-foreground">Ações</span>
+          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground")}>Ações</span>
         </div>
       ),
       enableSorting: false,
@@ -215,7 +216,7 @@ function criarColunas(
         const salario = row.original;
         const vigente = isVigente(salario);
         return (
-          <div className="flex items-center gap-1">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
             {salario.ativo && (
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -461,34 +462,34 @@ export function SalariosList() {
         }
         subHeader={
           totais ? (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 sm:grid-cols-2")}>
               {/* Card: Total Funcionários */}
-              <div className="group relative overflow-hidden rounded-xl border bg-gradient-to-br from-card to-card/50 p-6 shadow-sm transition-all hover:shadow-md">
+              <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "group relative overflow-hidden rounded-xl border bg-gradient-to-br from-card to-card/50 p-6 shadow-sm transition-all hover:shadow-md")}>
                 <div className="absolute right-4 top-4 opacity-10 transition-opacity group-hover:opacity-20">
                   <svg className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                 </div>
-                <div className="relative space-y-1">
-                  <p className="text-sm font-medium text-muted-foreground">
+                <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "relative space-y-1")}>
+                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground")}>
                     Total Funcionários com Salário
                   </p>
-                  <p className="text-3xl font-bold tracking-tight">{totais.totalFuncionarios}</p>
+                  <p className={cn(/* design-system-escape: text-3xl → migrar para <Heading level="display-*">; font-bold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-3xl font-bold tracking-tight")}>{totais.totalFuncionarios}</p>
                 </div>
               </div>
 
               {/* Card: Custo Mensal */}
-              <div className="group relative overflow-hidden rounded-xl border bg-gradient-to-br from-success/50 to-card dark:from-success/20 dark:to-card p-6 shadow-sm transition-all hover:shadow-md">
+              <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "group relative overflow-hidden rounded-xl border bg-gradient-to-br from-success/50 to-card dark:from-success/20 dark:to-card p-6 shadow-sm transition-all hover:shadow-md")}>
                 <div className="absolute right-4 top-4 opacity-10 transition-opacity group-hover:opacity-20">
                   <svg className="h-12 w-12 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <div className="relative space-y-1">
-                  <p className="text-sm font-medium text-muted-foreground">
+                <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "relative space-y-1")}>
+                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground")}>
                     Custo Mensal Bruto
                   </p>
-                  <p className="text-3xl font-bold tracking-tight text-success dark:text-success">
+                  <p className={cn(/* design-system-escape: text-3xl → migrar para <Heading level="display-*">; font-bold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-3xl font-bold tracking-tight text-success dark:text-success")}>
                     {formatarValor(totais.totalBrutoMensal)}
                   </p>
                 </div>
@@ -552,7 +553,7 @@ export function SalariosList() {
               <strong>{salarioSelecionado?.usuario?.nomeExibicao}</strong>
             </DialogDescription>
           </DialogHeader>
-          <div className="py-4">
+          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "py-4")}>
             <Label htmlFor="dataFimVigencia">Data de Fim</Label>
             <Input
               id="dataFimVigencia"

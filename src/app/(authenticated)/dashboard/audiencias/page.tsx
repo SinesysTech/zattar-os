@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import { obterDashboardUsuario, obterDashboardAdmin } from '../service';
@@ -47,21 +48,21 @@ export default async function AudienciasPage() {
 
   return (
     <DashboardProvider initialData={initialData}>
-      <div className="space-y-4">
+      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         <Heading level="page">Audiências</Heading>
         {/* Row 1: Próximas + Preparação */}
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2")}>
           <ProximasAudiencias />
           <WidgetPreparacao />
         </div>
         {/* Row 2: KPIs + Comparativo + Trend */}
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 xl:grid-cols-3")}>
           <KpiStrip />
           <WidgetComparativoMensal />
           <TrendMensal />
         </div>
         {/* Row 3: Modalidade + Status Mensal + Por Tipo */}
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 xl:grid-cols-3")}>
           <ModalidadeDistribution />
           <StatusMensal />
           <AudienciasPorTipo />

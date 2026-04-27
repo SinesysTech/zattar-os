@@ -140,19 +140,19 @@ function NovoPopover({
       <PopoverContent
         align="end"
         sideOffset={8}
-        className="rounded-2xl glass-dropdown overflow-hidden p-2 w-56"
+        className={cn(/* design-system-escape: p-2 → usar <Inset> */ "rounded-2xl glass-dropdown overflow-hidden p-2 w-56")}
       >
-        <div className="space-y-0.5">
+        <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
           <button
             type="button"
             onClick={wrap(onCreateFolder)}
-            className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs text-muted-foreground/80 hover:bg-muted/40 hover:text-foreground transition-colors cursor-pointer"
+            className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs text-muted-foreground/80 hover:bg-muted/40 hover:text-foreground transition-colors cursor-pointer")}
           >
             <span className="inline-flex size-7 items-center justify-center rounded-lg bg-warning/10 text-warning">
               <FolderPlus className="size-3.5" />
             </span>
             <span className="flex-1 text-left">
-              <span className="block font-medium">Nova pasta</span>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "block font-medium")}>Nova pasta</span>
               <span className="block text-[10px] text-muted-foreground/50">
                 Agrupar arquivos
               </span>
@@ -161,29 +161,29 @@ function NovoPopover({
           <button
             type="button"
             onClick={wrap(onCreateDocument)}
-            className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs text-muted-foreground/80 hover:bg-muted/40 hover:text-foreground transition-colors cursor-pointer"
+            className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs text-muted-foreground/80 hover:bg-muted/40 hover:text-foreground transition-colors cursor-pointer")}
           >
             <span className="inline-flex size-7 items-center justify-center rounded-lg bg-info/10 text-info">
               <FileText className="size-3.5" />
             </span>
             <span className="flex-1 text-left">
-              <span className="block font-medium">Novo documento</span>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "block font-medium")}>Novo documento</span>
               <span className="block text-[10px] text-muted-foreground/50">
                 Editor colaborativo
               </span>
             </span>
           </button>
-          <div className="h-px bg-border/30 my-1 mx-1" />
+          <div className={cn(/* design-system-escape: my-1 margin sem primitiva DS; mx-1 margin sem primitiva DS */ "h-px bg-border/30 my-1 mx-1")} />
           <button
             type="button"
             onClick={wrap(onUpload)}
-            className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs text-muted-foreground/80 hover:bg-muted/40 hover:text-foreground transition-colors cursor-pointer"
+            className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs text-muted-foreground/80 hover:bg-muted/40 hover:text-foreground transition-colors cursor-pointer")}
           >
             <span className="inline-flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
               <UploadIcon className="size-3.5" />
             </span>
             <span className="flex-1 text-left">
-              <span className="block font-medium">Fazer upload</span>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "block font-medium")}>Fazer upload</span>
               <span className="block text-[10px] text-muted-foreground/50">
                 PDF, imagem, planilha…
               </span>
@@ -414,12 +414,12 @@ export function FileManager() {
   // ── Render ────────────────────────────────────────────────────────────
 
   return (
-    <div className="space-y-5">
+    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       {/* ── Header ─────────────────────────────────────────── */}
-      <div className="flex items-end justify-between gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
         <div>
           <Heading level="page">Documentos</Heading>
-          <p className="text-sm text-muted-foreground/50 mt-0.5">{subtitle}</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 mt-0.5")}>{subtitle}</p>
         </div>
         <NovoPopover
           onCreateFolder={() => setCreateFolderOpen(true)}
@@ -435,14 +435,14 @@ export function FileManager() {
       {error && <InsightBanner type="alert">{error}</InsightBanner>}
 
       {/* ── Filter + Search + ViewToggle ───────────────────── */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
         <DocumentosFilterBar
           filters={filters}
           onChange={setFilters}
           criadores={criadores}
           counts={filterCounts}
         />
-        <div className="flex items-center gap-2 flex-1 justify-end">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
           <SearchInput
             value={search}
             onChange={setSearch}
@@ -458,12 +458,12 @@ export function FileManager() {
 
       {/* ── Breadcrumbs (dentro de pasta) ──────────────────── */}
       {currentPastaId && (
-        <GlassPanel className="px-4 py-2.5">
-          <nav className="flex items-center gap-1.5 text-xs" aria-label="Breadcrumb">
+        <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "px-4 py-2.5")}>
+          <nav className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-1.5 text-xs")} aria-label="Breadcrumb">
             <button
               type="button"
               onClick={() => router.push('/documentos')}
-              className="inline-flex items-center gap-1 text-muted-foreground/70 hover:text-primary transition-colors cursor-pointer"
+              className={cn(/* design-system-escape: gap-1 gap sem token DS */ "inline-flex items-center gap-1 text-muted-foreground/70 hover:text-primary transition-colors cursor-pointer")}
             >
               <Home className="size-3.5" />
               <span>Raiz</span>
@@ -471,7 +471,7 @@ export function FileManager() {
             {breadcrumbs.map((bc, i) => {
               const isLast = i === breadcrumbs.length - 1;
               return (
-                <div key={bc.id ?? `bc-${i}`} className="flex items-center gap-1.5">
+                <div key={bc.id ?? `bc-${i}`} className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
                   <ChevronRight className="size-3 text-muted-foreground/40" />
                   <button
                     type="button"
@@ -482,7 +482,7 @@ export function FileManager() {
                     className={cn(
                       'transition-colors',
                       isLast
-                        ? 'font-semibold text-foreground cursor-default'
+                        ? /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'font-semibold text-foreground cursor-default'
                         : 'text-muted-foreground/70 hover:text-primary cursor-pointer',
                     )}
                   >

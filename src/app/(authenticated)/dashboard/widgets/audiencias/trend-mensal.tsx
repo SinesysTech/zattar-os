@@ -11,6 +11,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import { TrendingUp } from 'lucide-react';
 import {
   WidgetContainer,
@@ -109,7 +110,7 @@ export function TrendMensal() {
         icon={TrendingUp}
         subtitle="Evolucao de audiencias"
       >
-        <div className="flex flex-col items-center justify-center py-6 gap-2">
+        <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center justify-center py-6 gap-2")}>
           <TrendingUp className="size-8 text-muted-foreground/45" />
           <p className="text-[11px] text-muted-foreground/60 text-center">
             Dados de tendencia indisponiveis
@@ -134,14 +135,14 @@ export function TrendMensal() {
       icon={TrendingUp}
       subtitle="Evolucao de audiencias (12 meses)"
     >
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         {/* Stats row */}
-        <div className="flex items-baseline gap-4">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-baseline gap-4")}>
           <div>
-            <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
               Mes Atual
             </p>
-            <p className="font-display text-xl font-bold tabular-nums">
+            <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "font-display text-xl font-bold tabular-nums")}>
               {currentMonth}
             </p>
           </div>
@@ -160,10 +161,10 @@ export function TrendMensal() {
             </p>
           </div>
           <div className="ml-auto text-right">
-            <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
               Media
             </p>
-            <p className="text-[14px] font-semibold tabular-nums">
+            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[14px] font-semibold tabular-nums")}>
               {average}
             </p>
           </div>

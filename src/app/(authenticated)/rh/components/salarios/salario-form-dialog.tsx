@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -149,8 +150,8 @@ export function SalarioFormDialog({
         </Button>
       }
     >
-      <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
+      <form ref={formRef} onSubmit={handleSubmit} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label>Funcionário</Label>
           <Controller
             control={form.control}
@@ -175,7 +176,7 @@ export function SalarioFormDialog({
             )}
           />
           {form.formState.errors.usuarioId && (
-            <p className="text-sm text-destructive">{form.formState.errors.usuarioId.message}</p>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{form.formState.errors.usuarioId.message}</p>
           )}
         </div>
 
@@ -184,7 +185,7 @@ export function SalarioFormDialog({
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Atenção: Salário Vigente Existente</AlertTitle>
-            <AlertDescription className="space-y-2">
+            <AlertDescription className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <p>
                 Este funcionário já possui um salário vigente de{' '}
                 <strong>
@@ -196,7 +197,7 @@ export function SalarioFormDialog({
                 desde{' '}
                 {new Date(salarioVigente.dataInicioVigencia).toLocaleDateString('pt-BR')}.
               </p>
-              <p className="text-sm">
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
                 Para criar um novo salário, você deve primeiro <strong>encerrar a vigência</strong> do salário atual.
               </p>
               <Button
@@ -233,7 +234,7 @@ export function SalarioFormDialog({
           </Alert>
         )}
 
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label>Cargo (Opcional)</Label>
           <Controller
             control={form.control}
@@ -258,7 +259,7 @@ export function SalarioFormDialog({
           />
         </div>
 
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label>Salário Bruto (R$)</Label>
           <Input
             type="number"
@@ -266,23 +267,23 @@ export function SalarioFormDialog({
             {...form.register('salarioBruto', { valueAsNumber: true })}
           />
           {form.formState.errors.salarioBruto && (
-            <p className="text-sm text-destructive">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
               {form.formState.errors.salarioBruto.message}
             </p>
           )}
         </div>
 
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label>Data de Início da Vigência</Label>
           <Input type="date" {...form.register('dataInicioVigencia')} />
           {form.formState.errors.dataInicioVigencia && (
-            <p className="text-sm text-destructive">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
               {form.formState.errors.dataInicioVigencia.message}
             </p>
           )}
         </div>
 
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Label>Observações</Label>
           <Textarea rows={3} {...form.register('observacoes')} placeholder="Ex: Promoção, Ajuste anual, etc." />
         </div>

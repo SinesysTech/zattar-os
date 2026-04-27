@@ -5,6 +5,7 @@
  * Integra Plate.js com auto-save, colaboração, e chat
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useUser } from '@/providers/user-provider';
 import dynamic from 'next/dynamic';
@@ -37,7 +38,7 @@ import { LoadingSpinner } from "@/components/ui/loading-state"
  */
 function PlateEditorSkeleton() {
   return (
-    <div className="mx-auto w-full max-w-4xl space-y-4 py-8">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-8 padding direcional sem Inset equiv. */ "mx-auto w-full max-w-4xl space-y-4 py-8")}>
       <Skeleton className="h-8 w-3/4" />
       <Skeleton className="h-6 w-full" />
       <Skeleton className="h-6 w-full" />
@@ -188,7 +189,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
       <div className="flex h-full items-center justify-center">
         <div className="text-center">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto" />
-          <p className="mt-4 text-sm text-muted-foreground">Carregando documento...</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-4 text-sm text-muted-foreground")}>Carregando documento...</p>
         </div>
       </div>
     );
@@ -215,9 +216,9 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
     <div className="flex h-full flex-col">
       {/* Header/Toolbar */}
       <div className="border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-        <div className="flex h-14 items-center justify-between px-4 gap-4">
+        <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; gap-4 → migrar para <Inline gap="default"> */ "flex h-14 items-center justify-between px-4 gap-4")}>
           {/* Left */}
-          <div className="flex items-center gap-2 flex-1 min-w-0">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 min-w-0")}>
             <Button
               variant="ghost"
               size="icon" aria-label="Voltar"
@@ -229,19 +230,19 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
             <Input
               value={titulo}
               onChange={(e) => setTitulo(e.target.value)}
-              className="max-w-md border-0 bg-transparent font-medium shadow-none focus-visible:ring-0"
+              className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "max-w-md border-0 bg-transparent font-medium shadow-none focus-visible:ring-0")}
               placeholder="Título do documento"
             />
 
             {saving && (
-              <Badge variant="secondary" className="text-xs">
+              <Badge variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                 Salvando...
               </Badge>
             )}
           </div>
 
           {/* Right */}
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             {/* Indicador de conexão em tempo real */}
             <TooltipProvider>
               <Tooltip>
@@ -260,7 +261,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
                   </div>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p className="text-xs">
+                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                     {isConnected
                       ? 'Colaboração em tempo real ativa'
                       : 'Conectando...'}
@@ -338,7 +339,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
         <div className="flex min-h-0 flex-1 overflow-auto">
           <div
             ref={editorContentRef}
-            className="flex h-full w-full min-h-0 flex-col p-8"
+            className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex h-full w-full min-h-0 flex-col p-8")}
           >
             <DocumentEditorProvider documentoId={documentoId}>
               <PlateEditor

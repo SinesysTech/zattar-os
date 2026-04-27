@@ -11,6 +11,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import { FileText } from 'lucide-react';
 import {
   WidgetContainer,
@@ -30,7 +31,7 @@ export function WidgetStatusContratos() {
   if (!data) {
     return (
       <WidgetContainer title="Status dos Contratos" icon={FileText} subtitle="Distribuição por status" depth={1}>
-        <p className="text-[11px] text-muted-foreground/60 py-4 text-center">
+        <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-4 text-center")}>
           Não foi possível carregar os dados.
         </p>
       </WidgetContainer>
@@ -46,7 +47,7 @@ export function WidgetStatusContratos() {
   if (!contratos) {
     return (
       <WidgetContainer title="Status dos Contratos" icon={FileText} subtitle="Distribuição por status" depth={1}>
-        <p className="text-[11px] text-muted-foreground/60 py-4 text-center">
+        <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-4 text-center")}>
           Dados indisponíveis
         </p>
       </WidgetContainer>
@@ -69,7 +70,7 @@ export function WidgetStatusContratos() {
       subtitle="Distribuição por status"
       depth={1}
     >
-      <div className="flex items-center gap-5">
+      <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5")}>
         <MiniDonut
           segments={segments}
           size={90}
@@ -77,16 +78,16 @@ export function WidgetStatusContratos() {
           centerLabel={`${fmtNum(total)}`}
         />
 
-        <div className="flex flex-col gap-1.5 flex-1 min-w-0">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5 flex-1 min-w-0")}>
           {porStatus.map((s) => {
             const pct = total > 0 ? ((s.count / total) * 100).toFixed(0) : '0';
             return (
-              <div key={s.status} className="flex items-center gap-2">
+              <div key={s.status} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <ToneDot tone={s.tone} shape="square" size="lg" aria-label={s.status} />
                 <span className="text-[10px] text-muted-foreground/70 truncate flex-1 capitalize">
                   {s.status.replace(/_/g, ' ')}
                 </span>
-                <span className="text-[10px] font-medium tabular-nums">
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums")}>
                   {fmtNum(s.count)}
                 </span>
                 <span className="text-[9px] text-muted-foreground/50 tabular-nums w-8 text-right">

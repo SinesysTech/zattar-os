@@ -4,6 +4,7 @@
  * Dialog para upload de arquivos em documentos
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { Upload, File, X} from 'lucide-react';
 import { Text } from '@/components/ui/typography';
@@ -135,17 +136,17 @@ export function UploadDialog({
         </ResponsiveDialogHeader>
 
         <ResponsiveDialogBody>
-          <div className="space-y-4">
+          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             {!selectedFile ? (
               <div
-                className="border-2 border-dashed rounded-lg p-6 sm:p-8 text-center cursor-pointer hover:bg-accent transition-colors"
+                className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; sm:p-8 sem equivalente DS */ "border-2 border-dashed rounded-lg p-6 sm:p-8 text-center cursor-pointer hover:bg-accent transition-colors")}
                 onClick={() => fileInputRef.current?.click()}
               >
                 <Upload className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-muted-foreground" />
-                <p className="mt-3 sm:mt-4 text-sm font-medium">
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "mt-3 sm:mt-4 text-sm font-medium")}>
                   Clique para selecionar um arquivo
                 </p>
-                <p className="mt-1 text-xs text-muted-foreground">
+                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "mt-1 text-xs text-muted-foreground")}>
                   Máximo 50MB • Imagens, PDFs, documentos
                 </p>
                 <input
@@ -158,7 +159,7 @@ export function UploadDialog({
                 />
               </div>
             ) : (
-              <div className="border rounded-lg p-3 sm:p-4 space-y-3">
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset>; sm:p-4 sem equivalente DS; space-y-3 sem token DS */ "border rounded-lg p-3 sm:p-4 space-y-3")}>
                 {previewUrl && (
                   <div className="relative w-full aspect-video rounded-md overflow-hidden bg-muted">
                     { }
@@ -170,12 +171,12 @@ export function UploadDialog({
                   </div>
                 )}
 
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; sm:gap-3 sem equivalente DS */ "flex items-center gap-2 sm:gap-3 flex-1 min-w-0")}>
                     <File className="h-6 w-6 sm:h-8 sm:w-8 text-primary shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate text-sm sm:text-base">{selectedFile.name}</p>
-                      <p className="text-xs sm:text-sm text-muted-foreground">
+                      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm">; sm:text-base sem equivalente DS */ "font-medium truncate text-sm sm:text-base")}>{selectedFile.name}</p>
+                      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; sm:text-sm sem equivalente DS */ "text-xs sm:text-sm text-muted-foreground")}>
                         {formatFileSize(selectedFile.size)}
                       </p>
                     </div>
@@ -192,10 +193,10 @@ export function UploadDialog({
                 </div>
 
                 {uploading && (
-                  <div className="mt-3 sm:mt-4 space-y-2">
-                    <div className="flex items-center justify-between text-xs sm:text-sm">
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "mt-3 sm:mt-4 space-y-2")}>
+                    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; sm:text-sm sem equivalente DS */ "flex items-center justify-between text-xs sm:text-sm")}>
                       <Text variant="caption" as="span" className="text-muted-foreground">Enviando...</Text>
-                      <span className="font-medium">{progress}%</span>
+                      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{progress}%</span>
                     </div>
                     <Progress value={progress} className="h-2" />
                   </div>

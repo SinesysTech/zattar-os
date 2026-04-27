@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import {
   AlertDialog,
@@ -53,7 +54,7 @@ export function CancelarLinkButton({
         <Button
           size="sm"
           variant="outline"
-          className="rounded-xl gap-1.5"
+          className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "rounded-xl gap-1.5")}
           disabled={loading}
         >
           <Ban className="size-3.5" />

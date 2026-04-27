@@ -8,6 +8,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import React from 'react';
 import { Lock, Layers, RefreshCw, ArrowLeft } from 'lucide-react';
 import type { ProcessoUnificado } from '@/app/(authenticated)/processos';
@@ -120,7 +121,7 @@ function ProcessoResponsavelCell({
             >
               <Avatar className="border">
                 <AvatarImage src={responsavel?.avatarUrl || undefined} alt={nomeExibicao} />
-                <AvatarFallback className="text-[10px] font-medium">
+                <AvatarFallback className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium")}>
                   {responsavel ? getInitials(responsavel.nomeExibicao) : 'NA'}
                 </AvatarFallback>
               </Avatar>
@@ -189,10 +190,10 @@ export function ProcessoHeader({
   const tituloPartes = parteRe && parteRe !== '-' ? `${parteAutora} vs ${parteRe}` : parteAutora;
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0 space-y-1.5">
-          <div className="flex items-center gap-3">
+    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start justify-between gap-4")}>
+        <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "min-w-0 space-y-1.5")}>
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
             {onVoltar && (
               <Button
                 variant="ghost"
@@ -205,8 +206,8 @@ export function ProcessoHeader({
               </Button>
             )}
 
-            <div className="min-w-0 space-y-2">
-              <div className="flex items-center gap-2 flex-wrap">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "min-w-0 space-y-2")}>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
                 <Heading level="page" className="min-w-0 sm:text-[2rem]">
                   <span className="block truncate">{tituloPartes}</span>
                 </Heading>
@@ -222,8 +223,8 @@ export function ProcessoHeader({
                 )}
               </div>
 
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
-                <SemanticBadge category="tribunal" value={trt} className="text-xs">
+              <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex flex-wrap items-center gap-x-3 gap-y-2 text-sm")}>
+                <SemanticBadge category="tribunal" value={trt} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                   {trt}
                 </SemanticBadge>
 
@@ -231,7 +232,7 @@ export function ProcessoHeader({
                   <GrauBadgesSimple grausAtivos={processo.grausAtivos} />
                 ) : (
                   processo.grauAtual && (
-                    <SemanticBadge category="grau" value={processo.grauAtual} className="text-xs">
+                    <SemanticBadge category="grau" value={processo.grauAtual} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                       {formatarGrau(processo.grauAtual)}
                     </SemanticBadge>
                   )
@@ -239,14 +240,14 @@ export function ProcessoHeader({
 
                 {classeJudicial && <span className="text-muted-foreground">{classeJudicial}</span>}
 
-                <div className="flex items-center gap-1.5 min-w-0">
-                  <span className="font-medium text-foreground">{numeroProcesso}</span>
+                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 min-w-0")}>
+                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>{numeroProcesso}</span>
                   <CopyButton text={numeroProcesso} label="Copiar número do processo" />
                 </div>
 
                 <span className="truncate text-muted-foreground">{orgaoJulgador}</span>
 
-                <div className="ml-0 flex items-center gap-2 sm:ml-auto">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "ml-0 flex items-center gap-2 sm:ml-auto")}>
                   <Text variant="meta-label">
                     Responsável
                   </Text>
@@ -257,11 +258,11 @@ export function ProcessoHeader({
           </div>
         </div>
 
-        <div className="flex items-start gap-3 shrink-0">
-          <div className="hidden sm:flex items-center gap-2 text-xs text-muted-foreground">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3 shrink-0")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "hidden sm:flex items-center gap-2 text-xs text-muted-foreground")}>
             {dataProximaAudiencia && <ProximaAudienciaPopover dataAudiencia={dataProximaAudiencia} />}
             {instancias && instancias.length > 1 && (
-              <span className="inline-flex items-center gap-1 rounded-full border bg-muted/20 px-2 py-1">
+              <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "inline-flex items-center gap-1 rounded-full border bg-muted/20 px-2 py-1")}>
                 <Layers className="h-3 w-3" />
                 {instancias.length} instâncias
               </span>
@@ -291,10 +292,10 @@ export function ProcessoHeader({
         </div>
       </div>
 
-      <div className="flex items-center gap-2 flex-wrap text-sm sm:hidden">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2 flex-wrap text-sm sm:hidden")}>
         {dataProximaAudiencia && <ProximaAudienciaPopover dataAudiencia={dataProximaAudiencia} />}
         {instancias && instancias.length > 1 && (
-          <span className="inline-flex items-center gap-1 rounded-full border bg-muted/20 px-2.5 py-1 text-xs text-muted-foreground">
+          <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "inline-flex items-center gap-1 rounded-full border bg-muted/20 px-2.5 py-1 text-xs text-muted-foreground")}>
             <Layers className="h-3 w-3" />
             {instancias.length} instâncias
           </span>
@@ -302,13 +303,13 @@ export function ProcessoHeader({
       </div>
 
       {instancias && instancias.length > 1 && (
-        <div className="flex items-center gap-2 flex-wrap text-sm">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2 flex-wrap text-sm")}>
           {instancias.map((inst) => (
-            <div key={inst.id} className="flex items-center gap-1.5 rounded-full border bg-muted/20 px-2.5 py-1">
+            <div key={inst.id} className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "flex items-center gap-1.5 rounded-full border bg-muted/20 px-2.5 py-1")}>
               <SemanticBadge category="grau" value={inst.grau} className="text-[10px]">
                 {formatarGrauComOrdinal(inst.grau)}
               </SemanticBadge>
-              <span className="text-xs text-muted-foreground">
+              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                 {inst.totalMovimentosProprios ?? inst.totalItensOriginal} mov.
               </span>
             </div>

@@ -35,7 +35,7 @@ export function AdvogadosFilter({
       <PopoverTrigger asChild>
         <div
           className={cn(
-            'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
+            /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
             isActive
               ? 'border-primary/20 bg-primary/5 text-primary'
               : 'border-border/15 text-muted-foreground/60 hover:bg-muted/30'
@@ -57,10 +57,10 @@ export function AdvogadosFilter({
         </div>
       </PopoverTrigger>
       <PopoverContent
-        className="rounded-2xl glass-dropdown overflow-hidden p-0 w-48"
+        className={cn(/* design-system-escape: p-0 → usar <Inset> */ "rounded-2xl glass-dropdown overflow-hidden p-0 w-48")}
         align="start"
       >
-        <div className="p-2 space-y-0.5">
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-0.5 sem token DS */ "p-2 space-y-0.5")}>
           {options.map((opt) => (
             <button
               key={opt.value}
@@ -70,7 +70,7 @@ export function AdvogadosFilter({
                 setOpen(false);
               }}
               className={cn(
-                'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
+                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
                 value === opt.value
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70'
@@ -83,14 +83,14 @@ export function AdvogadosFilter({
           ))}
           {isActive && (
             <>
-              <div className="border-t border-border/10 my-1" />
+              <div className={cn(/* design-system-escape: my-1 margin sem primitiva DS */ "border-t border-border/10 my-1")} />
               <button
                 type="button"
                 onClick={() => {
                   onValueChange('all');
                   setOpen(false);
                 }}
-                className="w-full text-center text-[10px] text-muted-foreground/50 hover:text-muted-foreground py-1.5 cursor-pointer"
+                className={cn(/* design-system-escape: py-1.5 padding direcional sem Inset equiv. */ "w-full text-center text-[10px] text-muted-foreground/50 hover:text-muted-foreground py-1.5 cursor-pointer")}
               >
                 Limpar filtros
               </button>

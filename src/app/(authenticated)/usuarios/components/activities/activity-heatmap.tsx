@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { BarChart3 } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
@@ -137,16 +138,16 @@ export function ActivityHeatmap({ data, weeks = 26 }: ActivityHeatmapProps) {
   }, []);
 
   return (
-    <GlassPanel depth={1} className="p-5">
+    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
       {/* Header */}
-      <div className="flex items-center gap-2 mb-4">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-4")}>
         <BarChart3 className="size-4 text-muted-foreground/50" />
         <Heading level="widget">Atividade (últimos 6 meses)</Heading>
       </div>
 
       {/* Empty state */}
       {data.length === 0 ? (
-        <p className="text-xs text-muted-foreground/40 text-center py-6">
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; py-6 padding direcional sem Inset equiv. */ "text-xs text-muted-foreground/40 text-center py-6")}>
           Sem atividade registrada nos últimos 6 meses.
         </p>
       ) : (
@@ -205,7 +206,7 @@ export function ActivityHeatmap({ data, weeks = 26 }: ActivityHeatmapProps) {
           </div>
 
           {/* Legend */}
-          <div className="flex items-center gap-1.5 mt-3">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mt-3")}>
             <span className="text-[10px] text-muted-foreground/40">Menos</span>
             {LEGEND_LEVELS.map((level) => (
               <svg key={level} width={CELL_SIZE} height={CELL_SIZE} aria-hidden="true">
@@ -231,7 +232,7 @@ export function ActivityHeatmap({ data, weeks = 26 }: ActivityHeatmapProps) {
           className="fixed z-50 pointer-events-none -translate-x-1/2 -translate-y-full"
           style={{ left: tooltip.x, top: tooltip.y }}
         >
-          <div className="px-2 py-1 rounded-md text-[11px] bg-popover text-popover-foreground border border-border/30 shadow-md whitespace-nowrap">
+          <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "px-2 py-1 rounded-md text-[11px] bg-popover text-popover-foreground border border-border/30 shadow-md whitespace-nowrap")}>
             {tooltip.text}
           </div>
         </div>

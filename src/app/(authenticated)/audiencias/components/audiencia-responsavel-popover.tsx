@@ -98,7 +98,7 @@ export function AudienciaResponsavelPopover({
           onClick={(e) => e.stopPropagation()}
           disabled={disabled}
           className={cn(
-            'flex items-center gap-1.5 rounded-md px-1.5 py-0.5 -mx-1.5 -my-0.5',
+            /* design-system-escape: gap-1.5 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; -mx-1.5 sem equivalente DS; -my-0.5 sem equivalente DS */ 'flex items-center gap-1.5 rounded-md px-1.5 py-0.5 -mx-1.5 -my-0.5',
             'transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
             !disabled && 'hover:bg-muted/50 cursor-pointer',
             disabled && 'cursor-not-allowed opacity-70',
@@ -109,25 +109,25 @@ export function AudienciaResponsavelPopover({
         </button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-60 p-0 rounded-2xl glass-dropdown overflow-hidden"
+        className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-60 p-0 rounded-2xl glass-dropdown overflow-hidden")}
         align={align}
         side="bottom"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}
       >
         <Command className="bg-transparent">
-          <div className="px-3 pt-3 pb-1.5">
+          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
             <Text variant="overline" as="p" className="text-muted-foreground/40 mb-2">
               Responsável
             </Text>
             <CommandInput
               placeholder="Buscar..."
-              className="h-8 text-xs rounded-lg"
+              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs rounded-lg")}
             />
           </div>
-          <CommandList className="max-h-52 px-1.5 pb-1.5">
+          <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-52 px-1.5 pb-1.5")}>
             <CommandEmpty>
-              <div className="flex flex-col items-center gap-1 py-3">
+              <div className={cn(/* design-system-escape: gap-1 gap sem token DS; py-3 padding direcional sem Inset equiv. */ "flex flex-col items-center gap-1 py-3")}>
                 <Search className="size-4 text-muted-foreground/30" />
                 <Text variant="caption" as="span" className="text-muted-foreground/40">Nenhum usuário encontrado</Text>
               </div>
@@ -136,7 +136,7 @@ export function AudienciaResponsavelPopover({
               <CommandItem
                 value="sem-responsavel"
                 onSelect={() => handleSelect(null)}
-                className="gap-2 rounded-lg text-xs px-2 py-1.5"
+                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-xs px-2 py-1.5")}
               >
                 <UserX className="size-3.5 text-muted-foreground/40" />
                 <span>Sem responsável</span>
@@ -149,7 +149,7 @@ export function AudienciaResponsavelPopover({
                   key={usuario.id}
                   value={getUsuarioNome(usuario)}
                   onSelect={() => handleSelect(usuario.id)}
-                  className="gap-2 rounded-lg text-xs px-2 py-1.5"
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-xs px-2 py-1.5")}
                 >
                   <Avatar size="xs" className="border size-5">
                     <AvatarImage src={usuario.avatarUrl || undefined} />
@@ -207,7 +207,7 @@ export function ResponsavelTriggerContent({
             ? 'text-micro-badge text-muted-foreground/60'
             : size === 'sm'
               ? 'text-micro-caption text-muted-foreground/60'
-              : 'text-label font-medium text-foreground',
+              : /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-label font-medium text-foreground',
         )}>
           {nome}
         </span>

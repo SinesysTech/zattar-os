@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { User, Building2, FileText, Calendar } from 'lucide-react';
 
@@ -113,7 +114,7 @@ export function PlaceholderInsertMenu({
           </Button>
         )}
       </PopoverTrigger>
-      <PopoverContent className="w-[calc(100vw-2rem)] sm:w-100 p-0" align="end">
+      <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-[calc(100vw-2rem)] sm:w-100 p-0")} align="end">
         <Command shouldFilter={false}>
           <CommandInput
             placeholder="Buscar placeholder..."
@@ -132,7 +133,7 @@ export function PlaceholderInsertMenu({
                       {index > 0 && <CommandSeparator />}
                       <CommandGroup
                         heading={
-                          <div className="flex items-center gap-2">
+                          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                             {CATEGORY_ICONS[category]}
                             <span>{PLACEHOLDER_CATEGORIES[category]}</span>
                           </div>
@@ -143,15 +144,15 @@ export function PlaceholderInsertMenu({
                             key={placeholder.key}
                             value={placeholder.key}
                             onSelect={() => handleSelect(placeholder)}
-                            className="flex flex-col items-start gap-1 py-2"
+                            className={cn(/* design-system-escape: gap-1 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex flex-col items-start gap-1 py-2")}
                           >
-                            <div className="flex items-center gap-2 w-full">
-                              <span className="font-medium">{placeholder.label}</span>
-                              <AppBadge variant="secondary" className="ml-auto text-xs font-mono">
+                            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 w-full")}>
+                              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{placeholder.label}</span>
+                              <AppBadge variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "ml-auto text-xs font-mono")}>
                                 {`{{${placeholder.key}}}`}
                               </AppBadge>
                             </div>
-                            <span className="text-xs text-muted-foreground line-clamp-1">
+                            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground line-clamp-1")}>
                               {placeholder.description}
                             </span>
                           </CommandItem>
@@ -187,7 +188,7 @@ export function PlaceholderToolbarButton({
       onSelect={onInsert}
       maxIndex={maxIndex}
       trigger={
-        <Button variant="ghost" size="sm" className="h-8 px-2">
+        <Button variant="ghost" size="sm" className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-8 px-2")}>
           <FileText className="h-4 w-4 mr-1" />
           Placeholder
         </Button>

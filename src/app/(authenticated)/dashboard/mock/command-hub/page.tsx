@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import {
@@ -186,7 +187,7 @@ function CommandHub({
         "
       >
         {/* Search */}
-        <div className="flex items-center gap-3 px-4 py-3.5 border-b border-border/30">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "flex items-center gap-3 px-4 py-3.5 border-b border-border/30")}>
           <Search className="size-4 text-muted-foreground/50 shrink-0" />
           <input
             ref={searchRef}
@@ -197,26 +198,26 @@ function CommandHub({
               setFocusedIndex(-1);
             }}
             placeholder="Buscar módulo..."
-            className="flex-1 bg-transparent text-sm placeholder:text-muted-foreground/40 outline-none"
+            className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex-1 bg-transparent text-sm placeholder:text-muted-foreground/40 outline-none")}
           />
-          <kbd className="hidden sm:flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-muted/50 text-[10px] text-muted-foreground/60 font-mono">
+          <kbd className={cn(/* design-system-escape: gap-0.5 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "hidden sm:flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-muted/50 text-[10px] text-muted-foreground/60 font-mono")}>
             ESC
           </kbd>
         </div>
 
         {/* Content */}
-        <div className="overflow-y-auto max-h-[calc(100vh-160px)] p-2 scrollbar-macos">
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "overflow-y-auto max-h-[calc(100vh-160px)] p-2 scrollbar-macos")}>
 
           {/* Recents (only when not searching) */}
           {!search.trim() && (
             <div className="mb-1">
-              <div className="flex items-center gap-2 px-3 py-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 px-3 py-2")}>
                 <Clock className="size-3 text-muted-foreground/40" />
-                <span className="text-[10px] font-medium text-muted-foreground/50 uppercase tracking-widest">
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-widest sem token DS */ "text-[10px] font-medium text-muted-foreground/50 uppercase tracking-widest")}>
                   Recentes
                 </span>
               </div>
-              <div className="flex gap-1.5 px-2 pb-3">
+              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; pb-3 padding direcional sem Inset equiv. */ "flex gap-1.5 px-2 pb-3")}>
                 {RECENTS.map((id) => {
                   const item = [...navEscritorio, ...navServicos, ...navGestao].find((i) => i.id === id);
                   if (!item) return null;
@@ -248,28 +249,28 @@ function CommandHub({
                       `}>
                         <Icon className="size-4" />
                       </div>
-                      <span className="text-[10px] font-medium text-muted-foreground/70 group-hover:text-foreground/80 transition-colors">
+                      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium text-muted-foreground/70 group-hover:text-foreground/80 transition-colors")}>
                         {item.title.length > 8 ? item.title.slice(0, 7) + '…' : item.title}
                       </span>
                     </button>
                   );
                 })}
               </div>
-              <div className="mx-3 border-t border-border/20" />
+              <div className={cn(/* design-system-escape: mx-3 margin sem primitiva DS */ "mx-3 border-t border-border/20")} />
             </div>
           )}
 
           {/* Sections Grid */}
           {filteredSections.map((section) => (
             <div key={section.label} className="mb-1">
-              <div className="flex items-center gap-2 px-3 py-2">
-                <span className="text-[10px] font-medium text-muted-foreground/50 uppercase tracking-widest">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 px-3 py-2")}>
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-widest sem token DS */ "text-[10px] font-medium text-muted-foreground/50 uppercase tracking-widest")}>
                   {section.label}
                 </span>
                 <span className="text-[10px] text-muted-foreground/30">{section.items.length}</span>
               </div>
 
-              <div className="grid grid-cols-2 gap-0.5 px-1">
+              <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS; px-1 padding direcional sem Inset equiv. */ "grid grid-cols-2 gap-0.5 px-1")}>
                 {section.items.map((item, idx) => {
                   const Icon = item.icon;
                   const isActive = activeItem === item.id;
@@ -334,31 +335,31 @@ function CommandHub({
 
           {/* Empty state */}
           {allFilteredItems.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-12 gap-3">
+            <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "flex flex-col items-center justify-center py-12 gap-3")}>
               <Search className="size-8 text-muted-foreground/20" />
-              <p className="text-sm text-muted-foreground/40">Nenhum módulo encontrado</p>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/40")}>Nenhum módulo encontrado</p>
               <p className="text-[11px] text-muted-foreground/30">Tente outro termo de busca</p>
             </div>
           )}
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between px-4 py-2.5 border-t border-border/20 bg-muted/20">
-          <div className="flex items-center gap-3 text-[10px] text-muted-foreground/40">
-            <span className="flex items-center gap-1">
-              <kbd className="px-1 py-0.5 rounded bg-muted/60 font-mono text-[9px]">↑↓</kbd>
+        <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center justify-between px-4 py-2.5 border-t border-border/20 bg-muted/20")}>
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 text-[10px] text-muted-foreground/40")}>
+            <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+              <kbd className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "px-1 py-0.5 rounded bg-muted/60 font-mono text-[9px]")}>↑↓</kbd>
               navegar
             </span>
-            <span className="flex items-center gap-1">
-              <kbd className="px-1 py-0.5 rounded bg-muted/60 font-mono text-[9px]">↵</kbd>
+            <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+              <kbd className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "px-1 py-0.5 rounded bg-muted/60 font-mono text-[9px]")}>↵</kbd>
               abrir
             </span>
-            <span className="flex items-center gap-1">
-              <kbd className="px-1 py-0.5 rounded bg-muted/60 font-mono text-[9px]">esc</kbd>
+            <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+              <kbd className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "px-1 py-0.5 rounded bg-muted/60 font-mono text-[9px]")}>esc</kbd>
               fechar
             </span>
           </div>
-          <div className="flex items-center gap-1 text-[10px] text-muted-foreground/30">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 text-[10px] text-muted-foreground/30")}>
             <Sparkles className="size-3" />
             <span>ZattarOS v2</span>
           </div>
@@ -443,29 +444,29 @@ function MockHeader({
 
   return (
     <>
-      <div className="flex h-16 shrink-0 items-center gap-4 px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 pt-2 z-40">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; sm:px-6 sem equivalente DS; md:px-8 sem equivalente DS; lg:px-10 sem equivalente DS; xl:px-12 sem equivalente DS; pt-2 padding direcional sem Inset equiv. */ /* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; sm:px-6 sem equivalente DS; md:px-8 sem equivalente DS; lg:px-10 sem equivalente DS; xl:px-12 sem equivalente DS; pt-2 padding direcional sem Inset equiv. */ "flex h-16 shrink-0 items-center gap-4 px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 pt-2 z-40")}>
         {/* Logo Trigger */}
         <LogoTrigger isOpen={hubOpen} onClick={() => setHubOpen(!hubOpen)} />
 
         {/* Center: Search */}
         <div className="flex-1 flex justify-center">
           <div className="w-full max-w-md">
-            <div className="flex items-center gap-2 px-4 h-9 rounded-xl bg-muted/30 border border-border/20 text-muted-foreground/40 text-sm">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-4 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2 px-4 h-9 rounded-xl bg-muted/30 border border-border/20 text-muted-foreground/40 text-sm")}>
               <Search className="size-3.5" />
               <span>Buscar...</span>
-              <kbd className="ml-auto text-[10px] font-mono bg-muted/50 px-1.5 py-0.5 rounded">⌘K</kbd>
+              <kbd className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "ml-auto text-[10px] font-mono bg-muted/50 px-1.5 py-0.5 rounded")}>⌘K</kbd>
             </div>
           </div>
         </div>
 
         {/* Right: Actions */}
-        <div className="flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           {/* Simulated action buttons */}
           <button className="size-8 rounded-lg flex items-center justify-center hover:bg-muted/40 transition-colors cursor-pointer text-muted-foreground/60">
             <Command className="size-4" />
           </button>
           <div className="h-4 w-px bg-border/30" />
-          <div className="size-8 rounded-full bg-primary/20 flex items-center justify-center text-[11px] font-bold text-primary">
+          <div className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "size-8 rounded-full bg-primary/20 flex items-center justify-center text-[11px] font-bold text-primary")}>
             JM
           </div>
         </div>
@@ -489,22 +490,22 @@ function SampleContent({ activeItem, onNavigate }: { activeItem: string; onNavig
   const Icon = item?.icon || LayoutDashboard;
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center gap-6 px-8">
+    <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose">; px-8 padding direcional sem Inset equiv. */ "flex-1 flex flex-col items-center justify-center gap-6 px-8")}>
       {/* Current module indicator */}
-      <div className="flex flex-col items-center gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center gap-4")}>
         <div className="size-20 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
           <Icon className="size-10 text-primary/60" />
         </div>
         <div className="text-center">
-          <h2 className="text-2xl font-heading font-bold">{item?.title || 'Dashboard'}</h2>
-          <p className="text-sm text-muted-foreground/50 mt-1">{item?.description}</p>
+          <h2 className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-heading font-bold")}>{item?.title || 'Dashboard'}</h2>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 mt-1")}>{item?.description}</p>
         </div>
       </div>
 
       {/* Instructions */}
-      <div className="glass-widget rounded-2xl border border-border/20 p-6 max-w-md w-full space-y-4">
-        <h3 className="text-sm font-medium text-center">Experimente o Command Hub</h3>
-        <div className="space-y-3">
+      <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; space-y-4 → migrar para <Stack gap="default"> */ "glass-widget rounded-2xl border border-border/20 p-6 max-w-md w-full space-y-4")}>
+        <h3 className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-center")}>Experimente o Command Hub</h3>
+        <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
           <InstructionRow
             shortcut="Clique na logo"
             description="Abre o Command Hub com todos os módulos"
@@ -529,7 +530,7 @@ function SampleContent({ activeItem, onNavigate }: { activeItem: string; onNavig
       </div>
 
       {/* Quick navigation chips */}
-      <div className="flex flex-wrap gap-2 justify-center max-w-lg">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2 justify-center max-w-lg")}>
         {navEscritorio.slice(0, 4).map((nav) => {
           const NavIcon = nav.icon;
           return (
@@ -557,8 +558,8 @@ function SampleContent({ activeItem, onNavigate }: { activeItem: string; onNavig
 
 function InstructionRow({ shortcut, description }: { shortcut: string; description: string }) {
   return (
-    <div className="flex items-center gap-3">
-      <kbd className="shrink-0 min-w-30 text-right px-2 py-1 rounded-md bg-muted/40 text-[11px] font-mono text-muted-foreground/60">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+      <kbd className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "shrink-0 min-w-30 text-right px-2 py-1 rounded-md bg-muted/40 text-[11px] font-mono text-muted-foreground/60")}>
         {shortcut}
       </kbd>
       <ArrowRight className="size-3 text-muted-foreground/30 shrink-0" />
@@ -587,7 +588,7 @@ export default function CommandHubMockPage() {
       <SampleContent activeItem={activeItem} onNavigate={handleNavigate} />
 
       {/* Footer note */}
-      <p className="text-center text-[10px] text-muted-foreground/30 pb-4">
+      <p className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "text-center text-[10px] text-muted-foreground/30 pb-4")}>
         {'Protótipo — Command Hub — clique na logo "Z" ou pressione ⌘/ para abrir'}
       </p>
     </div>

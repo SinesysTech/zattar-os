@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import {
   Accordion,
   AccordionContent,
@@ -75,11 +76,11 @@ function getMultiLabels<T extends { value: string; label: string }>(
 function BoolDisplay({ value }: { value: boolean | undefined }) {
   if (value === undefined) return <span className="text-muted-foreground">—</span>;
   return value ? (
-    <span className="inline-flex items-center gap-1 text-success">
+    <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "inline-flex items-center gap-1 text-success")}>
       <CheckCircle2 className="h-3.5 w-3.5" /> Sim
     </span>
   ) : (
-    <span className="inline-flex items-center gap-1 text-destructive">
+    <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "inline-flex items-center gap-1 text-destructive")}>
       <XCircle className="h-3.5 w-3.5" /> Não
     </span>
   );
@@ -87,9 +88,9 @@ function BoolDisplay({ value }: { value: boolean | undefined }) {
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="space-y-1">
-      <p className="text-xs font-medium text-muted-foreground">{label}</p>
-      <div className="text-sm">{children}</div>
+    <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-muted-foreground")}>{label}</p>
+      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{children}</div>
     </div>
   );
 }
@@ -99,15 +100,15 @@ function AnexosList({ anexos, modulo }: { anexos: EntrevistaAnexo[]; modulo: str
   if (filtrados.length === 0) return null;
 
   return (
-    <div className="mt-4 space-y-2">
-      <p className="text-xs font-medium text-muted-foreground">Anexos</p>
+    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "mt-4 space-y-2")}>
+      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-muted-foreground")}>Anexos</p>
       {filtrados.map((anexo) => (
         <a
           key={anexo.id}
           href={anexo.arquivoUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 text-sm text-primary hover:underline"
+          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2 text-sm text-primary hover:underline")}
         >
           <FileText className="h-3.5 w-3.5" />
           {anexo.descricao ?? anexo.tipoAnexo}
@@ -123,7 +124,7 @@ function AnexosList({ anexos, modulo }: { anexos: EntrevistaAnexo[]; modulo: str
 
 function ResumoVinculo({ r, anexos }: { r: EntrevistaTrabalhista['respostas']; anexos: EntrevistaAnexo[] }) {
   return (
-    <div className="space-y-3">
+    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
       <Field label="CTPS assinada?">{getLabelByValue(CTPS_OPTIONS, r.vinculo?.ctps_assinada)}</Field>
       {r.vinculo?.narrativa_subordinacao && (
         <Field label="Narrativa de subordinação">
@@ -137,7 +138,7 @@ function ResumoVinculo({ r, anexos }: { r: EntrevistaTrabalhista['respostas']; a
 
 function ResumoJornada({ r, anexos }: { r: EntrevistaTrabalhista['respostas']; anexos: EntrevistaAnexo[] }) {
   return (
-    <div className="space-y-3">
+    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
       <Field label="Controle de ponto">
         {getMultiLabels(CONTROLE_PONTO_OPTIONS, r.jornada?.controle_ponto)}
       </Field>
@@ -165,7 +166,7 @@ function ResumoJornada({ r, anexos }: { r: EntrevistaTrabalhista['respostas']; a
 
 function ResumoSaudeAmbiente({ r, anexos }: { r: EntrevistaTrabalhista['respostas']; anexos: EntrevistaAnexo[] }) {
   return (
-    <div className="space-y-3">
+    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
       <Field label="Exposição a riscos?">
         <BoolDisplay value={r.saude_ambiente?.exposicao_riscos} />
       </Field>
@@ -199,7 +200,7 @@ function ResumoSaudeAmbiente({ r, anexos }: { r: EntrevistaTrabalhista['resposta
 
 function ResumoRuptura({ r, anexos }: { r: EntrevistaTrabalhista['respostas']; anexos: EntrevistaAnexo[] }) {
   return (
-    <div className="space-y-3">
+    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
       <Field label="Motivo do término">
         {getLabelByValue(MOTIVO_RUPTURA_OPTIONS, r.ruptura?.motivo)}
       </Field>
@@ -213,7 +214,7 @@ function ResumoRuptura({ r, anexos }: { r: EntrevistaTrabalhista['respostas']; a
 
 function ResumoControleAlgoritmico({ r, anexos }: { r: EntrevistaTrabalhista['respostas']; anexos: EntrevistaAnexo[] }) {
   return (
-    <div className="space-y-3">
+    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
       <Field label="Tipo de plataforma">{getLabelByValue(TIPO_PLATAFORMA_OPTIONS, r.controle_algoritmico?.tipo_plataforma)}</Field>
       {r.controle_algoritmico?.nome_plataforma && (
         <Field label="Nome da plataforma">{r.controle_algoritmico.nome_plataforma}</Field>
@@ -239,7 +240,7 @@ function ResumoControleAlgoritmico({ r, anexos }: { r: EntrevistaTrabalhista['re
 
 function ResumoDependenciaEconomica({ r, anexos }: { r: EntrevistaTrabalhista['respostas']; anexos: EntrevistaAnexo[] }) {
   return (
-    <div className="space-y-3">
+    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
       <Field label="Percentual da renda">{getLabelByValue(PERCENTUAL_RENDA_OPTIONS, r.dependencia_economica?.percentual_renda)}</Field>
       <Field label="Quantidade de plataformas">{getLabelByValue(QTD_PLATAFORMAS_OPTIONS, r.dependencia_economica?.qtd_plataformas)}</Field>
       <Field label="Investimento específico?"><BoolDisplay value={r.dependencia_economica?.investimento_especifico} /></Field>
@@ -257,7 +258,7 @@ function ResumoDependenciaEconomica({ r, anexos }: { r: EntrevistaTrabalhista['r
 
 function ResumoCondicoesTrabalhoGig({ r, anexos }: { r: EntrevistaTrabalhista['respostas']; anexos: EntrevistaAnexo[] }) {
   return (
-    <div className="space-y-3">
+    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
       <Field label="Horas por dia">{getLabelByValue(FAIXA_HORAS_DIA_OPTIONS, r.condicoes_trabalho_gig?.horas_dia)}</Field>
       <Field label="Dias por semana">{getLabelByValue(DIAS_SEMANA_OPTIONS, r.condicoes_trabalho_gig?.dias_semana)}</Field>
       <Field label="Acesso a banheiro/descanso?"><BoolDisplay value={r.condicoes_trabalho_gig?.acesso_banheiro_descanso} /></Field>
@@ -279,7 +280,7 @@ function ResumoCondicoesTrabalhoGig({ r, anexos }: { r: EntrevistaTrabalhista['r
 
 function ResumoDesligamentoPlataforma({ r, anexos }: { r: EntrevistaTrabalhista['respostas']; anexos: EntrevistaAnexo[] }) {
   return (
-    <div className="space-y-3">
+    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
       <Field label="Forma de desligamento">{getLabelByValue(FORMA_DESLIGAMENTO_OPTIONS, r.desligamento_plataforma?.forma_desligamento)}</Field>
       <Field label="Aviso prévio?"><BoolDisplay value={r.desligamento_plataforma?.aviso_previo} /></Field>
       <Field label="Direito de defesa?"><BoolDisplay value={r.desligamento_plataforma?.direito_defesa} /></Field>
@@ -300,7 +301,7 @@ function ResumoDesligamentoPlataforma({ r, anexos }: { r: EntrevistaTrabalhista[
 
 function ResumoContratoPJ({ r, anexos }: { r: EntrevistaTrabalhista['respostas']; anexos: EntrevistaAnexo[] }) {
   return (
-    <div className="space-y-3">
+    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
       <Field label="Origem do PJ">{getLabelByValue(ORIGEM_PJ_OPTIONS, r.contrato_pj?.origem_pj)}</Field>
       <Field label="Tipo de PJ">{getLabelByValue(TIPO_PJ_OPTIONS, r.contrato_pj?.tipo_pj)}</Field>
       <Field label="Contrato formal?"><BoolDisplay value={r.contrato_pj?.contrato_formal} /></Field>
@@ -317,7 +318,7 @@ function ResumoContratoPJ({ r, anexos }: { r: EntrevistaTrabalhista['respostas']
 
 function ResumoSubordinacaoReal({ r, anexos }: { r: EntrevistaTrabalhista['respostas']; anexos: EntrevistaAnexo[] }) {
   return (
-    <div className="space-y-3">
+    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
       <Field label="Cumpria horário fixo?"><BoolDisplay value={r.subordinacao_real?.cumpre_horario_fixo} /></Field>
       <Field label="Recebia ordens de superior?"><BoolDisplay value={r.subordinacao_real?.recebe_ordens_superior} /></Field>
       <Field label="Reuniões obrigatórias?"><BoolDisplay value={r.subordinacao_real?.reunioes_obrigatorias} /></Field>
@@ -336,7 +337,7 @@ function ResumoSubordinacaoReal({ r, anexos }: { r: EntrevistaTrabalhista['respo
 
 function ResumoExclusividadePessoalidade({ r, anexos }: { r: EntrevistaTrabalhista['respostas']; anexos: EntrevistaAnexo[] }) {
   return (
-    <div className="space-y-3">
+    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
       <Field label="Atendia exclusivamente?"><BoolDisplay value={r.exclusividade_pessoalidade?.atende_exclusivamente} /></Field>
       <Field label="Podia enviar substituto?"><BoolDisplay value={r.exclusividade_pessoalidade?.pode_enviar_substituto} /></Field>
       <Field label="Proibição de outros clientes">{getLabelByValue(PROIBICAO_OUTROS_OPTIONS, r.exclusividade_pessoalidade?.proibicao_outros_clientes)}</Field>
@@ -349,7 +350,7 @@ function ResumoExclusividadePessoalidade({ r, anexos }: { r: EntrevistaTrabalhis
 
 function ResumoFraudeVerbas({ r, anexos }: { r: EntrevistaTrabalhista['respostas']; anexos: EntrevistaAnexo[] }) {
   return (
-    <div className="space-y-3">
+    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
       <Field label="Valor mensal fixo?"><BoolDisplay value={r.fraude_verbas?.valor_mensal_fixo} /></Field>
       {r.fraude_verbas?.valor_aproximado && (
         <Field label="Valor aproximado">{r.fraude_verbas.valor_aproximado}</Field>
@@ -402,11 +403,11 @@ export function EntrevistaResumo({
   };
 
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <SemanticBadge category="status" value={entrevista.tipoLitigio} variantOverride="secondary">
               {TIPO_LITIGIO_LABELS[entrevista.tipoLitigio]}
             </SemanticBadge>
@@ -447,7 +448,7 @@ export function EntrevistaResumo({
 
       {/* Notas do operador */}
       {entrevista.notasOperador && Object.keys(entrevista.notasOperador).length > 0 && (
-        <GlassPanel className="p-4">
+        <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
           <Text variant="label" className="mb-2 text-muted-foreground">Notas do Operador</Text>
           {Object.entries(entrevista.notasOperador).map(([modulo, nota]) => (
             <div key={modulo} className="mb-2 last:mb-0">

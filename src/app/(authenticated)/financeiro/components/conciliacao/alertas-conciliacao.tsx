@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Clock, CheckCircle2, AlertTriangle, XCircle } from 'lucide-react';
@@ -76,13 +77,13 @@ export function AlertasConciliacao({ resumo, isLoading, onFiltrarPendentes, onFi
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 md:grid-cols-4 gap-4")}>
         {[...Array(4)].map((_, i) => (
           <Card key={i}>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
+            <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
                 <Skeleton className="h-10 w-10 rounded-lg" />
-                <div className="space-y-1.5">
+                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
                   <Skeleton className="h-4 w-20" />
                   <Skeleton className="h-6 w-8" />
                 </div>
@@ -95,7 +96,7 @@ export function AlertasConciliacao({ resumo, isLoading, onFiltrarPendentes, onFi
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 md:grid-cols-4 gap-4")}>
       {cardsConfig.map((card) => {
         const onClick = getOnClick(card.key);
         const valor = getValor(card.key);
@@ -106,14 +107,14 @@ export function AlertasConciliacao({ resumo, isLoading, onFiltrarPendentes, onFi
             className={onClick ? 'cursor-pointer hover:shadow-md transition-shadow' : undefined}
             onClick={onClick}
           >
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
+            <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
                 <div className={`p-2 rounded-lg ${card.corFundo}`}>
                   <span className={card.corIcone}>{card.icon}</span>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">{card.title}</p>
-                  <p className="text-2xl font-bold">{valor}</p>
+                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{card.title}</p>
+                  <p className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-bold")}>{valor}</p>
                 </div>
               </div>
             </CardContent>

@@ -8,6 +8,7 @@
  * Merge em timeline unificada ordenada por hora.
  */
 
+import { cn } from '@/lib/utils';
 import { Calendar } from 'lucide-react';
 import { WidgetContainer, InsightBanner } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
@@ -189,14 +190,14 @@ export function WidgetMeuDia() {
       subtitle={subtitleStr}
       depth={2}
     >
-      <div className="relative isolate pt-1">
+      <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "relative isolate pt-1")}>
         {/* Linha vertical conectora corrigida */}
         <div
           className="absolute left-5 top-4 bottom-4 w-px bg-border/40 -z-10"
           aria-hidden="true"
         />
 
-        <div className="flex flex-col gap-1">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
           {eventos.map((evento, i) => {
             const isNext = i === proximoIdx;
             const minutos = evento.hora ? horaParaMinutos(evento.hora) : null;
@@ -235,7 +236,7 @@ export function WidgetMeuDia() {
                   )}
                 </div>
 
-                <div className="flex-1 min-w-0 flex items-start justify-between gap-3">
+                <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex-1 min-w-0 flex items-start justify-between gap-3")}>
                   {/* Informações à esquerda */}
                   <div className="flex-1 min-w-0">
                     <span
@@ -269,7 +270,7 @@ export function WidgetMeuDia() {
                   </div>
 
                   {/* Horário à direita */}
-                  <div className="flex flex-col items-end shrink-0 pl-2">
+                  <div className={cn(/* design-system-escape: pl-2 padding direcional sem Inset equiv. */ "flex flex-col items-end shrink-0 pl-2")}>
                     {evento.hora && (
                       <span
                         className={`text-xs font-display tabular-nums font-semibold ${isDone ? 'text-muted-foreground/70' : state === 'near' ? 'text-warning' : 'text-foreground/90'
@@ -279,12 +280,12 @@ export function WidgetMeuDia() {
                       </span>
                     )}
                     {state === 'near' && (
-                      <span className="mt-1 text-[9px] uppercase tracking-wider font-bold text-warning-foreground bg-warning px-2 py-0.5 rounded shadow-sm shrink-0">
+                      <span className={cn(/* design-system-escape: tracking-wider sem token DS; font-bold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "mt-1 text-[9px] uppercase tracking-wider font-bold text-warning-foreground bg-warning px-2 py-0.5 rounded shadow-sm shrink-0")}>
                         Em Breve
                       </span>
                     )}
                     {state === 'next' && (
-                      <span className="mt-1 text-[9px] uppercase tracking-wider font-bold text-primary-foreground bg-primary px-2 py-0.5 rounded shadow-sm shrink-0">
+                      <span className={cn(/* design-system-escape: tracking-wider sem token DS; font-bold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "mt-1 text-[9px] uppercase tracking-wider font-bold text-primary-foreground bg-primary px-2 py-0.5 rounded shadow-sm shrink-0")}>
                         Próximo
                       </span>
                     )}

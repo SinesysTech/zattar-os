@@ -122,7 +122,7 @@ function GlassRow({
         }
       }}
       className={cn(
-        'w-full text-left rounded-2xl border p-4 cursor-pointer backdrop-blur-md',
+        /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'w-full text-left rounded-2xl border p-4 cursor-pointer backdrop-blur-md',
         'transition-all duration-180 ease-out',
         'hover:border-border/70 hover:-translate-y-px hover:shadow-sm',
         isSelected
@@ -133,7 +133,7 @@ function GlassRow({
         hasPendingLong && !isSelected && 'ring-1 ring-warning/15',
       )}
     >
-      <div className="grid grid-cols-[auto_1fr_auto_auto_auto_auto] gap-3 items-center">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-[auto_1fr_auto_auto_auto_auto] gap-3 items-center")}>
         {/* Status dot */}
         <span
           aria-hidden="true"
@@ -141,7 +141,7 @@ function GlassRow({
         />
 
         {/* Main info */}
-        <div className="flex items-center gap-3 min-w-0">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 min-w-0")}>
           <div
             className={cn(
               'size-9 rounded-[0.625rem] flex items-center justify-center shrink-0',
@@ -151,7 +151,7 @@ function GlassRow({
             <Icon className={cn('size-4', cfg.iconColor)} />
           </div>
           <div className="min-w-0">
-            <p className="text-sm font-semibold truncate">{doc.titulo}</p>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold truncate")}>{doc.titulo}</p>
             <p className="text-[11px] text-muted-foreground mt-0.5 truncate">
               {doc.criadoPor} · {timeAgo(doc.criadoEm)}
             </p>
@@ -160,7 +160,7 @@ function GlassRow({
 
         {/* Progress */}
         {doc.assinantes.length > 0 ? (
-          <div className="flex items-center gap-1.5 shrink-0">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 shrink-0")}>
             <ProgressRing
               percent={progress.percent}
               size={22}
@@ -175,7 +175,7 @@ function GlassRow({
         )}
 
         {/* Flags */}
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 shrink-0")}>
           {doc.selfieHabilitada && (
             <span
               className="inline-flex size-6 items-center justify-center rounded-md bg-foreground/5"
@@ -197,7 +197,7 @@ function GlassRow({
         {/* Status pill */}
         <span
           className={cn(
-            'hidden sm:inline-flex items-center gap-1.5 backdrop-blur-sm rounded-lg text-[10px] font-semibold tracking-[0.04em] px-2 py-1 border whitespace-nowrap',
+            /* design-system-escape: gap-1.5 gap sem token DS; font-semibold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'hidden sm:inline-flex items-center gap-1.5 backdrop-blur-sm rounded-lg text-[10px] font-semibold tracking-[0.04em] px-2 py-1 border whitespace-nowrap',
             cfg.pill,
           )}
         >
@@ -242,14 +242,14 @@ function GlassCard({
         }
       }}
       className={cn(
-        'relative flex flex-col gap-3 rounded-2xl border p-4 cursor-pointer backdrop-blur-md',
+        /* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ 'relative flex flex-col gap-3 rounded-2xl border p-4 cursor-pointer backdrop-blur-md',
         'transition-all duration-180 ease-out',
         'hover:border-border/70 hover:-translate-y-px hover:shadow-sm',
         isSelected ? 'border-primary/35 bg-primary/5' : 'border-border/40 bg-card/55',
         hasPendingLong && !isSelected && 'ring-1 ring-warning/15',
       )}
     >
-      <div className="flex items-start justify-between gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
         <div
           className={cn(
             'size-10 rounded-[0.625rem] flex items-center justify-center',
@@ -258,14 +258,14 @@ function GlassCard({
         >
           <Icon className={cn('size-4', cfg.iconColor)} />
         </div>
-        <div className="flex items-center gap-1.5">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
           <span
             aria-hidden="true"
             className={cn('size-2 rounded-full', cfg.dot)}
           />
           <span
             className={cn(
-              'inline-flex items-center rounded-md text-[10px] font-semibold tracking-[0.04em] px-2 py-0.5 border',
+              /* design-system-escape: font-semibold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'inline-flex items-center rounded-md text-[10px] font-semibold tracking-[0.04em] px-2 py-0.5 border',
               cfg.pill,
             )}
           >
@@ -275,7 +275,7 @@ function GlassCard({
       </div>
 
       <div className="min-w-0">
-        <p className="text-sm font-semibold line-clamp-2 leading-snug">
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading>; leading-snug sem token DS */ "text-sm font-semibold line-clamp-2 leading-snug")}>
           {doc.titulo}
         </p>
         <p className="text-[11px] text-muted-foreground mt-1 truncate">
@@ -283,9 +283,9 @@ function GlassCard({
         </p>
       </div>
 
-      <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/30">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between gap-2 pt-2 border-t border-border/30")}>
         {doc.assinantes.length > 0 ? (
-          <div className="flex items-center gap-1.5">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
             <ProgressRing
               percent={progress.percent}
               size={22}
@@ -301,7 +301,7 @@ function GlassCard({
           </span>
         )}
 
-        <div className="flex items-center gap-1">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
           {doc.selfieHabilitada && (
             <Camera
               className="size-3 text-muted-foreground/60"
@@ -326,7 +326,7 @@ function GlassCard({
 
 function ListSkeleton() {
   return (
-    <div className="flex flex-col gap-2">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
       {Array.from({ length: 5 }, (_, i) => (
         <div
           key={i}
@@ -339,7 +339,7 @@ function ListSkeleton() {
 
 function CardsSkeleton() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3")}>
       {Array.from({ length: 6 }, (_, i) => (
         <div
           key={i}
@@ -352,12 +352,12 @@ function CardsSkeleton() {
 
 function EmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-center">
+    <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 text-center")}>
       <FileSignature className="size-10 text-muted-foreground/35 mb-4" />
-      <p className="text-sm font-medium text-muted-foreground/60">
+      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/60")}>
         Nenhum documento encontrado
       </p>
-      <p className="text-xs text-muted-foreground/50 mt-1">
+      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/50 mt-1")}>
         Tente ajustar os filtros ou a busca
       </p>
     </div>
@@ -380,7 +380,7 @@ export function DocumentosGlassList({
 
   if (mode === 'cards') {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3")}>
         {documentos.map((doc) => (
           <GlassCard
             key={doc.uuid}
@@ -394,7 +394,7 @@ export function DocumentosGlassList({
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
       {documentos.map((doc, i) => (
         <GlassRow
           key={doc.uuid}

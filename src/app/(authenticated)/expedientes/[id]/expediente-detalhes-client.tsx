@@ -166,20 +166,20 @@ export function ExpedienteDetalhesClient({
   ];
 
   return (
-    <div className="relative flex flex-col gap-8 pb-12">
+    <div className={cn(/* design-system-escape: gap-8 gap sem token DS; pb-12 padding direcional sem Inset equiv. */ "relative flex flex-col gap-8 pb-12")}>
       <AmbientBackdrop blurIntensity={18} grid baseGradient />
 
-      <div className="relative z-10 flex flex-col gap-8">
+      <div className={cn(/* design-system-escape: gap-8 gap sem token DS */ "relative z-10 flex flex-col gap-8")}>
         {/* ============================= BREADCRUMB ============================ */}
-        <div className="flex items-center justify-between gap-4 flex-wrap">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center justify-between gap-4 flex-wrap")}>
           <Text
             variant="micro-caption"
             as="div"
-            className="flex items-center gap-2 uppercase tracking-[0.18em] text-muted-foreground/60"
+            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 uppercase tracking-[0.18em] text-muted-foreground/60")}
           >
             <Link
               href="/expedientes"
-              className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors"
+              className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "inline-flex items-center gap-1.5 hover:text-foreground transition-colors")}
             >
               <ArrowLeft className="size-3" />
               Expedientes
@@ -189,12 +189,12 @@ export function ExpedienteDetalhesClient({
               #{expedienteId.toString().padStart(6, '0')}
             </span>
           </Text>
-          <div className="flex items-center gap-1.5">
-            <Button variant="outline" size="sm" className="rounded-full h-8 px-3 text-xs gap-1.5">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+            <Button variant="outline" size="sm" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; gap-1.5 gap sem token DS */ "rounded-full h-8 px-3 text-xs gap-1.5")}>
               <Download className="size-3" />
               PDF
             </Button>
-            <Button size="sm" className="rounded-full h-8 px-3 text-xs gap-1.5">
+            <Button size="sm" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; gap-1.5 gap sem token DS */ "rounded-full h-8 px-3 text-xs gap-1.5")}>
               <Edit3 className="size-3" />
               Editar
             </Button>
@@ -288,7 +288,7 @@ function HeroBlock({
       <GlassPanel
         depth={2}
         className={cn(
-          'relative overflow-hidden p-8 md:p-10 lg:p-12 rounded-4xl',
+          /* design-system-escape: p-8 → usar <Inset>; md:p-10 sem equivalente DS; lg:p-12 sem equivalente DS */ 'relative overflow-hidden p-8 md:p-10 lg:p-12 rounded-4xl',
           'ring-1 ring-inset',
           style.ring,
         )}
@@ -301,19 +301,19 @@ function HeroBlock({
           )}
         />
 
-        <div className="relative grid grid-cols-1 lg:grid-cols-[auto_1px_1fr] gap-8 lg:gap-10">
+        <div className={cn(/* design-system-escape: gap-8 gap sem token DS; lg:gap-10 sem equivalente DS */ "relative grid grid-cols-1 lg:grid-cols-[auto_1px_1fr] gap-8 lg:gap-10")}>
           {/* Countdown editorial */}
-          <div className="flex flex-col gap-3">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
             <Text
               variant="overline"
               className={cn('tracking-[0.22em]', style.accent)}
             >
               {style.label}
             </Text>
-            <div className="flex items-baseline gap-3">
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-baseline gap-3")}>
               <span
                 className={cn(
-                  'font-black leading-[0.85] tracking-tighter tabular-nums',
+                  /* design-system-escape: tracking-tighter sem token DS */ 'font-black leading-[0.85] tracking-tighter tabular-nums',
                   'text-[7rem] md:text-[8.5rem] lg:text-[9.5rem]',
                   style.accent,
                 )}
@@ -322,7 +322,7 @@ function HeroBlock({
               </span>
               <Text
                 variant="overline"
-                className="tracking-[0.2em] text-foreground/75 self-end pb-4"
+                className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "tracking-[0.2em] text-foreground/75 self-end pb-4")}
               >
                 {heroUnit}
               </Text>
@@ -331,7 +331,7 @@ function HeroBlock({
               <Text
                 variant="micro-caption"
                 as="div"
-                className="flex items-center gap-2 uppercase tracking-wider text-muted-foreground/70"
+                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; tracking-wider sem token DS */ "flex items-center gap-2 uppercase tracking-wider text-muted-foreground/70")}
               >
                 <Clock className="size-3" />
                 <span>{prazoFormatted}</span>
@@ -346,13 +346,13 @@ function HeroBlock({
           />
 
           {/* Partes editoriais */}
-          <div className="flex flex-col gap-5 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
+          <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex flex-col gap-5 min-w-0")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
               {tipoLabel && (
                 <Text
                   variant="micro-badge"
                   className={cn(
-                    'inline-flex items-center rounded-full px-2.5 py-1 uppercase tracking-wider',
+                    /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; tracking-wider sem token DS */ 'inline-flex items-center rounded-full px-2.5 py-1 uppercase tracking-wider',
                     'bg-primary/10 text-primary ring-1 ring-inset ring-primary/20',
                   )}
                 >
@@ -369,14 +369,14 @@ function HeroBlock({
               )}
             </div>
 
-            <div className="space-y-1.5">
+            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
               <Heading
                 level="page"
-                className="font-black tracking-tight text-foreground leading-[1.05] text-3xl md:text-4xl lg:text-[2.75rem]"
+                className={cn(/* design-system-escape: tracking-tight sem token DS; text-3xl → migrar para <Heading level="display-*"> */ /* design-system-escape: tracking-tight sem token DS; text-3xl → migrar para <Heading level="display-*"> */ "font-black tracking-tight text-foreground leading-[1.05] text-3xl md:text-4xl lg:text-[2.75rem]")}
               >
                 {partyNames.autora || 'Parte autora ausente'}
               </Heading>
-              <div className="flex items-center gap-3 py-0.5">
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-0.5 padding direcional sem Inset equiv. */ "flex items-center gap-3 py-0.5")}>
                 <Text
                   variant="micro-caption"
                   className="uppercase tracking-[0.3em] text-muted-foreground/50"
@@ -387,13 +387,13 @@ function HeroBlock({
               </div>
               <Heading
                 level="section"
-                className="font-bold tracking-tight text-foreground/80 leading-[1.1] text-2xl md:text-3xl lg:text-[2.25rem]"
+                className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; tracking-tight sem token DS; text-2xl → migrar para <Heading level="...">; md:text-3xl sem equivalente DS */ "font-bold tracking-tight text-foreground/80 leading-[1.1] text-2xl md:text-3xl lg:text-[2.25rem]")}
               >
                 {partyNames.re || 'Parte ré ausente'}
               </Heading>
             </div>
 
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-1">
+            <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "flex flex-wrap items-center gap-x-5 gap-y-2 pt-1")}>
               <MetaPill label="Tribunal" value={expediente.trt} />
               <MetaPill
                 label="Grau"
@@ -402,7 +402,7 @@ function HeroBlock({
               <button
                 type="button"
                 onClick={onCopyProcesso}
-                className="group inline-flex items-center gap-2"
+                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "group inline-flex items-center gap-2")}
                 title="Copiar número do processo"
               >
                 <Text
@@ -411,7 +411,7 @@ function HeroBlock({
                 >
                   Processo
                 </Text>
-                <span className="font-mono text-[13px] font-medium text-foreground/85 tabular-nums group-hover:text-foreground transition-colors">
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-mono text-[13px] font-medium text-foreground/85 tabular-nums group-hover:text-foreground transition-colors")}>
                   {expediente.numeroProcesso}
                 </span>
                 <Copy className="size-3 text-muted-foreground/30 group-hover:text-foreground/60 transition-colors" />
@@ -422,7 +422,7 @@ function HeroBlock({
               <Text
                 variant="micro-caption"
                 as="div"
-                className="text-muted-foreground/70 space-y-0.5 pt-1"
+                className={cn(/* design-system-escape: space-y-0.5 sem token DS; pt-1 padding direcional sem Inset equiv. */ "text-muted-foreground/70 space-y-0.5 pt-1")}
               >
                 {expediente.classeJudicial && (
                   <div>{expediente.classeJudicial}</div>
@@ -454,7 +454,7 @@ function EditorialTabs({
 }) {
   return (
     <div className="relative border-b border-border/30">
-      <div className="flex gap-8 overflow-x-auto -mb-px">
+      <div className={cn(/* design-system-escape: gap-8 gap sem token DS */ "flex gap-8 overflow-x-auto -mb-px")}>
         {tabs.map((tab) => {
           const isActive = active === tab.id;
           return (
@@ -462,20 +462,20 @@ function EditorialTabs({
               key={tab.id}
               onClick={() => onChange(tab.id)}
               className={cn(
-                'relative pb-3 pt-1 transition-colors whitespace-nowrap',
-                'font-heading text-sm font-semibold tracking-tight',
+                /* design-system-escape: pb-3 padding direcional sem Inset equiv.; pt-1 padding direcional sem Inset equiv. */ 'relative pb-3 pt-1 transition-colors whitespace-nowrap',
+                /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ 'font-heading text-sm font-semibold tracking-tight',
                 isActive
                   ? 'text-foreground'
                   : 'text-muted-foreground/50 hover:text-muted-foreground',
               )}
             >
-              <span className="inline-flex items-center gap-2">
+              <span className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "inline-flex items-center gap-2")}>
                 {tab.label}
                 {tab.count !== undefined && (
                   <Text
                     variant="micro-caption"
                     className={cn(
-                      'tabular-nums rounded-full px-1.5 py-0.5',
+                      /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'tabular-nums rounded-full px-1.5 py-0.5',
                       isActive
                         ? 'bg-primary/12 text-primary'
                         : 'bg-muted/40 text-muted-foreground/60',
@@ -518,9 +518,9 @@ function DadosTab({
   onSaveTipo: (id: number | null) => Promise<void>;
 }) {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10 lg:gap-14">
+    <div className={cn(/* design-system-escape: gap-10 gap sem token DS; lg:gap-14 sem equivalente DS */ "grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10 lg:gap-14")}>
       {/* ========================== MAIN EDITORIAL ========================== */}
-      <div className="space-y-12">
+      <div className={cn(/* design-system-escape: space-y-12 sem token DS */ "space-y-12")}>
         <EditorialBlock
           overline="§ 01"
           title="Classificação"
@@ -551,7 +551,7 @@ function DadosTab({
           >
             Texto oficial publicado no PJE
           </Text>
-          <div className="relative pl-6 border-l-2 border-primary/30">
+          <div className={cn(/* design-system-escape: pl-6 padding direcional sem Inset equiv. */ "relative pl-6 border-l-2 border-primary/30")}>
             <EditableTextCell
               value={expediente.descricaoArquivos}
               onSave={onSaveDescricao}
@@ -577,7 +577,7 @@ function DadosTab({
           >
             Resumo interno, estratégia, pontos de atenção
           </Text>
-          <div className="relative pl-6 border-l-2 border-foreground/15">
+          <div className={cn(/* design-system-escape: pl-6 padding direcional sem Inset equiv. */ "relative pl-6 border-l-2 border-foreground/15")}>
             <EditableTextCell
               value={expediente.observacoes}
               onSave={onSaveObservacoes}
@@ -614,7 +614,7 @@ function DadosTab({
       </div>
 
       {/* =============================== SIDEBAR =============================== */}
-      <aside className="space-y-6 lg:sticky lg:top-6 lg:self-start">
+      <aside className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6 lg:sticky lg:top-6 lg:self-start")}>
         <ResponsavelCard
           expedienteId={expediente.id}
           responsavelId={expediente.responsavelId}
@@ -687,7 +687,7 @@ function DadosTab({
 function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
   if (arquivos.length === 0) {
     return (
-      <GlassPanel depth={1} className="p-12 text-center rounded-2xl">
+      <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12 text-center rounded-2xl")}>
         <Text variant="caption" className="text-muted-foreground/60">
           Nenhum arquivo vinculado a este expediente.
         </Text>
@@ -709,8 +709,8 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
   };
 
   return (
-    <div className="space-y-1">
-      <div className="flex items-end justify-between pb-3 border-b border-border/20">
+    <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+      <div className={cn(/* design-system-escape: pb-3 padding direcional sem Inset equiv. */ "flex items-end justify-between pb-3 border-b border-border/20")}>
         <div>
           <Text
             variant="overline"
@@ -722,13 +722,13 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
           <Heading
             level="card"
             as="h3"
-            className="font-bold text-foreground mt-1 tabular-nums"
+            className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-bold text-foreground mt-1 tabular-nums")}
           >
             {arquivos.length.toString().padStart(2, '0')}{' '}
             <span className="text-muted-foreground/50 font-normal">documentos</span>
           </Heading>
         </div>
-        <Button variant="outline" size="sm" className="rounded-full h-8 px-3 text-xs gap-1.5">
+        <Button variant="outline" size="sm" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; gap-1.5 gap sem token DS */ "rounded-full h-8 px-3 text-xs gap-1.5")}>
           <Plus className="size-3" />
           Adicionar
         </Button>
@@ -739,16 +739,16 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
           <li key={arq.id}>
             <button
               type="button"
-              className="w-full group flex items-center gap-5 py-5 text-left transition-colors hover:bg-muted/20 rounded-xl px-3 -mx-3"
+              className={cn(/* design-system-escape: gap-5 gap sem token DS; py-5 padding direcional sem Inset equiv.; px-3 padding direcional sem Inset equiv.; -mx-3 sem equivalente DS */ "w-full group flex items-center gap-5 py-5 text-left transition-colors hover:bg-muted/20 rounded-xl px-3 -mx-3")}
             >
               <Text
                 variant="micro-caption"
-                className="font-semibold text-muted-foreground/40 tabular-nums w-6"
+                className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-muted-foreground/40 tabular-nums w-6")}
               >
                 {(idx + 1).toString().padStart(2, '0')}
               </Text>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-1")}>
                   <Text
                     variant="micro-badge"
                     className="uppercase tracking-[0.2em] text-primary"
@@ -757,12 +757,12 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
                   </Text>
                   <Text
                     variant="micro-badge"
-                    className="uppercase tracking-wider text-muted-foreground/40"
+                    className={cn(/* design-system-escape: tracking-wider sem token DS */ "uppercase tracking-wider text-muted-foreground/40")}
                   >
                     · {arq.tipo}
                   </Text>
                 </div>
-                <p className="font-headline text-[15px] font-medium text-foreground truncate group-hover:text-primary transition-colors">
+                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-headline text-[15px] font-medium text-foreground truncate group-hover:text-primary transition-colors")}>
                   {arq.nome}
                 </p>
                 <Text
@@ -819,7 +819,7 @@ function HistoricoTab({
         return (
           <li
             key={evt.id}
-            className="relative pl-10 py-5"
+            className={cn(/* design-system-escape: pl-10 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "relative pl-10 py-5")}
             style={{ animationDelay: `${idx * 40}ms` }}
           >
             <span
@@ -828,7 +828,7 @@ function HistoricoTab({
                 meta.dot,
               )}
             />
-            <div className="flex items-center gap-3 mb-1">
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mb-1")}>
               <Text
                 variant="micro-badge"
                 className="uppercase tracking-[0.22em] text-muted-foreground/60"
@@ -843,11 +843,11 @@ function HistoricoTab({
                 {format(parseISO(evt.data), "dd MMM · HH:mm", { locale: ptBR })}
               </Text>
             </div>
-            <p className="font-headline text-[15px] text-foreground/90 leading-relaxed">
+            <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "font-headline text-[15px] text-foreground/90 leading-relaxed")}>
               {evt.descricao}
             </p>
             {autor && (
-              <div className="flex items-center gap-2 mt-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-2")}>
                 <Avatar className="size-4">
                   <AvatarImage src={autor.avatarUrl || undefined} />
                   <AvatarFallback className="text-[7px]">
@@ -888,8 +888,8 @@ function EditorialBlock({
 }) {
   return (
     <section className="group">
-      <header className="flex items-end justify-between gap-4 pb-4 mb-5 border-b border-border/20">
-        <div className="flex items-baseline gap-4 min-w-0">
+      <header className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pb-4 padding direcional sem Inset equiv. */ "flex items-end justify-between gap-4 pb-4 mb-5 border-b border-border/20")}>
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-baseline gap-4 min-w-0")}>
           <Text
             variant="overline"
             className={cn(
@@ -902,7 +902,7 @@ function EditorialBlock({
           <Heading
             level="card"
             as="h3"
-            className="font-bold text-xl md:text-2xl tracking-tight text-foreground"
+            className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; text-xl → migrar para <Heading level="...">; md:text-2xl sem equivalente DS; tracking-tight sem token DS */ "font-bold text-xl md:text-2xl tracking-tight text-foreground")}
           >
             {title}
           </Heading>
@@ -910,7 +910,7 @@ function EditorialBlock({
         {hint && (
           <Text
             variant="micro-badge"
-            className="inline-flex items-center gap-1.5 uppercase tracking-wider text-muted-foreground/50 shrink-0"
+            className={cn(/* design-system-escape: gap-1.5 gap sem token DS; tracking-wider sem token DS */ "inline-flex items-center gap-1.5 uppercase tracking-wider text-muted-foreground/50 shrink-0")}
           >
             <Pencil className="size-2.5" />
             {hint}
@@ -941,8 +941,8 @@ function StatusChip({
     <Text
       variant="micro-badge"
       className={cn(
-        'inline-flex items-center gap-1 rounded-full px-2.5 py-1',
-        'font-semibold uppercase tracking-wider',
+        /* design-system-escape: gap-1 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'inline-flex items-center gap-1 rounded-full px-2.5 py-1',
+        /* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ 'font-semibold uppercase tracking-wider',
         'ring-1 ring-inset',
         tones[tone],
       )}
@@ -955,7 +955,7 @@ function StatusChip({
 
 function MetaPill({ label, value }: { label: string; value: string }) {
   return (
-    <span className="inline-flex items-center gap-2">
+    <span className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "inline-flex items-center gap-2")}>
       <Text
         variant="micro-badge"
         className="uppercase tracking-[0.22em] text-muted-foreground/50"
@@ -965,7 +965,7 @@ function MetaPill({ label, value }: { label: string; value: string }) {
       <Text
         variant="caption"
         as="span"
-        className="font-medium text-foreground/85 tabular-nums"
+        className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/85 tabular-nums")}
       >
         {value}
       </Text>
@@ -978,7 +978,7 @@ function FieldLabel({ children }: { children: React.ReactNode }) {
     <Text
       variant="micro-badge"
       as="p"
-      className="font-semibold uppercase tracking-[0.22em] text-muted-foreground/55 mb-1.5"
+      className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold uppercase tracking-[0.22em] text-muted-foreground/55 mb-1.5")}
     >
       {children}
     </Text>
@@ -997,7 +997,7 @@ function StatField({
   return (
     <div className={cn('min-w-0', className)}>
       <FieldLabel>{label}</FieldLabel>
-      <p className="font-headline text-[15px] font-medium text-foreground/90 wrap-break-word">
+      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-headline text-[15px] font-medium text-foreground/90 wrap-break-word")}>
         {value}
       </p>
     </div>
@@ -1027,7 +1027,7 @@ function ResponsavelCard({
       .toUpperCase() ?? '??';
 
   return (
-    <GlassPanel depth={3} className="p-5 rounded-2xl">
+    <GlassPanel depth={3} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5 rounded-2xl")}>
       <div className="flex items-center justify-between mb-4">
         <Text
           variant="overline"
@@ -1037,7 +1037,7 @@ function ResponsavelCard({
         </Text>
         <Text
           variant="micro-badge"
-          className="uppercase tracking-wider text-muted-foreground/40"
+          className={cn(/* design-system-escape: tracking-wider sem token DS */ "uppercase tracking-wider text-muted-foreground/40")}
         >
           reatribuir ↗
         </Text>
@@ -1050,22 +1050,22 @@ function ResponsavelCard({
         align="start"
       >
         {usuario ? (
-          <div className="flex items-center gap-3 w-full text-left">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 w-full text-left")}>
             <Avatar className="size-12 ring-2 ring-primary/20">
               <AvatarImage src={usuario.avatarUrl || undefined} alt={usuario.nomeExibicao} />
-              <AvatarFallback className="text-sm font-semibold bg-primary/10 text-primary">
+              <AvatarFallback className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold bg-primary/10 text-primary")}>
                 {initials}
               </AvatarFallback>
             </Avatar>
             <div className="min-w-0 flex-1">
-              <p className="font-heading font-bold text-foreground truncate leading-tight">
+              <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; leading-tight sem token DS */ "font-heading font-bold text-foreground truncate leading-tight")}>
                 {usuario.nomeExibicao}
               </p>
               {usuario.cargo && (
                 <Text
                   variant="micro-caption"
                   as="p"
-                  className="uppercase tracking-wider text-muted-foreground/60 mt-0.5"
+                  className={cn(/* design-system-escape: tracking-wider sem token DS */ "uppercase tracking-wider text-muted-foreground/60 mt-0.5")}
                 >
                   {usuario.cargo}
                 </Text>
@@ -1073,18 +1073,18 @@ function ResponsavelCard({
             </div>
           </div>
         ) : (
-          <div className="flex items-center gap-3 w-full text-left py-1">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-1 padding direcional sem Inset equiv. */ "flex items-center gap-3 w-full text-left py-1")}>
             <div className="size-12 rounded-full bg-muted/40 flex items-center justify-center ring-2 ring-dashed ring-border/40">
               <User className="size-5 text-muted-foreground/40" />
             </div>
             <div>
-              <p className="font-heading font-bold text-warning/80 italic leading-tight">
+              <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; leading-tight sem token DS */ "font-heading font-bold text-warning/80 italic leading-tight")}>
                 Sem responsável
               </p>
               <Text
                 variant="micro-caption"
                 as="p"
-                className="uppercase tracking-wider text-muted-foreground/50 mt-0.5"
+                className={cn(/* design-system-escape: tracking-wider sem token DS */ "uppercase tracking-wider text-muted-foreground/50 mt-0.5")}
               >
                 clique para atribuir
               </Text>
@@ -1111,7 +1111,7 @@ function SidebarSection({
       >
         {label}
       </Heading>
-      <div className="space-y-1.5">{children}</div>
+      <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>{children}</div>
     </section>
   );
 }
@@ -1128,7 +1128,7 @@ function CronologiaRow({
   muted?: boolean;
 }) {
   return (
-    <div className="flex items-baseline justify-between gap-3 py-1">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-1 padding direcional sem Inset equiv. */ "flex items-baseline justify-between gap-3 py-1")}>
       <Text variant="caption" as="span" className="text-muted-foreground/65 shrink-0">
         {label}
       </Text>
@@ -1136,9 +1136,9 @@ function CronologiaRow({
         variant={emphasis ? 'caption' : muted ? 'micro-caption' : 'caption'}
         as="span"
         className={cn(
-          'text-right tabular-nums leading-tight font-headline',
+          /* design-system-escape: leading-tight sem token DS */ 'text-right tabular-nums leading-tight font-headline',
           emphasis
-            ? 'font-bold text-foreground'
+            ? /* design-system-escape: font-bold → className de <Text>/<Heading> */ 'font-bold text-foreground'
             : muted
               ? 'text-muted-foreground/60'
               : 'text-foreground/80',
@@ -1162,13 +1162,13 @@ function FlagChip({
   return (
     <div
       className={cn(
-        'flex items-center justify-between gap-2 px-3 py-2 rounded-lg',
+        /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'flex items-center justify-between gap-2 px-3 py-2 rounded-lg',
         active
           ? 'bg-primary/6 ring-1 ring-inset ring-primary/15 text-foreground'
           : 'bg-transparent ring-1 ring-inset ring-border/20 text-muted-foreground/45',
       )}
     >
-      <div className="flex items-center gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
         <Icon className="size-3" />
         <Text variant="caption" as="span">{label}</Text>
       </div>
@@ -1218,42 +1218,42 @@ function InlineTipoEditor({
         <button
           type="button"
           className={cn(
-            'group inline-flex items-center gap-2 py-1 rounded-lg',
+            /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-1 padding direcional sem Inset equiv. */ 'group inline-flex items-center gap-2 py-1 rounded-lg',
             'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
             isPending && 'opacity-60 pointer-events-none',
           )}
         >
           {current ? (
-            <span className="font-heading font-semibold text-lg text-foreground group-hover:text-primary transition-colors underline decoration-dotted decoration-primary/40 underline-offset-4">
+            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; text-lg → migrar para <Text variant="body-lg"> */ "font-heading font-semibold text-lg text-foreground group-hover:text-primary transition-colors underline decoration-dotted decoration-primary/40 underline-offset-4")}>
               {current.tipo_expediente}
             </span>
           ) : (
-            <span className="font-heading italic text-lg text-muted-foreground/60 group-hover:text-foreground transition-colors">
+            <span className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "font-heading italic text-lg text-muted-foreground/60 group-hover:text-foreground transition-colors")}>
               Clique para atribuir tipo
             </span>
           )}
           <Tag className="size-3 text-muted-foreground/40 group-hover:text-primary transition-colors" />
         </button>
       </PopoverTrigger>
-      <PopoverContent className="w-72 p-0 rounded-2xl glass-dropdown overflow-hidden" align="start">
+      <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-72 p-0 rounded-2xl glass-dropdown overflow-hidden")} align="start">
         <Command className="bg-transparent">
-          <div className="px-3 pt-3 pb-1.5">
+          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
             <Text
               variant="micro-badge"
               as="p"
-              className="font-medium text-muted-foreground/50 uppercase tracking-[0.2em] mb-2"
+              className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground/50 uppercase tracking-[0.2em] mb-2")}
             >
               Escolher tipo
             </Text>
-            <CommandInput placeholder="Buscar tipo…" className="h-8 text-xs rounded-lg" />
+            <CommandInput placeholder="Buscar tipo…" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs rounded-lg")} />
           </div>
-          <CommandList className="max-h-64 px-1.5 pb-1.5">
+          <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-64 px-1.5 pb-1.5")}>
             <CommandEmpty>Nenhum tipo encontrado</CommandEmpty>
             <CommandGroup>
               <CommandItem
                 value="sem-tipo"
                 onSelect={() => handleSelect(null)}
-                className="gap-2 rounded-lg text-xs px-2 py-2"
+                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-xs px-2 py-2")}
               >
                 <span className="italic text-muted-foreground/60 font-headline">Sem tipo</span>
               </CommandItem>
@@ -1262,9 +1262,9 @@ function InlineTipoEditor({
                   key={tipo.id}
                   value={tipo.tipo_expediente}
                   onSelect={() => handleSelect(tipo.id)}
-                  className="gap-2 rounded-lg text-xs px-2 py-2"
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-xs px-2 py-2")}
                 >
-                  <span className="font-headline text-[13px] font-medium">
+                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-headline text-[13px] font-medium")}>
                     {tipo.tipo_expediente}
                   </span>
                 </CommandItem>

@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import {
   Camera,
   CheckCircle2,
@@ -31,30 +32,30 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
   const progress = getSignerProgress(doc);
 
   return (
-    <GlassPanel className="p-5">
+    <GlassPanel className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-3">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
           <IconContainer size="lg" className={cfg.bg}>
             <Icon className={`size-5 ${cfg.color}`} />
           </IconContainer>
           <div className="min-w-0">
-            <Heading level="section" className="text-sm leading-tight">
+            <Heading level="section" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-tight sem token DS */ "text-sm leading-tight")}>
               {doc.titulo}
             </Heading>
-            <div className="flex items-center gap-2 mt-1">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-1")}>
               <span
                 className={`text-[9px] font-medium px-1.5 py-0.5 rounded ${cfg.bg} ${cfg.color}`}
               >
                 {cfg.label}
               </span>
               {doc.selfieHabilitada && (
-                <span className="text-[8px] flex items-center gap-0.5 text-muted-foreground/55">
+                <span className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "text-[8px] flex items-center gap-0.5 text-muted-foreground/55")}>
                   <Camera className="size-2.5" /> Selfie
                 </span>
               )}
               {doc.origem === "formulario" && (
-                <span className="text-[8px] flex items-center gap-0.5 text-info/40">
+                <span className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "text-[8px] flex items-center gap-0.5 text-info/40")}>
                   <FileText className="size-2.5" /> Formulário
                 </span>
               )}
@@ -63,7 +64,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
         </div>
         <button
           onClick={onClose}
-          className="p-1.5 rounded-lg hover:bg-foreground/4 transition-colors cursor-pointer"
+          className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors cursor-pointer")}
         >
           <X className="size-4 text-muted-foreground/60" />
         </button>
@@ -71,7 +72,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
 
       {/* Progress */}
       {doc.assinantes.length > 0 && (
-        <div className="flex items-center gap-3 p-3 rounded-xl bg-foreground/3 border border-border/10 mb-4">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ "flex items-center gap-3 p-3 rounded-xl bg-foreground/3 border border-border/10 mb-4")}>
           <ProgressRing
             percent={progress.percent}
             size={48}
@@ -82,7 +83,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
             }
           />
           <div>
-            <p className="text-sm font-bold">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold")}>
               {progress.signed}/{progress.total} assinantes
             </p>
             <p className="text-[10px] text-muted-foreground/60">
@@ -96,11 +97,11 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
 
       {/* Signers list */}
       <div className="mb-4">
-        <Heading level="card" className="text-xs mb-2 flex items-center gap-1.5">
+        <Heading level="card" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; gap-1.5 gap sem token DS */ "text-xs mb-2 flex items-center gap-1.5")}>
           <Users className="size-3.5 text-muted-foreground/60" />
           Assinantes
         </Heading>
-        <div className="space-y-1.5">
+        <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
           {doc.assinantes.map((a, i) => {
             const isDone = a.status === "concluido";
             const isLate =
@@ -109,7 +110,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
             return (
               <div
                 key={i}
-                className="flex items-center gap-2.5 p-2 rounded-lg hover:bg-foreground/3 transition-colors"
+                className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-2 → usar <Inset> */ "flex items-center gap-2.5 p-2 rounded-lg hover:bg-foreground/3 transition-colors")}
               >
                 <div
                   className={`size-2 rounded-full shrink-0 ${
@@ -121,10 +122,10 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
                   }`}
                 />
                 <div className="flex-1 min-w-0">
-                  <p className="text-[11px] font-medium">{a.nome}</p>
-                  <div className="flex items-center gap-2 mt-0.5">
+                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium")}>{a.nome}</p>
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-0.5")}>
                     {a.email && (
-                      <span className="text-[9px] text-muted-foreground/55 flex items-center gap-0.5">
+                      <span className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "text-[9px] text-muted-foreground/55 flex items-center gap-0.5")}>
                         <Mail className="size-2" />
                         {a.email}
                       </span>
@@ -133,7 +134,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
                 </div>
                 <div className="text-right shrink-0">
                   {isDone ? (
-                    <span className="text-[9px] text-success/60 flex items-center gap-0.5">
+                    <span className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "text-[9px] text-success/60 flex items-center gap-0.5")}>
                       <CheckCircle2 className="size-2.5" />
                       {a.concluidoEm ? timeAgo(a.concluidoEm) : "Assinado"}
                     </span>
@@ -151,7 +152,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
             );
           })}
           {doc.assinantes.length === 0 && (
-            <p className="text-[10px] text-muted-foreground/55 text-center py-4">
+            <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-[10px] text-muted-foreground/55 text-center py-4")}>
               Sem assinantes configurados
             </p>
           )}
@@ -159,54 +160,54 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
       </div>
 
       {/* Metadata */}
-      <div className="grid grid-cols-2 gap-2 mb-4 text-[10px]">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2 mb-4 text-[10px]")}>
         <div>
-          <p className="text-muted-foreground/55 uppercase tracking-wider text-[9px]">
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-muted-foreground/55 uppercase tracking-wider text-[9px]")}>
             Criado por
           </p>
-          <p className="font-medium mt-0.5">{doc.criadoPor}</p>
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mt-0.5")}>{doc.criadoPor}</p>
         </div>
         <div>
-          <p className="text-muted-foreground/55 uppercase tracking-wider text-[9px]">
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-muted-foreground/55 uppercase tracking-wider text-[9px]")}>
             Criado em
           </p>
-          <p className="font-medium mt-0.5">
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mt-0.5")}>
             {new Date(doc.criadoEm).toLocaleDateString("pt-BR")}
           </p>
         </div>
         <div>
-          <p className="text-muted-foreground/55 uppercase tracking-wider text-[9px]">
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-muted-foreground/55 uppercase tracking-wider text-[9px]")}>
             Atualizado
           </p>
-          <p className="font-medium mt-0.5">{timeAgo(doc.atualizadoEm)}</p>
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mt-0.5")}>{timeAgo(doc.atualizadoEm)}</p>
         </div>
         <div>
-          <p className="text-muted-foreground/55 uppercase tracking-wider text-[9px]">
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-muted-foreground/55 uppercase tracking-wider text-[9px]")}>
             Verificação
           </p>
-          <p className="font-medium mt-0.5 flex items-center gap-1 text-success/60">
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; gap-1 gap sem token DS */ "font-medium mt-0.5 flex items-center gap-1 text-success/60")}>
             <Shield className="size-2.5" /> Íntegro
           </p>
         </div>
       </div>
 
       {/* Actions */}
-      <div className="flex gap-2 pt-3 border-t border-border/10">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-3 padding direcional sem Inset equiv. */ "flex gap-2 pt-3 border-t border-border/10")}>
         {doc.status === "pronto" &&
           doc.assinantes.some((a) => a.status === "pendente") && (
-            <button className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-warning/10 text-warning/70 text-xs font-medium hover:bg-warning/15 transition-colors cursor-pointer">
+            <button className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-warning/10 text-warning/70 text-xs font-medium hover:bg-warning/15 transition-colors cursor-pointer")}>
               <RotateCcw className="size-3" />
               Reenviar convites
             </button>
           )}
-        <button className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary/10 text-primary/70 text-xs font-medium hover:bg-primary/15 transition-colors cursor-pointer">
+        <button className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary/10 text-primary/70 text-xs font-medium hover:bg-primary/15 transition-colors cursor-pointer")}>
           <ExternalLink className="size-3" />
           Ver documento
         </button>
-        <button className="flex items-center justify-center px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/50 hover:bg-foreground/6 transition-colors cursor-pointer">
+        <button className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center justify-center px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/50 hover:bg-foreground/6 transition-colors cursor-pointer")}>
           <Download className="size-3" />
         </button>
-        <button className="flex items-center justify-center px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/50 hover:bg-foreground/6 transition-colors cursor-pointer">
+        <button className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center justify-center px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/50 hover:bg-foreground/6 transition-colors cursor-pointer")}>
           <Copy className="size-3" />
         </button>
       </div>

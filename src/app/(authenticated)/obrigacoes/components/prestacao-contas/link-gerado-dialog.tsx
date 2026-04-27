@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import {
   Dialog,
@@ -85,9 +86,9 @@ export function LinkGeradoDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 py-2">
-          <div className="flex gap-2 items-center">
-            <Input readOnly value={fullUrl} className="text-xs" />
+        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-2 padding direcional sem Inset equiv. */ "space-y-4 py-2")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2 items-center")}>
+            <Input readOnly value={fullUrl} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")} />
             <Button
               size="sm"
               onClick={handleCopy}
@@ -98,13 +99,13 @@ export function LinkGeradoDialog({
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-1 sm:grid-cols-2 gap-2")}>
             <Button
               size="sm"
               variant="outline"
               onClick={() => handleEnviar('email')}
               disabled={enviando !== null}
-              className="rounded-xl gap-1.5 justify-start"
+              className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "rounded-xl gap-1.5 justify-start")}
             >
               <Mail className="size-3.5" />
               {enviando === 'email' ? 'Enviando...' : 'Enviar por e-mail'}
@@ -114,7 +115,7 @@ export function LinkGeradoDialog({
               variant="outline"
               onClick={() => handleEnviar('whatsapp')}
               disabled={enviando !== null}
-              className="rounded-xl gap-1.5 justify-start"
+              className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "rounded-xl gap-1.5 justify-start")}
             >
               <MessageCircle className="size-3.5" />
               {enviando === 'whatsapp' ? 'Enviando...' : 'Enviar por WhatsApp'}

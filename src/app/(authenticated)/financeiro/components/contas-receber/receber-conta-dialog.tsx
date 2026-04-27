@@ -254,7 +254,7 @@ export function ReceberContaDialog({
       <DialogContent className="sm:max-w-[500px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
+            <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <CreditCard className="h-5 w-5" />
               Confirmar Recebimento
             </DialogTitle>
@@ -263,27 +263,27 @@ export function ReceberContaDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4 py-4">
+          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-4 padding direcional sem Inset equiv. */ "space-y-4 py-4")}>
             {/* Resumo da conta */}
-            <div className="rounded-lg border bg-muted/50 p-4 space-y-2">
+            <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-2 → migrar para <Stack gap="tight"> */ "rounded-lg border bg-muted/50 p-4 space-y-2")}>
               <div className="flex justify-between items-start">
                 <div>
-                  <p className="font-medium text-sm">{conta.descricao}</p>
+                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm"> */ "font-medium text-sm")}>{conta.descricao}</p>
                   {conta.cliente && (
-                    <p className="text-xs text-muted-foreground">
+                    <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                       {conta.cliente.nomeFantasia || conta.cliente.razaoSocial}
                     </p>
                   )}
                   {conta.contrato && (
-                    <p className="text-xs text-muted-foreground">
+                    <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                       Contrato: {conta.contrato.numero}
                     </p>
                   )}
                 </div>
                 <div className="text-right">
-                  <p className="font-bold text-lg text-success">{formatarValor(conta.valor)}</p>
+                  <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; text-lg → migrar para <Text variant="body-lg"> */ "font-bold text-lg text-success")}>{formatarValor(conta.valor)}</p>
                   {conta.dataVencimento && (
-                    <p className={cn('text-xs', isVencida ? 'text-destructive' : 'text-muted-foreground')}>
+                    <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ 'text-xs', isVencida ? 'text-destructive' : 'text-muted-foreground')}>
                       Venc: {format(new Date(conta.dataVencimento), 'dd/MM/yyyy')}
                     </p>
                   )}
@@ -303,7 +303,7 @@ export function ReceberContaDialog({
             <Separator />
 
             {/* Forma de Recebimento */}
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label htmlFor="formaRecebimento">
                 Forma de Recebimento <span className="text-destructive">*</span>
               </Label>
@@ -325,7 +325,7 @@ export function ReceberContaDialog({
             </div>
 
             {/* Conta Bancária */}
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label htmlFor="contaBancaria">
                 Conta Bancária <span className="text-destructive">*</span>
               </Label>
@@ -336,11 +336,11 @@ export function ReceberContaDialog({
                 <SelectContent>
                   {contasBancarias.map((cb) => (
                     <SelectItem key={cb.id} value={cb.id.toString()}>
-                      <div className="flex items-center gap-2">
+                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                         <Building2 className="h-4 w-4 text-muted-foreground" />
                         {cb.nome}
                         {cb.banco && (
-                          <span className="text-xs text-muted-foreground">({cb.banco})</span>
+                          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>({cb.banco})</span>
                         )}
                       </div>
                     </SelectItem>
@@ -350,7 +350,7 @@ export function ReceberContaDialog({
             </div>
 
             {/* Data de Efetivação */}
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label>Data de Efetivação</Label>
               <Popover>
                 <PopoverTrigger asChild>
@@ -367,7 +367,7 @@ export function ReceberContaDialog({
                       : 'Selecione a data'}
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
+                <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto p-0")} align="start">
                   <Calendar
                     mode="single"
                     selected={dataEfetivacao}
@@ -381,7 +381,7 @@ export function ReceberContaDialog({
             </div>
 
             {/* Observações */}
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label htmlFor="observacoes">Observações</Label>
               <Textarea
                 id="observacoes"
@@ -393,16 +393,16 @@ export function ReceberContaDialog({
             </div>
 
             {/* Comprovante de Recebimento */}
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label htmlFor="comprovante">Comprovante de Recebimento</Label>
 
               {comprovanteFile ? (
-                <div className="flex items-center justify-between rounded-md border bg-muted/50 p-3">
-                  <div className="flex items-center gap-2 overflow-hidden">
+                <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between rounded-md border bg-muted/50 p-3")}>
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 overflow-hidden")}>
                     <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
                     <div className="overflow-hidden">
-                      <p className="truncate text-sm font-medium">{comprovanteFile.name}</p>
-                      <p className="text-xs text-muted-foreground">{formatFileSize(comprovanteFile.size)}</p>
+                      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "truncate text-sm font-medium")}>{comprovanteFile.name}</p>
+                      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{formatFileSize(comprovanteFile.size)}</p>
                     </div>
                   </div>
                   <Button
@@ -430,7 +430,7 @@ export function ReceberContaDialog({
                     title="Anexar comprovante de recebimento"
                     aria-describedby="comprovante-help"
                   />
-                  <div className="flex cursor-pointer items-center justify-center gap-2 rounded-md border border-dashed p-4 text-sm text-muted-foreground transition-colors hover:border-primary hover:text-primary">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-4 → migrar para <Inset variant="card-compact">; text-sm → migrar para <Text variant="body-sm"> */ "flex cursor-pointer items-center justify-center gap-2 rounded-md border border-dashed p-4 text-sm text-muted-foreground transition-colors hover:border-primary hover:text-primary")}>
                     {comprovanteUploading ? (
                       <>
                         <LoadingSpinner />
@@ -447,10 +447,10 @@ export function ReceberContaDialog({
               )}
 
               {comprovanteError && (
-                <p className="text-xs text-destructive">{comprovanteError}</p>
+                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-destructive")}>{comprovanteError}</p>
               )}
 
-              <p id="comprovante-help" className="text-xs text-muted-foreground">
+              <p id="comprovante-help" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                 {COMPROVANTE_HELP_TEXT}
               </p>
             </div>

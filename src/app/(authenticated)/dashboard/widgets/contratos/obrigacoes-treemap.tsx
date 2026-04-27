@@ -11,6 +11,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import { BarChart3 } from 'lucide-react';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard } from '../../hooks';
@@ -54,7 +55,7 @@ export function WidgetObrigacoesTreemap() {
       subtitle="Distribuição de valores em aberto"
       depth={1}
     >
-      <div className="flex flex-col gap-4 mt-1">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4 mt-1")}>
         {data.length === 0 ? (
           <div
             className="rounded-lg border border-border/10 bg-border/5 flex items-center justify-center"
@@ -67,19 +68,19 @@ export function WidgetObrigacoesTreemap() {
         ) : (
           <>
             {/* Visual treemap simplificado — barras proporcionais */}
-            <div className="flex gap-1 rounded-lg overflow-hidden" style={{ height: 80 }}>
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1 rounded-lg overflow-hidden")} style={{ height: 80 }}>
               {data.map((item) => {
                 const pct = totalValor > 0 ? (item.valor / totalValor) * 100 : 0;
                 return (
                   <div
                     key={item.label}
-                    className="flex items-end justify-center pb-2 transition-all duration-500"
+                    className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "flex items-end justify-center pb-2 transition-all duration-500")}
                     style={{
                       backgroundColor: item.color,
                       width: `${Math.max(pct, 8)}%`,
                     }}
                   >
-                    <span className="text-[8px] font-semibold text-foreground/70 tabular-nums">
+                    <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[8px] font-semibold text-foreground/70 tabular-nums")}>
                       {Math.round(pct)}%
                     </span>
                   </div>
@@ -88,9 +89,9 @@ export function WidgetObrigacoesTreemap() {
             </div>
 
             {/* Legenda com valores reais */}
-            <div className="flex flex-col gap-1.5">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
               {data.map((item) => (
-                <div key={item.label} className="flex items-center gap-2">
+                <div key={item.label} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                   <div
                     className="size-2.5 rounded-[3px] shrink-0"
                     style={{ backgroundColor: item.color }}
@@ -98,7 +99,7 @@ export function WidgetObrigacoesTreemap() {
                   <span className="text-[10px] text-muted-foreground/70 truncate flex-1">
                     {item.label}
                   </span>
-                  <span className="text-[10px] font-medium tabular-nums">
+                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums")}>
                     {fmtMoeda(item.valor)}
                   </span>
                 </div>

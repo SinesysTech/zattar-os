@@ -252,7 +252,7 @@ export function PagarContaDialog({
       <DialogContent className="sm:max-w-[500px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
+            <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <CreditCard className="h-5 w-5" />
               Efetuar Pagamento
             </DialogTitle>
@@ -261,22 +261,22 @@ export function PagarContaDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4 py-4">
+          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-4 padding direcional sem Inset equiv. */ "space-y-4 py-4")}>
             {/* Resumo da conta */}
-            <div className="rounded-lg border bg-muted/50 p-4 space-y-2">
+            <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-2 → migrar para <Stack gap="tight"> */ "rounded-lg border bg-muted/50 p-4 space-y-2")}>
               <div className="flex justify-between items-start">
                 <div>
-                  <p className="font-medium text-sm">{conta.descricao}</p>
+                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm"> */ "font-medium text-sm")}>{conta.descricao}</p>
                   {conta.fornecedor && (
-                    <p className="text-xs text-muted-foreground">
+                    <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                       {conta.fornecedor.nomeFantasia || conta.fornecedor.razaoSocial}
                     </p>
                   )}
                 </div>
                 <div className="text-right">
-                  <p className="font-bold text-lg">{formatarValor(conta.valor)}</p>
+                  <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; text-lg → migrar para <Text variant="body-lg"> */ "font-bold text-lg")}>{formatarValor(conta.valor)}</p>
                   {conta.dataVencimento && (
-                    <p className={cn('text-xs', isVencida ? 'text-destructive' : 'text-muted-foreground')}>
+                    <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ 'text-xs', isVencida ? 'text-destructive' : 'text-muted-foreground')}>
                       Venc: {format(new Date(conta.dataVencimento), 'dd/MM/yyyy')}
                     </p>
                   )}
@@ -296,7 +296,7 @@ export function PagarContaDialog({
             <Separator />
 
             {/* Forma de Pagamento */}
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label htmlFor="formaPagamento">
                 Forma de Pagamento <span className="text-destructive">*</span>
               </Label>
@@ -318,7 +318,7 @@ export function PagarContaDialog({
             </div>
 
             {/* Conta Bancária */}
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label htmlFor="contaBancaria">
                 Conta Bancária <span className="text-destructive">*</span>
               </Label>
@@ -329,11 +329,11 @@ export function PagarContaDialog({
                 <SelectContent>
                   {contasBancarias.map((cb) => (
                     <SelectItem key={cb.id} value={cb.id.toString()}>
-                      <div className="flex items-center gap-2">
+                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                         <Building2 className="h-4 w-4 text-muted-foreground" />
                         {cb.nome}
                         {cb.banco && (
-                          <span className="text-xs text-muted-foreground">({cb.banco})</span>
+                          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>({cb.banco})</span>
                         )}
                       </div>
                     </SelectItem>
@@ -343,7 +343,7 @@ export function PagarContaDialog({
             </div>
 
             {/* Data de Efetivação */}
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label>Data de Efetivação</Label>
               <Popover>
                 <PopoverTrigger asChild>
@@ -360,7 +360,7 @@ export function PagarContaDialog({
                       : 'Selecione a data'}
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
+                <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto p-0")} align="start">
                   <Calendar
                     mode="single"
                     selected={dataEfetivacao}
@@ -374,7 +374,7 @@ export function PagarContaDialog({
             </div>
 
             {/* Observações */}
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label htmlFor="observacoes">Observações</Label>
               <Textarea
                 id="observacoes"
@@ -386,16 +386,16 @@ export function PagarContaDialog({
             </div>
 
             {/* Comprovante de Pagamento */}
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label htmlFor="comprovante">Comprovante de Pagamento</Label>
 
               {comprovanteFile ? (
-                <div className="flex items-center justify-between rounded-md border bg-muted/50 p-3">
-                  <div className="flex items-center gap-2 overflow-hidden">
+                <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between rounded-md border bg-muted/50 p-3")}>
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 overflow-hidden")}>
                     <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
                     <div className="overflow-hidden">
-                      <p className="truncate text-sm font-medium">{comprovanteFile.name}</p>
-                      <p className="text-xs text-muted-foreground">{formatFileSize(comprovanteFile.size)}</p>
+                      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "truncate text-sm font-medium")}>{comprovanteFile.name}</p>
+                      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{formatFileSize(comprovanteFile.size)}</p>
                     </div>
                   </div>
                   <Button
@@ -422,7 +422,7 @@ export function PagarContaDialog({
                     disabled={comprovanteUploading}
                     aria-label="Selecionar comprovante de pagamento"
                   />
-                  <div className="flex cursor-pointer items-center justify-center gap-2 rounded-md border border-dashed p-4 text-sm text-muted-foreground transition-colors hover:border-primary hover:text-primary">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-4 → migrar para <Inset variant="card-compact">; text-sm → migrar para <Text variant="body-sm"> */ "flex cursor-pointer items-center justify-center gap-2 rounded-md border border-dashed p-4 text-sm text-muted-foreground transition-colors hover:border-primary hover:text-primary")}>
                     {comprovanteUploading ? (
                       <>
                         <LoadingSpinner />
@@ -439,10 +439,10 @@ export function PagarContaDialog({
               )}
 
               {comprovanteError && (
-                <p className="text-xs text-destructive">{comprovanteError}</p>
+                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-destructive")}>{comprovanteError}</p>
               )}
 
-              <p className="text-xs text-muted-foreground">
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                 Formatos aceitos: PDF, JPG, PNG, WEBP. Máximo: 10MB.
               </p>
             </div>

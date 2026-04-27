@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useMemo } from "react";
 import { AnimatedIconTabs } from "@/components/ui/animated-icon-tabs";
@@ -17,7 +18,7 @@ interface AssinaturaDigitalTabsContentProps {
 
 function TabSkeleton() {
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       <Skeleton className="h-10 w-full" />
       <Skeleton className="h-64 w-full" />
     </div>
@@ -65,7 +66,7 @@ export function AssinaturaDigitalTabsContent({
       case "documentos":
         return (
           documentosContent || (
-            <div className="text-sm text-muted-foreground">
+            <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
               Carregando documentos...
             </div>
           )
@@ -73,7 +74,7 @@ export function AssinaturaDigitalTabsContent({
       case "templates":
         return (
           templatesContent || (
-            <div className="text-sm text-muted-foreground">
+            <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
               Carregando templates...
             </div>
           )
@@ -81,7 +82,7 @@ export function AssinaturaDigitalTabsContent({
       case "formularios":
         return (
           formulariosContent || (
-            <div className="text-sm text-muted-foreground">
+            <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
               Carregando formulários...
             </div>
           )
@@ -89,7 +90,7 @@ export function AssinaturaDigitalTabsContent({
       default:
         return (
           documentosContent || (
-            <div className="text-sm text-muted-foreground">
+            <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
               Carregando documentos...
             </div>
           )

@@ -7,6 +7,7 @@
  * Usa o domain unificado de Tarefas (Quadro)
  */
 
+import { cn } from '@/lib/utils';
 import * as React from "react";
 import {
   FileText,
@@ -67,13 +68,13 @@ export function QuadroSelector({
           <LayoutGrid className="h-4 w-4" />
           <span>Quadro</span>
           {selectedQuadro && (
-            <AppBadge variant="secondary" className="ml-1 rounded-sm px-1.5 font-normal">
+            <AppBadge variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "ml-1 rounded-sm px-1.5 font-normal")}>
               {selectedQuadro.titulo}
             </AppBadge>
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-64 p-0" align="start">
+      <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-64 p-0")} align="start">
         <Command>
           <CommandInput placeholder="Buscar quadro..." className="h-9" />
           <CommandList>

@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import ContasReceberClient from './page-client';
@@ -7,8 +8,8 @@ export const revalidate = 0;
 
 function ContasReceberLoading() {
   return (
-    <div className="space-y-3">
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 sm:grid-cols-4 gap-4")}>
         <Skeleton className="h-20 w-full" />
         <Skeleton className="h-20 w-full" />
         <Skeleton className="h-20 w-full" />

@@ -9,6 +9,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { Download } from 'lucide-react';
 import { toast } from 'sonner';
@@ -77,9 +78,9 @@ export function EventDetailDrawer({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="glass-dialog max-w-xl max-h-[90vh] p-0 flex flex-col">
-        <DialogHeader className="px-6 py-5 border-b border-border/30 shrink-0">
-          <DialogTitle className="text-lg font-semibold tracking-tight">
+      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "glass-dialog max-w-xl max-h-[90vh] p-0 flex flex-col")}>
+        <DialogHeader className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "px-6 py-5 border-b border-border/30 shrink-0")}>
+          <DialogTitle className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-lg font-semibold tracking-tight")}>
             Detalhes do Evento
           </DialogTitle>
         </DialogHeader>
@@ -105,9 +106,9 @@ export function EventDetailDrawer({
         </div>
 
         {item?.backblaze && (
-          <div className="p-6 border-t border-border/30 bg-muted/30 mt-auto shrink-0">
+          <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 border-t border-border/30 bg-muted/30 mt-auto shrink-0")}>
             <Button
-              className="w-full gap-2"
+              className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "w-full gap-2")}
               onClick={handleDownloadAll}
               disabled={isDownloading}
             >

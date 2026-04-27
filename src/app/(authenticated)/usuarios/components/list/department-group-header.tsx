@@ -39,13 +39,13 @@ export function DepartmentGroupHeader({
   const overflow = members.length - MAX_AVATARS;
 
   return (
-    <div className="space-y-2">
+    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
       {/* Header bar */}
       <GlassPanel depth={1} className="overflow-hidden">
         <button
           type="button"
           onClick={() => setOpen((prev) => !prev)}
-          className="w-full flex items-center gap-3 px-4 py-2.5 cursor-pointer hover:bg-white/[0.02] transition-colors duration-150"
+          className={cn(/* design-system-escape: gap-3 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "w-full flex items-center gap-3 px-4 py-2.5 cursor-pointer hover:bg-white/[0.02] transition-colors duration-150")}
         >
           {/* Color bar */}
           <div
@@ -56,12 +56,12 @@ export function DepartmentGroupHeader({
           />
 
           {/* Cargo name */}
-          <span className="text-sm font-semibold text-foreground truncate">
+          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold text-foreground truncate")}>
             {cargoNome}
           </span>
 
           {/* Member count */}
-          <span className="text-xs text-muted-foreground/40 shrink-0">
+          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/40 shrink-0")}>
             {members.length} {members.length === 1 ? 'membro' : 'membros'}
           </span>
 
@@ -69,7 +69,7 @@ export function DepartmentGroupHeader({
           <div className="flex-1" />
 
           {/* Avatar stack */}
-          <div className="flex items-center -space-x-2 shrink-0">
+          <div className={cn(/* design-system-escape: -space-x-2 sem equivalente DS */ "flex items-center -space-x-2 shrink-0")}>
             {visibleMembers.map((member) => (
               <Avatar
                 key={member.id}
@@ -79,14 +79,14 @@ export function DepartmentGroupHeader({
                   src={getAvatarUrl(member.avatarUrl) ?? undefined}
                   alt={member.nomeExibicao}
                 />
-                <AvatarFallback className="text-[9px] font-semibold bg-muted/40">
+                <AvatarFallback className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[9px] font-semibold bg-muted/40")}>
                   {getInitials(member)}
                 </AvatarFallback>
               </Avatar>
             ))}
             {overflow > 0 && (
               <div className="size-7 rounded-full border-2 border-background bg-muted/40 flex items-center justify-center shrink-0 z-10">
-                <span className="text-[9px] font-semibold text-muted-foreground/70">
+                <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[9px] font-semibold text-muted-foreground/70")}>
                   +{overflow}
                 </span>
               </div>

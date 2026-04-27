@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -28,7 +29,7 @@ export default function RelatorioMensalFolhaPage() {
   const { folha, isLoading, error, refetch } = useFolhaDoPeriodo({ ano, mes });
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <div className="flex items-center justify-between">
         <div>
           <Heading level="page">Relatório Mensal da Folha</Heading>
@@ -42,9 +43,9 @@ export default function RelatorioMensalFolhaPage() {
         <CardHeader>
           <CardTitle>Período</CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <CardContent className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 md:grid-cols-3")}>
           <div>
-            <label className="text-sm text-muted-foreground">Mês</label>
+            <label className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Mês</label>
             <Select value={mes.toString()} onValueChange={(value) => setMes(Number(value))}>
               <SelectTrigger>
                 <SelectValue />
@@ -59,7 +60,7 @@ export default function RelatorioMensalFolhaPage() {
             </Select>
           </div>
           <div>
-            <label className="text-sm text-muted-foreground">Ano</label>
+            <label className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Ano</label>
             <Select value={ano.toString()} onValueChange={(value) => setAno(Number(value))}>
               <SelectTrigger>
                 <SelectValue />
@@ -78,40 +79,40 @@ export default function RelatorioMensalFolhaPage() {
 
       {isLoading && (
         <Card>
-          <CardContent className="p-6 text-muted-foreground">Carregando...</CardContent>
+          <CardContent className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 text-muted-foreground")}>Carregando...</CardContent>
         </Card>
       )}
 
       {error && (
         <Card>
-          <CardContent className="p-6 text-destructive">{error}</CardContent>
+          <CardContent className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 text-destructive")}>{error}</CardContent>
         </Card>
       )}
 
       {folha && (
-        <div className="space-y-4">
+        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           <Card>
             <CardHeader>
               <CardTitle>Resumo</CardTitle>
             </CardHeader>
-            <CardContent className="grid gap-4 md:grid-cols-4">
+            <CardContent className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-4")}>
               <div>
-                <p className="text-sm text-muted-foreground">Funcionários</p>
-                <p className="text-xl font-semibold">{folha.totalFuncionarios}</p>
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Funcionários</p>
+                <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-semibold → className de <Text>/<Heading> */ "text-xl font-semibold")}>{folha.totalFuncionarios}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Valor Total</p>
-                <p className="text-xl font-semibold text-success">
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Valor Total</p>
+                <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-semibold → className de <Text>/<Heading> */ "text-xl font-semibold text-success")}>
                   {formatCurrency(folha.valorTotal ?? 0)}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Status</p>
-                <p className="text-xl font-semibold">{STATUS_FOLHA_LABELS[folha.status]}</p>
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Status</p>
+                <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-semibold → className de <Text>/<Heading> */ "text-xl font-semibold")}>{STATUS_FOLHA_LABELS[folha.status]}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Data Pagamento</p>
-                <p className="text-xl font-semibold">
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Data Pagamento</p>
+                <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-semibold → className de <Text>/<Heading> */ "text-xl font-semibold")}>
                   {folha.dataPagamento
                     ? new Date(folha.dataPagamento).toLocaleDateString('pt-BR')
                     : '-'}

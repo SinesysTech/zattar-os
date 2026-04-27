@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import React, { useTransition } from "react";
 import { PlusCircleIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -54,8 +55,8 @@ export function AddReminderDialog() {
         <DialogHeader>
           <DialogTitle>Adicionar Lembrete</DialogTitle>
         </DialogHeader>
-        <div className="mt-4 grid space-y-6">
-          <div className="grid gap-2">
+        <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "mt-4 grid space-y-6")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
             <Label htmlFor="texto">Nota</Label>
             <Input
               id="texto"
@@ -64,36 +65,36 @@ export function AddReminderDialog() {
               onChange={(e) => setTexto(e.target.value)}
             />
           </div>
-          <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
             <Label>Data e Hora</Label>
             <DateTimePicker date={date} setDate={setDate} />
           </div>
-          <div className="grid gap-3">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3")}>
             <Label>Prioridade</Label>
             <RadioGroup
               value={prioridade}
               onValueChange={(v) => setPrioridade(v as Prioridade)}
-              className="flex space-x-4"
+              className={cn(/* design-system-escape: space-x-4 → migrar para <Inline gap="default"> */ "flex space-x-4")}
             >
-              <div className="flex items-center space-x-2">
+              <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
                 <RadioGroupItem value="baixa" id="baixa" />
                 <Label htmlFor="baixa" className="cursor-pointer">
                   Baixa
                 </Label>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
                 <RadioGroupItem value="media" id="media" />
                 <Label htmlFor="media" className="cursor-pointer">
                   Média
                 </Label>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
                 <RadioGroupItem value="alta" id="alta" />
                 <Label htmlFor="alta" className="cursor-pointer">
                   Alta
                 </Label>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
                 <RadioGroupItem value="urgente" id="urgente" />
                 <Label htmlFor="urgente" className="cursor-pointer">
                   Urgente

@@ -89,12 +89,12 @@ export function AgendaToolbar({
   const activeFilters = sourceFilter.size;
 
   return (
-    <div className="space-y-3">
+    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
       {/* Row 1: Title + New Event */}
-      <div className="flex items-end justify-between gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
         <div>
           <Heading level="page">Agenda</Heading>
-          <p className="text-sm text-muted-foreground/50 mt-0.5">{dateLabel}</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 mt-0.5")}>{dateLabel}</p>
         </div>
         <Button size="sm" className="rounded-xl" onClick={onNewEvent}>
           <Plus className="size-3.5" />
@@ -103,7 +103,7 @@ export function AgendaToolbar({
       </div>
 
       {/* Row 2: Search + Filters + Nav + View */}
-      <div className="flex items-center gap-2 flex-wrap">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
         {/* Search (reusa SearchInput existente) */}
         <SearchInput
           value={search}
@@ -117,7 +117,7 @@ export function AgendaToolbar({
           <button
             onClick={() => setFilterOpen(!filterOpen)}
             className={cn(
-              "flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs border transition-colors cursor-pointer",
+              /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs border transition-colors cursor-pointer",
               activeFilters > 0
                 ? "border-primary/20 bg-primary/6 text-primary"
                 : "border-border/15 text-muted-foreground/50 hover:text-muted-foreground/70",
@@ -125,13 +125,13 @@ export function AgendaToolbar({
           >
             Tipo
             {activeFilters > 0 && (
-              <span className="text-[9px] px-1 py-0.5 rounded-full bg-primary/15 tabular-nums">{activeFilters}</span>
+              <span className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] px-1 py-0.5 rounded-full bg-primary/15 tabular-nums")}>{activeFilters}</span>
             )}
           </button>
           {filterOpen && (
             <>
               <div className="fixed inset-0 z-40" onClick={() => setFilterOpen(false)} />
-              <div className="absolute top-full left-0 mt-1 z-50 w-48 p-1.5 rounded-xl border border-border/20 bg-background shadow-lg">
+              <div className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "absolute top-full left-0 mt-1 z-50 w-48 p-1.5 rounded-xl border border-border/20 bg-background shadow-lg")}>
                 {(Object.keys(SOURCE_CONFIG) as CalendarSource[]).map((src) => {
                   const cfg = SOURCE_CONFIG[src];
                   const active = sourceFilter.has(src);
@@ -139,7 +139,7 @@ export function AgendaToolbar({
                     <button
                       key={src}
                       onClick={() => onToggleSource(src)}
-                      className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs hover:bg-foreground/4 transition-colors cursor-pointer"
+                      className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs hover:bg-foreground/4 transition-colors cursor-pointer")}
                     >
                       <div className={cn(
                         "size-3.5 rounded border flex items-center justify-center",
@@ -159,14 +159,14 @@ export function AgendaToolbar({
         <div className="flex-1" />
 
         {/* Date Nav */}
-        <div className="flex items-center gap-1">
-          <button onClick={onPrev} className="p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+          <button onClick={onPrev} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer")}>
             <ChevronLeft className="size-4" />
           </button>
-          <button onClick={onToday} className="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-primary/8 text-primary hover:bg-primary/12 transition-colors cursor-pointer">
+          <button onClick={onToday} className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "px-2.5 py-1 rounded-lg text-[11px] font-medium bg-primary/8 text-primary hover:bg-primary/12 transition-colors cursor-pointer")}>
             Hoje
           </button>
-          <button onClick={onNext} className="p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer">
+          <button onClick={onNext} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer")}>
             <ChevronRight className="size-4" />
           </button>
         </div>

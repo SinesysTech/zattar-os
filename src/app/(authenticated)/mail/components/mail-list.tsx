@@ -68,9 +68,9 @@ export function MailList({ items }: MailListProps) {
 
   if (error) {
     return (
-      <div className="flex h-full flex-col items-center justify-center gap-3 p-8 text-center">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-8 → usar <Inset> */ "flex h-full flex-col items-center justify-center gap-3 p-8 text-center")}>
         <AlertCircle className="text-destructive h-8 w-8" />
-        <p className="text-muted-foreground text-sm">{error}</p>
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>{error}</p>
         <Button
           variant="outline"
           size="sm"
@@ -87,12 +87,12 @@ export function MailList({ items }: MailListProps) {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col gap-2 p-4">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-4 → migrar para <Inset variant="card-compact"> */ "flex flex-col gap-2 p-4")}>
         {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className="flex flex-col gap-2 rounded-lg border p-3">
-            <div className="flex items-center gap-2">
+          <div key={i} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset> */ "flex flex-col gap-2 rounded-lg border p-3")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <Skeleton className="h-4 w-32" />
-              <div className="ml-auto flex items-center gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "ml-auto flex items-center gap-2")}>
                 <Skeleton className="h-2 w-2 rounded-full" />
                 <Skeleton className="h-3 w-16" />
               </div>
@@ -108,7 +108,7 @@ export function MailList({ items }: MailListProps) {
 
   if (items.length === 0) {
     return (
-      <div className="text-muted-foreground flex h-full items-center justify-center p-8 text-sm">
+      <div className={cn(/* design-system-escape: p-8 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground flex h-full items-center justify-center p-8 text-sm")}>
         Nenhum e-mail encontrado
       </div>
     );
@@ -120,18 +120,18 @@ export function MailList({ items }: MailListProps) {
         ref={listRef}
         role="listbox"
         aria-label="Lista de e-mails"
-        className="flex flex-col gap-2 p-4">
+        className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-4 → migrar para <Inset variant="card-compact"> */ "flex flex-col gap-2 p-4")}>
         {items.map((item, index) => (
           <div
             key={item.uid}
             className={cn(
-              "group flex gap-2 rounded-lg border p-3 text-sm transition-colors duration-200",
+              /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "group flex gap-2 rounded-lg border p-3 text-sm transition-colors duration-200",
               selectedMail?.uid === item.uid
                 ? "bg-accent"
                 : "hover:bg-muted/50"
             )}>
             <div
-              className="flex shrink-0 items-start pt-0.5"
+              className={cn(/* design-system-escape: pt-0.5 padding direcional sem Inset equiv. */ "flex shrink-0 items-start pt-0.5")}
               onClick={(e) => e.stopPropagation()}>
               <Checkbox
                 checked={selectedUids.has(item.uid)}
@@ -145,13 +145,13 @@ export function MailList({ items }: MailListProps) {
               aria-label={`${!item.read ? "Não lido: " : ""}${getMailPrimaryName(item)} — ${item.subject}`}
               data-mail-index={index}
               tabIndex={selectedMail?.uid === item.uid ? 0 : -1}
-              className="flex min-w-0 flex-1 flex-col items-start gap-1.5 text-left"
+              className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex min-w-0 flex-1 flex-col items-start gap-1.5 text-left")}
               onClick={() => setSelectedMail(item)}
               onKeyDown={(e) => handleKeyDown(e, index)}>
               <div className="flex w-full flex-wrap items-start gap-x-3 gap-y-1">
                 <div className="min-w-0 flex-1">
-                  <div className="flex min-w-0 flex-wrap items-center gap-2">
-                    <div className="text-foreground whitespace-normal wrap-break-word font-semibold leading-5">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex min-w-0 flex-wrap items-center gap-2")}>
+                    <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-5 sem token DS */ "text-foreground whitespace-normal wrap-break-word font-semibold leading-5")}>
                       {getMailPrimaryName(item)}
                     </div>
                     {!item.read && (
@@ -164,7 +164,7 @@ export function MailList({ items }: MailListProps) {
                 </div>
                 <div
                   className={cn(
-                    "text-[11px] leading-4 whitespace-normal wrap-break-word text-left sm:text-right",
+                    /* design-system-escape: leading-4 sem token DS */ "text-[11px] leading-4 whitespace-normal wrap-break-word text-left sm:text-right",
                     selectedMail?.uid === item.uid
                       ? "text-foreground"
                       : "text-muted-foreground"
@@ -175,8 +175,8 @@ export function MailList({ items }: MailListProps) {
                   })}
                 </div>
               </div>
-              <div className="grid w-full gap-1 text-xs leading-5">
-                <div className="font-medium text-foreground whitespace-normal wrap-break-word">
+              <div className={cn(/* design-system-escape: gap-1 gap sem token DS; text-xs → migrar para <Text variant="caption">; leading-5 sem token DS */ "grid w-full gap-1 text-xs leading-5")}>
+                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground whitespace-normal wrap-break-word")}>
                   {item.subject}
                 </div>
                 {getMailListPreview(item) ? (
@@ -191,7 +191,7 @@ export function MailList({ items }: MailListProps) {
 
         {/* Infinite scroll sentinel */}
         {hasMore && (
-          <div ref={sentinelRef} className="flex items-center justify-center py-4">
+          <div ref={sentinelRef} className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "flex items-center justify-center py-4")}>
             {isLoadingMore && <LoadingSpinner size="lg" className="text-muted-foreground" />}
           </div>
         )}

@@ -29,8 +29,8 @@ export function DocSection({
 }) {
   const anchor = id ?? title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
   return (
-    <section id={anchor} className={cn('space-y-4', className)}>
-      <h2 className="text-xl font-semibold tracking-tight font-heading scroll-mt-20">
+    <section id={anchor} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ 'space-y-4', className)}>
+      <h2 className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-xl font-semibold tracking-tight font-heading scroll-mt-20")}>
         <a href={`#${anchor}`} className="hover:underline underline-offset-4">
           {title}
         </a>
@@ -66,7 +66,7 @@ export function DocFieldTable({ fields }: { fields: FieldDef[] }) {
         <TableBody>
           {fields.map((f) => (
             <TableRow key={f.campo}>
-              <TableCell className="font-medium">{f.campo}</TableCell>
+              <TableCell className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{f.campo}</TableCell>
               <TableCell className="text-muted-foreground">{f.tipo ?? '—'}</TableCell>
               <TableCell>{f.obrigatorio ? 'Sim' : 'Não'}</TableCell>
               <TableCell>{f.descricao}</TableCell>
@@ -90,12 +90,12 @@ export type ActionDef = {
 
 export function DocActionList({ actions }: { actions: ActionDef[] }) {
   return (
-    <ul className="space-y-3">
+    <ul className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
       {actions.map((a) => (
-        <li key={a.nome} className="flex items-start gap-3">
+        <li key={a.nome} className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3")}>
           {a.icon && <a.icon className="h-5 w-5 text-primary mt-0.5 shrink-0" />}
           <div>
-            <span className="font-medium">{a.nome}</span>
+            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{a.nome}</span>
             <span className="text-muted-foreground"> — {a.descricao}</span>
           </div>
         </li>
@@ -128,15 +128,15 @@ export type StepDef = {
 
 export function DocSteps({ steps }: { steps: StepDef[] }) {
   return (
-    <ol className="space-y-4">
+    <ol className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       {steps.map((s, i) => (
-        <li key={i} className="flex gap-4">
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-bold">
+        <li key={i} className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}>
+          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-bold")}>
             {i + 1}
           </span>
-          <div className="pt-0.5">
-            <p className="font-medium">{s.titulo}</p>
-            <p className="text-muted-foreground text-sm">{s.descricao}</p>
+          <div className={cn(/* design-system-escape: pt-0.5 padding direcional sem Inset equiv. */ "pt-0.5")}>
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{s.titulo}</p>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>{s.descricao}</p>
           </div>
         </li>
       ))}

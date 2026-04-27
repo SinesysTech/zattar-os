@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import * as React from "react";
 import type { ColumnDef, Table as TanstackTable } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
@@ -25,7 +26,7 @@ const columns: ColumnDef<Projeto>[] = [
     header: ({ column }) => (
       <Button
         variant="ghost"
-        className="p-0!"
+        className={cn(/* design-system-escape: p-0! → usar <Inset> */ "p-0!")}
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Projeto
@@ -72,7 +73,7 @@ const columns: ColumnDef<Projeto>[] = [
     header: ({ column }) => (
       <Button
         variant="ghost"
-        className="p-0!"
+        className={cn(/* design-system-escape: p-0! → usar <Inset> */ "p-0!")}
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Orçamento

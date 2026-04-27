@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -54,12 +55,12 @@ export function FilterPopoverMulti({
             <>
               {selectedLabels.length <= 2 ? (
                 selectedLabels.map((opt) => (
-                  <AppBadge key={opt.value} variant="secondary" className="ml-1 rounded-sm px-1.5 font-normal">
+                  <AppBadge key={opt.value} variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "ml-1 rounded-sm px-1.5 font-normal")}>
                     {opt.label}
                   </AppBadge>
                 ))
               ) : (
-                <AppBadge variant="secondary" className="ml-1 rounded-sm px-1.5 font-normal">
+                <AppBadge variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "ml-1 rounded-sm px-1.5 font-normal")}>
                   {selectedLabels.length} selecionados
                 </AppBadge>
               )}
@@ -67,7 +68,7 @@ export function FilterPopoverMulti({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-56 p-0" align="start">
+      <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-56 p-0")} align="start">
         <Command>
           <CommandInput placeholder={placeholder || label} className="h-9" />
           <CommandList>
@@ -86,12 +87,12 @@ export function FilterPopoverMulti({
                       onValueChange(next);
                     }}
                   >
-                    <div className="flex items-center space-x-3 py-1">
+                    <div className={cn(/* design-system-escape: space-x-3 sem token DS; py-1 padding direcional sem Inset equiv. */ "flex items-center space-x-3 py-1")}>
                       <Checkbox
                         checked={isSelected}
                         className="pointer-events-none data-[state=checked]:text-white [&>span]:text-white"
                       />
-                      <Text variant="label" as="span" className="leading-none">{option.label}</Text>
+                      <Text variant="label" as="span" className={cn(/* design-system-escape: leading-none sem token DS */ "leading-none")}>{option.label}</Text>
                     </div>
                   </CommandItem>
                 );

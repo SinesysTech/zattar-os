@@ -5,6 +5,7 @@
  * Visualiza análise detalhada do orçamento vs realizado com gráficos
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -108,10 +109,10 @@ function ResumoGeralCards({
 }) {
   if (isLoading) {
     return (
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-4")}>
         {[...Array(4)].map((_, i) => (
           <Card key={i}>
-            <CardContent className="p-4">
+            <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
               <Skeleton className="h-20" />
             </CardContent>
           </Card>
@@ -128,66 +129,66 @@ function ResumoGeralCards({
     : 0;
 
   return (
-    <div className="grid gap-4 md:grid-cols-4">
+    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-4")}>
       <Card>
-        <CardHeader className="pb-2">
+        <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
           <CardDescription>Total Previsto</CardDescription>
-          <CardTitle className="text-2xl font-mono">
+          <CardTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "text-2xl font-mono")}>
             {formatarValor(resumo.totalPrevisto)}
           </CardTitle>
         </CardHeader>
       </Card>
 
       <Card>
-        <CardHeader className="pb-2">
+        <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
           <CardDescription>Total Realizado</CardDescription>
-          <CardTitle className="text-2xl font-mono">
+          <CardTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "text-2xl font-mono")}>
             {formatarValor(resumo.totalRealizado)}
           </CardTitle>
         </CardHeader>
-        <CardContent className="pt-0">
+        <CardContent className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv. */ "pt-0")}>
           <Progress value={resumo.percentualExecutado} className="h-2" />
-          <p className="text-xs text-muted-foreground mt-1">
+          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mt-1")}>
             {resumo.percentualExecutado.toFixed(1)}% executado
           </p>
         </CardContent>
       </Card>
 
       <Card>
-        <CardHeader className="pb-2">
+        <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
           <CardDescription>Variação</CardDescription>
           <CardTitle className={`text-2xl ${getVariacaoColor(variacaoPercentual)}`}>
             {formatarPercentual(variacaoPercentual)}
           </CardTitle>
         </CardHeader>
-        <CardContent className="pt-0">
-          <p className="text-xs text-muted-foreground">
+        <CardContent className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv. */ "pt-0")}>
+          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
             {variacaoPercentual > 0 ? 'Acima do previsto' : 'Abaixo do previsto'}
           </p>
         </CardContent>
       </Card>
 
       <Card>
-        <CardHeader className="pb-2">
+        <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
           <CardDescription>Status dos Itens</CardDescription>
         </CardHeader>
-        <CardContent className="pt-0 space-y-2">
+        <CardContent className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv.; space-y-2 → migrar para <Stack gap="tight"> */ "pt-0 space-y-2")}>
           {resumo.itensAcimaMeta > 0 && (
-            <div className="flex items-center gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <AlertTriangle className="h-4 w-4 text-destructive" />
-              <span className="text-sm">{resumo.itensAcimaMeta} acima da meta</span>
+              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{resumo.itensAcimaMeta} acima da meta</span>
             </div>
           )}
           {resumo.itensAbaixoMeta > 0 && (
-            <div className="flex items-center gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <AlertTriangle className="h-4 w-4 text-warning" />
-              <span className="text-sm">{resumo.itensAbaixoMeta} abaixo da meta</span>
+              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{resumo.itensAbaixoMeta} abaixo da meta</span>
             </div>
           )}
           {resumo.itensAcimaMeta === 0 && resumo.itensAbaixoMeta === 0 && (
-            <div className="flex items-center gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <CheckCircle2 className="h-4 w-4 text-success" />
-              <span className="text-sm">Todos dentro da meta</span>
+              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Todos dentro da meta</span>
             </div>
           )}
         </CardContent>
@@ -203,7 +204,7 @@ function ResumoGeralCards({
 function AnaliseItensTable({ itens }: { itens: AnaliseOrcamentariaItem[] }) {
   if (itens.length === 0) {
     return (
-      <p className="text-center text-muted-foreground py-8">
+      <p className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "text-center text-muted-foreground py-8")}>
         Nenhum item para análise.
       </p>
     );
@@ -225,11 +226,11 @@ function AnaliseItensTable({ itens }: { itens: AnaliseOrcamentariaItem[] }) {
       <table className="w-full">
         <thead>
           <tr className="border-b">
-            <th className="text-left p-3 font-medium">Conta Contábil</th>
-            <th className="text-right p-3 font-medium">Previsto</th>
-            <th className="text-right p-3 font-medium">Realizado</th>
-            <th className="text-right p-3 font-medium">Desvio</th>
-            <th className="text-center p-3 font-medium">Status</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; font-medium → className de <Text>/<Heading> */ "text-left p-3 font-medium")}>Conta Contábil</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; font-medium → className de <Text>/<Heading> */ "text-right p-3 font-medium")}>Previsto</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; font-medium → className de <Text>/<Heading> */ "text-right p-3 font-medium")}>Realizado</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; font-medium → className de <Text>/<Heading> */ "text-right p-3 font-medium")}>Desvio</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; font-medium → className de <Text>/<Heading> */ "text-center p-3 font-medium")}>Status</th>
           </tr>
         </thead>
         <tbody>
@@ -238,28 +239,28 @@ function AnaliseItensTable({ itens }: { itens: AnaliseOrcamentariaItem[] }) {
             const centroCustoLabel = getCentroCustoLabel(item.centroCusto);
             return (
               <tr key={item.id} className="border-b hover:bg-muted/50">
-                <td className="p-3">
+                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3")}>
                   <div className="flex flex-col">
-                    <span className="font-medium">
+                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
                       {getContaLabel(item.contaContabil)}
                     </span>
                     {centroCustoLabel && (
-                      <span className="text-xs text-muted-foreground">
+                      <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                         {centroCustoLabel}
                       </span>
                     )}
                   </div>
                 </td>
-                <td className="p-3 text-right font-mono">
+                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3 text-right font-mono")}>
                   {formatarValor(item.valorPrevisto)}
                 </td>
-                <td className="p-3 text-right font-mono">
+                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3 text-right font-mono")}>
                   {formatarValor(item.valorRealizado)}
                 </td>
                 <td className={`p-3 text-right font-mono ${getVariacaoColor(item.desvioPercentual)}`}>
                   {formatarPercentual(item.desvioPercentual)}
                 </td>
-                <td className="p-3 text-center">
+                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3 text-center")}>
                   <Badge variant={statusBadge.variant}>
                     {statusBadge.label}
                   </Badge>
@@ -280,7 +281,7 @@ function AnaliseItensTable({ itens }: { itens: AnaliseOrcamentariaItem[] }) {
 function AlertasDesvioList({ alertas }: { alertas: AlertaDesvio[] }) {
   if (alertas.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-8 text-center">
+      <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-8 text-center")}>
         <CheckCircle2 className="h-12 w-12 text-success mb-4" />
         <p className="text-muted-foreground">
           Nenhum alerta de desvio identificado.
@@ -316,10 +317,10 @@ function AlertasDesvioList({ alertas }: { alertas: AlertaDesvio[] }) {
   };
 
   return (
-    <div className="space-y-3">
+    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
       {alertas.map((alerta, index) => (
         <Card key={index}>
-          <CardContent className="flex items-start gap-4 p-4">
+          <CardContent className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; p-4 → migrar para <Inset variant="card-compact"> */ "flex items-start gap-4 p-4")}>
             <AlertTriangle
               className={`h-5 w-5 mt-0.5 ${alerta.tipo === 'critico'
                 ? 'text-destructive'
@@ -329,14 +330,14 @@ function AlertasDesvioList({ alertas }: { alertas: AlertaDesvio[] }) {
                 }`}
             />
             <div className="flex-1">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="font-medium">{alerta.descricao}</span>
-                <Badge variant={getTipoBadgeVariant(alerta.tipo)} className="text-xs">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-1")}>
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{alerta.descricao}</span>
+                <Badge variant={getTipoBadgeVariant(alerta.tipo)} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                   {getTipoLabel(alerta.tipo)}
                 </Badge>
               </div>
-              <p className="text-sm text-muted-foreground">{alerta.mensagem}</p>
-              <div className="flex gap-4 mt-2 text-xs text-muted-foreground">
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{alerta.mensagem}</p>
+              <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; text-xs → migrar para <Text variant="caption"> */ "flex gap-4 mt-2 text-xs text-muted-foreground")}>
                 <span className={getVariacaoColor(alerta.desvioPercentual)}>
                   Desvio: {formatarPercentual(alerta.desvioPercentual)}
                 </span>
@@ -356,7 +357,7 @@ function AlertasDesvioList({ alertas }: { alertas: AlertaDesvio[] }) {
 function ProjecaoTable({ itens }: { itens: ProjecaoItem[] }) {
   if (itens.length === 0) {
     return (
-      <p className="text-center text-muted-foreground py-8">
+      <p className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "text-center text-muted-foreground py-8")}>
         Dados insuficientes para projeção.
       </p>
     );
@@ -401,12 +402,12 @@ function ProjecaoTable({ itens }: { itens: ProjecaoItem[] }) {
       <table className="w-full">
         <thead>
           <tr className="border-b">
-            <th className="text-left p-3 font-medium">Mês</th>
-            <th className="text-right p-3 font-medium">Previsto</th>
-            <th className="text-right p-3 font-medium">Realizado</th>
-            <th className="text-right p-3 font-medium">Projetado</th>
-            <th className="text-right p-3 font-medium">vs Previsto</th>
-            <th className="text-center p-3 font-medium">Tendência</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; font-medium → className de <Text>/<Heading> */ "text-left p-3 font-medium")}>Mês</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; font-medium → className de <Text>/<Heading> */ "text-right p-3 font-medium")}>Previsto</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; font-medium → className de <Text>/<Heading> */ "text-right p-3 font-medium")}>Realizado</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; font-medium → className de <Text>/<Heading> */ "text-right p-3 font-medium")}>Projetado</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; font-medium → className de <Text>/<Heading> */ "text-right p-3 font-medium")}>vs Previsto</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; font-medium → className de <Text>/<Heading> */ "text-center p-3 font-medium")}>Tendência</th>
           </tr>
         </thead>
         <tbody>
@@ -415,23 +416,23 @@ function ProjecaoTable({ itens }: { itens: ProjecaoItem[] }) {
             const tendencia = getTendencia(item.valorPrevisto, item.valorProjetado);
             return (
               <tr key={index} className="border-b hover:bg-muted/50">
-                <td className="p-3 font-medium">{item.mes}</td>
-                <td className="p-3 text-right font-mono">
+                <td className={cn(/* design-system-escape: p-3 → usar <Inset>; font-medium → className de <Text>/<Heading> */ "p-3 font-medium")}>{item.mes}</td>
+                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3 text-right font-mono")}>
                   {formatarValor(item.valorPrevisto)}
                 </td>
-                <td className="p-3 text-right font-mono">
+                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3 text-right font-mono")}>
                   {formatarValor(item.valorRealizado)}
                 </td>
-                <td className="p-3 text-right font-mono">
+                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3 text-right font-mono")}>
                   {formatarValor(item.valorProjetado)}
                 </td>
                 <td className={`p-3 text-right font-mono ${getVariacaoColor(variacao)}`}>
                   {formatarPercentual(variacao)}
                 </td>
-                <td className="p-3">
-                  <div className="flex items-center justify-center gap-1">
+                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3")}>
+                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center justify-center gap-1")}>
                     {getTendenciaIcon(tendencia)}
-                    <span className="text-sm">{getTendenciaLabel(tendencia)}</span>
+                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{getTendenciaLabel(tendencia)}</span>
                   </div>
                 </td>
               </tr>
@@ -595,15 +596,15 @@ export default function AnaliseOrcamentariaPage() {
   // Loading
   if (isLoading && !orcamento) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center gap-4">
+      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
           <Skeleton className="h-10 w-10" />
           <Skeleton className="h-8 w-64" />
         </div>
-        <div className="grid gap-4 md:grid-cols-4">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-4")}>
           {[...Array(4)].map((_, i) => (
             <Card key={i}>
-              <CardContent className="p-6">
+              <CardContent className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
                 <Skeleton className="h-20" />
               </CardContent>
             </Card>
@@ -616,13 +617,13 @@ export default function AnaliseOrcamentariaPage() {
   // Erro
   if (error || !orcamento) {
     return (
-      <div className="space-y-6">
+      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
         <Button variant="ghost" onClick={handleVoltar}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
         </Button>
-        <div className="rounded-md bg-destructive/15 p-4 text-sm text-destructive">
-          <p className="font-semibold">Erro ao carregar análise</p>
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-4 text-sm text-destructive")}>
+          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Erro ao carregar análise</p>
           <p>{error || 'Orçamento não encontrado'}</p>
         </div>
       </div>
@@ -632,10 +633,10 @@ export default function AnaliseOrcamentariaPage() {
   const statusConfig = STATUS_CONFIG[orcamento.status];
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       {/* Header - Botão Voltar e Badge */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
           <Button variant="ghost" size="icon" aria-label="Voltar" onClick={handleVoltar}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
@@ -649,13 +650,13 @@ export default function AnaliseOrcamentariaPage() {
       <ResumoGeralCards resumo={resumo} isLoading={loadingAnalise} />
 
       {/* Tabs de Conteúdo */}
-      <Tabs defaultValue="analise" className="space-y-4">
+      <Tabs defaultValue="analise" className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         <TabsList>
           <TabsTrigger value="analise">Análise por Item</TabsTrigger>
           <TabsTrigger value="alertas">
             Alertas
             {alertas && alertas.length > 0 && (
-              <Badge variant="destructive" className="ml-2 text-xs">
+              <Badge variant="destructive" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "ml-2 text-xs")}>
                 {alertas.length}
               </Badge>
             )}
@@ -663,7 +664,7 @@ export default function AnaliseOrcamentariaPage() {
           <TabsTrigger value="projecao">Projeção</TabsTrigger>
         </TabsList>
 
-        <div className="flex gap-2 mt-4 justify-end">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2 mt-4 justify-end")}>
           <Button variant="outline" onClick={handleRefresh}>
             <RefreshCw className="mr-2 h-4 w-4" />
             Atualizar
@@ -732,7 +733,7 @@ export default function AnaliseOrcamentariaPage() {
               {loadingProjecao ? (
                 <Skeleton className="h-64" />
               ) : errorProjecao ? (
-                <p className="text-center text-destructive py-8">{errorProjecao}</p>
+                <p className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "text-center text-destructive py-8")}>{errorProjecao}</p>
               ) : (
                 <ProjecaoTable itens={projecao} />
               )}

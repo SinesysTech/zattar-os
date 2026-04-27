@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
@@ -21,7 +22,7 @@ import {
 
 export default function FolhasPagamento() {
   return (
-    <div className="space-y-10">
+    <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
       <div>
         <Heading level="page">Folhas de Pagamento</Heading>
         <p className="text-muted-foreground mt-2">
@@ -105,7 +106,7 @@ export default function FolhasPagamento() {
         <p className="text-muted-foreground mb-4">
           Ao clicar em um colaborador dentro da folha, o sistema exibe o demonstrativo individual:
         </p>
-        <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+        <ul className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "space-y-2 text-sm text-muted-foreground list-disc list-inside")}>
           <li>Salário base do período</li>
           <li>Adicionais aplicados (hora extra, adicional noturno, bonificações)</li>
           <li>Descontos aplicados (INSS, IRRF, faltas)</li>
@@ -169,7 +170,7 @@ export default function FolhasPagamento() {
         <p className="text-muted-foreground mb-4">
           O relatório mensal da folha de pagamento consolida:
         </p>
-        <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+        <ul className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "space-y-2 text-sm text-muted-foreground list-disc list-inside")}>
           <li>Total bruto da folha</li>
           <li>Total de descontos (INSS, IRRF, outros)</li>
           <li>Total líquido a pagar</li>

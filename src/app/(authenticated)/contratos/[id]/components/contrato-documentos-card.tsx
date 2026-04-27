@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { FileText, Plus, Upload } from 'lucide-react';
 
@@ -33,7 +34,7 @@ export function ContratoDocumentosCard({
         icon={FileText}
         label="Peças jurídicas e anexos"
         action={
-          <div className="flex items-center gap-1.5">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
             <Button
               variant="outline"
               size="sm"

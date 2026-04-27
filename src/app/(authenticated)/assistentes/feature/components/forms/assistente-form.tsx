@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -61,9 +62,9 @@ export function AssistenteForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4 py-4">
+    <form onSubmit={handleSubmit(onFormSubmit)} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-4 padding direcional sem Inset equiv. */ "space-y-4 py-4")}>
       {/* Nome */}
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label htmlFor="nome">
           Nome <span className="text-destructive">*</span>
         </Label>
@@ -74,12 +75,12 @@ export function AssistenteForm({
           disabled={isLoading}
         />
         {errors.nome && (
-          <p className="text-sm text-destructive">{errors.nome?.message as string}</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.nome?.message as string}</p>
         )}
       </div>
 
       {/* Descrição */}
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label htmlFor="descricao">Descrição</Label>
         <Textarea
           id="descricao"
@@ -89,12 +90,12 @@ export function AssistenteForm({
           rows={3}
         />
         {errors.descricao && (
-          <p className="text-sm text-destructive">{errors.descricao?.message as string}</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.descricao?.message as string}</p>
         )}
       </div>
 
       {/* Código do Iframe */}
-      <div className="grid gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
         <Label htmlFor="iframe_code">
           Código do Iframe <span className="text-destructive">*</span>
         </Label>
@@ -106,15 +107,15 @@ export function AssistenteForm({
           rows={5}
         />
         {errors.iframe_code && (
-          <p className="text-sm text-destructive">{errors.iframe_code?.message as string}</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.iframe_code?.message as string}</p>
         )}
       </div>
 
       {/* Status - apenas edição */}
       {isEditing && (
-        <div className="grid gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
           <Label htmlFor="ativo">Status</Label>
-          <div className="flex items-center space-x-2">
+          <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
             <Switch
               id="ativo"
               checked={Boolean(ativo)}
@@ -128,7 +129,7 @@ export function AssistenteForm({
         </div>
       )}
 
-      <div className="flex justify-end gap-2 pt-4">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-4 padding direcional sem Inset equiv. */ "flex justify-end gap-2 pt-4")}>
         <Button 
           type="button" 
           variant="outline" 

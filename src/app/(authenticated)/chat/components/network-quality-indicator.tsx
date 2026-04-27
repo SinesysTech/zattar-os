@@ -66,7 +66,7 @@ export function NetworkQualityIndicator({
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div className={cn("flex items-center gap-2 cursor-help", className)}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 cursor-help", className)}>
             <Icon 
               className={cn(
                 "w-5 h-5 transition-colors duration-300", 
@@ -75,17 +75,17 @@ export function NetworkQualityIndicator({
               )} 
             />
             {showLabel && (
-              <span className={cn("text-xs font-medium hidden md:inline-block", config.color)}>
+              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium hidden md:inline-block", config.color)}>
                 {config.label}
               </span>
             )}
           </div>
         </TooltipTrigger>
         <TooltipContent side="top">
-          <div className="flex flex-col gap-1">
-            <p className="font-semibold">{config.label}</p>
-            <p className="text-xs text-muted-foreground">{config.description}</p>
-            {score >= 0 && <p className="text-xs opacity-70">Score: {score}/5</p>}
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>{config.label}</p>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{config.description}</p>
+            {score >= 0 && <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs opacity-70")}>Score: {score}/5</p>}
           </div>
         </TooltipContent>
       </Tooltip>

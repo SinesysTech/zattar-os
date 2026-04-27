@@ -5,6 +5,7 @@
  * Usado na página de expedientes quando o usuário clica em um badge de parte
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import Link from 'next/link';
 import { AppBadge } from '@/components/ui/app-badge';
@@ -98,11 +99,11 @@ export function ParteDetalheDialog({
   const Campo = ({ label, value, icon }: { label: string; value: React.ReactNode; icon?: React.ReactNode }) => {
     if (!value || value === '-') return null;
     return (
-      <div className="flex items-start gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2")}>
         {icon && <span className="text-muted-foreground mt-0.5">{icon}</span>}
         <div>
-          <div className="text-xs text-muted-foreground">{label}</div>
-          <div className="text-sm">{value}</div>
+          <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{label}</div>
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{value}</div>
         </div>
       </div>
     );
@@ -117,16 +118,16 @@ export function ParteDetalheDialog({
       : formatarTelefone(p.ddd_telefone, p.numero_telefone);
 
     return (
-      <div className={`space-y-3 ${!isPrincipal ? 'pt-3 border-t' : ''}`}>
+      <div className={`space-y-3 ${!isPrincipal ? /* design-system-escape: pt-3 padding direcional sem Inset equiv. */ 'pt-3 border-t' : ''}`}>
         {/* Header com nome e tipo */}
-        <div className="flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           {tipoPessoaIcon}
           <div className="flex-1 min-w-0">
-            <div className="font-medium truncate">{p.nome}</div>
-            <div className="text-xs text-muted-foreground">
+            <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium truncate")}>{p.nome}</div>
+            <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
               {formatarTipoPessoa(p.tipo_pessoa)}
               {p.tipo_entidade === 'cliente' && (
-                <AppBadge variant="success" className="ml-2 text-[10px] px-1 py-0">
+                <AppBadge variant="success" className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "ml-2 text-[10px] px-1 py-0")}>
                   Cliente
                 </AppBadge>
               )}
@@ -143,7 +144,7 @@ export function ParteDetalheDialog({
         )}
 
         {/* Contato */}
-        <div className="grid grid-cols-1 gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-1 gap-2")}>
           {p.emails && p.emails.length > 0 && (
             <Campo
               label={p.emails.length > 1 ? 'E-mails' : 'E-mail'}
@@ -182,7 +183,7 @@ export function ParteDetalheDialog({
       open={open}
       onOpenChange={onOpenChange}
       title={
-        <div className="flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           <AppBadge variant="outline" className={poloColorClass}>
             {poloLabel}
           </AppBadge>
@@ -192,13 +193,13 @@ export function ParteDetalheDialog({
       maxWidth="sm"
       footer={footerButton}
     >
-      <div className="space-y-4 py-2">
+      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-2 padding direcional sem Inset equiv. */ "space-y-4 py-2")}>
         {/* Loading state */}
         {isLoading && (
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <Skeleton className="h-5 w-5 rounded-full" />
-              <div className="space-y-1 flex-1">
+              <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1 flex-1")}>
                 <Skeleton className="h-4 w-3/4" />
                 <Skeleton className="h-3 w-1/2" />
               </div>
@@ -211,20 +212,20 @@ export function ParteDetalheDialog({
 
         {/* Error state */}
         {!isLoading && error && (
-          <div className="flex flex-col items-center justify-center py-6 text-center">
+          <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-6 text-center")}>
             <AlertCircle className="h-10 w-10 text-muted-foreground mb-2" />
-            <p className="text-sm text-muted-foreground">{error}</p>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{error}</p>
           </div>
         )}
 
         {/* Parte não encontrada */}
         {!isLoading && !error && !parte && (
-          <div className="flex flex-col items-center justify-center py-6 text-center">
+          <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-6 text-center")}>
             <AlertCircle className="h-10 w-10 text-muted-foreground mb-2" />
-            <p className="text-sm text-muted-foreground">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
               Parte não encontrada no cadastro
             </p>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mt-1")}>
               Nome exibido: {nomeExibido}
             </p>
           </div>
@@ -237,8 +238,8 @@ export function ParteDetalheDialog({
 
             {/* Outras partes do mesmo polo */}
             {outrasPartes.length > 0 && (
-              <div className="pt-3 border-t">
-                <div className="text-xs text-muted-foreground mb-2">
+              <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "pt-3 border-t")}>
+                <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mb-2")}>
                   Outras partes ({outrasPartes.length})
                 </div>
                 {outrasPartes.map((p) => (

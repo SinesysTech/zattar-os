@@ -165,7 +165,7 @@ function GlassCard({
       type="button"
       onClick={() => onItemClick(item)}
       className={cn(
-        'group relative overflow-hidden rounded-2xl border border-border/40 bg-card p-4 text-left cursor-pointer',
+        /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'group relative overflow-hidden rounded-2xl border border-border/40 bg-card p-4 text-left cursor-pointer',
         'transition-all duration-200 ease-out',
         'hover:border-border/70 hover:-translate-y-0.5 hover:shadow-lg',
         isSelected && 'border-primary/50 ring-1 ring-primary/25 bg-primary/[0.03]',
@@ -180,7 +180,7 @@ function GlassCard({
       />
 
       {/* Header: ícone + menu */}
-      <div className="relative flex items-start justify-between gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "relative flex items-start justify-between gap-2")}>
         <IconContainer size="lg" className={cn('rounded-2xl', ACCENT_BG[accent])}>
           <Icon className={cn('size-5', ACCENT_TEXT[accent])} />
         </IconContainer>
@@ -200,7 +200,7 @@ function GlassCard({
               {item.tipo === 'arquivo' && (
                 <DropdownMenuItem
                   onClick={(e) => onOpen(item, e)}
-                  className="gap-2 text-xs cursor-pointer"
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "gap-2 text-xs cursor-pointer")}
                 >
                   <ExternalLink className="size-3.5" />
                   Abrir
@@ -208,7 +208,7 @@ function GlassCard({
               )}
               <DropdownMenuItem
                 onClick={(e) => onShare(item, e)}
-                className="gap-2 text-xs cursor-pointer"
+                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "gap-2 text-xs cursor-pointer")}
               >
                 <Share2 className="size-3.5" />
                 Compartilhar
@@ -216,7 +216,7 @@ function GlassCard({
               {item.tipo !== 'pasta' && (
                 <DropdownMenuItem
                   onClick={(e) => onDelete(item, e)}
-                  className="gap-2 text-xs cursor-pointer text-destructive focus:text-destructive"
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "gap-2 text-xs cursor-pointer text-destructive focus:text-destructive")}
                 >
                   <Trash2 className="size-3.5" />
                   Excluir
@@ -229,7 +229,7 @@ function GlassCard({
 
       {/* Body: nome + meta */}
       <div className="relative mt-3.5 min-h-[52px]">
-        <h3 className="text-[13.5px] font-semibold text-foreground line-clamp-2 leading-snug">
+        <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-snug sem token DS */ "text-[13.5px] font-semibold text-foreground line-clamp-2 leading-snug")}>
           {nome}
         </h3>
         {meta && (
@@ -238,8 +238,8 @@ function GlassCard({
       </div>
 
       {/* Footer: criador + data */}
-      <div className="relative mt-4 pt-3 border-t border-border/30 flex items-center justify-between gap-2">
-        <div className="flex items-center gap-1.5 min-w-0">
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "relative mt-4 pt-3 border-t border-border/30 flex items-center justify-between gap-2")}>
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 min-w-0")}>
           <Avatar className="size-5">
             {criadorAvatar && <AvatarImage src={criadorAvatar} alt={criador.nome} />}
             <AvatarFallback className="text-[8px] bg-primary/10 text-primary">
@@ -264,13 +264,13 @@ function GlassCard({
 
 function CardsSkeleton() {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3")}>
       {Array.from({ length: 10 }, (_, i) => (
-        <div key={i} className="rounded-2xl border border-border/40 bg-card p-4">
+        <div key={i} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-2xl border border-border/40 bg-card p-4")}>
           <Skeleton className="size-10 rounded-2xl" />
           <Skeleton className="h-3.5 w-full mt-3.5" />
           <Skeleton className="h-3 w-20 mt-2" />
-          <div className="mt-4 pt-3 border-t border-border/30 flex items-center gap-1.5">
+          <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; gap-1.5 gap sem token DS */ "mt-4 pt-3 border-t border-border/30 flex items-center gap-1.5")}>
             <Skeleton className="size-5 rounded-full" />
             <Skeleton className="h-2.5 w-16" />
           </div>
@@ -286,10 +286,10 @@ function CardsSkeleton() {
 
 function CardsEmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center py-16 opacity-60">
+    <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
       <FileSearch className="size-10 text-muted-foreground/30 mb-4" />
-      <p className="text-sm font-medium text-muted-foreground/60">Pasta vazia</p>
-      <p className="text-xs text-muted-foreground/40 mt-1">
+      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/60")}>Pasta vazia</p>
+      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/40 mt-1")}>
         Adicione uma pasta, documento ou faça upload
       </p>
     </div>
@@ -313,7 +313,7 @@ export function DocumentosGlassCards({
   if (items.length === 0) return <CardsEmptyState />;
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3")}>
       {items.map((item) => {
         const key = `${item.tipo}-${item.dados.id}`;
         return (

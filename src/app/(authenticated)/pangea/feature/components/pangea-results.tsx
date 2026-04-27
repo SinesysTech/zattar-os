@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -54,7 +55,7 @@ function renderSafeMarkedText(text: string): React.ReactNode {
     if (!token) continue;
     if (inMark) {
       nodes.push(
-        <mark key={`m-${key++}`} className="rounded bg-muted px-1 py-0.5">
+        <mark key={`m-${key++}`} className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "rounded bg-muted px-1 py-0.5")}>
           {token}
         </mark>
       );
@@ -108,23 +109,23 @@ export function PangeaResults({ data }: { data: PangeaBuscaResponse }) {
   }, [data.resultados, aggsByOrgao]);
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <Card>
         <CardHeader>
           <CardTitle>Resumo</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           <div>
             <Typography.Muted>Total</Typography.Muted>
             <Typography.H3>{total}</Typography.H3>
           </div>
           <div>
             <Typography.Muted>Por tribunal</Typography.Muted>
-            <div className="mt-2 flex flex-wrap gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2 flex flex-wrap gap-2")}>
               {grouped.slice(0, 16).map((g) => {
                 const badgeCode = toBadgeTribunalCode(g.orgao);
                 return (
-                  <AppBadge key={`org-${g.orgao}`} variant="neutral" className="flex items-center gap-2">
+                  <AppBadge key={`org-${g.orgao}`} variant="neutral" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                     <TribunalBadge codigo={badgeCode} />
                     <span>{g.total}</span>
                   </AppBadge>
@@ -152,23 +153,23 @@ export function PangeaResults({ data }: { data: PangeaBuscaResponse }) {
                 return (
                   <AccordionItem key={g.orgao} value={g.orgao}>
                     <AccordionTrigger className="hover:no-underline">
-                      <div className="flex items-center gap-2 w-full">
+                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 w-full")}>
                         <TribunalBadge codigo={badgeCode} />
-                        <Typography.Muted className="text-sm">{g.orgao}</Typography.Muted>
+                        <Typography.Muted className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{g.orgao}</Typography.Muted>
                         <AppBadge variant="neutral" className="ml-auto">
                           {g.total}
                         </AppBadge>
                       </div>
                     </AccordionTrigger>
                     <AccordionContent>
-                      <div className="space-y-3 pt-2">
+                      <div className={cn(/* design-system-escape: space-y-3 sem token DS; pt-2 padding direcional sem Inset equiv. */ "space-y-3 pt-2")}>
                         {g.resultados.map((r) => {
                           const { titulo, subtitulo } = getResumoTexto(r);
 
                           return (
                             <Card key={r.id}>
-                              <CardHeader className="space-y-2">
-                                <div className="flex flex-wrap items-center gap-2">
+                              <CardHeader className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap items-center gap-2")}>
                                   <AppBadge variant="info">{r.tipo}</AppBadge>
                                   {typeof r.nr === 'number' && <AppBadge variant="secondary">nr {r.nr}</AppBadge>}
                                   {r.situacao && <AppBadge variant="neutral">{r.situacao}</AppBadge>}
@@ -178,18 +179,18 @@ export function PangeaResults({ data }: { data: PangeaBuscaResponse }) {
                                   {r.possuiDecisoes && <AppBadge variant="success">Com decisões</AppBadge>}
                                   {r.alertaSituacao && <AppBadge variant="warning">{r.alertaSituacao}</AppBadge>}
                                 </div>
-                                <div className="space-y-2">
-                                  <Typography.H3 className="text-base leading-6">{titulo}</Typography.H3>
+                                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                                  <Typography.H3 className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; leading-6 sem token DS */ "text-base leading-6")}>{titulo}</Typography.H3>
                                   {subtitulo && (
-                                    <Typography.Muted className="leading-6">{subtitulo}</Typography.Muted>
+                                    <Typography.Muted className={cn(/* design-system-escape: leading-6 sem token DS */ "leading-6")}>{subtitulo}</Typography.Muted>
                                   )}
                                 </div>
                               </CardHeader>
 
                               {r.processosParadigma?.length ? (
-                                <CardContent className="pt-0">
+                                <CardContent className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv. */ "pt-0")}>
                                   <Typography.Muted className="mb-2">Processos paradigma</Typography.Muted>
-                                  <div className="flex flex-col gap-1">
+                                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
                                     {r.processosParadigma.map((p) => (
                                       p.link ? (
                                         <Link
@@ -197,12 +198,12 @@ export function PangeaResults({ data }: { data: PangeaBuscaResponse }) {
                                           href={p.link}
                                           target="_blank"
                                           rel="noreferrer"
-                                          className="text-sm underline underline-offset-4"
+                                          className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm underline underline-offset-4")}
                                         >
                                           {p.numero}
                                         </Link>
                                       ) : (
-                                        <span key={p.numero} className="text-sm text-muted-foreground">
+                                        <span key={p.numero} className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                                           {p.numero}
                                         </span>
                                       )

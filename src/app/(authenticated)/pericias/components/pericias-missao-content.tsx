@@ -153,14 +153,14 @@ function ResponsavelAvatar({
 
   if (responsavel && nome) {
     return (
-      <div className="flex items-center gap-2 min-w-0">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
         <Avatar size="xs" className="shrink-0 size-6">
           <AvatarImage src={responsavel.avatarUrl || undefined} alt={nome} />
           <AvatarFallback className="text-[9px]">
             {getInitials(nome)}
           </AvatarFallback>
         </Avatar>
-        <span className="text-[12px] font-medium text-foreground/85 truncate">
+        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[12px] font-medium text-foreground/85 truncate")}>
           {nome}
         </span>
       </div>
@@ -168,7 +168,7 @@ function ResponsavelAvatar({
   }
 
   return (
-    <div className="flex items-center gap-2 min-w-0">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
       <div className="size-6 rounded-full bg-muted/40 flex items-center justify-center shrink-0">
         <User className="size-3 text-muted-foreground/40" />
       </div>
@@ -222,10 +222,10 @@ function PericiaMissionCard({
           isCritical && 'border-destructive/20',
         )}
       >
-        <div className="p-4 flex flex-col gap-3">
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; gap-3 gap sem token DS */ "p-4 flex flex-col gap-3")}>
           {/* ── 1. Header: identidade (overline + heading) + Prazo ── */}
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-center gap-2.5 min-w-0">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
+            <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5 min-w-0")}>
               <IconContainer
                 size="md"
                 className={cn(
@@ -241,12 +241,12 @@ function PericiaMissionCard({
                 />
               </IconContainer>
               <div className="min-w-0">
-                <span className="block text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/65">
+                <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "block text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/65")}>
                   {SITUACAO_PERICIA_LABELS[pericia.situacaoCodigo]}
                 </span>
                 <Heading
                   level="card"
-                  className="mt-0.5 truncate text-sm"
+                  className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-0.5 truncate text-sm")}
                 >
                   {especialidade || 'Perícia técnica'}
                 </Heading>
@@ -256,7 +256,7 @@ function PericiaMissionCard({
             {/* Prazo (substituindo countdown "Atrasado Xd") */}
             <div
               className={cn(
-                'inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg shrink-0 text-[11px] font-semibold tabular-nums',
+                /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg shrink-0 text-[11px] font-semibold tabular-nums',
                 URGENCY_BADGE[urgency],
               )}
             >
@@ -270,23 +270,23 @@ function PericiaMissionCard({
           </div>
 
           {/* ── 2. Info grid: Tribunal | Processo ─────────────────── */}
-          <div className="grid grid-cols-3 gap-3 rounded-lg bg-border/5 px-3 py-2.5">
-            <div className="flex flex-col gap-0.5 min-w-0">
-              <span className="text-[9px] font-medium text-muted-foreground/55 uppercase tracking-wider">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "grid grid-cols-3 gap-3 rounded-lg bg-border/5 px-3 py-2.5")}>
+            <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5 min-w-0")}>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[9px] font-medium text-muted-foreground/55 uppercase tracking-wider")}>
                 Tribunal
               </span>
-              <span className="text-xs font-medium text-foreground/90 truncate">
+              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-foreground/90 truncate")}>
                 {pericia.trt}
                 <span className="text-[9px] text-muted-foreground/55 ml-1 font-normal">
                   {getGrauLabel(pericia.grau)}
                 </span>
               </span>
             </div>
-            <div className="flex flex-col gap-0.5 min-w-0 col-span-2">
-              <span className="text-[9px] font-medium text-muted-foreground/55 uppercase tracking-wider">
+            <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5 min-w-0 col-span-2")}>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[9px] font-medium text-muted-foreground/55 uppercase tracking-wider")}>
                 Processo
               </span>
-              <span className="text-xs font-medium text-foreground/90 tabular-nums truncate">
+              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-foreground/90 tabular-nums truncate")}>
                 {pericia.numeroProcesso}
               </span>
             </div>
@@ -294,20 +294,20 @@ function PericiaMissionCard({
 
           {/* ── 3. Partes: Autor vs Réu ──────────────────────────── */}
           {(parteAutora || parteRe) && (
-            <div className="flex items-center gap-2 rounded-lg bg-border/5 px-3 py-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 rounded-lg bg-border/5 px-3 py-2")}>
               <div className="flex-1 min-w-0">
-                <span className="block text-[9px] font-medium uppercase tracking-wider text-muted-foreground/55">
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "block text-[9px] font-medium uppercase tracking-wider text-muted-foreground/55")}>
                   Autor
                 </span>
                 <span className="block text-[11px] text-foreground/80 truncate">
                   {parteAutora || '—'}
                 </span>
               </div>
-              <span className="text-[9px] text-muted-foreground/40 shrink-0 uppercase tracking-wider">
+              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/40 shrink-0 uppercase tracking-wider")}>
                 vs
               </span>
               <div className="flex-1 min-w-0 text-right">
-                <span className="block text-[9px] font-medium uppercase tracking-wider text-muted-foreground/55">
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "block text-[9px] font-medium uppercase tracking-wider text-muted-foreground/55")}>
                   Réu
                 </span>
                 <span className="block text-[11px] text-foreground/80 truncate">
@@ -319,10 +319,10 @@ function PericiaMissionCard({
 
           {/* ── 4. Perito (corpo, sem truncate) ─────────────────── */}
           {perito && (
-            <div className="flex items-start gap-1.5 text-[12px] text-foreground/75 wrap-break-word">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-start gap-1.5 text-[12px] text-foreground/75 wrap-break-word")}>
               <Briefcase className="size-3 text-muted-foreground/50 shrink-0 mt-0.5" />
-              <span className="wrap-break-word leading-snug">
-                <span className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground/55 mr-1.5">
+              <span className={cn(/* design-system-escape: leading-snug sem token DS */ "wrap-break-word leading-snug")}>
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[9px] font-medium uppercase tracking-wider text-muted-foreground/55 mr-1.5")}>
                   Perito
                 </span>
                 {perito}
@@ -331,7 +331,7 @@ function PericiaMissionCard({
           )}
 
           {/* ── 5. Footer: Responsável (canto inferior direito) ── */}
-          <div className="flex items-center justify-end gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-end gap-2")}>
             <ResponsavelAvatar
               responsavelId={pericia.responsavelId}
               usuarios={usuarios}
@@ -354,17 +354,17 @@ interface GroupHeaderProps {
 function GroupHeader({ group }: GroupHeaderProps) {
   const Icon = group.icon;
   return (
-    <div className="flex items-center gap-3">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
       <IconContainer size="md" className={group.iconBg}>
         <Icon className={cn('size-4', group.iconColor)} />
       </IconContainer>
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-semibold tracking-tight text-foreground">
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-sm font-semibold tracking-tight text-foreground")}>
           {group.label}
         </p>
         <p className="text-[11px] text-muted-foreground/65">{group.description}</p>
       </div>
-      <span className="inline-flex items-center rounded-full bg-muted/50 px-2 py-0.5 text-[10px] font-medium tabular-nums text-muted-foreground/70">
+      <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center rounded-full bg-muted/50 px-2 py-0.5 text-[10px] font-medium tabular-nums text-muted-foreground/70")}>
         {group.pericias.length}
       </span>
     </div>
@@ -532,14 +532,14 @@ export function PericiasMissaoContent({
   }, []);
 
   return (
-    <div className="space-y-5">
+    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       {/* Grupos de urgência */}
       {isLoading ? (
-        <div className="space-y-4">
+        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="space-y-2">
+            <div key={i} className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Skeleton className="h-10 w-64 rounded-lg" />
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3")}>
                 {Array.from({ length: 3 }).map((_, j) => (
                   <Skeleton key={j} className="h-40 rounded-2xl" />
                 ))}
@@ -548,23 +548,23 @@ export function PericiasMissaoContent({
           ))}
         </div>
       ) : pericias.length === 0 ? (
-        <GlassPanel depth={1} className="p-12 flex flex-col items-center justify-center text-center">
+        <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12 flex flex-col items-center justify-center text-center")}>
           <Sparkles className="size-10 text-primary/30 mb-3" />
           <Heading level="card">Nenhuma perícia ativa</Heading>
-          <p className="text-sm text-muted-foreground/60 mt-1">
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/60 mt-1")}>
             {situacaoFilter !== 'todos'
               ? `Sem perícias na situação "${SITUACAO_PERICIA_LABELS[situacaoFilter as SituacaoPericiaCodigo]}"`
               : 'Todas as perícias estão finalizadas ou canceladas.'}
           </p>
         </GlassPanel>
       ) : (
-        <div className="space-y-6">
+        <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
           {groups
             .filter((g) => g.pericias.length > 0)
             .map((group) => (
-              <section key={group.key} className="space-y-3">
+              <section key={group.key} className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
                 <GroupHeader group={group} />
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+                <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3")}>
                   {group.pericias.map((p) => (
                     <PericiaMissionCard
                       key={p.id}

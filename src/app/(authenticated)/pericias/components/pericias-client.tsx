@@ -335,12 +335,12 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
   const hideFilterBarAdvanced = viewMode === 'semana';
 
   return (
-    <div className="space-y-5">
+    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       {/* ── Header ──────────────────────────────────────────── */}
-      <div className="flex items-end justify-between gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
         <div>
           <Heading level="page">Perícias</Heading>
-          <p className="text-sm text-muted-foreground/70 mt-0.5">{subtitle}</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/70 mt-0.5")}>{subtitle}</p>
         </div>
         <Button
           size="sm"
@@ -354,7 +354,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
 
       {/* ── Pulse Strip (KPIs reais) ────────────────────────── */}
       {isStatsLoading ? (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 lg:grid-cols-4 gap-3")}>
           {Array.from({ length: 4 }).map((_, i) => (
             <Skeleton key={i} className="h-24 rounded-xl" />
           ))}
@@ -364,7 +364,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
       ) : null}
 
       {/* ── Insight Banners ─────────────────────────────────── */}
-      <div role="status" aria-live="polite" className="space-y-2 empty:hidden">
+      <div role="status" aria-live="polite" className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 empty:hidden")}>
         {!isStatsLoading && stats && stats.prazosCriticos7d > 0 && (
           <InsightBanner type="warning">
             {stats.prazosCriticos7d} perícia
@@ -396,7 +396,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
       )}
 
       {/* ── Toolbar universal: Filters | Search | ViewToggle+Settings ── */}
-      <div className="flex items-center gap-2 flex-wrap">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
         <PericiasFilterBar
           situacaoFilter={situacaoFilter}
           onSituacaoChange={setSituacaoFilter}
@@ -430,7 +430,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
           placeholder="Buscar processo, perito..."
         />
 
-        <div className="flex items-center gap-0.5 p-0.5 rounded-lg bg-border/6">
+        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS; p-0.5 → usar <Inset> */ "flex items-center gap-0.5 p-0.5 rounded-lg bg-border/6")}>
           {VIEW_OPTIONS.map((opt) => (
             <button
               key={opt.id}
@@ -438,7 +438,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
               onClick={() => handleViewChange(opt.id)}
               aria-label={opt.label}
               className={cn(
-                'p-1.5 rounded-md transition-all cursor-pointer',
+                /* design-system-escape: p-1.5 → usar <Inset> */ 'p-1.5 rounded-md transition-all cursor-pointer',
                 viewMode === opt.id
                   ? 'bg-primary/12 text-primary'
                   : 'text-muted-foreground/55 hover:text-muted-foreground',
@@ -448,7 +448,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
             </button>
           ))}
           <span
-            className="mx-0.5 h-4 w-px bg-border/40"
+            className={cn(/* design-system-escape: mx-0.5 margin sem primitiva DS */ "mx-0.5 h-4 w-px bg-border/40")}
             aria-hidden="true"
           />
           <DropdownMenu>
@@ -456,24 +456,24 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
               <button
                 type="button"
                 aria-label="Configurações de perícias"
-                className="p-1.5 rounded-md text-muted-foreground/55 hover:text-muted-foreground transition-all cursor-pointer"
+                className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-md text-muted-foreground/55 hover:text-muted-foreground transition-all cursor-pointer")}
               >
                 <SlidersHorizontal className="size-3.5" />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="glass-dropdown rounded-2xl p-1.5 min-w-44 border-border/40"
+              className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "glass-dropdown rounded-2xl p-1.5 min-w-44 border-border/40")}
             >
               <DropdownMenuItem
                 asChild
-                className="rounded-lg text-xs px-3 py-2 cursor-pointer"
+                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "rounded-lg text-xs px-3 py-2 cursor-pointer")}
               >
                 <Link href="/pericias/especialidades">Especialidades</Link>
               </DropdownMenuItem>
               <DropdownMenuItem
                 asChild
-                className="rounded-lg text-xs px-3 py-2 cursor-pointer"
+                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "rounded-lg text-xs px-3 py-2 cursor-pointer")}
               >
                 <Link href="/pericias/peritos">Peritos</Link>
               </DropdownMenuItem>
@@ -484,15 +484,15 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
 
       {/* ── Active Filter Chips ─────────────────────────────── */}
       {activeFilterChips.length > 0 && (
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-[11px] uppercase tracking-wider text-muted-foreground/60">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap items-center gap-2")}>
+          <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[11px] uppercase tracking-wider text-muted-foreground/60")}>
             Filtros:
           </span>
           {activeFilterChips.map((chip) => (
             <AppBadge
               key={chip.key}
               variant="secondary"
-              className="gap-1 pr-1 cursor-pointer hover:bg-secondary/80"
+              className={cn(/* design-system-escape: gap-1 gap sem token DS; pr-1 padding direcional sem Inset equiv. */ "gap-1 pr-1 cursor-pointer hover:bg-secondary/80")}
               onClick={() => chip.onRemove()}
             >
               {chip.label}
@@ -512,7 +512,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
             <Button
               variant="ghost"
               size="sm"
-              className="h-6 px-2 text-xs"
+              className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "h-6 px-2 text-xs")}
               onClick={handleClearAllFilters}
             >
               Limpar todos

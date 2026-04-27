@@ -10,6 +10,7 @@
  * em lista scrollável, limitada em altura para não explodir o dialog.
  */
 
+import { cn } from '@/lib/utils';
 import type { Expediente } from '../domain';
 import { getExpedientePartyNames } from '../domain';
 
@@ -21,8 +22,8 @@ export function BulkSelectionPreview({ expedientes }: BulkSelectionPreviewProps)
   if (expedientes.length === 0) return null;
 
   return (
-    <div className="space-y-2">
-      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wide sem token DS */ "text-xs font-medium text-muted-foreground uppercase tracking-wide")}>
         {expedientes.length === 1
           ? 'Expediente afetado'
           : `${expedientes.length} expedientes afetados`}
@@ -36,12 +37,12 @@ export function BulkSelectionPreview({ expedientes }: BulkSelectionPreviewProps)
           return (
             <li
               key={expediente.id}
-              className="flex items-start justify-between gap-3 px-3 py-2 text-sm"
+              className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "flex items-start justify-between gap-3 px-3 py-2 text-sm")}
             >
-              <span className="font-medium text-foreground truncate">
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground truncate")}>
                 {expediente.numeroProcesso}
               </span>
-              <span className="text-xs text-muted-foreground truncate text-right max-w-[50%]">
+              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground truncate text-right max-w-[50%]")}>
                 {partes.autora ?? '—'}
               </span>
             </li>

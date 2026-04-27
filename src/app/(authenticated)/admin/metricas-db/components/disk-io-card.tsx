@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { AppBadge as Badge } from "@/components/ui/app-badge";
@@ -79,11 +80,11 @@ export function DiskIOCard({ diskIO, diskIOStatus, diskIOMessage }: DiskIOCardPr
         </CardHeader>
         <CardContent>
           <div className={`rounded-md p-4 text-sm ${bgClass}`}>
-            <p className="flex items-center gap-2 font-medium">
+            <p className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; font-medium → className de <Text>/<Heading> */ "flex items-center gap-2 font-medium")}>
               <Icon className={`size-4 ${isLoading ? "animate-spin" : ""}`} />
               {title}
             </p>
-            <p className="mt-1 text-xs">{description}</p>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "mt-1 text-xs")}>{description}</p>
           </div>
         </CardContent>
       </Card>
@@ -106,11 +107,11 @@ export function DiskIOCard({ diskIO, diskIOStatus, diskIOMessage }: DiskIOCardPr
           </Badge>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         {/* Progress bar principal */}
         <div>
           <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Consumo total</span>
+            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Consumo total</span>
             <span className={`text-sm font-semibold ${getTextColorClass(disk_io_budget_percent)}`}>
               {disk_io_budget_percent.toFixed(1)}%
             </span>
@@ -123,21 +124,21 @@ export function DiskIOCard({ diskIO, diskIOStatus, diskIOMessage }: DiskIOCardPr
         </div>
 
         {/* IOPS */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="rounded-md border p-3">
-            <p className="text-xs text-muted-foreground">IOPS</p>
-            <p className="mt-1 text-lg font-semibold">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md border p-3")}>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>IOPS</p>
+            <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "mt-1 text-lg font-semibold")}>
               {disk_iops_consumption.toLocaleString('pt-BR')}
-              <span className="text-sm font-normal text-muted-foreground"> / {disk_iops_limit.toLocaleString('pt-BR')}</span>
+              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm font-normal text-muted-foreground")}> / {disk_iops_limit.toLocaleString('pt-BR')}</span>
             </p>
           </div>
 
           {/* Throughput */}
-          <div className="rounded-md border p-3">
-            <p className="text-xs text-muted-foreground">Throughput</p>
-            <p className="mt-1 text-lg font-semibold">
+          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md border p-3")}>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Throughput</p>
+            <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "mt-1 text-lg font-semibold")}>
               {disk_io_consumption_mbps.toFixed(1)}
-              <span className="text-sm font-normal text-muted-foreground"> / {disk_io_limit_mbps.toFixed(1)} MB/s</span>
+              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm font-normal text-muted-foreground")}> / {disk_io_limit_mbps.toFixed(1)} MB/s</span>
             </p>
           </div>
         </div>

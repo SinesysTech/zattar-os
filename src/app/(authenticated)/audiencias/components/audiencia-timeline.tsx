@@ -182,11 +182,11 @@ export function AudienciaTimeline({
   // Loading skeleton
   if (isLoading) {
     return (
-      <div className={cn('space-y-4', className)}>
+      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ 'space-y-4', className)}>
         {[60, 80, 50].map((w, i) => (
-          <div key={i} className="flex gap-3">
+          <div key={i} className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex gap-3")}>
             <div className="size-10 shrink-0 animate-pulse rounded-full bg-muted" />
-            <div className="flex-1 space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "flex-1 space-y-2")}>
               <div className="h-3 animate-pulse rounded bg-muted" style={{ width: `${w}%` }} />
               <div className="h-3 animate-pulse rounded bg-muted" style={{ width: `${w - 20}%` }} />
             </div>
@@ -212,11 +212,11 @@ export function AudienciaTimeline({
       <div className="absolute left-4 top-8 bottom-0 w-px bg-border/30" />
 
       {entries.map((entry) => (
-        <div key={entry.id} className="relative flex gap-3 pb-5">
+        <div key={entry.id} className={cn(/* design-system-escape: gap-3 gap sem token DS; pb-5 padding direcional sem Inset equiv. */ "relative flex gap-3 pb-5")}>
           {/* Avatar / icon */}
           {entry.type === 'manual' && entry.usuario ? (
             <Avatar size="lg" className="shrink-0">
-              <AvatarFallback className="text-xs font-medium">
+              <AvatarFallback className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium")}>
                 {getInitials(entry.usuario.nome)}
               </AvatarFallback>
             </Avatar>
@@ -229,15 +229,15 @@ export function AudienciaTimeline({
           {/* Content */}
           <div className="flex-1 min-w-0">
             {/* Header */}
-            <div className="flex items-baseline gap-2 flex-wrap">
-              <span className="text-sm font-medium">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-baseline gap-2 flex-wrap")}>
+              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>
                 {entry.type === 'manual' && entry.usuario
                   ? entry.usuario.nome
                   : entry.type === 'captura_inicial'
                     ? 'Sistema'
                     : entry.descricao ?? 'Sistema'}
               </span>
-              <span className="text-xs text-muted-foreground">
+              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                 {formatTimestamp(entry.timestamp)}
               </span>
             </div>
@@ -251,15 +251,15 @@ export function AudienciaTimeline({
 
             {/* Changes list */}
             {entry.changes.length > 0 && (
-              <ul className="mt-1.5 space-y-1">
+              <ul className={cn(/* design-system-escape: space-y-1 sem token DS */ "mt-1.5 space-y-1")}>
                 {entry.changes.map((change, i) => (
-                  <li key={i} className="text-sm">
+                  <li key={i} className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
                     <span className="text-muted-foreground">{change.campo}:</span>{' '}
                     <span className="text-micro-caption tabular-nums line-through opacity-60">
                       {change.valorAnterior}
                     </span>
                     {' → '}
-                    <span className="text-micro-caption tabular-nums font-medium">
+                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-micro-caption tabular-nums font-medium")}>
                       {change.valorNovo}
                     </span>
                   </li>

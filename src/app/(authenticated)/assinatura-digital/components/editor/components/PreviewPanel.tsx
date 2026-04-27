@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Download, ExternalLink, FileX2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DialogFormShell } from '@/components/shared/dialog-shell/dialog-form-shell';
@@ -48,7 +49,7 @@ export default function PreviewPanel({
       title="PDF de Teste Gerado com Sucesso"
       description="Visualize o PDF gerado com dados fictícios para validar o layout do template."
       maxWidth="5xl"
-      bodyClassName="overflow-hidden flex flex-col p-0 sm:p-0"
+      bodyClassName=/* design-system-escape: p-0 → usar <Inset>; sm:p-0 sem equivalente DS */ "overflow-hidden flex flex-col p-0 sm:p-0"
       footer={
         <>
           <Button variant="outline" onClick={handleDownload}>
@@ -72,19 +73,19 @@ export default function PreviewPanel({
           onError={onIframeError}
         />
       ) : (
-        <div className="flex-1 min-h-0 flex items-center justify-center p-8">
-          <div className="text-center space-y-4 max-w-md">
+        <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex-1 min-h-0 flex items-center justify-center p-8")}>
+          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "text-center space-y-4 max-w-md")}>
             <FileX2 className="mx-auto h-12 w-12 text-muted-foreground" />
             <div>
-              <p className="font-medium text-foreground">
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>
                 Não foi possível exibir o PDF aqui
               </p>
-              <p className="text-sm text-muted-foreground mt-1">
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground mt-1")}>
                 O PDF foi gerado com sucesso, mas não pode ser embutido devido a restrições
                 de segurança (CORS/CSP). Use os botões abaixo para visualizar.
               </p>
             </div>
-            <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2 sm:flex-row sm:justify-center")}>
               <Button variant="outline" onClick={handleDownload}>
                 <Download className="mr-2 h-4 w-4" />
                 Baixar PDF

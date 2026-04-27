@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { Suspense } from 'react';
 import { authenticateRequest } from '@/lib/auth/session';
 import { fetchAudienciasPageData } from '@/app/(authenticated)/audiencias/queries';
@@ -9,10 +10,10 @@ export const revalidate = 0;
 
 function AudienciasLoading() {
   return (
-    <div className="space-y-5">
+    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       <Skeleton className="h-9 w-40" />
       <Skeleton className="h-14 w-full rounded-2xl" />
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         {Array.from({ length: 4 }).map((_, i) => (
           <Skeleton key={i} className="h-20 w-full rounded-2xl" />
         ))}

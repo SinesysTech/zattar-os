@@ -46,7 +46,7 @@ function ReminderCard({ lembrete }: { lembrete: Lembrete }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center text-base font-semibold capitalize">
+        <CardTitle className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ "flex items-center text-base font-semibold capitalize")}>
           <span
             className={cn(
               "me-2 inline-block size-2 rounded-full",
@@ -68,9 +68,9 @@ function ReminderCard({ lembrete }: { lembrete: Lembrete }) {
           </button>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="text-muted-foreground text-sm">{dataFormatada}</div>
-        <div className="text-sm">{lembrete.texto}</div>
+      <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>{dataFormatada}</div>
+        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{lembrete.texto}</div>
         {lembrete.projetoNome && (
           <Badge variant="outline">{lembrete.projetoNome}</Badge>
         )}
@@ -97,7 +97,7 @@ export function Reminders({ lembretes }: RemindersProps) {
             Nenhum lembrete pendente.
           </Text>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 sm:grid-cols-2 lg:grid-cols-3")}>
             {lembretes.map((lembrete) => (
               <ReminderCard key={lembrete.id} lembrete={lembrete} />
             ))}

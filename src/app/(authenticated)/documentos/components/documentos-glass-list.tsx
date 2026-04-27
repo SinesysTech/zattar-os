@@ -163,7 +163,7 @@ function GlassRow({
         }
       }}
       className={cn(
-        'group w-full text-left rounded-2xl border border-border/40 p-4 cursor-pointer bg-card',
+        /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'group w-full text-left rounded-2xl border border-border/40 p-4 cursor-pointer bg-card',
         'transition-all duration-180 ease-out',
         'hover:border-border/60 hover:scale-[1.003] hover:-translate-y-px hover:shadow-lg',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
@@ -171,18 +171,18 @@ function GlassRow({
       )}
     >
       {/* ── Mobile (<lg): stacked ───────────────────────────── */}
-      <div className="flex items-center gap-3 lg:hidden">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 lg:hidden")}>
         <IconContainer size="md" className={cn('rounded-xl', ACCENT_BG[accent])}>
           <Icon className={cn('size-4', ACCENT_TEXT[accent])} />
         </IconContainer>
         <div className="flex-1 min-w-0">
-          <span className="text-[13px] font-semibold text-foreground truncate block">{nome}</span>
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[13px] font-semibold text-foreground truncate block")}>{nome}</span>
           <div className="text-[11px] text-muted-foreground/60 mt-0.5 truncate">
             {meta ? `${meta} · ` : ''}
             {createdRelative}
           </div>
         </div>
-        <div className="flex items-center gap-0.5 shrink-0">
+        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center gap-0.5 shrink-0")}>
           {item.tipo === 'arquivo' && (
             <Button
               variant="ghost"
@@ -216,7 +216,7 @@ function GlassRow({
       </div>
 
       {/* ── Desktop (lg+): grid colunas ─────────────────────── */}
-      <div className={cn('hidden lg:grid gap-3 items-center', GRID_COLS)}>
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ 'hidden lg:grid gap-3 items-center', GRID_COLS)}>
         {/* 1. Ícone */}
         <IconContainer size="md" className={cn('rounded-xl size-10', ACCENT_BG[accent])}>
           <Icon className={cn('size-5', ACCENT_TEXT[accent])} />
@@ -224,7 +224,7 @@ function GlassRow({
 
         {/* 2. Nome + meta */}
         <div className="min-w-0">
-          <div className="text-[13.5px] font-semibold text-foreground truncate">{nome}</div>
+          <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[13.5px] font-semibold text-foreground truncate")}>{nome}</div>
           {meta && (
             <div className="text-[11px] text-muted-foreground/60 mt-0.5 truncate">{meta}</div>
           )}
@@ -239,7 +239,7 @@ function GlassRow({
         </div>
 
         {/* 4. Criador */}
-        <div className="flex items-center gap-2 min-w-0">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
           <Avatar className="size-6">
             {criadorAvatar && <AvatarImage src={criadorAvatar} alt={criadorNome} />}
             <AvatarFallback className="text-[9px] bg-primary/10 text-primary">
@@ -250,7 +250,7 @@ function GlassRow({
         </div>
 
         {/* 5. Ações */}
-        <div className="flex items-center justify-end gap-0.5">
+        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center justify-end gap-0.5")}>
           {item.tipo === 'arquivo' && (
             <Button
               variant="ghost"
@@ -295,31 +295,31 @@ function GlassRow({
 
 function ListSkeleton() {
   return (
-    <div className="flex flex-col gap-2">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
       {Array.from({ length: 6 }, (_, i) => (
-        <div key={i} className="rounded-2xl border border-border/40 bg-card p-4">
-          <div className={cn('hidden lg:grid gap-3 items-center', GRID_COLS)}>
+        <div key={i} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-2xl border border-border/40 bg-card p-4")}>
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ 'hidden lg:grid gap-3 items-center', GRID_COLS)}>
             <Skeleton className="size-10 rounded-xl" />
-            <div className="space-y-1.5">
+            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
               <Skeleton className="h-3.5 w-52" />
               <Skeleton className="h-2.5 w-24" />
             </div>
-            <div className="space-y-1">
+            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
               <Skeleton className="h-3 w-20" />
               <Skeleton className="h-2.5 w-16" />
             </div>
-            <div className="flex items-center gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <Skeleton className="size-6 rounded-full" />
               <Skeleton className="h-3 w-20" />
             </div>
-            <div className="flex items-center justify-end gap-1">
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center justify-end gap-1")}>
               <Skeleton className="size-7 rounded-md" />
               <Skeleton className="size-7 rounded-md" />
             </div>
           </div>
-          <div className="flex items-center gap-3 lg:hidden">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 lg:hidden")}>
             <Skeleton className="size-10 rounded-xl" />
-            <div className="flex-1 space-y-1.5">
+            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "flex-1 space-y-1.5")}>
               <Skeleton className="h-3.5 w-44" />
               <Skeleton className="h-2.5 w-28" />
             </div>
@@ -337,12 +337,12 @@ function ListSkeleton() {
 
 function GlassEmptyState({ hasSearch }: { hasSearch: boolean }) {
   return (
-    <div className="flex flex-col items-center justify-center py-16 opacity-60">
+    <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
       <FileSearch className="size-10 text-muted-foreground/30 mb-4" />
-      <p className="text-sm font-medium text-muted-foreground/60">
+      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/60")}>
         {hasSearch ? 'Nenhum item encontrado' : 'Pasta vazia'}
       </p>
-      <p className="text-xs text-muted-foreground/40 mt-1">
+      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/40 mt-1")}>
         {hasSearch
           ? 'Ajuste os filtros ou o termo de busca'
           : 'Adicione uma pasta, documento ou faça upload'}
@@ -368,7 +368,7 @@ export function DocumentosGlassList({
   if (items.length === 0) return <GlassEmptyState hasSearch={false} />;
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
       {items.map((item) => {
         const key = `${item.tipo}-${item.dados.id}`;
         return (

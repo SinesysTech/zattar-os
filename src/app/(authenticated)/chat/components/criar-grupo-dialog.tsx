@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import { useState, useEffect, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -172,7 +173,7 @@ export function CriarGrupoDialog({ open, onOpenChange, onGrupoCreated }: CriarGr
         <form
           id="criar-grupo-form"
           onSubmit={form.handleSubmit(handleSubmit)}
-          className="space-y-4 p-6"
+          className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; p-6 → migrar para <Inset variant="dialog"> */ "space-y-4 p-6")}
         >
           <FormField
             control={form.control}
@@ -192,7 +193,7 @@ export function CriarGrupoDialog({ open, onOpenChange, onGrupoCreated }: CriarGr
             )}
           />
 
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <FormLabel>Adicionar Membros</FormLabel>
             <Select onValueChange={handleAddMembro} value="">
               <SelectTrigger>
@@ -209,14 +210,14 @@ export function CriarGrupoDialog({ open, onOpenChange, onGrupoCreated }: CriarGr
 
             {/* Lista de membros selecionados */}
             {membrosSelecionados.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-3">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2 mt-3")}>
                 {membrosSelecionados.map((membro) => (
-                  <Badge key={membro.id} variant="secondary" className="flex items-center gap-1 pr-1">
+                  <Badge key={membro.id} variant="secondary" className={cn(/* design-system-escape: gap-1 gap sem token DS; pr-1 padding direcional sem Inset equiv. */ "flex items-center gap-1 pr-1")}>
                     {membro.nome}
                     <button
                       type="button"
                       onClick={() => handleRemoveMembro(membro.id)}
-                      className="ml-1 rounded-full p-0.5 hover:bg-muted-foreground/20"
+                      className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-1 rounded-full p-0.5 hover:bg-muted-foreground/20")}
                       aria-label={`Remover ${membro.nome} do grupo`}
                       title={`Remover ${membro.nome} do grupo`}
                     >
@@ -228,7 +229,7 @@ export function CriarGrupoDialog({ open, onOpenChange, onGrupoCreated }: CriarGr
             )}
 
             {form.formState.errors.membros && (
-              <p className="text-sm text-destructive">{form.formState.errors.membros.message}</p>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{form.formState.errors.membros.message}</p>
             )}
           </div>
         </form>

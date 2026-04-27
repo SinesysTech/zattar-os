@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -65,7 +66,7 @@ function RichTextEditorPopoverContent(props: RichTextEditorPopoverProps) {
       variant="outline"
       size="sm"
       onClick={handleAutoAdjust}
-      className="gap-1.5 text-xs"
+      className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "gap-1.5 text-xs")}
     >
       <ArrowUpDown className="h-3.5 w-3.5" />
       Ajustar Altura (+{heightDiff}px)
@@ -107,7 +108,7 @@ function RichTextEditorPopoverContent(props: RichTextEditorPopoverProps) {
               ) : (
                 <>O texto cabe no campo ({lineCount} linhas estimadas).</>
               )}
-              <span className="ml-1 text-muted-foreground text-xs">
+              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "ml-1 text-muted-foreground text-xs")}>
                 Margem de erro: ±10-15%.
               </span>
             </AlertDescription>

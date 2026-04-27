@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
@@ -20,7 +21,7 @@ import {
 
 export default function Salarios() {
   return (
-    <div className="space-y-10">
+    <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
       <div>
         <Heading level="page">Salários</Heading>
         <p className="text-muted-foreground mt-2">
@@ -195,7 +196,7 @@ export default function Salarios() {
         <p className="text-muted-foreground mb-4">
           O relatório de custo de pessoal consolida, por período selecionado:
         </p>
-        <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+        <ul className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "space-y-2 text-sm text-muted-foreground list-disc list-inside")}>
           <li>Custo total da folha (salários brutos)</li>
           <li>Total de encargos patronais (FGTS, INSS patronal)</li>
           <li>Total de benefícios (VR, VT, plano de saúde)</li>

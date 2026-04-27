@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Radar, X } from 'lucide-react';
@@ -28,18 +29,18 @@ export function ExpedientesCapturaBanner({
 
   return (
     <div
-      className="rounded-xl border border-info/20 bg-info/5 px-4 py-3 flex items-start gap-3"
+      className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "rounded-xl border border-info/20 bg-info/5 px-4 py-3 flex items-start gap-3")}
       role="status"
       aria-label={`Filtrando expedientes da captura #${capturaId}`}
     >
       <Radar className="size-4 text-info mt-0.5 shrink-0" />
 
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-foreground/90 leading-tight">
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-sm font-semibold text-foreground/90 leading-tight")}>
           Expedientes da Captura #{capturaId}
         </p>
         {resumo ? (
-          <p className="text-xs text-muted-foreground/70 mt-0.5">
+          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/70 mt-0.5")}>
             {resumo.total} expediente{resumo.total !== 1 ? 's' : ''}
             {' · '}
             <span className="text-success/80">{resumo.totalCriados} novo{resumo.totalCriados !== 1 ? 's' : ''}</span>
@@ -48,13 +49,13 @@ export function ExpedientesCapturaBanner({
             {dataFormatada && ` · Concluída ${dataFormatada}`}
           </p>
         ) : (
-          <p className="text-xs text-muted-foreground/60 mt-0.5">
+          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60 mt-0.5")}>
             Mostrando expedientes vinculados a esta captura
           </p>
         )}
         <Link
           href={`/app/captura/historico/${capturaId}`}
-          className="text-xs text-info/70 hover:text-info underline-offset-2 hover:underline mt-1 inline-block"
+          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-info/70 hover:text-info underline-offset-2 hover:underline mt-1 inline-block")}
         >
           ← Ver histórico de capturas
         </Link>

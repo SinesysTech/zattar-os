@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Bar, BarChart, Tooltip, XAxis, YAxis } from 'recharts';
 import Link from 'next/link';
 import { TrendingUp } from 'lucide-react';
@@ -35,10 +36,10 @@ export function WidgetFluxoCaixa() {
     return (
       <GlassPanel className="h-full transition-all duration-200">
         <CardHeader>
-          <CardTitle className="text-sm">Fluxo de Caixa</CardTitle>
+          <CardTitle className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Fluxo de Caixa</CardTitle>
         </CardHeader>
         <CardContent className="min-h-80 lg:min-h-90 flex items-center justify-center">
-          <p className="text-sm text-muted-foreground">Erro ao carregar dados</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Erro ao carregar dados</p>
         </CardContent>
       </GlassPanel>
     );
@@ -46,8 +47,8 @@ export function WidgetFluxoCaixa() {
 
   return (
     <GlassPanel className="h-full transition-all duration-200">
-      <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0 pb-2">
-        <Heading level="widget" className="flex items-center gap-2">
+      <CardHeader className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; sm:space-y-0 sem equivalente DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0 pb-2")}>
+        <Heading level="widget" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           <TrendingUp className="h-4 w-4 text-muted-foreground" />
           <span className="truncate">Fluxo de Caixa (6 meses)</span>
         </Heading>
@@ -63,12 +64,12 @@ export function WidgetFluxoCaixa() {
                 <XAxis
                   dataKey="mes"
                   tick={{ fontSize: 10 }}
-                  className="text-xs sm:text-sm"
+                  className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; sm:text-sm sem equivalente DS */ "text-xs sm:text-sm")}
                 />
                 <YAxis
                   tickFormatter={(value) => formatarValor(value as number)}
                   tick={{ fontSize: 10 }}
-                  className="text-xs sm:text-sm"
+                  className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; sm:text-sm sem equivalente DS */ "text-xs sm:text-sm")}
                   width={70}
                 />
                 <Tooltip

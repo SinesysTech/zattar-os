@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import type { LucideIcon } from 'lucide-react';
 import { ArrowRight, CalendarClock, FileText, Gavel, UserCircle2 } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
@@ -88,7 +89,7 @@ export function SearchShortcuts({ onAfterApply }: SearchShortcutsProps) {
       <Text variant="overline" className="mb-3 block text-center text-muted-foreground/70">
         Atalhos populares
       </Text>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3 sm:grid-cols-4")}>
         {SHORTCUTS.map((s) => {
           const tone = toneStyles[s.tone];
           return (
@@ -101,15 +102,15 @@ export function SearchShortcuts({ onAfterApply }: SearchShortcutsProps) {
               }}
               className="group text-left"
             >
-              <GlassPanel className="h-full gap-2 p-4 transition-all duration-200 group-hover:border-primary/30 group-hover:shadow-[0_4px_24px_color-mix(in_oklch,var(--primary)_8%,transparent)]">
+              <GlassPanel className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-4 → migrar para <Inset variant="card-compact"> */ "h-full gap-2 p-4 transition-all duration-200 group-hover:border-primary/30 group-hover:shadow-[0_4px_24px_color-mix(in_oklch,var(--primary)_8%,transparent)]")}>
                 <IconContainer
                   size="md"
                   className={`border ${tone.bg} ${tone.border} ${tone.text}`}
                 >
                   <s.icon className="size-4" aria-hidden />
                 </IconContainer>
-                <div className="mt-2 flex flex-col gap-0.5">
-                  <Heading level="widget" className="flex items-center gap-1 text-sm">
+                <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "mt-2 flex flex-col gap-0.5")}>
+                  <Heading level="widget" className={cn(/* design-system-escape: gap-1 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-1 text-sm")}>
                     {s.label}
                     <ArrowRight className="size-3 opacity-0 transition-opacity group-hover:opacity-60" aria-hidden />
                   </Heading>

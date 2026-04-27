@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { ClipboardList, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -55,7 +56,7 @@ export function EntrevistaTab({ contratoId, entrevista: initialEntrevista, anexo
   // Estado vazio: nenhuma entrevista existe
   if (view === 'empty') {
     return (
-      <GlassPanel className="flex flex-col items-center justify-center gap-4 py-16 text-center">
+      <GlassPanel className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center gap-4 py-16 text-center")}>
         <IconContainer size="lg" className="bg-muted/50">
           <ClipboardList className="size-5 text-muted-foreground/50" />
         </IconContainer>
@@ -81,11 +82,11 @@ export function EntrevistaTab({ contratoId, entrevista: initialEntrevista, anexo
   // Wizard: entrevista em andamento
   if (view === 'wizard' && entrevista) {
     return (
-      <div className="space-y-4">
+      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <SemanticBadge category="status" value={entrevista.status} variantOverride="outline">{STATUS_ENTREVISTA_LABELS[entrevista.status]}</SemanticBadge>
-            <span className="text-sm text-muted-foreground">
+            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
               Módulo atual: {MODULO_LABELS[entrevista.moduloAtual as ModuloEntrevista] ?? entrevista.moduloAtual}
             </span>
           </div>

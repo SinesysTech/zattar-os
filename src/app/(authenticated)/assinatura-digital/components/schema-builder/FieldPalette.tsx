@@ -51,21 +51,21 @@ function DraggableFieldItem({ field }: DraggableFieldItemProps) {
             {...listeners}
             {...attributes}
             className={cn(
-              "flex items-center gap-2 rounded-md border border-dashed border-border bg-card px-2.5 py-1.5 cursor-grab active:cursor-grabbing transition-colors hover:border-primary/50 hover:bg-accent/50",
+              /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 rounded-md border border-dashed border-border bg-card px-2.5 py-1.5 cursor-grab active:cursor-grabbing transition-colors hover:border-primary/50 hover:bg-accent/50",
               isDragging && "opacity-50 border-primary"
             )}
           >
             <Icon className="size-3.5 text-muted-foreground shrink-0" />
-            <span className="text-xs flex-1 min-w-0 wrap-break-word leading-tight">{field.label}</span>
+            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; leading-tight sem token DS */ "text-xs flex-1 min-w-0 wrap-break-word leading-tight")}>{field.label}</span>
             {field.badge && (
-              <Badge variant="secondary" className="text-[10px] px-1 py-0 shrink-0">
+              <Badge variant="secondary" className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1 py-0 shrink-0")}>
                 {field.badge}
               </Badge>
             )}
           </div>
         </TooltipTrigger>
         <TooltipContent side="right">
-          <p className="text-xs">{field.description}</p>
+          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>{field.description}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
@@ -115,25 +115,25 @@ export default function FieldPalette() {
 
   return (
     <div className="h-full flex flex-col border rounded-lg bg-card overflow-hidden">
-      <div className="shrink-0 px-3 pt-3 pb-2 space-y-2 border-b">
-        <Heading level="card" className="text-xs uppercase tracking-wider text-muted-foreground">Campos Disponíveis</Heading>
+      <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv.; space-y-2 → migrar para <Stack gap="tight"> */ "shrink-0 px-3 pt-3 pb-2 space-y-2 border-b")}>
+        <Heading level="card" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; tracking-wider sem token DS */ "text-xs uppercase tracking-wider text-muted-foreground")}>Campos Disponíveis</Heading>
         <div className="relative">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
           <Input
             placeholder="Buscar campos..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-8 h-7 text-xs"
+            className={cn(/* design-system-escape: pl-8 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "pl-8 h-7 text-xs")}
           />
         </div>
       </div>
 
       <ScrollArea className="flex-1">
-        <div className="px-3 pb-3 pt-2 space-y-0.5">
+        <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pb-3 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv.; space-y-0.5 sem token DS */ "px-3 pb-3 pt-2 space-y-0.5")}>
           {filteredCategories.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
+            <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "text-center py-8 text-muted-foreground")}>
               <Search className="size-6 mx-auto mb-2 opacity-50" />
-              <p className="text-xs">Nenhum campo encontrado</p>
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>Nenhum campo encontrado</p>
             </div>
           ) : (
             filteredCategories.map(category => {
@@ -146,9 +146,9 @@ export default function FieldPalette() {
                   open={isExpanded}
                   onOpenChange={() => toggleCategory(category.id)}
                 >
-                  <CollapsibleTrigger className="flex items-center gap-2 w-full px-1 py-1.5 rounded-md hover:bg-accent/50 transition-colors">
+                  <CollapsibleTrigger className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-1 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 w-full px-1 py-1.5 rounded-md hover:bg-accent/50 transition-colors")}>
                     <CategoryIcon className="size-3.5 text-muted-foreground" />
-                    <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground flex-1 text-left">{category.label}</span>
+                    <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[11px] font-semibold uppercase tracking-wider text-muted-foreground flex-1 text-left")}>{category.label}</span>
                     <ChevronDown
                       className={cn(
                         "size-3 text-muted-foreground transition-transform",
@@ -156,7 +156,7 @@ export default function FieldPalette() {
                       )}
                     />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className="pt-0.5 pb-1.5 space-y-0.5">
+                  <CollapsibleContent className={cn(/* design-system-escape: pt-0.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv.; space-y-0.5 sem token DS */ "pt-0.5 pb-1.5 space-y-0.5")}>
                     {category.fields.map(field => (
                       <DraggableFieldItem key={`${category.id}-${field.fieldName}`} field={field} />
                     ))}

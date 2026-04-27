@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import { FileSignature } from "lucide-react";
 import {
   GlassPanel,
@@ -21,16 +22,16 @@ export function SignatureStatsStrip({ stats }: SignatureStatsStripProps) {
       : 0;
 
   return (
-    <GlassPanel className="px-5 py-3">
-      <div className="flex items-center gap-6 overflow-x-auto">
+    <GlassPanel className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-5 py-3")}>
+      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "flex items-center gap-6 overflow-x-auto")}>
         {/* Total */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 shrink-0")}>
           <FileSignature className="size-4 text-muted-foreground/55" />
           <div>
-            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Total
             </p>
-            <p className="font-display text-lg font-bold tabular-nums">
+            <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold tabular-nums")}>
               <AnimatedNumber value={stats.total} />
             </p>
           </div>
@@ -40,16 +41,16 @@ export function SignatureStatsStrip({ stats }: SignatureStatsStripProps) {
 
         {/* Taxa Conclusão */}
         <div className="shrink-0">
-          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Taxa Conclusão
           </p>
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <ProgressRing
               percent={stats.taxaConclusao}
               size={32}
               color="var(--success)"
             />
-            <span className="text-xs font-bold text-success/70">
+            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-bold → className de <Text>/<Heading> */ "text-xs font-bold text-success/70")}>
               {stats.taxaConclusao}%
             </span>
           </div>
@@ -59,10 +60,10 @@ export function SignatureStatsStrip({ stats }: SignatureStatsStripProps) {
 
         {/* Tempo Médio */}
         <div className="shrink-0">
-          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Tempo Médio
           </p>
-          <p className="font-display text-base font-bold tabular-nums">
+          <p className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-bold → className de <Text>/<Heading> */ "font-display text-base font-bold tabular-nums")}>
             {stats.tempoMedio}d
           </p>
           <p className="text-[9px] text-muted-foreground/55">para conclusão</p>
@@ -71,12 +72,12 @@ export function SignatureStatsStrip({ stats }: SignatureStatsStripProps) {
         <div className="w-px h-8 bg-border/10 shrink-0" />
 
         {/* Tendência */}
-        <div className="flex items-center gap-3 shrink-0">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 shrink-0")}>
           <div>
-            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Tendência 6m
             </p>
-            <p className="text-xs font-semibold text-success/60">
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-success/60")}>
               {trendDelta >= 0 ? "+" : ""}
               {trendDelta} este mês
             </p>

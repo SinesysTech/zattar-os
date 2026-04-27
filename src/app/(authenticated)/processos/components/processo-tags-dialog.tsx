@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -147,7 +148,7 @@ export function ProcessoTagsDialog({
   }
 
   const footerButtons = (
-    <div className="flex gap-2">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
       <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSaving}>
         Cancelar
       </Button>
@@ -166,13 +167,13 @@ export function ProcessoTagsDialog({
       maxWidth="md"
       footer={footerButtons}
     >
-      <div className="space-y-4">
+      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         {/* Tags selecionadas */}
         <div>
-          <Label className="text-sm font-medium">Etiquetas selecionadas</Label>
-          <div className="mt-2 flex flex-wrap gap-2 min-h-10 p-2 border rounded-md bg-muted/30">
+          <Label className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Etiquetas selecionadas</Label>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2 → usar <Inset> */ "mt-2 flex flex-wrap gap-2 min-h-10 p-2 border rounded-md bg-muted/30")}>
             {selectedTagIds.length === 0 ? (
-              <span className="text-sm text-muted-foreground">Nenhuma etiqueta selecionada</span>
+              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Nenhuma etiqueta selecionada</span>
             ) : (
               selectedTagIds.map((tagId) => {
                 const tag = todasTags.find((t) => t.id === tagId);
@@ -193,13 +194,13 @@ export function ProcessoTagsDialog({
         {/* Lista de tags disponíveis */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <Label className="text-sm font-medium">Etiquetas disponíveis</Label>
+            <Label className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Etiquetas disponíveis</Label>
             <Button
               type="button"
               variant="ghost"
               size="sm"
               onClick={() => setShowNewTagForm(!showNewTagForm)}
-              className="h-7 px-2"
+              className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-7 px-2")}
             >
               <Plus className="h-4 w-4 mr-1" />
               Nova
@@ -208,8 +209,8 @@ export function ProcessoTagsDialog({
 
           {/* Formulário para criar nova tag */}
           {showNewTagForm && (
-            <div className="mb-3 p-3 border rounded-md bg-muted/30 space-y-3">
-              <div className="flex gap-2">
+            <div className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-3 sem token DS */ "mb-3 p-3 border rounded-md bg-muted/30 space-y-3")}>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
                 <Input
                   variant="glass"
                   placeholder="Nome da etiqueta"
@@ -228,14 +229,14 @@ export function ProcessoTagsDialog({
                     <Button
                       type="button"
                       variant="outline"
-                      className="w-10 p-0"
+                      className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-10 p-0")}
                       style={{ backgroundColor: newTagCor }}
                     >
                       <span className="sr-only">Escolher cor</span>
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto p-3">
-                    <div className="grid grid-cols-6 gap-2">
+                  <PopoverContent className={cn(/* design-system-escape: p-3 → usar <Inset> */ "w-auto p-3")}>
+                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-6 gap-2")}>
                       {TAG_COLORS.map((color) => {
                         const isSelected = newTagCor === color.hex
                         return (
@@ -257,7 +258,7 @@ export function ProcessoTagsDialog({
                   </PopoverContent>
                 </Popover>
               </div>
-              <div className="flex justify-end gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex justify-end gap-2")}>
                 <Button
                   type="button"
                   variant="ghost"
@@ -284,13 +285,13 @@ export function ProcessoTagsDialog({
 
           {/* Lista de tags */}
           {isLoading ? (
-            <div className="flex items-center justify-center py-8">
+            <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex items-center justify-center py-8")}>
               <LoadingSpinner className="size-6 text-muted-foreground" />
             </div>
           ) : (
-            <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto p-2 border rounded-md">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2 → usar <Inset> */ "flex flex-wrap gap-2 max-h-48 overflow-y-auto p-2 border rounded-md")}>
               {todasTags.length === 0 ? (
-                <span className="text-sm text-muted-foreground">Nenhuma etiqueta cadastrada</span>
+                <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Nenhuma etiqueta cadastrada</span>
               ) : (
                 todasTags.map((tag) => {
                   const isSelected = selectedTagIds.includes(tag.id);
@@ -318,7 +319,7 @@ export function ProcessoTagsDialog({
 
         {/* Erro */}
         {error && (
-          <p className="text-sm font-medium text-destructive">{error}</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}>{error}</p>
         )}
       </div>
     </DialogFormShell>

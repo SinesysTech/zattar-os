@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { AlertTriangle } from 'lucide-react';
 import { WidgetContainer, UrgencyDot, ListItem, fmtData } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
@@ -36,7 +37,7 @@ function getDiasLabel(dias: number): string {
 
 function EmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center py-8 gap-2">
+    <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center justify-center py-8 gap-2")}>
       <AlertTriangle className="size-8 text-muted-foreground/45" />
       <p className="text-[11px] text-muted-foreground/60 text-center">
         Nenhum expediente urgente no momento
@@ -56,18 +57,18 @@ function ExpedienteItem({ item }: { item: ExpedienteUrgente }) {
     <ListItem className="items-start">
       <UrgencyDot level={level} />
       <div className="flex-1 min-w-0">
-        <p className="text-[12px] font-medium leading-tight">{item.tipo_expediente}</p>
+        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[12px] font-medium leading-tight")}>{item.tipo_expediente}</p>
         {partes && (
-          <p className="text-[10px] text-foreground/65 mt-0.5 leading-tight">
+          <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[10px] text-foreground/65 mt-0.5 leading-tight")}>
             {partes}
           </p>
         )}
         {contextoProcesso && (
-          <p className="text-[10px] text-foreground/55 mt-0.5 leading-tight">
+          <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[10px] text-foreground/55 mt-0.5 leading-tight")}>
             {contextoProcesso}
           </p>
         )}
-        <p className="text-[10px] text-muted-foreground/60 font-mono break-all leading-relaxed mt-0.5">
+        <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[10px] text-muted-foreground/60 font-mono break-all leading-relaxed mt-0.5")}>
           {item.numero_processo}
         </p>
         <p className="text-[10px] text-muted-foreground/60 mt-0.5">
@@ -95,7 +96,7 @@ export function UrgencyList() {
         subtitle="Por urgência de prazo"
         depth={1}
       >
-        <p className="text-[11px] text-muted-foreground/60 py-4 text-center">
+        <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-4 text-center")}>
           Não foi possível carregar os expedientes.
         </p>
       </WidgetContainer>
@@ -116,7 +117,7 @@ export function UrgencyList() {
       {expedientes.length === 0 ? (
         <EmptyState />
       ) : (
-        <div className="space-y-0.5">
+        <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
           {expedientes.map((item) => (
             <ExpedienteItem key={item.id} item={item} />
           ))}

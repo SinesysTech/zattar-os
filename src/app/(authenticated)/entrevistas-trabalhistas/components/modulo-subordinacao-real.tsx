@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import {
   Select,
@@ -27,16 +28,16 @@ export function ModuloSubordinacaoReal({ data, onChange }: ModuloSubordinacaoRea
     data.reunioes_obrigatorias === true;
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <div>
         <Heading level="card">CLT Disfarçada</Heading>
-        <p className="text-sm text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
           Investigar se havia subordinação real típica de emprego, mesmo com contrato PJ
         </p>
       </div>
 
       {/* C.2.1: Horário fixo */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>Cumpria horário fixo definido pela empresa?</Label>
         <SimNaoRadio
           id="cumpre-horario"
@@ -46,7 +47,7 @@ export function ModuloSubordinacaoReal({ data, onChange }: ModuloSubordinacaoRea
       </div>
 
       {/* C.2.2: Ordens de superior */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>Recebia ordens de um superior/gestor na empresa?</Label>
         <SimNaoRadio
           id="recebe-ordens"
@@ -56,7 +57,7 @@ export function ModuloSubordinacaoReal({ data, onChange }: ModuloSubordinacaoRea
       </div>
 
       {/* C.2.3: Reuniões obrigatórias */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>Participava de reuniões obrigatórias da empresa?</Label>
         <SimNaoRadio
           id="reunioes-obrigatorias"
@@ -72,7 +73,7 @@ export function ModuloSubordinacaoReal({ data, onChange }: ModuloSubordinacaoRea
       )}
 
       {/* C.2.4: Autorização para faltar */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>Tinha que pedir autorização para faltar ou tirar folga?</Label>
         <SimNaoRadio
           id="autorizacao-falta"
@@ -82,7 +83,7 @@ export function ModuloSubordinacaoReal({ data, onChange }: ModuloSubordinacaoRea
       </div>
 
       {/* C.2.5: Crachá/e-mail/uniforme */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>Usava crachá, e-mail corporativo ou uniforme da empresa?</Label>
         <SimNaoRadio
           id="cracha-email-uniforme"
@@ -92,7 +93,7 @@ export function ModuloSubordinacaoReal({ data, onChange }: ModuloSubordinacaoRea
       </div>
 
       {/* C.2.6: Local de trabalho */}
-      <div className="space-y-2">
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Label htmlFor="local-trabalho">Onde realizava o trabalho?</Label>
         <Select
           value={data.local_trabalho ?? ''}
@@ -112,7 +113,7 @@ export function ModuloSubordinacaoReal({ data, onChange }: ModuloSubordinacaoRea
       </div>
 
       {/* C.2.7: Narrativa */}
-      <div className="space-y-2">
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Label htmlFor="narrativa-rotina">Descreva como era sua rotina de trabalho na empresa</Label>
         <Textarea
           id="narrativa-rotina"

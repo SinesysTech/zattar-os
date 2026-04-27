@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { format, isToday } from 'date-fns';
 
@@ -171,7 +172,7 @@ export function PericiasCalendarMonth({
           {['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'].map((dia, i) => (
             <div
               key={dia}
-              className="p-2 text-center text-sm font-medium text-muted-foreground"
+              className={cn(/* design-system-escape: p-2 → usar <Inset>; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "p-2 text-center text-sm font-medium text-muted-foreground")}
             >
               <span className="hidden sm:inline">{dia}</span>
               <span className="sm:hidden">{['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'][i]}</span>
@@ -208,7 +209,7 @@ export function PericiasCalendarMonth({
                     </div>
 
                     {hasPs && (
-                      <div className="space-y-1">
+                      <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
                         {ps.slice(0, 3).map((p) => (
                           <div
                             key={p.id}
@@ -216,7 +217,7 @@ export function PericiasCalendarMonth({
                               ev.stopPropagation();
                               handlePericiaClick(p);
                             }}
-                            className="text-xs px-1.5 py-0.5 rounded cursor-pointer truncate border bg-primary/10 text-primary border-primary/20"
+                            className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-xs px-1.5 py-0.5 rounded cursor-pointer truncate border bg-primary/10 text-primary border-primary/20")}
                             title={p.numeroProcesso}
                           >
                             {p.numeroProcesso}

@@ -113,7 +113,7 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
       >
         <form
           id="note-form"
-          className="space-y-6"
+          className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}
           onSubmit={async (e) => {
             e.preventDefault();
             setError(null);
@@ -159,7 +159,7 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
           }}
         >
           {error && (
-            <div className="rounded-md bg-destructive/10 p-4 text-sm text-destructive">
+            <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/10 p-4 text-sm text-destructive")}>
               {error}
             </div>
           )}
@@ -189,7 +189,7 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
             value={value}
             onChange={setValue}
             className="w-full"
-            editorContentClassName={cn("p-4", {
+            editorContentClassName={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4", {
               "min-h-48": true,
             })}
             toolbarRight={
@@ -224,18 +224,18 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
                               <Tag className="h-4 w-4" />
                             </Button>
                           </PopoverTrigger>
-                          <PopoverContent className="w-[220px] p-0">
+                          <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-[220px] p-0")}>
                             <Command>
                               <CommandInput placeholder="Buscar etiquetas..." className="h-9" />
                               <CommandList>
                                 <CommandEmpty>Nenhuma etiqueta encontrada.</CommandEmpty>
-                                <CommandGroup className="p-2">
+                                <CommandGroup className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2")}>
                                   {noteLabels &&
                                     noteLabels.length &&
                                     noteLabels.map((label, key: number) => (
                                       <CommandItem
                                         key={key}
-                                        className="flex items-center py-2"
+                                        className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}
                                         onSelect={() => {
                                           if (selectedTags.includes(label)) {
                                             return setSelectedTags(
@@ -248,9 +248,9 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
                                           );
                                         }}
                                       >
-                                        <div className="flex grow items-center gap-2">
+                                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex grow items-center gap-2")}>
                                           <span className={cn("block size-3 rounded-full", label.color)} />
-                                          <span className="text-sm leading-none">{label.title}</span>
+                                          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-none sem token DS */ "text-sm leading-none")}>{label.title}</span>
                                           {selectedTags.includes(label) ? (
                                             <Check className="text-primary ms-auto size-3" />
                                           ) : null}
@@ -277,7 +277,7 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
           />
 
           {selectedTags.length > 0 ? (
-            <div className="flex flex-wrap gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2")}>
               {selectedTags.map((tag, key) => (
                 <Badge key={key} variant="outline">
                   {tag.title}

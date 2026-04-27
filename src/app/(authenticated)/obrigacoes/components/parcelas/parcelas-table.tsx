@@ -99,9 +99,9 @@ export function ParcelasTable({
 
   if (parcelas.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 opacity-60">
+      <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-12 opacity-60")}>
         <FileX className="w-8 h-8 text-muted-foreground/30 mb-3" />
-        <p className="text-sm font-medium text-muted-foreground/50">
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/50")}>
           Nenhuma parcela encontrada
         </p>
       </div>
@@ -111,7 +111,7 @@ export function ParcelasTable({
   const isRecebimento = direcao === 'recebimento';
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
       {parcelas.map((parcela) => {
         const isPendente = parcela.status === 'pendente';
         const isAtrasada = parcela.status === 'atrasada';
@@ -122,21 +122,21 @@ export function ParcelasTable({
             key={parcela.id}
             depth={1}
             className={cn(
-              'px-4 py-3 transition-colors',
+              /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ 'px-4 py-3 transition-colors',
               isAtrasada && 'border-destructive/20',
             )}
           >
-            <div className="flex items-center gap-3 flex-wrap">
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 flex-wrap")}>
               {/* Numero da parcela */}
               <div className="size-8 rounded-lg bg-primary/8 text-primary/80 flex items-center justify-center shrink-0">
-                <span className="text-[11px] font-bold tabular-nums">
+                <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[11px] font-bold tabular-nums")}>
                   {parcela.numeroParcela}
                 </span>
               </div>
 
               {/* Dados financeiros agrupados */}
               <div className="flex-1 min-w-60">
-                <div className="text-sm font-medium tabular-nums">
+                <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium tabular-nums")}>
                   {formatCurrency(parcela.valorBrutoCreditoPrincipal)}
                   {parcela.editadoManualmente && (
                     <span
@@ -147,7 +147,7 @@ export function ParcelasTable({
                     </span>
                   )}
                 </div>
-                <div className="text-[10px] text-muted-foreground/55 mt-0.5 flex gap-2 flex-wrap">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "text-[10px] text-muted-foreground/55 mt-0.5 flex gap-2 flex-wrap")}>
                   <span>
                     Hon. contr: {formatCurrency(parcela.honorariosContratuais)}
                   </span>
@@ -160,7 +160,7 @@ export function ParcelasTable({
 
               {/* Vencimento + forma pagamento */}
               <div className="min-w-25">
-                <div className="text-xs tabular-nums">
+                <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs tabular-nums")}>
                   {formatDate(parcela.dataVencimento)}
                 </div>
                 {parcela.formaPagamento && (
@@ -201,12 +201,12 @@ export function ParcelasTable({
               )}
 
               {/* Ações */}
-              <div className="flex items-center gap-1 shrink-0">
+              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 shrink-0")}>
                 {onEdit && isPendente && (
                   <Button
                     size="sm"
                     variant="ghost"
-                    className="h-7 w-7 p-0"
+                    className={cn(/* design-system-escape: p-0 → usar <Inset> */ "h-7 w-7 p-0")}
                     onClick={() => onEdit(parcela)}
                     aria-label="Editar parcela"
                   >
@@ -217,7 +217,7 @@ export function ParcelasTable({
                   <Button
                     size="sm"
                     variant="outline"
-                    className="h-7 text-[11px] px-2.5"
+                    className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv. */ "h-7 text-[11px] px-2.5")}
                     onClick={() =>
                       handleMarcar(
                         parcela.id,

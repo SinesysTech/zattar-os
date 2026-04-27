@@ -34,11 +34,11 @@ const CURRENCY = new Intl.NumberFormat('pt-BR', {
 
 function PulseSkeleton() {
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 lg:grid-cols-4 gap-3")}>
       {Array.from({ length: 4 }).map((_, i) => (
-        <GlassPanel key={i} depth={1} className="px-4 py-3.5">
-          <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0 space-y-2">
+        <GlassPanel key={i} depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "min-w-0 space-y-2")}>
               <Skeleton className="h-2.5 w-16" />
               <Skeleton className="h-6 w-20" />
               <Skeleton className="h-2 w-14" />
@@ -101,7 +101,7 @@ export function ObrigacoesPulseStrip({ resumo, isLoading }: ObrigacoesPulseStrip
   const totalPendente = resumo.pendentesTotal.quantidade;
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 lg:grid-cols-4 gap-3")}>
       {metrics.map((metric) => {
         const Icon = metric.icon;
         const pct =
@@ -115,19 +115,19 @@ export function ObrigacoesPulseStrip({ resumo, isLoading }: ObrigacoesPulseStrip
             key={metric.label}
             depth={metric.highlight ? 2 : 1}
             className={cn(
-              'px-4 py-3.5',
+              /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ 'px-4 py-3.5',
               metric.highlight && metric.quantidade > 0 && 'border-destructive/15',
             )}
           >
-            <div className="flex items-start justify-between gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
               <div className="min-w-0">
-                <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate">
+                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
                   {metric.label}
                 </p>
-                <div className="flex items-baseline gap-1.5 mt-1">
+                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
                   <p
                     className={cn(
-                      'font-display text-2xl font-bold tabular-nums leading-none tracking-tight',
+                      /* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ 'font-display text-2xl font-bold tabular-nums leading-none tracking-tight',
                       metric.highlight && metric.quantidade > 0 && 'text-destructive/80',
                       isSaldo && metric.negativeOnNegative && 'text-destructive/80',
                     )}
@@ -166,7 +166,7 @@ export function ObrigacoesPulseStrip({ resumo, isLoading }: ObrigacoesPulseStrip
 
             {/* Barra de proporção (não exibida para saldo) */}
             {!isSaldo && (
-              <div className="mt-2.5 flex items-center gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
                 <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
                   <div
                     className={cn(

@@ -4,6 +4,7 @@
  * Tabela de documentos para visualização em lista
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { FileText, MoreVertical, Share2, Trash2 } from 'lucide-react';
 import { Text } from '@/components/ui/typography';
@@ -59,15 +60,15 @@ export function DocumentTable({ documentos, onDocumentoClick }: DocumentTablePro
               onClick={() => onDocumentoClick(doc.id)}
             >
               <TableCell>
-                <div className="rounded bg-primary/10 p-2 w-fit">
+                <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "rounded bg-primary/10 p-2 w-fit")}>
                   <FileText className="h-4 w-4 text-primary" />
                 </div>
               </TableCell>
               <TableCell>
                 <div>
-                  <div className="font-medium">{doc.titulo}</div>
+                  <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{doc.titulo}</div>
                   {doc.descricao && (
-                    <div className="text-sm text-muted-foreground line-clamp-1">
+                    <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground line-clamp-1")}>
                       {doc.descricao}
                     </div>
                   )}
@@ -75,14 +76,14 @@ export function DocumentTable({ documentos, onDocumentoClick }: DocumentTablePro
               </TableCell>
               <TableCell>
                 {doc.tags && doc.tags.length > 0 ? (
-                  <div className="flex flex-wrap gap-1">
+                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-wrap gap-1")}>
                     {doc.tags.slice(0, 2).map((tag: string) => (
-                      <Badge key={tag} variant="secondary" className="text-xs">
+                      <Badge key={tag} variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                         {tag}
                       </Badge>
                     ))}
                     {doc.tags.length > 2 && (
-                      <Badge variant="secondary" className="text-xs">
+                      <Badge variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                         +{doc.tags.length - 2}
                       </Badge>
                     )}
@@ -92,10 +93,10 @@ export function DocumentTable({ documentos, onDocumentoClick }: DocumentTablePro
                 )}
               </TableCell>
               <TableCell>
-                <div className="text-sm">{doc.criador.nomeCompleto}</div>
+                <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{doc.criador.nomeCompleto}</div>
               </TableCell>
               <TableCell>
-                <div className="text-sm text-muted-foreground">
+                <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                   {formatDistanceToNow(new Date(doc.updated_at), {
                     addSuffix: true,
                     locale: ptBR,

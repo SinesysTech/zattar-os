@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
@@ -42,7 +43,7 @@ import { Heading, Text } from '@/components/ui/typography';
 // renderizados condicionalmente e lazy-loaded para não entrarem no first paint.
 
 const ViewSkeleton = () => (
-  <div className="space-y-3" aria-busy="true" aria-label="Carregando visualização">
+  <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")} aria-busy="true" aria-label="Carregando visualização">
     {Array.from({ length: 4 }).map((_, i) => (
       <Skeleton key={i} className="h-20 rounded-2xl" />
     ))}
@@ -396,10 +397,10 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
   }, [refetch]);
 
   return (
-    <div className="space-y-5">
+    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
 
       {/* 1. Header */}
-      <div className="flex items-end justify-between gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
         <div>
           <Heading level="page">
             Expedientes
@@ -407,7 +408,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
           <Text variant="caption" as="p" className="mt-0.5" aria-live="polite">{subtitle}</Text>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           <Button size="sm" className="rounded-xl" onClick={() => setIsCreateOpen(true)}>
             <Plus className="size-3.5" />
             Novo Expediente
@@ -427,7 +428,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
       )}
 
       {/* 3. Insight Banners */}
-      <div role="status" aria-live="polite" aria-atomic="true" className="space-y-2 empty:hidden">
+      <div role="status" aria-live="polite" aria-atomic="true" className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 empty:hidden")}>
         {!isLoading && showVencidosBanner && (
           <InsightBanner type="alert">
             {vencidos.length} expediente{vencidos.length !== 1 ? 's' : ''} com prazo vencido —
@@ -442,7 +443,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
       </div>
 
       {/* 4. View Controls — sempre visível conforme Glass Briefing */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
         <ExpedientesFilterBar
           filters={filters}
           onChange={setFilters}
@@ -450,7 +451,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
           tiposExpedientes={tiposExpedientes || []}
           counts={globalCounts}
         />
-        <div className="flex items-center gap-2 flex-1 justify-end">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
           <SearchInput
             value={search}
             onChange={setSearch}
@@ -467,7 +468,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
       {/* 5. Content Switcher */}
       <main className="min-h-0 transition-opacity duration-300">
         {isLoading && (
-          <div className="space-y-3" aria-busy="true" aria-label="Carregando expedientes">
+          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")} aria-busy="true" aria-label="Carregando expedientes">
             {Array.from({ length: 4 }).map((_, i) => (
               <Skeleton key={i} className="h-20 rounded-2xl" />
             ))}

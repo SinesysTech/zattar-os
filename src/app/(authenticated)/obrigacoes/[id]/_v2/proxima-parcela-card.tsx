@@ -29,8 +29,8 @@ export function ProximaParcelaCard({
 }: ProximaParcelaCardProps) {
   if (!parcela) {
     return (
-      <GlassPanel depth={1} className="p-5 flex items-center justify-center min-h-[180px]">
-        <div className="text-center space-y-2">
+      <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5 flex items-center justify-center min-h-[180px]")}>
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "text-center space-y-2")}>
           <IconContainer size="md" className="bg-success/8 mx-auto">
             <CheckCircle2 className="size-4 text-success/70" />
           </IconContainer>
@@ -66,16 +66,16 @@ export function ProximaParcelaCard({
     <GlassPanel
       depth={2}
       className={cn(
-        'p-5 relative overflow-hidden',
+        /* design-system-escape: p-5 → usar <Inset> */ 'p-5 relative overflow-hidden',
         atrasada && 'border-destructive/20',
       )}
     >
-      <div className="flex items-start justify-between gap-3 mb-4">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3 mb-4")}>
         <div className="min-w-0">
           <Text variant="meta-label" className="text-muted-foreground/60">
             Próxima parcela
           </Text>
-          <div className="flex items-baseline gap-2 mt-1">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-baseline gap-2 mt-1")}>
             <Heading level="card" className="tabular-nums">
               Parcela {parcela.numeroParcela}
             </Heading>
@@ -86,23 +86,23 @@ export function ProximaParcelaCard({
         </IconContainer>
       </div>
 
-      <div className="space-y-1 mb-5">
-        <div className="flex items-baseline gap-2">
+      <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1 mb-5")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-baseline gap-2")}>
           <Text
             variant="kpi-value"
-            className="text-3xl leading-none tracking-tight"
+            className={cn(/* design-system-escape: text-3xl → migrar para <Heading level="display-*">; leading-none sem token DS; tracking-tight sem token DS */ /* design-system-escape: text-3xl → migrar para <Heading level="display-*">; leading-none sem token DS; tracking-tight sem token DS */ "text-3xl leading-none tracking-tight")}
           >
             {formatCurrency(parcela.valorBrutoCreditoPrincipal)}
           </Text>
           <Icon className={cn('size-4', accentClass)} />
         </div>
-        <div className="flex items-center gap-2 text-sm">
-          <Text variant="caption" className="font-medium text-foreground/85">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2 text-sm")}>
+          <Text variant="caption" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/85")}>
             {format(venc, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
           </Text>
           <span
             className={cn(
-              'inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold',
+              /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold',
               atrasada
                 ? 'bg-destructive/10 text-destructive'
                 : hoje0
@@ -115,7 +115,7 @@ export function ProximaParcelaCard({
         </div>
       </div>
 
-      <div className="flex gap-2 flex-wrap">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2 flex-wrap")}>
         {onMarcarRecebida && (
           <Button
             size="sm"

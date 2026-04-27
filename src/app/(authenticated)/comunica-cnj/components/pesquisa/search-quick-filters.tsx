@@ -26,7 +26,7 @@ import { cn } from '@/lib/utils';
 import { usePesquisaStore } from '../hooks/use-pesquisa-store';
 import type { MeioComunicacao } from '@/app/(authenticated)/comunica-cnj/domain';
 
-const POPOVER_CLASSES = 'rounded-2xl glass-dropdown overflow-hidden p-0';
+const POPOVER_CLASSES = /* design-system-escape: p-0 → usar <Inset> */ 'rounded-2xl glass-dropdown overflow-hidden p-0';
 
 // TRTs principais + tribunais superiores (lista estática para evitar round-trip)
 const TRIBUNAIS = [
@@ -82,7 +82,7 @@ function FilterChip({
   return (
     <div
       className={cn(
-        'group flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
+        /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'group flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
         hasValue
           ? 'border-primary/20 bg-primary/5 text-primary'
           : 'border-border/15 text-muted-foreground/60 hover:bg-muted/30',
@@ -109,7 +109,7 @@ function FilterChip({
                   onClear();
                 }
               }}
-              className="ml-0.5 rounded-full p-0.5 hover:bg-primary/10 transition-colors"
+              className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-0.5 rounded-full p-0.5 hover:bg-primary/10 transition-colors")}
               aria-label={`Limpar ${label}`}
             >
               <X className="size-2.5" aria-hidden />
@@ -145,7 +145,7 @@ export function SearchQuickFilters() {
       : undefined;
 
   return (
-    <div className="flex flex-wrap items-center justify-center gap-2">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap items-center justify-center gap-2")}>
       {/* Tribunal */}
       <Popover>
         <PopoverTrigger asChild>
@@ -170,7 +170,7 @@ export function SearchQuickFilters() {
                       })
                     }
                   >
-                    <span className="font-medium tabular-nums">{t.sigla}</span>
+                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium tabular-nums")}>{t.sigla}</span>
                     <span className="ml-2 text-muted-foreground">{t.nome}</span>
                   </CommandItem>
                 ))}
@@ -200,9 +200,9 @@ export function SearchQuickFilters() {
             />
           </button>
         </PopoverTrigger>
-        <PopoverContent className={cn(POPOVER_CLASSES, 'w-64 p-4')} align="start">
-          <div className="space-y-3">
-            <div className="space-y-1.5">
+        <PopoverContent className={cn(POPOVER_CLASSES, /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'w-64 p-4')} align="start">
+          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
               <Label htmlFor="pesquisa-oab-num">
                 <Text variant="meta-label">Número</Text>
               </Label>
@@ -215,7 +215,7 @@ export function SearchQuickFilters() {
                 className="tabular-nums"
               />
             </div>
-            <div className="space-y-1.5">
+            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
               <Label htmlFor="pesquisa-oab-uf">
                 <Text variant="meta-label">UF</Text>
               </Label>
@@ -223,7 +223,7 @@ export function SearchQuickFilters() {
                 id="pesquisa-oab-uf"
                 value={oabUf}
                 onChange={(e) => setOabUf(e.target.value)}
-                className="w-full rounded-md border border-input bg-background px-3 py-1.5 text-sm"
+                className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "w-full rounded-md border border-input bg-background px-3 py-1.5 text-sm")}
               >
                 <option value="">—</option>
                 {UFS.map((uf) => (
@@ -264,8 +264,8 @@ export function SearchQuickFilters() {
             />
           </button>
         </PopoverTrigger>
-        <PopoverContent className={cn(POPOVER_CLASSES, 'w-56 p-2')} align="start">
-          <div className="flex flex-col gap-1">
+        <PopoverContent className={cn(POPOVER_CLASSES, /* design-system-escape: p-2 → usar <Inset> */ 'w-56 p-2')} align="start">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
             {MEIO_OPTIONS.map((opt) => (
               <button
                 key={opt.value}
@@ -276,7 +276,7 @@ export function SearchQuickFilters() {
                   })
                 }
                 className={cn(
-                  'flex items-center justify-between rounded-md px-3 py-2 text-sm transition-colors',
+                  /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ 'flex items-center justify-between rounded-md px-3 py-2 text-sm transition-colors',
                   filtros.meio === opt.value
                     ? 'bg-primary/10 text-primary'
                     : 'text-foreground hover:bg-muted/40',
@@ -309,9 +309,9 @@ export function SearchQuickFilters() {
             />
           </button>
         </PopoverTrigger>
-        <PopoverContent className={cn(POPOVER_CLASSES, 'w-72 p-4')} align="start">
-          <div className="space-y-3">
-            <div className="space-y-1.5">
+        <PopoverContent className={cn(POPOVER_CLASSES, /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'w-72 p-4')} align="start">
+          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
               <Label htmlFor="pesquisa-data-inicio">
                 <Text variant="meta-label">Data início</Text>
               </Label>
@@ -324,7 +324,7 @@ export function SearchQuickFilters() {
                 }
               />
             </div>
-            <div className="space-y-1.5">
+            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
               <Label htmlFor="pesquisa-data-fim">
                 <Text variant="meta-label">Data fim</Text>
               </Label>

@@ -7,6 +7,7 @@
  * Implementação seguindo o padrão DataShell.
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import type { Table as TanstackTable, SortingState, RowSelectionState } from '@tanstack/react-table';
@@ -244,7 +245,7 @@ export function ClientesTableWrapper({
               }
             />
           ) : (
-            <div className="p-6" />
+            <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")} />
           )
         }
         footer={

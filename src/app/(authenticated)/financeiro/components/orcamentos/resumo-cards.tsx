@@ -4,6 +4,7 @@
  * Cards de resumo para a página de Orçamentos
  */
 
+import { cn } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
@@ -88,13 +89,13 @@ export function ResumoCards({
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 md:grid-cols-4 gap-4")}>
         {[...Array(4)].map((_, i) => (
           <Card key={i}>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
+            <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
                 <Skeleton className="h-10 w-10 rounded-lg" />
-                <div className="space-y-1.5">
+                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
                   <Skeleton className="h-4 w-20" />
                   <Skeleton className="h-6 w-8" />
                 </div>
@@ -107,21 +108,21 @@ export function ResumoCards({
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 md:grid-cols-4 gap-4")}>
       {items.map((item) => (
         <Card
           key={item.titulo}
           className={item.onClick ? 'cursor-pointer hover:shadow-md transition-shadow' : undefined}
           onClick={item.onClick}
         >
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
+          <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
               <div className={`p-2 rounded-lg ${item.corFundo}`}>
                 <span className={item.corIcone}>{item.icone}</span>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">{item.titulo}</p>
-                <p className="text-2xl font-bold">{item.valor}</p>
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{item.titulo}</p>
+                <p className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-bold")}>{item.valor}</p>
               </div>
             </div>
           </CardContent>

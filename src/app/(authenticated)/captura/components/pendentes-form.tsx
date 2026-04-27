@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { forwardRef, useImperativeHandle, useState, useEffect, useCallback } from 'react';
 import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaResult, CapturaResultData } from './captura-result';
@@ -104,21 +105,21 @@ export const PendentesForm = forwardRef<CapturaFormHandle, PendentesFormProps>(
     }), [handleCaptura, isLoading]);
 
     return (
-      <div className="space-y-6">
+      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
         <CapturaFormBase
           advogadoId={advogadoId}
           credenciaisSelecionadas={credenciaisSelecionadas}
           onAdvogadoChange={setAdvogadoId}
           onCredenciaisChange={setCredenciaisSelecionadas}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2 md:col-span-2">
+          <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "grid grid-cols-1 md:grid-cols-2 gap-6")}>
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 md:col-span-2")}>
               <Label htmlFor="filtroPrazo">Filtros de Prazo</Label>
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-1 gap-2 sm:grid-cols-2")}>
                 {FILTROS_PRAZO.map((opcao) => (
                   <label
                     key={opcao.value}
-                    className="flex items-center gap-3 rounded-md border px-3 py-2 text-sm"
+                    className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-3 rounded-md border px-3 py-2 text-sm")}
                   >
                     <Checkbox
                       id={`filtro-${opcao.value}`}
@@ -129,7 +130,7 @@ export const PendentesForm = forwardRef<CapturaFormHandle, PendentesFormProps>(
                   </label>
                 ))}
               </div>
-              <p className="text-sm text-muted-foreground">
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                 Os filtros selecionados são executados sequencialmente: primeiro Sem Prazo e,
                 em seguida, No Prazo.
               </p>

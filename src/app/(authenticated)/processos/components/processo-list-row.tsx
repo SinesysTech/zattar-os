@@ -50,7 +50,7 @@ export function ProcessoListRow({
   return (
     <div
       className={cn(
-        'w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all',
+        /* design-system-escape: gap-3 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ 'w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all',
         isSelected
           ? 'bg-primary/6 border border-primary/15'
           : 'hover:bg-foreground/4 border border-transparent'
@@ -59,11 +59,11 @@ export function ProcessoListRow({
       <button
         type="button"
         onClick={onClick}
-        className="flex items-center gap-3 flex-1 min-w-0 cursor-pointer"
+        className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 flex-1 min-w-0 cursor-pointer")}
       >
         <div className={cn('size-2.5 rounded-full shrink-0', dotColor)} />
         <div className="flex-1 min-w-0 text-left">
-          <p className="text-xs font-medium truncate">{tituloPartes}</p>
+          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium truncate")}>{tituloPartes}</p>
           <p className="text-[10px] text-muted-foreground/55 font-mono tabular-nums truncate">
             {processo.numeroProcesso}
           </p>
@@ -88,7 +88,7 @@ export function ProcessoListRow({
       </ResponsavelPopover>
 
       {dataAut && (
-        <span className="text-[10px] font-medium text-muted-foreground/55 w-20 text-right hidden lg:block tabular-nums">
+        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium text-muted-foreground/55 w-20 text-right hidden lg:block tabular-nums")}>
           {new Date(dataAut).toLocaleDateString('pt-BR')}
         </span>
       )}

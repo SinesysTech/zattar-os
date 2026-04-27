@@ -1,6 +1,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -56,7 +57,7 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
 
   if (isLoading) {
     return (
-      <div className="space-y-4">
+      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         <Skeleton className="h-10 w-64" />
         <Skeleton className="h-32 w-full" />
         <Skeleton className="h-64 w-full" />
@@ -66,15 +67,15 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
 
   if (error || !folha) {
     return (
-      <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-6 text-center text-destructive">
+      <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "rounded-lg border border-destructive/50 bg-destructive/10 p-6 text-center text-destructive")}>
         {error || 'Folha não encontrada'}
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between")}>
         <div>
           <Heading level="page">
             Folha {MESES_LABELS[folha.mesReferencia]}/{folha.anoReferencia}
@@ -83,7 +84,7 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
             Gerada em {new Date(folha.dataGeracao).toLocaleString('pt-BR')}
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap items-center gap-2")}>
           {cores && (
              <Badge
              className={`${cores.bg} ${cores.text} border ${cores.border}`}
@@ -113,20 +114,20 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
         <CardHeader>
           <CardTitle>Resumo</CardTitle>
         </CardHeader>
-        <CardContent className="grid gap-4 md:grid-cols-3">
+        <CardContent className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-3")}>
           <div>
-            <p className="text-sm text-muted-foreground">Funcionários</p>
-            <p className="text-xl font-semibold">{folha.totalFuncionarios}</p>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Funcionários</p>
+            <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-semibold → className de <Text>/<Heading> */ "text-xl font-semibold")}>{folha.totalFuncionarios}</p>
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">Valor Total</p>
-            <p className="text-xl font-semibold text-success">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Valor Total</p>
+            <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-semibold → className de <Text>/<Heading> */ "text-xl font-semibold text-success")}>
               {formatCurrency(folha.valorTotal ?? 0)}
             </p>
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">Data de Pagamento</p>
-            <p className="text-xl font-semibold">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Data de Pagamento</p>
+            <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-semibold → className de <Text>/<Heading> */ "text-xl font-semibold")}>
               {folha.dataPagamento
                 ? new Date(folha.dataPagamento).toLocaleDateString('pt-BR')
                 : '-'}
@@ -185,7 +186,7 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
         <Card className="border-primary/20 bg-primary/5">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <DollarSign className="h-5 w-5" />
                 Lançamentos Financeiros
               </CardTitle>
@@ -197,29 +198,29 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
                 Ver no Financeiro
               </Button>
             </div>
-            <p className="text-sm text-muted-foreground">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
               Lançamentos criados quando a folha foi aprovada
             </p>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-3">
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3")}>
               {folha.itens
                 .filter((item) => item.lancamentoFinanceiroId)
                 .map((item) => (
                   <div
                     key={item.id}
-                    className="flex items-center justify-between rounded-lg border bg-card p-4 hover:bg-accent/50 transition-colors"
+                    className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex items-center justify-between rounded-lg border bg-card p-4 hover:bg-accent/50 transition-colors")}
                   >
-                    <div className="flex flex-col gap-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">
+                    <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
                           {item.usuario?.nomeExibicao ?? `Usuário ${item.usuarioId}`}
                         </span>
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="outline" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                           Lançamento #{item.lancamentoFinanceiroId}
                         </Badge>
                       </div>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-4 text-sm text-muted-foreground")}>
                         <span>Salário: {formatCurrency(item.valorBruto)}</span>
                         {folha.status === 'paga' && (
                           <Badge variant={getSemanticBadgeVariant('folha_status', 'PAGA')}>
@@ -243,7 +244,7 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
                   </div>
                 ))}
             </div>
-            <div className="mt-4 rounded-md bg-muted/50 p-3 text-sm text-muted-foreground">
+            <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "mt-4 rounded-md bg-muted/50 p-3 text-sm text-muted-foreground")}>
               <strong>Nota:</strong> Os lançamentos financeiros são criados automaticamente quando
               a folha é aprovada. Para visualizar todos os detalhes e realizar o pagamento, acesse o
               módulo Financeiro.

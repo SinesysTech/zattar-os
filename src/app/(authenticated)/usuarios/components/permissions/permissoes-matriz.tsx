@@ -1,6 +1,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -88,7 +89,7 @@ export function PermissoesMatriz({
 
   if (isLoading) {
     return (
-      <GlassPanel depth={1} className="p-5 space-y-4">
+      <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset>; space-y-4 → migrar para <Stack gap="default"> */ "p-5 space-y-4")}>
         <Skeleton className="h-6 w-48" />
         <Skeleton className="h-4 w-full" />
         <Skeleton className="h-96 w-full" />
@@ -98,11 +99,11 @@ export function PermissoesMatriz({
 
   return (
     <>
-      <GlassPanel depth={1} className="p-5 space-y-5">
+      <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset>; space-y-5 sem token DS */ "p-5 space-y-5")}>
         {/* Header */}
         <div className="flex items-center justify-between">
-          <div className="space-y-0.5">
-            <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <Shield className="size-4 text-muted-foreground/50" />
               <Heading level="card">Permissões do Usuário</Heading>
             </div>
@@ -114,7 +115,7 @@ export function PermissoesMatriz({
           </div>
 
           {canEdit && !isSuperAdmin && hasChanges && (
-            <div className="flex items-center gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <Button
                 type="button"
                 variant="outline"
@@ -176,7 +177,7 @@ export function PermissoesMatriz({
             )}
 
             {/* Module groups — flat layout, always expanded */}
-            <div className="space-y-4">
+            <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
               {gruposModulo.map((grupo) => {
                 const permissoesAtivasModulo = grupo.itens.reduce((acc, item) => {
                   return acc + Object.values(item.operacoes).filter(Boolean).length;
@@ -195,10 +196,10 @@ export function PermissoesMatriz({
                   : 'bg-info/12 text-info';
 
                 return (
-                  <GlassPanel key={grupo.chave} depth={1} className="p-4 space-y-3">
+                  <GlassPanel key={grupo.chave} depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-3 sem token DS */ "p-4 space-y-3")}>
                     {/* Group header */}
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-semibold text-foreground">
+                      <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold text-foreground")}>
                         {grupo.titulo}
                       </span>
                       <span
@@ -209,7 +210,7 @@ export function PermissoesMatriz({
                     </div>
 
                     {/* Permissions grid — all resources within group, flat */}
-                    <div className="space-y-2">
+                    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                       {grupo.itens.map((item) => {
                         const permissoesAtivas = Object.values(item.operacoes).filter(Boolean).length;
                         const totalOperacoes = Object.keys(item.operacoes).length;
@@ -223,9 +224,9 @@ export function PermissoesMatriz({
                           : 'bg-info/12 text-info';
 
                         return (
-                          <div key={item.recurso} className="space-y-1.5">
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs font-medium text-muted-foreground">
+                          <div key={item.recurso} className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+                            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-muted-foreground")}>
                                 {formatarNomeRecurso(item.recurso)}
                               </span>
                               <span
@@ -234,7 +235,7 @@ export function PermissoesMatriz({
                                 {permissoesAtivas}/{totalOperacoes}
                               </span>
                             </div>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-1.5">
+                            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-1.5")}>
                               {Object.entries(item.operacoes).map(([operacao, permitido]) => {
                                 const initialValue = getInitialValue(item.recurso, operacao);
                                 const isChanged = Boolean(permitido) !== initialValue;
@@ -288,7 +289,7 @@ export function PermissoesMatriz({
               Você está prestes a modificar as permissões deste usuário. Esta ação será registrada no log de auditoria.
             </DialogDescription>
           </DialogHeader>
-          <div className="py-4">
+          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "py-4")}>
             <Typography.Muted>
               <strong>Total de permissões ativas:</strong> {totalPermissoesAtivas} de {totalPermissoes}
             </Typography.Muted>

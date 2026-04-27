@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import React, { useEffect, useRef, useState } from "react";
 import { addDays, addHours, format, nextSaturday } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -151,7 +152,7 @@ function MailBody({ mail }: { mail: MailMessagePreview }) {
 
   if (isLoadingBody && !isLoaded) {
     return (
-      <div className="flex flex-col gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
         <Skeleton className="h-4 w-full" />
         <Skeleton className="h-4 w-5/6" />
         <Skeleton className="h-4 w-4/6" />
@@ -163,7 +164,7 @@ function MailBody({ mail }: { mail: MailMessagePreview }) {
 
   if (fetchError && !isLoaded) {
     return (
-      <div className="text-sm whitespace-pre-wrap">{mail.preview || "Não foi possível carregar o conteúdo do e-mail."}</div>
+      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm whitespace-pre-wrap")}>{mail.preview || "Não foi possível carregar o conteúdo do e-mail."}</div>
     );
   }
 
@@ -180,7 +181,7 @@ function MailBody({ mail }: { mail: MailMessagePreview }) {
   }
 
   return (
-    <div className="text-sm whitespace-pre-wrap">{textContent}</div>
+    <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm whitespace-pre-wrap")}>{textContent}</div>
   );
 }
 
@@ -225,10 +226,10 @@ function ForwardDialog({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
       <PopoverContent className="w-[calc(100vw-2rem)] sm:w-96" align="end">
-        <div className="grid gap-3">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3")}>
           <Text variant="label">Encaminhar e-mail</Text>
-          <div className="grid gap-2">
-            <Label htmlFor="forward-to" className="text-xs">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+            <Label htmlFor="forward-to" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
               Para (separar com vírgula)
             </Label>
             <Input
@@ -239,8 +240,8 @@ function ForwardDialog({
               onChange={(e) => setTo(e.target.value)}
             />
           </div>
-          <div className="grid gap-2">
-            <Label className="text-xs">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+            <Label className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
               Mensagem adicional
             </Label>
             <MailEditor
@@ -301,8 +302,8 @@ export function MailDisplay({ mail }: MailDisplayProps) {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex h-13 shrink-0 items-center gap-2 px-2">
-        <div className="flex items-center gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv. */ "flex h-13 shrink-0 items-center gap-2 px-2")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
@@ -358,7 +359,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
           </Tooltip>
         </div>
 
-        <Separator orientation="vertical" className="mx-1 h-6" />
+        <Separator orientation="vertical" className={cn(/* design-system-escape: mx-1 margin sem primitiva DS */ "mx-1 h-6")} />
 
         <Tooltip>
           <Popover>
@@ -370,10 +371,10 @@ export function MailDisplay({ mail }: MailDisplayProps) {
                 </Button>
               </TooltipTrigger>
             </PopoverTrigger>
-            <PopoverContent className="flex w-[calc(100vw-2rem)] sm:w-133.75 p-0">
-              <div className="flex flex-col gap-2 border-r px-2 py-4">
-                <Text variant="label" className="px-4">Adiar até</Text>
-                <div className="grid min-w-62.5 gap-1">
+            <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "flex w-[calc(100vw-2rem)] sm:w-133.75 p-0")}>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "flex flex-col gap-2 border-r px-2 py-4")}>
+                <Text variant="label" className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "px-4")}>Adiar até</Text>
+                <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "grid min-w-62.5 gap-1")}>
                   <Button
                     variant="ghost"
                     className="justify-start font-normal"
@@ -412,7 +413,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
                   </Button>
                 </div>
               </div>
-              <div className="p-2">
+              <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2")}>
                 <Calendar />
               </div>
             </PopoverContent>
@@ -420,7 +421,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
           <TooltipContent>Adiar</TooltipContent>
         </Tooltip>
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "ml-auto flex items-center gap-2")}>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
@@ -439,7 +440,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             </TooltipContent>
           </Tooltip>
 
-          <Separator orientation="vertical" className="mx-1 h-6" />
+          <Separator orientation="vertical" className={cn(/* design-system-escape: mx-1 margin sem primitiva DS */ "mx-1 h-6")} />
 
           <Tooltip>
             <TooltipTrigger asChild>
@@ -494,7 +495,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
           )}
         </div>
 
-        <Separator orientation="vertical" className="mx-1 h-6" />
+        <Separator orientation="vertical" className={cn(/* design-system-escape: mx-1 margin sem primitiva DS */ "mx-1 h-6")} />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -518,41 +519,41 @@ export function MailDisplay({ mail }: MailDisplayProps) {
 
       {mail ? (
         <div className="flex min-h-0 flex-1 flex-col">
-          <div className="flex shrink-0 flex-wrap items-start gap-3 p-4">
-            <div className="flex min-w-0 flex-1 items-start gap-4 text-sm">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex shrink-0 flex-wrap items-start gap-3 p-4")}>
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; text-sm → migrar para <Text variant="body-sm"> */ "flex min-w-0 flex-1 items-start gap-4 text-sm")}>
               <Avatar>
                 <AvatarFallback>{participantInitials}</AvatarFallback>
               </Avatar>
-              <div className="min-w-0 grid flex-1 gap-1">
-                <div className="whitespace-normal wrap-break-word font-semibold">{participantName}</div>
-                <div className="text-xs whitespace-normal wrap-break-word">{mail.subject}</div>
-                <div className="text-xs whitespace-normal wrap-break-word">
-                  <span className="font-medium">{participantLabel}:</span> {participantLine}
+              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "min-w-0 grid flex-1 gap-1")}>
+                <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "whitespace-normal wrap-break-word font-semibold")}>{participantName}</div>
+                <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs whitespace-normal wrap-break-word")}>{mail.subject}</div>
+                <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs whitespace-normal wrap-break-word")}>
+                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{participantLabel}:</span> {participantLine}
                 </div>
               </div>
             </div>
-            <div className="text-muted-foreground text-xs whitespace-normal wrap-break-word sm:ml-auto sm:pl-4 sm:text-right">
+            <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; sm:pl-4 sem equivalente DS */ "text-muted-foreground text-xs whitespace-normal wrap-break-word sm:ml-auto sm:pl-4 sm:text-right")}>
               {format(new Date(mail.date), "PPpp", { locale: ptBR })}
             </div>
           </div>
 
           <Separator />
 
-          <div className="min-h-0 flex-1 overflow-auto p-4">
+          <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "min-h-0 flex-1 overflow-auto p-4")}>
             <MailBody mail={mail} />
           </div>
 
           <Separator />
 
           {replyMode ? (
-            <div ref={replyAreaRef} className="shrink-0 p-4">
+            <div ref={replyAreaRef} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "shrink-0 p-4")}>
               <form onSubmit={handleReply}>
-                <div className="grid gap-3">
-                  <div className="text-sm text-muted-foreground">
+                <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3")}>
+                  <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                     {replyMode === "reply-all"
                       ? "Responder a todos"
                       : "Responder para"}{" "}
-                    <span className="font-medium text-foreground">
+                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>
                       {participantName}
                     </span>
                   </div>
@@ -561,7 +562,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
                     editorRef={editorRef}
                     placeholder="Escreva sua resposta..."
                   />
-                  <div className="flex items-center gap-2 justify-end">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 justify-end")}>
                     <Button
                       type="button"
                       variant="ghost"
@@ -585,8 +586,8 @@ export function MailDisplay({ mail }: MailDisplayProps) {
               </form>
             </div>
           ) : (
-            <div className="shrink-0 p-4">
-              <div className="flex items-center gap-2">
+            <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "shrink-0 p-4")}>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <Button
                   variant="outline"
                   size="sm"
@@ -616,9 +617,9 @@ export function MailDisplay({ mail }: MailDisplayProps) {
           )}
         </div>
       ) : (
-        <div className="text-muted-foreground flex flex-1 flex-col items-center justify-center gap-2 p-8">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-8 → usar <Inset> */ "text-muted-foreground flex flex-1 flex-col items-center justify-center gap-2 p-8")}>
           <MailOpen className="h-10 w-10 opacity-40" />
-          <p className="text-sm">Selecione um e-mail para visualizar</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Selecione um e-mail para visualizar</p>
         </div>
       )}
     </div>

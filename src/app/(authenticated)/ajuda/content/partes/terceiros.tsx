@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
@@ -86,10 +87,10 @@ const actions: ActionDef[] = [
 
 export default function TerceirosDoc() {
   return (
-    <div className="space-y-10">
-      <div className="space-y-2">
+    <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Heading level="page">Terceiros</Heading>
-        <p className="text-muted-foreground text-lg">
+        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-muted-foreground text-lg")}>
           Cadastro de pessoas indiretamente envolvidas nos processos, como testemunhas, peritos e assistentes técnicos.
         </p>
       </div>
@@ -122,7 +123,7 @@ export default function TerceirosDoc() {
         <p className="text-muted-foreground">
           O campo Tipo de Terceiro ajuda a classificar o envolvimento de cada pessoa:
         </p>
-        <ul className="list-disc list-inside space-y-1 text-muted-foreground text-sm mt-2">
+        <ul className={cn(/* design-system-escape: space-y-1 sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "list-disc list-inside space-y-1 text-muted-foreground text-sm mt-2")}>
           <li><strong>Testemunha:</strong> pessoa arrolada para depor no processo.</li>
           <li><strong>Perito:</strong> especialista nomeado pelo juízo para elaborar laudo técnico.</li>
           <li><strong>Assistente Técnico:</strong> especialista indicado por uma das partes para acompanhar a perícia.</li>

@@ -6,6 +6,7 @@
  *   - data.processos.tendenciaMensal (mes/novos/resolvidos)
  */
 
+import { cn } from '@/lib/utils';
 import { TrendingUp } from 'lucide-react';
 import {
   WidgetContainer,
@@ -29,7 +30,7 @@ export function WidgetTendenciaNovos() {
         subtitle="Tendencia -- ultimos 8 meses"
         depth={1}
       >
-        <p className="text-xs text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
           Nao foi possivel carregar os dados processuais.
         </p>
       </WidgetContainer>
@@ -73,7 +74,7 @@ export function WidgetTendenciaNovos() {
       subtitle="Tendencia -- ultimos 8 meses"
       depth={1}
     >
-      <div className="flex items-end justify-between gap-3 mb-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-end justify-between gap-3 mb-3")}>
         <Stat
           label="Este mes"
           value={fmtNum(current)}
@@ -87,9 +88,9 @@ export function WidgetTendenciaNovos() {
           color="var(--primary)"
         />
       </div>
-      <div className="flex items-end justify-between pt-2 border-t border-border/10">
+      <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-end justify-between pt-2 border-t border-border/10")}>
         {tendencia.map((t, i) => (
-          <div key={i} className="flex flex-col items-center gap-0.5">
+          <div key={i} className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-center gap-0.5")}>
             <span className="text-[9px] text-muted-foreground/60 tabular-nums">{t.novos}</span>
             <span className="text-[8px] text-muted-foreground/55">{labels[i]}</span>
           </div>

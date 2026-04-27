@@ -75,32 +75,32 @@ function BriefingEventCard({ event, onClick }: { event: AgendaEvent; onClick?: (
   const prepPct = event.meta?.prepStatus === "preparado" ? 100 : event.meta?.prepStatus === "parcial" ? 60 : event.meta?.prepStatus === "pendente" ? 20 : undefined;
 
   return (
-    <button onClick={onClick} className={cn("w-full text-left rounded-xl p-4 bg-muted/[0.035] border border-border/8 transition-all hover:bg-muted/6r:border-border/15 cursor-pointer", isFatal && "border-destructive/15")}>
-      <div className="flex items-start gap-4">
+    <button onClick={onClick} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "w-full text-left rounded-xl p-4 bg-muted/[0.035] border border-border/8 transition-all hover:bg-muted/6r:border-border/15 cursor-pointer", isFatal && "border-destructive/15")}>
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start gap-4")}>
         <div className="text-right shrink-0 w-14">
-          <div className={cn("text-sm font-mono font-bold tabular-nums", isFatal ? "text-destructive" : "text-foreground")}>{fmtTime(event.start)}</div>
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-mono font-bold tabular-nums", isFatal ? "text-destructive" : "text-foreground")}>{fmtTime(event.start)}</div>
           {event.start.getTime() !== event.end.getTime() && <div className="text-[9px] text-muted-foreground/40 font-mono tabular-nums">{fmtTime(event.end)}</div>}
-          {isFatal && <div className="text-[9px] text-destructive/60 font-bold uppercase mt-0.5">FATAL</div>}
+          {isFatal && <div className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[9px] text-destructive/60 font-bold uppercase mt-0.5")}>FATAL</div>}
         </div>
         <div className={cn("w-1 self-stretch rounded-full shrink-0", colors.dot)} />
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-[13px] font-semibold text-foreground">{event.title}</span>
-            <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-semibold border", colors.bg, colors.text, colors.border)}>{colors.label}</span>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
+            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[13px] font-semibold text-foreground")}>{event.title}</span>
+            <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-semibold border", colors.bg, colors.text, colors.border)}>{colors.label}</span>
             {event.meta?.status && (
-              <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-semibold border",
+              <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-semibold border",
                 event.meta?.status === "Marcada" && "bg-success/15 text-success border-success/20",
                 event.meta?.status === "Pendente" && "bg-warning/15 text-warning border-warning/20",
               )}>{event.meta?.status}</span>
             )}
           </div>
-          <div className="flex items-center gap-4 mt-2 text-[11px] text-muted-foreground/45">
-            {event.meta?.trt && <span className="flex items-center gap-1"><Landmark className="size-3" /> {event.meta?.trt}{event.meta?.grau ? ` · ${event.meta?.grau}` : ""}</span>}
-            {event.meta?.modalidade && <span className="flex items-center gap-1">{event.meta?.modalidade === "virtual" ? <Video className="size-3" /> : <MapPin className="size-3" />} {event.meta?.modalidade === "virtual" ? "Virtual" : "Presencial"}</span>}
-            {event.meta?.local && <span className="flex items-center gap-1"><MapPin className="size-3" /> {event.meta?.local}</span>}
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4 mt-2 text-[11px] text-muted-foreground/45")}>
+            {event.meta?.trt && <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}><Landmark className="size-3" /> {event.meta?.trt}{event.meta?.grau ? ` · ${event.meta?.grau}` : ""}</span>}
+            {event.meta?.modalidade && <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>{event.meta?.modalidade === "virtual" ? <Video className="size-3" /> : <MapPin className="size-3" />} {event.meta?.modalidade === "virtual" ? "Virtual" : "Presencial"}</span>}
+            {event.meta?.local && <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}><MapPin className="size-3" /> {event.meta?.local}</span>}
           </div>
           {event.meta?.processo && (
-            <div className="mt-2 p-2 rounded-lg bg-muted/3 border border-border/6 flex items-center gap-3">
+            <div className={cn(/* design-system-escape: p-2 → usar <Inset>; gap-3 gap sem token DS */ "mt-2 p-2 rounded-lg bg-muted/3 border border-border/6 flex items-center gap-3")}>
               <FileText className="size-3.5 text-muted-foreground/35 shrink-0" />
               <div className="min-w-0 flex-1">
                 <div className="text-[10px] font-mono text-muted-foreground/50">{event.meta?.processo}</div>
@@ -110,8 +110,8 @@ function BriefingEventCard({ event, onClick }: { event: AgendaEvent; onClick?: (
           )}
           {prepPct != null && <div className="mt-2"><PrepProgress percent={prepPct} size="sm" /></div>}
           {event.meta?.responsavelNome && (
-            <div className="flex items-center gap-2 mt-2">
-              <div className="size-5 rounded-full bg-primary/10 flex items-center justify-center text-[8px] font-bold text-primary shrink-0">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-2")}>
+              <div className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "size-5 rounded-full bg-primary/10 flex items-center justify-center text-[8px] font-bold text-primary shrink-0")}>
                 {event.meta?.responsavelNome.split(" ").map((w) => w[0]).join("").slice(0, 2)}
               </div>
               <span className="text-[10px] text-muted-foreground/45">{event.meta?.responsavelNome}</span>
@@ -165,20 +165,20 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
   }, [events, dayEvents]);
 
   return (
-    <div className={cn("flex gap-4", className)}>
-      <div className="flex-1 space-y-4 min-w-0">
+    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4", className)}>
+      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "flex-1 space-y-4 min-w-0")}>
         {/* Narrative */}
-        <GlassPanel className="p-5">
-          <div className="flex items-center gap-3 mb-3">
+        <GlassPanel className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mb-3")}>
             <div className="size-9 rounded-xl bg-primary/10 flex items-center justify-center"><Sparkles className="size-4 text-primary" /></div>
             <div>
-              <div className="text-sm font-semibold text-foreground">Bom dia, {userName}</div>
-              <div className="text-xs text-muted-foreground/50">{dateStr}</div>
+              <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold text-foreground")}>Bom dia, {userName}</div>
+              <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/50")}>{dateStr}</div>
             </div>
           </div>
-          <p className="text-[13px] text-muted-foreground/60 leading-relaxed">
-            Você tem <span className="text-foreground font-semibold">{dayEvents.length} compromissos</span> hoje
-            {audienciaCount > 0 && <>, incluindo <span className="text-info font-semibold">{audienciaCount} audiência{audienciaCount > 1 ? "s" : ""}</span></>}.
+          <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[13px] text-muted-foreground/60 leading-relaxed")}>
+            Você tem <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-foreground font-semibold")}>{dayEvents.length} compromissos</span> hoje
+            {audienciaCount > 0 && <>, incluindo <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-info font-semibold")}>{audienciaCount} audiência{audienciaCount > 1 ? "s" : ""}</span></>}.
             {dayEvents.length === 0 && " Dia livre para foco e preparação."}
           </p>
         </GlassPanel>
@@ -186,9 +186,9 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
         {/* Morning */}
         {morning.length > 0 && (
           <>
-            <div className="flex items-center gap-3 mt-6 mb-3">
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mt-6 mb-3")}>
               <Sun className="size-4 text-warning" />
-              <span className="text-xs font-semibold text-muted-foreground/50 uppercase tracking-wider">Manhã</span>
+              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-xs font-semibold text-muted-foreground/50 uppercase tracking-wider")}>Manhã</span>
               <div className="flex-1 h-px bg-border/8" />
             </div>
             {morning.map((evt) => <BriefingEventCard key={evt.id} event={evt} onClick={() => onEventClick?.(evt)} />)}
@@ -198,9 +198,9 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
         {/* Afternoon */}
         {afternoon.length > 0 && (
           <>
-            <div className="flex items-center gap-3 mt-6 mb-3">
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mt-6 mb-3")}>
               <Sunset className="size-4 text-warning/70" />
-              <span className="text-xs font-semibold text-muted-foreground/50 uppercase tracking-wider">Tarde</span>
+              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-xs font-semibold text-muted-foreground/50 uppercase tracking-wider")}>Tarde</span>
               <div className="flex-1 h-px bg-border/8" />
             </div>
             {afternoon.map((evt) => <BriefingEventCard key={evt.id} event={evt} onClick={() => onEventClick?.(evt)} />)}
@@ -209,25 +209,25 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
       </div>
 
       {/* Right Sidebar */}
-      <div className="w-64 shrink-0 space-y-4 hidden lg:flex lg:flex-col">
+      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "w-64 shrink-0 space-y-4 hidden lg:flex lg:flex-col")}>
         {prepItems.length > 0 && (
-          <GlassPanel className="p-4">
-            <div className="flex items-center gap-2 mb-3"><ShieldCheck className="size-3.5 text-primary" /><span className="text-xs font-semibold text-foreground">Radar de Preparo</span></div>
-            <div className="space-y-3">{prepItems.map((item) => <PrepProgress key={item.id} label={item.label} percent={item.percent} size="md" />)}</div>
+          <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}><ShieldCheck className="size-3.5 text-primary" /><span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-foreground")}>Radar de Preparo</span></div>
+            <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>{prepItems.map((item) => <PrepProgress key={item.id} label={item.label} percent={item.percent} size="md" />)}</div>
           </GlassPanel>
         )}
         {alerts.length > 0 && (
-          <GlassPanel className="p-4">
-            <div className="flex items-center gap-2 mb-3"><Bell className="size-3.5 text-warning" /><span className="text-xs font-semibold text-foreground">Alertas</span></div>
-            <div className="space-y-2">
+          <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}><Bell className="size-3.5 text-warning" /><span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-foreground")}>Alertas</span></div>
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               {alerts.map((alert) => {
                 const Icon = alert.severity === "critical" ? AlertCircle : alert.severity === "warning" ? TriangleAlert : Clock;
                 const cls = alert.severity === "critical" ? "bg-destructive/[0.06] border-destructive/10 text-destructive" : "bg-warning/[0.04] border-warning/8 text-warning";
                 return (
-                  <div key={alert.id} className={cn("flex items-start gap-2 p-2 rounded-lg border", cls)}>
+                  <div key={alert.id} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2 → usar <Inset> */ "flex items-start gap-2 p-2 rounded-lg border", cls)}>
                     <Icon className="size-3.5 mt-0.5 shrink-0" />
                     <div>
-                      <div className="text-[10px] font-semibold">{alert.title}</div>
+                      <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold")}>{alert.title}</div>
                       <div className="text-[9px] text-muted-foreground/40">{alert.description}</div>
                     </div>
                   </div>
@@ -236,16 +236,16 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
             </div>
           </GlassPanel>
         )}
-        <GlassPanel className="p-4">
-          <div className="flex items-center gap-2 mb-3"><Zap className="size-3.5 text-primary" /><span className="text-xs font-semibold text-foreground">Ações Rápidas</span></div>
-          <div className="space-y-1.5">
+        <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}><Zap className="size-3.5 text-primary" /><span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-foreground")}>Ações Rápidas</span></div>
+          <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
             {[
               { icon: ExternalLink, label: "Abrir PJe" },
               { icon: FilePen, label: "Preparar Peça" },
               { icon: Users, label: "Confirmar Testemunhas" },
               { icon: CalendarCheck, label: "Pauta da Semana" },
             ].map((a) => (
-              <button key={a.label} className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[11px] text-muted-foreground/60 hover:bg-muted/10 hover:text-muted-foreground transition-colors cursor-pointer">
+              <button key={a.label} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[11px] text-muted-foreground/60 hover:bg-muted/10 hover:text-muted-foreground transition-colors cursor-pointer")}>
                 <a.icon className="size-3.5 text-muted-foreground/35" />{a.label}
               </button>
             ))}

@@ -57,7 +57,7 @@ function OrgNode({ usuario, isRoot, onClick }: OrgNodeProps) {
       onClick={() => onClick(usuario)}
       onKeyDown={handleKeyDown}
       className={cn(
-        'flex flex-col items-center gap-2 p-3 rounded-2xl border cursor-pointer',
+        /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset> */ 'flex flex-col items-center gap-2 p-3 rounded-2xl border cursor-pointer',
         'transition-all duration-200 select-none',
         'hover:-translate-y-0.5 hover:shadow-md',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50',
@@ -72,13 +72,13 @@ function OrgNode({ usuario, isRoot, onClick }: OrgNodeProps) {
           src={getAvatarUrl(usuario.avatarUrl) ?? undefined}
           alt={displayName}
         />
-        <AvatarFallback className="text-xs font-medium">
+        <AvatarFallback className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium")}>
           {getInitials(usuario)}
         </AvatarFallback>
       </Avatar>
 
       <div className="flex flex-col items-center text-center min-w-0 w-full">
-        <span className="text-[12px] font-semibold leading-tight truncate w-full text-center">
+        <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[12px] font-semibold leading-tight truncate w-full text-center")}>
           {displayName}
         </span>
         {cargoNome && (
@@ -143,9 +143,9 @@ export function UsuariosOrgView({ usuarios, onView }: UsuariosOrgViewProps) {
   }
 
   return (
-    <GlassPanel depth={1} className="p-6 overflow-x-auto relative">
+    <GlassPanel depth={1} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 overflow-x-auto relative")}>
       {/* Zoom controls */}
-      <div className="absolute top-4 right-4 flex items-center gap-1 z-10">
+      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "absolute top-4 right-4 flex items-center gap-1 z-10")}>
         <Button
           variant="ghost"
           size="icon"
@@ -159,7 +159,7 @@ export function UsuariosOrgView({ usuarios, onView }: UsuariosOrgViewProps) {
         <button
           type="button"
           onClick={handleZoomReset}
-          className="text-[11px] font-medium tabular-nums text-muted-foreground/60 hover:text-foreground transition-colors min-w-10nter"
+          className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium tabular-nums text-muted-foreground/60 hover:text-foreground transition-colors min-w-10nter")}
           aria-label="Redefinir zoom para 100%"
         >
           {zoom}%
@@ -184,7 +184,7 @@ export function UsuariosOrgView({ usuarios, onView }: UsuariosOrgViewProps) {
         }}
         className="transition-transform duration-200"
       >
-        <div className="flex flex-col items-center gap-0 py-2">
+        <div className={cn(/* design-system-escape: gap-0 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex flex-col items-center gap-0 py-2")}>
           {groups.map(([cargoNome, { level, members }], groupIndex) => {
             const isRoot = level === 0;
             return (
@@ -195,14 +195,14 @@ export function UsuariosOrgView({ usuarios, onView }: UsuariosOrgViewProps) {
                 )}
 
                 {/* Level */}
-                <div className="flex flex-col items-center gap-2">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center gap-2")}>
                   {/* Level label */}
-                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground/40">
+                  <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/40")}>
                     {cargoNome}
                   </span>
 
                   {/* Members row */}
-                  <div className="flex flex-row flex-wrap justify-center gap-2">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-row flex-wrap justify-center gap-2")}>
                     {members.map((usuario) => (
                       <OrgNode
                         key={usuario.id}

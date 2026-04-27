@@ -92,12 +92,12 @@ function StatCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-border/40 bg-muted/30 p-4 px-5">
-      <div className="flex items-center gap-2 mb-2">
+    <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; px-5 padding direcional sem Inset equiv. */ "rounded-2xl border border-border/40 bg-muted/30 p-4 px-5")}>
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-2")}>
         <IconContainer size="sm" className={iconBg}>
           <Icon className={cn('size-3.5', iconColor)} />
         </IconContainer>
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">
+        <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60")}>
           {label}
         </span>
       </div>
@@ -141,24 +141,24 @@ const MonthGrid = React.memo(function MonthGrid({
   return (
     <div>
       <div className="flex items-center justify-between mb-1.5">
-        <span className="text-[11px] font-semibold capitalize text-foreground">
+        <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[11px] font-semibold capitalize text-foreground")}>
           {monthName}
         </span>
         <span className="text-[9px] tabular-nums text-muted-foreground/50">
           {monthTotal}
         </span>
       </div>
-      <div className="grid grid-cols-7 gap-0.5 mb-0.5">
+      <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "grid grid-cols-7 gap-0.5 mb-0.5")}>
         {WEEKDAY_LABELS.map((d, i) => (
           <span
             key={i}
-            className="text-[7px] font-semibold text-center text-muted-foreground/30 uppercase"
+            className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[7px] font-semibold text-center text-muted-foreground/30 uppercase")}
           >
             {d}
           </span>
         ))}
       </div>
-      <div className="grid grid-cols-7 gap-0.5">
+      <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "grid grid-cols-7 gap-0.5")}>
         {Array.from({ length: offset }).map((_, i) => (
           <div key={`e${i}`} className="aspect-square" />
         ))}
@@ -189,7 +189,7 @@ const MonthGrid = React.memo(function MonthGrid({
                   )}
                 />
               </TooltipTrigger>
-              <TooltipContent side="top" className="text-xs">
+              <TooltipContent side="top" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                 {format(new Date(year, monthIndex, day), "d 'de' MMMM", {
                   locale: ptBR,
                 })}{' '}
@@ -231,21 +231,21 @@ function ExpedientesDayDialog({
           </DialogDescription>
         </DialogHeader>
         <ScrollArea className="max-h-[60vh]">
-          <div className="space-y-2 pr-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; pr-2 padding direcional sem Inset equiv. */ "space-y-2 pr-2")}>
             {expedientes.map((exp) => (
               <div
                 key={exp.id}
-                className="rounded-xl border border-border/40 bg-muted/30 p-3 space-y-1.5"
+                className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-1.5 sem token DS */ "rounded-xl border border-border/40 bg-muted/30 p-3 space-y-1.5")}
               >
-                <div className="flex items-center gap-2">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                   <IconContainer size="sm" className="bg-primary/15">
                     <FileText className="size-3.5 text-primary" />
                   </IconContainer>
-                  <span className="text-xs font-medium tabular-nums truncate">
+                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium tabular-nums truncate")}>
                     {exp.numeroProcesso}
                   </span>
                 </div>
-                <div className="flex items-center gap-2 flex-wrap">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
                   <SemanticBadge category="tribunal" value={exp.trt} toneOverride="soft">
                     {exp.trt}
                   </SemanticBadge>
@@ -393,9 +393,9 @@ export function ExpedientesYearHeatmap({
 
   return (
     <TooltipProvider delayDuration={100}>
-      <div className="flex flex-col gap-5">
+      <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex flex-col gap-5")}>
         {/* Year Navigator */}
-        <div className="flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           <Button
             variant="ghost"
             size="icon"
@@ -421,7 +421,7 @@ export function ExpedientesYearHeatmap({
             <Button
               variant="ghost"
               size="sm"
-              className="text-xs border border-border/40 bg-primary/8 text-primary hover:bg-primary/14 rounded-lg"
+              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs border border-border/40 bg-primary/8 text-primary hover:bg-primary/14 rounded-lg")}
               onClick={() => setYear(getYear(new Date()))}
             >
               Hoje
@@ -430,11 +430,11 @@ export function ExpedientesYearHeatmap({
         </div>
 
         {/* Main Layout */}
-        <div className="flex gap-5 flex-wrap xl:flex-nowrap">
+        <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex gap-5 flex-wrap xl:flex-nowrap")}>
           {/* Stats Sidebar */}
           <GlassPanel
             depth={2}
-            className="w-full xl:w-64 shrink-0 p-5 space-y-3"
+            className={cn(/* design-system-escape: p-5 → usar <Inset>; space-y-3 sem token DS */ "w-full xl:w-64 shrink-0 p-5 space-y-3")}
           >
             {/* Total no Ano */}
             <StatCard
@@ -478,9 +478,9 @@ export function ExpedientesYearHeatmap({
               <Text variant="kpi-value" className="text-warning">
                 {stats.pendentes}
               </Text>
-              <div className="mt-2 space-y-1">
+              <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "mt-2 space-y-1")}>
                 {stats.vencidos > 0 && (
-                  <div className="flex items-center gap-1.5">
+                  <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
                     <div className="size-1.5 rounded-full bg-destructive" />
                     <span className="text-[10px] text-muted-foreground/60">
                       {stats.vencidos} vencido{stats.vencidos !== 1 ? 's' : ''}
@@ -488,7 +488,7 @@ export function ExpedientesYearHeatmap({
                   </div>
                 )}
                 {stats.hoje > 0 && (
-                  <div className="flex items-center gap-1.5">
+                  <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
                     <div className="size-1.5 rounded-full bg-warning" />
                     <span className="text-[10px] text-muted-foreground/60">
                       {stats.hoje} hoje
@@ -496,7 +496,7 @@ export function ExpedientesYearHeatmap({
                   </div>
                 )}
                 {stats.proximos > 0 && (
-                  <div className="flex items-center gap-1.5">
+                  <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
                     <div className="size-1.5 rounded-full bg-info" />
                     <span className="text-[10px] text-muted-foreground/60">
                       {stats.proximos} proximos 3 dias
@@ -522,16 +522,16 @@ export function ExpedientesYearHeatmap({
             {/* Top Months Ranking */}
             {topMonths.length > 0 && (
               <div className="mt-4">
-                <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/40">
+                <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/40")}>
                   Ranking por Volume
                 </span>
-                <div className="mt-2 space-y-1.5">
+                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "mt-2 space-y-1.5")}>
                   {topMonths.map((m, i) => (
-                    <div key={m.idx} className="flex items-center gap-2">
-                      <span className="text-[9px] font-bold text-muted-foreground/40 w-3 text-right">
+                    <div key={m.idx} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                      <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[9px] font-bold text-muted-foreground/40 w-3 text-right")}>
                         {i + 1}
                       </span>
-                      <span className="text-[11px] font-medium w-10">
+                      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium w-10")}>
                         {format(new Date(year, m.idx, 1), 'MMM', {
                           locale: ptBR,
                         })}
@@ -544,7 +544,7 @@ export function ExpedientesYearHeatmap({
                           }}
                         />
                       </div>
-                      <span className="text-[10px] font-semibold tabular-nums w-7 text-right">
+                      <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold tabular-nums w-7 text-right")}>
                         {m.count}
                       </span>
                     </div>
@@ -555,7 +555,7 @@ export function ExpedientesYearHeatmap({
           </GlassPanel>
 
           {/* Heatmap Panel */}
-          <GlassPanel depth={1} className="flex-1 min-w-0 p-6">
+          <GlassPanel depth={1} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "flex-1 min-w-0 p-6")}>
             <div className="grid grid-cols-4 gap-x-6 gap-y-8">
               {Array.from({ length: 12 }, (_, i) => (
                 <MonthGrid
@@ -569,7 +569,7 @@ export function ExpedientesYearHeatmap({
             </div>
 
             {/* Legend */}
-            <div className="flex items-center gap-1 justify-end mt-4">
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 justify-end mt-4")}>
               <span className="text-[9px] text-muted-foreground/40 mr-1">
                 Menos
               </span>

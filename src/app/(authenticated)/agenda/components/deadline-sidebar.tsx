@@ -51,26 +51,26 @@ export function DeadlineSidebar({ deadlines, className }: DeadlineSidebarProps) 
   if (deadlines.length === 0) return null;
 
   return (
-    <GlassPanel className={cn("p-4", className)}>
-      <div className="flex items-center gap-2 mb-3">
+    <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4", className)}>
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
         <AlarmClock className="size-3.5 text-destructive" />
-        <span className="text-xs font-semibold text-foreground">Prazos Próximos</span>
+        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-foreground")}>Prazos Próximos</span>
       </div>
-      <div className="space-y-2">
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         {deadlines.map((dl) => {
           const u = urgencyClasses(dl.daysLeft, dl.fatal);
           return (
             <div
               key={dl.id}
               className={cn(
-                "flex items-center gap-2 p-2 rounded-lg border",
+                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2 → usar <Inset> */ "flex items-center gap-2 p-2 rounded-lg border",
                 u.bg,
                 u.border,
               )}
             >
               <div className={cn("w-1 h-8 rounded-full shrink-0", u.bar)} />
               <div className="min-w-0">
-                <div className={cn("text-[10px] font-mono font-semibold", u.label)}>
+                <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-mono font-semibold", u.label)}>
                   {daysLabel(dl.daysLeft)}
                 </div>
                 <div className="text-[11px] text-muted-foreground truncate">

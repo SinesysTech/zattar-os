@@ -125,35 +125,35 @@ export function ObrigacoesYearWrapper({
       <Dialog open={dayDialogOpen} onOpenChange={setDayDialogOpen}>
         <DialogContent className="glass-dialog max-w-lg">
           <DialogHeader>
-            <DialogTitle className="text-sm font-medium">
+            <DialogTitle className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>
               {selectedDayDate
                 ? format(selectedDayDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })
                 : ''}
             </DialogTitle>
           </DialogHeader>
           <ScrollArea className="max-h-[60vh]">
-            <div className="space-y-2 p-1">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; p-1 → usar <Inset> */ "space-y-2 p-1")}>
               {selectedDayParcelas.map((item, idx) => (
                 <GlassPanel
                   key={idx}
                   depth={1}
                   className={cn(
-                    'px-4 py-3 transition-colors',
+                    /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ 'px-4 py-3 transition-colors',
                     item.parcela.status === 'atrasada' && 'border-destructive/20',
                   )}
                 >
-                  <div className="flex items-center justify-between gap-3">
+                  <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium truncate">
+                      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium truncate")}>
                         Parcela {item.parcela.numeroParcela} ·{' '}
                         {item.acordo.processo?.numero_processo ||
                           `Acordo #${item.acordo.id}`}
                       </p>
-                      <div className="flex items-center gap-2 mt-1">
+                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-1")}>
                         <SemanticBadge
                           category="obrigacao_tipo"
                           value={item.acordo.tipo}
-                          className="text-[9px] font-semibold"
+                          className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[9px] font-semibold")}
                         >
                           {item.acordo.tipo}
                         </SemanticBadge>
@@ -162,7 +162,7 @@ export function ObrigacoesYearWrapper({
                         </span>
                       </div>
                     </div>
-                    <div className="shrink-0 text-xs font-medium tabular-nums">
+                    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "shrink-0 text-xs font-medium tabular-nums")}>
                       {CURRENCY.format(item.parcela.valorBrutoCreditoPrincipal)}
                     </div>
                   </div>

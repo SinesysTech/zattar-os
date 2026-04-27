@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -111,7 +112,7 @@ export function TemplateTextoCreateForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
         {/* Header with actions */}
         <div className="flex items-center justify-between">
           <Button
@@ -140,7 +141,7 @@ export function TemplateTextoCreateForm({
         </div>
 
         {/* Metadata fields */}
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 sm:grid-cols-2")}>
           <FormField
             control={form.control}
             name="nome"
@@ -212,7 +213,7 @@ export function TemplateTextoCreateForm({
         />
 
         {/* Editor section */}
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <FormLabel>Conteúdo do Template</FormLabel>
           <TemplateTextoEditor
             value={editorContent}

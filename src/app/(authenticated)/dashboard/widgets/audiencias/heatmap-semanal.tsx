@@ -12,6 +12,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import { Calendar } from 'lucide-react';
 import {
   WidgetContainer,
@@ -46,7 +47,7 @@ export function WidgetHeatmapSemanal() {
         icon={Calendar}
         subtitle="Distribuicao semanal de audiencias"
       >
-        <div className="flex flex-col items-center justify-center py-6 gap-2">
+        <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center justify-center py-6 gap-2")}>
           <Calendar className="size-8 text-muted-foreground/45" />
           <p className="text-[11px] text-muted-foreground/60 text-center">
             Dados de heatmap indisponiveis
@@ -82,30 +83,30 @@ export function WidgetHeatmapSemanal() {
       icon={Calendar}
       subtitle="Distribuicao semanal de audiencias"
     >
-      <div className="space-y-4">
+      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         <CalendarHeatmap data={heatmap} colorScale="primary" />
 
         {/* Stats */}
-        <div className="flex items-center justify-between pt-2 border-t border-border/10">
-          <div className="space-y-0.5">
-            <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider">
+        <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between pt-2 border-t border-border/10")}>
+          <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>
               Dia mais cheio
             </p>
-            <p className="text-[12px] font-semibold">{diaMaisCheio}</p>
+            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[12px] font-semibold")}>{diaMaisCheio}</p>
           </div>
 
-          <div className="space-y-0.5 text-center">
-            <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider">
+          <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5 text-center")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>
               Horario pico
             </p>
-            <p className="text-[12px] font-semibold">{horarioPico}</p>
+            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[12px] font-semibold")}>{horarioPico}</p>
           </div>
 
-          <div className="space-y-0.5 text-right">
-            <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider">
+          <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5 text-right")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>
               Total
             </p>
-            <p className="text-[12px] font-semibold tabular-nums">
+            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[12px] font-semibold tabular-nums")}>
               {totalAudiencias}
             </p>
           </div>

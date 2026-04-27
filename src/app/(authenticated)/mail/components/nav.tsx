@@ -27,11 +27,11 @@ export function Nav({ links, isCollapsed, onSelect }: NavProps) {
   return (
     <div
       data-collapsed={isCollapsed}
-      className="group flex flex-col gap-4 py-2 data-[collapsed=true]:py-2">
+      className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; py-2 padding direcional sem Inset equiv.; data-[collapsed=true]:py-2 sem equivalente DS */ "group flex flex-col gap-4 py-2 data-[collapsed=true]:py-2")}>
       <nav
         role="navigation"
         aria-label="Pastas de e-mail"
-        className="grid gap-1 px-2 group-data-[collapsed=true]:justify-center group-data-[collapsed=true]:px-2">
+        className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; group-data-[collapsed=true]:px-2 sem equivalente DS */ "grid gap-1 px-2 group-data-[collapsed=true]:justify-center group-data-[collapsed=true]:px-2")}>
         {links.map((link) =>
           isCollapsed ? (
             <Tooltip key={link.folder ?? link.title} delayDuration={0}>
@@ -42,13 +42,13 @@ export function Nav({ links, isCollapsed, onSelect }: NavProps) {
                   className={cn(
                     buttonVariants({ variant: link.variant === "default" ? "secondary" : "ghost", size: "icon" }),
                     "size-9",
-                    link.variant === "default" && "font-semibold"
+                    link.variant === "default" && /* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold"
                   )}>
                   {link.dot ?? <link.icon className="size-4" />}
                   <span className="sr-only">{link.title}</span>
                 </button>
               </TooltipTrigger>
-              <TooltipContent side="right" className="flex items-center gap-4">
+              <TooltipContent side="right" className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
                 {link.title}
                 {link.label && <span className="text-muted-foreground ml-auto">{link.label}</span>}
               </TooltipContent>
@@ -60,8 +60,8 @@ export function Nav({ links, isCollapsed, onSelect }: NavProps) {
               aria-current={link.variant === "default" ? "page" : undefined}
               className={cn(
                 buttonVariants({ variant: link.variant === "default" ? "secondary" : "ghost", size: "sm" }),
-                link.variant === "default" && "font-semibold",
-                "flex justify-start gap-3"
+                link.variant === "default" && /* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold",
+                /* design-system-escape: gap-3 gap sem token DS */ "flex justify-start gap-3"
               )}>
               {link.dot ?? <link.icon className="size-4" />}
               {link.title}

@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { usePerfil } from '../hooks/use-perfil';
 import { PerfilEditSheet } from './perfil-edit-sheet';
@@ -50,9 +51,9 @@ export function PerfilView() {
     return (
       <div className="flex min-h-100 items-center justify-center">
         <Card className="w-full max-w-md">
-          <CardContent className="pt-6">
+          <CardContent className={cn(/* design-system-escape: pt-6 padding direcional sem Inset equiv. */ "pt-6")}>
             <div className="text-center">
-              <p className="text-sm text-destructive">{error}</p>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{error}</p>
               <Button
                 onClick={() => refetch()}
                 variant="outline"
@@ -69,7 +70,7 @@ export function PerfilView() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
+      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
         <div className="flex items-center justify-between">
           <div>
             <Skeleton className="h-8 w-48 mb-2" />
@@ -89,10 +90,10 @@ export function PerfilView() {
   const avatarUrl = getAvatarUrl(usuario.avatarUrl);
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       {/* Header com Avatar */}
-      <div className="flex items-start justify-between gap-6">
-        <div className="flex items-center gap-6">
+      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "flex items-start justify-between gap-6")}>
+        <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "flex items-center gap-6")}>
           {/* Avatar */}
           <div
             className="relative group cursor-pointer"
@@ -100,7 +101,7 @@ export function PerfilView() {
           >
             <Avatar size="3xl" className="border-2 border-muted">
               <AvatarImage src={avatarUrl || undefined} alt={usuario.nomeExibicao} />
-              <AvatarFallback className="text-2xl font-medium">
+              <AvatarFallback className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-medium → className de <Text>/<Heading> */ "text-2xl font-medium")}>
                 {getInitials(usuario.nomeExibicao)}
               </AvatarFallback>
             </Avatar>
@@ -112,7 +113,7 @@ export function PerfilView() {
 
           {/* Informações */}
           <div>
-            <Heading level="page" className="flex items-center gap-3">
+            <Heading level="page" className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
               {usuario.nomeExibicao}
               <Badge variant={usuario.ativo ? 'success' : 'outline'}>
                 {usuario.ativo ? 'Ativo' : 'Inativo'}
@@ -124,7 +125,7 @@ export function PerfilView() {
           </div>
         </div>
 
-        <div className="flex gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
           <Button variant="outline" onClick={() => setAlterarSenhaDialogOpen(true)}>
             <KeyRound className="mr-2 h-4 w-4" />
             Alterar Senha
@@ -137,55 +138,55 @@ export function PerfilView() {
       </div>
 
       {/* Cards de Informação */}
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "grid gap-6 md:grid-cols-2")}>
         {/* Informações Pessoais */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <User className="h-5 w-5" />
               Informações Pessoais
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             <div>
-              <div className="text-sm font-medium text-muted-foreground mb-1">
+              <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground mb-1")}>
                 Nome Completo
               </div>
-              <div className="text-base">{usuario.nomeCompleto}</div>
+              <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.nomeCompleto}</div>
             </div>
             {usuario.cpf && (
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1">
+                <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground mb-1")}>
                   CPF
                 </div>
-                <div className="text-base">{formatarCpf(usuario.cpf)}</div>
+                <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{formatarCpf(usuario.cpf)}</div>
               </div>
             )}
             {usuario.rg && (
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1">
+                <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground mb-1")}>
                   RG
                 </div>
-                <div className="text-base">{usuario.rg}</div>
+                <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.rg}</div>
               </div>
             )}
             {usuario.dataNascimento && (
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-1">
+                <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading>; gap-1 gap sem token DS */ "text-sm font-medium text-muted-foreground mb-1 flex items-center gap-1")}>
                   <Calendar className="h-4 w-4" />
                   Data de Nascimento
                 </div>
-                <div className="text-base">
+                <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
                   {formatarData(usuario.dataNascimento)}
                 </div>
               </div>
             )}
             {usuario.genero && (
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1">
+                <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground mb-1")}>
                   Gênero
                 </div>
-                <div className="text-base">{formatarGenero(usuario.genero)}</div>
+                <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{formatarGenero(usuario.genero)}</div>
               </div>
             )}
           </CardContent>
@@ -194,35 +195,35 @@ export function PerfilView() {
         {/* Contato */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <Mail className="h-5 w-5" />
               Contato
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             {usuario.emailCorporativo && (
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1">
+                <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground mb-1")}>
                   E-mail Corporativo
                 </div>
-                <div className="text-base break-all">{usuario.emailCorporativo}</div>
+                <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base break-all")}>{usuario.emailCorporativo}</div>
               </div>
             )}
             {usuario.emailPessoal && (
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1">
+                <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground mb-1")}>
                   E-mail Pessoal
                 </div>
-                <div className="text-base break-all">{usuario.emailPessoal}</div>
+                <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base break-all")}>{usuario.emailPessoal}</div>
               </div>
             )}
             {usuario.telefone && (
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-1">
+                <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading>; gap-1 gap sem token DS */ "text-sm font-medium text-muted-foreground mb-1 flex items-center gap-1")}>
                   <Phone className="h-4 w-4" />
                   Telefone
                 </div>
-                <div className="text-base">
+                <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
                   {formatarTelefone(usuario.telefone)}
                   {usuario.ramal && ` (Ramal: ${usuario.ramal})`}
                 </div>
@@ -235,18 +236,18 @@ export function PerfilView() {
         {(usuario.oab || usuario.ufOab) && (
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <Briefcase className="h-5 w-5" />
                 Informações Profissionais
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
               {usuario.oab && (
                 <div>
-                  <div className="text-sm font-medium text-muted-foreground mb-1">
+                  <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground mb-1")}>
                     OAB
                   </div>
-                  <div className="text-base">
+                  <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
                     {formatarOab(usuario.oab, usuario.ufOab)}
                   </div>
                 </div>
@@ -259,13 +260,13 @@ export function PerfilView() {
         {usuario.endereco && (
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <MapPin className="h-5 w-5" />
                 Endereço
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-base">
+              <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
                 {formatarEnderecoCompleto(usuario.endereco)}
               </div>
             </CardContent>
@@ -279,18 +280,18 @@ export function PerfilView() {
           <CardTitle>Informações do Sistema</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
             <div>
-              <div className="text-sm font-medium text-muted-foreground mb-1">
+              <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground mb-1")}>
                 Data de Criação
               </div>
-              <div className="text-base">{formatarData(usuario.createdAt)}</div>
+              <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{formatarData(usuario.createdAt)}</div>
             </div>
             <div>
-              <div className="text-sm font-medium text-muted-foreground mb-1">
+              <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground mb-1")}>
                 Última Atualização
               </div>
-              <div className="text-base">{formatarData(usuario.updatedAt)}</div>
+              <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{formatarData(usuario.updatedAt)}</div>
             </div>
           </div>
         </CardContent>

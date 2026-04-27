@@ -27,9 +27,9 @@ export function AccountSwitcher({ isCollapsed, accounts }: AccountSwitcherProps)
     <Select defaultValue={selectedAccount} onValueChange={setSelectedAccount}>
       <SelectTrigger
         className={cn(
-          "hover:bg-accent/70! bg-background! flex w-full items-center gap-2 border-transparent [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0 [&>span]:line-clamp-1 [&>span]:flex [&>span]:w-full [&>span]:items-center [&>span]:gap-1 [&>span]:truncate",
+          /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; [&>span]:gap-1 sem equivalente DS */ "hover:bg-accent/70! bg-background! flex w-full items-center gap-2 border-transparent [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0 [&>span]:line-clamp-1 [&>span]:flex [&>span]:w-full [&>span]:items-center [&>span]:gap-1 [&>span]:truncate",
           isCollapsed &&
-            "flex h-9 w-9 shrink-0 items-center justify-center p-0 [&>span]:w-auto [&>svg]:hidden"
+            /* design-system-escape: p-0 → usar <Inset> */ "flex h-9 w-9 shrink-0 items-center justify-center p-0 [&>span]:w-auto [&>svg]:hidden"
         )}
         aria-label="Select account">
         <SelectValue placeholder="Select an account">
@@ -42,7 +42,7 @@ export function AccountSwitcher({ isCollapsed, accounts }: AccountSwitcherProps)
       <SelectContent>
         {accounts.map((account) => (
           <SelectItem key={account.email} value={account.email}>
-            <div className="[&_svg]:text-foreground flex items-center gap-3 [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0">
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "[&_svg]:text-foreground flex items-center gap-3 [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0")}>
               {account.icon}
               {account.email}
             </div>

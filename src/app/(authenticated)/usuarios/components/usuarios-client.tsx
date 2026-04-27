@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Settings } from 'lucide-react';
@@ -27,7 +28,7 @@ const UsuariosOrgView = React.lazy(() =>
 // ─── Skeleton grid (reutilizado como fallback) ───────────────────────────────
 function SkeletonGrid() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3")}>
       {Array.from({ length: 8 }).map((_, i) => (
         <Skeleton key={i} className="h-48 rounded-2xl" />
       ))}
@@ -116,14 +117,14 @@ export function UsuariosClient() {
   // ─── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div className="space-y-5">
+    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       {/* Header */}
-      <div className="flex items-start justify-between gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start justify-between gap-4")}>
         <div className="min-w-0">
           <Heading level="page">Usuários</Heading>
-          <p className="text-sm text-muted-foreground/50 mt-0.5">{subtitle}</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 mt-0.5")}>{subtitle}</p>
         </div>
-        <div className="flex items-center gap-2 shrink-0">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 shrink-0")}>
           <Button
             type="button"
             variant="outline"

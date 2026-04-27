@@ -8,6 +8,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { FileText, Pencil, Calendar, Tag, Eye } from 'lucide-react';
 import { format } from 'date-fns';
@@ -97,9 +98,9 @@ export function PecaModeloViewSheet({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="glass-dialog max-w-2xl max-h-[90vh] p-0 flex flex-col">
-        <DialogHeader className="px-6 pt-6 pb-4 border-b border-border/30 shrink-0">
-          <DialogTitle className="flex items-center gap-2">
+      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "glass-dialog max-w-2xl max-h-[90vh] p-0 flex flex-col")}>
+        <DialogHeader className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; pt-6 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv. */ "px-6 pt-6 pb-4 border-b border-border/30 shrink-0")}>
+          <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <Eye className="h-5 w-5" />
             Visualizar Modelo
           </DialogTitle>
@@ -109,22 +110,22 @@ export function PecaModeloViewSheet({
         </DialogHeader>
 
         <ScrollArea className="flex-1">
-          <div className="space-y-6 p-6">
+          <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose">; p-6 → migrar para <Inset variant="dialog"> */ "space-y-6 p-6")}>
             {/* Cabeçalho do Modelo */}
-            <div className="space-y-3">
-              <div className="flex items-start gap-3">
+            <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3")}>
                 <FileText className="h-6 w-6 text-muted-foreground shrink-0 mt-0.5" />
-                <div className="space-y-1 flex-1 min-w-0">
+                <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1 flex-1 min-w-0")}>
                   <Heading level="card">{modelo.titulo}</Heading>
                   {modelo.descricao && (
-                    <p className="text-sm text-muted-foreground">
+                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                       {modelo.descricao}
                     </p>
                   )}
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2")}>
                 <AppBadge variant="secondary">
                   <Tag className="h-3 w-3 mr-1" />
                   {TIPO_PECA_LABELS[modelo.tipoPeca] || modelo.tipoPeca}
@@ -141,7 +142,7 @@ export function PecaModeloViewSheet({
             </div>
 
             {/* Metadados */}
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2 text-sm text-muted-foreground")}>
               <Calendar className="h-4 w-4" />
               <span>
                 Criado em{' '}
@@ -154,13 +155,13 @@ export function PecaModeloViewSheet({
             <Separator />
 
             {/* Preview do Conteúdo */}
-            <div className="space-y-3">
+            <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
               <Text variant="label" as="h4" className="text-muted-foreground">
                 Preview do Conteúdo
               </Text>
 
               {loading ? (
-                <div className="space-y-2">
+                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                   <Skeleton className="h-4 w-full" />
                   <Skeleton className="h-4 w-5/6" />
                   <Skeleton className="h-4 w-4/6" />
@@ -168,13 +169,13 @@ export function PecaModeloViewSheet({
                   <Skeleton className="h-4 w-3/4" />
                 </div>
               ) : conteudoPreview ? (
-                <GlassPanel depth={1} className="p-4 bg-muted/30">
-                  <pre className="whitespace-pre-wrap font-mono text-sm text-foreground/80 max-h-80 overflow-auto">
+                <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 bg-muted/30")}>
+                  <pre className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "whitespace-pre-wrap font-mono text-sm text-foreground/80 max-h-80 overflow-auto")}>
                     {conteudoPreview}
                   </pre>
                 </GlassPanel>
               ) : (
-                <p className="text-sm text-muted-foreground italic">
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground italic")}>
                   Nenhum conteúdo definido
                 </p>
               )}
@@ -182,7 +183,7 @@ export function PecaModeloViewSheet({
 
             {/* Botão de Edição */}
             {onEdit && (
-              <div className="pt-4">
+              <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "pt-4")}>
                 <Button
                   variant="outline"
                   className="w-full"

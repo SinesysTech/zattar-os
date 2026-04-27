@@ -210,7 +210,7 @@ export function DocumentViewer({
           </div>
         ) : error ? (
           // Estado de erro com retry
-          <div className="flex flex-col items-center justify-center h-full gap-3 p-8 text-center">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full gap-3 p-8 text-center")}>
             <FileText className="h-12 w-12 text-destructive" aria-hidden="true" />
             <Text variant="caption" className="text-destructive">{error}</Text>
             <button
@@ -232,7 +232,7 @@ export function DocumentViewer({
                   })
                   .finally(() => setIsLoading(false));
               }}
-              className="inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-accent cursor-pointer"
+              className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-accent cursor-pointer")}
             >
               <RefreshCw className="h-3 w-3" />
               Tentar novamente
@@ -240,12 +240,12 @@ export function DocumentViewer({
           </div>
         ) : !item ? (
           // Estado vazio — nenhum item selecionado
-          <div className="flex flex-col items-center justify-center h-full gap-3 p-8 text-center">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full gap-3 p-8 text-center")}>
             <FileText
               className="h-12 w-12 text-muted-foreground/55"
               aria-hidden="true"
             />
-            <p className="text-sm text-muted-foreground">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
               Selecione um documento na timeline
             </p>
           </div>
@@ -253,8 +253,8 @@ export function DocumentViewer({
           // Exibição do PDF com renderer controlado
           <div
             className={cn(
-              'h-full w-full overflow-auto px-3 pb-20 pt-3 transition-[padding] duration-200 sm:px-4 sm:pt-4',
-              annotationsOpen && 'lg:pr-6'
+              /* design-system-escape: px-3 padding direcional sem Inset equiv.; pb-20 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; sm:px-4 sem equivalente DS; sm:pt-4 sem equivalente DS */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; pb-20 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; sm:px-4 sem equivalente DS; sm:pt-4 sem equivalente DS */ 'h-full w-full overflow-auto px-3 pb-20 pt-3 transition-[padding] duration-200 sm:px-4 sm:pt-4',
+              annotationsOpen && /* design-system-escape: lg:pr-6 sem equivalente DS */ 'lg:pr-6'
             )}
           >
             <div className="mx-auto flex min-h-full w-full max-w-232 justify-center rounded-2xl bg-background">
@@ -270,12 +270,12 @@ export function DocumentViewer({
           </div>
         ) : (
           // Item selecionado mas sem presigned URL (ex: sem backblaze)
-          <div className="flex flex-col items-center justify-center h-full gap-3 p-8 text-center">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full gap-3 p-8 text-center")}>
             <FileText
               className="h-12 w-12 text-muted-foreground/55"
               aria-hidden="true"
             />
-            <p className="text-sm text-muted-foreground">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
               Documento não disponível para visualização
             </p>
           </div>

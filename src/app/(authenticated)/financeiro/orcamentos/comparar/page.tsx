@@ -5,6 +5,7 @@
  * Permite comparar múltiplos orçamentos lado a lado
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -118,9 +119,9 @@ function OrcamentoSelector({
       const statusConfig = STATUS_CONFIG[orcamento.status];
       return (
         <Card>
-          <CardHeader className="pb-2">
+          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg">{orcamento.nome}</CardTitle>
+              <CardTitle className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-lg")}>{orcamento.nome}</CardTitle>
               <Button variant="ghost" size="icon" aria-label="Fechar" onClick={onRemove}>
                 <X className="h-4 w-4" />
               </Button>
@@ -141,7 +142,7 @@ function OrcamentoSelector({
 
   return (
     <Card className="border-dashed">
-      <CardContent className="p-4">
+      <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
         <Select
           value={selectedId?.toString() || ''}
           onValueChange={(value) => onSelect(parseInt(value, 10))}
@@ -174,7 +175,7 @@ function ComparacaoCards({
 }) {
   if (orcamentos.length < 2) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 text-center">
+      <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-12 text-center")}>
         <p className="text-muted-foreground">
           Selecione pelo menos 2 orçamentos para comparar
         </p>
@@ -202,46 +203,46 @@ function ComparacaoCards({
   const mediaValor = dadosComparacao.reduce((sum, d) => sum + d.totalOrcado, 0) / dadosComparacao.length;
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       {/* Cards de resumo */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-3")}>
         <Card>
-          <CardHeader className="pb-2">
+          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
             <CardDescription>Maior Orçamento</CardDescription>
-            <CardTitle className="text-2xl font-mono text-success">
+            <CardTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "text-2xl font-mono text-success")}>
               {formatarValor(maiorValor)}
             </CardTitle>
           </CardHeader>
-          <CardContent className="pt-0">
-            <p className="text-xs text-muted-foreground">
+          <CardContent className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv. */ "pt-0")}>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
               {dadosComparacao.find((d) => d.totalOrcado === maiorValor)?.nome}
             </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="pb-2">
+          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
             <CardDescription>Menor Orçamento</CardDescription>
-            <CardTitle className="text-2xl font-mono text-info">
+            <CardTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "text-2xl font-mono text-info")}>
               {formatarValor(menorValor)}
             </CardTitle>
           </CardHeader>
-          <CardContent className="pt-0">
-            <p className="text-xs text-muted-foreground">
+          <CardContent className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv. */ "pt-0")}>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
               {dadosComparacao.find((d) => d.totalOrcado === menorValor)?.nome}
             </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="pb-2">
+          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
             <CardDescription>Média</CardDescription>
-            <CardTitle className="text-2xl font-mono">
+            <CardTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "text-2xl font-mono")}>
               {formatarValor(mediaValor)}
             </CardTitle>
           </CardHeader>
-          <CardContent className="pt-0">
-            <p className="text-xs text-muted-foreground">
+          <CardContent className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv. */ "pt-0")}>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
               Entre {orcamentos.length} orçamentos
             </p>
           </CardContent>
@@ -272,7 +273,7 @@ function ComparacaoCards({
                 const statusConfig = STATUS_CONFIG[dados.status];
                 return (
                   <TableRow key={dados.id}>
-                    <TableCell className="font-medium">{dados.nome}</TableCell>
+                    <TableCell className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{dados.nome}</TableCell>
                     <TableCell>
                       {dados.ano} - {dados.periodo}
                     </TableCell>
@@ -286,7 +287,7 @@ function ComparacaoCards({
                     </TableCell>
                     <TableCell className="text-center">{dados.quantidadeItens}</TableCell>
                     <TableCell className="text-center">
-                      <div className="flex items-center justify-center gap-1">
+                      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center justify-center gap-1")}>
                         {getVariacaoIcon(variacaoVsMedia)}
                         <span className={getVariacaoColor(variacaoVsMedia)}>
                           {formatarPercentual(variacaoVsMedia)}
@@ -307,12 +308,12 @@ function ComparacaoCards({
           <CardTitle>Visualização Comparativa</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             {dadosComparacao.map((dados) => {
               const percentual = (dados.totalOrcado / maiorValor) * 100;
               return (
-                <div key={dados.id} className="space-y-1">
-                  <div className="flex justify-between text-sm">
+                <div key={dados.id} className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+                  <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex justify-between text-sm")}>
                     <span>{dados.nome}</span>
                     <span className="font-mono">{formatarValor(dados.totalOrcado)}</span>
                   </div>
@@ -487,15 +488,15 @@ function CompararOrcamentosContent() {
   // Loading
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center gap-4">
+      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
           <Skeleton className="h-10 w-10" />
           <Skeleton className="h-8 w-64" />
         </div>
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-3")}>
           {[...Array(3)].map((_, i) => (
             <Card key={i}>
-              <CardContent className="p-6">
+              <CardContent className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
                 <Skeleton className="h-20" />
               </CardContent>
             </Card>
@@ -508,13 +509,13 @@ function CompararOrcamentosContent() {
   // Erro
   if (error) {
     return (
-      <div className="space-y-6">
+      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
         <Button variant="ghost" onClick={handleVoltar}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
         </Button>
-        <div className="rounded-md bg-destructive/15 p-4 text-sm text-destructive">
-          <p className="font-semibold">Erro ao carregar orçamentos</p>
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-4 text-sm text-destructive")}>
+          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Erro ao carregar orçamentos</p>
           <p>{error}</p>
         </div>
       </div>
@@ -522,14 +523,14 @@ function CompararOrcamentosContent() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <Button variant="ghost" size="icon" aria-label="Voltar" onClick={handleVoltar}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
 
-        <div className="flex gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
           <Button variant="outline" onClick={() => refetch()}>
             <RefreshCw className="mr-2 h-4 w-4" />
             Atualizar
@@ -567,7 +568,7 @@ function CompararOrcamentosContent() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5")}>
             {selectedIds.map((id, index) => (
               <OrcamentoSelector
                 key={index}
@@ -581,7 +582,7 @@ function CompararOrcamentosContent() {
             ))}
             {selectedIds.length < 5 && (
               <Card className="border-dashed">
-                <CardContent className="p-4 flex items-center justify-center">
+                <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 flex items-center justify-center")}>
                   <Button variant="ghost" onClick={handleAddSlot}>
                     <Plus className="mr-2 h-4 w-4" />
                     Adicionar
@@ -606,15 +607,15 @@ function CompararOrcamentosContent() {
 export default function CompararOrcamentosPage() {
   return (
     <React.Suspense fallback={
-      <div className="space-y-6">
-        <div className="flex items-center gap-4">
+      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
           <Skeleton className="h-10 w-10" />
           <Skeleton className="h-8 w-64" />
         </div>
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-3")}>
           {[...Array(3)].map((_, i) => (
             <Card key={i}>
-              <CardContent className="p-6">
+              <CardContent className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
                 <Skeleton className="h-20" />
               </CardContent>
             </Card>

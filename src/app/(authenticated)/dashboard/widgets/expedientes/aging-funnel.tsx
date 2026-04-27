@@ -15,6 +15,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import { Clock } from 'lucide-react';
 import {
   UrgencyDot,
@@ -94,18 +95,18 @@ export function AgingFunnel() {
       icon={Clock}
       subtitle="Distribuição por janela de prazo"
       depth={1}
-      className="h-auto! self-start p-4!"
+      className={cn(/* design-system-escape: p-4! → usar <Inset> */ "h-auto! self-start p-4!")}
     >
-      <div className="mt-1 space-y-2">
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "mt-1 space-y-2")}>
         {faixas.map((row) => (
-          <div key={row.label} className="flex items-center gap-2.5">
+          <div key={row.label} className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
             <UrgencyDot level={row.level} />
             <div className="w-24 shrink-0">
               <span className="text-[10px] text-muted-foreground/60">
                 {row.label}
               </span>
             </div>
-            <div className="flex h-4.5 flex-1 items-center gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex h-4.5 flex-1 items-center gap-2")}>
               <div
                 className="h-full rounded-sm transition-all duration-500"
                 style={{
@@ -116,7 +117,7 @@ export function AgingFunnel() {
                 }}
               />
               <span
-                className="shrink-0 text-[11px] font-bold tabular-nums"
+                className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "shrink-0 text-[11px] font-bold tabular-nums")}
                 style={{ color: row.color }}
               >
                 {row.count}
@@ -126,11 +127,11 @@ export function AgingFunnel() {
         ))}
       </div>
 
-      <div className="mt-3 flex items-center justify-between border-t border-border/10 pt-2.5">
-        <span className="text-[9px] uppercase tracking-wide text-muted-foreground/60">
+      <div className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "mt-3 flex items-center justify-between border-t border-border/10 pt-2.5")}>
+        <span className={cn(/* design-system-escape: tracking-wide sem token DS */ "text-[9px] uppercase tracking-wide text-muted-foreground/60")}>
           Total
         </span>
-        <span className="text-[13px] font-bold">{fmtNum(totalExibido)}</span>
+        <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[13px] font-bold")}>{fmtNum(totalExibido)}</span>
       </div>
     </WidgetContainer>
   );

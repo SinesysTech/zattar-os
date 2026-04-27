@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import * as React from "react";
 import { Label, Pie, PieChart, Sector } from "recharts";
 import { Text } from "@/components/ui/typography";
@@ -70,11 +71,11 @@ export function ChartProjectEfficiency({
       <Card>
         <CardHeader>
           <CardDescription>Distribuição por Status</CardDescription>
-          <CardTitle className="font-display text-xl">
+          <CardTitle className={cn(/* design-system-escape: text-xl → migrar para <Heading level="..."> */ "font-display text-xl")}>
             Eficiência dos Projetos
           </CardTitle>
         </CardHeader>
-        <CardContent className="flex items-center justify-center py-12">
+        <CardContent className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "flex items-center justify-center py-12")}>
           <Text variant="caption" className="text-muted-foreground">
             Nenhum dado disponível.
           </Text>
@@ -88,7 +89,7 @@ export function ChartProjectEfficiency({
       <ChartStyle id={id} config={chartConfig} />
       <CardHeader>
         <CardDescription>Distribuição por Status</CardDescription>
-        <CardTitle className="font-display text-xl">
+        <CardTitle className={cn(/* design-system-escape: text-xl → migrar para <Heading level="..."> */ "font-display text-xl")}>
           Eficiência dos Projetos
         </CardTitle>
         <CardAction>
@@ -106,7 +107,7 @@ export function ChartProjectEfficiency({
                   config && "color" in config ? config.color : undefined;
                 return (
                   <SelectItem key={item.status} value={item.status}>
-                    <div className="flex items-center gap-2 text-xs">
+                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-2 text-xs")}>
                       <span
                         className="flex h-3 w-3 shrink-0 rounded-sm"
                         style={{ backgroundColor: color }}
@@ -120,7 +121,7 @@ export function ChartProjectEfficiency({
           </Select>
         </CardAction>
       </CardHeader>
-      <CardContent className="flex flex-1 justify-center pb-0">
+      <CardContent className={cn(/* design-system-escape: pb-0 padding direcional sem Inset equiv. */ "flex flex-1 justify-center pb-0")}>
         <ChartContainer
           id={id}
           config={chartConfig}
@@ -166,7 +167,7 @@ export function ChartProjectEfficiency({
                         <tspan
                           x={viewBox.cx}
                           y={viewBox.cy}
-                          className="fill-foreground text-3xl font-bold"
+                          className={cn(/* design-system-escape: text-3xl → migrar para <Heading level="display-*">; font-bold → className de <Text>/<Heading> */ "fill-foreground text-3xl font-bold")}
                         >
                           {activeIndex >= 0
                             ? data[activeIndex].total.toLocaleString()

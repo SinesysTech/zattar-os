@@ -132,7 +132,7 @@ export function ChatWidget({ currentUserId, currentUserName: _currentUserName }:
     return (
       <Card className="row-span-2 flex flex-col">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <MessageSquare className="size-5" />
             Chat
           </CardTitle>
@@ -148,7 +148,7 @@ export function ChatWidget({ currentUserId, currentUserName: _currentUserName }:
     return (
       <Card className="row-span-2 flex flex-col">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <MessageSquare className="size-5" />
             Chat
           </CardTitle>
@@ -164,9 +164,9 @@ export function ChatWidget({ currentUserId, currentUserName: _currentUserName }:
         <CardContent className="flex flex-1 items-center justify-center">
           <div className="flex flex-col items-center justify-center text-center">
             <MessageSquare className="size-12 text-muted-foreground/55" />
-            <p className="mt-4 text-sm text-muted-foreground">Nenhuma conversa iniciada!</p>
-            <p className="text-sm text-muted-foreground">
-              Clique no <span className="font-medium text-primary">+</span> para começar.
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-4 text-sm text-muted-foreground")}>Nenhuma conversa iniciada!</p>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+              Clique no <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-primary")}>+</span> para começar.
             </p>
           </div>
         </CardContent>
@@ -177,7 +177,7 @@ export function ChatWidget({ currentUserId, currentUserName: _currentUserName }:
   return (
     <GlassPanel className="row-span-2">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           <MessageSquare className="size-5" />
           {salaAtiva?.nome || 'Chat'}
           {isConnected && <span className="ml-1 size-2 rounded-full bg-success" title="Conectado" />}
@@ -190,35 +190,35 @@ export function ChatWidget({ currentUserId, currentUserName: _currentUserName }:
           </Link>
         </CardAction>
       </CardHeader>
-      <CardContent className="flex-1 p-0">
-        <ScrollArea className="h-full px-4" ref={scrollRef}>
-          <div className="space-y-3 py-2">
+      <CardContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "flex-1 p-0")}>
+        <ScrollArea className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "h-full px-4")} ref={scrollRef}>
+          <div className={cn(/* design-system-escape: space-y-3 sem token DS; py-2 padding direcional sem Inset equiv. */ "space-y-3 py-2")}>
             {mensagens.length === 0 ? (
-              <div className="flex h-full items-center justify-center py-8 text-center text-sm text-muted-foreground">
+              <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "flex h-full items-center justify-center py-8 text-center text-sm text-muted-foreground")}>
                 Sem mensagens ainda. Seja o primeiro a enviar!
               </div>
             ) : (
               mensagens.map((mensagem) => {
                 const isOwn = mensagem.usuarioId === currentUserId;
                 return (
-                  <div key={mensagem.id} className={cn('flex gap-2', isOwn ? 'flex-row-reverse' : 'flex-row')}>
+                  <div key={mensagem.id} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ 'flex gap-2', isOwn ? 'flex-row-reverse' : 'flex-row')}>
                     {!isOwn && (
                       <Avatar>
                         <AvatarImage src={mensagem.usuario.avatar || undefined} />
-                        <AvatarFallback className="text-xs">
+                        <AvatarFallback className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                           {obterIniciais(mensagem.usuario.nomeExibicao || mensagem.usuario.nomeCompleto)}
                         </AvatarFallback>
                       </Avatar>
                     )}
                     <div
                       className={cn(
-                        'flex max-w-[75%] flex-col gap-1 rounded-lg px-3 py-2 text-sm',
+                        /* design-system-escape: gap-1 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ 'flex max-w-[75%] flex-col gap-1 rounded-lg px-3 py-2 text-sm',
                         isOwn ? 'bg-primary text-primary-foreground' : 'bg-muted'
                       )}
                     >
-                      {!isOwn && <span className="text-xs font-medium opacity-70">{mensagem.usuario.nomeExibicao}</span>}
+                      {!isOwn && <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium opacity-70")}>{mensagem.usuario.nomeExibicao}</span>}
                       <p className="wrap-break-word">{mensagem.conteudo}</p>
-                      <span className="text-xs opacity-60">{formatarHora(mensagem.createdAt)}</span>
+                      <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs opacity-60")}>{formatarHora(mensagem.createdAt)}</span>
                     </div>
                   </div>
                 );
@@ -227,8 +227,8 @@ export function ChatWidget({ currentUserId, currentUserName: _currentUserName }:
           </div>
         </ScrollArea>
       </CardContent>
-      <CardFooter className="border-t p-3">
-        <form onSubmit={enviarMensagem} className="flex w-full gap-2">
+      <CardFooter className={cn(/* design-system-escape: p-3 → usar <Inset> */ "border-t p-3")}>
+        <form onSubmit={enviarMensagem} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex w-full gap-2")}>
           <Input
             placeholder="Digite sua mensagem..."
             value={input}

@@ -53,7 +53,7 @@ function SectionHeader({
 
 function SectionCard({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn('rounded-[14px] bg-muted/40 border border-border/30 p-4', className)}>
+    <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'rounded-[14px] bg-muted/40 border border-border/30 p-4', className)}>
       {children}
     </div>
   );
@@ -71,9 +71,9 @@ function FieldLabel({ htmlFor, children }: { htmlFor?: string; children: React.R
 
 function InlineLoader({ label }: { label: string }) {
   return (
-    <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg border border-border/30 bg-muted/30 text-muted-foreground/60">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 px-3 py-2.5 rounded-lg border border-border/30 bg-muted/30 text-muted-foreground/60")}>
       <LoadingSpinner size="sm" className="shrink-0" />
-      <span className="text-sm">{label}</span>
+      <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{label}</span>
     </div>
   );
 }
@@ -429,7 +429,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
       description="Preencha os dados para registrar uma nova audiência no sistema."
       maxWidth="2xl"
       density="compact"
-      bodyClassName="overflow-y-auto px-6 py-5"
+      bodyClassName=/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "overflow-y-auto px-6 py-5"
       footer={
         <Button type="submit" form="nova-audiencia-form" disabled={isLoading}>
           {isLoading && <LoadingSpinner className="mr-2" />}
@@ -441,17 +441,17 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
         <Stack gap="default">
           {/* ── Erro ─────────────────────────────────────────────────────── */}
           {error && (
-            <Inline align="start" gap="tight" className="rounded-lg border border-destructive/30 bg-destructive/8 px-3.5 py-3 text-destructive">
+            <Inline align="start" gap="tight" className={cn(/* design-system-escape: px-3.5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "rounded-lg border border-destructive/30 bg-destructive/8 px-3.5 py-3 text-destructive")}>
               <AlertCircle className="size-4 shrink-0 mt-0.5" />
-              <span className="text-sm leading-snug">{error}</span>
+              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-snug sem token DS */ "text-sm leading-snug")}>{error}</span>
             </Inline>
           )}
 
           {/* ── Seção 1: Jurisdição + Processo ───────────────────────────── */}
         <SectionCard>
           <SectionHeader icon={Landmark} label="Jurisdição e Processo" />
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-3">
+          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3")}>
               <div>
                 <FieldLabel htmlFor="trt">Tribunal (TRT) *</FieldLabel>
                 <Select value={trt} onValueChange={setTrt}>
@@ -487,7 +487,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
             <div>
               <FieldLabel htmlFor="processo">Processo *</FieldLabel>
               {!trt || !grau ? (
-                <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg border border-dashed border-border/40 bg-muted/20 text-muted-foreground/50 text-sm">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2 px-3 py-2.5 rounded-lg border border-dashed border-border/40 bg-muted/20 text-muted-foreground/50 text-sm")}>
                   Selecione o TRT e Grau para listar os processos
                 </div>
               ) : loadingProcessos ? (
@@ -510,8 +510,8 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
         {/* ── Seção 2: Data e Horário ───────────────────────────────────── */}
         <SectionCard>
           <SectionHeader icon={CalendarDays} label="Data e Horário" />
-          <div className="space-y-3">
-            <div className="grid grid-cols-2 gap-3">
+          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3")}>
               <div>
                 <FieldLabel htmlFor="dataInicio">Data de Início *</FieldLabel>
                 <DatePicker
@@ -531,7 +531,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3")}>
               <div>
                 <FieldLabel htmlFor="dataFim">Data de Fim *</FieldLabel>
                 <DatePicker
@@ -560,7 +560,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
             icon={tipoSelecionado?.is_virtual ? Video : MapPin}
             label="Tipo e Local"
           />
-          <div className="space-y-3">
+          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
             <div>
               <FieldLabel htmlFor="tipo">Tipo de Audiência</FieldLabel>
               {loadingTipos ? (
@@ -627,12 +627,12 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
                   />
                 </div>
               ) : (
-                <div className="space-y-3 pt-1">
+                <div className={cn(/* design-system-escape: space-y-3 sem token DS; pt-1 padding direcional sem Inset equiv. */ "space-y-3 pt-1")}>
                   <Text variant="overline" as="p" className="text-muted-foreground">
                     Endereço Presencial
                   </Text>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-3 gap-3")}>
                     <div className="sm:col-span-2">
                       <FieldLabel htmlFor="logradouro">Logradouro</FieldLabel>
                       <Input
@@ -653,7 +653,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3")}>
                     <div>
                       <FieldLabel htmlFor="complemento">Complemento</FieldLabel>
                       <Input
@@ -673,7 +673,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-3 gap-3")}>
                     <div className="sm:col-span-2">
                       <FieldLabel htmlFor="cidade">Cidade</FieldLabel>
                       <Input

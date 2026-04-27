@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import {
   Label,
   PolarGrid,
@@ -61,7 +62,7 @@ export function ProgressoChart({ percentual }: ProgressoChartProps) {
                     <tspan
                       x={viewBox.cx}
                       y={viewBox.cy}
-                      className="fill-foreground text-sm font-bold"
+                      className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "fill-foreground text-sm font-bold")}
                     >
                       {percentual}%
                     </tspan>

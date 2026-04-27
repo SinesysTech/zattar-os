@@ -113,7 +113,7 @@ function TextChatBubble({
       {/* Bubble */}
       <div
         className={cn(
-          "px-4 py-2 text-[0.8125rem] leading-[1.5]",
+          /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "px-4 py-2 text-[0.8125rem] leading-[1.5]",
           bubbleCornerClass(!!message.ownMessage, isFirstInGroup),
           // Received bubble
           !message.ownMessage && "bg-(--chat-bubble-received) border border-border/30 dark:border-white/[0.05] shadow-[0_1px_3px_rgba(0,0,0,0.03)] dark:shadow-none",
@@ -150,7 +150,7 @@ function FileChatBubble({
       {/* File bubble container */}
       <div
         className={cn(
-          "flex items-center gap-3 p-3 pr-4 min-w-[240px]",
+          /* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset>; pr-4 padding direcional sem Inset equiv. */ "flex items-center gap-3 p-3 pr-4 min-w-[240px]",
           bubbleCornerClass(isOwn, isFirstInGroup),
           // Received
           !isOwn && "bg-foreground/[0.03] border border-foreground/[0.06]",
@@ -171,7 +171,7 @@ function FileChatBubble({
 
         {/* File info */}
         <div className="flex flex-col min-w-0 flex-1">
-          <span className="text-[0.75rem] font-semibold text-foreground truncate">
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[0.75rem] font-semibold text-foreground truncate")}>
             {fileName}
           </span>
           {fileSizeLabel && (
@@ -270,7 +270,7 @@ function AudioChatBubble({
     <div>
       <div
         className={cn(
-          "px-4 py-2 flex items-center gap-[0.625rem] min-w-[220px]",
+          /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "px-4 py-2 flex items-center gap-[0.625rem] min-w-[220px]",
           bubbleCornerClass(isOwn, isFirstInGroup),
           !isOwn && "bg-(--chat-bubble-received) border border-border/30 dark:border-white/[0.05] shadow-[0_1px_3px_rgba(0,0,0,0.03)] dark:shadow-none",
           isOwn && "bg-primary text-white shadow-lg shadow-primary/20"
@@ -306,7 +306,7 @@ function AudioChatBubble({
         </button>
 
         {/* Waveform bars */}
-        <div className="flex-1 h-6 flex items-center gap-1" aria-hidden="true">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex-1 h-6 flex items-center gap-1")} aria-hidden="true">
           {barHeights.map((height, i) => (
             <div
               key={i}
@@ -346,7 +346,7 @@ function ImageChatBubble({
     <div>
       <div
         className={cn(
-          "p-2",
+          /* design-system-escape: p-2 → usar <Inset> */ "p-2",
           bubbleCornerClass(isOwn, isFirstInGroup),
           !isOwn && "bg-(--chat-bubble-received) border border-border/30 dark:border-white/[0.05] shadow-[0_1px_3px_rgba(0,0,0,0.03)] dark:shadow-none",
           isOwn && "bg-primary shadow-lg shadow-primary/20"
@@ -460,7 +460,7 @@ export function ChatBubble({
       );
     case "sistema":
       return (
-        <div className="text-[0.625rem] text-muted-foreground/40 text-center py-2">
+        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "text-[0.625rem] text-muted-foreground/40 text-center py-2")}>
           {message.conteudo}
         </div>
       );

@@ -25,7 +25,7 @@ export function GazetteTimeline({ items }: GazetteTimelineProps) {
   if (items.length === 0) return null;
 
   return (
-    <div className="relative flex flex-col gap-3">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "relative flex flex-col gap-3")}>
       {/* Vertical line */}
       <div
         className="absolute bottom-2 left-1 top-2 w-px bg-border/50"
@@ -33,7 +33,7 @@ export function GazetteTimeline({ items }: GazetteTimelineProps) {
       />
 
       {items.map((item) => (
-        <div key={item.id} className="relative flex items-start gap-3 pl-5">
+        <div key={item.id} className={cn(/* design-system-escape: gap-3 gap sem token DS; pl-5 padding direcional sem Inset equiv. */ "relative flex items-start gap-3 pl-5")}>
           {/* Dot */}
           <div
             className={cn(
@@ -48,14 +48,14 @@ export function GazetteTimeline({ items }: GazetteTimelineProps) {
           {/* Card */}
           <div
             className={cn(
-              'flex-1 rounded-lg p-2',
+              /* design-system-escape: p-2 → usar <Inset> */ 'flex-1 rounded-lg p-2',
               item.isCurrent
                 ? 'border border-primary/15 bg-primary/5'
                 : 'border border-border/30 bg-muted/20',
             )}
           >
             {/* Header: badge + date */}
-            <div className="mb-0.5 flex items-center justify-between gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mb-0.5 flex items-center justify-between gap-2")}>
               <div className="shrink-0">{item.badge}</div>
               <Text variant="micro-caption" className="whitespace-nowrap">
                 {item.date}
@@ -63,7 +63,7 @@ export function GazetteTimeline({ items }: GazetteTimelineProps) {
             </div>
 
             {/* Text */}
-            <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; leading-relaxed sem token DS */ "line-clamp-2 text-xs leading-relaxed text-muted-foreground")}>
               {item.text}
             </p>
 

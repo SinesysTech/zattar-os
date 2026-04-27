@@ -4,6 +4,7 @@
  * Componente para visualização dos documentos do cliente armazenados no Backblaze
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import {
   FileText, Download, FolderOpen, FileImage, FileSpreadsheet, File, Dot,
@@ -121,7 +122,7 @@ export function ClienteDocumentosViewer({
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-8">
+      <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex items-center justify-center py-8")}>
         <LoadingSpinner className="size-6 text-muted-foreground" />
         <span className="ml-2 text-muted-foreground">
           Carregando documentos...
@@ -132,18 +133,18 @@ export function ClienteDocumentosViewer({
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center py-8 text-center">
+      <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-8 text-center")}>
         <FolderOpen className="h-12 w-12 text-muted-foreground/50 mb-2" />
-        <p className="text-sm text-muted-foreground">{error}</p>
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{error}</p>
       </div>
     );
   }
 
   if (documentos.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-8 text-center">
+      <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-8 text-center")}>
         <FolderOpen className="h-12 w-12 text-muted-foreground/50 mb-2" />
-        <p className="text-sm text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
           Nenhum documento encontrado para este cliente.
         </p>
       </div>
@@ -153,28 +154,28 @@ export function ClienteDocumentosViewer({
   return (
     <div className={className}>
       <div className="flex items-center justify-between mb-4">
-        <Heading level="subsection" className="text-sm text-muted-foreground">
+        <Heading level="subsection" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
           {documentos.length} documento{documentos.length !== 1 ? 's' : ''}
         </Heading>
       </div>
 
       <ScrollArea className="h-100">
-        <div className="grid gap-3">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3")}>
           {documentos.map((doc) => (
             <Card
               key={doc.key}
               className="group cursor-pointer transition-all hover:shadow-md"
               onClick={() => handlePreview(doc)}
             >
-              <CardContent className="p-3">
-                <div className="flex items-center gap-3">
-                  <div className="rounded-lg bg-muted p-2">
+              <CardContent className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3")}>
+                <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+                  <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "rounded-lg bg-muted p-2")}>
                     {getFileIcon(doc.contentType)}
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium truncate text-sm">{doc.name}</p>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
+                    <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm"> */ "font-medium truncate text-sm")}>{doc.name}</p>
+                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-2 text-xs text-muted-foreground mt-0.5")}>
                       <span>{formatFileSize(doc.size)}</span>
                       <Dot className="size-3 shrink-0" aria-hidden />
                       <span>
@@ -188,7 +189,7 @@ export function ClienteDocumentosViewer({
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity")}>
                     <Button
                       variant="ghost"
                       size="icon" aria-label="Baixar"
@@ -211,8 +212,8 @@ export function ClienteDocumentosViewer({
 
       {/* Dialog de Preview de PDF */}
       <Dialog open={!!selectedDoc} onOpenChange={() => setSelectedDoc(null)}>
-        <DialogContent className="max-w-[90vw] h-[90vh] flex flex-col p-0 gap-0">
-          <DialogHeader className="p-4 border-b">
+        <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset>; gap-0 gap sem token DS */ "max-w-[90vw] h-[90vh] flex flex-col p-0 gap-0")}>
+          <DialogHeader className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 border-b")}>
             <DialogTitle>{selectedDoc?.name}</DialogTitle>
           </DialogHeader>
           <div className="flex-1 w-full min-h-0 bg-muted/20">

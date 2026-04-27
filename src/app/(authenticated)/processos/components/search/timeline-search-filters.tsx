@@ -49,7 +49,7 @@ export function TimelineSearchFilters({
 }: TimelineSearchFiltersProps) {
   return (
     <div
-      className="flex gap-2 px-4 py-3 border-b overflow-x-auto bg-muted/30"
+      className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex gap-2 px-4 py-3 border-b overflow-x-auto bg-muted/30")}
       role="group"
       aria-label="Filtros rápidos"
     >
@@ -64,7 +64,7 @@ export function TimelineSearchFilters({
             aria-checked={isAtivo}
             onClick={() => onToggleFilter(filtro.key)}
             className={cn(
-              'h-7 shrink-0 rounded px-3 text-[13px] font-medium transition-colors cursor-pointer',
+              /* design-system-escape: px-3 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'h-7 shrink-0 rounded px-3 text-[13px] font-medium transition-colors cursor-pointer',
               isAtivo
                 ? 'border border-transparent bg-primary text-primary-foreground shadow-sm hover:bg-primary/90'
                 : 'border bg-card text-foreground hover:border-primary/30'

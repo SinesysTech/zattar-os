@@ -35,14 +35,14 @@ export function MobileProgress({
   className,
 }: MobileProgressProps) {
   return (
-    <div className={cn('flex flex-col gap-1.5 animate-fade-in animate-duration-300', className)}>
+    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ 'flex flex-col gap-1.5 animate-fade-in animate-duration-300', className)}>
       {/* Label */}
       <div className="flex items-center justify-between">
-        <span className="text-xs font-medium text-muted-foreground">
+        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-muted-foreground")}>
           Etapa {currentStep + 1} de {totalSteps}
         </span>
         {currentStepLabel && (
-          <span className="text-xs font-semibold text-primary">
+          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-primary")}>
             {currentStepLabel}
           </span>
         )}

@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import React from "react";
 import { PlusCircleIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -87,9 +88,9 @@ export function AddReminderDialog() {
         <form
           id="add-reminder-form"
           onSubmit={handleSubmit}
-          className="space-y-4 px-6 py-4"
+          className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "space-y-4 px-6 py-4")}
         >
-          <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
             <Label htmlFor="reminder-text">Nota</Label>
             <Input
               id="reminder-text"
@@ -104,12 +105,12 @@ export function AddReminderDialog() {
             />
           </div>
 
-          <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
             <Label htmlFor="reminder-date">Data e Hora</Label>
             <DateTimePicker date={date} setDate={setDate} />
           </div>
 
-          <div className="grid gap-3">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3")}>
             <Label>Prioridade</Label>
             <RadioGroup
               value={newReminder.prioridade}
@@ -119,22 +120,22 @@ export function AddReminderDialog() {
                   prioridade: value as PrioridadeLembrete,
                 })
               }
-              className="flex space-x-4"
+              className={cn(/* design-system-escape: space-x-4 → migrar para <Inline gap="default"> */ "flex space-x-4")}
               disabled={isPending}
             >
-              <div className="flex items-center space-x-2">
+              <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
                 <RadioGroupItem value="low" id="priority-low" />
                 <Label htmlFor="priority-low" className="cursor-pointer">
                   Baixa
                 </Label>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
                 <RadioGroupItem value="medium" id="priority-medium" />
                 <Label htmlFor="priority-medium" className="cursor-pointer">
                   Média
                 </Label>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
                 <RadioGroupItem value="high" id="priority-high" />
                 <Label htmlFor="priority-high" className="cursor-pointer">
                   Alta
@@ -143,7 +144,7 @@ export function AddReminderDialog() {
             </RadioGroup>
           </div>
 
-          <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
             <Label htmlFor="reminder-category">Categoria</Label>
             <Select
               value={newReminder.categoria}

@@ -15,7 +15,7 @@ export function ProTip({ children, className }: ProTipProps) {
   return (
     <div
       className={cn(
-        'flex items-start gap-3 p-4 rounded-lg',
+        /* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ 'flex items-start gap-3 p-4 rounded-lg',
         'bg-chart-2/10', // Using chart-2 (highlight/orange) with opacity
         className
       )}
@@ -24,7 +24,7 @@ export function ProTip({ children, className }: ProTipProps) {
       <div className="h-5 w-5 rounded-full bg-chart-2 flex items-center justify-center shrink-0">
         <span className="h-2 w-2 rounded-full bg-white" />
       </div>
-      <p className="text-sm text-muted-foreground">
+      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
         {children}
       </p>
     </div>
@@ -36,7 +36,7 @@ export function ProTip({ children, className }: ProTipProps) {
  */
 export function ProTipLabel({ children }: { children: React.ReactNode }) {
   return (
-    <span className="font-medium text-chart-2">
+    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-chart-2")}>
       {children}
     </span>
   );
@@ -47,7 +47,7 @@ export function ProTipLabel({ children }: { children: React.ReactNode }) {
  */
 export function Kbd({ children }: { children: React.ReactNode }) {
   return (
-    <kbd className="px-1.5 py-0.5 bg-muted rounded text-xs font-mono">
+    <kbd className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "px-1.5 py-0.5 bg-muted rounded text-xs font-mono")}>
       {children}
     </kbd>
   );

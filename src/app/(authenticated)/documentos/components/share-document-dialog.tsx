@@ -4,6 +4,7 @@
  * Dialog para compartilhar documentos com outros usuários
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { Search, UserPlus, X, Users, Mail, Trash2, Shield} from 'lucide-react';
 import { Text } from '@/components/ui/typography';
@@ -194,7 +195,7 @@ export function ShareDocumentDialog({
     <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
       <ResponsiveDialogContent className="sm:max-w-lg">
         <ResponsiveDialogHeader>
-          <ResponsiveDialogTitle className="flex items-center gap-2">
+          <ResponsiveDialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <Users className="h-5 w-5" />
             Compartilhar documento
           </ResponsiveDialogTitle>
@@ -204,11 +205,11 @@ export function ShareDocumentDialog({
         </ResponsiveDialogHeader>
 
         <ResponsiveDialogBody>
-          <div className="space-y-4">
+          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             {/* Busca de usuários */}
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label>Adicionar pessoas</Label>
-              <div className="flex gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
@@ -218,7 +219,7 @@ export function ShareDocumentDialog({
                       setSearchQuery(e.target.value);
                       setSelectedUser(null);
                     }}
-                    className="pl-9"
+                    className={cn(/* design-system-escape: pl-9 padding direcional sem Inset equiv. */ "pl-9")}
                   />
                   {searchLoading && (
                     <LoadingSpinner className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
@@ -236,13 +237,13 @@ export function ShareDocumentDialog({
               </div>
 
               {/* Opção de permissão de deleção */}
-              <div className="flex items-center gap-2 mt-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-2")}>
                 <Checkbox
                   id="pode-deletar"
                   checked={podeDeletar}
                   onCheckedChange={(checked) => setPodeDeletar(checked === true)}
                 />
-                <Label htmlFor="pode-deletar" className="text-sm text-muted-foreground cursor-pointer">
+                <Label htmlFor="pode-deletar" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground cursor-pointer")}>
                   Permitir mover para lixeira
                 </Label>
                 <TooltipProvider>
@@ -251,7 +252,7 @@ export function ShareDocumentDialog({
                       <Shield className="h-4 w-4 text-muted-foreground cursor-help" />
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p className="max-w-xs text-xs">
+                      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "max-w-xs text-xs")}>
                         Quando ativado, o usuário poderá mover este documento para a lixeira.
                         Apenas o proprietário pode excluir permanentemente.
                       </p>
@@ -268,23 +269,23 @@ export function ShareDocumentDialog({
                       <button
                         key={usuario.id}
                         type="button"
-                        className="flex w-full items-center gap-3 p-2 hover:bg-accent text-left"
+                        className={cn(/* design-system-escape: gap-3 gap sem token DS; p-2 → usar <Inset> */ "flex w-full items-center gap-3 p-2 hover:bg-accent text-left")}
                         onClick={() => {
                           setSelectedUser(usuario);
                           setSearchResults([]);
                         }}
                       >
                         <Avatar>
-                          <AvatarFallback className="text-xs">
+                          <AvatarFallback className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                             {getInitials(usuario.nomeCompleto)}
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex-1 min-w-0">
-                          <Text variant="label" as="p" className="font-medium truncate">
+                          <Text variant="label" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium truncate")}>
                             {usuario.nomeExibicao || usuario.nomeCompleto}
                           </Text>
                           {usuario.emailCorporativo && (
-                            <p className="text-xs text-muted-foreground truncate">
+                            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground truncate")}>
                               {usuario.emailCorporativo}
                             </p>
                           )}
@@ -297,25 +298,25 @@ export function ShareDocumentDialog({
 
               {/* Usuário selecionado */}
               {selectedUser && (
-                <div className="mt-2 flex items-center justify-between rounded-md border bg-muted/50 p-2">
-                  <div className="flex items-center gap-2">
+                <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "mt-2 flex items-center justify-between rounded-md border bg-muted/50 p-2")}>
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                     <Avatar>
-                      <AvatarFallback className="text-xs">
+                      <AvatarFallback className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                         {getInitials(selectedUser.nomeCompleto)}
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="text-sm font-medium">
+                      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>
                         {selectedUser.nomeExibicao || selectedUser.nomeCompleto}
                       </p>
                       {selectedUser.emailCorporativo && (
-                        <p className="text-xs text-muted-foreground">
+                        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                           {selectedUser.emailCorporativo}
                         </p>
                       )}
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                     <Button
                       variant="ghost"
                       size="icon" aria-label="Fechar"
@@ -341,39 +342,39 @@ export function ShareDocumentDialog({
             <Separator />
 
             {/* Lista de compartilhamentos */}
-            <div className="space-y-2">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label>Pessoas com acesso</Label>
               {compartilhamentos.length === 0 ? (
-                <p className="text-sm text-muted-foreground py-4 text-center">
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; py-4 padding direcional sem Inset equiv. */ "text-sm text-muted-foreground py-4 text-center")}>
                   Este documento ainda não foi compartilhado
                 </p>
               ) : (
                 <ScrollArea className="max-h-60">
-                  <div className="space-y-2">
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                     {compartilhamentos.map((compartilhamento) => (
                       <div
                         key={compartilhamento.id}
-                        className="flex items-center justify-between rounded-md border p-2"
+                        className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-center justify-between rounded-md border p-2")}
                       >
-                        <div className="flex items-center gap-3">
+                        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
                           <Avatar size="lg">
-                            <AvatarFallback className="text-xs">
+                            <AvatarFallback className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                               {getInitials(compartilhamento.usuario.nomeCompleto)}
                             </AvatarFallback>
                           </Avatar>
                           <div>
-                            <p className="text-sm font-medium">
+                            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>
                               {compartilhamento.usuario.nomeExibicao || compartilhamento.usuario.nomeCompleto}
                             </p>
                             {compartilhamento.usuario.emailCorporativo && (
-                              <p className="text-xs text-muted-foreground flex items-center gap-1">
+                              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; gap-1 gap sem token DS */ "text-xs text-muted-foreground flex items-center gap-1")}>
                                 <Mail className="h-3 w-3" />
                                 {compartilhamento.usuario.emailCorporativo}
                               </p>
                             )}
                           </div>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                           <Select
                             value={compartilhamento.permissao}
                             onValueChange={(v) =>
@@ -411,7 +412,7 @@ export function ShareDocumentDialog({
                                 </Button>
                               </TooltipTrigger>
                               <TooltipContent>
-                                <p className="text-xs">
+                                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                                   {compartilhamento.pode_deletar
                                     ? 'Pode mover para lixeira (clique para revogar)'
                                     : 'Não pode mover para lixeira (clique para permitir)'}

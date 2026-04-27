@@ -6,6 +6,7 @@
  *   - data.processos.aging (faixa/count/color)
  */
 
+import { cn } from '@/lib/utils';
 import { BarChart3 } from 'lucide-react';
 import {
   WidgetContainer,
@@ -29,7 +30,7 @@ export function WidgetAging() {
         subtitle="Distribuicao por tempo de duracao"
         depth={1}
       >
-        <p className="text-xs text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
           Nao foi possivel carregar os dados processuais.
         </p>
       </WidgetContainer>
@@ -77,23 +78,23 @@ export function WidgetAging() {
       depth={1}
     >
       <StackedBar segments={segments} height={12} />
-      <div className="flex flex-col gap-3 mt-4">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3 mt-4")}>
         {segments.map((seg) => {
           const pct = total > 0 ? Math.round((seg.value / total) * 100) : 0;
           return (
-            <div key={seg.label} className="flex items-center gap-2">
+            <div key={seg.label} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <ToneDot tone={seg.tone} shape="bullet" aria-label={seg.label} />
               <span className="text-[10px] text-muted-foreground/60 flex-1 truncate">
                 {seg.label}
               </span>
-              <div className="flex items-center gap-1.5">
+              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
                 <div className="w-14 h-1.5 rounded-full bg-border/15 overflow-hidden">
                   <div
                     className="h-full rounded-full transition-all duration-500"
                     style={{ width: `${pct}%`, backgroundColor: tokenForTone(seg.tone) }}
                   />
                 </div>
-                <span className="text-[10px] font-medium tabular-nums w-6 text-right">
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums w-6 text-right")}>
                   {seg.value}
                 </span>
               </div>

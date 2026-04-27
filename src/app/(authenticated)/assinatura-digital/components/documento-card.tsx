@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import {
   Clock,
   CheckCircle2,
@@ -95,17 +96,17 @@ export function DocumentCard({ doc, onSelect }: DocumentCardProps) {
       className={`p-4 cursor-pointer hover:scale-[1.01] ${hasPendingLong ? "ring-1 ring-warning/15" : ""}`}
     >
       <div onClick={() => onSelect(doc)}>
-        <div className="flex items-start gap-3">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3")}>
           <div
             className={`size-9 rounded-xl ${cfg.bg} flex items-center justify-center shrink-0`}
           >
             <Icon className={`size-4 ${cfg.color}`} />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-semibold truncate leading-tight">
+            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[11px] font-semibold truncate leading-tight")}>
               {doc.titulo}
             </p>
-            <div className="flex items-center gap-2 mt-1">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-1")}>
               <span
                 className={`text-[9px] font-medium px-1.5 py-0.5 rounded ${cfg.bg} ${cfg.color}`}
               >
@@ -115,7 +116,7 @@ export function DocumentCard({ doc, onSelect }: DocumentCardProps) {
                 <Camera className="size-3 text-muted-foreground/50" />
               )}
               {doc.origem === "formulario" && (
-                <span className="text-[8px] px-1 py-0.5 rounded bg-info/6 text-info/40">
+                <span className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[8px] px-1 py-0.5 rounded bg-info/6 text-info/40")}>
                   formulário
                 </span>
               )}
@@ -124,7 +125,7 @@ export function DocumentCard({ doc, onSelect }: DocumentCardProps) {
         </div>
 
         {doc.assinantes.length > 0 && (
-          <div className="mt-3 flex items-center gap-3">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "mt-3 flex items-center gap-3")}>
             <ProgressRing
               percent={progress.percent}
               size={36}
@@ -135,7 +136,7 @@ export function DocumentCard({ doc, onSelect }: DocumentCardProps) {
               }
             />
             <div className="flex-1 min-w-0">
-              <div className="flex flex-wrap gap-1">
+              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-wrap gap-1")}>
                 {doc.assinantes.map((a, i) => (
                   <SignerPill key={i} assinante={a} />
                 ))}
@@ -145,17 +146,17 @@ export function DocumentCard({ doc, onSelect }: DocumentCardProps) {
         )}
 
         {doc.assinantes.length === 0 && doc.status === "rascunho" && (
-          <div className="mt-3 flex items-center gap-2 text-[10px] text-muted-foreground/55">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-3 flex items-center gap-2 text-[10px] text-muted-foreground/55")}>
             <Users className="size-3" />
             Sem assinantes configurados
           </div>
         )}
 
-        <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-border/10">
+        <div className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "flex items-center justify-between mt-3 pt-2.5 border-t border-border/10")}>
           <span className="text-[9px] text-muted-foreground/55">
             {doc.criadoPor}
           </span>
-          <span className="text-[9px] text-muted-foreground/50 flex items-center gap-1">
+          <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-[9px] text-muted-foreground/50 flex items-center gap-1")}>
             <Clock className="size-2.5" />
             {timeAgo(doc.atualizadoEm)}
           </span>

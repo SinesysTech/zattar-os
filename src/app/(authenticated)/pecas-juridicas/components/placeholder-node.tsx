@@ -91,7 +91,7 @@ export function PlaceholderNodeElement(
     <PlateElement
       {...props}
       className={cn(
-        'inline-block rounded-md px-1.5 py-0.5 align-baseline font-medium text-sm',
+        /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm"> */ 'inline-block rounded-md px-1.5 py-0.5 align-baseline font-medium text-sm',
         colorClass,
         !readOnly && 'cursor-pointer',
         selected && focused && 'ring-2 ring-ring'
@@ -129,10 +129,10 @@ export function PlaceholderNodeElement(
         <Tooltip>
           <TooltipTrigger asChild>{content}</TooltipTrigger>
           <TooltipContent side="top" className="max-w-xs">
-            <div className="space-y-1">
-              <p className="font-medium">{label}</p>
-              <p className="text-xs text-muted-foreground">{description}</p>
-              <p className="text-xs font-mono text-muted-foreground">
+            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{label}</p>
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{description}</p>
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs font-mono text-muted-foreground")}>
                 {`{{${element.value}}}`}
               </p>
             </div>
@@ -163,7 +163,7 @@ export function PlaceholderNodeStatic({
   return (
     <span
       className={cn(
-        'inline-block rounded-md px-1.5 py-0.5 align-baseline font-medium text-sm',
+        /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm"> */ 'inline-block rounded-md px-1.5 py-0.5 align-baseline font-medium text-sm',
         colorClass,
         className
       )}

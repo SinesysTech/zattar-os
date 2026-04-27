@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { AlertCircle, Check, Upload, X} from 'lucide-react';
@@ -188,7 +189,7 @@ export default function ReplacePdfDialog({
         <Button
           onClick={handleReplace}
           disabled={!uploadedFile || !uploadedFile.isValid || isUploading}
-          className="gap-2"
+          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}
         >
           {isUploading ? (
             <>
@@ -201,8 +202,8 @@ export default function ReplacePdfDialog({
         </Button>
       }
     >
-      <div className="flex flex-col gap-3">
-        <p className="text-sm text-muted-foreground">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
           Faça upload de um novo arquivo PDF. O arquivo atual será substituído permanentemente.
         </p>
 
@@ -218,19 +219,19 @@ export default function ReplacePdfDialog({
           >
             <input {...getInputProps()} ref={fileInputRef} className="hidden" />
             <Upload className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-            <p className="text-sm font-medium mb-1">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium mb-1")}>
               {isDragActive ? 'Solte o arquivo aqui' : 'Arraste um PDF ou clique para selecionar'}
             </p>
-            <p className="text-xs text-muted-foreground">
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
               Apenas arquivos PDF, máximo 10MB
             </p>
           </div>
         ) : (
           <>
             {/* Indicador de arquivo selecionado */}
-            <div className="border rounded-lg p-3 bg-card">
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2 min-w-0 flex-1">
+            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "border rounded-lg p-3 bg-card")}>
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0 flex-1")}>
                   <div className={`shrink-0 p-1.5 rounded-full ${
                     uploadedFile.isValid
                       ? 'bg-success/10'
@@ -243,12 +244,12 @@ export default function ReplacePdfDialog({
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium truncate">{uploadedFile.file.name}</p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")}>{uploadedFile.file.name}</p>
+                    <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                       {(uploadedFile.file.size / 1024 / 1024).toFixed(2)} MB
                     </p>
                     {!uploadedFile.isValid && uploadedFile.error && (
-                      <p className="text-xs text-destructive mt-0.5">{uploadedFile.error}</p>
+                      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-destructive mt-0.5")}>{uploadedFile.error}</p>
                     )}
                   </div>
                 </div>

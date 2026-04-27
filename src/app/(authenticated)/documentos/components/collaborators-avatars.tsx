@@ -5,6 +5,7 @@
  * Mostra quem está editando o documento em tempo real
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Text } from '@/components/ui/typography';
@@ -26,7 +27,7 @@ export function CollaboratorsAvatars({ collaborators }: CollaboratorsAvatarsProp
   }
 
   return (
-    <div className="flex items-center -space-x-2">
+    <div className={cn(/* design-system-escape: -space-x-2 sem equivalente DS */ "flex items-center -space-x-2")}>
       <TooltipProvider>
         {collaborators.slice(0, 5).map((collab) => (
           <Tooltip key={collab.user_id}>
@@ -36,7 +37,7 @@ export function CollaboratorsAvatars({ collaborators }: CollaboratorsAvatarsProp
                 style={{ borderColor: collab.color }}
               >
                 <AvatarFallback
-                  className="text-xs text-white"
+                  className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-white")}
                   style={{ backgroundColor: collab.color }}
                 >
                   {collab.name.substring(0, 2).toUpperCase()}
@@ -44,7 +45,7 @@ export function CollaboratorsAvatars({ collaborators }: CollaboratorsAvatarsProp
               </Avatar>
             </TooltipTrigger>
             <TooltipContent>
-              <p className="font-medium">{collab.name}</p>
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{collab.name}</p>
               <Text variant="caption" className="text-muted-foreground">Editando agora</Text>
             </TooltipContent>
           </Tooltip>
@@ -54,7 +55,7 @@ export function CollaboratorsAvatars({ collaborators }: CollaboratorsAvatarsProp
           <Tooltip>
             <TooltipTrigger asChild>
               <Avatar className="border-2 border-background">
-                <AvatarFallback className="text-xs">
+                <AvatarFallback className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                   +{collaborators.length - 5}
                 </AvatarFallback>
               </Avatar>

@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import { useEffect, useMemo, useRef } from "react";
 import { ChatItem, MensagemComUsuario, TipoSalaChat } from "../domain";
 import { DateSeparator } from "./date-separator";
@@ -134,8 +135,8 @@ export function ChatContent({ mensagens, salaAtiva }: ChatContentProps) {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 bg-(--chat-thread-bg)">
-      <div className="flex flex-col items-start space-y-0.5 pt-6 pb-2 max-w-full">
+    <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv. */ "flex-1 overflow-y-auto overflow-x-hidden px-6 bg-(--chat-thread-bg)")}>
+      <div className={cn(/* design-system-escape: space-y-0.5 sem token DS; pt-6 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "flex flex-col items-start space-y-0.5 pt-6 pb-2 max-w-full")}>
         {grouped.map((item, index) => {
           if (item.type === "date-separator") {
             return <DateSeparator key={`sep-${item.date}-${index}`} date={item.date} />;

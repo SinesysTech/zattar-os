@@ -91,7 +91,7 @@ function SelectAllRail({
   visibleCount: number;
 }) {
   return (
-    <div className="flex items-center gap-2 px-4 pb-2 text-muted-foreground/50">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-4 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 px-4 pb-2 text-muted-foreground/50")}>
       <Checkbox
         checked={allSelected ? true : someSelected ? 'indeterminate' : false}
         onCheckedChange={onToggleSelectAll}
@@ -120,7 +120,7 @@ function RowActions({
 }) {
   return (
     <div
-      className="flex items-center justify-end gap-0.5"
+      className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center justify-end gap-0.5")}
       onClick={(e) => e.stopPropagation()}
       onKeyDown={(e) => e.stopPropagation()}
     >
@@ -209,7 +209,7 @@ function ResponsavelCell({
             e.stopPropagation();
             setDialogOpen(true);
           }}
-          className="flex items-center gap-1.5 min-w-0 rounded-lg px-1 -mx-1 py-1 text-left transition-colors hover:bg-muted/40 focus:outline-none focus-visible:ring-1 focus-visible:ring-ring cursor-pointer"
+          className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-1 padding direcional sem Inset equiv.; -mx-1 sem equivalente DS; py-1 padding direcional sem Inset equiv. */ "flex items-center gap-1.5 min-w-0 rounded-lg px-1 -mx-1 py-1 text-left transition-colors hover:bg-muted/40 focus:outline-none focus-visible:ring-1 focus-visible:ring-ring cursor-pointer")}
           title={`Alterar responsável: ${nome}`}
         >
           <Avatar className="size-6">
@@ -280,10 +280,10 @@ function ResponsavelAssignPopover({
           onClick={(e) => e.stopPropagation()}
           aria-label="Adicionar responsável"
           disabled={isPending}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-dashed border-border/30 px-2 py-1 text-muted-foreground/60 hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-colors cursor-pointer disabled:opacity-50 w-fit"
+          className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "inline-flex items-center gap-1.5 rounded-lg border border-dashed border-border/30 px-2 py-1 text-muted-foreground/60 hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-colors cursor-pointer disabled:opacity-50 w-fit")}
         >
           <Plus className="size-3" aria-hidden="true" />
-          <Text variant="caption" className="font-medium">
+          <Text variant="caption" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
             Adicionar responsável
           </Text>
         </button>
@@ -291,11 +291,11 @@ function ResponsavelAssignPopover({
       <PopoverContent
         align="start"
         sideOffset={6}
-        className="w-56 rounded-2xl glass-dropdown overflow-hidden p-0"
+        className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-56 rounded-2xl glass-dropdown overflow-hidden p-0")}
         onClick={(e) => e.stopPropagation()}
       >
         <Command>
-          <CommandInput placeholder="Buscar usuário..." className="h-8 text-xs rounded-lg" />
+          <CommandInput placeholder="Buscar usuário..." className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs rounded-lg")} />
           <CommandList className="max-h-52">
             <CommandEmpty>
               <Text variant="caption" className="text-muted-foreground/40">
@@ -308,7 +308,7 @@ function ResponsavelAssignPopover({
                   key={usuario.id}
                   value={usuario.nome}
                   onSelect={() => handleSelect(usuario.id)}
-                  className="gap-2 rounded-lg text-xs px-2 py-1.5 cursor-pointer"
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-xs px-2 py-1.5 cursor-pointer")}
                 >
                   <Avatar className="size-5">
                     <AvatarImage src={usuario.avatarUrl || undefined} alt={usuario.nome} />
@@ -414,7 +414,7 @@ function GlassRow({
         }
       }}
       className={cn(
-        'group w-full text-left rounded-2xl border p-3 cursor-pointer',
+        /* design-system-escape: p-3 → usar <Inset> */ 'group w-full text-left rounded-2xl border p-3 cursor-pointer',
         'transition-all duration-180 ease-out',
         'hover:border-border hover:shadow-[0_4px_14px_color-mix(in_oklch,var(--foreground)_6%,transparent)] hover:-translate-y-px',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
@@ -425,7 +425,7 @@ function GlassRow({
             : 'border-border/40 bg-card',
       )}
     >
-      <div className={cn('grid items-center gap-3', GRID_TEMPLATE)}>
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ 'grid items-center gap-3', GRID_TEMPLATE)}>
         {/* 1. Checkbox */}
         <div
           className="flex items-center justify-center"
@@ -450,17 +450,17 @@ function GlassRow({
 
         {/* 3. Cliente / Parte */}
         <div className="min-w-0">
-          <div className="flex items-center gap-1.5">
-            <Text variant="label" className="font-semibold text-foreground truncate leading-tight">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+            <Text variant="label" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "font-semibold text-foreground truncate leading-tight")}>
               {autoraNome || clienteNome}
               {partesAutoras.length > 1 && (
-                <span className="text-muted-foreground/60 font-medium"> e outros</span>
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-muted-foreground/60 font-medium")}> e outros</span>
               )}
             </Text>
             {contrato.papelClienteNoContrato === 'autora' && (
               <Text
                 variant="micro-badge"
-                className="inline-flex items-center bg-primary/10 border border-primary/20 text-primary rounded px-1 py-px font-semibold shrink-0"
+                className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center bg-primary/10 border border-primary/20 text-primary rounded px-1 py-px font-semibold shrink-0")}
               >
                 Cliente
               </Text>
@@ -476,7 +476,7 @@ function GlassRow({
               {contrato.papelClienteNoContrato === 're' && (
                 <Text
                   variant="micro-badge"
-                  className="ml-1.5 inline-flex items-center bg-primary/10 border border-primary/20 text-primary rounded px-1 py-px font-semibold"
+                  className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "ml-1.5 inline-flex items-center bg-primary/10 border border-primary/20 text-primary rounded px-1 py-px font-semibold")}
                 >
                   Cliente
                 </Text>
@@ -491,7 +491,7 @@ function GlassRow({
         </div>
 
         {/* 4. Tipo / Cobrança */}
-        <div className="flex flex-col gap-1 min-w-0">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1 min-w-0")}>
           <SemanticBadge category="tipo_contrato" value={contrato.tipoContrato} className="w-fit">
             {TIPO_CONTRATO_LABELS[contrato.tipoContrato]}
           </SemanticBadge>
@@ -501,13 +501,13 @@ function GlassRow({
         </div>
 
         {/* 5. Processos vinculados */}
-        <div className="flex flex-col gap-0.5 min-w-0">
+        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5 min-w-0")}>
           {firstProcesso ? (
             <>
               <Link
                 href={`/app/processos/${firstProcesso.processoId}`}
                 onClick={(e) => e.stopPropagation()}
-                className="inline-flex items-center gap-1 min-w-0 text-primary hover:underline"
+                className={cn(/* design-system-escape: gap-1 gap sem token DS */ "inline-flex items-center gap-1 min-w-0 text-primary hover:underline")}
               >
                 <Scale className="size-2.5 shrink-0" />
                 <Text variant="caption" className="tabular-nums truncate text-primary">
@@ -558,28 +558,28 @@ function GlassRow({
 
 function ListSkeleton() {
   return (
-    <div className="flex flex-col gap-2">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
       {Array.from({ length: 6 }, (_, i) => (
-        <div key={i} className="rounded-2xl border border-border/40 bg-card p-3">
-          <div className={cn('grid items-center gap-3', GRID_TEMPLATE)}>
+        <div key={i} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-2xl border border-border/40 bg-card p-3")}>
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ 'grid items-center gap-3', GRID_TEMPLATE)}>
             <Skeleton className="size-3.5 rounded" />
             <Skeleton className="size-2 rounded-full" />
-            <div className="space-y-1.5">
+            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
               <Skeleton className="h-3.5 w-48" />
               <Skeleton className="h-2.5 w-36" />
             </div>
-            <div className="space-y-1">
+            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
               <Skeleton className="h-4 w-16 rounded-md" />
               <Skeleton className="h-4 w-14 rounded-md" />
             </div>
             <Skeleton className="h-3 w-24" />
             <Skeleton className="h-4 w-20 rounded-md" />
-            <div className="flex items-center gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <Skeleton className="size-5 rounded-full" />
               <Skeleton className="h-3 w-16" />
             </div>
             <Skeleton className="h-3 w-14" />
-            <div className="flex items-center justify-end gap-0.5">
+            <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center justify-end gap-0.5")}>
               {[0, 1, 2, 3].map((j) => (
                 <Skeleton key={j} className="size-7 rounded-md" />
               ))}
@@ -597,7 +597,7 @@ function ListSkeleton() {
 
 function EmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center py-16 opacity-60">
+    <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
       <FileText className="w-10 h-10 text-muted-foreground/30 mb-4" />
       <Text variant="label" className="text-muted-foreground/60">
         Nenhum contrato encontrado
@@ -644,7 +644,7 @@ export function ContratosGlassList({
           onToggleSelectAll={onToggleSelectAll}
           visibleCount={contratos.length}
         />
-        <div className="flex flex-col gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
           {contratos.map((contrato, i) => (
             <GlassRow
               key={contrato.id}

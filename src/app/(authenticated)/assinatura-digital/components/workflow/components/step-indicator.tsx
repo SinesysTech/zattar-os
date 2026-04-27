@@ -38,8 +38,8 @@ export function StepIndicator({
   const { status, index } = step;
 
   const sizeClasses = {
-    sm: 'h-6 w-6 text-xs',
-    md: 'h-8 w-8 text-sm',
+    sm: /* design-system-escape: text-xs → migrar para <Text variant="caption"> */ 'h-6 w-6 text-xs',
+    md: /* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ 'h-8 w-8 text-sm',
   };
 
   const iconSizes = {
@@ -70,7 +70,7 @@ export function StepIndicator({
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       className={cn(
-        'relative flex items-center justify-center rounded-full font-medium transition-all duration-300',
+        /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'relative flex items-center justify-center rounded-full font-medium transition-all duration-300',
         sizeClasses[size],
         // Status styles
         status === 'completed' && 'bg-primary text-primary-foreground',

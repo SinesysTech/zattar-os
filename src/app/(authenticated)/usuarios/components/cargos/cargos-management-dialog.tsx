@@ -172,11 +172,11 @@ export function CargosManagementDialog({
         title={<Typography.H3 as="span">Gerenciar cargos</Typography.H3>}
         maxWidth="3xl"
       >
-        <div className="p-6 space-y-4">
-          <div className="grid gap-6 lg:grid-cols-2">
+        <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; space-y-4 → migrar para <Stack gap="default"> */ "p-6 space-y-4")}>
+          <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "grid gap-6 lg:grid-cols-2")}>
             {/* Lista */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between gap-3">
+            <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
                 <Typography.H4 as="h3">Cargos</Typography.H4>
                 <Button
                   type="button"
@@ -195,7 +195,7 @@ export function CargosManagementDialog({
               </div>
 
               {isLoading ? (
-                <div className="flex items-center justify-center py-10">
+                <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv. */ "flex items-center justify-center py-10")}>
                   <LoadingSpinner className="size-6 text-muted-foreground" />
                 </div>
               ) : cargos.length === 0 ? (
@@ -208,7 +208,7 @@ export function CargosManagementDialog({
                   </EmptyHeader>
                 </Empty>
               ) : (
-                <div className="space-y-1 rounded-lg border bg-card">
+                <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1 rounded-lg border bg-card")}>
                   {cargos.map((cargo) => (
                     <div
                       key={cargo.id}
@@ -221,13 +221,13 @@ export function CargosManagementDialog({
                           handleEdit(cargo);
                         }
                       }}
-                      className="w-full text-left flex items-center justify-between py-2 px-3 hover:bg-muted/50 transition-colors cursor-pointer rounded-md"
+                      className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; px-3 padding direcional sem Inset equiv. */ "w-full text-left flex items-center justify-between py-2 px-3 hover:bg-muted/50 transition-colors cursor-pointer rounded-md")}
                     >
-                      <div className="flex items-center gap-2 flex-1 min-w-0">
+                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 min-w-0")}>
                         <div className={cn('w-1 h-5 rounded-sm bg-linear-to-b shrink-0', getRoleBannerGradient(cargo.nome))} />
-                        <span className="font-medium">{cargo.nome}</span>
+                        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{cargo.nome}</span>
                         {!cargo.ativo && (
-                          <Badge variant="secondary" className="text-xs">
+                          <Badge variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                             Inativo
                           </Badge>
                         )}
@@ -238,7 +238,7 @@ export function CargosManagementDialog({
                         )}
                       </div>
 
-                      <div className="flex items-center gap-1 ml-4">
+                      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 ml-4")}>
                         <Button
                           type="button"
                           variant="ghost"
@@ -274,8 +274,8 @@ export function CargosManagementDialog({
             </div>
 
             {/* Form */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between gap-3">
+            <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
                 <Typography.H4 as="h3">
                   {editingId ? 'Editar cargo' : isCreating ? 'Novo cargo' : 'Detalhes'}
                 </Typography.H4>
@@ -293,14 +293,14 @@ export function CargosManagementDialog({
               </div>
 
               {!isCreating && !editingId ? (
-                <div className="rounded-lg border bg-card p-4">
+                <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-lg border bg-card p-4")}>
                   <Typography.Muted>
                     Selecione um cargo para editar ou clique em <strong>Novo cargo</strong>.
                   </Typography.Muted>
                 </div>
               ) : (
-                <div className="rounded-lg border bg-card p-4 space-y-4">
-                  <div className="grid gap-2">
+                <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-4 → migrar para <Stack gap="default"> */ "rounded-lg border bg-card p-4 space-y-4")}>
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                     <Label htmlFor="nome">
                       Nome <span className="text-destructive">*</span>
                     </Label>
@@ -316,7 +316,7 @@ export function CargosManagementDialog({
                     />
                   </div>
 
-                  <div className="grid gap-2">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                     <Label htmlFor="descricao">Descrição</Label>
                     <Textarea
                       id="descricao"
@@ -331,7 +331,7 @@ export function CargosManagementDialog({
                     />
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                     <Checkbox
                       id="ativo"
                       checked={formData.ativo}
@@ -347,7 +347,7 @@ export function CargosManagementDialog({
 
                   <Separator />
 
-                  <div className="flex justify-end gap-2">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex justify-end gap-2")}>
                     <Button
                       type="button"
                       onClick={editingId ? handleUpdate : handleCreate}

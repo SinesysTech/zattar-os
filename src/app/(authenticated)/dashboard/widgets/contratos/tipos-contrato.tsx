@@ -11,6 +11,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import { Scale } from 'lucide-react';
 import {
   WidgetContainer,
@@ -27,7 +28,7 @@ export function WidgetTiposContrato() {
   if (!data) {
     return (
       <WidgetContainer title="Tipos de Contrato" icon={Scale} subtitle="Distribuição por natureza" depth={1}>
-        <p className="text-[11px] text-muted-foreground/60 py-4 text-center">
+        <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-4 text-center")}>
           Não foi possível carregar os dados.
         </p>
       </WidgetContainer>
@@ -43,7 +44,7 @@ export function WidgetTiposContrato() {
   if (!contratos) {
     return (
       <WidgetContainer title="Tipos de Contrato" icon={Scale} subtitle="Distribuição por natureza" depth={1}>
-        <p className="text-[11px] text-muted-foreground/60 py-4 text-center">
+        <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-4 text-center")}>
           Dados indisponíveis
         </p>
       </WidgetContainer>
@@ -56,7 +57,7 @@ export function WidgetTiposContrato() {
   if (porTipo.length === 0) {
     return (
       <WidgetContainer title="Tipos de Contrato" icon={Scale} subtitle="Distribuição por natureza" depth={1}>
-        <p className="text-[11px] text-muted-foreground/60 py-6 text-center italic">
+        <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-6 text-center italic")}>
           Nenhum contrato cadastrado.
         </p>
       </WidgetContainer>
@@ -70,16 +71,16 @@ export function WidgetTiposContrato() {
       subtitle="Distribuição por natureza"
       depth={1}
     >
-      <div className="flex flex-col gap-2.5">
+      <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex flex-col gap-2.5")}>
         {porTipo.map((t) => {
           const pct = (t.count / maxCount) * 100;
           return (
-            <div key={t.tipo} className="flex flex-col gap-1">
+            <div key={t.tipo} className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
               <div className="flex items-center justify-between">
                 <span className="text-[10px] text-muted-foreground/70 capitalize truncate">
                   {t.tipo.replace(/_/g, ' ')}
                 </span>
-                <span className="text-[10px] font-medium tabular-nums shrink-0 ml-2">
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums shrink-0 ml-2")}>
                   {fmtNum(t.count)}
                 </span>
               </div>

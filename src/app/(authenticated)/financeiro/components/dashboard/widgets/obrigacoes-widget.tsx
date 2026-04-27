@@ -44,14 +44,14 @@ function ObrigacaoItem({
   colorClass: string;
 }) {
   return (
-    <div className="flex items-start gap-3 rounded-lg border p-3">
-      <div className={cn('rounded-md p-2 shrink-0', colorClass)}>
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ "flex items-start gap-3 rounded-lg border p-3")}>
+      <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ 'rounded-md p-2 shrink-0', colorClass)}>
         <Icon className="h-4 w-4" />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-xs text-muted-foreground">{label}</p>
-        <p className="text-lg font-bold font-heading tabular-nums">{formatarMoeda(valor)}</p>
-        <p className="text-xs text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{label}</p>
+        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold font-heading tabular-nums")}>{formatarMoeda(valor)}</p>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
           {quantidade} parcela{quantidade !== 1 ? 's' : ''}
         </p>
       </div>
@@ -67,15 +67,15 @@ export function ObrigacoesWidget({ resumo, isLoading }: ObrigacoesWidgetProps) {
   if (isLoading) {
     return (
       <Card className="h-full">
-        <CardHeader className="pb-2">
+        <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
           <Skeleton className="h-5 w-36" />
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
+          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="flex gap-3 rounded-lg border p-3">
+              <div key={i} className={cn(/* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ "flex gap-3 rounded-lg border p-3")}>
                 <Skeleton className="h-8 w-8 rounded-md" />
-                <div className="space-y-1.5 flex-1">
+                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5 flex-1")}>
                   <Skeleton className="h-3 w-16" />
                   <Skeleton className="h-5 w-24" />
                 </div>
@@ -91,8 +91,8 @@ export function ObrigacoesWidget({ resumo, isLoading }: ObrigacoesWidgetProps) {
 
   return (
     <Card className="h-full flex flex-col">
-      <CardHeader className="pb-2">
-        <CardTitle className="flex items-center gap-2 text-sm font-medium">
+      <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+        <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "flex items-center gap-2 text-sm font-medium")}>
           <Scale className="h-4 w-4 text-muted-foreground" />
           Obrigações e Prazos
         </CardTitle>
@@ -100,15 +100,15 @@ export function ObrigacoesWidget({ resumo, isLoading }: ObrigacoesWidgetProps) {
       <CardContent className="flex-1">
         {!hasData ? (
           <div className="flex items-center justify-center h-full min-h-32">
-            <div className="text-center space-y-2">
-              <div className="rounded-full bg-muted p-3 mx-auto w-fit">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "text-center space-y-2")}>
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-full bg-muted p-3 mx-auto w-fit")}>
                 <Scale className="h-5 w-5 text-muted-foreground" />
               </div>
-              <p className="text-sm text-muted-foreground">Sem obrigações pendentes</p>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Sem obrigações pendentes</p>
             </div>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
             <ObrigacaoItem
               label="Vencidas"
               valor={resumo.valorTotalVencido}

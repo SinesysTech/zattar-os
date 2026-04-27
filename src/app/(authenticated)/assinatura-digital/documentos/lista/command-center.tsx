@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import {
   FileText,
   Clock,
@@ -63,7 +64,7 @@ export function DocumentosCommandCenter({
   } = useDocumentosPage({ initialData });
 
   return (
-    <div className="space-y-5">
+    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       {/* ── Header (título do módulo + abas + ação) ─────── */}
       <AssinaturaDigitalPageNav
         action={
@@ -78,7 +79,7 @@ export function DocumentosCommandCenter({
 
       {/* ── KPI Strip (consolidado em StatCard — ver StatCard.tsx) ────── */}
       {stats && (
-        <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3 lg:grid-cols-5")}>
           <StatCard
             title="Total"
             value={stats.total}
@@ -127,7 +128,7 @@ export function DocumentosCommandCenter({
       )}
 
       {/* ── Controls ────────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
         <TabPills
           tabs={[
             { id: "todos", label: "Todos", count: stats?.total ?? 0 },
@@ -139,7 +140,7 @@ export function DocumentosCommandCenter({
           active={activeStatus}
           onChange={setActiveStatus}
         />
-        <div className="flex items-center gap-2 flex-1 justify-end">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
           <SearchInput
             value={search}
             onChange={setSearch}

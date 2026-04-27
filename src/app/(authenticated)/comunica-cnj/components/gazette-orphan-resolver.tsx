@@ -50,7 +50,7 @@ function highlightSegments(text: string, highlights: string[]): React.ReactNode 
 
   return parts.map((part, i) =>
     regex.test(part) ? (
-      <span key={i} className="bg-primary/15 px-0.5 rounded">
+      <span key={i} className={cn(/* design-system-escape: px-0.5 padding direcional sem Inset equiv. */ "bg-primary/15 px-0.5 rounded")}>
         {part}
       </span>
     ) : (
@@ -71,16 +71,16 @@ function formatDate(dateStr: string) {
 
 function ConfidenceLegend() {
   return (
-    <div className="flex items-center gap-4">
-      <span className="flex items-center gap-1.5">
+    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
+      <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
         <span className="size-2 rounded-full bg-success" aria-hidden />
         <Text variant="micro-caption">Alta (&gt;85%)</Text>
       </span>
-      <span className="flex items-center gap-1.5">
+      <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
         <span className="size-2 rounded-full bg-warning" aria-hidden />
         <Text variant="micro-caption">Média (50-85%)</Text>
       </span>
-      <span className="flex items-center gap-1.5">
+      <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
         <span className="size-2 rounded-full bg-muted-foreground" aria-hidden />
         <Text variant="micro-caption">Sem match</Text>
       </span>
@@ -99,7 +99,7 @@ function ProgressSegment({
   const pctPending = total > 0 ? ((total - resolved) / total) * 100 : 0;
 
   return (
-    <div className="space-y-1.5">
+    <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
       <div className="flex h-1.5 w-full overflow-hidden rounded-full bg-border/20">
         <div
           className="rounded-full bg-success transition-all duration-500"
@@ -119,16 +119,16 @@ function ProgressSegment({
 
 function MatchCriteriaList({ criterios }: { criterios: MatchCriterio[] }) {
   return (
-    <ul className="space-y-2">
+    <ul className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
       {criterios.map((c, i) => (
-        <li key={i} className="flex items-start gap-2">
+        <li key={i} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2")}>
           {c.match ? (
             <Check className="mt-0.5 size-3.5 shrink-0 text-success" />
           ) : (
             <Circle className="mt-0.5 size-3.5 shrink-0 text-muted-foreground/40" />
           )}
           <div className={cn(!c.match && 'opacity-50')}>
-            <span className="text-xs font-medium">{c.campo}</span>
+            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium")}>{c.campo}</span>
             <Text variant="micro-caption" className="ml-1.5">
               {c.detalhe}
             </Text>
@@ -149,20 +149,20 @@ function NoMatchState({
   onIgnorar: () => void;
 }) {
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-4 p-8 text-center">
+    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; p-8 → usar <Inset> */ "flex flex-1 flex-col items-center justify-center gap-4 p-8 text-center")}>
       <div className="flex size-14 items-center justify-center rounded-full bg-muted/40">
         <AlertCircle className="size-6 text-muted-foreground" />
       </div>
-      <div className="space-y-1">
+      <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
         <Heading level="widget">Nenhum match encontrado</Heading>
         <Text variant="caption" className="text-muted-foreground">
           Não encontramos um expediente compatível
         </Text>
       </div>
-      <div className="flex w-full max-w-60 flex-col items-center gap-2">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex w-full max-w-60 flex-col items-center gap-2")}>
         <Button
           variant="outline"
-          className="w-full gap-2 text-xs"
+          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "w-full gap-2 text-xs")}
           onClick={onBuscarManualmente}
         >
           <Search className="size-3.5" aria-hidden />
@@ -170,7 +170,7 @@ function NoMatchState({
         </Button>
         <Button
           variant="outline"
-          className="w-full gap-2 text-xs"
+          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "w-full gap-2 text-xs")}
           onClick={onCriarNovo}
         >
           <Plus className="size-3.5" aria-hidden />
@@ -178,7 +178,7 @@ function NoMatchState({
         </Button>
         <button
           type="button"
-          className="mt-1 text-xs text-muted-foreground/60 transition-colors hover:text-muted-foreground"
+          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "mt-1 text-xs text-muted-foreground/60 transition-colors hover:text-muted-foreground")}
           onClick={onIgnorar}
         >
           Ignorar
@@ -190,11 +190,11 @@ function NoMatchState({
 
 function AllResolvedState() {
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-4 p-12 text-center">
+    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; p-12 → usar <Inset> */ "flex flex-1 flex-col items-center justify-center gap-4 p-12 text-center")}>
       <div className="flex size-16 items-center justify-center rounded-full bg-success/10">
         <CheckCircle2 className="size-8 text-success" />
       </div>
-      <div className="space-y-1">
+      <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
         <Heading level="section">Tudo resolvido!</Heading>
         <Text variant="caption" className="text-muted-foreground">
           Todas as comunicações órfãs foram processadas
@@ -356,24 +356,24 @@ export function GazetteOrphanResolver() {
   return (
     <GlassPanel depth={1} className="flex h-full flex-col overflow-hidden">
       {/* ── Header ── */}
-      <div className="space-y-3 border-b border-border/40 p-4">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "space-y-3 border-b border-border/40 p-4")}>
         {/* Title row */}
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
+          <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
             <Heading level="section">Comunicações Órfãs</Heading>
             <Text
               variant="micro-badge"
-              className="inline-flex items-center rounded-full bg-warning/10 px-2 py-0.5 text-warning"
+              className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center rounded-full bg-warning/10 px-2 py-0.5 text-warning")}
             >
               {orphans.length}
             </Text>
           </div>
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             {highConfidenceCount > 0 && (
               <Button
                 variant="outline"
                 size="sm"
-                className="h-7 gap-1.5 border-success/20 bg-success/10 px-3 text-xs text-success hover:bg-success/15"
+                className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "h-7 gap-1.5 border-success/20 bg-success/10 px-3 text-xs text-success hover:bg-success/15")}
                 onClick={handleAcceptHighConfidence}
               >
                 <Check className="size-3" aria-hidden />
@@ -383,7 +383,7 @@ export function GazetteOrphanResolver() {
             <Button
               variant="outline"
               size="sm"
-              className="h-7 px-3 text-xs"
+              className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "h-7 px-3 text-xs")}
               onClick={handleIgnoreAll}
             >
               Ignorar Todos
@@ -399,12 +399,12 @@ export function GazetteOrphanResolver() {
       </div>
 
       {/* ── Navigation Bar ── */}
-      <div className="flex items-center justify-between border-b border-border/30 px-4 py-2">
-        <div className="flex items-center gap-2">
+      <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center justify-between border-b border-border/30 px-4 py-2")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           <Button
             variant="ghost"
             size="sm"
-            className="h-7 gap-1 px-2 text-xs"
+            className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "h-7 gap-1 px-2 text-xs")}
             disabled={currentIndex === 0}
             onClick={goPrev}
           >
@@ -414,7 +414,7 @@ export function GazetteOrphanResolver() {
           <Button
             variant="ghost"
             size="sm"
-            className="h-7 gap-1 px-2 text-xs"
+            className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "h-7 gap-1 px-2 text-xs")}
             disabled={currentIndex === orphans.length - 1}
             onClick={goNext}
           >
@@ -433,24 +433,24 @@ export function GazetteOrphanResolver() {
       {/* ── Split Panel ── */}
       <div className="flex flex-1 overflow-hidden">
         {/* Left — Publicacao Original */}
-        <div className="flex flex-1 flex-col overflow-y-auto border-r border-border/30 p-4">
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex flex-1 flex-col overflow-y-auto border-r border-border/30 p-4")}>
           <span className="text-overline text-muted-foreground/70">
             Publicacao Original
           </span>
 
           {/* Badges */}
-          <div className="mt-3 flex flex-wrap items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-3 flex flex-wrap items-center gap-2")}>
             {current.tipoComunicacao && (
               <Text
                 variant="micro-badge"
-                className="rounded-md bg-primary/10 px-2 py-0.5 text-primary"
+                className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "rounded-md bg-primary/10 px-2 py-0.5 text-primary")}
               >
                 {current.tipoComunicacao}
               </Text>
             )}
             <Text
               variant="micro-badge"
-              className="rounded-md bg-muted/40 px-2 py-0.5 text-muted-foreground"
+              className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "rounded-md bg-muted/40 px-2 py-0.5 text-muted-foreground")}
             >
               {current.meioCompleto ?? current.meio}
             </Text>
@@ -458,11 +458,11 @@ export function GazetteOrphanResolver() {
           </div>
 
           {/* Processo */}
-          <div className="mt-4 space-y-0.5">
+          <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "mt-4 space-y-0.5")}>
             <Text variant="overline" className="text-muted-foreground/70">
               Processo
             </Text>
-            <p className="text-sm font-medium tabular-nums text-foreground">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium tabular-nums text-foreground")}>
               {highlightSegments(
                 current.numeroProcessoMascara ?? current.numeroProcesso,
                 matchHighlights,
@@ -471,11 +471,11 @@ export function GazetteOrphanResolver() {
           </div>
 
           {/* Partes */}
-          <div className="mt-3 space-y-1.5">
+          <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "mt-3 space-y-1.5")}>
             {current.partesAutor.length > 0 && (
               <div>
                 <Text variant="micro-caption">Autor: </Text>
-                <span className="text-xs text-foreground">
+                <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground")}>
                   {highlightSegments(current.partesAutor.join(', '), matchHighlights)}
                 </span>
               </div>
@@ -483,7 +483,7 @@ export function GazetteOrphanResolver() {
             {current.partesReu.length > 0 && (
               <div>
                 <Text variant="micro-caption">Réu: </Text>
-                <span className="text-xs text-foreground">
+                <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground")}>
                   {highlightSegments(current.partesReu.join(', '), matchHighlights)}
                 </span>
               </div>
@@ -492,11 +492,11 @@ export function GazetteOrphanResolver() {
 
           {/* Órgão */}
           {current.nomeOrgao && (
-            <div className="mt-3 space-y-0.5">
+            <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "mt-3 space-y-0.5")}>
               <Text variant="overline" className="text-muted-foreground/70">
                 Órgão
               </Text>
-              <p className="text-xs text-foreground">
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground")}>
                 {highlightSegments(current.nomeOrgao, matchHighlights)}
               </p>
             </div>
@@ -504,12 +504,12 @@ export function GazetteOrphanResolver() {
 
           {/* Texto excerpt */}
           {current.texto && (
-            <div className="mt-4 space-y-1">
+            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "mt-4 space-y-1")}>
               <Text variant="overline" className="text-muted-foreground/70">
                 Trecho
               </Text>
-              <div className="rounded-lg border border-border/40 bg-muted/20 p-3">
-                <p className="line-clamp-6 text-xs leading-relaxed text-foreground/80">
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg border border-border/40 bg-muted/20 p-3")}>
+                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; leading-relaxed sem token DS */ "line-clamp-6 text-xs leading-relaxed text-foreground/80")}>
                   {highlightSegments(current.texto.slice(0, 600), matchHighlights)}
                 </p>
               </div>
@@ -518,7 +518,7 @@ export function GazetteOrphanResolver() {
         </div>
 
         {/* Right — Match Sugerido */}
-        <div className="flex flex-1 flex-col overflow-y-auto p-4">
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex flex-1 flex-col overflow-y-auto p-4")}>
           {match ? (
             <>
               {/* Header with confidence */}
@@ -526,7 +526,7 @@ export function GazetteOrphanResolver() {
                 <Text variant="overline" className="text-muted-foreground/70">
                   Match Sugerido
                 </Text>
-                <div className="flex items-center gap-2">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                   <div className="h-1.5 w-16 overflow-hidden rounded-full bg-border/20">
                     <div
                       className={cn(
@@ -538,7 +538,7 @@ export function GazetteOrphanResolver() {
                   </div>
                   <span
                     className={cn(
-                      'text-sm font-bold tabular-nums',
+                      /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ 'text-sm font-bold tabular-nums',
                       confidenceColor(match.confianca),
                     )}
                   >
@@ -548,41 +548,41 @@ export function GazetteOrphanResolver() {
               </div>
 
               {/* Match card */}
-              <div className="mt-3 space-y-2.5 rounded-xl border border-success/20 bg-success/5 p-4">
+              <div className={cn(/* design-system-escape: space-y-2.5 sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "mt-3 space-y-2.5 rounded-xl border border-success/20 bg-success/5 p-4")}>
                 <div>
                   <Text variant="micro-caption">Expediente</Text>
-                  <p className="text-sm font-semibold text-foreground">
+                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold text-foreground")}>
                     #{match.expedienteNumero}
                   </p>
                 </div>
                 <div>
                   <Text variant="micro-caption">Processo</Text>
-                  <p className="text-xs tabular-nums text-foreground">
+                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs tabular-nums text-foreground")}>
                     {match.processoNumero}
                   </p>
                 </div>
                 <div>
                   <Text variant="micro-caption">Partes</Text>
-                  <p className="text-xs text-foreground">{match.partes}</p>
+                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground")}>{match.partes}</p>
                 </div>
-                <div className="flex gap-4">
+                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}>
                   <div>
                     <Text variant="micro-caption">Vara</Text>
-                    <p className="text-xs text-foreground">{match.vara}</p>
+                    <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground")}>{match.vara}</p>
                   </div>
                   <div>
                     <Text variant="micro-caption">Status</Text>
-                    <p className="text-xs text-foreground">{match.status}</p>
+                    <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground")}>{match.status}</p>
                   </div>
                 </div>
                 <div>
                   <Text variant="micro-caption">Criado em</Text>
-                  <p className="text-xs text-foreground">{formatDate(match.criadoEm)}</p>
+                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground")}>{formatDate(match.criadoEm)}</p>
                 </div>
               </div>
 
               {/* Criteria */}
-              <div className="mt-4 space-y-2">
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "mt-4 space-y-2")}>
                 <Text variant="overline" className="text-muted-foreground/70">
                   Critérios de Match
                 </Text>
@@ -590,19 +590,19 @@ export function GazetteOrphanResolver() {
               </div>
 
               {/* Action buttons */}
-              <div className="mt-6 space-y-2">
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "mt-6 space-y-2")}>
                 <button
                   type="button"
-                  className="w-full rounded-xl border border-success/20 bg-success/10 py-2.5 text-center text-xs font-medium text-success transition-colors hover:bg-success/15"
+                  className={cn(/* design-system-escape: py-2.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "w-full rounded-xl border border-success/20 bg-success/10 py-2.5 text-center text-xs font-medium text-success transition-colors hover:bg-success/15")}
                   onClick={() => handleVincular(current)}
                 >
                   Vincular a Este Expediente
                 </button>
-                <div className="grid grid-cols-2 gap-2">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2")}>
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-9 gap-1.5 text-xs"
+                    className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "h-9 gap-1.5 text-xs")}
                     onClick={() => {
                       /* TODO: buscar outro */
                     }}
@@ -613,7 +613,7 @@ export function GazetteOrphanResolver() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-9 gap-1.5 text-xs"
+                    className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "h-9 gap-1.5 text-xs")}
                     onClick={() => {
                       /* TODO: criar expediente */
                     }}
@@ -624,7 +624,7 @@ export function GazetteOrphanResolver() {
                 </div>
                 <button
                   type="button"
-                  className="w-full text-center text-xs text-muted-foreground/60 transition-colors hover:text-muted-foreground"
+                  className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "w-full text-center text-xs text-muted-foreground/60 transition-colors hover:text-muted-foreground")}
                   onClick={() => handleIgnorar(current)}
                 >
                   <Ban className="mr-1 inline size-3" aria-hidden />

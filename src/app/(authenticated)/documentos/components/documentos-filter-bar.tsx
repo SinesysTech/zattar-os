@@ -58,7 +58,7 @@ interface DocumentosFilterBarProps {
 
 // ── Shared ───────────────────────────────────────────────────────────
 
-const POPOVER_CLASSES = 'rounded-2xl glass-dropdown overflow-hidden p-0';
+const POPOVER_CLASSES = /* design-system-escape: p-0 → usar <Inset> */ 'rounded-2xl glass-dropdown overflow-hidden p-0';
 
 function FilterDropdownTrigger({
   label,
@@ -76,7 +76,7 @@ function FilterDropdownTrigger({
   return (
     <div
       className={cn(
-        'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
+        /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
         active
           ? 'border-primary/20 bg-primary/5 text-primary'
           : 'border-border/15 text-muted-foreground/60 hover:bg-muted/30',
@@ -92,7 +92,7 @@ function FilterDropdownTrigger({
             e.stopPropagation();
             onClear();
           }}
-          className="ml-0.5 rounded-full p-0.5 hover:bg-primary/10 transition-colors"
+          className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-0.5 rounded-full p-0.5 hover:bg-primary/10 transition-colors")}
         >
           <X className="size-2.5" />
         </span>
@@ -143,7 +143,7 @@ function TipoFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-52')} align="start" side="bottom">
-        <div className="p-2 space-y-0.5">
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-0.5 sem token DS */ "p-2 space-y-0.5")}>
           {TIPO_OPTIONS.map((opt) => {
             const count = counts[opt.countKey];
             return (
@@ -155,7 +155,7 @@ function TipoFilter({
                   setOpen(false);
                 }}
                 className={cn(
-                  'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
+                  /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
                   selected === opt.value
                     ? 'bg-primary/8 text-primary'
                     : 'hover:bg-muted/30 text-muted-foreground/70',
@@ -215,10 +215,10 @@ function CriadorFilter({
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-56')} align="start" side="bottom">
         <Command className="bg-transparent">
-          <div className="px-3 pt-3 pb-1.5">
-            <CommandInput placeholder="Buscar criador..." className="h-8 text-xs rounded-lg" />
+          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
+            <CommandInput placeholder="Buscar criador..." className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs rounded-lg")} />
           </div>
-          <CommandList className="max-h-52 px-1.5 pb-1.5">
+          <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-52 px-1.5 pb-1.5")}>
             <CommandEmpty>
               <Text variant="caption" as="span" className="text-muted-foreground/40">Não encontrado</Text>
             </CommandEmpty>
@@ -231,7 +231,7 @@ function CriadorFilter({
                     onChange(selected === criador.id ? null : criador.id);
                     setOpen(false);
                   }}
-                  className="gap-2 rounded-lg text-xs px-2 py-1.5"
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-xs px-2 py-1.5")}
                 >
                   <Avatar size="xs" className="border size-5">
                     <AvatarImage src={criador.avatarUrl || undefined} />
@@ -287,7 +287,7 @@ function PeriodoFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-48')} align="start" side="bottom">
-        <div className="p-2 space-y-0.5">
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-0.5 sem token DS */ "p-2 space-y-0.5")}>
           {PERIODO_OPTIONS.map((opt) => (
             <button
               key={opt.value}
@@ -297,7 +297,7 @@ function PeriodoFilter({
                 setOpen(false);
               }}
               className={cn(
-                'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
+                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
                 selected === opt.value
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70',
@@ -322,7 +322,7 @@ export function DocumentosFilterBar({
   counts,
 }: DocumentosFilterBarProps) {
   return (
-    <div className="flex items-center gap-2 flex-wrap">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
       <TipoFilter
         selected={filters.tipo}
         onChange={(tipo) => onChange({ ...filters, tipo })}

@@ -192,14 +192,14 @@ function criarColunas(
         const conta = row.original;
         return (
           <div className="min-h-10 flex flex-col justify-center">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">{conta.descricao}</span>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{conta.descricao}</span>
               {conta.recorrencia && (
                 <Repeat className="h-3 w-3 text-muted-foreground" aria-label="Recorrente" />
               )}
             </div>
             {conta.entidade && (
-              <span className="text-xs text-muted-foreground">
+              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                 {conta.entidade.nome}
               </span>
             )}
@@ -243,7 +243,7 @@ function criarColunas(
       cell: ({ row }) => {
         const valor = row.getValue('valor') as number;
         return (
-          <div className="min-h-10 flex items-center justify-end font-mono text-sm font-medium">
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "min-h-10 flex items-center justify-end font-mono text-sm font-medium")}>
             {formatarValor(valor)}
           </div>
         );
@@ -264,8 +264,8 @@ function criarColunas(
         return (
           <div
             className={cn(
-              'min-h-10 flex items-center justify-center text-sm',
-              vencida && 'text-destructive font-medium'
+              /* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ 'min-h-10 flex items-center justify-center text-sm',
+              vencida && /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-destructive font-medium'
             )}
           >
             {formatarData(conta.dataVencimento)}
@@ -303,7 +303,7 @@ function criarColunas(
       id: 'acoes',
       header: () => (
         <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">Ações</div>
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Ações</div>
         </div>
       ),
       enableSorting: false,
@@ -616,7 +616,7 @@ export default function ContasPagarPage() {
               }
             />
           ) : (
-            <div className="p-6" />
+            <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")} />
           )
         }
         footer={
@@ -677,7 +677,7 @@ export default function ContasPagarPage() {
             <AlertDialogDescription>
               Tem certeza que deseja cancelar esta conta?
               {selectedConta && (
-                <span className="block mt-2 font-medium text-foreground">
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "block mt-2 font-medium text-foreground")}>
                   {selectedConta.descricao} - {formatarValor(selectedConta.valor)}
                 </span>
               )}
@@ -701,11 +701,11 @@ export default function ContasPagarPage() {
             <AlertDialogDescription>
               Tem certeza que deseja excluir permanentemente esta conta?
               {selectedConta && (
-                <span className="block mt-2 font-medium text-foreground">
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "block mt-2 font-medium text-foreground")}>
                   {selectedConta.descricao} - {formatarValor(selectedConta.valor)}
                 </span>
               )}
-              <span className="block mt-2 text-destructive font-medium">
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "block mt-2 text-destructive font-medium")}>
                 Esta ação não pode ser desfeita!
               </span>
             </AlertDialogDescription>

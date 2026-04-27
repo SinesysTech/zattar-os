@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { Trash2} from "lucide-react";
@@ -44,7 +45,7 @@ export function SettingsView({ projetoId }: SettingsViewProps) {
   };
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "mx-auto max-w-3xl space-y-6")}>
       <Heading level="page">
         Configurações do Projeto
       </Heading>

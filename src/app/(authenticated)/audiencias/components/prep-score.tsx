@@ -121,7 +121,7 @@ export function PrepScore({ audiencia, className, showBreakdown = false, size = 
   };
 
   return (
-    <div className={cn("flex items-start gap-3", className)}>
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3", className)}>
       {/* Ring */}
       <div className="relative shrink-0" style={{ width: cfg.ring, height: cfg.ring }}>
         <svg width={cfg.ring} height={cfg.ring} className="-rotate-90">
@@ -150,7 +150,7 @@ export function PrepScore({ audiencia, className, showBreakdown = false, size = 
         <div className="absolute inset-0 flex items-center justify-center">
           <Text
             variant="label"
-            className={cn("font-semibold tabular-nums leading-none", cfg.text, statusTextColors[status])}
+            className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-none sem token DS */ "font-semibold tabular-nums leading-none", cfg.text, statusTextColors[status])}
           >
             {score}%
           </Text>
@@ -159,9 +159,9 @@ export function PrepScore({ audiencia, className, showBreakdown = false, size = 
 
       {/* Breakdown */}
       {showBreakdown && (
-        <div className="flex-1 min-w-0 space-y-1">
+        <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "flex-1 min-w-0 space-y-1")}>
           {items.map((item) => (
-            <div key={item.label} className="flex items-center gap-1.5">
+            <div key={item.label} className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
               {item.done ? (
                 <CheckCircle2 className="size-2.5 text-success/60 shrink-0" />
               ) : (
@@ -199,7 +199,7 @@ export function PrepScoreBadge({ audiencia, className }: { audiencia: Audiencia;
 
   return (
     <span className={cn(
-      "inline-flex items-center gap-0.5 px-1.5 py-px rounded-full text-micro-badge font-semibold tabular-nums shrink-0",
+      /* design-system-escape: gap-0.5 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-0.5 px-1.5 py-px rounded-full text-micro-badge font-semibold tabular-nums shrink-0",
       badgeStyles[status],
       className,
     )}>

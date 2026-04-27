@@ -10,6 +10,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useMemo } from 'react';
 import { CalendarDays, Clock, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { parseISO, isSameWeek, isSameMonth } from 'date-fns';
@@ -130,14 +131,14 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
   return (
     <div className={`grid grid-cols-2 lg:grid-cols-4 gap-3 ${className ?? ''}`}>
       {/* ── Semana ─────────────────────────────────────── */}
-      <GlassPanel className="px-4 py-3">
-        <div className="flex items-start justify-between gap-2">
+      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <Text variant="micro-caption" as="p" className="font-medium uppercase tracking-wider text-muted-foreground/60">
+            <Text variant="micro-caption" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "font-medium uppercase tracking-wider text-muted-foreground/60")}>
               Semana
             </Text>
-            <div className="flex items-baseline gap-1.5 mt-1">
-              <p className="font-display text-xl font-bold tabular-nums leading-none">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
                 <AnimatedNumber value={stats.totalSemana} />
               </p>
               <span className="text-micro-caption text-muted-foreground/45">audiências</span>
@@ -148,7 +149,7 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
           </IconContainer>
         </div>
         {/* Sparkline de tendência 6m */}
-        <div className="mt-2.5 flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
           <Sparkline data={stats.trend.length >= 2 ? stats.trend : [0, 0]} width={80} height={16} />
           {stats.trend.length >= 2 && stats.trend[0] > 0 && (
             <span className={`text-micro-caption font-medium tabular-nums ${
@@ -161,14 +162,14 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
       </GlassPanel>
 
       {/* ── Próxima ────────────────────────────────────── */}
-      <GlassPanel className="px-4 py-3">
-        <div className="flex items-start justify-between gap-2">
+      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <Text variant="micro-caption" as="p" className="font-medium uppercase tracking-wider text-muted-foreground/60">
+            <Text variant="micro-caption" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "font-medium uppercase tracking-wider text-muted-foreground/60")}>
               Próxima
             </Text>
-            <div className="flex items-baseline gap-1.5 mt-1">
-              <p className="font-display text-xl font-bold tabular-nums leading-none">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
                 {stats.nextLabel}
               </p>
             </div>
@@ -190,14 +191,14 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
       </GlassPanel>
 
       {/* ── Realizadas ─────────────────────────────────── */}
-      <GlassPanel className="px-4 py-3">
-        <div className="flex items-start justify-between gap-2">
+      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <Text variant="micro-caption" as="p" className="font-medium uppercase tracking-wider text-muted-foreground/60">
+            <Text variant="micro-caption" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "font-medium uppercase tracking-wider text-muted-foreground/60")}>
               Realizadas
             </Text>
-            <div className="flex items-baseline gap-1.5 mt-1">
-              <p className="font-display text-xl font-bold tabular-nums leading-none">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
                 <AnimatedNumber value={stats.realizadasMes} />
               </p>
               <span className="text-micro-caption text-muted-foreground/45">/ {stats.relevantesMes} mês</span>
@@ -208,7 +209,7 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
           </IconContainer>
         </div>
         {/* Barra de taxa de realização */}
-        <div className="mt-2.5 flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full bg-success/25 transition-all duration-500"
@@ -222,14 +223,14 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
       </GlassPanel>
 
       {/* ── Preparo ────────────────────────────────────── */}
-      <GlassPanel className="px-4 py-3">
-        <div className="flex items-start justify-between gap-2">
+      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <Text variant="micro-caption" as="p" className="font-medium uppercase tracking-wider text-muted-foreground/60">
+            <Text variant="micro-caption" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "font-medium uppercase tracking-wider text-muted-foreground/60")}>
               Preparo
             </Text>
-            <div className="flex items-baseline gap-1.5 mt-1">
-              <p className="font-display text-xl font-bold tabular-nums leading-none">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
                 {stats.avgPrep}%
               </p>
               <span className="text-micro-caption text-muted-foreground/45">média</span>
@@ -240,7 +241,7 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
           </IconContainer>
         </div>
         {/* Barra de preparo com cor dinâmica */}
-        <div className="mt-2.5 flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full transition-all duration-500"

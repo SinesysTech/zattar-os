@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -102,14 +103,14 @@ export function ComposeMailDialog({ children }: ComposeMailDialogProps) {
           <DialogTitle>Novo E-mail</DialogTitle>
         </DialogHeader>
 
-        <div className="grid gap-3 py-2">
-          <div className="grid gap-2">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "grid gap-3 py-2")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
             <div className="flex items-center justify-between">
               <Label htmlFor="compose-to">Para</Label>
               {!showCcBcc && (
                 <button
                   type="button"
-                  className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                  className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground hover:text-foreground transition-colors")}
                   onClick={() => setShowCcBcc(true)}>
                   Cc / Cco
                 </button>
@@ -126,7 +127,7 @@ export function ComposeMailDialog({ children }: ComposeMailDialogProps) {
 
           {showCcBcc && (
             <>
-              <div className="grid gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                 <Label htmlFor="compose-cc">Cc</Label>
                 <Input
                   id="compose-cc"
@@ -136,7 +137,7 @@ export function ComposeMailDialog({ children }: ComposeMailDialogProps) {
                   onChange={(e) => setCc(e.target.value)}
                 />
               </div>
-              <div className="grid gap-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                 <Label htmlFor="compose-bcc">Cco</Label>
                 <Input
                   id="compose-bcc"
@@ -149,7 +150,7 @@ export function ComposeMailDialog({ children }: ComposeMailDialogProps) {
             </>
           )}
 
-          <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
             <Label htmlFor="compose-subject">Assunto</Label>
             <Input
               id="compose-subject"
@@ -160,7 +161,7 @@ export function ComposeMailDialog({ children }: ComposeMailDialogProps) {
             />
           </div>
 
-          <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
             <Label>Mensagem</Label>
             <MailEditor editorRef={editorRef} placeholder="Escreva sua mensagem..." />
           </div>

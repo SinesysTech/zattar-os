@@ -24,7 +24,7 @@ function SidebarItem({ entry, level = 0 }: { entry: DocEntry; level?: number }) 
         <button
           onClick={() => setExpanded(!expanded)}
           className={cn(
-            'flex w-full items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-medium transition-colors hover:bg-accent',
+            /* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ 'flex w-full items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-medium transition-colors hover:bg-accent',
             (isActive || isParentActive) && 'text-primary',
           )}
           style={{ paddingLeft: `${level * 12 + 8}px` }}
@@ -49,8 +49,8 @@ function SidebarItem({ entry, level = 0 }: { entry: DocEntry; level?: number }) 
     <Link
       href={href}
       className={cn(
-        'flex items-center rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-accent',
-        isActive ? 'bg-accent text-primary font-medium' : 'text-muted-foreground',
+        /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ 'flex items-center rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-accent',
+        isActive ? /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'bg-accent text-primary font-medium' : 'text-muted-foreground',
       )}
       style={{ paddingLeft: `${level * 12 + 8}px` }}
     >
@@ -87,14 +87,14 @@ export function DocsSidebar() {
 
   return (
     <aside className="hidden md:flex w-64 shrink-0 flex-col border-r">
-      <div className="p-3 border-b">
+      <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3 border-b")}>
         <div className="relative">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Buscar na documentação..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-8 h-9"
+            className={cn(/* design-system-escape: pl-8 padding direcional sem Inset equiv. */ "pl-8 h-9")}
           />
           {search && (
             <Button
@@ -108,13 +108,13 @@ export function DocsSidebar() {
           )}
         </div>
       </div>
-      <ScrollArea className="flex-1 p-3">
-        <nav className="space-y-1">
+      <ScrollArea className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex-1 p-3")}>
+        <nav className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
           {filteredEntries.map((entry) => (
             <SidebarItem key={entry.slug} entry={entry} />
           ))}
           {filteredEntries.length === 0 && (
-            <p className="text-sm text-muted-foreground px-2 py-4">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; px-2 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "text-sm text-muted-foreground px-2 py-4")}>
               Nenhum resultado encontrado.
             </p>
           )}

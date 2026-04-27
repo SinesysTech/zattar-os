@@ -11,6 +11,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { CheckSquare } from 'lucide-react';
 import {
@@ -98,20 +99,20 @@ export function WidgetTarefasStatus() {
       subtitle="Distribuição real das tarefas"
       depth={1}
     >
-      <div className="flex items-center gap-5">
+      <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5")}>
         <MiniDonut
           segments={segments.length > 0 ? segments : [{ value: 1, color: 'var(--muted)', label: 'Vazio' }]}
           size={88}
           strokeWidth={11}
           centerLabel={fmtNum(total)}
         />
-        <div className="flex flex-col gap-2 flex-1 min-w-0">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2 flex-1 min-w-0")}>
           {[
             { label: 'Pendentes', value: pendentes, color: 'var(--warning)' },
             { label: 'Em Andamento', value: emAndamento, color: 'hsl(220 70% 60%)' },
             { label: 'Concluídas', value: concluidas, color: 'hsl(142 60% 45%)' },
           ].map((row) => (
-            <div key={row.label} className="flex items-center gap-2">
+            <div key={row.label} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <span
                 className="size-2 rounded-full shrink-0"
                 style={{ backgroundColor: row.color }}
@@ -119,7 +120,7 @@ export function WidgetTarefasStatus() {
               <span className="text-[10px] text-muted-foreground/60 truncate flex-1">
                 {row.label}
               </span>
-              <span className="text-[10px] font-medium tabular-nums">
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums")}>
                 {fmtNum(row.value)}
               </span>
             </div>
@@ -128,12 +129,12 @@ export function WidgetTarefasStatus() {
       </div>
 
       {/* Barra de progresso */}
-      <div className="mt-4 pt-3 border-t border-border/10 space-y-1.5">
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; space-y-1.5 sem token DS */ "mt-4 pt-3 border-t border-border/10 space-y-1.5")}>
         <div className="flex items-center justify-between">
-          <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+          <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Taxa de conclusão
           </span>
-          <span className="text-[10px] font-semibold tabular-nums">
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold tabular-nums")}>
             {taxaConclusao}%
           </span>
         </div>

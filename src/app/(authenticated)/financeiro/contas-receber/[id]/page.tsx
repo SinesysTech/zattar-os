@@ -118,13 +118,13 @@ function DetalheItem({
   className?: string;
 }) {
   return (
-    <div className={cn('flex items-start gap-3', className)}>
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ 'flex items-start gap-3', className)}>
       <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted">
         <Icon className="h-4 w-4 text-muted-foreground" />
       </div>
-      <div className="space-y-1">
-        <p className="text-sm text-muted-foreground">{label}</p>
-        <div className="font-medium">{value}</div>
+      <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{label}</p>
+        <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{value}</div>
       </div>
     </div>
   );
@@ -195,15 +195,15 @@ export default function ContaReceberDetalhesPage() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center gap-4">
+      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
           <Skeleton className="h-10 w-10" />
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Skeleton className="h-8 w-64" />
             <Skeleton className="h-4 w-40" />
           </div>
         </div>
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "grid gap-6 md:grid-cols-2")}>
           <Skeleton className="h-64" />
           <Skeleton className="h-64" />
         </div>
@@ -214,13 +214,13 @@ export default function ContaReceberDetalhesPage() {
   // Error state
   if (error) {
     return (
-      <div className="space-y-4">
+      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         <Button variant="ghost" onClick={handleVoltar}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
         </Button>
-        <div className="rounded-md bg-destructive/15 p-4 text-sm text-destructive">
-          <p className="font-semibold">Erro ao carregar conta:</p>
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-4 text-sm text-destructive")}>
+          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Erro ao carregar conta:</p>
           <p>{error}</p>
         </div>
       </div>
@@ -230,14 +230,14 @@ export default function ContaReceberDetalhesPage() {
   // Not found state
   if (!contaReceber) {
     return (
-      <div className="space-y-4">
+      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         <Button variant="ghost" onClick={handleVoltar}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
         </Button>
-        <div className="rounded-md bg-muted p-8 text-center">
-          <p className="text-lg font-medium">Conta não encontrada</p>
-          <p className="text-sm text-muted-foreground">
+        <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "rounded-md bg-muted p-8 text-center")}>
+          <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-medium → className de <Text>/<Heading> */ "text-lg font-medium")}>Conta não encontrada</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
             A conta solicitada não existe ou foi removida.
           </p>
         </div>
@@ -249,10 +249,10 @@ export default function ContaReceberDetalhesPage() {
   const isPendente = contaReceber.status === 'pendente';
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
           <Button variant="ghost" size="icon" aria-label="Voltar" onClick={handleVoltar}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
@@ -269,7 +269,7 @@ export default function ContaReceberDetalhesPage() {
 
         {/* Actions */}
         {isPendente && (
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <Button variant="outline" onClick={() => setEditDialogOpen(true)}>
               <Pencil className="mr-2 h-4 w-4" />
               Editar
@@ -288,11 +288,11 @@ export default function ContaReceberDetalhesPage() {
 
       {/* Alert Vencida */}
       {isVencida && (
-        <div className="flex items-center gap-3 rounded-lg border border-destructive/50 bg-destructive/10 p-4">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex items-center gap-3 rounded-lg border border-destructive/50 bg-destructive/10 p-4")}>
           <AlertTriangle className="h-5 w-5 text-destructive" />
           <div>
-            <p className="font-medium text-destructive">Conta Inadimplente</p>
-            <p className="text-sm text-destructive/80">
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-destructive")}>Conta Inadimplente</p>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive/80")}>
               Esta conta venceu em {formatarData(contaReceber.dataVencimento)}. Entre em contato
               com o cliente para regularização.
             </p>
@@ -307,21 +307,21 @@ export default function ContaReceberDetalhesPage() {
       />
 
       {/* Cards de detalhes */}
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "grid gap-6 md:grid-cols-2")}>
         {/* Informações Financeiras */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <DollarSign className="h-5 w-5" />
               Informações Financeiras
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             <DetalheItem
               icon={DollarSign}
               label="Valor Total"
               value={
-                <span className="text-xl font-bold text-success">
+                <span className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-xl font-bold text-success")}>
                   {formatarValor(contaReceber.valor)}
                 </span>
               }
@@ -337,7 +337,7 @@ export default function ContaReceberDetalhesPage() {
                     icon={CheckCircle2}
                     label="Valor Recebido"
                     value={
-                      <span className="font-semibold text-success">
+                      <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-success")}>
                         {formatarValor(historico.valorTotalRecebido)}
                       </span>
                     }
@@ -347,7 +347,7 @@ export default function ContaReceberDetalhesPage() {
                       icon={CircleDollarSign}
                       label="Valor Pendente"
                       value={
-                        <span className="font-semibold text-warning">
+                        <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-warning")}>
                           {formatarValor(historico.valorPendente)}
                         </span>
                       }
@@ -396,23 +396,23 @@ export default function ContaReceberDetalhesPage() {
         {/* Informações de Vinculação */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <Building2 className="h-5 w-5" />
               Vinculações
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             {contaReceber.cliente ? (
               <DetalheItem
                 icon={User}
                 label="Cliente"
                 value={
                   <div>
-                    <p className="font-medium">
+                    <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
                       {contaReceber.cliente.nomeFantasia || contaReceber.cliente.razaoSocial}
                     </p>
                     {contaReceber.cliente.cnpj && (
-                      <p className="text-sm text-muted-foreground">
+                      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                         CNPJ: {contaReceber.cliente.cnpj}
                       </p>
                     )}
@@ -420,7 +420,7 @@ export default function ContaReceberDetalhesPage() {
                 }
               />
             ) : (
-              <p className="text-sm text-muted-foreground">Nenhum cliente vinculado</p>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Nenhum cliente vinculado</p>
             )}
             {contaReceber.contrato && (
               <DetalheItem
@@ -428,9 +428,9 @@ export default function ContaReceberDetalhesPage() {
                 label="Contrato"
                 value={
                   <div>
-                    <p className="font-medium">{contaReceber.contrato.numero}</p>
+                    <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{contaReceber.contrato.numero}</p>
                     {contaReceber.contrato.descricao && (
-                      <p className="text-sm text-muted-foreground">
+                      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                         {contaReceber.contrato.descricao}
                       </p>
                     )}
@@ -481,7 +481,7 @@ export default function ContaReceberDetalhesPage() {
             <Card className="md:col-span-2">
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle className="flex items-center gap-2">
+                  <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                     <History className="h-5 w-5" />
                     Histórico de Recebimentos
                   </CardTitle>
@@ -505,9 +505,9 @@ export default function ContaReceberDetalhesPage() {
                   {/* Timeline line */}
                   <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-muted" />
 
-                  <div className="space-y-6">
+                  <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
                     {historico!.recebimentos.map((recebimento, index) => (
-                      <div key={recebimento.id} className="relative flex gap-4">
+                      <div key={recebimento.id} className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "relative flex gap-4")}>
                         {/* Timeline dot */}
                         <div
                           className={cn(
@@ -525,16 +525,16 @@ export default function ContaReceberDetalhesPage() {
                         </div>
 
                         {/* Content */}
-                        <div className="flex-1 pb-4">
-                          <div className="flex items-start justify-between gap-4">
+                        <div className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "flex-1 pb-4")}>
+                          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start justify-between gap-4")}>
                             <div>
-                              <p className="font-medium">
+                              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
                                 {formatarValor(recebimento.valor)}
-                                <span className="ml-2 text-sm font-normal text-muted-foreground">
+                                <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "ml-2 text-sm font-normal text-muted-foreground")}>
                                   via {FORMA_PAGAMENTO_LABELS[recebimento.formaRecebimento] || recebimento.formaRecebimento}
                                 </span>
                               </p>
-                              <p className="text-sm text-muted-foreground">
+                              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                                 {formatarData(recebimento.dataRecebimento)}
                               </p>
                             </div>
@@ -543,7 +543,7 @@ export default function ContaReceberDetalhesPage() {
                                 href={recebimento.comprovante.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-1 text-sm text-primary hover:underline"
+                                className={cn(/* design-system-escape: gap-1 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-1 text-sm text-primary hover:underline")}
                               >
                                 <Paperclip className="h-3 w-3" />
                                 Comprovante
@@ -551,7 +551,7 @@ export default function ContaReceberDetalhesPage() {
                             )}
                           </div>
                           {recebimento.observacoes && (
-                            <p className="mt-1 text-sm text-muted-foreground">
+                            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-1 text-sm text-muted-foreground")}>
                               {recebimento.observacoes}
                             </p>
                           )}
@@ -569,13 +569,13 @@ export default function ContaReceberDetalhesPage() {
         {contaReceber.observacoes && (
           <Card className="md:col-span-2">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <FileText className="h-5 w-5" />
                 Observações
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="whitespace-pre-wrap text-sm">{contaReceber.observacoes}</p>
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "whitespace-pre-wrap text-sm")}>{contaReceber.observacoes}</p>
             </CardContent>
           </Card>
         )}
@@ -584,7 +584,7 @@ export default function ContaReceberDetalhesPage() {
         {contaReceber.anexos && contaReceber.anexos.length > 0 && (
           <Card className="md:col-span-2">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <Paperclip className="h-5 w-5" />
                 Anexos
               </CardTitle>
@@ -593,7 +593,7 @@ export default function ContaReceberDetalhesPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3 sm:grid-cols-2 lg:grid-cols-3")}>
                 {contaReceber.anexos.map((anexo: { nome: string; url: string; tipo?: string; tamanho?: number }, index: number) => {
                   const isImage = anexo.tipo?.startsWith('image/');
                   const isPdf = anexo.tipo === 'application/pdf';
@@ -605,14 +605,14 @@ export default function ContaReceberDetalhesPage() {
                       href={anexo.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:bg-muted/50"
+                      className={cn(/* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ "flex items-center gap-3 rounded-lg border p-3 transition-colors hover:bg-muted/50")}
                     >
                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-muted">
                         <FileIcon className="h-5 w-5 text-muted-foreground" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-medium">{anexo.nome}</p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "truncate text-sm font-medium")}>{anexo.nome}</p>
+                        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                           {anexo.tamanho
                             ? `${(anexo.tamanho / 1024).toFixed(1)} KB`
                             : 'Tamanho desconhecido'}
@@ -630,14 +630,14 @@ export default function ContaReceberDetalhesPage() {
         {/* Informações de Auditoria */}
         <Card className="md:col-span-2">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <Clock className="h-5 w-5" />
               Auditoria
             </CardTitle>
             <CardDescription>Informações de criação e atualização</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-4 sm:grid-cols-3">
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 sm:grid-cols-3")}>
               <DetalheItem
                 icon={Calendar}
                 label="Data de Lançamento"
@@ -685,7 +685,7 @@ export default function ContaReceberDetalhesPage() {
             <AlertDialogTitle>Cancelar Conta a Receber</AlertDialogTitle>
             <AlertDialogDescription>
               Tem certeza que deseja cancelar esta conta?
-              <span className="block mt-2 font-medium text-foreground">
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "block mt-2 font-medium text-foreground")}>
                 {contaReceber.descricao} - {formatarValor(contaReceber.valor)}
               </span>
               <span className="block mt-2 text-warning">

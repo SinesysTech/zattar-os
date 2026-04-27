@@ -60,9 +60,9 @@ export function ExpedientesTabsCarousel({
 }: ExpedientesTabsCarouselProps) {
   return (
     <div className={cn('flex flex-col h-full', className)}>
-      <Tabs value={activeTab} onValueChange={onTabChange} className="flex flex-col gap-0 h-full">
+      <Tabs value={activeTab} onValueChange={onTabChange} className={cn(/* design-system-escape: gap-0 gap sem token DS */ "flex flex-col gap-0 h-full")}>
         {/* Tabs List - estilo lifted (tabs-13 pattern) */}
-        <TabsList className="bg-background justify-start rounded-none border-b border-border p-0 h-auto">
+        <TabsList className={cn(/* design-system-escape: p-0 → usar <Inset> */ "bg-background justify-start rounded-none border-b border-border p-0 h-auto")}>
           {tabs.map((tab) => {
             const isActive = activeTab === tab.value;
             return (
@@ -85,8 +85,8 @@ export function ExpedientesTabsCarousel({
                   'dark:border-b-0',
                   'dark:data-[state=active]:-mb-0.5',
                   // Custom styles for icon support
-                  'flex items-center gap-1.5 px-4 py-2',
-                  'text-sm font-medium',
+                  /* design-system-escape: gap-1.5 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'flex items-center gap-1.5 px-4 py-2',
+                  /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ 'text-sm font-medium',
                   'whitespace-nowrap',
                   // Active state removes border-b when carousel exists (visual integration)
                   isActive && carousel && 'border-b-0 -mb-px'
@@ -109,7 +109,7 @@ export function ExpedientesTabsCarousel({
                 // Borders: left, right, bottom only (top integrates with tab)
                 'border-x border-b border-border',
                 'rounded-b-lg',
-                'p-4',
+                /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'p-4',
                 carouselClassName
               )}
             >
@@ -119,7 +119,7 @@ export function ExpedientesTabsCarousel({
 
           {/* Conteúdo principal */}
           {children && (
-            <div className={cn('flex-1 flex flex-col gap-4 mt-4 min-h-0', contentClassName)}>
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ 'flex-1 flex flex-col gap-4 mt-4 min-h-0', contentClassName)}>
               {children}
             </div>
           )}

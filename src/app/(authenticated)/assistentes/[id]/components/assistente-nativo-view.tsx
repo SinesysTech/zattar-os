@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useState, useCallback } from 'react';
 import {
   DifyChatPanel,
@@ -49,7 +50,7 @@ export function AssistenteNativoView({ appId, appType, metadata }: AssistenteNat
 
     case 'workflow':
       return (
-        <div className="h-full overflow-auto p-4">
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "h-full overflow-auto p-4")}>
           <WorkflowRunner appId={appId} defaultInputs={submittedInputs} className="max-w-3xl mx-auto" />
         </div>
       );

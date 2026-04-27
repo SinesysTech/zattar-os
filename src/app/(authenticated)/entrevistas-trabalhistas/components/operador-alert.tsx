@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Info, AlertTriangle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
@@ -14,7 +15,7 @@ export function OperadorAlert({ tipo = 'info', children }: OperadorAlertProps) {
   return (
     <Alert variant={tipo === 'aviso' ? 'destructive' : 'default'} className="mt-3">
       <Icon className="h-4 w-4" />
-      <AlertDescription className="text-sm">{children}</AlertDescription>
+      <AlertDescription className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{children}</AlertDescription>
     </Alert>
   );
 }

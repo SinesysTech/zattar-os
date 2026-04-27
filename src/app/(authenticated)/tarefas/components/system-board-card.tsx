@@ -34,34 +34,34 @@ export function SystemBoardCard({ event }: SystemBoardCardProps) {
 
   return (
     <Card className={cn("border-l-4 transition-colors hover:bg-accent/50", colorClass)}>
-      <CardHeader className="p-3 pb-1">
-        <div className="flex items-center gap-1.5 flex-wrap">
+      <CardHeader className={cn(/* design-system-escape: p-3 → usar <Inset>; pb-1 padding direcional sem Inset equiv. */ "p-3 pb-1")}>
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 flex-wrap")}>
           {sourceLabel && (
-            <AppBadge variant="outline" className="text-[10px] px-1 py-0">
+            <AppBadge variant="outline" className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1 py-0")}>
               {sourceLabel}
             </AppBadge>
           )}
           {event.prazoVencido && (
-            <AppBadge variant="destructive" className="text-[10px] px-1 py-0">
+            <AppBadge variant="destructive" className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1 py-0")}>
               Vencido
             </AppBadge>
           )}
         </div>
-        <CardTitle className="text-sm font-medium leading-tight line-clamp-2">
+        <CardTitle className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-sm font-medium leading-tight line-clamp-2")}>
           {event.title}
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-3 pt-0">
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <div className="flex items-center gap-2">
+      <CardContent className={cn(/* design-system-escape: p-3 → usar <Inset>; pt-0 padding direcional sem Inset equiv. */ "p-3 pt-0")}>
+        <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex items-center justify-between text-xs text-muted-foreground")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             {dueDate && (
-              <span className="flex items-center gap-1">
+              <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
                 <Calendar className="h-3 w-3" />
                 {dueDate}
               </span>
             )}
             {event.responsavelNome && (
-              <span className="flex items-center gap-1">
+              <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
                 <User className="h-3 w-3" />
                 {event.responsavelNome}
               </span>

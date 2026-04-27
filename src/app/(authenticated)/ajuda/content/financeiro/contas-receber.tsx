@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
@@ -21,7 +22,7 @@ import {
 
 export default function ContasReceber() {
   return (
-    <div className="space-y-10">
+    <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
       <div>
         <Heading level="page">Contas a Receber</Heading>
         <p className="text-muted-foreground mt-2">
@@ -208,7 +209,7 @@ export default function ContasReceber() {
           O relatório de inadimplência consolida todos os títulos vencidos e não recebidos. Ele
           exibe:
         </p>
-        <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+        <ul className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "space-y-2 text-sm text-muted-foreground list-disc list-inside")}>
           <li>Nome do cliente</li>
           <li>Valor original e valor atualizado (se configurado)</li>
           <li>Dias de atraso</li>

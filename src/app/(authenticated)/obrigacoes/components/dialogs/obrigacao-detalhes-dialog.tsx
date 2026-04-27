@@ -123,7 +123,7 @@ function SectionHeader({
   label: string;
 }) {
   return (
-    <div className="flex items-center gap-2 mb-2.5">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-2.5")}>
       <Icon className="size-3.5 text-primary" />
       <Text variant="overline" className="text-muted-foreground">
         {label}
@@ -176,7 +176,7 @@ function InfoRow({
       </Text>
       <div
         className={cn(
-          'text-[13px] font-medium text-foreground/90 leading-snug',
+          /* design-system-escape: font-medium → className de <Text>/<Heading>; leading-snug sem token DS */ 'text-[13px] font-medium text-foreground/90 leading-snug',
           valueClassName,
         )}
       >
@@ -357,15 +357,15 @@ export function ObrigacaoDetalhesDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[92vh] flex flex-col p-0 gap-0 overflow-hidden sm:max-w-2xl [scrollbar-width:thin]">
+      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset>; gap-0 gap sem token DS */ "max-h-[92vh] flex flex-col p-0 gap-0 overflow-hidden sm:max-w-2xl [scrollbar-width:thin]")}>
         <DialogDescription className="sr-only">
           Detalhes da obrigação financeira
         </DialogDescription>
 
         {/* ══════════ HEADER · Capa do processo ══════════ */}
-        <div className="shrink-0 px-6 pt-5 pb-4 border-b border-border/50">
-          <div className="flex items-center justify-between gap-4 mb-1.5">
-            <DialogTitle className="flex-1 min-w-0 text-[16px] font-semibold text-foreground leading-[1.3] -tracking-[0.01em] truncate">
+        <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; pt-5 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv. */ "shrink-0 px-6 pt-5 pb-4 border-b border-border/50")}>
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center justify-between gap-4 mb-1.5")}>
+            <DialogTitle className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "flex-1 min-w-0 text-[16px] font-semibold text-foreground leading-[1.3] -tracking-[0.01em] truncate")}>
               {tituloPartes}
             </DialogTitle>
 
@@ -388,7 +388,7 @@ export function ObrigacaoDetalhesDialog({
           </div>
 
           {(numeroProcesso || trt || orgaoJulgador) && (
-            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] font-medium text-muted-foreground">
+            <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] font-medium text-muted-foreground")}>
               {numeroProcesso && <span>{numeroProcesso}</span>}
               {classeJudicial && (
                 <>
@@ -419,10 +419,10 @@ export function ObrigacaoDetalhesDialog({
         </div>
 
         {/* ══════════ BLOCO PRINCIPAL · Tipo, valor e vencimento ══════════ */}
-        <div className="shrink-0 mx-6 mt-4 p-4 rounded-xl bg-primary/5 border border-primary/15">
-          <div className="flex items-start gap-3 mb-3.5">
+        <div className={cn(/* design-system-escape: mx-6 margin sem primitiva DS; p-4 → migrar para <Inset variant="card-compact"> */ "shrink-0 mx-6 mt-4 p-4 rounded-xl bg-primary/5 border border-primary/15")}>
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3 mb-3.5")}>
             <div className="flex-1 min-w-0">
-              <p className="text-[14.5px] font-semibold text-foreground leading-tight">
+              <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[14.5px] font-semibold text-foreground leading-tight")}>
                 {TIPO_LABELS[obrigacao.tipo] || obrigacao.tipo}
               </p>
               <Text variant="caption" className="text-muted-foreground mt-0.5 block">
@@ -432,7 +432,7 @@ export function ObrigacaoDetalhesDialog({
             {obrigacao.direcao && (
               <span
                 className={cn(
-                  'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10.5px] font-semibold border shrink-0',
+                  /* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10.5px] font-semibold border shrink-0',
                   isRecebimento
                     ? 'bg-success/10 text-success border-success/25'
                     : 'bg-destructive/10 text-destructive border-destructive/25',
@@ -448,10 +448,10 @@ export function ObrigacaoDetalhesDialog({
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-5 pb-3.5 mb-3.5 border-b border-border/40">
+          <div className={cn(/* design-system-escape: gap-5 gap sem token DS; pb-3.5 padding direcional sem Inset equiv. */ "grid grid-cols-2 gap-5 pb-3.5 mb-3.5 border-b border-border/40")}>
             {/* ──────── Valor (editável) ──────── */}
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center justify-between gap-2">
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
                 <Text variant="label" className="text-muted-foreground/80">
                   Valor
                 </Text>
@@ -459,7 +459,7 @@ export function ObrigacaoDetalhesDialog({
                   <button
                     type="button"
                     onClick={handleStartEditValor}
-                    className="text-[10px] font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center gap-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded"
+                    className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; gap-1 gap sem token DS */ "text-[10px] font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center gap-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded")}
                     aria-label="Editar valor"
                   >
                     <Pencil className="size-2.5" />
@@ -469,8 +469,8 @@ export function ObrigacaoDetalhesDialog({
               </div>
 
               {editingValor ? (
-                <div className="flex items-center gap-1.5 min-w-0">
-                  <span className="text-[13px] font-medium text-muted-foreground shrink-0">
+                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 min-w-0")}>
+                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[13px] font-medium text-muted-foreground shrink-0")}>
                     R$
                   </span>
                   <Input
@@ -479,7 +479,7 @@ export function ObrigacaoDetalhesDialog({
                     min="0"
                     value={valorDraft}
                     onChange={(e) => setValorDraft(e.target.value)}
-                    className="h-8 text-sm tabular-nums flex-1 min-w-0"
+                    className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "h-8 text-sm tabular-nums flex-1 min-w-0")}
                     autoFocus
                     disabled={savingValor}
                     onKeyDown={(e) => {
@@ -515,7 +515,7 @@ export function ObrigacaoDetalhesDialog({
               ) : (
                 <Text
                   variant="kpi-value"
-                  className="text-[22px] leading-tight tabular-nums"
+                  className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[22px] leading-tight tabular-nums")}
                 >
                   {formatCurrency(obrigacao.valor)}
                 </Text>
@@ -523,8 +523,8 @@ export function ObrigacaoDetalhesDialog({
             </div>
 
             {/* ──────── Vencimento (editável) ──────── */}
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center justify-between gap-2">
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
                 <Text variant="label" className="text-muted-foreground/80">
                   Vencimento
                 </Text>
@@ -532,7 +532,7 @@ export function ObrigacaoDetalhesDialog({
                   <button
                     type="button"
                     onClick={handleStartEditVencimento}
-                    className="text-[10px] font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center gap-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded"
+                    className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; gap-1 gap sem token DS */ "text-[10px] font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center gap-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded")}
                     aria-label="Editar vencimento"
                   >
                     <Pencil className="size-2.5" />
@@ -542,12 +542,12 @@ export function ObrigacaoDetalhesDialog({
               </div>
 
               {editingVencimento ? (
-                <div className="flex items-center gap-1.5 min-w-0">
+                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 min-w-0")}>
                   <Input
                     type="date"
                     value={vencimentoDraft}
                     onChange={(e) => setVencimentoDraft(e.target.value)}
-                    className="h-8 text-sm tabular-nums flex-1 min-w-0"
+                    className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "h-8 text-sm tabular-nums flex-1 min-w-0")}
                     autoFocus
                     disabled={savingVencimento}
                     onKeyDown={(e) => {
@@ -585,7 +585,7 @@ export function ObrigacaoDetalhesDialog({
                   <Text
                     variant="kpi-value"
                     className={cn(
-                      'text-[17px] leading-tight tabular-nums',
+                      /* design-system-escape: leading-tight sem token DS */ 'text-[17px] leading-tight tabular-nums',
                       obrigacao.status === 'vencida' && 'text-destructive',
                     )}
                   >
@@ -607,13 +607,13 @@ export function ObrigacaoDetalhesDialog({
           </div>
 
           {/* Ações rápidas */}
-          <div className="flex flex-wrap gap-1.5">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-wrap gap-1.5")}>
             {temAcordo && (
               <Button
                 asChild
                 size="sm"
                 variant="default"
-                className="h-7 px-2.5 rounded-lg text-[11.5px] gap-1.5"
+                className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; gap-1.5 gap sem token DS */ "h-7 px-2.5 rounded-lg text-[11.5px] gap-1.5")}
               >
                 <Link
                   href={`/obrigacoes/${obrigacao.acordoId}`}
@@ -629,7 +629,7 @@ export function ObrigacaoDetalhesDialog({
                 asChild
                 size="sm"
                 variant="outline"
-                className="h-7 px-2.5 rounded-lg text-[11.5px] gap-1.5"
+                className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; gap-1.5 gap sem token DS */ "h-7 px-2.5 rounded-lg text-[11.5px] gap-1.5")}
               >
                 <Link
                   href={`/processos/${obrigacao.processoId}`}
@@ -645,7 +645,7 @@ export function ObrigacaoDetalhesDialog({
                 size="sm"
                 variant="outline"
                 onClick={() => onVerLancamento?.(obrigacao)}
-                className="h-7 px-2.5 rounded-lg text-[11.5px] gap-1.5"
+                className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; gap-1.5 gap sem token DS */ "h-7 px-2.5 rounded-lg text-[11.5px] gap-1.5")}
               >
                 <LinkIcon className="size-3" />
                 Ver lançamento
@@ -656,7 +656,7 @@ export function ObrigacaoDetalhesDialog({
                 size="sm"
                 variant="outline"
                 onClick={() => onSincronizar?.(obrigacao)}
-                className="h-7 px-2.5 rounded-lg text-[11.5px] gap-1.5"
+                className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; gap-1.5 gap sem token DS */ "h-7 px-2.5 rounded-lg text-[11.5px] gap-1.5")}
               >
                 <RefreshCw className="size-3" />
                 Sincronizar
@@ -666,8 +666,8 @@ export function ObrigacaoDetalhesDialog({
         </div>
 
         {/* ══════════ BODY scrollável ══════════ */}
-        <div className="flex-1 overflow-y-auto px-6 py-4 [scrollbar-width:thin]">
-          <div className="space-y-4">
+        <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "flex-1 overflow-y-auto px-6 py-4 [scrollbar-width:thin]")}>
+          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             {/* Registrar recebimento — parcelas pendentes/vencidas */}
             {podeMarcarRecebida && (
               <div>
@@ -681,7 +681,7 @@ export function ObrigacaoDetalhesDialog({
                 />
                 <SectionCard className="bg-success/5 border-success/25">
                   {efetivando ? (
-                    <div className="space-y-2">
+                    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                       <div>
                         <Text variant="label" className="mb-1 block">
                           {isRecebimento
@@ -694,7 +694,7 @@ export function ObrigacaoDetalhesDialog({
                           onChange={(e) =>
                             setDataEfetivacaoDraft(e.target.value)
                           }
-                          className="h-8 text-sm tabular-nums"
+                          className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "h-8 text-sm tabular-nums")}
                           autoFocus
                           disabled={savingEfetivacao}
                           onKeyDown={(e) => {
@@ -703,13 +703,13 @@ export function ObrigacaoDetalhesDialog({
                           }}
                         />
                       </div>
-                      <div className="flex justify-end gap-1.5">
+                      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex justify-end gap-1.5")}>
                         <Button
                           size="sm"
                           variant="ghost"
                           onClick={() => setEfetivando(false)}
                           disabled={savingEfetivacao}
-                          className="h-7 text-xs"
+                          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-7 text-xs")}
                         >
                           Cancelar
                         </Button>
@@ -717,7 +717,7 @@ export function ObrigacaoDetalhesDialog({
                           size="sm"
                           onClick={handleMarcarRecebida}
                           disabled={savingEfetivacao}
-                          className="h-7 text-xs"
+                          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-7 text-xs")}
                         >
                           {savingEfetivacao && (
                             <LoadingSpinner size="sm" className="mr-1" />
@@ -729,7 +729,7 @@ export function ObrigacaoDetalhesDialog({
                       </div>
                     </div>
                   ) : (
-                    <div className="flex items-center justify-between gap-3">
+                    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
                       <Text variant="caption" className="text-foreground/80">
                         {isRecebimento
                           ? 'Esta parcela ainda não foi recebida.'
@@ -738,7 +738,7 @@ export function ObrigacaoDetalhesDialog({
                       <Button
                         size="sm"
                         onClick={handleStartEfetivacao}
-                        className="h-7 px-3 rounded-lg text-[11.5px] gap-1.5 bg-success hover:bg-success/90 text-success-foreground"
+                        className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; gap-1.5 gap sem token DS */ "h-7 px-3 rounded-lg text-[11.5px] gap-1.5 bg-success hover:bg-success/90 text-success-foreground")}
                       >
                         <CheckCircle2 className="size-3" />
                         {isRecebimento
@@ -755,7 +755,7 @@ export function ObrigacaoDetalhesDialog({
             <div>
               <SectionHeader icon={RefreshCw} label="Sincronização" />
               <SectionCard>
-                <div className="flex items-center gap-2">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                   <SincIcon
                     className={cn(
                       'size-4 shrink-0',
@@ -765,7 +765,7 @@ export function ObrigacaoDetalhesDialog({
                       sincConfig.tone === 'muted' && 'text-muted-foreground/60',
                     )}
                   />
-                  <Text variant="caption" className="text-foreground/90 font-medium">
+                  <Text variant="caption" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-foreground/90 font-medium")}>
                     {sincConfig.label}
                   </Text>
                 </div>
@@ -794,7 +794,7 @@ export function ObrigacaoDetalhesDialog({
             {isParcela && (
               <div>
                 <SectionHeader icon={FileText} label="Prestação de contas" />
-                <SectionCard className="p-0 overflow-hidden">
+                <SectionCard className={cn(/* design-system-escape: p-0 → usar <Inset> */ "p-0 overflow-hidden")}>
                   <div className="p-[14px_16px]">
                     <PrestacaoContasSection parcelaId={obrigacao.id} />
                   </div>
@@ -805,7 +805,7 @@ export function ObrigacaoDetalhesDialog({
         </div>
 
         {/* ══════════ FOOTER ══════════ */}
-        <div className="shrink-0 px-6 py-3 border-t border-border/50 flex items-center justify-end bg-card/40">
+        <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "shrink-0 px-6 py-3 border-t border-border/50 flex items-center justify-end bg-card/40")}>
           <Button variant="outline" size="sm" onClick={handleClose}>
             Fechar
           </Button>

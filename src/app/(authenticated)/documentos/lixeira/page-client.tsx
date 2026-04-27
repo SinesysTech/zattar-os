@@ -5,6 +5,7 @@
  * Lista documentos excluídos com opções de restaurar ou deletar permanentemente
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import {
@@ -101,7 +102,7 @@ function formatDeletedAt(date: string | null): string {
 
 function LoadingState() {
   return (
-    <div className="space-y-4">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       <Skeleton className="h-24 w-full" />
       <Skeleton className="h-24 w-full" />
       <Skeleton className="h-24 w-full" />
@@ -129,9 +130,9 @@ function LixeiraEmptyState({ onVoltar }: { onVoltar: () => void }) {
 function AvisoExclusaoCard() {
   return (
     <Card className="border-warning/15 bg-warning/5">
-      <CardContent className="flex items-center gap-3 p-4">
+      <CardContent className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex items-center gap-3 p-4")}>
         <AlertTriangle className="h-5 w-5 text-warning" />
-        <p className="text-sm text-warning">
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-warning")}>
           Documentos na lixeira serão deletados permanentemente após 30 dias.
         </p>
       </CardContent>
@@ -154,12 +155,12 @@ function DocumentoCard({
 
   return (
     <Card>
-      <CardHeader className="pb-2">
+      <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
         <div className="flex items-start justify-between">
-          <div className="flex items-center gap-3">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
             <FileText className="h-5 w-5 text-muted-foreground" />
             <div>
-              <CardTitle className="text-base">
+              <CardTitle className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
                 {documento.titulo || 'Documento sem título'}
               </CardTitle>
               <CardDescription>
@@ -167,7 +168,7 @@ function DocumentoCard({
               </CardDescription>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <Button
               variant="outline"
               size="sm"
@@ -198,8 +199,8 @@ function DocumentoCard({
         </div>
       </CardHeader>
       {documento.descricao && (
-        <CardContent className="pt-0">
-          <p className="text-sm text-muted-foreground line-clamp-2">
+        <CardContent className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv. */ "pt-0")}>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground line-clamp-2")}>
             {documento.descricao}
           </p>
         </CardContent>
@@ -337,17 +338,17 @@ export default function LixeiraClient() {
 
   return (
     <>
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div className="space-y-1.5">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between")}>
+        <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
           <Heading level="page">Lixeira</Heading>
-          <p className="text-sm text-muted-foreground/50 mt-0.5">
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 mt-0.5")}>
             Documentos excluídos que serão deletados permanentemente após 30 dias
           </p>
         </div>
       </div>
 
       {/* Toolbar com filtros */}
-      <div className="flex items-center gap-2 mb-4">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-4")}>
         <Button
           variant="ghost"
           size="icon"
@@ -371,7 +372,7 @@ export default function LixeiraClient() {
       ) : documentosFiltrados.length === 0 ? (
         <LixeiraEmptyState onVoltar={() => router.push('/app/documentos')} />
       ) : (
-        <div className="space-y-4">
+        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           <AvisoExclusaoCard />
           {documentosFiltrados.map((documento) => (
             <DocumentoCard

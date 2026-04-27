@@ -89,18 +89,18 @@ function AlertaCard({
       )}
       onClick={onClick}
     >
-      <CardContent className="p-4">
-        <div className="flex items-center gap-3">
-          <div className={cn('rounded-full p-2', styles.bg)}>
+      <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+          <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ 'rounded-full p-2', styles.bg)}>
             <Icon className={cn('h-5 w-5', styles.icon)} />
           </div>
           <div className="flex-1 min-w-0">
-            <p className={cn('text-sm font-medium', styles.text)}>{titulo}</p>
-            <div className="flex items-center gap-2 mt-1">
-              <Badge variant="secondary" className="text-xs">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ 'text-sm font-medium', styles.text)}>{titulo}</p>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-1")}>
+              <Badge variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
                 {quantidade} {quantidade === 1 ? 'conta' : 'contas'}
               </Badge>
-              <span className={cn('text-sm font-semibold', styles.value)}>
+              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ 'text-sm font-semibold', styles.value)}>
                 {formatarValor(valorTotal)}
               </span>
             </div>
@@ -121,13 +121,13 @@ export function AlertasVencimento({
 }: AlertasVencimentoProps) {
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4")}>
         {[1, 2, 3, 4].map((i) => (
           <Card key={i} className="animate-pulse">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
+            <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
                 <div className="h-9 w-9 rounded-full bg-muted" />
-                <div className="flex-1 space-y-2">
+                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "flex-1 space-y-2")}>
                   <div className="h-4 w-24 bg-muted rounded" />
                   <div className="h-3 w-32 bg-muted rounded" />
                 </div>
@@ -157,7 +157,7 @@ export function AlertasVencimento({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4")}>
       <AlertaCard
         titulo="Contas Vencidas"
         quantidade={vencidas.quantidade}

@@ -375,9 +375,9 @@ export function AudienciasMockClient() {
   );
 
   return (
-    <div className="space-y-5">
+    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       {/* ── Header ──────────────────────────────────────────────── */}
-      <div className="flex items-end justify-between gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
         <div>
           <Heading level="page">Audiências</Heading>
           <Text variant="caption" className="text-muted-foreground/50 mt-0.5">
@@ -424,9 +424,9 @@ export function AudienciasMockClient() {
       )}
 
       {/* ── View Controls ──────────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
         <TabPills tabs={STATUS_TABS} active={activeTab} onChange={setActiveTab} />
-        <div className="flex items-center gap-2 flex-1 justify-end">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
           <SearchInput
             value={search}
             onChange={setSearch}
@@ -443,13 +443,13 @@ export function AudienciasMockClient() {
       {/* ── Content ────────────────────────────────────────────── */}
 
       {viewMode === 'missao' && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 lg:grid-cols-3 gap-4")}>
           {/* Timeline (2/3) */}
           <div className="lg:col-span-2">
             <DayTimeline audiencias={filtered} />
           </div>
           {/* Sidebar (1/3) */}
-          <div className="space-y-4">
+          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             <RhythmStrip heatmap={MOCK_WEEK_HEATMAP} />
             <LoadDistribution audiencias={MOCK_AUDIENCIAS} />
           </div>
@@ -457,17 +457,17 @@ export function AudienciasMockClient() {
       )}
 
       {viewMode === 'lista' && (
-        <div className="flex flex-col gap-1">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
           {filtered.map((a) => (
             <AudienciaListRow key={a.id} audiencia={a} />
           ))}
           {filtered.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-16 text-center">
+            <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 text-center")}>
               <Gavel className="size-8 text-muted-foreground/45 mb-3" />
-              <p className="text-sm font-medium text-muted-foreground/50">
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/50")}>
                 Nenhuma audiência encontrada
               </p>
-              <p className="text-xs text-muted-foreground/55 mt-1">
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/55 mt-1")}>
                 {search ? 'Tente ajustar a busca' : 'Tente ajustar os filtros'}
               </p>
             </div>
@@ -502,16 +502,16 @@ function MissionKpiStrip({
   const prepColor = PREP_COLORS[getPrepStatus(avgPrep)];
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 lg:grid-cols-4 gap-3")}>
       {/* ── Semana ─────────────────────────────────────── */}
-      <GlassPanel className="px-4 py-3">
-        <div className="flex items-start justify-between gap-2">
+      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Semana
             </p>
-            <div className="flex items-baseline gap-1.5 mt-1">
-              <p className="font-display text-xl font-bold tabular-nums leading-none">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
                 <AnimatedNumber value={totalSemana} />
               </p>
               <span className="text-[10px] text-muted-foreground/40">audiências</span>
@@ -521,21 +521,21 @@ function MissionKpiStrip({
             <CalendarDays className="size-4 text-primary/50" />
           </div>
         </div>
-        <div className="mt-2.5 flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
           <Sparkline data={trend} width={80} height={16} />
-          <span className="text-[9px] text-success/60 font-medium">+18%</span>
+          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[9px] text-success/60 font-medium")}>+18%</span>
         </div>
       </GlassPanel>
 
       {/* ── Próxima ────────────────────────────────────── */}
-      <GlassPanel className="px-4 py-3">
-        <div className="flex items-start justify-between gap-2">
+      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Próxima
             </p>
-            <div className="flex items-baseline gap-1.5 mt-1">
-              <p className="font-display text-xl font-bold tabular-nums leading-none">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
                 {timeUntil?.label ?? '—'}
               </p>
             </div>
@@ -556,14 +556,14 @@ function MissionKpiStrip({
       </GlassPanel>
 
       {/* ── Realizadas ─────────────────────────────────── */}
-      <GlassPanel className="px-4 py-3">
-        <div className="flex items-start justify-between gap-2">
+      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Realizadas
             </p>
-            <div className="flex items-baseline gap-1.5 mt-1">
-              <p className="font-display text-xl font-bold tabular-nums leading-none">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
                 <AnimatedNumber value={realizadasMes} />
               </p>
               <span className="text-[10px] text-muted-foreground/40">/ {totalMes} mês</span>
@@ -573,7 +573,7 @@ function MissionKpiStrip({
             <CheckCircle2 className="size-4 text-success/50" />
           </div>
         </div>
-        <div className="mt-2.5 flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full bg-success/25 transition-all duration-500"
@@ -587,14 +587,14 @@ function MissionKpiStrip({
       </GlassPanel>
 
       {/* ── Preparo ────────────────────────────────────── */}
-      <GlassPanel className="px-4 py-3">
-        <div className="flex items-start justify-between gap-2">
+      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0">
-            <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Preparo
             </p>
-            <div className="flex items-baseline gap-1.5 mt-1">
-              <p className="font-display text-xl font-bold tabular-nums leading-none">
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
                 {avgPrep}%
               </p>
               <span className="text-[10px] text-muted-foreground/40">média</span>
@@ -604,7 +604,7 @@ function MissionKpiStrip({
             <ShieldCheck className="size-4 text-primary/50" />
           </div>
         </div>
-        <div className="mt-2.5 flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full transition-all duration-500"
@@ -675,21 +675,21 @@ function MissionHeroCard({ audiencia }: { audiencia: MockAudiencia }) {
       <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-24 h-24 bg-primary/3 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none" />
 
-      <div className="relative p-4 sm:p-5">
+      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-5 sem equivalente DS */ "relative p-4 sm:p-5")}>
         {/* Header */}
-        <div className="flex items-start justify-between gap-3 mb-4">
-          <div className="flex items-center gap-2.5">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3 mb-4")}>
+          <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
             <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center">
               <Gavel className="size-4 text-primary" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <span className="text-[9px] font-semibold uppercase tracking-wider text-primary/60">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[9px] font-semibold uppercase tracking-wider text-primary/60")}>
                   {isOngoing ? 'Em andamento' : 'Próxima missão'}
                 </span>
                 {isOngoing && <span className="size-1.5 rounded-full bg-success animate-pulse" />}
               </div>
-              <h3 className="text-base font-heading font-semibold tracking-tight mt-0.5">
+              <h3 className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-base font-heading font-semibold tracking-tight mt-0.5")}>
                 {audiencia.tipo}
               </h3>
             </div>
@@ -697,24 +697,24 @@ function MissionHeroCard({ audiencia }: { audiencia: MockAudiencia }) {
 
           {/* Countdown */}
           {diff > 0 && (
-            <div className={cn('inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg', urgencyBg)}>
-              <div className="flex items-center gap-0.5 tabular-nums">
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ 'inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg', urgencyBg)}>
+              <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center gap-0.5 tabular-nums")}>
                 {hours > 0 && (
                   <>
-                    <span className={cn('text-sm font-bold', urgencyTextColor)}>{pad(hours)}</span>
+                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ 'text-sm font-bold', urgencyTextColor)}>{pad(hours)}</span>
                     <span className="text-[9px] text-muted-foreground/55">:</span>
                   </>
                 )}
-                <span className={cn('text-sm font-bold', urgencyTextColor)}>{pad(minutes)}</span>
+                <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ 'text-sm font-bold', urgencyTextColor)}>{pad(minutes)}</span>
                 <span className="text-[9px] text-muted-foreground/55">:</span>
-                <span className={cn('text-sm font-bold', urgencyTextColor)}>{pad(seconds)}</span>
+                <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ 'text-sm font-bold', urgencyTextColor)}>{pad(seconds)}</span>
               </div>
             </div>
           )}
         </div>
 
         {/* Info Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4")}>
           <InfoCell label="Horário" value={`${fmtTime(audiencia.dataInicio)} – ${fmtTime(audiencia.dataFim)}`} />
           <InfoCell label="Tribunal" value={`${audiencia.trt} · ${audiencia.grau}`} />
           <InfoCell label="Processo" value={audiencia.numeroProcesso} mono />
@@ -726,19 +726,19 @@ function MissionHeroCard({ audiencia }: { audiencia: MockAudiencia }) {
         </div>
 
         {/* Parties */}
-        <div className="flex items-center gap-2 mb-4 px-3 py-2 rounded-lg bg-border/5">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 mb-4 px-3 py-2 rounded-lg bg-border/5")}>
           <span className="text-[10px] text-foreground/60 truncate">{audiencia.poloAtivo}</span>
           <span className="text-[9px] text-muted-foreground/50 shrink-0">vs</span>
           <span className="text-[10px] text-foreground/60 truncate">{audiencia.poloPassivo}</span>
         </div>
 
         {/* Bottom: PrepScore + Actions */}
-        <div className="flex items-end justify-between gap-4">
-          <div className="flex items-center gap-3">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
             <PrepRing score={audiencia.prepScore} size={48} />
-            <div className="space-y-0.5">
+            <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
               {audiencia.prepItems.slice(0, 3).map((item) => (
-                <div key={item.label} className="flex items-center gap-1.5">
+                <div key={item.label} className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
                   {item.done ? (
                     <CheckCircle2 className="size-2.5 text-success/60 shrink-0" />
                   ) : (
@@ -760,12 +760,12 @@ function MissionHeroCard({ audiencia }: { audiencia: MockAudiencia }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
             {actions.map((action) => (
               <button
                 key={action.label}
                 className={cn(
-                  'flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] font-medium transition-all cursor-pointer group',
+                  /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] font-medium transition-all cursor-pointer group',
                   action.primary
                     ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm'
                     : 'text-muted-foreground/50 hover:text-foreground/70 hover:bg-foreground/4',
@@ -812,28 +812,28 @@ function PostHearingCard({ audiencia }: { audiencia: MockAudiencia }) {
   return (
     <GlassPanel depth={1} className="relative overflow-hidden">
       <div className="h-px bg-linear-to-r from-transparent via-warning/20 to-transparent" />
-      <div className="p-4 sm:p-5">
+      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-5 sem equivalente DS */ "p-4 sm:p-5")}>
         {/* Header */}
         <div className="flex items-start justify-between mb-3">
-          <div className="flex items-center gap-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <div className="size-1.5 rounded-full bg-warning/50" />
-            <span className="text-[9px] font-semibold uppercase tracking-wider text-warning/60">Concluída</span>
+            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[9px] font-semibold uppercase tracking-wider text-warning/60")}>Concluída</span>
             <span className="text-[10px] text-muted-foreground/55">
               {audiencia.tipo} · {fmtTime(audiencia.dataFim)}
             </span>
           </div>
-          <div className="flex items-center gap-1">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
             <Clock className={cn('size-2.5', urgencyColor)} />
-            <span className={cn('text-[10px] tabular-nums font-medium', urgencyColor)}>
+            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[10px] tabular-nums font-medium', urgencyColor)}>
               há {elapsedLabel}
             </span>
           </div>
         </div>
 
         {/* Process */}
-        <div className="flex items-center gap-2 mb-3">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
           <span className="text-[11px] font-mono text-muted-foreground/60 tabular-nums">{audiencia.numeroProcesso}</span>
-          <span className="text-[8px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40">{audiencia.trt}</span>
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-[8px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40")}>{audiencia.trt}</span>
         </div>
 
         {/* Parties */}
@@ -843,14 +843,14 @@ function PostHearingCard({ audiencia }: { audiencia: MockAudiencia }) {
 
         {/* Result Selector */}
         <div className="mb-4">
-          <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">Resultado</span>
-          <div className="flex items-center gap-1.5 mt-1.5">
+          <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/55 uppercase tracking-wider")}>Resultado</span>
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mt-1.5")}>
             {results.map((opt) => (
               <button
                 key={opt.value}
                 onClick={() => setSelectedResult(opt.value)}
                 className={cn(
-                  'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-medium border transition-all cursor-pointer',
+                  /* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-medium border transition-all cursor-pointer',
                   selectedResult === opt.value
                     ? 'border-primary/30 bg-primary/8 text-primary'
                     : 'border-border/15 text-muted-foreground/50 hover:text-foreground/70 hover:border-border/25',
@@ -866,18 +866,18 @@ function PostHearingCard({ audiencia }: { audiencia: MockAudiencia }) {
         {/* Checklist */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">Ações pós-audiência</span>
+            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/55 uppercase tracking-wider")}>Ações pós-audiência</span>
             <span className="text-[9px] tabular-nums text-muted-foreground/55">{completed}/{postActions.length}</span>
           </div>
           <div className="h-0.5 rounded-full bg-border/8 overflow-hidden mb-2">
             <div className="h-full rounded-full bg-success/50 transition-all duration-500" style={{ width: `${progress}%` }} />
           </div>
-          <div className="space-y-0.5">
+          <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
             {postActions.map((action) => (
               <div
                 key={action.id}
                 className={cn(
-                  'flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[10px] transition-all',
+                  /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ 'flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[10px] transition-all',
                   action.done ? 'text-muted-foreground/55' : 'text-foreground/60 hover:bg-foreground/4or-pointer',
                 )}
               >
@@ -916,11 +916,11 @@ function DayTimeline({ audiencias }: { audiencias: MockAudiencia[] }) {
   const evening = today.filter((a) => a.dataInicio.getHours() >= 18);
 
   return (
-    <GlassPanel className="p-4 sm:p-5">
+    <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-5 sem equivalente DS */ "p-4 sm:p-5")}>
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           <Clock className="size-3 text-muted-foreground/50" />
-          <span className="text-[11px] font-medium text-muted-foreground/50">Timeline do dia</span>
+          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-muted-foreground/50")}>Timeline do dia</span>
         </div>
         <span className="text-[9px] tabular-nums text-muted-foreground/50 capitalize">
           {fmtDate(TODAY)}
@@ -928,12 +928,12 @@ function DayTimeline({ audiencias }: { audiencias: MockAudiencia[] }) {
       </div>
 
       {today.length === 0 && future.length === 0 ? (
-        <div className="py-12 text-center">
+        <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "py-12 text-center")}>
           <CalendarDays className="size-8 text-muted-foreground/10 mx-auto mb-2" />
           <p className="text-[11px] text-muted-foreground/55">Nenhuma audiência neste dia</p>
         </div>
       ) : (
-        <div className="space-y-0">
+        <div className={cn(/* design-system-escape: space-y-0 sem token DS */ "space-y-0")}>
           {/* Morning */}
           {morning.length > 0 && (
             <>
@@ -949,9 +949,9 @@ function DayTimeline({ audiencias }: { audiencias: MockAudiencia[] }) {
 
           {/* Lunch break */}
           {morning.length > 0 && afternoon.length > 0 && (
-            <div className="flex items-center gap-2 py-3 px-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-3 padding direcional sem Inset equiv.; px-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 py-3 px-2")}>
               <div className="flex-1 h-px bg-border/8" />
-              <span className="text-[8px] text-muted-foreground/40 uppercase tracking-widest">Intervalo</span>
+              <span className={cn(/* design-system-escape: tracking-widest sem token DS */ "text-[8px] text-muted-foreground/40 uppercase tracking-widest")}>Intervalo</span>
               <div className="flex-1 h-px bg-border/8" />
             </div>
           )}
@@ -982,9 +982,9 @@ function DayTimeline({ audiencias }: { audiencias: MockAudiencia[] }) {
           {/* Upcoming (not today) */}
           {future.length > 0 && (
             <>
-              <div className="flex items-center gap-2 py-3 mt-2">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-3 padding direcional sem Inset equiv. */ "flex items-center gap-2 py-3 mt-2")}>
                 <div className="flex-1 h-px bg-border/8" />
-                <span className="text-[9px] text-muted-foreground/50 uppercase tracking-wider">Próximos dias</span>
+                <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>Próximos dias</span>
                 <div className="flex-1 h-px bg-border/8" />
               </div>
               {future.map((a) => (
@@ -1000,9 +1000,9 @@ function DayTimeline({ audiencias }: { audiencias: MockAudiencia[] }) {
 
 function TimelineSectionHeader({ label, icon: Icon }: { label: string; icon: typeof Sun }) {
   return (
-    <div className="flex items-center gap-2 py-2">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 py-2")}>
       <Icon className="size-3 text-muted-foreground/40" />
-      <span className="text-[10px] font-semibold text-muted-foreground/50 uppercase tracking-wider">{label}</span>
+      <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-semibold text-muted-foreground/50 uppercase tracking-wider")}>{label}</span>
       <div className="flex-1 h-px bg-border/6" />
     </div>
   );
@@ -1010,7 +1010,7 @@ function TimelineSectionHeader({ label, icon: Icon }: { label: string; icon: typ
 
 function TimelineBuffer() {
   return (
-    <div className="flex items-center gap-2 py-1 pl-12">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-1 padding direcional sem Inset equiv.; pl-12 padding direcional sem Inset equiv. */ "flex items-center gap-2 py-1 pl-12")}>
       <div className="w-px h-4 bg-border/10 ml-0.5" />
       <span className="text-[8px] text-muted-foreground/35">~30min buffer</span>
     </div>
@@ -1027,16 +1027,16 @@ function TimelineCard({ audiencia, showDate }: { audiencia: MockAudiencia; showD
   const ModalIcon = MODALIDADE_ICON[audiencia.modalidade];
 
   return (
-    <div className="flex items-stretch gap-3 py-1 group">
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-1 padding direcional sem Inset equiv. */ "flex items-stretch gap-3 py-1 group")}>
       {/* Time column */}
-      <div className="w-12 shrink-0 flex flex-col items-end pt-2.5">
+      <div className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "w-12 shrink-0 flex flex-col items-end pt-2.5")}>
         {showDate && (
           <span className="text-[8px] text-muted-foreground/40 mb-0.5">
             {audiencia.dataInicio.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}
           </span>
         )}
         <span className={cn(
-          'text-[11px] tabular-nums font-medium',
+          /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[11px] tabular-nums font-medium',
           isPast || isFinalizada ? 'text-muted-foreground/55' : 'text-foreground/60',
         )}>
           {fmtTime(audiencia.dataInicio)}
@@ -1047,7 +1047,7 @@ function TimelineCard({ audiencia, showDate }: { audiencia: MockAudiencia; showD
       </div>
 
       {/* Dot + line */}
-      <div className="flex flex-col items-center pt-3 shrink-0">
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex flex-col items-center pt-3 shrink-0")}>
         <div className={cn(
           'size-2 rounded-full',
           isOngoing ? 'bg-success animate-pulse' :
@@ -1060,25 +1060,25 @@ function TimelineCard({ audiencia, showDate }: { audiencia: MockAudiencia; showD
 
       {/* Card */}
       <div className={cn(
-        'flex-1 rounded-xl p-3 transition-all duration-200 min-w-0 cursor-pointer',
+        /* design-system-escape: p-3 → usar <Inset> */ 'flex-1 rounded-xl p-3 transition-all duration-200 min-w-0 cursor-pointer',
         'border border-border/12 hover:border-border/20 hover:shadow-sm hover:scale-[1.005]',
         (isPast || isFinalizada) && 'opacity-55',
         isOngoing && 'ring-1 ring-success/20 border-success/15',
       )}>
-        <div className="flex items-start justify-between gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <Gavel className="size-3 text-primary/40 shrink-0" />
-              <h3 className="text-[13px] font-medium text-foreground truncate">{audiencia.tipo}</h3>
+              <h3 className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[13px] font-medium text-foreground truncate")}>{audiencia.tipo}</h3>
               {isOngoing && (
-                <span className="text-[8px] font-semibold text-success px-1.5 py-px rounded-full bg-success/10">Agora</span>
+                <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-[8px] font-semibold text-success px-1.5 py-px rounded-full bg-success/10")}>Agora</span>
               )}
               {isFinalizada && (
-                <span className="text-[8px] font-semibold text-success/60 px-1.5 py-px rounded-full bg-success/8">Realizada</span>
+                <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-[8px] font-semibold text-success/60 px-1.5 py-px rounded-full bg-success/8")}>Realizada</span>
               )}
               {/* Prep Badge */}
               <span className={cn(
-                'inline-flex items-center gap-0.5 px-1.5 py-px rounded-full text-[8px] font-semibold tabular-nums shrink-0',
+                /* design-system-escape: gap-0.5 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center gap-0.5 px-1.5 py-px rounded-full text-[8px] font-semibold tabular-nums shrink-0',
                 prepStatus === 'good' ? 'bg-success/10 text-success' :
                 prepStatus === 'warning' ? 'bg-warning/10 text-warning' :
                 'bg-destructive/10 text-destructive',
@@ -1095,7 +1095,7 @@ function TimelineCard({ audiencia, showDate }: { audiencia: MockAudiencia; showD
           {/* Countdown */}
           {!isPast && !isOngoing && !isFinalizada && (
             <span className={cn(
-              'text-[11px] tabular-nums font-semibold shrink-0',
+              /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-[11px] tabular-nums font-semibold shrink-0',
               urgency === 'critico' ? 'text-destructive' :
               urgency === 'alto' ? 'text-warning' :
               'text-primary/70',
@@ -1111,19 +1111,19 @@ function TimelineCard({ audiencia, showDate }: { audiencia: MockAudiencia; showD
         </p>
 
         {/* Tags */}
-        <div className="flex items-center gap-2 mt-2 ml-5 flex-wrap">
-          <div className="flex items-center gap-1">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-2 ml-5 flex-wrap")}>
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
             <ModalIcon className="size-2 text-muted-foreground/50" />
             <span className="text-[9px] text-muted-foreground/55">{MODALIDADE_LABEL[audiencia.modalidade]}</span>
           </div>
-          <span className="text-[8px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40">{audiencia.trt}</span>
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-[8px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40")}>{audiencia.trt}</span>
           {audiencia.urlVirtual && (audiencia.modalidade === 'virtual' || audiencia.modalidade === 'hibrida') && (
-            <span className="text-[8px] font-semibold px-1.5 py-px rounded bg-info/8 text-info/50 hover:bg-info/15 transition-colors cursor-pointer">
+            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-[8px] font-semibold px-1.5 py-px rounded bg-info/8 text-info/50 hover:bg-info/15 transition-colors cursor-pointer")}>
               Entrar na sala
             </span>
           )}
           {audiencia.responsavel && (
-            <span className="text-[8px] px-1.5 py-px rounded bg-border/8 text-muted-foreground/40">
+            <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "text-[8px] px-1.5 py-px rounded bg-border/8 text-muted-foreground/40")}>
               {audiencia.responsavel}
             </span>
           )}
@@ -1154,7 +1154,7 @@ function AudienciaListRow({ audiencia }: { audiencia: MockAudiencia }) {
 
   return (
     <div className={cn(
-      'flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer transition-all outline-none',
+      /* design-system-escape: gap-3 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ 'flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer transition-all outline-none',
       'focus-visible:ring-1 focus-visible:ring-primary/30 hover:bg-foreground/4',
       (isPast || isFinalizada) && 'opacity-55',
     )}>
@@ -1168,7 +1168,7 @@ function AudienciaListRow({ audiencia }: { audiencia: MockAudiencia }) {
 
       {/* Main info */}
       <div className="flex-1 min-w-0">
-        <p className="text-xs font-medium truncate">{audiencia.tipo}</p>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium truncate")}>{audiencia.tipo}</p>
         <p className="text-[10px] text-muted-foreground/30 truncate">
           {audiencia.poloAtivo} vs {audiencia.poloPassivo}
         </p>
@@ -1176,7 +1176,7 @@ function AudienciaListRow({ audiencia }: { audiencia: MockAudiencia }) {
 
       {/* Date/Time */}
       <div className="text-right shrink-0 hidden sm:block">
-        <p className="text-[10px] font-medium tabular-nums">
+        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums")}>
           {audiencia.dataInicio.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}
         </p>
         <p className="text-[9px] text-muted-foreground/40 tabular-nums">
@@ -1185,13 +1185,13 @@ function AudienciaListRow({ audiencia }: { audiencia: MockAudiencia }) {
       </div>
 
       {/* Modalidade */}
-      <div className="flex items-center gap-1 shrink-0 md:flex w-20">
+      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 shrink-0 md:flex w-20")}>
         <ModalIcon className="size-2.5 text-muted-foreground/40" />
         <span className="text-[9px] text-muted-foreground/50">{MODALIDADE_LABEL[audiencia.modalidade]}</span>
       </div>
 
       {/* TRT */}
-      <span className="text-[9px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40 shrink-0 hidden md:block">
+      <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-[9px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40 shrink-0 hidden md:block")}>
         {audiencia.trt}
       </span>
 
@@ -1202,7 +1202,7 @@ function AudienciaListRow({ audiencia }: { audiencia: MockAudiencia }) {
 
       {/* Countdown or status */}
       <span className={cn(
-        'text-[9px] shrink-0 w-16 text-right tabular-nums font-medium',
+        /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[9px] shrink-0 w-16 text-right tabular-nums font-medium',
         isFinalizada ? 'text-success/50' :
         !isPast ? (timeUntil.totalMs <= 60 * 60 * 1000 ? 'text-warning/60' : 'text-muted-foreground/40') :
         'text-muted-foreground/25',
@@ -1221,15 +1221,15 @@ function AudienciaListRow({ audiencia }: { audiencia: MockAudiencia }) {
 
 function RhythmStrip({ heatmap }: { heatmap: number[] }) {
   return (
-    <GlassPanel className="p-4">
-      <div className="flex items-center gap-2 mb-3">
+    <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
         <Zap className="size-3 text-primary/40" />
-        <span className="text-[11px] font-medium text-muted-foreground/50">Ritmo de audiências</span>
+        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-muted-foreground/50")}>Ritmo de audiências</span>
       </div>
       <CalendarHeatmap data={heatmap} colorScale="primary" />
       <div className="flex items-center justify-between mt-2">
         <span className="text-[8px] text-muted-foreground/40">Menos</span>
-        <div className="flex gap-0.5">
+        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex gap-0.5")}>
           {['bg-border/10', 'bg-primary/15', 'bg-primary/30', 'bg-primary/50', 'bg-primary/80'].map((c, i) => (
             <div key={i} className={cn('size-2.5 rounded-[2px]', c)} />
           ))}
@@ -1264,20 +1264,20 @@ function LoadDistribution({ audiencias }: { audiencias: MockAudiencia[] }) {
   }, [audiencias]);
 
   return (
-    <div className="space-y-4">
-      <GlassPanel className="p-4">
-        <div className="flex items-center gap-2 mb-3">
+    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
           <BarChart3 className="size-3 text-primary/40" />
-          <span className="text-[11px] font-medium text-muted-foreground/50">Por tipo</span>
+          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-muted-foreground/50")}>Por tipo</span>
           <span className="text-[9px] tabular-nums text-muted-foreground/50 ml-auto">{audiencias.length} total</span>
         </div>
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           {byType.map((item) => (
             <div key={item.tipo}>
               <div className="flex items-baseline justify-between mb-0.5">
                 <span className="text-[10px] text-foreground/60 truncate max-w-[60%]">{item.tipo}</span>
-                <div className="flex items-baseline gap-1.5">
-                  <span className="text-[10px] font-bold tabular-nums">{item.count}</span>
+                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5")}>
+                  <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[10px] font-bold tabular-nums")}>{item.count}</span>
                   <span className="text-[8px] text-muted-foreground/50 tabular-nums">{item.percent}%</span>
                 </div>
               </div>
@@ -1289,17 +1289,17 @@ function LoadDistribution({ audiencias }: { audiencias: MockAudiencia[] }) {
         </div>
       </GlassPanel>
 
-      <GlassPanel className="p-4">
-        <div className="flex items-center gap-2 mb-3">
+      <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
           <Users className="size-3 text-primary/40" />
-          <span className="text-[11px] font-medium text-muted-foreground/50">Carga por advogado</span>
+          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-muted-foreground/50")}>Carga por advogado</span>
         </div>
-        <div className="space-y-2">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           {byResponsavel.map((item) => (
             <div key={item.nome}>
               <div className="flex items-baseline justify-between mb-0.5">
                 <span className="text-[10px] text-foreground/60 truncate max-w-[60%]">{item.nome}</span>
-                <span className="text-[10px] font-bold tabular-nums">{item.count}</span>
+                <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[10px] font-bold tabular-nums")}>{item.count}</span>
               </div>
               <div className="h-1 rounded-full bg-border/8 overflow-hidden">
                 <div
@@ -1345,7 +1345,7 @@ function PrepRing({ score, size = 36 }: { score: number; size?: number }) {
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
         <span className={cn(
-          'font-bold tabular-nums',
+          /* design-system-escape: font-bold → className de <Text>/<Heading> */ 'font-bold tabular-nums',
           size <= 32 ? 'text-[8px]' : 'text-[10px]',
           status === 'good' ? 'text-success' : status === 'warning' ? 'text-warning' : 'text-destructive',
         )}>
@@ -1368,12 +1368,12 @@ function InfoCell({
   icon?: typeof Video;
 }) {
   return (
-    <div className="flex flex-col gap-0.5">
-      <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">{label}</span>
-      <div className="flex items-center gap-1.5">
+    <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+      <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/55 uppercase tracking-wider")}>{label}</span>
+      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
         {Icon && <Icon className="size-3 text-muted-foreground/60" />}
         <span className={cn(
-          'text-sm font-medium truncate',
+          /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ 'text-sm font-medium truncate',
           mono && 'text-[11px] font-mono text-foreground/70 tabular-nums',
         )}>
           {value}

@@ -56,25 +56,25 @@ export function AgendaFilterBar({
   const allActive = activeSources.size === 0;
 
   return (
-    <div className={cn("flex items-center gap-3 flex-wrap", className)}>
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 flex-wrap", className)}>
       {/* Date Navigation */}
-      <div className="flex items-center gap-1">
+      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
         <button
           onClick={onPrev}
-          className="p-1.5 rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground/50 hover:text-muted-foreground cursor-pointer"
+          className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground/50 hover:text-muted-foreground cursor-pointer")}
           aria-label="Período anterior"
         >
           <ChevronLeft className="size-3.5" />
         </button>
         <button
           onClick={onToday}
-          className="px-3 py-1.5 rounded-lg text-xs font-medium bg-primary/8 text-primary hover:bg-primary/12 transition-colors cursor-pointer"
+          className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "px-3 py-1.5 rounded-lg text-xs font-medium bg-primary/8 text-primary hover:bg-primary/12 transition-colors cursor-pointer")}
         >
           Hoje
         </button>
         <button
           onClick={onNext}
-          className="p-1.5 rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground/50 hover:text-muted-foreground cursor-pointer"
+          className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground/50 hover:text-muted-foreground cursor-pointer")}
           aria-label="Próximo período"
         >
           <ChevronRight className="size-3.5" />
@@ -85,7 +85,7 @@ export function AgendaFilterBar({
       <div className="w-px h-5 bg-border/10" />
 
       {/* Source Filter Pills */}
-      <div className="flex items-center gap-1.5 flex-wrap">
+      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 flex-wrap")}>
         {/* All toggle */}
         <button
           onClick={() => {
@@ -95,7 +95,7 @@ export function AgendaFilterBar({
             }
           }}
           className={cn(
-            "inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-medium border transition-all cursor-pointer",
+            /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-medium border transition-all cursor-pointer",
             allActive
               ? "border-primary/20 bg-primary/8 text-primary"
               : "border-border/10 text-muted-foreground/40 hover:bg-muted/10",
@@ -114,7 +114,7 @@ export function AgendaFilterBar({
               key={source}
               onClick={() => onToggleSource(source)}
               className={cn(
-                "inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-medium border transition-all cursor-pointer",
+                /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-medium border transition-all cursor-pointer",
                 active
                   ? "border-primary/20 bg-primary/8 text-primary"
                   : "border-border/10 text-muted-foreground/40 hover:bg-muted/10 hover:text-muted-foreground/60",

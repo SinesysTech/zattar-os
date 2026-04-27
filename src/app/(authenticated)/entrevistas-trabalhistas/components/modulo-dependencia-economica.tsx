@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import {
   Select,
@@ -32,16 +33,16 @@ export function ModuloDependenciaEconomica({ data, onChange }: ModuloDependencia
   const mostrarInvestimento = data.investimento_especifico === true;
 
   return (
-    <div className="space-y-6">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <div>
         <Heading level="card">Preso na Plataforma</Heading>
-        <p className="text-sm text-muted-foreground">
+        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
           Avaliar o grau de dependência econômica do trabalhador em relação à plataforma
         </p>
       </div>
 
       {/* B.2.1: Percentual da renda */}
-      <div className="space-y-2">
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Label htmlFor="percentual">Qual porcentagem da sua renda vinha da plataforma?</Label>
         <Select
           value={data.percentual_renda ?? ''}
@@ -61,7 +62,7 @@ export function ModuloDependenciaEconomica({ data, onChange }: ModuloDependencia
       </div>
 
       {/* B.2.2: Quantidade de plataformas */}
-      <div className="space-y-2">
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Label htmlFor="qtd-plataformas">Em quantas plataformas trabalhava simultaneamente?</Label>
         <Select
           value={data.qtd_plataformas ?? ''}
@@ -81,7 +82,7 @@ export function ModuloDependenciaEconomica({ data, onChange }: ModuloDependencia
       </div>
 
       {/* B.2.3: Investimento específico */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>Fez algum investimento específico para trabalhar na plataforma? (moto, bag, celular, carro)</Label>
         <SimNaoRadio
           id="investimento"
@@ -90,7 +91,7 @@ export function ModuloDependenciaEconomica({ data, onChange }: ModuloDependencia
         />
 
         {mostrarInvestimento && (
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label htmlFor="desc-investimento">Descreva o investimento feito</Label>
             <Textarea
               id="desc-investimento"
@@ -104,7 +105,7 @@ export function ModuloDependenciaEconomica({ data, onChange }: ModuloDependencia
       </div>
 
       {/* B.2.4: Única fonte de renda */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>A plataforma era sua única fonte de renda?</Label>
         <SimNaoRadio
           id="unica-fonte-renda"
@@ -114,7 +115,7 @@ export function ModuloDependenciaEconomica({ data, onChange }: ModuloDependencia
       </div>
 
       {/* B.2.5: Exclusividade */}
-      <div className="space-y-3">
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>Havia cláusula de exclusividade (formal ou informal) com a plataforma?</Label>
         <SimNaoRadio
           id="clausula-exclusividade"

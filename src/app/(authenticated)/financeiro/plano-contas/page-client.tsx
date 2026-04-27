@@ -7,6 +7,7 @@
  * REFATORADO: Migrado de TableToolbar (deprecated) para DataTableToolbar (Data Shell)
  */
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useDebounce } from '@/hooks/use-debounce';
 import {
@@ -75,7 +76,7 @@ function criarColunas(
       size: 120,
       meta: { align: 'left' as const, headerLabel: 'Código' },
       cell: ({ row }) => (
-        <div className="flex items-center justify-start font-mono text-sm">
+        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex items-center justify-start font-mono text-sm")}>
           {row.getValue('codigo')}
         </div>
       ),
@@ -94,9 +95,9 @@ function criarColunas(
         const conta = row.original;
         return (
           <div className="flex flex-col justify-center">
-            <span className="text-sm">{conta.nome}</span>
+            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{conta.nome}</span>
             {conta.contaPai && (
-              <span className="text-xs text-muted-foreground">
+              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                 Pai: {conta.contaPai.codigo} - {conta.contaPai.nome}
               </span>
             )}
@@ -173,7 +174,7 @@ function criarColunas(
       id: 'acoes',
       header: () => (
         <div className="flex items-center justify-start">
-          <div className="text-sm font-medium">Ações</div>
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Ações</div>
         </div>
       ),
       enableSorting: false,

@@ -57,8 +57,8 @@ export function AssinaturaDigitalPageNav({ action }: AssinaturaDigitalPageNavPro
   const pathname = usePathname() ?? '';
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-end justify-between gap-4">
+    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
         <Heading level="page">Assinatura Digital</Heading>
         {action}
       </div>
@@ -66,7 +66,7 @@ export function AssinaturaDigitalPageNav({ action }: AssinaturaDigitalPageNavPro
       <nav
         aria-label="Navegação do módulo Assinatura Digital"
         className={cn(
-          'inline-flex items-center gap-1 rounded-2xl border border-border/40 bg-card/60 p-1',
+          /* design-system-escape: gap-1 gap sem token DS; p-1 → usar <Inset> */ 'inline-flex items-center gap-1 rounded-2xl border border-border/40 bg-card/60 p-1',
           'backdrop-blur-xl',
         )}
       >
@@ -78,7 +78,7 @@ export function AssinaturaDigitalPageNav({ action }: AssinaturaDigitalPageNavPro
               href={href}
               aria-current={active ? 'page' : undefined}
               className={cn(
-                'flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors',
+                /* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ 'flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors',
                 active
                   ? 'bg-foreground text-background shadow-sm'
                   : 'text-muted-foreground hover:bg-foreground/5 hover:text-foreground',

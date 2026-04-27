@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Pie, PieChart, Tooltip, Cell } from 'recharts';
 import Link from 'next/link';
 import { PieChart as PieIcon } from 'lucide-react';
@@ -63,10 +64,10 @@ export function WidgetDespesasCategoria() {
     return (
       <GlassPanel className="h-full transition-all duration-200">
         <CardHeader>
-          <CardTitle className="text-sm">Despesas por Categoria</CardTitle>
+          <CardTitle className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Despesas por Categoria</CardTitle>
         </CardHeader>
         <CardContent className="min-h-80 lg:min-h-90 flex items-center justify-center">
-          <p className="text-sm text-muted-foreground">Erro ao carregar dados</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Erro ao carregar dados</p>
         </CardContent>
       </GlassPanel>
     );
@@ -74,8 +75,8 @@ export function WidgetDespesasCategoria() {
 
   return (
     <GlassPanel className="h-full transition-all duration-200">
-      <CardHeader className="flex flex-col gap-2 pb-2 sm:flex-row sm:items-center sm:justify-between">
-        <Heading level="widget" className="flex min-w-0 flex-1 items-center gap-2">
+      <CardHeader className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pb-2 padding direcional sem Inset equiv. */ "flex flex-col gap-2 pb-2 sm:flex-row sm:items-center sm:justify-between")}>
+        <Heading level="widget" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex min-w-0 flex-1 items-center gap-2")}>
           <PieIcon className="h-4 w-4 text-muted-foreground" />
           <span className="truncate">Despesas por Categoria</span>
         </Heading>
@@ -83,7 +84,7 @@ export function WidgetDespesasCategoria() {
           <Link href="/financeiro/dre">DRE</Link>
         </Button>
       </CardHeader>
-      <CardContent className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4 min-h-70">
+      <CardContent className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4 min-h-70")}>
         <div className="flex items-center justify-center min-h-55">
           <div className="w-full h-64 sm:h-72 lg:h-80" style={{ minHeight: 220 }}>
             <ClientOnly>
@@ -110,23 +111,23 @@ export function WidgetDespesasCategoria() {
             </ClientOnly>
           </div>
         </div>
-        <div className="space-y-2 text-xs sm:text-sm max-h-64 sm:max-h-72 lg:max-h-80 overflow-y-auto">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; text-xs → migrar para <Text variant="caption">; sm:text-sm sem equivalente DS */ "space-y-2 text-xs sm:text-sm max-h-64 sm:max-h-72 lg:max-h-80 overflow-y-auto")}>
           {(despesasPorCategoria || []).map((item, idx) => {
             const categoriaNome = normalizarCategoria(item.categoria);
             return (
-              <div key={categoriaNome + idx} className="flex items-center justify-between rounded-md bg-muted/60 p-2 gap-2">
-                <div className="flex items-center gap-2 min-w-0 flex-1">
+              <div key={categoriaNome + idx} className={cn(/* design-system-escape: p-2 → usar <Inset>; gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between rounded-md bg-muted/60 p-2 gap-2")}>
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0 flex-1")}>
                   <span
                     className={`h-3 w-3 rounded-full shrink-0 ${DOT_BG_CLASSES[idx % DOT_BG_CLASSES.length]}`}
                   />
                   <span className="truncate">{categoriaNome}</span>
                 </div>
-                <span className="font-medium whitespace-nowrap">{formatarValor(item.valor)}</span>
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium whitespace-nowrap")}>{formatarValor(item.valor)}</span>
               </div>
             );
           })}
           {!despesasPorCategoria?.length && (
-            <p className="text-xs text-muted-foreground">Sem dados disponíveis.</p>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Sem dados disponíveis.</p>
           )}
         </div>
       </CardContent>

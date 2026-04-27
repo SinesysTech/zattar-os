@@ -43,7 +43,7 @@ export function DesktopStepper({
   return (
     <div
       className={cn(
-        'flex items-center justify-center gap-2',
+        /* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ 'flex items-center justify-center gap-2',
         'animate-fade-in animate-duration-300',
         className
       )}
@@ -56,7 +56,7 @@ export function DesktopStepper({
         return (
           <Fragment key={step.id}>
             {/* Step container */}
-            <div className="flex items-center gap-2">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               {/* Step indicator */}
               <StepIndicator
                 step={step}
@@ -68,10 +68,10 @@ export function DesktopStepper({
               {/* Step label - hidden on smaller screens */}
               <span
                 className={cn(
-                  'hidden text-sm transition-colors duration-200 lg:inline',
-                  step.status === 'current' && 'font-bold text-primary',
-                  step.status === 'completed' && 'font-medium text-foreground',
-                  step.status === 'pending' && 'font-medium text-muted-foreground'
+                  /* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ 'hidden text-sm transition-colors duration-200 lg:inline',
+                  step.status === 'current' && /* design-system-escape: font-bold → className de <Text>/<Heading> */ 'font-bold text-primary',
+                  step.status === 'completed' && /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'font-medium text-foreground',
+                  step.status === 'pending' && /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'font-medium text-muted-foreground'
                 )}
               >
                 {step.label}

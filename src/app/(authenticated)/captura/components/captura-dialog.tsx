@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useRef, useState } from 'react';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Button } from '@/components/ui/button';
@@ -113,7 +114,7 @@ export function CapturaDialog({ open, onOpenChange, onSuccess }: CapturaDialogPr
         </Button>
       }
     >
-      <div className="space-y-6">
+      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
         <TipoCapturaSelect
           value={tipoCaptura}
           onValueChange={(value) => setTipoCaptura(value as TipoCapturaDialog)}

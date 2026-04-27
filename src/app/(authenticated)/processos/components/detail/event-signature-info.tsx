@@ -26,11 +26,11 @@ export function EventSignatureInfo({
   }
 
   return (
-    <div className="px-6 py-5 border-b bg-muted/30">
-      <div className="flex flex-col gap-3">
+    <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "px-6 py-5 border-b bg-muted/30")}>
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
         {/* Assinatura digital */}
         {signatario && (
-          <div className="flex items-center gap-3">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
             {/* Ícone com círculo verde */}
             <div
               className={cn(
@@ -44,10 +44,10 @@ export function EventSignatureInfo({
 
             {/* Texto da assinatura */}
             <div>
-              <Text variant="label" as="p" className="font-medium leading-tight">
+              <Text variant="label" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "font-medium leading-tight")}>
                 Assinado digitalmente por
               </Text>
-              <p className="text-[13px] text-muted-foreground font-normal leading-tight mt-0.5">
+              <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[13px] text-muted-foreground font-normal leading-tight mt-0.5")}>
                 {signatario}
               </p>
             </div>
@@ -56,7 +56,7 @@ export function EventSignatureInfo({
 
         {/* Aviso de sigilo */}
         {isSigiloso && (
-          <div className="flex items-center gap-3">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
             {/* Ícone com círculo âmbar */}
             <div
               className={cn(
@@ -70,7 +70,7 @@ export function EventSignatureInfo({
 
             {/* Texto do sigilo */}
             <div>
-              <Text variant="label" as="p" className="font-medium leading-tight">
+              <Text variant="label" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "font-medium leading-tight")}>
                 Documento sigiloso — acesso restrito
               </Text>
             </div>

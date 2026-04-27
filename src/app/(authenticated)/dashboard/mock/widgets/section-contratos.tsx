@@ -11,6 +11,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import { FileText, Scale, Wallet, BarChart3, ArrowLeftRight, Activity, HeartPulse, PieChart } from 'lucide-react';
 import {
   GallerySection,
@@ -188,16 +189,16 @@ export function WidgetStatusContratos() {
       subtitle="Distribuição da carteira de contratos"
       depth={1}
     >
-      <div className="flex items-center gap-5">
+      <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5")}>
         <MiniDonut
           segments={STATUS_CONTRATOS}
           size={88}
           strokeWidth={11}
           centerLabel={fmtNum(total)}
         />
-        <div className="flex flex-col gap-2 flex-1 min-w-0">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2 flex-1 min-w-0")}>
           {STATUS_CONTRATOS.map((seg) => (
-            <div key={seg.label} className="flex items-center gap-2">
+            <div key={seg.label} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <span
                 className="size-2 rounded-full shrink-0"
                 style={{ backgroundColor: seg.color }}
@@ -205,7 +206,7 @@ export function WidgetStatusContratos() {
               <span className="text-[10px] text-muted-foreground/60 truncate flex-1">
                 {seg.label}
               </span>
-              <span className="text-[10px] font-medium tabular-nums">
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums")}>
                 {fmtNum(seg.value)}
               </span>
               <span className="text-[9px] text-muted-foreground/60 w-7 text-right tabular-nums">
@@ -229,16 +230,16 @@ export function WidgetTiposContrato() {
       subtitle="Volume por modalidade contratual"
       depth={1}
     >
-      <div className="flex flex-col gap-2.5">
+      <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex flex-col gap-2.5")}>
         {TIPOS_CONTRATO.map((tipo) => {
           const pct = Math.round((tipo.value / TIPOS_MAX) * 100);
           return (
             <div key={tipo.label}>
               <div className="flex items-center justify-between mb-1">
-                <span className="text-[10px] text-muted-foreground/70 truncate leading-none">
+                <span className={cn(/* design-system-escape: leading-none sem token DS */ "text-[10px] text-muted-foreground/70 truncate leading-none")}>
                   {tipo.label}
                 </span>
-                <span className="text-[10px] font-semibold tabular-nums ml-2 shrink-0">
+                <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold tabular-nums ml-2 shrink-0")}>
                   {tipo.value}
                 </span>
               </div>
@@ -267,15 +268,15 @@ export function WidgetObrigacoesVencer() {
       depth={1}
       className="md:col-span-2"
     >
-      <div className="flex flex-col -mx-1">
+      <div className={cn(/* design-system-escape: -mx-1 sem equivalente DS */ "flex flex-col -mx-1")}>
         {OBRIGACOES.map((ob) => (
           <ListItem key={ob.descricao}>
             <UrgencyDot level={ob.urgencia} />
             <div className="flex flex-col flex-1 min-w-0">
-              <span className="text-[10px] text-muted-foreground/80 truncate leading-tight">
+              <span className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[10px] text-muted-foreground/80 truncate leading-tight")}>
                 {ob.descricao}
               </span>
-              <div className="flex items-center gap-1.5 mt-0.5">
+              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mt-0.5")}>
                 <span
                   className={`text-[9px] px-1.5 py-px rounded-full font-medium ${BADGE_STYLES[ob.tipo]}`}
                 >
@@ -286,7 +287,7 @@ export function WidgetObrigacoesVencer() {
                 </span>
               </div>
             </div>
-            <span className="text-[10px] font-semibold tabular-nums shrink-0 text-right">
+            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold tabular-nums shrink-0 text-right")}>
               {fmtMoeda(ob.valor)}
             </span>
           </ListItem>
@@ -308,18 +309,18 @@ export function WidgetParcelasStatus() {
     >
       <StackedBar segments={PARCELAS_SEGMENTS} height={10} />
 
-      <div className="flex gap-2 mt-3 mb-4">
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2 mt-3 mb-4")}>
         {PARCELAS_SEGMENTS.map((seg) => {
           const pct = Math.round((seg.value / PARCELAS_TOTAL_N) * 100);
           return (
-            <div key={seg.label} className="flex items-center gap-1.5 flex-1">
+            <div key={seg.label} className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 flex-1")}>
               <span
                 className="size-2 rounded-sm shrink-0"
                 style={{ backgroundColor: seg.color }}
               />
               <div className="min-w-0">
                 <p className="text-[9px] text-muted-foreground/50 truncate">{seg.label}</p>
-                <p className="text-[10px] font-semibold tabular-nums">{seg.value}</p>
+                <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold tabular-nums")}>{seg.value}</p>
                 <p className="text-[9px] text-muted-foreground/60 tabular-nums">{pct}%</p>
               </div>
             </div>
@@ -327,7 +328,7 @@ export function WidgetParcelasStatus() {
         })}
       </div>
 
-      <div className="border-t border-border/10 pt-3 grid grid-cols-2 gap-3">
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "border-t border-border/10 pt-3 grid grid-cols-2 gap-3")}>
         <Stat
           label="Total Periodo"
           value={fmtMoeda(PARCELAS_TOTAL)}
@@ -356,16 +357,16 @@ export function WidgetRepassesPendentes() {
       subtitle="Divisão cliente / escritório"
       depth={1}
     >
-      <div className="flex flex-col -mx-1">
+      <div className={cn(/* design-system-escape: -mx-1 sem equivalente DS */ "flex flex-col -mx-1")}>
         {REPASSES.map((rep) => {
           const statusInfo = REPASSE_STATUS_STYLES[rep.status];
           const valorCliente = rep.total * (rep.pctCliente / 100);
           const valorEscritorio = rep.total * (rep.pctEscritorio / 100);
           return (
             <ListItem key={rep.processo}>
-              <div className="flex flex-col flex-1 min-w-0 gap-1">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-[10px] font-medium text-muted-foreground/80 truncate flex-1">
+              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col flex-1 min-w-0 gap-1")}>
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
+                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium text-muted-foreground/80 truncate flex-1")}>
                     {rep.cliente}
                   </span>
                   <span
@@ -377,10 +378,10 @@ export function WidgetRepassesPendentes() {
                 <span className="text-[9px] text-muted-foreground/55 font-mono truncate">
                   {rep.processo}
                 </span>
-                <div className="flex items-center gap-3 mt-0.5">
-                  <div className="flex items-center gap-1">
+                <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mt-0.5")}>
+                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
                     <span className="text-[9px] text-muted-foreground/60">Cliente</span>
-                    <span className="text-[9px] font-semibold text-primary/70 tabular-nums">
+                    <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[9px] font-semibold text-primary/70 tabular-nums")}>
                       {fmtMoeda(valorCliente)}
                     </span>
                     <span className="text-[8px] text-muted-foreground/55">
@@ -388,9 +389,9 @@ export function WidgetRepassesPendentes() {
                     </span>
                   </div>
                   <span className="text-[9px] text-muted-foreground/45">·</span>
-                  <div className="flex items-center gap-1">
+                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
                     <span className="text-[9px] text-muted-foreground/60">Escrit.</span>
-                    <span className="text-[9px] font-semibold tabular-nums text-muted-foreground/60">
+                    <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[9px] font-semibold tabular-nums text-muted-foreground/60")}>
                       {fmtMoeda(valorEscritorio)}
                     </span>
                     <span className="text-[8px] text-muted-foreground/55">
@@ -404,12 +405,12 @@ export function WidgetRepassesPendentes() {
         })}
       </div>
 
-      <div className="border-t border-border/10 mt-1 pt-2.5">
+      <div className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "border-t border-border/10 mt-1 pt-2.5")}>
         <div className="flex items-center justify-between">
-          <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+          <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Total pendente de repasse
           </span>
-          <span className="text-[10px] font-bold tabular-nums text-warning/80">
+          <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[10px] font-bold tabular-nums text-warning/80")}>
             {fmtMoeda(
               REPASSES.filter((r) => r.status !== 'repassado').reduce(
                 (a, r) => a + r.total * (r.pctCliente / 100),
@@ -434,13 +435,13 @@ export function WidgetModeloCobranca() {
       depth={2}
     >
       {/* Comparação em duas colunas */}
-      <div className="grid grid-cols-2 gap-3 mb-4">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3 mb-4")}>
         {/* Pro Labore */}
-        <div className="rounded-xl border border-border/15 bg-foreground/2 p-3">
-          <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider mb-1">
+        <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-xl border border-border/15 bg-foreground/2 p-3")}>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/50 uppercase tracking-wider mb-1")}>
             Pro Labore
           </p>
-          <p className="text-[10px] font-semibold text-muted-foreground/80 mb-2">
+          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold text-muted-foreground/80 mb-2")}>
             28 contratos
           </p>
           <Stat
@@ -453,11 +454,11 @@ export function WidgetModeloCobranca() {
         </div>
 
         {/* Pro Êxito */}
-        <div className="rounded-xl border border-primary/10 bg-primary/3 p-3">
-          <p className="text-[9px] text-primary/50 uppercase tracking-wider mb-1">
+        <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-xl border border-primary/10 bg-primary/3 p-3")}>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-primary/50 uppercase tracking-wider mb-1")}>
             Pro Exito
           </p>
-          <p className="text-[10px] font-semibold text-primary/70 mb-2">
+          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold text-primary/70 mb-2")}>
             40 contratos
           </p>
           <Stat
@@ -471,15 +472,15 @@ export function WidgetModeloCobranca() {
       </div>
 
       {/* Taxa de Realização + mini bar trend */}
-      <div className="flex items-center gap-4 pt-3 border-t border-border/10 mb-4">
-        <div className="flex items-center gap-3">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pt-3 padding direcional sem Inset equiv. */ "flex items-center gap-4 pt-3 border-t border-border/10 mb-4")}>
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
           <ProgressRing
             percent={REALIZACAO_RATE}
             size={52}
             color="hsl(220 70% 60%)"
           />
           <div>
-            <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
               Taxa de Realizacao
             </p>
             <p className="text-[10px] text-muted-foreground/60 mt-0.5">
@@ -491,7 +492,7 @@ export function WidgetModeloCobranca() {
 
       {/* Trend bar: pro labore vs pro êxito por mês */}
       <div>
-        <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider mb-2">
+        <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider mb-2")}>
           Receita realizada — ultimos 3 meses
         </p>
         <MiniBar
@@ -500,12 +501,12 @@ export function WidgetModeloCobranca() {
           barColor="bg-muted-foreground/30"
           barColor2="bg-primary/50"
         />
-        <div className="flex items-center gap-3 mt-2">
-          <div className="flex items-center gap-1.5">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mt-2")}>
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
             <span className="size-2 rounded-sm bg-muted-foreground/30" />
             <span className="text-[9px] text-muted-foreground/60">Pro Labore</span>
           </div>
-          <div className="flex items-center gap-1.5">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
             <span className="size-2 rounded-sm bg-primary/50" />
             <span className="text-[9px] text-muted-foreground/60">Pro Exito</span>
           </div>
@@ -527,9 +528,9 @@ export function WidgetSaudeContratual() {
       className="md:col-span-2"
     >
       {/* Gauge + comparações lado a lado */}
-      <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "flex flex-col sm:flex-row items-center sm:items-start gap-6")}>
         {/* Gauge central */}
-        <div className="flex flex-col items-center gap-1 shrink-0">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col items-center gap-1 shrink-0")}>
           <GaugeMeter
             value={72}
             max={100}
@@ -537,7 +538,7 @@ export function WidgetSaudeContratual() {
             status="good"
             size={110}
           />
-          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider mt-1">
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider mt-1")}>
             Score contratual
           </p>
         </div>
@@ -546,7 +547,7 @@ export function WidgetSaudeContratual() {
         <div className="hidden sm:block w-px self-stretch bg-border/10" />
 
         {/* Comparações */}
-        <div className="flex flex-1 flex-wrap gap-x-6 gap-y-4 justify-center sm:justify-start pt-1">
+        <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "flex flex-1 flex-wrap gap-x-6 gap-y-4 justify-center sm:justify-start pt-1")}>
           {SAUDE_COMPARACOES.map((s) => (
             <ComparisonStat
               key={s.label}
@@ -584,7 +585,7 @@ export function WidgetObrigacoesTreemap() {
       {/* Legenda compacta */}
       <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1.5">
         {TREEMAP_OBRIGACOES.map((seg) => (
-          <div key={seg.label} className="flex items-center gap-1.5">
+          <div key={seg.label} className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
             <span
               className="size-2 rounded-sm shrink-0"
               style={{ backgroundColor: seg.color }}

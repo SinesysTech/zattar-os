@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { Heading } from '@/components/ui/typography';
@@ -87,14 +88,14 @@ export function AuthLogsTimeline({ usuarioId }: AuthLogsTimelineProps) {
 
   if (isLoading) {
     return (
-      <GlassPanel depth={1} className="p-6">
+      <GlassPanel depth={1} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
         <Skeleton className="h-6 w-48" />
         <Skeleton className="h-4 w-full mt-2" />
-        <div className="space-y-4 mt-4">
+        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4 mt-4")}>
           {[1, 2, 3].map((i) => (
-            <div key={i} className="flex gap-4">
+            <div key={i} className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}>
               <Skeleton className="h-10 w-10 rounded-full" />
-              <div className="flex-1 space-y-2">
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "flex-1 space-y-2")}>
                 <Skeleton className="h-4 w-32" />
                 <Skeleton className="h-3 w-full" />
               </div>
@@ -106,18 +107,18 @@ export function AuthLogsTimeline({ usuarioId }: AuthLogsTimelineProps) {
   }
 
   return (
-    <GlassPanel depth={1} className="p-6">
-      <Heading level="widget" className="flex items-center gap-2">
+    <GlassPanel depth={1} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
+      <Heading level="widget" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
         <Clock className="size-4" />
         Histórico de Acesso
       </Heading>
-      <p className="text-xs text-muted-foreground/50 mt-1">
+      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/50 mt-1")}>
         Sessões de login registradas pelo sistema
       </p>
 
       <div className="mt-4">
         {error && (
-          <div className="text-sm text-destructive p-4 bg-destructive/10 rounded-lg">
+          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; p-4 → migrar para <Inset variant="card-compact"> */ "text-sm text-destructive p-4 bg-destructive/10 rounded-lg")}>
             {error}
           </div>
         )}
@@ -141,14 +142,14 @@ export function AuthLogsTimeline({ usuarioId }: AuthLogsTimelineProps) {
             {/* Linha vertical da timeline */}
             <div className="absolute left-5 top-0 bottom-0 w-px bg-border" />
 
-            <div className="space-y-6">
+            <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
               {logs.map((log, index) => {
                 const Icon = EVENT_ICONS[log.eventType];
                 const label = EVENT_LABELS[log.eventType];
                 const colorClass = EVENT_COLORS[log.eventType];
 
                 return (
-                  <div key={index} className="relative flex gap-4">
+                  <div key={index} className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "relative flex gap-4")}>
                     {/* Ícone do evento */}
                     <div
                       className={`relative z-10 flex h-10 w-10 items-center justify-center rounded-full bg-background border-2 ${colorClass}`}
@@ -157,12 +158,12 @@ export function AuthLogsTimeline({ usuarioId }: AuthLogsTimelineProps) {
                     </div>
 
                     {/* Conteúdo */}
-                    <div className="flex-1 pb-6">
-                      <div className="bg-muted/4 border-border/15 rounded-xl p-4">
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="space-y-1">
+                    <div className={cn(/* design-system-escape: pb-6 padding direcional sem Inset equiv. */ "flex-1 pb-6")}>
+                      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "bg-muted/4 border-border/15 rounded-xl p-4")}>
+                        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start justify-between gap-4")}>
+                          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
                             <p className={`font-medium ${colorClass}`}>{label}</p>
-                            <p className="text-sm text-muted-foreground">
+                            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                               {formatDistanceToNow(new Date(log.timestamp), {
                                 addSuffix: true,
                                 locale: ptBR,
@@ -171,15 +172,15 @@ export function AuthLogsTimeline({ usuarioId }: AuthLogsTimelineProps) {
                           </div>
                         </div>
 
-                        <div className="mt-3 space-y-2 text-sm text-muted-foreground">
+                        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "mt-3 space-y-2 text-sm text-muted-foreground")}>
                           {log.ipAddress && (
-                            <div className="flex items-center gap-2">
+                            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                               <MapPin className="h-3.5 w-3.5" />
                               <span>IP: {log.ipAddress}</span>
                             </div>
                           )}
                           {log.userAgent && (
-                            <div className="flex items-center gap-2">
+                            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                               <Monitor className="h-3.5 w-3.5" />
                               <span>{simplifyUserAgent(log.userAgent)}</span>
                             </div>

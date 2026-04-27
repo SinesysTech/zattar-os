@@ -93,16 +93,16 @@ export function StatCard({
 
   const content = (
     <GlassPanel depth={2} className={cn('transition-all hover:shadow-md', href && 'cursor-pointer', className)}>
-      <CardContent className="pt-4 sm:pt-6">
-        <div className="flex items-start justify-between gap-2">
-          <div className="space-y-1 sm:space-y-2 flex-1 min-w-0">
+      <CardContent className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv.; sm:pt-6 sem equivalente DS */ "pt-4 sm:pt-6")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+          <div className={cn(/* design-system-escape: space-y-1 sem token DS; sm:space-y-2 sem equivalente DS */ "space-y-1 sm:space-y-2 flex-1 min-w-0")}>
             <Heading level="widget" className="text-muted-foreground truncate">{title}</Heading>
-            <div className="flex items-baseline gap-2 flex-wrap">
-              <p className="text-2xl sm:text-3xl font-bold tracking-tight break-all">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-baseline gap-2 flex-wrap")}>
+              <p className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; sm:text-3xl sem equivalente DS; font-bold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-2xl sm:text-3xl font-bold tracking-tight break-all")}>
                 {typeof value === 'number' ? value.toLocaleString('pt-BR') : value}
               </p>
               {change !== undefined && (
-                <div className={cn('flex items-center gap-1 text-sm font-medium whitespace-nowrap', styles.trend[trend])}>
+                <div className={cn(/* design-system-escape: gap-1 gap sem token DS; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ 'flex items-center gap-1 text-sm font-medium whitespace-nowrap', styles.trend[trend])}>
                   <TrendIcon className="h-4 w-4" />
                   <span>
                     {change > 0 ? '+' : ''}
@@ -112,11 +112,11 @@ export function StatCard({
               )}
             </div>
             {(changeLabel || description) && (
-              <p className="text-xs text-muted-foreground line-clamp-2">{changeLabel || description}</p>
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground line-clamp-2")}>{changeLabel || description}</p>
             )}
           </div>
           {Icon && (
-            <div className={cn('rounded-lg p-2 sm:p-3 shrink-0', styles.icon)}>
+            <div className={cn(/* design-system-escape: p-2 → usar <Inset>; sm:p-3 sem equivalente DS */ 'rounded-lg p-2 sm:p-3 shrink-0', styles.icon)}>
               <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
             </div>
           )}
@@ -143,18 +143,18 @@ interface MiniStatProps {
 
 export function MiniStat({ label, value, icon: Icon, color, className }: MiniStatProps) {
   return (
-    <div className={cn('flex items-center gap-3', className)}>
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ 'flex items-center gap-3', className)}>
       {Icon && (
         <div
-          className="rounded-md p-2"
+          className={cn(/* design-system-escape: p-2 → usar <Inset> */ "rounded-md p-2")}
           style={{ backgroundColor: color ? `${color}20` : undefined }}
         >
           <Icon className="h-4 w-4" style={{ color }} />
         </div>
       )}
       <div>
-        <p className="text-xs text-muted-foreground">{label}</p>
-        <p className="text-lg font-semibold">
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{label}</p>
+        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "text-lg font-semibold")}>
           {typeof value === 'number' ? value.toLocaleString('pt-BR') : value}
         </p>
       </div>

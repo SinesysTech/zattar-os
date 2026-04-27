@@ -25,7 +25,7 @@ export function ProgressIndicator({
   const clamped = Math.min(100, Math.max(0, Math.round(value)));
 
   return (
-    <div className={cn("flex items-center gap-2", className)}>
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2", className)}>
       <Progress
         value={clamped}
         className={cn("flex-1", size === "sm" ? "h-2" : "h-3")}

@@ -53,10 +53,10 @@ function MetricCardContent({
       if (parts.length === 2) {
         return (
           <>
-            <span className="text-2xl font-bold font-heading text-foreground tabular-nums">
+            <span className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-bold font-heading text-foreground tabular-nums")}>
               {parts[0]}
             </span>
-            <span className="text-base font-semibold font-heading text-muted-foreground tabular-nums">
+            <span className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ "text-base font-semibold font-heading text-muted-foreground tabular-nums")}>
               ,{parts[1]}
             </span>
           </>
@@ -64,15 +64,15 @@ function MetricCardContent({
       }
     }
     return (
-      <span className="text-2xl font-bold font-heading text-foreground tabular-nums">
+      <span className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-bold font-heading text-foreground tabular-nums")}>
         {val}
       </span>
     );
   };
 
   return (
-    <CardContent className="p-6 flex flex-col h-full relative">
-      <CardHeader className="p-0 flex flex-row items-center justify-between mb-4 space-y-0">
+    <CardContent className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 flex flex-col h-full relative")}>
+      <CardHeader className={cn(/* design-system-escape: p-0 → usar <Inset>; space-y-0 sem token DS */ "p-0 flex flex-row items-center justify-between mb-4 space-y-0")}>
         <Heading level="widget" className="text-muted-foreground">
           {title}
         </Heading>
@@ -81,14 +81,14 @@ function MetricCardContent({
       <div className="flex flex-col flex-1">
         <div>{formatValue(value)}</div>
         {trend && TrendIcon && (
-          <p className={cn('text-xs mt-2 flex items-center gap-1', trendDirection ? trendColors[trendDirection] : 'text-muted-foreground')}>
+          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; gap-1 gap sem token DS */ 'text-xs mt-2 flex items-center gap-1', trendDirection ? trendColors[trendDirection] : 'text-muted-foreground')}>
             <TrendIcon className="h-3.5 w-3.5" />
             {trend}
           </p>
         )}
       </div>
       {footer && (
-        <div className="mt-auto pt-4 border-t">
+        <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "mt-auto pt-4 border-t")}>
           <div className="text-right">
             {footer}
           </div>

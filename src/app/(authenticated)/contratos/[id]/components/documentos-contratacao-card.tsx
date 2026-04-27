@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { FileDown, Send } from 'lucide-react';
 import { toast } from 'sonner';
@@ -165,21 +166,21 @@ export function DocumentosContratacaoCard({
 
   return (
     <>
-      <div className="flex items-center gap-3 px-4 py-3.5 rounded-[14px] bg-primary/5 border border-primary/15">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "flex items-center gap-3 px-4 py-3.5 rounded-[14px] bg-primary/5 border border-primary/15")}>
         <div className="inline-flex size-9 items-center justify-center rounded-[10px] bg-primary/10 text-primary shrink-0">
           <FileDown className="size-4" aria-hidden="true" />
         </div>
         <div className="flex-1 min-w-0">
-          <Text variant="label" as="h4" className="font-semibold text-foreground">
+          <Text variant="label" as="h4" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-foreground")}>
             Documentos de contratação
           </Text>
-          <Text variant="caption" className="text-muted-foreground mt-0.5 leading-relaxed">
+          <Text variant="caption" className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-muted-foreground mt-0.5 leading-relaxed")}>
             Gera os documentos do formulário de contratação deste segmento
             preenchidos com os dados do contrato. Se faltar informação,
             complete antes do download ou envio.
           </Text>
         </div>
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 shrink-0")}>
           <Button
             variant="outline"
             size="sm"

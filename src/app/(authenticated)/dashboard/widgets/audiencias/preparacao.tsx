@@ -12,6 +12,7 @@
  * ============================================================================
  */
 
+import { cn } from '@/lib/utils';
 import { Calendar, Clock, FileText, Video } from 'lucide-react';
 import {
   ProgressRing,
@@ -81,13 +82,13 @@ export function WidgetPreparacao() {
       depth={1}
     >
       {audiencias.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-6 gap-2">
+        <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center justify-center py-6 gap-2")}>
           <p className="text-[11px] text-muted-foreground/60">
             Nenhuma audiência próxima registrada.
           </p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
           {audiencias.map((audiencia) => {
             const prepScore = calcPrepScoreFromProxima(audiencia);
             const ringColor = scoreColor(prepScore);
@@ -96,7 +97,7 @@ export function WidgetPreparacao() {
             return (
               <div
                 key={audiencia.id}
-                className="flex items-center gap-3 px-2 py-2 -mx-2 rounded-xl hover:bg-foreground/4 transition-colors duration-150"
+                className={cn(/* design-system-escape: gap-3 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; -mx-2 sem equivalente DS */ "flex items-center gap-3 px-2 py-2 -mx-2 rounded-xl hover:bg-foreground/4 transition-colors duration-150")}
               >
                 <ProgressRing
                   percent={prepScore}
@@ -106,35 +107,35 @@ export function WidgetPreparacao() {
 
                 {/* Informações da audiência */}
                 <div className="flex-1 min-w-0">
-                  <p className="text-[11px] font-medium leading-tight">
+                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[11px] font-medium leading-tight")}>
                     {audiencia.tipo_audiencia ?? 'Audiência'}
                   </p>
                   {partesTexto && (
-                    <p className="text-[10px] text-foreground/65 mt-0.5 leading-tight">
+                    <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[10px] text-foreground/65 mt-0.5 leading-tight")}>
                       {partesTexto}
                     </p>
                   )}
                   {contextoProcesso && (
-                    <p className="text-[9px] text-foreground/55 mt-0.5 leading-tight">
+                    <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[9px] text-foreground/55 mt-0.5 leading-tight")}>
                       {contextoProcesso}
                     </p>
                   )}
-                  <p className="text-[9px] text-muted-foreground/60 font-mono break-all leading-relaxed mt-0.5">
+                  <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[9px] text-muted-foreground/60 font-mono break-all leading-relaxed mt-0.5")}>
                     {audiencia.numero_processo}
                   </p>
-                  <div className="flex items-center gap-3 mt-1">
-                    <div className="flex items-center gap-1 text-[9px] text-muted-foreground/50">
+                  <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mt-1")}>
+                    <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 text-[9px] text-muted-foreground/50")}>
                       <Calendar className="size-2.5" />
                       <span>{formatarDataAudiencia(audiencia.data_audiencia)}</span>
                     </div>
                     {audiencia.hora_audiencia && (
-                      <div className="flex items-center gap-1 text-[9px] text-muted-foreground/50">
+                      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 text-[9px] text-muted-foreground/50")}>
                         <Clock className="size-2.5" />
                         <span>{audiencia.hora_audiencia}</span>
                       </div>
                     )}
                     {audiencia.url_audiencia_virtual && (
-                      <div className="flex items-center gap-1 text-[9px] text-muted-foreground/60">
+                      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 text-[9px] text-muted-foreground/60")}>
                         <Video className="size-2.5 shrink-0" />
                         <span>Ambiente virtual</span>
                       </div>

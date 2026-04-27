@@ -151,12 +151,12 @@ export function TimelineSearchResult({
       aria-selected={isSelected}
       onClick={onClick}
       className={cn(
-        'w-full flex items-center justify-between p-2 rounded cursor-pointer group text-left transition-colors',
+        /* design-system-escape: p-2 → usar <Inset> */ 'w-full flex items-center justify-between p-2 rounded cursor-pointer group text-left transition-colors',
         isSelected ? 'bg-accent' : 'hover:bg-accent/50'
       )}
     >
       {/* Lado esquerdo: ícone + textos */}
-      <div className="flex items-center gap-2.5 min-w-0 flex-1">
+      <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5 min-w-0 flex-1")}>
         {/* Caixa do ícone */}
         <div
           className="size-8 rounded bg-card border flex items-center justify-center shrink-0"
@@ -166,12 +166,12 @@ export function TimelineSearchResult({
         </div>
 
         {/* Textos */}
-        <div className="flex flex-col min-w-0 gap-0.5">
+        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col min-w-0 gap-0.5")}>
           {/* Título com destaque */}
-          <Text variant="label" as="p" className="font-medium truncate leading-snug text-foreground">
+          <Text variant="label" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-snug sem token DS */ "font-medium truncate leading-snug text-foreground")}>
             {partesTitulo.map((parte, i) =>
               parte.match ? (
-                <span key={i} className="font-semibold text-primary">
+                <span key={i} className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-primary")}>
                   {parte.text}
                 </span>
               ) : (
@@ -181,10 +181,10 @@ export function TimelineSearchResult({
           </Text>
 
           {/* Linha secundária: badge + anexo */}
-          <div className="flex items-center gap-1.5">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
             <span
               className={cn(
-                'inline-flex items-center px-1.5 py-0.5 rounded-sm text-[11px] font-medium border',
+                /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'inline-flex items-center px-1.5 py-0.5 rounded-sm text-[11px] font-medium border',
                 badgeClasses
               )}
             >
@@ -192,7 +192,7 @@ export function TimelineSearchResult({
             </span>
 
             {temAnexo && (
-              <span className="inline-flex items-center gap-0.5 text-[11px] text-muted-foreground font-mono">
+              <span className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "inline-flex items-center gap-0.5 text-[11px] text-muted-foreground font-mono")}>
                 <Paperclip className="size-2.5" aria-hidden="true" />
                 1 anexo
               </span>

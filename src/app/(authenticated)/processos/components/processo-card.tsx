@@ -77,7 +77,7 @@ export function ProcessoCard({
   const hasUrgency = !!proximaAudienciaDate;
 
   return (
-    <GlassPanel className="p-4 cursor-pointer group">
+    <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 cursor-pointer group")}>
       <div
         onClick={onClick}
         role="button"
@@ -85,17 +85,17 @@ export function ProcessoCard({
         onKeyDown={(e) => e.key === 'Enter' && onClick()}
       >
         {/* Top row — CNJ à esquerda, tribunal/grau à direita (spec) */}
-        <div className="flex items-start justify-between gap-3">
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
           <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-1">
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
               <span className="text-mono-num truncate">{processo.numeroProcesso}</span>
               <CopyButton text={processo.numeroProcesso} label="Copiar número" />
             </div>
-            <Heading level="card" className="text-sm truncate mt-0.5">
+            <Heading level="card" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm truncate mt-0.5")}>
               {tituloPartes}
             </Heading>
           </div>
-          <div className="flex flex-col items-end gap-1 shrink-0">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col items-end gap-1 shrink-0")}>
             <SemanticBadge category="tribunal" value={trt} className="text-[9px]">
               {trt}
             </SemanticBadge>
@@ -129,7 +129,7 @@ export function ProcessoCard({
                   : '—'
               }
               icon={<AlertTriangle className="size-3 text-warning" />}
-              valueClassName="text-warning font-medium"
+              valueClassName=/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-warning font-medium"
             />
           )}
           {dataAut && (
@@ -143,11 +143,11 @@ export function ProcessoCard({
 
         {/* Tags */}
         {tags && tags.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-3">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-wrap gap-1 mt-3")}>
             {tags.slice(0, 3).map((tag) => (
               <span
                 key={tag.id}
-                className="text-[9px] px-1.5 py-0.5 rounded bg-primary/5 text-primary/60 border border-primary/10"
+                className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] px-1.5 py-0.5 rounded bg-primary/5 text-primary/60 border border-primary/10")}
               >
                 {tag.nome}
               </span>
@@ -162,7 +162,7 @@ export function ProcessoCard({
       </div>
 
       {/* Footer — responsável popover (feature preservada) + timestamp com ícone (spec) */}
-      <div className="flex items-center justify-between mt-3 pt-2 border-t border-border/10">
+      <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between mt-3 pt-2 border-t border-border/10")}>
         <ResponsavelPopover
           processoId={processo.id}
           responsavel={responsavel}
@@ -179,7 +179,7 @@ export function ProcessoCard({
             {responsavel?.nomeExibicao || 'Sem resp.'}
           </span>
         </ResponsavelPopover>
-        <span className="text-[9px] text-muted-foreground/40 flex items-center gap-1 font-mono tabular-nums">
+        <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-[9px] text-muted-foreground/40 flex items-center gap-1 font-mono tabular-nums")}>
           <Clock className="size-2.5" />
           {timeAgo(processo.updatedAt)}
         </span>
@@ -200,13 +200,13 @@ interface MetaCellProps {
 
 function MetaCell({ label, value, icon, valueClassName, truncate }: MetaCellProps) {
   return (
-    <div className="flex flex-col gap-0.5 min-w-0">
+    <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5 min-w-0")}>
       <Text variant="meta-label" className="text-[9px]">
         {label}
       </Text>
       <div
         className={cn(
-          'flex items-center gap-1 text-[11px]',
+          /* design-system-escape: gap-1 gap sem token DS */ 'flex items-center gap-1 text-[11px]',
           truncate && 'min-w-0',
         )}
       >

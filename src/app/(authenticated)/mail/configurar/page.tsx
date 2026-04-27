@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/providers/user-provider";
@@ -189,14 +190,14 @@ export default function ConfigurarEmailPage() {
   }
 
   return (
-    <div className="mx-auto max-w-xl space-y-6 py-6">
-      <div className="flex items-center gap-3">
+    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose">; py-6 padding direcional sem Inset equiv. */ "mx-auto max-w-xl space-y-6 py-6")}>
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
         <Button variant="ghost" size="icon" aria-label="Voltar" onClick={() => router.push("/app/mail")}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div>
           <Heading level="page">Configurar E-mail</Heading>
-          <p className="text-muted-foreground text-sm">
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>
             Conecte sua conta de e-mail do Cloudron
           </p>
         </div>
@@ -211,8 +212,8 @@ export default function ConfigurarEmailPage() {
               : "Informe o e-mail e senha da sua conta Cloudron."}
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
+        <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label htmlFor="nome-conta">Nome da conta</Label>
             <Input
               id="nome-conta"
@@ -220,12 +221,12 @@ export default function ConfigurarEmailPage() {
               value={nomeConta}
               onChange={(e) => setNomeConta(e.target.value)}
             />
-            <p className="text-muted-foreground text-xs">
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground text-xs")}>
               Nome exibido na sidebar para identificar esta caixa de entrada.
             </p>
           </div>
 
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label htmlFor="email">E-mail</Label>
             <Input
               id="email"
@@ -236,7 +237,7 @@ export default function ConfigurarEmailPage() {
             />
           </div>
 
-          <div className="space-y-2">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label htmlFor="password">Senha</Label>
             <div className="relative">
               <Input
@@ -250,7 +251,7 @@ export default function ConfigurarEmailPage() {
                 type="button"
                 variant="ghost"
                 size="icon" aria-label="Ocultar"
-                className="absolute right-0 top-0 h-full px-3"
+                className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "absolute right-0 top-0 h-full px-3")}
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? (
@@ -264,12 +265,12 @@ export default function ConfigurarEmailPage() {
 
           <Accordion type="single" collapsible>
             <AccordionItem value="advanced">
-              <AccordionTrigger className="text-sm">
+              <AccordionTrigger className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
                 Configurações avançadas
               </AccordionTrigger>
-              <AccordionContent className="space-y-4 pt-2">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
+              <AccordionContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; pt-2 padding direcional sem Inset equiv. */ "space-y-4 pt-2")}>
+                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                     <Label htmlFor="imap-host">Servidor IMAP</Label>
                     <Input
                       id="imap-host"
@@ -277,7 +278,7 @@ export default function ConfigurarEmailPage() {
                       onChange={(e) => setImapHost(e.target.value)}
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                     <Label htmlFor="imap-port">Porta IMAP</Label>
                     <Input
                       id="imap-port"
@@ -287,8 +288,8 @@ export default function ConfigurarEmailPage() {
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
+                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                     <Label htmlFor="smtp-host">Servidor SMTP</Label>
                     <Input
                       id="smtp-host"
@@ -296,7 +297,7 @@ export default function ConfigurarEmailPage() {
                       onChange={(e) => setSmtpHost(e.target.value)}
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                     <Label htmlFor="smtp-port">Porta SMTP</Label>
                     <Input
                       id="smtp-port"
@@ -312,8 +313,8 @@ export default function ConfigurarEmailPage() {
 
           {/* Test result */}
           {testResult && (
-            <div className="space-y-2 rounded-md border p-3">
-              <div className="flex items-center gap-2 text-sm">
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; p-3 → usar <Inset> */ "space-y-2 rounded-md border p-3")}>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2 text-sm")}>
                 {testResult.imap.success ? (
                   <CheckCircle2 className="h-4 w-4 text-success" />
                 ) : (
@@ -323,7 +324,7 @@ export default function ConfigurarEmailPage() {
                   IMAP: {testResult.imap.success ? "Conectado" : testResult.imap.error}
                 </span>
               </div>
-              <div className="flex items-center gap-2 text-sm">
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2 text-sm")}>
                 {testResult.smtp.success ? (
                   <CheckCircle2 className="h-4 w-4 text-success" />
                 ) : (
@@ -337,11 +338,11 @@ export default function ConfigurarEmailPage() {
           )}
 
           {error && (
-            <p className="text-sm text-destructive">{error}</p>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{error}</p>
           )}
 
           {/* Actions */}
-          <div className="flex items-center gap-2 pt-2">
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 pt-2")}>
             <Button
               variant="outline"
               onClick={handleTest}

@@ -1,8 +1,9 @@
+import { cn } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function RelatorioInconsistenciasPage() {
     return (
-        <div className="space-y-6">
+        <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
             <Card>
                 <CardHeader>
                     <CardTitle>Inconsistências de Sincronização</CardTitle>

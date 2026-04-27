@@ -10,7 +10,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar";
-import { generateAvatarFallback } from "@/lib/utils";
+import { generateAvatarFallback, cn } from '@/lib/utils';
 import {
   DataShell,
   DataTable,
@@ -56,7 +56,7 @@ const columns: ColumnDef<Tarefa>[] = [
     header: ({ column }) => (
       <Button
         variant="ghost"
-        className="p-0!"
+        className={cn(/* design-system-escape: p-0! → usar <Inset> */ "p-0!")}
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Tarefa
@@ -88,7 +88,7 @@ const columns: ColumnDef<Tarefa>[] = [
       const nome = row.original.responsavelNome;
       if (!nome) return "—";
       return (
-        <div className="flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           <Avatar size="sm">
             <AvatarImage
               src={row.original.responsavelAvatar ?? ""}
@@ -108,7 +108,7 @@ const columns: ColumnDef<Tarefa>[] = [
     header: ({ column }) => (
       <Button
         variant="ghost"
-        className="p-0!"
+        className={cn(/* design-system-escape: p-0! → usar <Inset> */ "p-0!")}
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Prazo
@@ -190,7 +190,7 @@ export function GlobalTasksView({ tarefas }: GlobalTasksViewProps) {
         ) : null
       }
       footer={
-        <div className="text-muted-foreground text-sm">
+        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>
           {filteredCount} {filteredCount === 1 ? "tarefa" : "tarefas"}
         </div>
       }

@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import React, { useMemo } from 'react';
 import {
   LayoutGrid,
@@ -67,7 +68,7 @@ export function WidgetPicker({
         <Button
           variant="outline"
           size="sm"
-          className="gap-2 text-xs font-medium border-border/30 bg-transparent hover:bg-foreground/5 backdrop-blur-sm"
+          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "gap-2 text-xs font-medium border-border/30 bg-transparent hover:bg-foreground/5 backdrop-blur-sm")}
           aria-label="Personalizar dashboard"
         >
           <LayoutGrid className="size-3.5" />
@@ -77,30 +78,30 @@ export function WidgetPicker({
 
       <SheetContent
         side="right"
-        className="w-full sm:w-96 flex flex-col gap-0 p-0 bg-background/95 backdrop-blur-xl border-l border-border/20"
+        className={cn(/* design-system-escape: gap-0 gap sem token DS; p-0 → usar <Inset> */ "w-full sm:w-96 flex flex-col gap-0 p-0 bg-background/95 backdrop-blur-xl border-l border-border/20")}
       >
-        <SheetHeader className="px-5 pt-6 pb-4 border-b border-border/10">
-          <SheetTitle className="font-heading text-base font-semibold">
+        <SheetHeader className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; pt-6 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv. */ "px-5 pt-6 pb-4 border-b border-border/10")}>
+          <SheetTitle className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ "font-heading text-base font-semibold")}>
             Personalizar Dashboard
           </SheetTitle>
-          <SheetDescription className="not-sr-only text-sm text-muted-foreground/60 mt-0.5">
+          <SheetDescription className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "not-sr-only text-sm text-muted-foreground/60 mt-0.5")}>
             Escolha quais widgets exibir
           </SheetDescription>
         </SheetHeader>
 
         {/* Resumo + reset */}
-        <div className="flex items-center justify-between px-5 py-3 border-b border-border/10">
-          <p className="text-xs text-muted-foreground/60">
-            <span className="font-semibold text-foreground">{activeCount}</span>
+        <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-center justify-between px-5 py-3 border-b border-border/10")}>
+          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60")}>
+            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-foreground")}>{activeCount}</span>
             {' '}de{' '}
-            <span className="font-semibold text-foreground">{totalCount}</span>
+            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-foreground")}>{totalCount}</span>
             {' '}widgets ativos
           </p>
           <Button
             variant="ghost"
             size="sm"
             onClick={onResetDefaults}
-            className="gap-1.5 text-xs text-muted-foreground/60 hover:text-foreground h-7 px-2"
+            className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv. */ "gap-1.5 text-xs text-muted-foreground/60 hover:text-foreground h-7 px-2")}
             aria-label="Restaurar configuração padrão"
           >
             <RotateCcw className="size-3" />
@@ -117,7 +118,7 @@ export function WidgetPicker({
                 <label
                   key={widget.id}
                   htmlFor={`widget-toggle-${widget.id}`}
-                  className="flex items-center gap-4 px-5 py-3.5 cursor-pointer hover:bg-foreground/3 transition-colors duration-150"
+                  className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-5 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "flex items-center gap-4 px-5 py-3.5 cursor-pointer hover:bg-foreground/3 transition-colors duration-150")}
                 >
                   <Switch
                     id={`widget-toggle-${widget.id}`}
@@ -126,7 +127,7 @@ export function WidgetPicker({
                     aria-label={`${isEnabled ? 'Desativar' : 'Ativar'} widget ${widget.title}`}
                   />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium leading-tight truncate flex items-center gap-2">
+                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading>; leading-tight sem token DS; gap-2 → migrar para <Inline gap="tight"> */ "text-sm font-medium leading-tight truncate flex items-center gap-2")}>
                        {/* Opcional: mostrar um ícone bem sutil do módulo se quiser, mas o usuário pediu para não separar */}
                       {widget.title}
                     </p>
@@ -140,9 +141,9 @@ export function WidgetPicker({
           )}
 
           {availableWidgets.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-16 px-5 text-center">
+            <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv.; px-5 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 px-5 text-center")}>
               <LayoutGrid className="size-8 text-muted-foreground/45 mb-3" />
-              <p className="text-sm text-muted-foreground/50">
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50")}>
                 Nenhum widget disponivel para o seu perfil.
               </p>
             </div>

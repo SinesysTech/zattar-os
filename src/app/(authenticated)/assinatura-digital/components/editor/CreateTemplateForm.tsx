@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import React, { useState } from 'react';
 import { FileText, Info} from 'lucide-react';
 import { toast } from 'sonner';
@@ -90,23 +91,23 @@ export default function CreateTemplateForm({
   };
 
   return (
-    <div className="border rounded-lg p-6 bg-card shadow-sm">
-      <div className="space-y-4">
+    <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "border rounded-lg p-6 bg-card shadow-sm")}>
+      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         {/* Header */}
-        <div className="flex items-center gap-2 pb-3 border-b">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pb-3 padding direcional sem Inset equiv. */ "flex items-center gap-2 pb-3 border-b")}>
           <FileText className="h-4 w-4" />
-          <Heading level="card" className="text-sm">Informações do Novo Template</Heading>
+          <Heading level="card" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Informações do Novo Template</Heading>
         </div>
 
         {/* Nome */}
-        <div className="space-y-2">
-          <Label htmlFor="template-nome-create" className="text-xs font-medium">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <Label htmlFor="template-nome-create" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium")}>
             Nome do Template *
           </Label>
           <Input
             id="template-nome-create"
             placeholder="Ex: Contrato Apps - Uber 2024"
-            className="h-9 text-sm"
+            className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "h-9 text-sm")}
             value={formData.nome}
             onChange={(e) => setFormData((prev) => ({ ...prev, nome: e.target.value }))}
             autoFocus
@@ -114,14 +115,14 @@ export default function CreateTemplateForm({
         </div>
 
         {/* Descrição */}
-        <div className="space-y-2">
-          <Label htmlFor="template-desc-create" className="text-xs font-medium">
+        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <Label htmlFor="template-desc-create" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium")}>
             Descrição
           </Label>
           <Textarea
             id="template-desc-create"
             placeholder="Informações adicionais sobre o uso deste template (opcional)"
-            className="text-sm resize-none"
+            className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm resize-none")}
             rows={2}
             value={formData.descricao}
             onChange={(e) => setFormData((prev) => ({ ...prev, descricao: e.target.value }))}
@@ -130,8 +131,8 @@ export default function CreateTemplateForm({
 
         {/* Conteúdo Markdown (condicional para tipoTemplate === 'markdown') */}
         {tipoTemplate === 'markdown' && (
-          <div className="space-y-2">
-            <Label htmlFor="template-markdown-create" className="text-xs font-medium">
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <Label htmlFor="template-markdown-create" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium")}>
               Conteúdo Markdown *
             </Label>
             <MarkdownRichTextEditor
@@ -141,39 +142,39 @@ export default function CreateTemplateForm({
               />
             <Alert>
               <Info className="h-4 w-4" />
-              <AlertDescription className="text-xs">
-                <p className="font-medium mb-2">Variáveis disponíveis (use entre chaves duplas):</p>
-                <div className="space-y-2">
+              <AlertDescription className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mb-2")}>Variáveis disponíveis (use entre chaves duplas):</p>
+                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                   <div>
-                    <p className="font-semibold text-[11px] mb-1">📋 Dados do Cliente (Etapa 2):</p>
-                    <ul className="list-disc list-inside space-y-0.5 ml-2 text-[11px]">
+                    <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-[11px] mb-1")}>📋 Dados do Cliente (Etapa 2):</p>
+                    <ul className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "list-disc list-inside space-y-0.5 ml-2 text-[11px]")}>
                       <li><code>{'{{cliente.nome_completo}}'}</code>, <code>{'{{cliente.cpf}}'}</code>, <code>{'{{cliente.email}}'}</code>, <code>{'{{cliente.telefone}}'}</code></li>
                       <li><code>{'{{cliente.data_nascimento}}'}</code>, <code>{'{{cliente.genero}}'}</code>, <code>{'{{cliente.estado_civil}}'}</code>, <code>{'{{cliente.nacionalidade}}'}</code></li>
                       <li><code>{'{{cliente.endereco_completo}}'}</code> ou componentes individuais: <code>{'{{cliente.endereco_rua}}'}</code>, <code>{'{{cliente.endereco_numero}}'}</code>, <code>{'{{cliente.endereco_complemento}}'}</code>, <code>{'{{cliente.endereco_bairro}}'}</code>, <code>{'{{cliente.endereco_cidade}}'}</code>, <code>{'{{cliente.endereco_uf}}'}</code>, <code>{'{{cliente.endereco_cep}}'}</code></li>
                     </ul>
                   </div>
                   <div>
-                    <p className="font-semibold text-[11px] mb-1">📝 Campos do Formulário Dinâmico (Etapa 3):</p>
+                    <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-[11px] mb-1")}>📝 Campos do Formulário Dinâmico (Etapa 3):</p>
                     <p className="text-[11px] ml-2 mb-1">
                       <strong>TODOS os campos do formulário associado</strong> estão disponíveis usando o ID do campo:
                     </p>
-                    <ul className="list-disc list-inside space-y-0.5 ml-2 text-[11px]">
+                    <ul className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "list-disc list-inside space-y-0.5 ml-2 text-[11px]")}>
                       <li><strong>Exemplo (Apps):</strong> <code>{'{{aplicativo}}'}</code>, <code>{'{{modalidade}}'}</code>, <code>{'{{situacao}}'}</code>, <code>{'{{dataInicio}}'}</code>, <code>{'{{dataBloqueio}}'}</code>, <code>{'{{acidenteTrabalho}}'}</code>, <code>{'{{observacoes}}'}</code></li>
                       <li><strong>Exemplo (Trabalhista):</strong> <code>{'{{nomeEmpresaPessoa}}'}</code>, <code>{'{{cpfCnpjEmpresaPessoa}}'}</code>, <code>{'{{cepEmpresaPessoa}}'}</code>, <code>{'{{logradouroEmpresaPessoa}}'}</code>, <code>{'{{dataInicio}}'}</code>, <code>{'{{dataRescisao}}'}</code></li>
                       <li className="text-muted-foreground"><em>Os campos disponíveis dependem do schema do formulário configurado no Admin</em></li>
                     </ul>
                   </div>
                   <div>
-                    <p className="font-semibold text-[11px] mb-1">🖊️ Assinatura Digital (Etapa 4):</p>
-                    <ul className="list-disc list-inside space-y-0.5 ml-2 text-[11px]">
+                    <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-[11px] mb-1")}>🖊️ Assinatura Digital (Etapa 4):</p>
+                    <ul className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "list-disc list-inside space-y-0.5 ml-2 text-[11px]")}>
                       <li><code>{'{{assinatura.assinatura_base64}}'}</code> - Imagem da assinatura (base64)</li>
                       <li><code>{'{{assinatura.foto_base64}}'}</code> - Foto/selfie do cliente (se habilitada)</li>
                       <li><code>{'{{assinatura.latitude}}'}</code>, <code>{'{{assinatura.longitude}}'}</code> - Coordenadas GPS (se geolocalização habilitada)</li>
                     </ul>
                   </div>
                   <div>
-                    <p className="font-semibold text-[11px] mb-1">⚙️ Metadados do Sistema:</p>
-                    <ul className="list-disc list-inside space-y-0.5 ml-2 text-[11px]">
+                    <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-[11px] mb-1")}>⚙️ Metadados do Sistema:</p>
+                    <ul className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "list-disc list-inside space-y-0.5 ml-2 text-[11px]")}>
                       <li><code>{'{{sistema.data_geracao}}'}</code> - Data em formato extenso (ex: &quot;16 de outubro de 2025&quot;)</li>
                       <li><code>{'{{sistema.timestamp}}'}</code> - Carimbo de data/hora (ex: &quot;16/10/2025 às 14:30:45&quot;)</li>
                       <li><code>{'{{sistema.protocolo}}'}</code> - Número de protocolo único</li>
@@ -183,7 +184,7 @@ export default function CreateTemplateForm({
                     </ul>
                   </div>
                 </div>
-                <p className="mt-3 text-[11px] text-muted-foreground border-t pt-2">
+                <p className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "mt-3 text-[11px] text-muted-foreground border-t pt-2")}>
                   <strong>📌 Dica:</strong> Use o formato <code>{'{{categoria.campo}}'}</code> para campos estáticos (cliente, sistema, assinatura)
                   e <code>{'{{campoId}}'}</code> para campos do formulário dinâmico.
                 </p>
@@ -198,15 +199,15 @@ export default function CreateTemplateForm({
 
         {/* Info do arquivo (condicional para tipoTemplate === 'pdf') */}
         {tipoTemplate === 'pdf' && pdfFile && (
-          <div className="pt-2 border-t">
-            <p className="text-xs text-muted-foreground">
+          <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "pt-2 border-t")}>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
               <strong>Arquivo:</strong> {pdfFile.name} ({(pdfFile.size / 1024 / 1024).toFixed(2)} MB)
             </p>
           </div>
         )}
 
         {/* Ações */}
-        <div className="flex gap-2 pt-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-2 padding direcional sem Inset equiv. */ "flex gap-2 pt-2")}>
           {onCancel && (
             <Button
               variant="outline"
@@ -220,7 +221,7 @@ export default function CreateTemplateForm({
           )}
           <Button
             size="sm"
-            className="flex-1 gap-2"
+            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex-1 gap-2")}
             onClick={handleSubmit}
             disabled={!canSubmit || isSaving}
           >

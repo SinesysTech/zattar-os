@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import { useEffect, useState, useCallback } from "react";
 import {
   Select,
@@ -64,7 +65,7 @@ export function SegmentoSelect({
 
   if (error) {
     return (
-      <div className="text-sm text-destructive">
+      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
         {error}
         <button
           type="button"
@@ -96,10 +97,10 @@ export function SegmentoSelect({
           ) : (
             segmentos.map((segmento) => (
               <SelectItem key={segmento.id} value={String(segmento.id)}>
-                <div className="flex items-center gap-2">
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                   <span>{segmento.nome}</span>
                   {!segmento.ativo && (
-                    <span className="text-xs text-muted-foreground">(Inativo)</span>
+                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>(Inativo)</span>
                   )}
                 </div>
               </SelectItem>

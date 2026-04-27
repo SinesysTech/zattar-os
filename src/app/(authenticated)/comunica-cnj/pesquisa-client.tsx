@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useCallback, useMemo } from 'react';
 import { toast } from 'sonner';
 import {
@@ -88,11 +89,11 @@ export function PesquisaClient() {
   }, [isBuscando, jaBuscou, total]);
 
   return (
-    <div className="space-y-5">
+    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       <DiarioOficialPageNav active="pesquisa" subtitle={subtitle} />
 
       {/* Busca centralizada — hero de consulta à API pública */}
-      <div className="py-4">
+      <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "py-4")}>
         <SearchHero onBuscar={executarBusca} />
         <div className="mt-4">
           <SearchQuickFilters />
@@ -101,7 +102,7 @@ export function PesquisaClient() {
 
       {/* Atalhos + stats antes da primeira busca */}
       {!jaBuscou && (
-        <div className="flex flex-col gap-6">
+        <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "flex flex-col gap-6")}>
           <SearchShortcuts onAfterApply={executarBusca} />
           <SearchStats />
         </div>

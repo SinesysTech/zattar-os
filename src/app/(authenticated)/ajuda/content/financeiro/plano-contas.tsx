@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
@@ -20,7 +21,7 @@ import {
 
 export default function PlanoContas() {
   return (
-    <div className="space-y-10">
+    <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
       <div>
         <Heading level="page">Plano de Contas</Heading>
         <p className="text-muted-foreground mt-2">
@@ -34,7 +35,7 @@ export default function PlanoContas() {
         <p className="text-muted-foreground mb-4">
           O plano de contas é organizado em até quatro níveis de hierarquia:
         </p>
-        <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+        <ul className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "space-y-2 text-sm text-muted-foreground list-disc list-inside")}>
           <li>
             <strong>Nível 1 — Grupo Principal:</strong> ex: Receitas Operacionais, Despesas
             Administrativas

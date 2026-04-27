@@ -370,14 +370,14 @@ export default function CredenciaisPage() {
 
   return (
     <>
-      <div className="space-y-5">
+      <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
         {/* KPI Strip */}
         <PulseStrip items={kpiItems} />
 
         {/* Filter Bar */}
-        <GlassPanel depth={1} className="px-4 py-2.5">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-            <div className="flex items-center gap-2 flex-wrap">
+        <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "px-4 py-2.5")}>
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
               <AdvogadosFilter
                 title="Advogado"
                 options={advogadoOptions}
@@ -403,7 +403,7 @@ export default function CredenciaisPage() {
                 onValueChange={setStatusFilter}
               />
             </div>
-            <div className="flex items-center gap-2 flex-1 justify-end">
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
               <SearchInput
                 value={busca}
                 onChange={setBusca}
@@ -418,8 +418,8 @@ export default function CredenciaisPage() {
         {viewMode === 'tabela' && (
           <>
             <GlassPanel depth={1} className="overflow-hidden relative">
-              <div className="flex items-center px-4 py-2.5 border-b border-foreground/5">
-                <span className="text-xs text-muted-foreground/60">
+              <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center px-4 py-2.5 border-b border-foreground/5")}>
+                <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60")}>
                   {credenciaisFiltradas.length} credenciais
                 </span>
               </div>
@@ -440,8 +440,8 @@ export default function CredenciaisPage() {
 
               {/* Sticky Bulk Actions Bar */}
               {selectedCount > 0 && (
-                <div className="sticky bottom-0 left-0 right-0 flex items-center gap-3 bg-primary/95 backdrop-blur-sm border-t border-primary-foreground/12 px-5 py-2.5 text-primary-foreground rounded-b-2xl">
-                  <span className="text-sm font-semibold flex-1">{selectedCount} selecionada(s)</span>
+                <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-5 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "sticky bottom-0 left-0 right-0 flex items-center gap-3 bg-primary/95 backdrop-blur-sm border-t border-primary-foreground/12 px-5 py-2.5 text-primary-foreground rounded-b-2xl")}>
+                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold flex-1")}>{selectedCount} selecionada(s)</span>
                   <Button
                     variant="secondary"
                     size="sm"
@@ -466,7 +466,7 @@ export default function CredenciaisPage() {
 
         {/* Card View */}
         {viewMode === 'cards' && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3")}>
             {isLoading ? (
               Array.from({ length: 6 }).map((_, i) => (
                 <GlassPanel key={i} depth={1} className="h-40 animate-pulse" />
@@ -481,55 +481,55 @@ export default function CredenciaisPage() {
               </div>
             ) : (
               credenciaisFiltradas.map((credencial) => (
-                <GlassPanel key={credencial.id} depth={2} className="p-4 transition-all duration-300 ease-out hover:shadow-md hover:-translate-y-px">
+                <GlassPanel key={credencial.id} depth={2} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 transition-all duration-300 ease-out hover:shadow-md hover:-translate-y-px")}>
                   {/* Tribunal + Grau header */}
-                  <div className="flex items-center gap-3 mb-3">
+                  <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mb-3")}>
                     <div className="w-9 h-9 rounded-[0.625rem] bg-primary/8 flex items-center justify-center shrink-0">
                       <Landmark className="w-4 h-4 text-primary" />
                     </div>
                     <div className="min-w-0">
-                      <div className="text-sm font-semibold">{credencial.tribunal}</div>
-                      <div className="text-xs text-muted-foreground/55">
+                      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold")}>{credencial.tribunal}</div>
+                      <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/55")}>
                         {GRAU_LABELS[credencial.grau] ?? credencial.grau}
                       </div>
                     </div>
                     {/* Status dot */}
-                    <div className="ml-auto flex items-center gap-1.5">
+                    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "ml-auto flex items-center gap-1.5")}>
                       <div className={cn('size-2 rounded-full', credencial.active ? 'bg-success' : 'bg-muted-foreground/40')} />
-                      <span className={cn('text-[11px] font-medium', credencial.active ? 'text-success' : 'text-muted-foreground/50')}>
+                      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[11px] font-medium', credencial.active ? 'text-success' : 'text-muted-foreground/50')}>
                         {credencial.active ? 'Ativa' : 'Inativa'}
                       </span>
                     </div>
                   </div>
 
-                  <div className="border-t border-border/10 my-2" />
+                  <div className={cn(/* design-system-escape: my-2 margin sem primitiva DS */ "border-t border-border/10 my-2")} />
 
                   {/* Advogado info */}
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground/60">
+                  <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-2 text-xs text-muted-foreground/60")}>
                       <Users className="size-3 shrink-0" />
                       <span className="truncate">{credencial.advogado_nome}</span>
                     </div>
                     {credencial.usuario && (
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground/60">
+                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-2 text-xs text-muted-foreground/60")}>
                         <KeyRound className="size-3 shrink-0" />
                         <span className="font-mono text-[11px]">{credencial.usuario}</span>
                       </div>
                     )}
                   </div>
 
-                  <div className="border-t border-border/10 mt-3 pt-3" />
+                  <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "border-t border-border/10 mt-3 pt-3")} />
 
                   {/* Actions */}
-                  <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="sm" className="flex-1 text-xs h-7" onClick={() => handleToggleStatus(credencial)}>
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                    <Button variant="ghost" size="sm" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex-1 text-xs h-7")} onClick={() => handleToggleStatus(credencial)}>
                       {credencial.active ? (
                         <><PowerOff className="size-3 mr-1" />Desativar</>
                       ) : (
                         <><Power className="size-3 mr-1" />Ativar</>
                       )}
                     </Button>
-                    <Button variant="ghost" size="sm" className="text-xs h-7" onClick={() => handleEdit(credencial)}>
+                    <Button variant="ghost" size="sm" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs h-7")} onClick={() => handleEdit(credencial)}>
                       Editar
                     </Button>
                   </div>
@@ -560,8 +560,8 @@ export default function CredenciaisPage() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="py-4">
-            <div className="grid gap-2">
+          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "py-4")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
               <Label>Advogado</Label>
               <AdvogadoCombobox
                 advogados={advogadosList}

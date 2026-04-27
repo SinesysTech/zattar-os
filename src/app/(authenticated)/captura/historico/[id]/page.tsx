@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { notFound } from 'next/navigation';
 
 import { CapturaResult, type CapturaResultData, CapturaErrosFormatados, CapturaRawLogs } from '@/app/(authenticated)/captura';
@@ -17,28 +18,18 @@ import {
   Timer,
   FileJson,
   ScrollText,
+  CheckCircle2,
+  XCircle,
+  AlertTriangle,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { formatarTipoCaptura, formatarDuracao } from '@/app/(authenticated)/captura/utils/format-captura';
 
 interface PageProps {
   params: Promise<{
     id: string;
   }>;
-}
-
-function calcularDuracao(inicio: string, fim: string | null): string | null {
-  if (!fim) return null;
-  const ms = new Date(fim).getTime() - new Date(inicio).getTime();
-  if (ms < 1000) return `${ms}ms`;
-  const segundos = Math.floor(ms / 1000);
-  if (segundos < 60) return `${segundos}s`;
-  const minutos = Math.floor(segundos / 60);
-  const segsRestantes = segundos % 60;
-  if (minutos < 60) return `${minutos}m ${segsRestantes}s`;
-  const horas = Math.floor(minutos / 60);
-  const minsRestantes = minutos % 60;
-  return `${horas}h ${minsRestantes}m ${segsRestantes}s`;
 }
 
 export default async function CapturaDetalhesPage({ params }: PageProps) {
@@ -58,9 +49,12 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
     notFound();
   }
 
-  const duracao = calcularDuracao(captura.iniciado_em, captura.concluido_em);
+  const duracao = formatarDuracao(captura.iniciado_em, captura.concluido_em);
   const isFailed = captura.status === 'failed';
   const isCompleted = captura.status === 'completed';
+  const isInProgress = captura.status === 'in_progress';
+
+  const tipoFormatado = formatarTipoCaptura(captura.tipo_captura);
 
   return (
     <>
@@ -69,39 +63,47 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
       <div className="fixed top-16 right-48 w-32 h-32 bg-info/[0.03] rounded-full blur-3xl pointer-events-none" />
 
       {/* Header da página */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between relative">
-        <div className="flex items-center gap-3">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between relative")}>
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
           <IconContainer size="md" className="bg-primary/10">
             <Activity className="size-4 text-primary" />
           </IconContainer>
           <div>
-            <Heading level="page">{`Captura #${captura.id}`}</Heading>
-            <p className="text-[11px] font-medium text-muted-foreground/50 mt-0.5 uppercase tracking-wide">
-              {captura.tipo_captura.replace(/_/g, ' ')}
-            </p>
+            <Heading level="page">{tipoFormatado}</Heading>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-0.5")}>
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wide sem token DS */ "text-[11px] font-medium text-muted-foreground/50 uppercase tracking-wide")}>
+                Captura #{captura.id}
+              </p>
+              {isInProgress && (
+                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "inline-flex items-center gap-1 text-[10px] font-medium text-info uppercase tracking-wider")}>
+                  <span className="h-1.5 w-1.5 rounded-full bg-info animate-pulse" />
+                  em andamento
+                </span>
+              )}
+            </div>
           </div>
         </div>
         <Button variant="outline" size="sm" asChild className="shrink-0">
           <Link href="/captura/historico">
             <ArrowLeft className="mr-2 size-3.5" />
-            Voltar
+            Voltar ao histórico
           </Link>
         </Button>
       </div>
 
       {/* KPI Strip */}
-      <GlassPanel depth={1} className="p-4">
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4 sm:grid-cols-4")}>
           {/* Status */}
-          <div className="flex flex-col gap-1.5">
-            <div className="flex items-center gap-1.5">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
               <Activity className="size-3 text-muted-foreground/50" />
-              <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
                 Status
               </p>
             </div>
             <div className="relative w-fit">
-              {captura.status === 'in_progress' && (
+              {isInProgress && (
                 <span className="absolute inset-0 rounded-full bg-info/20 animate-pulse" />
               )}
               <CapturaStatusSemanticBadge value={captura.status} className="relative w-fit" />
@@ -109,27 +111,27 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
           </div>
 
           {/* Iniciado em */}
-          <div className="flex flex-col gap-1.5">
-            <div className="flex items-center gap-1.5">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
               <CalendarClock className="size-3 text-muted-foreground/50" />
-              <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
                 Iniciado em
               </p>
             </div>
-            <p className="text-sm tabular-nums text-foreground/80">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm tabular-nums text-foreground/80")}>
               {new Date(captura.iniciado_em).toLocaleString('pt-BR')}
             </p>
           </div>
 
           {/* Concluído em */}
-          <div className="flex flex-col gap-1.5">
-            <div className="flex items-center gap-1.5">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
               <CalendarCheck className="size-3 text-muted-foreground/50" />
-              <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
                 Concluído em
               </p>
             </div>
-            <p className="text-sm tabular-nums text-foreground/80">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm tabular-nums text-foreground/80")}>
               {captura.concluido_em
                 ? new Date(captura.concluido_em).toLocaleString('pt-BR')
                 : <span className="text-muted-foreground/40">—</span>}
@@ -137,23 +139,46 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
           </div>
 
           {/* Duração */}
-          <div className="flex flex-col gap-1.5">
-            <div className="flex items-center gap-1.5">
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
               <Timer className="size-3 text-muted-foreground/50" />
-              <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
                 Duração
               </p>
             </div>
-            <p className="text-sm tabular-nums font-display font-semibold text-foreground/80">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm tabular-nums font-display font-semibold text-foreground/80")}>
               {duracao ?? <span className="text-muted-foreground/40 font-normal">—</span>}
             </p>
           </div>
         </div>
       </GlassPanel>
 
+      {/* Indicador visual rápido de resultado */}
+      {(isCompleted || isFailed) && (
+        <div className={`flex items-center gap-2.5 rounded-lg border px-4 py-2.5 ${
+          isCompleted
+            ? 'border-success/20 bg-success/[0.04]'
+            : 'border-destructive/20 bg-destructive/[0.04]'
+        }`}>
+          {isCompleted ? (
+            <CheckCircle2 className="h-4 w-4 text-success shrink-0" />
+          ) : (
+            <XCircle className="h-4 w-4 text-destructive shrink-0" />
+          )}
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>
+            {isCompleted ? 'Captura concluída com sucesso' : 'Captura finalizada com erros'}
+          </p>
+          {rawLogs.length > 0 && (
+            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "ml-auto text-xs text-muted-foreground")}>
+              {rawLogs.length} registro{rawLogs.length !== 1 ? 's' : ''} de log
+            </span>
+          )}
+        </div>
+      )}
+
       {/* Resultado (quando completed) */}
-      {isCompleted && (
-        <WidgetContainer title="Resultado">
+      {isCompleted && captura.resultado && (
+        <WidgetContainer title="Resultado da captura">
           <CapturaResult
             success={true}
             data={captura.resultado as CapturaResultData}
@@ -164,24 +189,26 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
 
       {/* Erros (quando failed) */}
       {isFailed && captura.erro && (
-        <CapturaErrosFormatados erro={captura.erro} />
+        <WidgetContainer title="Diagnóstico de erros">
+          <CapturaErrosFormatados erro={captura.erro} />
+        </WidgetContainer>
       )}
 
       {/* Tabs: Logs Detalhados + Dados Brutos */}
       <Tabs defaultValue="logs" className="w-full">
         <TabsList>
-          <TabsTrigger value="logs" className="gap-1.5">
+          <TabsTrigger value="logs" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5")}>
             <ScrollText className="size-3.5" />
-            Logs Detalhados
+            Logs por tribunal
             {rawLogs.length > 0 && (
-              <Badge variant="secondary" className="ml-1 text-[10px] px-1.5 py-0">
+              <Badge variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "ml-1 text-[10px] px-1.5 py-0")}>
                 {rawLogs.length}
               </Badge>
             )}
           </TabsTrigger>
-          <TabsTrigger value="dados-brutos" className="gap-1.5">
+          <TabsTrigger value="dados-brutos" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5")}>
             <FileJson className="size-3.5" />
-            Dados Brutos
+            Payload bruto
           </TabsTrigger>
         </TabsList>
 
@@ -191,19 +218,19 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
 
         <TabsContent value="dados-brutos" className="mt-4">
           <div className="flex flex-col">
-            <div className="flex items-center gap-2 mb-2.5 px-0.5">
-              <FileJson className="size-3.5 text-primary shrink-0" aria-hidden="true" />
-              <h4 className="text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.08em]">
-                Payload JSON da execução
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-0.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 mb-2.5 px-0.5")}>
+              <AlertTriangle className="size-3.5 text-muted-foreground shrink-0" aria-hidden="true" />
+              <h4 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.08em]")}>
+                Payload JSON da execução — dados técnicos para auditoria
               </h4>
             </div>
-            <DetailSectionCard className="p-0 overflow-hidden">
+            <DetailSectionCard className={cn(/* design-system-escape: p-0 → usar <Inset> */ "p-0 overflow-hidden")}>
               {captura.resultado ? (
-                <pre className="p-4 overflow-auto max-h-[500px] text-xs font-mono leading-relaxed">
+                <pre className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; text-xs → migrar para <Text variant="caption">; leading-relaxed sem token DS */ "p-4 overflow-auto max-h-[500px] text-xs font-mono leading-relaxed")}>
                   {JSON.stringify(captura.resultado, null, 2)}
                 </pre>
               ) : (
-                <div className="p-6 text-center">
+                <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 text-center")}>
                   <p className="text-[11px] text-muted-foreground/60">
                     Nenhum dado disponível.
                   </p>

@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import { useState, useEffect, useTransition } from "react";
 import { toast } from "sonner";
 import { DialogFormShell } from "@/components/shared/dialog-shell";
@@ -143,7 +144,7 @@ export function NovoChatDialog({ open, onOpenChange, onChatCreated }: NovoChatDi
         </Button>
       }
     >
-      <div className="space-y-2 px-6 py-4">
+      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "space-y-2 px-6 py-4")}>
         <Label>Com quem você quer conversar?</Label>
         <Select
           onValueChange={setSelectedUsuarioId}

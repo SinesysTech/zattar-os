@@ -47,7 +47,7 @@ interface AudienciasFilterBarProps {
 
 // ── Shared ─────────────────────────────────────────────────────────────
 
-const POPOVER_CLASSES = 'rounded-2xl glass-dropdown overflow-hidden p-0';
+const POPOVER_CLASSES = /* design-system-escape: p-0 → usar <Inset> */ 'rounded-2xl glass-dropdown overflow-hidden p-0';
 
 function _FilterChip({
   label,
@@ -69,7 +69,7 @@ function _FilterChip({
       type="button"
       onClick={onClick}
       className={cn(
-        'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 font-medium transition-colors cursor-pointer',
+        /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 font-medium transition-colors cursor-pointer',
         active
           ? 'border-primary/20 bg-primary/5 text-primary'
           : 'border-border/15 text-muted-foreground/60 hover:bg-muted/30'
@@ -79,7 +79,7 @@ function _FilterChip({
       <span className="text-micro-caption">{label}</span>
       {count !== undefined && count > 0 && (
         <span className={cn(
-          'text-micro-caption px-1 py-px rounded-full tabular-nums',
+          /* design-system-escape: px-1 padding direcional sem Inset equiv. */ 'text-micro-caption px-1 py-px rounded-full tabular-nums',
           active ? 'bg-primary/10' : 'bg-muted/50'
         )}>
           {count}
@@ -92,7 +92,7 @@ function _FilterChip({
             e.stopPropagation();
             onClear();
           }}
-          className="ml-0.5 rounded-full p-0.5 hover:bg-primary/10 transition-colors"
+          className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-0.5 rounded-full p-0.5 hover:bg-primary/10 transition-colors")}
         >
           <X className="size-2.5" />
         </span>
@@ -117,7 +117,7 @@ function FilterDropdownTrigger({
   return (
     <div
       className={cn(
-        'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 font-medium transition-colors cursor-pointer',
+        /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 font-medium transition-colors cursor-pointer',
         active
           ? 'border-primary/20 bg-primary/5 text-primary'
           : 'border-border/15 text-muted-foreground/60 hover:bg-muted/30',
@@ -133,7 +133,7 @@ function FilterDropdownTrigger({
             e.stopPropagation();
             onClear();
           }}
-          className="ml-0.5 rounded-full p-0.5 hover:bg-primary/10 transition-colors"
+          className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-0.5 rounded-full p-0.5 hover:bg-primary/10 transition-colors")}
         >
           <X className="size-2.5" />
         </span>
@@ -186,7 +186,7 @@ function StatusFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-44')} align="start" side="bottom">
-        <div className="p-2 space-y-0.5">
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-0.5 sem token DS */ "p-2 space-y-0.5")}>
           {STATUS_OPTIONS.map((opt) => (
             <button
               key={opt.value}
@@ -196,7 +196,7 @@ function StatusFilter({
                 setOpen(false);
               }}
               className={cn(
-                'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
+                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
                 selected === opt.value
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70'
@@ -265,7 +265,7 @@ function ResponsavelFilter({
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-56')} align="start" side="bottom">
         <Command className="bg-transparent">
-          <div className="p-2 space-y-0.5 border-b border-border/10">
+          <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-0.5 sem token DS */ "p-2 space-y-0.5 border-b border-border/10")}>
             <button
               type="button"
               onClick={() => {
@@ -273,7 +273,7 @@ function ResponsavelFilter({
                 setOpen(false);
               }}
               className={cn(
-                'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
+                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
                 selected === 'meus'
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70'
@@ -289,7 +289,7 @@ function ResponsavelFilter({
                 setOpen(false);
               }}
               className={cn(
-                'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
+                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
                 selected === 'sem_responsavel'
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70'
@@ -300,10 +300,10 @@ function ResponsavelFilter({
               {selected === 'sem_responsavel' && <Check className="size-3" />}
             </button>
           </div>
-          <div className="px-3 pt-2 pb-1.5">
+          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-2 pb-1.5")}>
             <CommandInput placeholder="Buscar usuário..." className="h-8 text-micro-caption rounded-lg" />
           </div>
-          <CommandList className="max-h-44 px-1.5 pb-1.5">
+          <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-44 px-1.5 pb-1.5")}>
             <CommandEmpty>
               <Text variant="caption" as="span" className="text-muted-foreground/40">Não encontrado</Text>
             </CommandEmpty>
@@ -316,7 +316,7 @@ function ResponsavelFilter({
                     onChange(selected === usuario.id ? null : usuario.id);
                     setOpen(false);
                   }}
-                  className="gap-2 rounded-lg text-micro-caption px-2 py-1.5"
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-micro-caption px-2 py-1.5")}
                 >
                   <Avatar size="xs" className="border size-4">
                     <AvatarImage src={usuario.avatarUrl || undefined} />
@@ -383,10 +383,10 @@ function TRTFilter({
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-48')} align="start" side="bottom">
         <Command className="bg-transparent">
-          <div className="px-3 pt-3 pb-1.5">
+          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
             <CommandInput placeholder="Buscar TRT..." className="h-8 text-micro-caption rounded-lg" />
           </div>
-          <CommandList className="max-h-52 px-1.5 pb-1.5">
+          <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-52 px-1.5 pb-1.5")}>
             <CommandEmpty>
               <Text variant="caption" as="span" className="text-muted-foreground/40">Não encontrado</Text>
             </CommandEmpty>
@@ -396,7 +396,7 @@ function TRTFilter({
                   key={trt}
                   value={trt}
                   onSelect={() => handleToggle(trt)}
-                  className="gap-2 rounded-lg text-micro-caption px-2 py-1.5"
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-micro-caption px-2 py-1.5")}
                 >
                   <div className={cn(
                     'size-3.5 rounded border flex items-center justify-center',
@@ -451,7 +451,7 @@ function ModalidadeFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-44')} align="start" side="bottom">
-        <div className="p-2 space-y-0.5">
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-0.5 sem token DS */ "p-2 space-y-0.5")}>
           {MODALIDADE_OPTIONS.map((opt) => (
             <button
               key={opt.value}
@@ -461,7 +461,7 @@ function ModalidadeFilter({
                 setOpen(false);
               }}
               className={cn(
-                'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
+                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
                 selected === opt.value
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70'
@@ -487,7 +487,7 @@ export function AudienciasFilterBar({
   counts,
 }: AudienciasFilterBarProps) {
   return (
-    <div className="flex items-center gap-2 flex-wrap">
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
       <StatusFilter
         selected={filters.status}
         onChange={(status) => onChange({ ...filters, status })}

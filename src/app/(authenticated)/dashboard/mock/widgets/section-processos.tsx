@@ -10,6 +10,7 @@
 
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { BarChart3, PieChart, Scale, TrendingUp, LayoutGrid, Activity, HeartPulse, Flame, Layers } from 'lucide-react';
 import {
@@ -87,16 +88,16 @@ export function WidgetStatusDistribuicao() {
       subtitle="Total de processos ativos"
       depth={1}
     >
-      <div className="flex items-center gap-5">
+      <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5")}>
         <MiniDonut
           segments={STATUS_SEGMENTS}
           size={88}
           strokeWidth={11}
           centerLabel={fmtNum(total)}
         />
-        <div className="flex flex-col justify-center gap-2.5 flex-1 min-w-0">
+        <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex flex-col justify-center gap-2.5 flex-1 min-w-0")}>
           {STATUS_SEGMENTS.map((seg) => (
-            <div key={seg.label} className="flex items-center gap-2">
+            <div key={seg.label} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <span
                 className="size-2 rounded-full shrink-0"
                 style={{ backgroundColor: seg.color }}
@@ -104,7 +105,7 @@ export function WidgetStatusDistribuicao() {
               <span className="text-[10px] text-muted-foreground/60 truncate flex-1">
                 {seg.label}
               </span>
-              <span className="text-[10px] font-medium tabular-nums">
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums")}>
                 {fmtNum(seg.value)}
               </span>
               <span className="text-[9px] text-muted-foreground/60 w-7 text-right tabular-nums">
@@ -128,16 +129,16 @@ export function WidgetCasosTribunal() {
       subtitle="Top 5 TRTs — volume atual"
       depth={1}
     >
-      <div className="flex flex-col gap-2.5">
+      <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex flex-col gap-2.5")}>
         {TRT_DATA.map((trt) => {
           const pct = Math.round((trt.value / TRT_MAX) * 100);
           return (
             <div key={trt.label}>
               <div className="flex items-center justify-between mb-1">
-                <span className="text-[10px] text-muted-foreground/70 truncate leading-none">
+                <span className={cn(/* design-system-escape: leading-none sem token DS */ "text-[10px] text-muted-foreground/70 truncate leading-none")}>
                   {trt.label}
                 </span>
-                <span className="text-[10px] font-semibold tabular-nums ml-2 shrink-0">
+                <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold tabular-nums ml-2 shrink-0")}>
                   {trt.value}
                 </span>
               </div>
@@ -170,7 +171,7 @@ export function WidgetTendenciaNovos() {
       subtitle="Tendência — últimos 8 meses"
       depth={1}
     >
-      <div className="flex items-end justify-between gap-3 mb-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-end justify-between gap-3 mb-3")}>
         <Stat
           label="Este mês"
           value={fmtNum(current)}
@@ -184,9 +185,9 @@ export function WidgetTendenciaNovos() {
           color="var(--primary)"
         />
       </div>
-      <div className="flex items-end justify-between pt-2 border-t border-border/10">
+      <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-end justify-between pt-2 border-t border-border/10")}>
         {MONTHLY_TREND.map((v, i) => (
-          <div key={i} className="flex flex-col items-center gap-0.5">
+          <div key={i} className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-center gap-0.5")}>
             <span className="text-[9px] text-muted-foreground/60 tabular-nums">{v}</span>
             <span className="text-[8px] text-muted-foreground/55">{MONTH_LABELS[i]}</span>
           </div>
@@ -209,11 +210,11 @@ export function WidgetAging() {
       depth={1}
     >
       <StackedBar segments={AGING_SEGMENTS} height={12} />
-      <div className="flex flex-col gap-3 mt-4">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3 mt-4")}>
         {AGING_SEGMENTS.map((seg) => {
           const pct = Math.round((seg.value / total) * 100);
           return (
-            <div key={seg.label} className="flex items-center gap-2">
+            <div key={seg.label} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <span
                 className="size-2 rounded-sm shrink-0"
                 style={{ backgroundColor: seg.color }}
@@ -221,14 +222,14 @@ export function WidgetAging() {
               <span className="text-[10px] text-muted-foreground/60 flex-1 truncate">
                 {seg.label}
               </span>
-              <div className="flex items-center gap-1.5">
+              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
                 <div className="w-14 h-1.5 rounded-full bg-border/15 overflow-hidden">
                   <div
                     className="h-full rounded-full transition-all duration-500"
                     style={{ width: `${pct}%`, backgroundColor: seg.color }}
                   />
                 </div>
-                <span className="text-[10px] font-medium tabular-nums w-6 text-right">
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums w-6 text-right")}>
                   {seg.value}
                 </span>
               </div>
@@ -253,18 +254,18 @@ export function WidgetSegmento() {
       subtitle="Distribuição por área jurídica"
       depth={1}
     >
-      <div className="flex items-center gap-5">
+      <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5")}>
         <MiniDonut
           segments={SEGMENTO_SEGMENTS}
           size={88}
           strokeWidth={11}
           centerLabel={`${Math.round((dominant.value / total) * 100)}%`}
         />
-        <div className="flex flex-col gap-2 flex-1 min-w-0">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2 flex-1 min-w-0")}>
           {SEGMENTO_SEGMENTS.map((seg) => {
             const pct = Math.round((seg.value / total) * 100);
             return (
-              <div key={seg.label} className="flex items-center gap-2">
+              <div key={seg.label} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <span
                   className="size-2 rounded-full shrink-0"
                   style={{ backgroundColor: seg.color }}
@@ -280,7 +281,7 @@ export function WidgetSegmento() {
           })}
         </div>
       </div>
-      <div className="mt-3 pt-3 border-t border-border/10">
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 pt-3 border-t border-border/10")}>
         <StackedBar segments={SEGMENTO_SEGMENTS} height={8} />
       </div>
     </WidgetContainer>
@@ -326,15 +327,15 @@ export function WidgetKpiPulse() {
         />
       </div>
 
-      <div className="flex items-center gap-4 pt-3 border-t border-border/10">
-        <div className="flex items-center gap-3">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pt-3 padding direcional sem Inset equiv. */ "flex items-center gap-4 pt-3 border-t border-border/10")}>
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
           <ProgressRing
             percent={TAXA_RESOLUCAO}
             size={48}
             color="hsl(142 60% 45%)"
           />
           <div>
-            <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
               Taxa de Resolução
             </p>
             <p className="text-[10px] text-muted-foreground/60 mt-0.5">
@@ -342,8 +343,8 @@ export function WidgetKpiPulse() {
             </p>
           </div>
         </div>
-        <div className="flex-1 flex flex-col items-end gap-1">
-          <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex-1 flex flex-col items-end gap-1")}>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Tendência 8m
           </p>
           <Sparkline
@@ -355,7 +356,7 @@ export function WidgetKpiPulse() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-1 mt-3 pt-3 border-t border-border/10">
+      <div className={cn(/* design-system-escape: gap-1 gap sem token DS; pt-3 padding direcional sem Inset equiv. */ "flex flex-col gap-1 mt-3 pt-3 border-t border-border/10")}>
         {[
           { label: 'Prazo vencendo esta semana', count: 4, level: 'alto' as const },
           { label: 'Audiências no mês',           count: 9, level: 'medio' as const },
@@ -366,7 +367,7 @@ export function WidgetKpiPulse() {
             <span className="text-[10px] text-muted-foreground/70 flex-1 truncate">
               {item.label}
             </span>
-            <span className="text-[10px] font-semibold tabular-nums">{item.count}</span>
+            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold tabular-nums")}>{item.count}</span>
           </ListItem>
         ))}
       </div>
@@ -396,7 +397,7 @@ export function WidgetSaudeProcessual() {
       subtitle="Score composto — ativos, resolução e vencimentos"
       depth={2}
     >
-      <div className="flex items-center gap-5">
+      <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5")}>
         <GaugeMeter
           value={SAUDE_SCORE}
           max={100}
@@ -417,13 +418,13 @@ export function WidgetSaudeProcessual() {
             previous={9}
             format="number"
           />
-          <div className="flex flex-col gap-1">
-            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Tempo médio
             </p>
-            <div className="flex items-baseline gap-2">
-              <span className="font-display text-lg font-bold">8,2 meses</span>
-              <span className="text-[10px] font-medium text-success/70">-9,9%</span>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-baseline gap-2")}>
+              <span className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold")}>8,2 meses</span>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium text-success/70")}>-9,9%</span>
             </div>
             <p className="text-[9px] text-muted-foreground/55">anterior: 9,1 meses</p>
           </div>
@@ -456,12 +457,12 @@ export function WidgetHeatmapAtividade() {
       subtitle="Frequência diária — últimas 5 semanas"
       depth={1}
     >
-      <div className="flex flex-col gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
         <CalendarHeatmap data={HEATMAP_DATA} colorScale="primary" />
         {/* Legend */}
-        <div className="flex items-center gap-2">
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
           <span className="text-[9px] text-muted-foreground/55">0</span>
-          <div className="flex gap-0.5">
+          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex gap-0.5")}>
             {['bg-border/10', 'bg-primary/15', 'bg-primary/30', 'bg-primary/50', 'bg-primary/80'].map(
               (cls, i) => (
                 <div key={i} className={`size-3 rounded-[3px] ${cls}`} />
@@ -474,7 +475,7 @@ export function WidgetHeatmapAtividade() {
           </span>
         </div>
         {/* Stats abaixo */}
-        <div className="flex gap-4 pt-2 border-t border-border/10">
+        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pt-2 padding direcional sem Inset equiv. */ "flex gap-4 pt-2 border-t border-border/10")}>
           <Stat label="Média diária" value="2,8 mov/dia" small />
           <Stat label="Pico" value="6 em 12/mar" small />
         </div>
@@ -525,12 +526,12 @@ export function WidgetProcessosComTabs() {
         />
       }
     >
-      <div className="flex flex-col gap-3">
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
         <Treemap segments={treemapData} height={84} />
         {/* Legend row */}
-        <div className="flex flex-wrap gap-x-3 gap-y-1 pt-1">
+        <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "flex flex-wrap gap-x-3 gap-y-1 pt-1")}>
           {treemapData.map((seg) => (
-            <div key={seg.label} className="flex items-center gap-1">
+            <div key={seg.label} className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
               <span
                 className="size-1.5 rounded-full shrink-0"
                 style={{ backgroundColor: seg.color }}

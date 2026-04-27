@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
@@ -173,7 +174,7 @@ function TipoCobrancaDialog({ open, onOpenChange, tipo, onSuccess }: TipoCobranc
       }
     >
       <Form {...form}>
-        <form id="tipo-cobranca-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form id="tipo-cobranca-form" onSubmit={form.handleSubmit(onSubmit)} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           <FormField
             control={form.control}
             name="nome"
@@ -294,13 +295,13 @@ export function TiposCobrancaPageClient() {
   const ativosCount = tipos.filter((t) => t.ativo).length;
 
   return (
-    <div className="space-y-5">
+    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       {/* Header */}
-      <div className="flex items-end justify-between gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
         <div>
           <Heading level="page">Tipos de Cobrança</Heading>
           {!isLoading && (
-            <p className="text-sm text-muted-foreground mt-0.5">
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground mt-0.5")}>
               {ativosCount} ativo{ativosCount !== 1 ? 's' : ''} &middot; {total} total
             </p>
           )}
@@ -314,22 +315,22 @@ export function TiposCobrancaPageClient() {
       {/* Lista Glass */}
       <GlassPanel depth={1} className="overflow-hidden">
         {isLoading ? (
-          <div className="p-4 space-y-2">
+          <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-2 → migrar para <Stack gap="tight"> */ "p-4 space-y-2")}>
             {Array.from({ length: 5 }).map((_, i) => (
               <Skeleton key={i} className="h-14 w-full rounded-xl" />
             ))}
           </div>
         ) : error ? (
-          <div className="p-8 text-center text-sm text-destructive">{error}</div>
+          <div className={cn(/* design-system-escape: p-8 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "p-8 text-center text-sm text-destructive")}>{error}</div>
         ) : tipos.length === 0 ? (
-          <div className="p-12 text-center text-sm text-muted-foreground">
+          <div className={cn(/* design-system-escape: p-12 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "p-12 text-center text-sm text-muted-foreground")}>
             Nenhum tipo de cobrança cadastrado.
           </div>
         ) : (
           <div role="table" aria-label="Tipos de Cobrança">
             <div
               role="row"
-              className="grid grid-cols-[1.5fr_1fr_80px_100px_120px] gap-4 px-4 py-2.5 border-b border-border/40 text-[11px] uppercase tracking-wide font-medium text-muted-foreground/70"
+              className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; tracking-wide sem token DS; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; tracking-wide sem token DS; font-medium → className de <Text>/<Heading> */ "grid grid-cols-[1.5fr_1fr_80px_100px_120px] gap-4 px-4 py-2.5 border-b border-border/40 text-[11px] uppercase tracking-wide font-medium text-muted-foreground/70")}
             >
               <span>Nome</span>
               <span>Slug</span>
@@ -342,17 +343,17 @@ export function TiposCobrancaPageClient() {
                 <div
                   key={tipo.id}
                   role="row"
-                  className="grid grid-cols-[1.5fr_1fr_80px_100px_120px] gap-4 items-center px-4 py-3 hover:bg-muted/30 transition-colors"
+                  className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "grid grid-cols-[1.5fr_1fr_80px_100px_120px] gap-4 items-center px-4 py-3 hover:bg-muted/30 transition-colors")}
                 >
-                  <span className="text-sm font-medium truncate">{tipo.nome}</span>
-                  <span className="text-xs text-muted-foreground truncate">{tipo.slug}</span>
-                  <span className="text-sm text-muted-foreground">{tipo.ordem}</span>
+                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")}>{tipo.nome}</span>
+                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground truncate")}>{tipo.slug}</span>
+                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{tipo.ordem}</span>
                   <span>
                     <Badge tone="soft" variant={tipo.ativo ? 'success' : 'neutral'}>
                       {tipo.ativo ? 'Ativo' : 'Inativo'}
                     </Badge>
                   </span>
-                  <div className="flex items-center justify-end gap-2">
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-end gap-2")}>
                     <Button
                       variant="ghost"
                       size="icon"

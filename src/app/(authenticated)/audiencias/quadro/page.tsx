@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { Suspense } from 'react';
 import { authenticateRequest } from '@/lib/auth/session';
 import { fetchAudienciasPageData } from '@/app/(authenticated)/audiencias/queries';
@@ -9,11 +10,11 @@ export const revalidate = 0;
 
 function AudienciasLoading() {
   return (
-    <div className="space-y-5">
+    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       <Skeleton className="h-9 w-40" />
       <Skeleton className="h-14 w-full rounded-2xl" />
       <Skeleton className="h-48 w-full rounded-2xl" />
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 lg:grid-cols-3 gap-4")}>
         <Skeleton className="lg:col-span-2 h-80 rounded-2xl" />
         <Skeleton className="h-40 rounded-2xl" />
       </div>
