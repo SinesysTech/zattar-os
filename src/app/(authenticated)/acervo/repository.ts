@@ -790,5 +790,5 @@ export async function buscarProcessosParaSelector(
     console.error('buscarProcessosParaSelector error:', error);
     return [];
   }
-  return (data ?? []) as ProcessoParaSelector[];
+  return (data ?? []) as unknown as ProcessoParaSelector[];
 }
