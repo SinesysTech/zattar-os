@@ -17,7 +17,9 @@ import {
   reverterBaixa,
   listarExpedientes,
   contarExpedientesPorStatus,
+  obterResumoUltimaCaptura,
 } from "../service";
+import type { ResumoUltimaCaptura } from "../domain";
 import { after } from "next/server";
 import { indexDocument } from "@/lib/ai/services/indexing.service";
 import { authenticateRequest } from "@/lib/auth";
@@ -583,6 +585,21 @@ export async function actionAtualizarExpedientePayload(
       success: false,
       error: error instanceof Error ? error.message : "Erro interno do servidor",
       message: "Erro ao atualizar expediente.",
+    };
+  }
+}
+
+export async function actionObterResumoUltimaCaptura(): Promise<ActionResult<ResumoUltimaCaptura | null>> {
+  try {
+    const result = await obterResumoUltimaCaptura();
+    if (!result.success) {
+      return { success: false, error: result.error.message };
+    }
+    return { success: true, data: result.data };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro interno do servidor",
     };
   }
 }
