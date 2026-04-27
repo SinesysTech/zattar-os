@@ -102,7 +102,7 @@ export interface PulseKpiBarProps {
 
 export function PulseKpiBar({ pct, color = 'bg-primary/25' }: PulseKpiBarProps) {
   return (
-    <div className="mt-2.5 flex items-center gap-2">
+    <div className="mt-2.5 h-6 flex items-center gap-2">
       <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
         <div
           className={cn('h-full rounded-full transition-all duration-700', color)}

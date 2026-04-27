@@ -59,16 +59,14 @@ export function ContratosPulseStrip({
         iconColor="text-primary/60"
         iconBg="bg-primary/8"
         footer={
-          <div className="mt-2.5 flex items-center justify-center">
-            {trendMensal && trendMensal.length >= 2 ? (
+          <div className="mt-2.5 h-6 flex items-center justify-center">
+            {trendMensal && trendMensal.length >= 2 && (
               <Sparkline data={trendMensal} width={120} height={24} />
-            ) : (
-              <div className="h-6" />
             )}
           </div>
         }
       >
-        {fmtMoeda(valorTotal)}
+        <span className="tabular-nums">{fmtMoeda(valorTotal)}</span>
       </PulseKpiCard>
 
       {/* ── Vencendo 30d ───────────────────────────────────────────── */}
