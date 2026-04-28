@@ -13,6 +13,12 @@
 - [src/app/(authenticated)/processos/index.ts](file://src/app/(authenticated)/processos/index.ts)
 - [src/testing/setup.ts](file://src/testing/setup.ts)
 - [src/lib/utils.ts](file://src/lib/utils.ts)
+- [src/app/metadata.ts](file://src/app/metadata.ts)
+- [src/app/website/_metadata/build-metadata.ts](file://src/app/website/_metadata/build-metadata.ts)
+- [src/app/website/contato/page.tsx](file://src/app/website/contato/page.tsx)
+- [src/app/website/expertise/page.tsx](file://src/app/website/expertise/page.tsx)
+- [src/app/website/insights/page.tsx](file://src/app/website/insights/page.tsx)
+- [src/app/website/insights/[slug]/page.tsx](file://src/app/website/insights/[slug]/page.tsx)
 - [eslint-rules/no-hardcoded-secrets.js](file://eslint-rules/no-hardcoded-secrets.js)
 - [eslint-rules/no-hsl-var-tokens.js](file://eslint-rules/no-hsl-var-tokens.js)
 - [src/app/(authenticated)/design-system/page.tsx](file://src/app/(authenticated)/design-system/page.tsx)
@@ -36,11 +42,11 @@
 
 ## Update Summary
 **Changes Made**
-- Enhanced testing infrastructure documentation with comprehensive property-based testing examples for dialogs
-- Updated AI instructions formatting documentation with improved structured prompt building utilities
-- Added new dialog component patterns section documenting ResponsiveDialog and DialogFormShell implementations
-- Expanded testing framework documentation to include fast-check integration and property-based testing strategies
-- Updated shared component documentation standards with enhanced dialog component guidelines
+- Enhanced metadata management documentation with comprehensive coverage of the new generateMeta utility function
+- Updated SEO and social media optimization documentation with standardized metadata generation patterns
+- Added detailed examples of metadata implementation across website pages
+- Expanded testing infrastructure documentation to include metadata validation strategies
+- Updated build process documentation with metadata optimization techniques
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -51,22 +57,24 @@
 6. [Enhanced Testing Infrastructure](#enhanced-testing-infrastructure)
 7. [Dialog Component Patterns](#dialog-component-patterns)
 8. [AI Instructions Formatting](#ai-instructions-formatting)
-9. [Dependency Analysis](#dependency-analysis)
-10. [Performance Considerations](#performance-considerations)
-11. [Troubleshooting Guide](#troubleshooting-guide)
-12. [Conclusion](#conclusion)
-13. [Appendices](#appendices)
+9. [Metadata Management and SEO Optimization](#metadata-management-and-seo-optimization)
+10. [Dependency Analysis](#dependency-analysis)
+11. [Performance Considerations](#performance-considerations)
+12. [Troubleshooting Guide](#troubleshooting-guide)
+13. [Conclusion](#conclusion)
+14. [Appendices](#appendices)
 
 ## Introduction
 This development guide provides a comprehensive overview of the ZattarOS project's development environment, architecture, testing strategy, and deployment processes. The project follows an AI-first approach with Next.js 16 App Router, TypeScript, Feature-Sliced Design (FSD), and strict code quality controls enforced by ESLint and custom rules. It integrates Supabase for backend services, implements a robust testing framework with Jest, Playwright, and property-based testing using fast-check, and uses a PWA setup via Serwist. The guide also documents the build pipeline, TypeScript configuration, import restrictions, barrel export patterns, and CI/CD deployment strategies.
 
-**Updated** Enhanced with comprehensive property-based testing infrastructure for dialog components, improved AI instructions formatting with structured prompt building utilities, and updated shared component documentation standards with new dialog component patterns.
+**Updated** Enhanced with comprehensive property-based testing infrastructure for dialog components, improved AI instructions formatting with structured prompt building utilities, updated shared component documentation standards with new dialog component patterns, and comprehensive metadata management with standardized SEO and social media optimization.
 
 ## Project Structure
 The repository is organized around Next.js App Router conventions with a strong emphasis on modular feature development. Key areas include:
 - Application routes under src/app
 - Feature modules under src/app/(authenticated) with barrel exports
-- Shared utilities under src/lib
+- Shared utilities under src/lib including the new generateMeta utility function
+- Website metadata management under src/app/website/_metadata
 - Testing infrastructure under src/testing with property-based testing capabilities
 - Supabase schema and migrations under supabase
 - Developer tooling and scripts under scripts
@@ -90,22 +98,25 @@ J["src/components/shared/dialog-shell"]
 K["src/components/ui/responsive-dialog"]
 L["src/components/shared/__tests__"]
 M["src/components/ui/__tests__"]
+N["src/app/website/_metadata"]
+O["src/app/metadata.ts"]
 end
 subgraph "Testing"
-N["src/testing"]
-O["Jest Config"]
-P["Playwright Config"]
-Q["Property-Based Testing<br/>fast-check"]
+P["src/testing"]
+Q["Jest Config"]
+R["Playwright Config"]
+S["Property-Based Testing<br/>fast-check"]
 end
 subgraph "Tooling"
-R["scripts/*"]
-S["supabase/*"]
-T["Next Config"]
-U["TypeScript Config"]
-V["ESLint Config"]
-W["Design System Docs"]
-X["AI Instructions"]
-Y["Dialog Components"]
+T["scripts/*"]
+U["supabase/*"]
+V["Next Config"]
+W["TypeScript Config"]
+X["ESLint Config"]
+Y["Design System Docs"]
+Z["AI Instructions"]
+AA["Dialog Components"]
+BB["Metadata Utilities"]
 end
 A --> B
 B --> C
@@ -119,24 +130,27 @@ I --> C
 I --> E
 J --> C
 K --> C
-L --> Q
-M --> Q
-N --> O
-N --> P
-Q --> L
-Q --> M
-R --> S
-T --> A
-U --> A
+L --> S
+M --> S
+N --> BB
+O --> BB
+P --> Q
+P --> R
+S --> L
+S --> M
+T --> U
 V --> A
-V --> H
-V --> I
-V --> J
-V --> K
 W --> A
+X --> A
+X --> H
 X --> I
-Y --> J
-Y --> K
+X --> J
+X --> K
+X --> N
+Y --> I
+AA --> J
+AA --> K
+BB --> E
 ```
 
 **Diagram sources**
@@ -145,6 +159,8 @@ Y --> K
 - [eslint.config.mjs:1-273](file://eslint.config.mjs#L1-L273)
 - [jest.config.js:1-119](file://jest.config.js#L1-L119)
 - [playwright.config.ts:1-46](file://playwright.config.ts#L1-L46)
+- [src/lib/utils.ts:18-39](file://src/lib/utils.ts#L18-L39)
+- [src/app/website/_metadata/build-metadata.ts:40-86](file://src/app/website/_metadata/build-metadata.ts#L40-L86)
 
 **Section sources**
 - [openspec/project.md:67-78](file://openspec/project.md#L67-L78)
@@ -152,15 +168,16 @@ Y --> K
 
 ## Core Components
 - Feature Modules: Each feature module encapsulates domain, service, repository, actions, components, and types. Barrel exports provide controlled public APIs for cross-module consumption.
-- Shared Utilities: Centralized helpers for class merging, casing conversions, HTML stripping, metadata generation, and avatar fallbacks.
+- Shared Utilities: Centralized helpers for class merging, casing conversions, HTML stripping, metadata generation, avatar fallbacks, and the new generateMeta utility function for standardized SEO optimization.
 - Enhanced Testing Infrastructure: Jest configuration with dual environments (node and jsdom), extensive mocking for ESM-only and UI libraries, property-based testing with fast-check for dialog components, and setup utilities for Next.js App Router and Web Streams.
 - Quality Gates: ESLint with Next.js, React, and React Hooks plugins, plus custom rules for secrets, HSL var tokens, and design system governance with streamlined enforcement.
 - Rich Text Editors: Advanced Markdown editor with variable insertion, conflict resolution, and serialization support.
 - Dialog Components: Comprehensive dialog system with ResponsiveDialog for mobile-first design and DialogFormShell for form-based interactions.
+- Metadata Management: Standardized metadata generation with buildWebsiteMetadata for website routes and generateMeta for consistent SEO optimization.
 
 **Section sources**
 - [src/app/(authenticated)/processos/index.ts](file://src/app/(authenticated)/processos/index.ts#L1-L225)
-- [src/lib/utils.ts:1-161](file://src/lib/utils.ts#L1-L161)
+- [src/lib/utils.ts:1-40](file://src/lib/utils.ts#L1-L40)
 - [jest.config.js:1-119](file://jest.config.js#L1-L119)
 - [eslint.config.mjs:1-273](file://eslint.config.mjs#L1-L273)
 
@@ -173,6 +190,8 @@ ZattarOS adopts Feature-Sliced Design with a clear separation of concerns:
 - Supabase provides database and auth
 - Rich text editors utilize Plate.js with custom variable plugins
 - Dialog components provide responsive modal interfaces with property-based testing validation
+- Metadata utilities ensure consistent SEO and social media optimization across all website routes
+- Website metadata management provides standardized metadata generation with Open Graph and Twitter Card support
 
 ```mermaid
 graph TB
@@ -209,9 +228,14 @@ DS["Tailwind CSS v4<br/>shadcn/ui<br/>Radix UI"]
 DSESC["Design System Showcase<br/>Streamlined Governance"]
 ENDS["Core Design System Enforcement"]
 end
-UI --> DS
-DS --> DSESC
-DSESC --> ENDS
+subgraph "Metadata Management"
+GM["generateMeta Utility"]
+BWM["buildWebsiteMetadata"]
+META["Standardized Metadata<br/>SEO & Social Media<br/>Open Graph & Twitter Cards"]
+GM --> META
+BWM --> META
+META --> UI
+ENDS --> UI
 RE --> DS
 RD --> DS
 DFS --> DS
@@ -220,14 +244,16 @@ AIU --> DS
 
 **Diagram sources**
 - [openspec/project.md:55-65](file://openspec/project.md#L55-L65)
-- [src/app/layout.tsx:1-82](file://src/app/layout.tsx#L1-L82)
+- [src/app/layout.tsx:1-82](file://src/app/layout.tsx#L1-82)
 - [src/app/(authenticated)/assinatura-digital/components/editor/MarkdownRichTextEditor.tsx:62-104](file://src/app/(authenticated)/assinatura-digital/components/editor/MarkdownRichTextEditor.tsx#L62-L104)
 - [src/components/ui/responsive-dialog.tsx](file://src/components/ui/responsive-dialog.tsx)
 - [src/components/shared/dialog-shell/dialog-form-shell.tsx](file://src/components/shared/dialog-shell/dialog-form-shell.tsx)
+- [src/lib/utils.ts:18-39](file://src/lib/utils.ts#L18-L39)
+- [src/app/website/_metadata/build-metadata.ts:40-86](file://src/app/website/_metadata/build-metadata.ts#L40-L86)
 
 **Section sources**
 - [openspec/project.md:55-65](file://openspec/project.md#L55-L65)
-- [src/app/layout.tsx:1-82](file://src/app/layout.tsx#L1-L82)
+- [src/app/layout.tsx:1-82](file://src/app/layout.tsx#L1-82)
 
 ## Detailed Component Analysis
 
@@ -511,6 +537,7 @@ PWA --> Deploy["Deploy"]
 - Streamlined Design System Governance: Focuses on core design system enforcement with targeted restrictions for Badge imports and color token usage, while maintaining flexibility for showcase pages.
 - Variable Conflict Prevention: Implements strict variable naming conventions and conflict resolution mechanisms in rich text editors.
 - Property-Based Testing: Mathematical guarantees for dialog component behavior validation.
+- Metadata Standards: Consistent metadata generation with standardized SEO and social media optimization.
 
 The streamlined ESLint configuration focuses on core design system enforcement:
 
@@ -665,6 +692,43 @@ test('Property 34: DialogFormShell uses ResponsiveDialog on mobile', async () =>
 - [src/components/shared/__tests__/dialog-form-shell.test.tsx:204-236](file://src/components/shared/__tests__/dialog-form-shell.test.tsx#L204-L236)
 - [src/components/ui/__tests__/responsive-dialog.test.tsx:54-90](file://src/components/ui/__tests__/responsive-dialog.test.tsx#L54-L90)
 
+#### Metadata Management Development Example
+
+**New Section** Comprehensive example of implementing standardized metadata management.
+
+When implementing metadata for website pages:
+
+1. **Use buildWebsiteMetadata for standard website routes** with consistent SEO optimization
+2. **Use generateMeta for custom metadata scenarios** with flexible configuration
+3. **Follow standardized patterns** for title, description, and social media optimization
+4. **Ensure canonical URLs and Open Graph compliance** for all public routes
+
+Example of buildWebsiteMetadata usage:
+```typescript
+export const metadata = buildWebsiteMetadata({
+  title: "Contact",
+  description: "Talk to specialists in Labor Law. Belo Horizonte, digital service, quick response.",
+  path: "/contact",
+});
+```
+
+Example of generateMeta usage:
+```typescript
+const metadata = generateMeta({
+  title: "Article Title",
+  description: "Article excerpt or subtitle",
+  canonical: "https://zattaradvogados.com/articles/article-slug",
+  imageUrl: "https://zattaradvogados.com/images/article-image.jpg",
+  keywords: ["keyword1", "keyword2", "keyword3"],
+  ogType: "article"
+});
+```
+
+**Section sources**
+- [src/app/website/_metadata/build-metadata.ts:40-86](file://src/app/website/_metadata/build-metadata.ts#L40-L86)
+- [src/lib/utils.ts:18-39](file://src/lib/utils.ts#L18-L39)
+- [src/app/website/contato/page.tsx:7-12](file://src/app/website/contato/page.tsx#L7-L12)
+
 #### Testing Implementation Example
 - Unit/Integration: Place tests under src/<location>/**/*.test.ts with appropriate jest-environment docblocks.
 - Property-Based: Use fast-check generators for comprehensive dialog component validation.
@@ -683,6 +747,8 @@ test('Property 34: DialogFormShell uses ResponsiveDialog on mobile', async () =>
 - Monitor design system governance violations in ESLint output.
 - Use property-based testing to identify edge cases in dialog component behavior.
 - Leverage fast-check's shrinking capabilities to isolate failing test cases.
+- Validate metadata generation using browser developer tools and social media preview tools.
+- Test SEO optimization with tools like Google Search Console and Facebook Sharing Debugger.
 
 **Section sources**
 - [package.json:32-43](file://package.json#L32-L43)
@@ -918,22 +984,193 @@ CheckComment --> |No| GenerateMode
 - [src/app/api/ai/command/prompts.ts:28-41](file://src/app/api/ai/command/prompts.ts#L28-L41)
 - [src/app/api/plate/ai/prompts.ts:33-245](file://src/app/api/plate/ai/prompts.ts#L33-L245)
 
+## Metadata Management and SEO Optimization
+
+**New Section** Comprehensive documentation of metadata management with standardized SEO and social media optimization.
+
+### Standardized Metadata Generation
+
+The project implements two complementary metadata generation utilities for comprehensive SEO optimization:
+
+#### buildWebsiteMetadata Function
+
+The `buildWebsiteMetadata` function provides standardized metadata generation for website routes with consistent SEO optimization:
+
+```mermaid
+flowchart TD
+Input["BuildWebsiteMetadata Input"] --> Title["Title Validation"]
+Input --> Description["Description Validation"]
+Input --> Path["Path Processing"]
+Input --> Image["Image Selection"]
+Input --> AbsoluteTitle["Absolute Title Flag"]
+Input --> NoIndex["NoIndex Flag"]
+Title --> FullTitle["Generate Full Title<br/>with Site Name"]
+Description --> MetaDesc["Metadata Description"]
+Path --> CanonicalURL["Generate Canonical URL"]
+Image --> OGImage["Process Open Graph Image"]
+AbsoluteTitle --> TitleLogic["Title Logic<br/>Absolute or Prefixed"]
+NoIndex --> Robots["Robots Configuration"]
+FullTitle --> OpenGraph["Open Graph Title"]
+MetaDesc --> OpenGraph
+CanonicalURL --> OpenGraph
+OGImage --> OpenGraph
+TitleLogic --> Twitter["Twitter Card Title"]
+MetaDesc --> Twitter
+CanonicalURL --> Twitter
+OGImage --> Twitter
+OpenGraph --> FinalMetadata["Final Metadata Object"]
+Twitter --> FinalMetadata
+Robots --> FinalMetadata
+```
+
+**Diagram sources**
+- [src/app/website/_metadata/build-metadata.ts:40-86](file://src/app/website/_metadata/build-metadata.ts#L40-L86)
+
+#### generateMeta Function
+
+The `generateMeta` function provides flexible metadata generation for custom scenarios with comprehensive SEO optimization:
+
+```mermaid
+flowchart TD
+Params["GenerateMeta Parameters"] --> Title["Title (required)"]
+Params --> Description["Description (optional)"]
+Params --> Canonical["Canonical URL (optional)"]
+Params --> ImageUrl["Image URL (optional)"]
+Params --> Keywords["Keywords (optional)"]
+Params --> OgType["Open Graph Type (optional)"]
+Title --> MetaTitle["Metadata Title"]
+Description --> MetaDesc["Metadata Description"]
+Canonical --> Alternates["Alternates Canonical"]
+ImageUrl --> OpenGraphImages["Open Graph Images"]
+Keywords --> MetaKeywords["Metadata Keywords"]
+OgType --> OpenGraphType["Open Graph Type"]
+MetaTitle --> OpenGraph["Open Graph Object"]
+MetaDesc --> OpenGraph
+Alternates --> OpenGraph
+OpenGraphImages --> OpenGraph
+MetaKeywords --> Twitter["Twitter Card Object"]
+OpenGraphType --> Twitter
+OpenGraph --> FinalObject["Final Metadata Object"]
+Twitter --> FinalObject
+```
+
+**Diagram sources**
+- [src/lib/utils.ts:18-39](file://src/lib/utils.ts#L18-L39)
+
+### Website Metadata Implementation Patterns
+
+#### Standard Website Route Metadata
+
+Most website routes use the `buildWebsiteMetadata` function for consistent SEO optimization:
+
+```typescript
+export const metadata = buildWebsiteMetadata({
+  title: "Page Title",
+  description: "140-160 character description",
+  path: "/route-path",
+  image: "/path/to/image.jpg", // Optional
+  absoluteTitle: false, // Optional
+  noIndex: false, // Optional
+});
+```
+
+#### Dynamic Content Metadata
+
+Blog posts and dynamic content use Next.js `generateMetadata` function for personalized metadata:
+
+```typescript
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const post = await buscarPostPorSlug(slug);
+  
+  return {
+    title: `${post.title} | Insights Zattar Advogados`,
+    description: post.excerpt ?? post.subtitle ?? undefined,
+    openGraph: {
+      title: post.title,
+      description: post.excerpt ?? post.subtitle ?? undefined,
+      type: 'article',
+      publishedTime: post.publishedAt ?? undefined,
+      authors: [post.authorName],
+      ...(post.coverUrl && { images: [post.coverUrl] }),
+    },
+  };
+}
+```
+
+#### Custom Metadata Scenarios
+
+For custom metadata scenarios, use the `generateMeta` function:
+
+```typescript
+const metadata = generateMeta({
+  title: "Custom Page Title",
+  description: "Custom description text",
+  canonical: "https://example.com/custom-page",
+  imageUrl: "https://example.com/image.jpg",
+  keywords: ["keyword1", "keyword2", "keyword3"],
+  ogType: "website" // or "article" | "profile"
+});
+```
+
+### SEO and Social Media Optimization Standards
+
+#### Open Graph Implementation
+
+Both metadata functions implement comprehensive Open Graph support:
+
+- **Title and Description**: Consistent across all social platforms
+- **Image Optimization**: 1200x630 pixels for optimal social media display
+- **Locale and Type**: Portuguese Brazil locale with website type
+- **Site Name**: Consistent branding across platforms
+
+#### Twitter Card Integration
+
+Automatic Twitter Card generation with:
+
+- **Summary Large Image**: Optimized for social sharing
+- **Consistent Alt Text**: Descriptive alt text for accessibility
+- **Platform Optimization**: Proper card sizing and formatting
+
+#### Canonical URL Management
+
+- **Consistent Base URL**: Derived from environment configuration
+- **Path Normalization**: Proper URL formatting and validation
+- **Cross-platform Consistency**: Unified canonical URLs across all routes
+
+#### Robots and Indexing Control
+
+- **Default Indexing**: All public routes indexed by default
+- **NoIndex Support**: Option to prevent indexing for specific routes
+- **SEO Compliance**: Proper robots.txt and meta robots configuration
+
+**Section sources**
+- [src/app/website/_metadata/build-metadata.ts:1-87](file://src/app/website/_metadata/build-metadata.ts#L1-L87)
+- [src/lib/utils.ts:1-40](file://src/lib/utils.ts#L1-L40)
+- [src/app/metadata.ts:1-17](file://src/app/metadata.ts#L1-L17)
+- [src/app/website/contato/page.tsx:7-12](file://src/app/website/contato/page.tsx#L7-L12)
+- [src/app/website/expertise/page.tsx:10-15](file://src/app/website/expertise/page.tsx#L10-L15)
+- [src/app/website/insights/page.tsx:10-15](file://src/app/website/insights/page.tsx#L10-L15)
+- [src/app/website/insights/[slug]/page.tsx:30-52](file://src/app/website/insights/[slug]/page.tsx#L30-L52)
+
 ## Dependency Analysis
 - Next.js App Router: Routes, layouts, and API endpoints under src/app.
 - Feature Modules: Controlled exports via barrel index.ts.
-- Shared Libraries: Utilities, design system, and domain logic under src/lib.
+- Shared Libraries: Utilities, design system, domain logic, and metadata management under src/lib.
+- Website Metadata: Specialized metadata utilities under src/app/website/_metadata.
 - Enhanced Testing Dependencies: Jest, ts-jest, jsdom, Playwright, and fast-check for property-based testing.
 - Quality Tools: ESLint, custom rules, and Husky for pre-commit enforcement.
 - Design System Documentation: Master guidelines and page-specific overrides.
 - Rich Text Editor Dependencies: Plate.js, markdown plugins, and custom variable handling.
 - Dialog Component Dependencies: ResponsiveDialog, DialogFormShell, and property-based testing utilities.
 - AI Instructions Dependencies: Structured prompt builders, classification utilities, and formatting helpers.
+- Metadata Management Dependencies: Next.js Metadata types, Open Graph standards, and social media optimization.
 
 ```mermaid
 graph LR
 App["src/app/*"] --> Features["Feature Modules"]
 Features --> Barrel["Barrel Exports"]
 App --> Lib["src/lib/*"]
+App --> Metadata["src/app/website/_metadata/*"]
 App --> Testing["src/testing/*"]
 Testing --> Jest["Jest"]
 Testing --> PW["Playwright"]
@@ -943,6 +1180,9 @@ ESL --> Rules["Custom Rules"]
 ESL --> DS["Streamlined Design System"]
 DS --> Showcase["Showcase Pages"]
 Lib --> DS
+Lib --> MetadataUtils["Metadata Utilities"]
+Metadata --> SEO["SEO & Social Media<br/>Optimization"]
+MetadataUtils --> SEO
 DS --> Master["Master Guidelines"]
 DS --> Pages["Page Overrides"]
 App --> Editors["Rich Text Editors"]
@@ -964,6 +1204,8 @@ AI --> Formatting["Formatting"]
 - [jest.config.js:1-119](file://jest.config.js#L1-L119)
 - [playwright.config.ts:1-46](file://playwright.config.ts#L1-L46)
 - [eslint.config.mjs:1-273](file://eslint.config.mjs#L1-L273)
+- [src/lib/utils.ts:18-39](file://src/lib/utils.ts#L18-L39)
+- [src/app/website/_metadata/build-metadata.ts:40-86](file://src/app/website/_metadata/build-metadata.ts#L40-L86)
 
 **Section sources**
 - [src/app/(authenticated)/processos/index.ts](file://src/app/(authenticated)/processos/index.ts#L1-L225)
@@ -978,6 +1220,8 @@ AI --> Formatting["Formatting"]
 - Rich Text Editor Optimization: Use efficient variable injection algorithms and avoid unnecessary re-renders through proper state management.
 - Property-Based Testing Performance: Configure appropriate `numRuns` values for fast-check to balance test thoroughness and execution time.
 - Dialog Component Optimization: Use responsive design patterns to minimize layout thrashing on viewport changes.
+- Metadata Generation Performance: Cache metadata generation results where possible and optimize image loading for Open Graph tags.
+- SEO Optimization: Implement proper canonical URLs and meta tag management to improve search engine crawling efficiency.
 
 **Section sources**
 - [next.config.ts:188-250](file://next.config.ts#L188-L250)
@@ -993,8 +1237,11 @@ AI --> Formatting["Formatting"]
 - Property-Based Test Failures: Use fast-check's shrinking to identify minimal failing cases; adjust generator ranges and constraints.
 - Dialog Component Issues: Verify viewport detection and responsive behavior; check for proper slot usage in dialog components.
 - AI Instructions Formatting: Validate structured prompt construction and ensure proper tag formatting.
+- Metadata Generation Issues: Validate metadata objects using browser developer tools and social media preview tools.
+- SEO Optimization Problems: Test with Google Search Console and social media debugging tools to verify metadata implementation.
+- Open Graph Validation: Use Facebook Sharing Debugger and LinkedIn Post Inspector for social media preview validation.
 
-**Updated** Added troubleshooting guidance for streamlined design system governance, CSS token issues, comprehensive variable conflict resolution in rich text editors, property-based testing failures, and dialog component responsiveness.
+**Updated** Added troubleshooting guidance for streamlined design system governance, CSS token issues, comprehensive variable conflict resolution in rich text editors, property-based testing failures, dialog component responsiveness, metadata generation validation, and SEO optimization testing.
 
 **Section sources**
 - [package.json:47-50](file://package.json#L47-L50)
@@ -1002,9 +1249,9 @@ AI --> Formatting["Formatting"]
 - [src/testing/setup.ts:1-358](file://src/testing/setup.ts#L1-L358)
 
 ## Conclusion
-This guide outlines the development workflow, architecture, and operational practices for ZattarOS. By adhering to Feature-Sliced Design, enforcing streamlined design system governance, leveraging comprehensive property-based testing infrastructure, and optimizing the build and deployment pipeline, contributors can maintain a scalable, secure, and high-performance legal management platform.
+This guide outlines the development workflow, architecture, and operational practices for ZattarOS. By adhering to Feature-Sliced Design, enforcing streamlined design system governance, leveraging comprehensive property-based testing infrastructure, implementing standardized metadata management with SEO optimization, and optimizing the build and deployment pipeline, contributors can maintain a scalable, secure, and high-performance legal management platform.
 
-**Updated** Enhanced with comprehensive property-based testing infrastructure for dialog components, improved AI instructions formatting with structured prompt building utilities, and updated shared component documentation standards with new dialog component patterns.
+**Updated** Enhanced with comprehensive property-based testing infrastructure for dialog components, improved AI instructions formatting with structured prompt building utilities, updated shared component documentation standards with new dialog component patterns, comprehensive metadata management with standardized SEO and social media optimization, and expanded testing strategies for metadata validation.
 
 ## Appendices
 
@@ -1127,3 +1374,33 @@ This guide outlines the development workflow, architecture, and operational prac
 - [src/app/api/ai/command/utils.ts:92-161](file://src/app/api/ai/command/utils.ts#L92-L161)
 - [src/app/api/ai/command/prompts.ts:28-41](file://src/app/api/ai/command/prompts.ts#L28-L41)
 - [src/components/shared/AI_INSTRUCTIONS.md:1-770](file://src/components/shared/AI_INSTRUCTIONS.md#L1-L770)
+
+### Metadata Management Best Practices
+
+**New Section** Comprehensive guidelines for metadata management and SEO optimization.
+
+#### Metadata Generation Patterns
+- **Consistent Title Structure**: Use site name suffix for all public pages
+- **Optimal Description Length**: Maintain 140-160 character descriptions
+- **Image Optimization**: Use 1200x630 pixel images for Open Graph
+- **Canonical URL Management**: Ensure consistent canonical URLs across all routes
+
+#### SEO Validation Strategies
+- **Google Search Console**: Monitor crawl errors and indexing status
+- **Social Media Preview**: Test with Facebook Sharing Debugger and LinkedIn Post Inspector
+- **Schema Markup**: Validate structured data with Google Rich Results Test
+- **Performance Impact**: Monitor metadata impact on page load performance
+
+#### Metadata Testing Approaches
+- **Unit Testing**: Test metadata generation functions with various input combinations
+- **Integration Testing**: Validate metadata rendering in browser developer tools
+- **Cross-platform Testing**: Test metadata across different social media platforms
+- **Performance Testing**: Monitor metadata generation performance impact
+
+**Section sources**
+- [src/app/website/_metadata/build-metadata.ts:1-87](file://src/app/website/_metadata/build-metadata.ts#L1-L87)
+- [src/lib/utils.ts:1-40](file://src/lib/utils.ts#L1-L40)
+- [src/app/website/contato/page.tsx:7-12](file://src/app/website/contato/page.tsx#L7-L12)
+- [src/app/website/expertise/page.tsx:10-15](file://src/app/website/expertise/page.tsx#L10-L15)
+- [src/app/website/insights/page.tsx:10-15](file://src/app/website/insights/page.tsx#L10-L15)
+- [src/app/website/insights/[slug]/page.tsx:30-52](file://src/app/website/insights/[slug]/page.tsx#L30-L52)

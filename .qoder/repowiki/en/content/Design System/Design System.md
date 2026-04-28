@@ -34,6 +34,14 @@
 - [heading-node-static.tsx](file://src/components/editor/plate-ui/heading-node-static.tsx)
 - [typography/page.tsx](file://src/app/(ajuda)/ajuda/design-system/typography/page.tsx)
 - [badge.test.tsx](file://src/components/ui/__tests__/badge.test.tsx)
+- [avatar.tsx](file://src/components/ui/avatar.tsx)
+- [current-user-avatar.tsx](file://src/components/ui/current-user-avatar.tsx)
+- [avatar-stack.tsx](file://src/components/ui/avatar-stack.tsx)
+- [avatar-group.tsx](file://src/components/ui/avatar-group.tsx)
+- [avatar.test.tsx](file://src/components/ui/__tests__/avatar.test.tsx)
+- [user-status-dot.tsx](file://src/app/(authenticated)/usuarios/components/shared/user-status-dot.tsx)
+- [chat-header.tsx](file://src/app/(authenticated)/chat/components/chat-header.tsx)
+- [usuario-card.tsx](file://src/app/(authenticated)/usuarios/components/shared/usuario-card.tsx)
 </cite>
 
 ## Update Summary
@@ -47,6 +55,9 @@
 - **Updated** Comprehensive typography improvements with typed Typography components replacing deprecated custom components
 - **Updated** Removal of glass dialog overlay variants from token system affecting design token governance
 - **Updated** Enhanced CSS variable management with systematic font family property updates
+- **Updated** Added comprehensive documentation for the new AvatarIndicator component that provides user avatar status indicators (online, away, offline, success) with Tailwind CSS integration and accessibility features
+- **Updated** Enhanced avatar system with AvatarIndicator component for consistent status communication across chat and user interfaces
+- **Updated** Added UserStatusDot component documentation for user presence indicators with size variants and accessibility compliance
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -56,23 +67,27 @@
 5. [Enhanced Typography System](#enhanced-typography-system)
 6. [New CountBadge Component](#new-countbadge-component)
 7. [Enhanced Semantic Badge System](#enhanced-semantic-badge-system)
-8. [Accessibility Compliance Improvements](#accessibility-compliance-improvements)
-9. [Component Library Integration](#component-library-integration)
-10. [Responsive Utilities and Breakpoint Management](#responsive-utilities-and-breakpoint-management)
-11. [Radix UI Modernization and Component Refactoring](#radix-ui-modernization-and-component-refactoring)
-12. [Enhanced CSS Variables and Design Tokens](#enhanced-css-variables-and-design-tokens)
-13. [Unified Font Families and Typography System](#unified-font-families-and-typography-system)
-14. [Theme Presets and Customization System](#theme-presets-and-customization-system)
-15. [Design System Playground](#design-system-playground)
-16. [Page-Specific Implementation Examples](#page-specific-implementation-examples)
-17. [Quality Assurance and Migration Tracking](#quality-assurance-and-migration-tracking)
-18. [Integration and Maintenance](#integration-and-maintenance)
-19. [Conclusion](#conclusion)
+8. [New AvatarIndicator Component](#new-avatarindicator-component)
+9. [Enhanced Avatar System](#enhanced-avatar-system)
+10. [Accessibility Compliance Improvements](#accessibility-compliance-improvements)
+11. [Component Library Integration](#component-library-integration)
+12. [Responsive Utilities and Breakpoint Management](#responsive-utilities-and-breakpoint-management)
+13. [Radix UI Modernization and Component Refactoring](#radix-ui-modernization-and-component-refactoring)
+14. [Enhanced CSS Variables and Design Tokens](#enhanced-css-variables-and-design-tokens)
+15. [Unified Font Families and Typography System](#unified-font-families-and-typography-system)
+16. [Theme Presets and Customization System](#theme-presets-and-customization-system)
+17. [Design System Playground](#design-system-playground)
+18. [Page-Specific Implementation Examples](#page-specific-implementation-examples)
+19. [Quality Assurance and Migration Tracking](#quality-assurance-and-migration-tracking)
+20. [Integration and Maintenance](#integration-and-maintenance)
+21. [Conclusion](#conclusion)
 
 ## Introduction
 The ZattarOS Design System represents a comprehensive visual and interaction framework built on shadcn/ui components with semantic badge architecture and advanced theming capabilities. The system has undergone a major modernization effort featuring comprehensive theming improvements with unified font families, refined color tokens, systematic CSS custom property updates, and enhanced design token governance.
 
 **Updated** The system now features comprehensive responsive utility management, modernized component architecture, enhanced design token governance, and a unified theming system with OKLCH color space implementation. The migration to unified radix-ui packages ensures better maintainability and consistency across the component library, while the new responsive utilities provide developers with powerful tools for adaptive UI development.
+
+**Updated** The design system now includes a comprehensive avatar system with the new AvatarIndicator component that provides consistent user status indicators (online, away, offline, success) across chat interfaces and user profiles. This addition enhances the system's ability to communicate user presence and status effectively while maintaining accessibility and design consistency.
 
 This architecture ensures consistency across the legal management platform while allowing for module-specific adaptations through a well-defined override mechanism and modernized component development practices.
 
@@ -425,6 +440,200 @@ The CountBadge component complements the semantic badge system by providing spec
 - [semantic-badge.tsx:75-110](file://src/components/ui/semantic-badge.tsx#L75-L110)
 - [semantic-badge.tsx:124-189](file://src/components/ui/semantic-badge.tsx#L124-L189)
 - [semantic-badge.tsx:200-219](file://src/components/ui/semantic-badge.tsx#L200-L219)
+
+## New AvatarIndicator Component
+
+The design system introduces a comprehensive AvatarIndicator component as part of the enhanced avatar system, providing consistent user status indicators with Tailwind CSS integration and accessibility features.
+
+### AvatarIndicator Architecture and Design Philosophy
+
+**Component Design**
+The AvatarIndicator component is a specialized indicator designed specifically for displaying user status in avatar contexts. It provides a consistent visual pattern for status communication across chat interfaces and user profiles.
+
+**Design Philosophy**
+- **Status Communication**: Uses semantic color variants (online, away, offline, success)
+- **Positioning System**: Absolute positioning for seamless avatar integration
+- **Size Flexibility**: Supports sm, md, and lg sizes for different avatar contexts
+- **Accessibility Compliance**: Proper ARIA labeling and semantic meaning
+- **Consistent Styling**: Provides uniform appearance across all status indicators
+
+**Component Implementation**
+```typescript
+interface AvatarIndicatorProps extends React.ComponentProps<"span"> {
+  variant?: "online" | "away" | "offline" | "success";
+}
+
+function AvatarIndicator({
+  className,
+  variant = "offline",
+  ...props
+}: AvatarIndicatorProps) {
+  const variantStyles = {
+    online: "bg-green-500 border-green-600",
+    away: "bg-yellow-500 border-yellow-600",
+    offline: "bg-gray-400 border-gray-500",
+    success: "bg-blue-500 border-blue-600",
+  };
+
+  return (
+    <span
+      data-slot="avatar-indicator"
+      data-variant={variant}
+      className={cn(
+        "absolute bottom-0 right-0 z-10 flex items-center justify-center rounded-full border-2 size-3 group-data-[size=lg]/avatar:size-4 group-data-[size=sm]/avatar:size-2",
+        variantStyles[variant],
+        className
+      )}
+      {...props}
+    />
+  );
+}
+```
+
+### AvatarIndicator Usage Patterns
+
+**Chat Interface Integration**
+```typescript
+// Chat header with online status
+<Avatar className="size-8 rounded-full overflow-visible shrink-0">
+  <AvatarImage src={image} alt={name} className="rounded-full" />
+  <AvatarFallback>{generateAvatarFallback(name)}</AvatarFallback>
+  {!isGroup && <AvatarIndicator variant={onlineStatus} />}
+</Avatar>
+```
+
+**User Profile Integration**
+```typescript
+// User card with status indicator
+<div className="relative inline-block" style={{ width: ringSize, height: ringSize }}>
+  <UserCompletenessRing score={score} size={ringSize} strokeWidth={2} />
+  <div className="absolute inset-0 flex items-center justify-center">
+    <Avatar
+      style={{
+        width: avatarSize,
+        height: avatarSize,
+        borderWidth: 3,
+        margin: 4,
+      }}
+      className="border-background shrink-0"
+    >
+      <AvatarImage src={getAvatarUrl(usuario.avatarUrl)} alt={usuario.nomeExibicao} />
+      <AvatarFallback>{getInitials(usuario.nomeExibicao)}</AvatarFallback>
+    </Avatar>
+  </div>
+  <UserStatusDot status={status} size="sm" className="absolute bottom-0.5 right-0.5" />
+</div>
+```
+
+**Size Variations**
+- **sm**: Extra-small for compact avatar contexts
+- **md**: Medium for standard avatar sizes
+- **lg**: Large for prominent avatar displays
+
+### AvatarIndicator Integration Examples
+
+**Chat Module Integration**
+The AvatarIndicator component is extensively used in the chat module for displaying user online status:
+- Chat header user presence indicators
+- User detail panel status displays
+- Contact list status indicators
+
+**Accessibility Integration**
+The component integrates with accessibility standards:
+- Proper ARIA labeling for screen readers
+- Semantic color usage for status communication
+- Focus management for interactive contexts
+
+**Responsive Integration**
+The component seamlessly integrates with modern responsive utilities, adapting its size and positioning based on avatar size and screen context.
+
+**Section sources**
+- [avatar.tsx:105-133](file://src/components/ui/avatar.tsx#L105-L133)
+- [avatar.test.tsx:93-132](file://src/components/ui/__tests__/avatar.test.tsx#L93-L132)
+- [chat-header.tsx:50-56](file://src/app/(authenticated)/chat/components/chat-header.tsx#L50-L56)
+
+## Enhanced Avatar System
+
+The avatar system has been comprehensively enhanced with the new AvatarIndicator component, providing consistent status communication across chat interfaces and user profiles. The system now includes multiple avatar components with specialized functionality.
+
+### Avatar Component Architecture
+
+**Core Avatar Components**
+The enhanced avatar system provides a comprehensive set of avatar components:
+- **Avatar**: Core avatar container with size variants and ring support
+- **AvatarImage**: Image display with aspect ratio control
+- **AvatarFallback**: Initials fallback with size-aware styling
+- **AvatarBadge**: Notification badges for avatar contexts
+- **AvatarGroup**: Multiple avatar grouping with overlap management
+- **AvatarGroupCount**: Count badges for avatar groups
+- **AvatarIndicator**: Status indicators with semantic variants
+- **CurrentUserAvatar**: User-specific avatar with provider integration
+
+**AvatarIndicator Integration**
+The AvatarIndicator component integrates seamlessly with the core avatar system:
+- **Positioning**: Absolute positioning for seamless avatar overlap
+- **Sizing**: Responsive sizing based on parent avatar size
+- **Styling**: Consistent border and size styling with avatar groups
+- **Accessibility**: Proper ARIA labeling and semantic meaning
+
+**Enhanced Avatar Usage Patterns**
+```typescript
+// Avatar with status indicator
+<Avatar className="size-8 rounded-full overflow-visible shrink-0">
+  <AvatarImage src={image} alt={name} className="rounded-full" />
+  <AvatarFallback>{generateAvatarFallback(name)}</AvatarFallback>
+  {!isGroup && <AvatarIndicator variant={onlineStatus} />}
+</Avatar>
+
+// Avatar group with status indicators
+<AvatarGroup max={3}>
+  {users.map((user) => (
+    <Avatar key={user.id}>
+      <AvatarImage src={user.avatarUrl} alt={user.name} />
+      <AvatarFallback>{user.initials}</AvatarFallback>
+      <AvatarIndicator variant={user.status} />
+    </Avatar>
+  ))}
+</AvatarGroup>
+```
+
+### Avatar System Integration Examples
+
+**Chat Module Integration**
+The avatar system is extensively used in the chat module:
+- Chat header user avatars with online status
+- User detail panels with avatar and status
+- Contact list with avatar groups and individual indicators
+- Collaborator avatars in document sharing contexts
+
+**User Management Integration**
+The avatar system integrates with user management features:
+- User profile cards with completeness rings and status indicators
+- Team member displays with avatar groups and counts
+- Presence indicators in collaborative contexts
+
+**Accessibility Integration**
+The avatar system prioritizes accessibility:
+- Proper ARIA labeling for all interactive avatar elements
+- Focus management for keyboard navigation
+- Screen reader support for avatar content
+- Color contrast compliance for status indicators
+
+**Responsive Integration**
+The avatar system adapts to different screen sizes:
+- Mobile-optimized avatar sizes and spacing
+- Responsive avatar group layouts
+- Adaptive status indicator visibility
+- Touch-friendly avatar interaction areas
+
+**Section sources**
+- [avatar.tsx:1-144](file://src/components/ui/avatar.tsx#L1-L144)
+- [current-user-avatar.tsx:1-26](file://src/components/ui/current-user-avatar.tsx#L1-L26)
+- [avatar-stack.tsx:1-85](file://src/components/ui/avatar-stack.tsx#L1-L85)
+- [avatar-group.tsx:1-58](file://src/components/ui/avatar-group.tsx#L1-L58)
+- [avatar.test.tsx:1-207](file://src/components/ui/__tests__/avatar.test.tsx#L1-L207)
+- [chat-header.tsx:50-75](file://src/app/(authenticated)/chat/components/chat-header.tsx#L50-L75)
+- [usuario-card.tsx:117-148](file://src/app/(authenticated)/usuarios/components/shared/usuario-card.tsx#L117-L148)
 
 ## Accessibility Compliance Improvements
 
@@ -1077,6 +1286,14 @@ The playground includes comprehensive testing capabilities:
 - **Accessibility Compliance**: Ensuring CountBadge meets accessibility standards
 - **Performance Optimization**: Testing CountBadge rendering performance
 
+**AvatarIndicator Testing and Validation**
+**Updated** The playground now includes comprehensive testing for the new AvatarIndicator component:
+- **Variant Coverage Testing**: Testing all four status variants (online, away, offline, success)
+- **Size Variants Testing**: Validating sm, md, and lg size variants
+- **Integration Scenarios**: Testing AvatarIndicator usage with avatar components
+- **Accessibility Compliance**: Ensuring AvatarIndicator meets WCAG AAA standards
+- **Performance Optimization**: Testing AvatarIndicator rendering performance
+
 **Responsive Utilities Testing**
 - **Breakpoint Hook Testing**: Comprehensive testing of useBreakpoint utilities
 - **Mobile Detection**: Validation of useIsMobile and related responsive utilities
@@ -1099,6 +1316,7 @@ The playground includes comprehensive testing capabilities:
 
 **Section sources**
 - [badge.test.tsx:29-78](file://src/components/ui/__tests__/badge.test.tsx#L29-L78)
+- [avatar.test.tsx:93-132](file://src/components/ui/__tests__/avatar.test.tsx#L93-L132)
 
 ## Page-Specific Implementation Examples
 
@@ -1265,6 +1483,63 @@ The module demonstrates modern responsive utility usage:
 - **Quality Assurance**: Multi-layered validation of implementation quality
 - **Responsive Validation**: Ensuring modern breakpoint patterns are properly implemented
 
+### Chat Module Implementation
+
+**Updated** The chat module demonstrates comprehensive integration of the new AvatarIndicator component with clear usage patterns and accessibility compliance.
+
+**AvatarIndicator Integration and Usage**
+The chat module showcases the AvatarIndicator component in multiple contexts:
+- **Chat Header Integration**: Online status indicators in chat headers
+- **User Detail Integration**: Status displays in user detail panels
+- **Contact List Integration**: Presence indicators in contact lists
+- **Collaborator Integration**: Status indicators in document collaboration contexts
+
+**Chat Header Implementation**
+```typescript
+// Avatar with online status indicator
+<Avatar className="size-8 rounded-full overflow-visible shrink-0">
+  <AvatarImage src={image} alt={name} className="rounded-full" />
+  <AvatarFallback>{generateAvatarFallback(name)}</AvatarFallback>
+  {!isGroup && <AvatarIndicator variant={onlineStatus} />}
+</Avatar>
+```
+
+**User Detail Panel Integration**
+```typescript
+// User detail with status indicator
+<div className="flex items-center gap-3">
+  <Avatar className="size-12">
+    <AvatarImage src={user.avatarUrl} alt={user.name} />
+    <AvatarFallback>{user.initials}</AvatarFallback>
+    <AvatarIndicator variant={user.status} />
+  </Avatar>
+  <div>
+    <h3 className="font-semibold">{user.name}</h3>
+    <p className="text-sm text-muted-foreground">
+      {user.status === 'online' ? 'Online agora' : `Última vez visto ${user.lastSeen}`}
+    </p>
+  </div>
+</div>
+```
+
+**Accessibility Integration**
+The AvatarIndicator component integrates with chat accessibility standards:
+- **Proper ARIA Labeling**: Screen reader support for user status
+- **Focus Management**: Keyboard navigation for interactive contexts
+- **Color Contrast**: WCAG AAA compliant color usage for status indicators
+- **Motion Sensitivity**: Respect for reduced motion preferences
+
+**Responsive Integration**
+The AvatarIndicator component adapts to different screen sizes:
+- **Mobile Optimization**: Compact status indicators for small screens
+- **Touch-Friendly**: Adequate touch targets for mobile interaction
+- **Adaptive Positioning**: Status indicators that work across avatar sizes
+- **Performance Optimization**: Efficient rendering across different contexts
+
+**Section sources**
+- [chat-header.tsx:50-75](file://src/app/(authenticated)/chat/components/chat-header.tsx#L50-L75)
+- [user-status-dot.tsx:1-59](file://src/app/(authenticated)/usuarios/components/shared/user-status-dot.tsx#L1-L59)
+
 ## Quality Assurance and Migration Tracking
 
 The design system includes comprehensive quality assurance processes to ensure consistent implementation and track migration progress, now enhanced with modern responsive utility validation.
@@ -1312,6 +1587,14 @@ The design system includes comprehensive quality assurance processes to ensure c
 - **Count Display Standardization**: Evidence of consistent count presentation
 - **Badge System Enhancement**: Improved semantic badge architecture
 - **Developer Productivity**: Measured improvement in count display implementation
+
+**AvatarIndicator Migration Metrics**
+**Updated** The system now tracks metrics for the new AvatarIndicator component:
+- **AvatarIndicator Component Adoption**: Tracking of AvatarIndicator usage across chat and user interfaces
+- **Status Indicator Standardization**: Evidence of consistent user status communication
+- **Avatar System Enhancement**: Improved avatar component architecture
+- **Developer Productivity**: Measured improvement in user status display implementation
+- **Accessibility Compliance**: Validation of AvatarIndicator accessibility standards
 
 **Responsive Utility Metrics**
 - **useIsMobile Adoption**: Tracking of mobile detection usage
@@ -1391,6 +1674,15 @@ The design system architecture supports scalable maintenance and evolution throu
 - **Developer Education**: Training on CountBadge usage patterns and best practices
 - **Responsive Integration**: Ensuring CountBadge works with modern breakpoint utilities
 
+**AvatarIndicator Maintenance and Governance**
+**Updated** The system now includes maintenance processes for the new AvatarIndicator component:
+- **Component Usage Analytics**: Tracking AvatarIndicator adoption across chat and user interfaces
+- **Performance Monitoring**: Ensuring efficient AvatarIndicator rendering
+- **Accessibility Compliance**: Regular validation of AvatarIndicator accessibility
+- **Developer Education**: Training on AvatarIndicator usage patterns and best practices
+- **Responsive Integration**: Ensuring AvatarIndicator works with modern breakpoint utilities
+- **Integration Testing**: Validating AvatarIndicator with avatar component ecosystem
+
 **Responsive Utility Maintenance and Governance**
 - **Breakpoint Utility Usage Analytics**: Tracking modern breakpoint adoption
 - **Performance Monitoring**: Ensuring efficient responsive utility usage
@@ -1420,7 +1712,9 @@ The ZattarOS Design System represents a comprehensive approach to design system 
 
 **Updated** The system now features major typography improvements with typed Typography components (Heading and Text) replacing deprecated custom components, enhanced accessibility compliance with WCAG AAA standards, comprehensive anti-pattern prevention measures, and a new CountBadge component for consistent count display across tabs and badges. The introduction of typed Typography components provides semantic HTML elements with proper heading hierarchy, improving accessibility and reducing unnecessary abstraction layers across the application.
 
-The comprehensive modernization effort has successfully migrated the component library to the unified radix-ui package, streamlining component APIs and improving maintainability. The enhanced responsive utility system provides developers with powerful tools for adaptive UI development, while the expanded CSS variable and design token system ensures better consistency and maintainability across the platform.
+**Updated** The comprehensive modernization effort has successfully migrated the component library to the unified radix-ui package, streamlining component APIs and improving maintainability. The enhanced responsive utility system provides developers with powerful tools for adaptive UI development, while the expanded CSS variable and design token system ensures better consistency and maintainability across the platform.
+
+**Updated** The most significant enhancement is the introduction of the AvatarIndicator component, which provides consistent user status indicators (online, away, offline, success) across chat interfaces and user profiles. This addition enhances the system's ability to communicate user presence and status effectively while maintaining accessibility and design consistency. The component integrates seamlessly with the existing avatar ecosystem and provides comprehensive testing coverage with property-based tests.
 
 The hierarchical architecture ensures that all modules follow consistent design principles while allowing for targeted adaptations through documented overrides. The comprehensive audit and validation processes guarantee high-quality implementations across all modules, while the playground environment facilitates testing and validation of design system implementations.
 
@@ -1435,6 +1729,8 @@ The enhanced typography system with typed components, comprehensive accessibilit
 The modernized component architecture with unified radix-ui packages, enhanced responsive utilities, and comprehensive design token management positions the ZattarOS Design System for continued success in supporting the platform's growth and evolution. The systematic approach to component refactoring, responsive utility integration, and design token management ensures that the system remains maintainable, accessible, and aligned with current best practices in design system development.
 
 The enhanced badge component with 5 new semantic status variants (success, warning, info, neutral, accent) and the new highlight foreground color variable demonstrate the system's commitment to continuous improvement and enhanced color consistency. These improvements provide developers with more granular control over status communication while maintaining accessibility and visual coherence across the platform.
+
+**Updated** The new AvatarIndicator component with comprehensive testing coverage and accessibility compliance represents the latest advancement in user presence communication within the design system. The component's integration with the avatar ecosystem and its support for multiple status variants (online, away, offline, success) provides a consistent and accessible way to communicate user status across the platform.
 
 The comprehensive design system improvements ensure that the ZattarOS platform remains at the forefront of legal technology design, providing both developers and users with a consistent, accessible, and visually appealing interface that supports the complex needs of legal case management.
 

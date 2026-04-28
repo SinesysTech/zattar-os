@@ -8,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 
 interface GenerateMetaParams {
   title: string
-  description: string
+  description?: string
   canonical?: string
   imageUrl?: string
   keywords?: string[]
@@ -17,7 +17,7 @@ interface GenerateMetaParams {
 
 export function generateMeta({
   title,
-  description,
+  description = title,
   canonical,
   imageUrl,
   keywords,
