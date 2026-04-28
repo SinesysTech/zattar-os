@@ -165,12 +165,12 @@ export function PrepScore({ audiencia, className, showBreakdown = false, size = 
               {item.done ? (
                 <CheckCircle2 className="size-2.5 text-success/60 shrink-0" />
               ) : (
-                <Circle className="size-2.5 text-muted-foreground/45 shrink-0" />
+                <Circle className="size-2.5 text-muted-foreground/65 shrink-0" />
               )}
               <span
                 className={cn(
                   "text-micro-caption truncate",
-                  item.done ? "text-muted-foreground/50 line-through" : "text-foreground/70",
+                  item.done ? "text-muted-foreground/70 line-through" : "text-foreground/70",
                 )}
               >
                 {item.label}

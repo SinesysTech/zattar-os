@@ -286,11 +286,11 @@ export function MissionCard({
                   {item.done ? (
                     <CheckCircle2 className="size-2.5 text-success/60 shrink-0" />
                   ) : (
-                    <Circle className="size-2.5 text-muted-foreground/45 shrink-0" />
+                    <Circle className="size-2.5 text-muted-foreground/65 shrink-0" />
                   )}
                   <span className={cn(
                     'text-micro-caption truncate',
-                    item.done ? 'text-muted-foreground/50 line-through' : 'text-foreground/70',
+                    item.done ? 'text-muted-foreground/70 line-through' : 'text-foreground/70',
                   )}>
                     {item.label}
                   </span>
@@ -312,7 +312,7 @@ export function MissionCard({
                   /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-micro-caption font-medium transition-all cursor-pointer group',
                   action.primary
                     ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm'
-                    : 'text-muted-foreground/50 hover:text-foreground/70 hover:bg-foreground/4',
+                    : 'text-muted-foreground/70 hover:text-foreground/70 hover:bg-foreground/4',
                 )}
               >
                 <action.icon className="size-2.5" />

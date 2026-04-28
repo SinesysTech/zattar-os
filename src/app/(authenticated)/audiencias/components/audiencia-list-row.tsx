@@ -103,7 +103,7 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
     : isCancelada
     ? 'bg-destructive/50'
     : isPast
-    ? 'bg-muted-foreground/20'
+    ? 'bg-muted-foreground/45'
     : 'bg-primary/50';
 
   // Prep ring (inline SVG)
@@ -118,7 +118,7 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
       onClick={() => onClick?.(audiencia)}
       className={cn(
         /* design-system-escape: gap-3 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ 'w-full flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer transition-all outline-none text-left',
-        'focus-visible:ring-1 focus-visible:ring-primary/30 hover:bg-foreground/4',
+        'focus-visible:ring-1 focus-visible:ring-primary/55 hover:bg-foreground/4',
         selected && 'bg-primary/6',
         (isPast || isFinalizada || isCancelada) && 'opacity-55',
         className,
@@ -129,20 +129,20 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
 
       {/* Icon */}
       <IconContainer size="md" className="bg-primary/8">
-        <Gavel className="size-3.5 text-primary/50" />
+        <Gavel className="size-3.5 text-primary/70" />
       </IconContainer>
 
       {/* Main info */}
       <div className="flex-1 min-w-0">
         <Text variant="caption" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium truncate text-foreground/80")}>{audiencia.tipoDescricao || 'Audiência'}</Text>
-        <p className="text-micro-caption text-muted-foreground/45 truncate">
+        <p className="text-micro-caption text-muted-foreground/65 truncate">
           {audiencia.poloAtivoNome || '—'} vs {audiencia.poloPassivoNome || '—'}
         </p>
         {audiencia.orgaoJulgadorOrigem && (
-          <p className="text-micro-caption text-muted-foreground/40 truncate">{audiencia.orgaoJulgadorOrigem}</p>
+          <p className="text-micro-caption text-muted-foreground/65 truncate">{audiencia.orgaoJulgadorOrigem}</p>
         )}
         {audiencia.observacoes && (
-          <p className="text-micro-caption text-muted-foreground/40 truncate italic" title={audiencia.observacoes}>{audiencia.observacoes}</p>
+          <p className="text-micro-caption text-muted-foreground/65 truncate italic" title={audiencia.observacoes}>{audiencia.observacoes}</p>
         )}
       </div>
 
@@ -157,25 +157,25 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
             }
           })()}
         </p>
-        <p className="text-micro-caption text-muted-foreground/50 tabular-nums">
+        <p className="text-micro-caption text-muted-foreground/70 tabular-nums">
           {fmtTime(audiencia.dataInicio)}
         </p>
       </div>
 
       {/* Modalidade */}
       <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 shrink-0 md:flex w-20")}>
-        <ModalIcon className="size-2.5 text-muted-foreground/40" />
-        <span className="text-micro-caption text-muted-foreground/60">{modalidadeLabel}</span>
+        <ModalIcon className="size-2.5 text-muted-foreground/65" />
+        <span className="text-micro-caption text-muted-foreground/75">{modalidadeLabel}</span>
       </div>
 
       {/* TRT + Grau */}
       {audiencia.trt && (
         <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 shrink-0 md:flex")}>
-          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-caption font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40")}>
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-caption font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/65")}>
             {audiencia.trt}
           </span>
           {audiencia.grau && (
-            <span className="text-micro-caption text-muted-foreground/45">{GRAU_TRIBUNAL_LABELS[audiencia.grau]}</span>
+            <span className="text-micro-caption text-muted-foreground/65">{GRAU_TRIBUNAL_LABELS[audiencia.grau]}</span>
           )}
         </div>
       )}
@@ -209,15 +209,15 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
       {/* Countdown or status */}
       <span className={cn(
         /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-micro-caption shrink-0 w-16 text-right tabular-nums font-medium',
-        isFinalizada ? 'text-success/50' :
-        isCancelada ? 'text-destructive/50' :
-        !isPast ? (timeUntil.totalMs <= 60 * 60 * 1000 ? 'text-warning/60' : 'text-muted-foreground/40') :
-        'text-muted-foreground/25',
+        isFinalizada ? 'text-success/70' :
+        isCancelada ? 'text-destructive/70' :
+        !isPast ? (timeUntil.totalMs <= 60 * 60 * 1000 ? 'text-warning/75' : 'text-muted-foreground/65') :
+        'text-muted-foreground/55',
       )}>
         {isFinalizada ? 'Realizada' : isCancelada ? 'Cancelada' : !isPast ? timeUntil.label : 'Passada'}
       </span>
 
-      <ChevronRight className="size-3.5 text-muted-foreground/15 shrink-0" />
+      <ChevronRight className="size-3.5 text-muted-foreground/65 shrink-0" />
     </button>
   );
 }

@@ -55,7 +55,7 @@ export function RhythmStrip({ audiencias, className }: RhythmStripProps) {
   return (
     <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'p-4', className)}>
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
-        <Zap className="size-3 text-primary/40" />
+        <Zap className="size-3 text-primary/65" />
         <Text variant="caption" as="span" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground/60")}>Ritmo de audiências</Text>
         {hasOverload && (
           <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-badge font-semibold px-1.5 py-px rounded-full bg-warning/10 text-warning ml-auto")}>
@@ -65,13 +65,13 @@ export function RhythmStrip({ audiencias, className }: RhythmStripProps) {
       </div>
       <CalendarHeatmap data={heatmapData} colorScale={hasOverload ? 'warning' : 'primary'} />
       <div className="flex items-center justify-between mt-2">
-        <span className="text-micro-badge text-muted-foreground/45">Menos</span>
+        <span className="text-micro-badge text-muted-foreground/65">Menos</span>
         <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex gap-0.5")}>
           {['bg-border/10', 'bg-primary/15', 'bg-primary/30', 'bg-primary/50', 'bg-primary/80'].map((c, i) => (
             <div key={i} className={cn('size-2.5 rounded-[2px]', c)} />
           ))}
         </div>
-        <span className="text-micro-badge text-muted-foreground/45">Mais</span>
+        <span className="text-micro-badge text-muted-foreground/65">Mais</span>
       </div>
     </GlassPanel>
   );

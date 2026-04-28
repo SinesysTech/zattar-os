@@ -135,7 +135,7 @@ export function PostHearingFlow({
             <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-micro-caption font-semibold uppercase tracking-wider text-warning/60")}>
               Concluída
             </span>
-            <span className="text-micro-caption text-muted-foreground/60">
+            <span className="text-micro-caption text-muted-foreground/75">
               {audiencia.tipoDescricao} · {format(dataFim, "HH:mm", { locale: ptBR })}
             </span>
           </div>
@@ -151,21 +151,21 @@ export function PostHearingFlow({
         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
           <span className="text-mono-num text-muted-foreground/60">{audiencia.numeroProcesso}</span>
           {audiencia.trt && (
-            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-badge font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40")}>{audiencia.trt}</span>
+            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-badge font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/65")}>{audiencia.trt}</span>
           )}
         </div>
 
         {/* Parties */}
         {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
-          <p className="text-micro-caption text-foreground/60 mb-4 truncate">
-            {audiencia.poloAtivoNome || "–"} <span className="text-muted-foreground/50">vs</span> {audiencia.poloPassivoNome || "–"}
+          <p className="text-micro-caption text-foreground/75 mb-4 truncate">
+            {audiencia.poloAtivoNome || "–"} <span className="text-muted-foreground/70">vs</span> {audiencia.poloPassivoNome || "–"}
           </p>
         )}
 
         {/* Result selector */}
         {!isFinalized && (
           <div className="mb-4">
-            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Resultado</span>
+            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/75 uppercase tracking-wider")}>Resultado</span>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mt-1.5")}>
               {RESULT_OPTIONS.map((opt) => (
                 <button
@@ -175,7 +175,7 @@ export function PostHearingFlow({
                     /* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-micro-caption font-medium border transition-all cursor-pointer",
                     selectedResult === opt.value
                       ? "border-primary/30 bg-primary/8 text-primary"
-                      : "border-border/15 text-muted-foreground/50 hover:text-foreground/70 hover:border-border/25",
+                      : "border-border/15 text-muted-foreground/70 hover:text-foreground/75 hover:border-border/25",
                   )}
                 >
                   <opt.icon className="size-3" />
@@ -189,8 +189,8 @@ export function PostHearingFlow({
         {/* Post-action checklist */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Ações pós-audiência</span>
-            <span className="text-micro-caption tabular-nums text-muted-foreground/60">{completedCount}/{postActions.length}</span>
+            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/75 uppercase tracking-wider")}>Ações pós-audiência</span>
+            <span className="text-micro-caption tabular-nums text-muted-foreground/75">{completedCount}/{postActions.length}</span>
           </div>
 
           {/* Progress bar */}
@@ -211,13 +211,13 @@ export function PostHearingFlow({
                   /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-micro-caption transition-all",
                   action.done
                     ? "text-muted-foreground/55"
-                    : "text-foreground/60 hover:bg-foreground/4or-pointer",
+                    : "text-foreground/75 hover:bg-foreground/4or-pointer",
                 )}
               >
                 {action.done ? (
                   <CheckCircle2 className="size-3 text-success/50 shrink-0" />
                 ) : (
-                  <Circle className="size-3 text-muted-foreground/45 shrink-0" />
+                  <Circle className="size-3 text-muted-foreground/65 shrink-0" />
                 )}
                 <span className={action.done ? "line-through" : ""}>{action.label}</span>
               </button>

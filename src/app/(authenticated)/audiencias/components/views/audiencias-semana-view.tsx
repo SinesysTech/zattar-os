@@ -186,19 +186,19 @@ export function AudienciasSemanaView({
     <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       {/* Week Navigator */}
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
-        <button onClick={handlePrevWeek} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer")}>
+        <button onClick={handlePrevWeek} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/70 cursor-pointer")}>
           <ChevronLeft className="size-4" />
         </button>
         <button
           onClick={handleToday}
           className={cn(
             /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'px-2.5 py-1 rounded-lg text-caption font-medium transition-colors cursor-pointer',
-            isCurrentWeek ? 'bg-primary/12 text-primary' : 'bg-border/8 text-muted-foreground/50 hover:bg-border/15',
+            isCurrentWeek ? 'bg-primary/12 text-primary' : 'bg-border/8 text-muted-foreground/70 hover:bg-border/15',
           )}
         >
           Hoje
         </button>
-        <button onClick={handleNextWeek} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer")}>
+        <button onClick={handleNextWeek} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/70 cursor-pointer")}>
           <ChevronRight className="size-4" />
         </button>
         <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium capitalize ml-1")}>{weekLabel}</span>
@@ -268,7 +268,7 @@ export function AudienciasSemanaView({
                             {group.title}
                           </h3>
                         </div>
-                        <span className="text-mono-num text-muted-foreground/40">
+                        <span className="text-mono-num text-muted-foreground/65">
                           {group.items.length}
                         </span>
                       </div>
@@ -428,7 +428,7 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
                 <p className="text-sm font-semibold text-foreground leading-snug">
                   {audiencia.poloAtivoNome || '—'}
                   {audiencia.poloAtivoNome && audiencia.poloPassivoNome && (
-                    <span className="mx-1.5 text-[10px] font-normal text-muted-foreground/40">vs</span>
+                    <span className="mx-1.5 text-[10px] font-normal text-muted-foreground/65">vs</span>
                   )}
                   {audiencia.poloPassivoNome && (
                     <span className="font-medium text-muted-foreground/80">{audiencia.poloPassivoNome}</span>
@@ -464,7 +464,7 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
               <button
                 type="button"
                 onClick={onClick}
-                className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex h-6 cursor-pointer items-center gap-1 rounded-md border border-border/20 px-2 text-[10px] font-medium text-muted-foreground/60 transition-colors hover:border-border/40 hover:text-muted-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
+                className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex h-6 cursor-pointer items-center gap-1 rounded-md border border-border/40 px-2 text-[10px] font-medium text-muted-foreground/60 transition-colors hover:border-border/40 hover:text-muted-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
               >
                 <ExternalLink className="size-3" />
                 Detalhes

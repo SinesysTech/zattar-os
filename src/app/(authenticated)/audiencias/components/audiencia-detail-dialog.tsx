@@ -462,7 +462,7 @@ export function AudienciaDetailDialog({
                           : 'Definir'}
                       </span>
                       {!modalidadePopoverDisabled && (
-                        <ChevronDown className="size-3 text-muted-foreground/60" />
+                        <ChevronDown className="size-3 text-muted-foreground/75" />
                       )}
                     </>
                   )}
@@ -472,7 +472,7 @@ export function AudienciaDetailDialog({
                 <Text
                   variant="overline"
                   as="p"
-                  className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; pt-1 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-2 pt-1 pb-1.5 text-muted-foreground/60")}
+                  className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; pt-1 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-2 pt-1 pb-1.5 text-muted-foreground/75")}
                 >
                   Modalidade
                 </Text>
@@ -646,7 +646,7 @@ export function AudienciaDetailDialog({
               <button
                 type="button"
                 onClick={() => onOpenChange(false)}
-                className="inline-flex size-7 shrink-0 items-center justify-center rounded-md text-muted-foreground/60 transition-colors hover:bg-muted/60 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="inline-flex size-7 shrink-0 items-center justify-center rounded-md text-muted-foreground/75 transition-colors hover:bg-muted/60 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 aria-label="Fechar"
               >
                 <X className="size-3.5" />
@@ -767,7 +767,7 @@ export function AudienciaDetailDialog({
                           </div>
                         ) : audiencia.urlAudienciaVirtual ? (
                           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
-                            <Video className="size-3.5 text-muted-foreground/60 shrink-0" />
+                            <Video className="size-3.5 text-muted-foreground/75 shrink-0" />
                             <a
                               href={audiencia.urlAudienciaVirtual}
                               target="_blank"
@@ -790,7 +790,7 @@ export function AudienciaDetailDialog({
                             </Button>
                           </div>
                         ) : (
-                          <Text variant="caption" className="text-muted-foreground/60 italic">
+                          <Text variant="caption" className="text-muted-foreground/75 italic">
                             Nenhum link cadastrado
                           </Text>
                         )}
@@ -933,7 +933,7 @@ export function AudienciaDetailDialog({
                             </span>
                           </Text>
                         ) : (
-                          <Text variant="caption" className="text-muted-foreground/60 italic">
+                          <Text variant="caption" className="text-muted-foreground/75 italic">
                             Nenhum endereço cadastrado
                           </Text>
                         )}
@@ -1050,7 +1050,7 @@ export function AudienciaDetailDialog({
                         {audiencia.observacoes}
                       </p>
                     ) : (
-                      <Text variant="caption" className="text-muted-foreground/60 italic">
+                      <Text variant="caption" className="text-muted-foreground/75 italic">
                         Nenhuma observação registrada
                       </Text>
                     )}

@@ -97,7 +97,7 @@ function TimelineBar({ audiencia, maxEnd, minStart }: { audiencia: Audiencia; ma
         className="absolute top-0.5 h-3.5 rounded bg-primary/20 border border-primary/15 transition-all duration-200 hover:bg-primary/30 cursor-default"
         style={{ left: `${left}%`, width: `${width}%`, minWidth: 20 }}
       >
-        <span className={cn(/* design-system-escape: pr-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "absolute left-1.5 top-1/2 -translate-y-1/2 text-micro-badge text-foreground/60 truncate max-w-full pr-1.5 font-medium")}>
+        <span className={cn(/* design-system-escape: pr-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "absolute left-1.5 top-1/2 -translate-y-1/2 text-micro-badge text-foreground/75 truncate max-w-full pr-1.5 font-medium")}>
           {format(parseISO(audiencia.dataInicio), "HH:mm")}
         </span>
       </div>
@@ -118,7 +118,7 @@ export function ConflictAlert({ audiencias, dailyAverage = 2.5, className }: Con
       <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
           <AlertTriangle className="size-3 text-destructive/50" />
-          <Text variant="caption" as="span" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground/60")}>
+          <Text variant="caption" as="span" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground/75")}>
             {conflicts.length} {conflicts.length === 1 ? "alerta" : "alertas"}
           </Text>
         </div>
@@ -169,8 +169,8 @@ export function ConflictAlert({ audiencias, dailyAverage = 2.5, className }: Con
 
                 {conflict.suggestion && (
                   <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 ml-4")}>
-                    <ArrowRight className="size-2 text-muted-foreground/45" />
-                    <span className="text-micro-caption text-muted-foreground/60 italic">{conflict.suggestion}</span>
+                    <ArrowRight className="size-2 text-muted-foreground/65" />
+                    <span className="text-micro-caption text-muted-foreground/75 italic">{conflict.suggestion}</span>
                   </div>
                 )}
               </div>

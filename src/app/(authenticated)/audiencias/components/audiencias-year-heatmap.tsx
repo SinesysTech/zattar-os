@@ -166,7 +166,7 @@ const MonthGrid = React.memo(function MonthGrid({
       </div>
       <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "grid grid-cols-7 gap-0.5 mb-1")}>
         {WEEKDAY_LABELS.map((lbl, i) => (
-          <div key={i} className="text-micro-caption text-muted-foreground/50 text-center">
+          <div key={i} className="text-micro-caption text-muted-foreground/70 text-center">
             {lbl}
           </div>
         ))}
@@ -307,7 +307,7 @@ export function AudienciasYearHeatmap({
                 <div className="w-2.5 h-2.5 rounded-[2px] bg-primary/85" />
               </div>
               <span className="text-micro-caption">Mais</span>
-              <span className={cn(/* design-system-escape: mx-2 margin sem primitiva DS */ "text-muted-foreground/40 mx-2 text-micro-caption")}>·</span>
+              <span className={cn(/* design-system-escape: mx-2 margin sem primitiva DS */ "text-muted-foreground/65 mx-2 text-micro-caption")}>·</span>
               <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
                 <div className="w-2.5 h-2.5 rounded-[2px] bg-muted/50 ring-[1.5px] ring-primary ring-offset-1 ring-offset-transparent" />
                 <span className="text-micro-caption">Hoje</span>

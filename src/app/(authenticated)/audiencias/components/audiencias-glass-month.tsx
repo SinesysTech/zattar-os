@@ -68,7 +68,7 @@ function getStatusBadgeClass(status: StatusAudiencia): string {
     case StatusAudiencia.Cancelada:
       return 'bg-destructive/15 text-destructive border-destructive/25';
     default:
-      return 'bg-muted/30 text-muted-foreground border-border/30';
+      return 'bg-muted/30 text-muted-foreground border-border/50';
   }
 }
 
@@ -183,7 +183,7 @@ function HearingItem({ audiencia }: { audiencia: Audiencia }) {
   return (
     <div
       className={cn(
-        /* design-system-escape: p-2.5 → usar <Inset> */ 'rounded-lg p-2.5 border border-border/30 border-l-2 bg-muted/15',
+        /* design-system-escape: p-2.5 → usar <Inset> */ 'rounded-lg p-2.5 border border-border/50 border-l-2 bg-muted/15',
         'hover:bg-accent/40 transition-colors cursor-pointer',
         getStatusBorderClass(audiencia.status),
       )}
@@ -191,7 +191,7 @@ function HearingItem({ audiencia }: { audiencia: Audiencia }) {
       {/* Linha principal: hora + tipo + badge */}
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
         <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 min-w-0")}>
-          <Clock className="w-3 h-3 text-foreground/40 shrink-0" />
+          <Clock className="w-3 h-3 text-foreground/60 shrink-0" />
           <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-foreground/85 truncate")}>
             {audiencia.horaInicio || '—'} · {audiencia.tipoDescricao || 'Audiência'}
           </span>
@@ -207,24 +207,24 @@ function HearingItem({ audiencia }: { audiencia: Audiencia }) {
       {/* Processo + grau */}
       <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mt-1.5 ml-4.5 min-w-0")}>
         {audiencia.grau && (
-          <span className="text-micro-caption text-foreground/40 shrink-0">
+          <span className="text-micro-caption text-foreground/60 shrink-0">
             {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
           </span>
         )}
-        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/45 tabular-nums truncate")}>
+        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/65 tabular-nums truncate")}>
           {audiencia.numeroProcesso}
         </span>
       </div>
 
       {/* Meta: modalidade + órgão */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mt-1.5 ml-4.5 text-foreground/35")}>
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mt-1.5 ml-4.5 text-foreground/55")}>
         <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
           <ModalidadeIcon className="w-3 h-3" />
           <span className="text-caption">{modalidadeLabel}</span>
         </div>
         {audiencia.orgaoJulgadorOrigem && (
           <>
-            <span className="text-foreground/15">·</span>
+            <span className="text-foreground/55">·</span>
             <span className="text-caption truncate">{audiencia.orgaoJulgadorOrigem}</span>
           </>
         )}
@@ -334,7 +334,7 @@ export function AudienciasGlassMonth({
                 key={label}
                 className={cn(
                   /* design-system-escape: py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading>; tracking-widest sem token DS */ 'text-center py-2 text-xs font-semibold uppercase tracking-widest',
-                  idx >= 5 ? 'text-foreground/35' : 'text-foreground/50',
+                  idx >= 5 ? 'text-foreground/55' : 'text-foreground/70',
                 )}
               >
                 {label}
@@ -379,16 +379,16 @@ export function AudienciasGlassMonth({
                             <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold capitalize")}>
                               {format(day, "d 'de' MMMM", { locale: ptBR })}
                             </p>
-                            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/40 mt-0.5 capitalize")}>
+                            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/60 mt-0.5 capitalize")}>
                               {format(day, 'EEEE', { locale: ptBR })} · {auds.length} audiência{auds.length > 1 ? 's' : ''}
                             </p>
                           </div>
                           <button
                             type="button"
                             onClick={() => setPopoverDay(null)}
-                            className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-accent/50 border border-border/30 transition-colors"
+                            className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-accent/50 border border-border/50 transition-colors"
                           >
-                            <X className="w-3.5 h-3.5 text-foreground/50" />
+                            <X className="w-3.5 h-3.5 text-foreground/70" />
                           </button>
                         </div>
                         <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; pr-0.5 padding direcional sem Inset equiv. */ "space-y-2 max-h-72 overflow-y-auto pr-0.5")}>
@@ -419,26 +419,26 @@ export function AudienciasGlassMonth({
           </div>
 
           {/* Summary Strip */}
-          <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "mt-5 pt-4 border-t border-border/30 flex items-center justify-between flex-wrap gap-3")}>
+          <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "mt-5 pt-4 border-t border-border/50 flex items-center justify-between flex-wrap gap-3")}>
             <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5")}>
               <div className="text-center">
                 <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold")}>{summary.total}</p>
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/40 mt-0.5")}>Total no mês</p>
+                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/60 mt-0.5")}>Total no mês</p>
               </div>
               <div className="w-px h-8 bg-border/50" />
               <div className="text-center">
                 <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold text-success")}>{summary.marcadas}</p>
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/40 mt-0.5")}>Marcadas</p>
+                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/60 mt-0.5")}>Marcadas</p>
               </div>
               <div className="w-px h-8 bg-border/50" />
               <div className="text-center">
                 <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold text-info")}>{summary.finalizadas}</p>
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/40 mt-0.5")}>Finalizadas</p>
+                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/60 mt-0.5")}>Finalizadas</p>
               </div>
               <div className="w-px h-8 bg-border/50" />
               <div className="text-center">
                 <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold text-destructive")}>{summary.canceladas}</p>
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/40 mt-0.5")}>Canceladas</p>
+                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/60 mt-0.5")}>Canceladas</p>
               </div>
             </div>
           </div>

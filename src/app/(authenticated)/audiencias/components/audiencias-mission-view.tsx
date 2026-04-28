@@ -266,19 +266,19 @@ export function AudienciasMissionView({
       {/* ── Date Navigator (only in mission view) ──────────── */}
       {contentView === 'missao' && (
         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
-          <button onClick={handlePrev} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer")}>
+          <button onClick={handlePrev} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/70 hover:text-muted-foreground/70 cursor-pointer")}>
             <ChevronLeft className="size-4" />
           </button>
           <button
             onClick={handleToday}
             className={cn(
               /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'px-2.5 py-1 rounded-lg text-caption font-medium transition-colors cursor-pointer',
-              isCurrentDay ? 'bg-primary/12 text-primary' : 'bg-border/8 text-muted-foreground/50 hover:bg-border/15',
+              isCurrentDay ? 'bg-primary/12 text-primary' : 'bg-border/8 text-muted-foreground/70 hover:bg-border/15',
             )}
           >
             Hoje
           </button>
-          <button onClick={handleNext} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer")}>
+          <button onClick={handleNext} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/70 hover:text-muted-foreground/70 cursor-pointer")}>
             <ChevronRight className="size-4" />
           </button>
           <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium capitalize ml-1")}>{dateLabel}</span>
@@ -334,7 +334,7 @@ export function AudienciasMissionView({
             <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-5 sem equivalente DS */ "p-4 sm:p-5")}>
               <div className="flex items-center justify-between mb-4">
                 <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
-                  <Clock className="size-3 text-muted-foreground/50" />
+                  <Clock className="size-3 text-muted-foreground/70" />
                   <Text variant="caption" as="span" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground/60")}>Timeline do dia</Text>
                 </div>
                 <span className="text-micro-caption tabular-nums text-muted-foreground/60">
@@ -369,7 +369,7 @@ export function AudienciasMissionView({
                   {morning.length > 0 && afternoon.length > 0 && (
                     <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-3 padding direcional sem Inset equiv.; px-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 py-3 px-2")}>
                       <div className="flex-1 h-px bg-border/8" />
-                      <span className={cn(/* design-system-escape: tracking-widest sem token DS */ "text-micro-badge text-muted-foreground/45 uppercase tracking-widest")}>Intervalo</span>
+                      <span className={cn(/* design-system-escape: tracking-widest sem token DS */ "text-micro-badge text-muted-foreground/65 uppercase tracking-widest")}>Intervalo</span>
                       <div className="flex-1 h-px bg-border/8" />
                     </div>
                   )}
@@ -433,8 +433,8 @@ export function AudienciasMissionView({
             ))
           ) : (
             <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 text-center")}>
-              <Gavel className="size-8 text-muted-foreground/45 mb-3" />
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium text-muted-foreground/50")}>Nenhuma audiência encontrada</p>
+              <Gavel className="size-8 text-muted-foreground/65 mb-3" />
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium text-muted-foreground/70")}>Nenhuma audiência encontrada</p>
               <p className="text-micro-caption text-muted-foreground/55 mt-1">
                 {search ? 'Tente ajustar a busca' : 'Tente ajustar os filtros'}
               </p>
@@ -453,7 +453,7 @@ export function AudienciasMissionView({
 function TimelineSectionHeader({ label, icon: Icon }: { label: string; icon: typeof Sun }) {
   return (
     <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 py-2")}>
-      <Icon className="size-3 text-muted-foreground/40" />
+      <Icon className="size-3 text-muted-foreground/65" />
       <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-micro-caption font-semibold text-muted-foreground/60 uppercase tracking-wider")}>{label}</span>
       <div className="flex-1 h-px bg-border/6" />
     </div>
@@ -464,7 +464,7 @@ function TimelineBuffer({ label }: { label: string }) {
   return (
     <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-1 padding direcional sem Inset equiv.; pl-16 padding direcional sem Inset equiv. */ "flex items-center gap-2 py-1 pl-16")}>
       <div className="w-px h-4 bg-border/10 ml-0.5" />
-      <span className="text-micro-caption text-muted-foreground/45">{label}</span>
+      <span className="text-micro-caption text-muted-foreground/65">{label}</span>
     </div>
   );
 }
@@ -511,7 +511,7 @@ function TimelineAudienciaCard({ audiencia, onClick }: { audiencia: Audiencia; o
         onClick={onClick}
         className={cn(
           /* design-system-escape: p-3 → usar <Inset> */ 'flex-1 rounded-xl p-3 transition-all duration-200 min-w-0 text-left cursor-pointer',
-          'border border-border/12 hover:border-border/20 hover:shadow-sm hover:scale-[1.005]',
+          'border border-border/12 hover:border-border/40 hover:shadow-sm hover:scale-[1.005]',
           isPast && 'opacity-50',
           isOngoing && 'ring-1 ring-success/20 border-success/15',
         )}
@@ -519,7 +519,7 @@ function TimelineAudienciaCard({ audiencia, onClick }: { audiencia: Audiencia; o
         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
           <div className="min-w-0 flex-1">
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
-              <Gavel className="size-3 text-primary/40 shrink-0" />
+              <Gavel className="size-3 text-primary/65 shrink-0" />
               <Text variant="label" as="span" className="truncate text-foreground">
                 {audiencia.tipoDescricao || 'Audiência'}
               </Text>
@@ -549,20 +549,20 @@ function TimelineAudienciaCard({ audiencia, onClick }: { audiencia: Audiencia; o
         {/* Parties */}
         {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
           <p className="text-micro-caption text-muted-foreground/70 mt-1 truncate ml-5">
-            {audiencia.poloAtivoNome || '–'} <span className="text-muted-foreground/45">vs</span> {audiencia.poloPassivoNome || '–'}
+            {audiencia.poloAtivoNome || '–'} <span className="text-muted-foreground/65">vs</span> {audiencia.poloPassivoNome || '–'}
           </p>
         )}
 
         {/* Tags */}
         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-2 ml-5 flex-wrap")}>
           <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
-            <ModalIcon className="size-2 text-muted-foreground/50" />
+            <ModalIcon className="size-2 text-muted-foreground/70" />
             <span className="text-micro-caption text-muted-foreground/60">
               {audiencia.modalidade === 'presencial' ? 'Presencial' : audiencia.modalidade === 'hibrida' ? 'Híbrida' : 'Virtual'}
             </span>
           </div>
           {audiencia.trt && (
-            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-badge font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40")}>{audiencia.trt}</span>
+            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-badge font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/65")}>{audiencia.trt}</span>
           )}
           {audiencia.urlAudienciaVirtual && (audiencia.modalidade === 'virtual' || audiencia.modalidade === 'hibrida') && (
             <a
@@ -570,7 +570,7 @@ function TimelineAudienciaCard({ audiencia, onClick }: { audiencia: Audiencia; o
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-badge font-semibold px-1.5 py-px rounded bg-info/8 text-info/50 hover:bg-info/15 transition-colors")}
+              className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-badge font-semibold px-1.5 py-px rounded bg-info/8 text-info/70 hover:bg-info/15 transition-colors")}
             >
               Entrar na sala
             </a>
