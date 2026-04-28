@@ -22,7 +22,7 @@ import {
 import { toast } from "sonner";
 import useChatStore from "../hooks/use-chat-store";
 import { ChatItem } from "../domain";
-import { actionRemoverConversa } from "../actions/chat-actions";
+import { actionRemoverConversa, actionArquivarSala } from "../actions/chat-actions";
 
 interface ChatUserDropdownProps {
   children: React.ReactNode;
@@ -36,7 +36,17 @@ export function ChatUserDropdown({ children, chat }: ChatUserDropdownProps) {
 
   const handleArchive = async () => {
     if (!chat) return;
-    // TODO: Call actionArquivarSala(chat.id)
+    try {
+      const result = await actionArquivarSala(chat.id);
+      if (result.success) {
+        toast.success("Conversa arquivada com sucesso");
+        removerSala(chat.id);
+      } else {
+        toast.error(result.error || "Erro ao arquivar conversa");
+      }
+    } catch {
+      toast.error("Erro ao arquivar conversa");
+    }
   };
 
   const handleDeleteClick = () => {
