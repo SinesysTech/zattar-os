@@ -15,6 +15,7 @@ import {
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { GrauTribunal, ExpedienteDialog } from '@/app/(authenticated)/expedientes';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { Heading, Text } from '@/components/ui/typography';
 import { useGazetteStore } from './hooks/use-gazette-store';
@@ -217,6 +218,7 @@ export function GazetteOrphanResolver() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [resolvedCount, setResolvedCount] = useState(0);
   const totalOrphans = orphans.length + resolvedCount;
+  const [expedienteDialogOpen, setExpedienteDialogOpen] = useState(false);
 
   const current = orphans[currentIndex] as ComunicacaoCNJEnriquecida | undefined;
 
@@ -338,6 +340,14 @@ export function GazetteOrphanResolver() {
     if (current.matchSugestao.vara) hints.push(current.matchSugestao.vara);
     return hints.map((h) => h.trim()).filter(Boolean);
   }, [current]);
+
+  const handleBuscarManualmente = () => {
+    toast.info('Funcionalidade de busca manual em desenvolvimento');
+  };
+
+  const handleCriarExpediente = () => {
+    setExpedienteDialogOpen(true);
+  };
 
   // ── All Resolved ──
 
@@ -604,7 +614,7 @@ export function GazetteOrphanResolver() {
                     size="sm"
                     className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "h-9 gap-1.5 text-xs")}
                     onClick={() => {
-                      /* TODO: buscar outro */
+                      handleBuscarManualmente();
                     }}
                   >
                     <Search className="size-3" aria-hidden />
@@ -615,7 +625,7 @@ export function GazetteOrphanResolver() {
                     size="sm"
                     className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "h-9 gap-1.5 text-xs")}
                     onClick={() => {
-                      /* TODO: criar expediente */
+                      handleCriarExpediente();
                     }}
                   >
                     <Plus className="size-3" aria-hidden />
@@ -635,16 +645,33 @@ export function GazetteOrphanResolver() {
           ) : (
             <NoMatchState
               onBuscarManualmente={() => {
-                /* TODO */
+                handleBuscarManualmente();
               }}
               onCriarNovo={() => {
-                /* TODO */
+                handleCriarExpediente();
               }}
               onIgnorar={() => handleIgnorar(current)}
             />
           )}
         </div>
       </div>
+      {current && (
+        <ExpedienteDialog
+          open={expedienteDialogOpen}
+          onOpenChange={setExpedienteDialogOpen}
+          onSuccess={() => {
+            setExpedienteDialogOpen(false);
+          }}
+          dadosIniciais={{
+            numeroProcesso: current.numeroProcesso,
+            processoId: 0,
+            trt: "TRT1",
+            grau: GrauTribunal.PRIMEIRO_GRAU,
+            nomeParteAutora: current.partesAutor?.[0],
+            nomeParteRe: current.partesReu?.[0]
+          }}
+        />
+      )}
     </GlassPanel>
   );
 }
