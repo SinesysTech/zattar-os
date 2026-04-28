@@ -526,17 +526,33 @@ export const cancelarFolhaPagamento = async (
   if (folha.status === 'aprovada') {
     const erros: Array<{ itemId: number; usuario: string; erro: string }> = [];
 
+    // Otimização: Busca todos os lançamentos de uma vez para evitar N+1 queries
+    const lancamentoIds = folha.itens
+      .map(item => item.lancamentoFinanceiroId)
+      .filter((id): id is number => !!id);
+
+    const { data: lancamentosData, error: erroLancamentos } = lancamentoIds.length > 0
+      ? await supabase
+          .from('lancamentos_financeiros')
+          .select('id, status, observacoes')
+          .in('id', lancamentoIds)
+      : { data: [], error: null };
+
+    if (erroLancamentos) {
+      throw new Error(`Erro ao consultar lançamentos: ${erroLancamentos.message}`);
+    }
+
+    const lancamentosMap = new Map(
+      (lancamentosData || []).map(l => [l.id, l])
+    );
+
     for (const item of folha.itens) {
       if (!item.lancamentoFinanceiroId) continue;
 
       try {
-        const { data: lancamento, error: erroConsulta } = await supabase
-          .from('lancamentos_financeiros')
-          .select('status, observacoes')
-          .eq('id', item.lancamentoFinanceiroId)
-          .single();
+        const lancamento = lancamentosMap.get(item.lancamentoFinanceiroId);
 
-        if (erroConsulta || !lancamento) {
+        if (!lancamento) {
           throw new Error('Lançamento não encontrado');
         }
 
@@ -614,18 +630,19 @@ export const podeCancelarFolha = async (
 
   let temLancamentosPagos = false;
   if (folha.status === 'aprovada') {
-    for (const item of folha.itens) {
-      if (item.lancamentoFinanceiroId) {
-        const { data: lancamento } = await supabase
-          .from('lancamentos_financeiros')
-          .select('status')
-          .eq('id', item.lancamentoFinanceiroId)
-          .single();
+    // Otimização: Busca todos os lançamentos de uma vez para evitar N+1 queries
+    const lancamentoIds = folha.itens
+      .map(item => item.lancamentoFinanceiroId)
+      .filter((id): id is number => !!id);
 
-        if (lancamento?.status === 'confirmado') {
-          temLancamentosPagos = true;
-          break;
-        }
+    if (lancamentoIds.length > 0) {
+      const { data: lancamentosData, error: erroLancamentos } = await supabase
+        .from('lancamentos_financeiros')
+        .select('status')
+        .in('id', lancamentoIds);
+
+      if (!erroLancamentos && lancamentosData) {
+        temLancamentosPagos = lancamentosData.some(l => l.status === 'confirmado');
       }
     }
   }
