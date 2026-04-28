@@ -41,7 +41,13 @@ import type {
   ContaPagarComDetalhes,
   Lancamento,
 } from '../../types/lancamentos';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+} from '@/components/ui/dialog';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
 // ============================================================================
@@ -309,23 +315,15 @@ export function ContaPagarFormDialog({
   };
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title={isEditMode ? 'Editar Conta a Pagar' : 'Nova Conta a Pagar'}
-      maxWidth="2xl"
-      footer={
-        <Button
-          type="submit"
-          onClick={() => formRef.current?.requestSubmit()}
-          disabled={isSubmitting}
-          className="ml-auto"
-        >
-          {isSubmitting && <LoadingSpinner className="mr-2" />}
-          {isEditMode ? 'Salvar Alterações' : 'Criar Conta'}
-        </Button>
-      }
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="sm:max-w-2xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>{isEditMode ? 'Editar Conta a Pagar' : 'Nova Conta a Pagar'}</DialogTitle>
+        </DialogHeader>
+        <DialogBody>
       <form ref={formRef} onSubmit={handleSubmit((data) => onSubmit(data as unknown as ContaPagarFormData))} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         {Object.keys(errors).length > 0 && (
           <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-3 text-sm text-destructive")}>
@@ -641,6 +639,21 @@ export function ContaPagarFormDialog({
           )}
         </div>
       </form>
-    </DialogFormShell>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            <Button
+              type="submit"
+              onClick={() => formRef.current?.requestSubmit()}
+              disabled={isSubmitting}
+            >
+              {isSubmitting && <LoadingSpinner className="mr-2" />}
+              {isEditMode ? 'Salvar Alterações' : 'Criar Conta'}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

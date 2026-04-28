@@ -21,7 +21,7 @@ import {
   Landmark, CalendarDays, MapPin, Video, UserRound, MessageSquare, AlertCircle} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Stack, Inline } from '@/components/ui/stack';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody } from '@/components/ui/dialog';
 import { actionBuscarProcessosParaSelector } from '@/app/(authenticated)/acervo';
 import { actionListarUsuarios } from '@/app/(authenticated)/usuarios';
 import {
@@ -418,21 +418,17 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
   }, [processos]);
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={handleClose}
-      title="Nova Audiência"
-      description="Preencha os dados para registrar uma nova audiência no sistema."
-      maxWidth="2xl"
-      density="compact"
-      bodyClassName=/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "overflow-y-auto px-6 py-5"
-      footer={
-        <Button type="submit" form="nova-audiencia-form" disabled={isLoading}>
-          {isLoading && <LoadingSpinner className="mr-2" />}
-          Salvar Audiência
-        </Button>
-      }
-    >
+    <Dialog open={open} onOpenChange={handleClose}>
+      <DialogContent
+        showCloseButton={false}
+        data-density="compact"
+        className="sm:max-w-2xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>Nova Audiência</DialogTitle>
+          <DialogDescription>Preencha os dados para registrar uma nova audiência no sistema.</DialogDescription>
+        </DialogHeader>
+        <DialogBody className="overflow-y-auto px-6 py-5">
       <form id="nova-audiencia-form" onSubmit={handleSubmit}>
         <Stack gap="default">
           {/* ── Erro ─────────────────────────────────────────────────────── */}
@@ -744,7 +740,17 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
 
         </Stack>
         </form>
-        </DialogFormShell>
-
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={handleClose}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            <Button type="submit" form="nova-audiencia-form" disabled={isLoading}>
+              {isLoading && <LoadingSpinner className="mr-2" />}
+              Salvar Audiência
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -9,10 +9,11 @@ import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import {
-  DialogFormShell,
   DialogSection,
   type DialogSectionStepState,
 } from '@/components/shared/dialog-shell';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody } from '@/components/ui/dialog';
+import { Progress } from '@/components/ui/progress';
 import {
   Select,
   SelectContent,
@@ -428,19 +429,29 @@ export function ExpedienteDialog({
     </Button>
   );
 
+  const progressValue = 3 <= 1 ? 100 : ((currentStep - 1) / (3 - 1)) * 100;
+
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title="Novo expediente manual"
-      maxWidth="2xl"
-      footer={footerButtons}
-      multiStep={{
-        current: currentStep,
-        total: 3,
-        stepTitle,
-      }}
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        data-density="comfortable"
+        className="sm:max-w-2xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle className="text-card-title">Novo expediente manual</DialogTitle>
+          <DialogDescription className="sr-only">Formulário para criação de novo expediente manual</DialogDescription>
+          <div className="mt-3 space-y-1.5">
+            <div className="flex items-center justify-between gap-4">
+              {stepTitle && <span className="text-overline text-foreground/80 truncate">{stepTitle}</span>}
+              <span className="text-micro-caption text-muted-foreground shrink-0">
+                Etapa {currentStep} de {3}
+              </span>
+            </div>
+            <Progress value={progressValue} className="h-1.5" />
+          </div>
+        </DialogHeader>
+        <DialogBody>
       <form
         id="criar-expediente-form"
         action={formAction}
@@ -899,6 +910,14 @@ export function ExpedienteDialog({
           </DialogSection>
         )}
       </form>
-    </DialogFormShell>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            {footerButtons}
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

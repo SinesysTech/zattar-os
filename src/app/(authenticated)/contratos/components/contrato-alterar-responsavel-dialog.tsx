@@ -10,7 +10,13 @@ import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+} from '@/components/ui/dialog';
 import {
   Select,
   SelectContent,
@@ -70,38 +76,46 @@ export function ContratoAlterarResponsavelDialog({
   };
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title="Alterar Responsável"
-      maxWidth="md"
-      footer={
-        <Button onClick={handleSubmit} disabled={isPending}>
-          {isPending && <LoadingSpinner className="mr-2" />}
-          Salvar
-        </Button>
-      }
-    >
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-        <Label htmlFor="responsavel-contrato">Responsável</Label>
-        <Select
-          value={responsavelId || 'null'}
-          onValueChange={setResponsavelId}
-          disabled={isPending}
-        >
-          <SelectTrigger id="responsavel-contrato" className="w-full">
-            <SelectValue placeholder="Selecione um responsável" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="null">Sem responsável</SelectItem>
-            {usuarios.map((usuario) => (
-              <SelectItem key={usuario.id} value={usuario.id.toString()}>
-                {usuario.nome}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-    </DialogFormShell>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="sm:max-w-md glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>Alterar Responsável</DialogTitle>
+        </DialogHeader>
+        <DialogBody>
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <Label htmlFor="responsavel-contrato">Responsável</Label>
+            <Select
+              value={responsavelId || 'null'}
+              onValueChange={setResponsavelId}
+              disabled={isPending}
+            >
+              <SelectTrigger id="responsavel-contrato" className="w-full">
+                <SelectValue placeholder="Selecione um responsável" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="null">Sem responsável</SelectItem>
+                {usuarios.map((usuario) => (
+                  <SelectItem key={usuario.id} value={usuario.id.toString()}>
+                    {usuario.nome}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            <Button onClick={handleSubmit} disabled={isPending}>
+              {isPending && <LoadingSpinner className="mr-2" />}
+              Salvar
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

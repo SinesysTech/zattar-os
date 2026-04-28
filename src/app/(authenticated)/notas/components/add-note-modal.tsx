@@ -224,7 +224,7 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
                               <Tag className="h-4 w-4" />
                             </Button>
                           </PopoverTrigger>
-                          <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-[220px] p-0")}>
+                          <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-55)}>
                             <Command>
                               <CommandInput placeholder="Buscar etiquetas..." className="h-9" />
                               <CommandList>

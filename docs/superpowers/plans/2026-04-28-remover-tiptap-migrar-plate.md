@@ -1015,7 +1015,7 @@ Remover o bloco `<MinimalTiptapEditor ... />` (linhas 188-277 aprox.) e substitu
                     <Tag className="h-4 w-4" />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-[220px] p-0">
+                <PopoverContent className="w-55>
                   <Command>
                     <CommandInput placeholder="Buscar etiquetas..." className="h-9" />
                     <CommandList>

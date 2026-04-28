@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody } from '@/components/ui/dialog';
 import { actionBuscarProcessosParaSelector } from '@/app/(authenticated)/acervo';
 import { actionListarUsuarios } from '@/app/(authenticated)/usuarios';
 import {
@@ -472,24 +472,21 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
   }, [processos]);
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={handleClose}
-      title="Editar Audiência"
-      description={isCapturada
-        ? 'Audiência capturada do PJE — ajuste responsável e observações aqui. Para alterar modalidade, link, endereço ou presença híbrida, use o painel de detalhes.'
-        : 'Altere os dados da audiência.'
-      }
-      maxWidth="2xl"
-      density="compact"
-      bodyClassName=/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "overflow-y-auto px-6 py-5"
-      footer={
-        <Button type="submit" form="editar-audiencia-form" disabled={isLoading}>
-          {isLoading && <LoadingSpinner className="mr-2" />}
-          Salvar
-        </Button>
-      }
-    >
+    <Dialog open={open} onOpenChange={handleClose}>
+      <DialogContent
+        showCloseButton={false}
+        data-density="compact"
+        className="sm:max-w-2xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>Editar Audiência</DialogTitle>
+          <DialogDescription>
+            {isCapturada
+              ? 'Audiência capturada do PJE — ajuste responsável e observações aqui. Para alterar modalidade, link, endereço ou presença híbrida, use o painel de detalhes.'
+              : 'Altere os dados da audiência.'}
+          </DialogDescription>
+        </DialogHeader>
+        <DialogBody className="overflow-y-auto px-6 py-5">
       <form id="editar-audiencia-form" onSubmit={handleSubmit} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         {error && (
           <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-3.5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-start gap-2.5 rounded-lg border border-destructive/30 bg-destructive/8 px-3.5 py-3 text-destructive")}>
@@ -851,6 +848,17 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
           />
         </div>
       </form>
-    </DialogFormShell>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={handleClose}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            <Button type="submit" form="editar-audiencia-form" disabled={isLoading}>
+              {isLoading && <LoadingSpinner className="mr-2" />}
+              Salvar
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

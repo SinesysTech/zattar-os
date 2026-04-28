@@ -25,7 +25,13 @@ import type { Usuario, Endereco, GeneroUsuario } from '../../domain';
 import { getAvatarUrl } from '../../utils';
 import { AvatarEditDialog } from '../avatar/avatar-edit-dialog';
 import { buscarEnderecoPorCep, limparCep } from '@/lib/utils/viacep';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+} from '@/components/ui/dialog';
 import { GlassPanel } from '@/components/shared/glass-panel';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
@@ -233,31 +239,15 @@ export function UsuarioEditDialog({
   };
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title="Editar Usuário"
-      maxWidth="4xl"
-      footer={
-        <Button
-          type="submit"
-          onClick={() => formRef.current?.requestSubmit()}
-          disabled={isSaving}
-        >
-          {isSaving ? (
-            <>
-              <LoadingSpinner className="mr-2" />
-              Salvando...
-            </>
-          ) : (
-            <>
-              <Save className="h-4 w-4 mr-2" />
-              Salvar
-            </>
-          )}
-        </Button>
-      }
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="sm:max-w-4xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>Editar Usuário</DialogTitle>
+        </DialogHeader>
+        <DialogBody>
       <form ref={formRef} onSubmit={handleSubmit}>
         <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "grid gap-6")}>
           {/* Avatar */}
@@ -651,6 +641,30 @@ export function UsuarioEditDialog({
         </div>
       </form>
 
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            <Button
+              type="submit"
+              onClick={() => formRef.current?.requestSubmit()}
+              disabled={isSaving}
+            >
+              {isSaving ? (
+                <>
+                  <LoadingSpinner className="mr-2" />
+                  Salvando...
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4 mr-2" />
+                  Salvar
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
       {/* Avatar Edit Dialog */}
       <AvatarEditDialog
         open={avatarDialogOpen}
@@ -664,6 +678,6 @@ export function UsuarioEditDialog({
           onSuccess?.();
         }}
       />
-    </DialogFormShell>
+    </Dialog>
   );
 }

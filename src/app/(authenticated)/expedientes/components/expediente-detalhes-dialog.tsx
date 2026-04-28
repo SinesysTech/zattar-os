@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Expediente } from '../domain';
 import { actionAtualizarExpediente } from '../actions';
 import { format } from 'date-fns';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AuditLogTimeline } from '@/components/common/audit-log-timeline';
 import { useAuditLogs } from '@/lib/domain/audit/hooks/use-audit-logs';
@@ -312,33 +312,41 @@ export function ExpedienteDetalhesDialog({
   );
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title={titulo || (exibirLista ? 'Expedientes do Dia' : 'Detalhes do Expediente')}
-      maxWidth="2xl"
-      footer={footerButton}
-    >
-      <ScrollArea className={cn(/* design-system-escape: pr-4 padding direcional sem Inset equiv. */ "max-h-[60vh] pr-4")}>
-        {exibirLista ? (
-          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-            {listaLocal.map((exp) => (
-              <ExpedienteListItem
-                key={exp.id}
-                exp={exp}
-                onUpdated={(u) => setListaLocal((prev) => prev.map((p) => (p.id === u.id ? u : p)))}
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        data-density="comfortable"
+        className="sm:max-w-2xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>{titulo || (exibirLista ? 'Expedientes do Dia' : 'Detalhes do Expediente')}</DialogTitle>
+        </DialogHeader>
+        <DialogBody>
+          <ScrollArea className={cn(/* design-system-escape: pr-4 padding direcional sem Inset equiv. */ "max-h-[60vh] pr-4")}>
+            {exibirLista ? (
+              <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+                {listaLocal.map((exp) => (
+                  <ExpedienteListItem
+                    key={exp.id}
+                    exp={exp}
+                    onUpdated={(u) => setListaLocal((prev) => prev.map((p) => (p.id === u.id ? u : p)))}
+                    onSuccess={onSuccess}
+                  />
+                ))}
+              </div>
+            ) : expedienteUnico ? (
+              <ExpedienteSingleDetails
+                expediente={expedienteUnico}
+                onUpdated={(u) => setExpLocal(u)}
                 onSuccess={onSuccess}
               />
-            ))}
-          </div>
-        ) : expedienteUnico ? (
-          <ExpedienteSingleDetails
-            expediente={expedienteUnico}
-            onUpdated={(u) => setExpLocal(u)}
-            onSuccess={onSuccess}
-          />
-        ) : null}
-      </ScrollArea>
-    </DialogFormShell>
+            ) : null}
+          </ScrollArea>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-end gap-2">
+          {footerButton}
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

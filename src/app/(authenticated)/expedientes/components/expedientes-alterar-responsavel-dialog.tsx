@@ -5,7 +5,7 @@ import * as React from 'react';
 import { useActionState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody } from '@/components/ui/dialog';
 import { LoadingSpinner } from '@/components/ui/loading-state';
 import { toast } from 'sonner';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -105,44 +105,55 @@ export function ExpedientesAlterarResponsavelDialog({
   );
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title="Alterar Responsável"
-      maxWidth="md"
-      footer={footerButtons}
-    >
-      <form id="alterar-responsavel-form" action={formAction} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-        <input
-          type="hidden"
-          name="responsavelId"
-          value={responsavelId === 'null' ? '' : responsavelId}
-        />
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-          <Label htmlFor="responsavelId">Responsável</Label>
-          <Select
-            value={responsavelId || 'null'}
-            onValueChange={setResponsavelId}
-            disabled={isPending}
-          >
-            <SelectTrigger id="responsavelId" className="w-full">
-              <SelectValue placeholder="Selecione um responsável" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="null">Sem responsável</SelectItem>
-              {usuarios.map((usuario) => (
-                <SelectItem key={usuario.id} value={usuario.id.toString()}>
-                  {usuario.nomeExibicao}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {generalError && (
-            <p role="alert" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}>{generalError}</p>
-          )}
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        data-density="comfortable"
+        className="sm:max-w-md glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>Alterar Responsável</DialogTitle>
+        </DialogHeader>
+        <DialogBody>
+          <form id="alterar-responsavel-form" action={formAction} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+            <input
+              type="hidden"
+              name="responsavelId"
+              value={responsavelId === 'null' ? '' : responsavelId}
+            />
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <Label htmlFor="responsavelId">Responsável</Label>
+              <Select
+                value={responsavelId || 'null'}
+                onValueChange={setResponsavelId}
+                disabled={isPending}
+              >
+                <SelectTrigger id="responsavelId" className="w-full">
+                  <SelectValue placeholder="Selecione um responsável" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="null">Sem responsável</SelectItem>
+                  {usuarios.map((usuario) => (
+                    <SelectItem key={usuario.id} value={usuario.id.toString()}>
+                      {usuario.nomeExibicao}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {generalError && (
+                <p role="alert" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}>{generalError}</p>
+              )}
+            </div>
+          </form>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            {footerButtons}
+          </div>
         </div>
-      </form>
-    </DialogFormShell>
+      </DialogContent>
+    </Dialog>
   );
 }
 

@@ -25,7 +25,7 @@ import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
 import { ExpedientesBaixarDialog } from './expedientes-baixar-dialog';
 import { ExpedientesReverterBaixaDialog } from './expedientes-reverter-baixa-dialog';
 import { PdfViewerDialog } from './pdf-viewer-dialog';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody } from '@/components/ui/dialog';
 import { EditableTextCell } from '@/components/shared/data-shell';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
@@ -247,29 +247,38 @@ export function TipoDescricaoCell({
         </button>
       </div>
 
-      <DialogFormShell
-        open={isDescricaoDialogOpen}
-        onOpenChange={setIsDescricaoDialogOpen}
-        title="Editar Descrição"
-        maxWidth="md"
-        footer={
-          <Button onClick={handleSaveDescricao} disabled={isLoadingDescricao}>
-            {isLoadingDescricao && <LoadingSpinner className="mr-2" />}
-            Salvar
-          </Button>
-        }
-      >
-        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "py-2")}>
-          <Textarea
-            value={descricao}
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescricao(e.target.value)}
-            placeholder="Descreva o conteúdo do expediente..."
-            className="resize-none"
-            rows={5}
-            disabled={isLoadingDescricao}
-          />
-        </div>
-      </DialogFormShell>
+      <Dialog open={isDescricaoDialogOpen} onOpenChange={setIsDescricaoDialogOpen}>
+        <DialogContent
+          showCloseButton={false}
+          data-density="comfortable"
+          className="sm:max-w-md glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+        >
+          <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+            <DialogTitle>Editar Descrição</DialogTitle>
+          </DialogHeader>
+          <DialogBody>
+            <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "py-2")}>
+              <Textarea
+                value={descricao}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescricao(e.target.value)}
+                placeholder="Descreva o conteúdo do expediente..."
+                className="resize-none"
+                rows={5}
+                disabled={isLoadingDescricao}
+              />
+            </div>
+          </DialogBody>
+          <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+            <Button variant="outline" onClick={() => setIsDescricaoDialogOpen(false)}>Cancelar</Button>
+            <div className="flex items-center gap-2">
+              <Button onClick={handleSaveDescricao} disabled={isLoadingDescricao}>
+                {isLoadingDescricao && <LoadingSpinner className="mr-2" />}
+                Salvar
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <PdfViewerDialog
         open={isPdfViewerOpen}

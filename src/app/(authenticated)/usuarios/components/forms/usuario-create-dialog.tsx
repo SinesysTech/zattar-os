@@ -21,7 +21,13 @@ import { cn } from '@/lib/utils';
 import { useCargos } from '@/app/(authenticated)/cargos';
 import { actionCriarUsuario } from '../../actions/usuarios-actions';
 import type { UsuarioDados, GeneroUsuario, Endereco } from '../../domain';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+} from '@/components/ui/dialog';
 import { buscarEnderecoPorCep, limparCep } from '@/lib/utils/viacep';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
@@ -204,31 +210,15 @@ export function UsuarioCreateDialog({
   };
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title="Novo Usuário"
-      maxWidth="2xl"
-      footer={
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
-          {step > 0 && (
-            <Button type="button" variant="outline" onClick={() => setStep(s => s - 1)} disabled={isLoading}>
-              Anterior
-            </Button>
-          )}
-          {step < STEPS.length - 1 ? (
-            <Button type="button" onClick={() => setStep(s => s + 1)}>
-              Próximo
-            </Button>
-          ) : (
-            <Button type="submit" onClick={() => formRef.current?.requestSubmit()} disabled={isLoading}>
-              {isLoading && <LoadingSpinner className="mr-2" />}
-              Criar Usuário
-            </Button>
-          )}
-        </div>
-      }
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="sm:max-w-2xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>Novo Usuário</DialogTitle>
+        </DialogHeader>
+        <DialogBody>
         <form ref={formRef} onSubmit={handleSubmit}>
           <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             {/* Step Indicator */}
@@ -592,6 +582,28 @@ export function UsuarioCreateDialog({
             )}
           </div>
         </form>
-    </DialogFormShell>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>Cancelar</Button>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
+            {step > 0 && (
+              <Button type="button" variant="outline" onClick={() => setStep(s => s - 1)} disabled={isLoading}>
+                Anterior
+              </Button>
+            )}
+            {step < STEPS.length - 1 ? (
+              <Button type="button" onClick={() => setStep(s => s + 1)}>
+                Próximo
+              </Button>
+            ) : (
+              <Button type="submit" onClick={() => formRef.current?.requestSubmit()} disabled={isLoading}>
+                {isLoading && <LoadingSpinner className="mr-2" />}
+                Criar Usuário
+              </Button>
+            )}
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -29,7 +29,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogBody,
+} from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { X, Trash2, UserRound, ArrowRightLeft, FolderKanban, CheckSquare} from 'lucide-react';
 import { toast } from 'sonner';
@@ -160,35 +167,43 @@ export function AlterarStatusMassaDialog({
   };
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title="Alterar Status"
-      description={`Alterar status de ${selectedIds.length} contrato(s) selecionado(s).`}
-      maxWidth="sm"
-      footer={
-        <Button onClick={handleSubmit} disabled={isPending || !novoStatus}>
-          {isPending && <LoadingSpinner className="mr-2" />}
-          Confirmar
-        </Button>
-      }
-    >
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-        <Label>Novo Status</Label>
-        <Select value={novoStatus} onValueChange={setNovoStatus} disabled={isPending}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Selecione o novo status" />
-          </SelectTrigger>
-          <SelectContent>
-            {Object.entries(STATUS_CONTRATO_LABELS).map(([value, label]) => (
-              <SelectItem key={value} value={value}>
-                {label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-    </DialogFormShell>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="sm:max-w-sm glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>Alterar Status</DialogTitle>
+          <DialogDescription>{`Alterar status de ${selectedIds.length} contrato(s) selecionado(s).`}</DialogDescription>
+        </DialogHeader>
+        <DialogBody>
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <Label>Novo Status</Label>
+            <Select value={novoStatus} onValueChange={setNovoStatus} disabled={isPending}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Selecione o novo status" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(STATUS_CONTRATO_LABELS).map(([value, label]) => (
+                  <SelectItem key={value} value={value}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            <Button onClick={handleSubmit} disabled={isPending || !novoStatus}>
+              {isPending && <LoadingSpinner className="mr-2" />}
+              Confirmar
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -239,36 +254,44 @@ export function AtribuirResponsavelMassaDialog({
   };
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title="Atribuir Responsável"
-      description={`Atribuir responsável a ${selectedIds.length} contrato(s) selecionado(s).`}
-      maxWidth="sm"
-      footer={
-        <Button onClick={handleSubmit} disabled={isPending || !responsavelId}>
-          {isPending && <LoadingSpinner className="mr-2" />}
-          Confirmar
-        </Button>
-      }
-    >
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-        <Label>Responsável</Label>
-        <Select value={responsavelId} onValueChange={setResponsavelId} disabled={isPending}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Selecione um responsável" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="null">Sem responsável</SelectItem>
-            {usuarios.map((u) => (
-              <SelectItem key={u.id} value={u.id.toString()}>
-                {u.nome}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-    </DialogFormShell>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="sm:max-w-sm glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>Atribuir Responsável</DialogTitle>
+          <DialogDescription>{`Atribuir responsável a ${selectedIds.length} contrato(s) selecionado(s).`}</DialogDescription>
+        </DialogHeader>
+        <DialogBody>
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <Label>Responsável</Label>
+            <Select value={responsavelId} onValueChange={setResponsavelId} disabled={isPending}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Selecione um responsável" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="null">Sem responsável</SelectItem>
+                {usuarios.map((u) => (
+                  <SelectItem key={u.id} value={u.id.toString()}>
+                    {u.nome}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            <Button onClick={handleSubmit} disabled={isPending || !responsavelId}>
+              {isPending && <LoadingSpinner className="mr-2" />}
+              Confirmar
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -319,36 +342,44 @@ export function AlterarSegmentoMassaDialog({
   };
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title="Alterar Segmento"
-      description={`Alterar segmento de ${selectedIds.length} contrato(s) selecionado(s).`}
-      maxWidth="sm"
-      footer={
-        <Button onClick={handleSubmit} disabled={isPending || !segmentoId}>
-          {isPending && <LoadingSpinner className="mr-2" />}
-          Confirmar
-        </Button>
-      }
-    >
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-        <Label>Segmento</Label>
-        <Select value={segmentoId} onValueChange={setSegmentoId} disabled={isPending}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Selecione um segmento" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="null">Sem segmento</SelectItem>
-            {segmentos.map((s) => (
-              <SelectItem key={s.id} value={s.id.toString()}>
-                {s.nome}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-    </DialogFormShell>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="sm:max-w-sm glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>Alterar Segmento</DialogTitle>
+          <DialogDescription>{`Alterar segmento de ${selectedIds.length} contrato(s) selecionado(s).`}</DialogDescription>
+        </DialogHeader>
+        <DialogBody>
+          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <Label>Segmento</Label>
+            <Select value={segmentoId} onValueChange={setSegmentoId} disabled={isPending}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Selecione um segmento" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="null">Sem segmento</SelectItem>
+                {segmentos.map((s) => (
+                  <SelectItem key={s.id} value={s.id.toString()}>
+                    {s.nome}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            <Button onClick={handleSubmit} disabled={isPending || !segmentoId}>
+              {isPending && <LoadingSpinner className="mr-2" />}
+              Confirmar
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 

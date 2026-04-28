@@ -14,7 +14,14 @@ import {
 } from '@/components/ui/card';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { Checkbox } from '@/components/ui/checkbox';
-import { DialogFormShell } from '@/components/shared';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogBody,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -177,77 +184,90 @@ export function TarefasWidget({ initialTasks }: TarefasWidgetProps) {
         )}
       </CardContent>
 
-      <DialogFormShell
+      <Dialog
         open={open}
         onOpenChange={(next) => {
           setOpen(next);
           if (!next) setErrorMessage(null);
         }}
-        title="Nova tarefa"
-        footer={
-          <Button type="submit" form="dashboard-nova-tarefa-form" disabled={isPending}>
-            {isPending ? 'Salvando...' : 'Salvar'}
-          </Button>
-        }
       >
-        <form id="dashboard-nova-tarefa-form" onSubmit={handleCreate} className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "px-6 py-4")}>
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 md:grid-cols-2")}>
-            <div className="md:col-span-2">
-              <Label htmlFor="dashboard-task-title">Título</Label>
-              <Input
-                id="dashboard-task-title"
-                value={form.title}
-                onChange={(e) => setForm((s) => ({ ...s, title: e.target.value }))}
-                placeholder="Ex: Revisar documento"
-                className="mt-2 bg-background"
-                required
-              />
-            </div>
-            <div>
-              <Label>Status</Label>
-              <Select value={form.status} onValueChange={(value) => setForm((s) => ({ ...s, status: value as TaskStatus }))}>
-                <SelectTrigger className="mt-2 bg-background"><SelectValue placeholder="Selecione" /></SelectTrigger>
-                <SelectContent className="bg-background">
-                  <SelectItem value="backlog">Backlog</SelectItem>
-                  <SelectItem value="todo">A fazer</SelectItem>
-                  <SelectItem value="in progress">Em andamento</SelectItem>
-                  <SelectItem value="done">Concluída</SelectItem>
-                  <SelectItem value="canceled">Cancelada</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label>Prioridade</Label>
-              <Select value={form.priority} onValueChange={(value) => setForm((s) => ({ ...s, priority: value as TaskPriority }))}>
-                <SelectTrigger className="mt-2 bg-background"><SelectValue placeholder="Selecione" /></SelectTrigger>
-                <SelectContent className="bg-background">
-                  <SelectItem value="low">Baixa</SelectItem>
-                  <SelectItem value="medium">Média</SelectItem>
-                  <SelectItem value="high">Alta</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="md:col-span-2">
-              <Label>Etiqueta</Label>
-              <Select value={form.label} onValueChange={(value) => setForm((s) => ({ ...s, label: value as TaskLabel }))}>
-                <SelectTrigger className="mt-2 bg-background"><SelectValue placeholder="Selecione" /></SelectTrigger>
-                <SelectContent className="bg-background">
-                  <SelectItem value="bug">Bug</SelectItem>
-                  <SelectItem value="feature">Funcionalidade</SelectItem>
-                  <SelectItem value="documentation">Documentação</SelectItem>
-                  <SelectItem value="audiencia">Audiência</SelectItem>
-                  <SelectItem value="expediente">Expediente</SelectItem>
-                  <SelectItem value="obrigacao">Obrigação</SelectItem>
-                  <SelectItem value="pericia">Perícia</SelectItem>
-                </SelectContent>
-              </Select>
+        <DialogContent
+          showCloseButton={false}
+          className="sm:max-w-lg glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+        >
+          <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+            <DialogTitle>Nova tarefa</DialogTitle>
+            <DialogDescription className="sr-only">Preencha os dados para criar uma nova tarefa</DialogDescription>
+          </DialogHeader>
+          <DialogBody>
+            <form id="dashboard-nova-tarefa-form" onSubmit={handleCreate} className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "px-6 py-4")}>
+              <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 md:grid-cols-2")}>
+                <div className="md:col-span-2">
+                  <Label htmlFor="dashboard-task-title">Título</Label>
+                  <Input
+                    id="dashboard-task-title"
+                    value={form.title}
+                    onChange={(e) => setForm((s) => ({ ...s, title: e.target.value }))}
+                    placeholder="Ex: Revisar documento"
+                    className="mt-2 bg-background"
+                    required
+                  />
+                </div>
+                <div>
+                  <Label>Status</Label>
+                  <Select value={form.status} onValueChange={(value) => setForm((s) => ({ ...s, status: value as TaskStatus }))}>
+                    <SelectTrigger className="mt-2 bg-background"><SelectValue placeholder="Selecione" /></SelectTrigger>
+                    <SelectContent className="bg-background">
+                      <SelectItem value="backlog">Backlog</SelectItem>
+                      <SelectItem value="todo">A fazer</SelectItem>
+                      <SelectItem value="in progress">Em andamento</SelectItem>
+                      <SelectItem value="done">Concluída</SelectItem>
+                      <SelectItem value="canceled">Cancelada</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>Prioridade</Label>
+                  <Select value={form.priority} onValueChange={(value) => setForm((s) => ({ ...s, priority: value as TaskPriority }))}>
+                    <SelectTrigger className="mt-2 bg-background"><SelectValue placeholder="Selecione" /></SelectTrigger>
+                    <SelectContent className="bg-background">
+                      <SelectItem value="low">Baixa</SelectItem>
+                      <SelectItem value="medium">Média</SelectItem>
+                      <SelectItem value="high">Alta</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="md:col-span-2">
+                  <Label>Etiqueta</Label>
+                  <Select value={form.label} onValueChange={(value) => setForm((s) => ({ ...s, label: value as TaskLabel }))}>
+                    <SelectTrigger className="mt-2 bg-background"><SelectValue placeholder="Selecione" /></SelectTrigger>
+                    <SelectContent className="bg-background">
+                      <SelectItem value="bug">Bug</SelectItem>
+                      <SelectItem value="feature">Funcionalidade</SelectItem>
+                      <SelectItem value="documentation">Documentação</SelectItem>
+                      <SelectItem value="audiencia">Audiência</SelectItem>
+                      <SelectItem value="expediente">Expediente</SelectItem>
+                      <SelectItem value="obrigacao">Obrigação</SelectItem>
+                      <SelectItem value="pericia">Perícia</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              {errorMessage && (
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-4 text-sm text-destructive")} role="alert">{errorMessage}</p>
+              )}
+            </form>
+          </DialogBody>
+          <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+            <Button variant="outline" onClick={() => setOpen(false)}>Cancelar</Button>
+            <div className="flex items-center gap-2">
+              <Button type="submit" form="dashboard-nova-tarefa-form" disabled={isPending}>
+                {isPending ? 'Salvando...' : 'Salvar'}
+              </Button>
             </div>
           </div>
-          {errorMessage && (
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-4 text-sm text-destructive")} role="alert">{errorMessage}</p>
-          )}
-        </form>
-      </DialogFormShell>
+        </DialogContent>
+      </Dialog>
     </GlassPanel>
   );
 }

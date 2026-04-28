@@ -85,7 +85,7 @@ export function PericiaObservacoesDialog({
             setObservacoes(e.target.value)
           }
           placeholder="Adicione observações sobre a perícia..."
-          className="min-h-[140px] resize-none"
+          className="min-h-35ne"
           disabled={isSaving}
         />
         {error && <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{error}</div>}

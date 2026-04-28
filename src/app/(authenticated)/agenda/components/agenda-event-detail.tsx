@@ -34,6 +34,7 @@ import {
 } from "lucide-react";
 import { Heading, Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import type { MockEvent, ChecklistItem } from "./mock-data";
 import { MOCK_CHECKLIST, sourceColorClasses } from "./mock-data";
 
@@ -80,7 +81,7 @@ export function AgendaEventDetail({
   onClose,
   checklist = MOCK_CHECKLIST,
 }: AgendaEventDetailProps) {
-  if (!open || !event) return null;
+  if (!event) return null;
 
   const dateStr = `${DAY_NAMES[event.start.getDay()]}, ${event.start.getDate()} de ${MONTH_NAMES[event.start.getMonth()]} de ${event.start.getFullYear()}`;
   const colors = sourceColorClasses(event.source);
@@ -89,25 +90,18 @@ export function AgendaEventDetail({
   const prepPct = prepTotal > 0 ? Math.round((prepDone / prepTotal) * 100) : 0;
 
   return (
-    <div className="fixed inset-0 z-50" role="presentation">
-      {/* Overlay — usa glass-dialog-overlay token (globals.css) */}
-      <div
-        className="absolute inset-0 glass-dialog-overlay"
-        onClick={onClose}
-        aria-hidden="true"
-      />
-
-      {/* Dialog — usa glass-dialog token (globals.css) */}
-      <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "absolute inset-0 flex items-center justify-center p-6")}>
-        <div
-          className={cn(
-            "w-full max-w-195 max-h-[92vh] flex flex-col overflow-hidden",
-            "glass-dialog rounded-2xl",
-          )}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="event-detail-title"
-        >
+    <Dialog open={open} onOpenChange={(next) => { if (!next) onClose(); }}>
+      <DialogContent
+        showCloseButton={false}
+        className="glass-dialog flex max-h-[92vh] w-[95vw] flex-col overflow-hidden p-0 gap-0 [scrollbar-width:thin] sm:max-w-3xl"
+      >
+        <DialogDescription className="sr-only">Detalhes do evento de agenda</DialogDescription>
+        <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+          <div
+            className={cn(
+              "w-full flex flex-col overflow-hidden",
+            )}
+          >
           {/* ── Header ── */}
           <div className={cn(/* design-system-escape: px-7 padding direcional sem Inset equiv.; pt-6 padding direcional sem Inset equiv.; pb-0 padding direcional sem Inset equiv. */ "px-7 pt-6 pb-0 shrink-0")}>
             {/* Top row */}

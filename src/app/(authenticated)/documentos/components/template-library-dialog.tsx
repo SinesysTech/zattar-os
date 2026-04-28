@@ -11,13 +11,13 @@ import { useRouter } from 'next/navigation';
 import {
   Search, FileText, Globe, Lock, Star} from 'lucide-react';
 import {
-  ResponsiveDialog,
-  ResponsiveDialogContent,
-  ResponsiveDialogDescription,
-  ResponsiveDialogHeader,
-  ResponsiveDialogTitle,
-  ResponsiveDialogBody,
-} from '@/components/ui/responsive-dialog';
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -132,19 +132,22 @@ export function TemplateLibraryDialog({
   const hasFilters = busca || categoria || visibilidade;
 
   return (
-    <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
-      <ResponsiveDialogContent className="sm:max-w-4xl">
-        <ResponsiveDialogHeader>
-          <ResponsiveDialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className={cn(/* design-system-escape: p-0 gap-0 → usar <Inset>; px-6 py-4 → usar <Inset> */ "sm:max-w-4xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col")}
+      >
+        <DialogHeader className={cn(/* design-system-escape: px-6 py-4 → usar <Inset> */ "px-6 py-4 border-b border-border/20 shrink-0")}>
+          <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <FileText className="h-5 w-5" />
             Biblioteca de Templates
-          </ResponsiveDialogTitle>
-          <ResponsiveDialogDescription>
+          </DialogTitle>
+          <DialogDescription>
             Escolha um template para criar um novo documento
-          </ResponsiveDialogDescription>
-        </ResponsiveDialogHeader>
+          </DialogDescription>
+        </DialogHeader>
 
-        <ResponsiveDialogBody>
+        <DialogBody>
           <Tabs value={tab} onValueChange={setTab} className="flex-1">
             <TabsList className="mb-4">
               <TabsTrigger value="todos">Todos</TabsTrigger>
@@ -157,7 +160,7 @@ export function TemplateLibraryDialog({
             <TabsContent value="todos" className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "mt-0 space-y-4")}>
               {/* Filtros */}
               <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2")}>
-                <div className="relative flex-1 min-w-[200px]">
+                <div className="relative flex-1 min-w-50">
                   <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     placeholder="Buscar templates..."
@@ -216,7 +219,7 @@ export function TemplateLibraryDialog({
               </div>
 
               {/* Lista de templates */}
-              <ScrollArea className="h-[400px]">
+              <ScrollArea className="h-100">
                 {templatesLoading ? (
                   <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 lg:grid-cols-3 gap-4")}>
                     {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -248,7 +251,7 @@ export function TemplateLibraryDialog({
             </TabsContent>
 
             <TabsContent value="mais_usados" className="mt-0">
-              <ScrollArea className="h-[400px]">
+              <ScrollArea className="h-100">
                 {maisUsados.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-64 text-center">
                     <Star className="h-12 w-12 text-muted-foreground mb-4" />
@@ -281,8 +284,8 @@ export function TemplateLibraryDialog({
               </div>
             </div>
           )}
-        </ResponsiveDialogBody>
-      </ResponsiveDialogContent>
-    </ResponsiveDialog>
+        </DialogBody>
+      </DialogContent>
+    </Dialog>
   );
 }

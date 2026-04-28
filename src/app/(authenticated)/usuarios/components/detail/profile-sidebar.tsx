@@ -87,7 +87,7 @@ export function ProfileSidebar({
       </div>
 
       {/* 2. Avatar section */}
-      <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv. */ "flex flex-col items-center -mt-11 px-5 relative z-[2]")}>
+      <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv. */ "flex flex-col items-center -mt-11 px-5 relative z-2")}>
         <div
           className="group relative cursor-pointer"
           onClick={onEditAvatar}

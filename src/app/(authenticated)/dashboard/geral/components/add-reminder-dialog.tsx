@@ -15,7 +15,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DateTimePicker } from "@/components/layout/pickers/date-time-picker";
-import { DialogFormShell } from "@/components/shared";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogBody,
+} from "@/components/ui/dialog";
 import { useReminders } from "../../hooks";
 import { CATEGORIAS_LEMBRETE, type PrioridadeLembrete } from "../../domain";
 
@@ -70,107 +77,116 @@ export function AddReminderDialog() {
         <span className="sr-only">Adicionar Lembrete</span>
       </Button>
 
-      <DialogFormShell
-        open={open}
-        onOpenChange={setOpen}
-        title="Novo Lembrete"
-        maxWidth="md"
-        footer={
-          <Button
-            type="submit"
-            form="add-reminder-form"
-            disabled={isPending}
-          >
-            {isPending ? "Adicionando..." : "Adicionar"}
-          </Button>
-        }
-      >
-        <form
-          id="add-reminder-form"
-          onSubmit={handleSubmit}
-          className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "space-y-4 px-6 py-4")}
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent
+          showCloseButton={false}
+          className="sm:max-w-md glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
         >
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
-            <Label htmlFor="reminder-text">Nota</Label>
-            <Input
-              id="reminder-text"
-              variant="glass"
-              placeholder="Digite seu lembrete"
-              value={newReminder.texto}
-              onChange={(e) =>
-                setNewReminder({ ...newReminder, texto: e.target.value })
-              }
-              disabled={isPending}
-              required
-            />
-          </div>
-
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
-            <Label htmlFor="reminder-date">Data e Hora</Label>
-            <DateTimePicker date={date} setDate={setDate} />
-          </div>
-
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3")}>
-            <Label>Prioridade</Label>
-            <RadioGroup
-              value={newReminder.prioridade}
-              onValueChange={(value) =>
-                setNewReminder({
-                  ...newReminder,
-                  prioridade: value as PrioridadeLembrete,
-                })
-              }
-              className={cn(/* design-system-escape: space-x-4 → migrar para <Inline gap="default"> */ "flex space-x-4")}
-              disabled={isPending}
+          <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+            <DialogTitle>Novo Lembrete</DialogTitle>
+            <DialogDescription className="sr-only">Preencha os dados para adicionar um novo lembrete</DialogDescription>
+          </DialogHeader>
+          <DialogBody>
+            <form
+              id="add-reminder-form"
+              onSubmit={handleSubmit}
+              className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "space-y-4 px-6 py-4")}
             >
-              <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
-                <RadioGroupItem value="low" id="priority-low" />
-                <Label htmlFor="priority-low" className="cursor-pointer">
-                  Baixa
-                </Label>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+                <Label htmlFor="reminder-text">Nota</Label>
+                <Input
+                  id="reminder-text"
+                  variant="glass"
+                  placeholder="Digite seu lembrete"
+                  value={newReminder.texto}
+                  onChange={(e) =>
+                    setNewReminder({ ...newReminder, texto: e.target.value })
+                  }
+                  disabled={isPending}
+                  required
+                />
               </div>
-              <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
-                <RadioGroupItem value="medium" id="priority-medium" />
-                <Label htmlFor="priority-medium" className="cursor-pointer">
-                  Média
-                </Label>
-              </div>
-              <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
-                <RadioGroupItem value="high" id="priority-high" />
-                <Label htmlFor="priority-high" className="cursor-pointer">
-                  Alta
-                </Label>
-              </div>
-            </RadioGroup>
-          </div>
 
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
-            <Label htmlFor="reminder-category">Categoria</Label>
-            <Select
-              value={newReminder.categoria}
-              onValueChange={(value) =>
-                setNewReminder({ ...newReminder, categoria: value })
-              }
-              disabled={isPending}
-              required
-            >
-              <SelectTrigger
-                id="reminder-category"
-                className="w-full"
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+                <Label htmlFor="reminder-date">Data e Hora</Label>
+                <DateTimePicker date={date} setDate={setDate} />
+              </div>
+
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3")}>
+                <Label>Prioridade</Label>
+                <RadioGroup
+                  value={newReminder.prioridade}
+                  onValueChange={(value) =>
+                    setNewReminder({
+                      ...newReminder,
+                      prioridade: value as PrioridadeLembrete,
+                    })
+                  }
+                  className={cn(/* design-system-escape: space-x-4 → migrar para <Inline gap="default"> */ "flex space-x-4")}
+                  disabled={isPending}
+                >
+                  <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+                    <RadioGroupItem value="low" id="priority-low" />
+                    <Label htmlFor="priority-low" className="cursor-pointer">
+                      Baixa
+                    </Label>
+                  </div>
+                  <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+                    <RadioGroupItem value="medium" id="priority-medium" />
+                    <Label htmlFor="priority-medium" className="cursor-pointer">
+                      Média
+                    </Label>
+                  </div>
+                  <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+                    <RadioGroupItem value="high" id="priority-high" />
+                    <Label htmlFor="priority-high" className="cursor-pointer">
+                      Alta
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
+
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+                <Label htmlFor="reminder-category">Categoria</Label>
+                <Select
+                  value={newReminder.categoria}
+                  onValueChange={(value) =>
+                    setNewReminder({ ...newReminder, categoria: value })
+                  }
+                  disabled={isPending}
+                  required
+                >
+                  <SelectTrigger
+                    id="reminder-category"
+                    className="w-full"
+                  >
+                    <SelectValue placeholder="Selecione uma categoria" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CATEGORIAS_LEMBRETE.map((categoria) => (
+                      <SelectItem key={categoria} value={categoria}>
+                        {categoria}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </form>
+          </DialogBody>
+          <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+            <Button variant="outline" onClick={() => setOpen(false)}>Cancelar</Button>
+            <div className="flex items-center gap-2">
+              <Button
+                type="submit"
+                form="add-reminder-form"
+                disabled={isPending}
               >
-                <SelectValue placeholder="Selecione uma categoria" />
-              </SelectTrigger>
-              <SelectContent>
-                {CATEGORIAS_LEMBRETE.map((categoria) => (
-                  <SelectItem key={categoria} value={categoria}>
-                    {categoria}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+                {isPending ? "Adicionando..." : "Adicionar"}
+              </Button>
+            </div>
           </div>
-        </form>
-      </DialogFormShell>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

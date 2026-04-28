@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertTriangle, Check, ArrowUpDown } from 'lucide-react';
-import { DialogFormShell } from '@/components/shared/dialog-shell/dialog-form-shell';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody } from '@/components/ui/dialog';
 import { RichTextEditor } from './RichTextEditor';
 import type { ConteudoComposto } from '@/shared/assinatura-digital/types/template.types';
 
@@ -74,57 +74,67 @@ function RichTextEditorPopoverContent(props: RichTextEditorPopoverProps) {
   ) : undefined;
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title={`Editar ${fieldName}`}
-      description={`Largura: ${fieldWidth}px · Altura: ${fieldHeight}px · Fonte: ${fontSize}pt`}
-      maxWidth="5xl"
-      bodyClassName="overflow-hidden flex flex-col"
-      footer={<Button onClick={handleSave}>Salvar</Button>}
-    >
-      {/* Alerta de overflow — fica fixo acima do editor */}
-      {localValue?.template && (
-        <div className="shrink-0 mb-3">
-          <Alert
-            variant={isOverflow ? 'destructive' : 'default'}
-            className={
-              isOverflow
-                ? 'border-warning/15 bg-warning/10 text-warning [&>svg]:text-warning'
-                : 'border-success/50 bg-success/10 text-success [&>svg]:text-success'
-            }
-          >
-            {isOverflow ? (
-              <AlertTriangle className="h-4 w-4" />
-            ) : (
-              <Check className="h-4 w-4" />
-            )}
-            <AlertDescription>
-              {isOverflow ? (
-                <>
-                  O texto pode exceder a altura do campo ({lineCount} linhas estimadas).
-                  Considere ajustar a altura ou reduzir o conteúdo.
-                </>
-              ) : (
-                <>O texto cabe no campo ({lineCount} linhas estimadas).</>
-              )}
-              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "ml-1 text-muted-foreground text-xs")}>
-                Margem de erro: ±10-15%.
-              </span>
-            </AlertDescription>
-          </Alert>
-        </div>
-      )}
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        data-density="comfortable"
+        className="sm:max-w-5xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>{`Editar ${fieldName}`}</DialogTitle>
+          <DialogDescription>{`Largura: ${fieldWidth}px · Altura: ${fieldHeight}px · Fonte: ${fontSize}pt`}</DialogDescription>
+        </DialogHeader>
+        <DialogBody className="overflow-hidden flex flex-col">
+          {/* Alerta de overflow — fica fixo acima do editor */}
+          {localValue?.template && (
+            <div className="shrink-0 mb-3">
+              <Alert
+                variant={isOverflow ? 'destructive' : 'default'}
+                className={
+                  isOverflow
+                    ? 'border-warning/15 bg-warning/10 text-warning [&>svg]:text-warning'
+                    : 'border-success/50 bg-success/10 text-success [&>svg]:text-success'
+                }
+              >
+                {isOverflow ? (
+                  <AlertTriangle className="h-4 w-4" />
+                ) : (
+                  <Check className="h-4 w-4" />
+                )}
+                <AlertDescription>
+                  {isOverflow ? (
+                    <>
+                      O texto pode exceder a altura do campo ({lineCount} linhas estimadas).
+                      Considere ajustar a altura ou reduzir o conteúdo.
+                    </>
+                  ) : (
+                    <>O texto cabe no campo ({lineCount} linhas estimadas).</>
+                  )}
+                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "ml-1 text-muted-foreground text-xs")}>
+                    Margem de erro: ±10-15%.
+                  </span>
+                </AlertDescription>
+              </Alert>
+            </div>
+          )}
 
-      {/* Editor — preenche o espaço restante com scroll interno */}
-      <RichTextEditor
-        className="flex-1 min-h-0"
-        value={localValue}
-        onChange={setLocalValue}
-        formularios={formularios}
-        toolbarExtra={toolbarHeightAction}
-      />
-    </DialogFormShell>
+          {/* Editor — preenche o espaço restante com scroll interno */}
+          <RichTextEditor
+            className="flex-1 min-h-0"
+            value={localValue}
+            onChange={setLocalValue}
+            formularios={formularios}
+            toolbarExtra={toolbarHeightAction}
+          />
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            <Button onClick={handleSave}>Salvar</Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 

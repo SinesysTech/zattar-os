@@ -1,33 +1,44 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
-import { useEditor, EditorContent } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import TextAlign from '@tiptap/extension-text-align';
-import Placeholder from '@tiptap/extension-placeholder';
-import { Variable } from './extensions/Variable';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
+import * as React from 'react';
+
+import type { Value } from 'platejs';
 import {
-  Bold,
-  Italic,
-  Strikethrough,
-  Code,
-  Heading1,
-  Heading2,
-  Heading3,
-  AlignLeft,
-  AlignCenter,
-  AlignRight,
-  AlignJustify,
-  List,
-  ListOrdered,
-  Quote,
-  Minus,
-  Undo,
-  Redo,
+  BoldPlugin,
+  ItalicPlugin,
+  UnderlinePlugin,
+  StrikethroughPlugin,
+} from '@platejs/basic-nodes/react';
+import { BlockquotePlugin } from '@platejs/basic-nodes/react';
+import { ParagraphPlugin } from 'platejs/react';
+import { ListPlugin } from '@platejs/list/react';
+import { TextAlignPlugin } from '@platejs/basic-styles/react';
+import { KEYS } from 'platejs';
+import { Plate, usePlateEditor, useEditorRef } from 'platejs/react';
+import {
+  BoldIcon,
+  ItalicIcon,
+  UnderlineIcon,
+  StrikethroughIcon,
   Variable as VariableIcon,
 } from 'lucide-react';
+
+import { ParagraphElement } from '@/components/editor/plate-ui/paragraph-node';
+import { BlockquoteElement } from '@/components/editor/plate-ui/blockquote-node';
+import { BlockList } from '@/components/editor/plate-ui/block-list';
+import { IndentKit } from '@/components/editor/plate/indent-kit';
+import { MarkToolbarButton } from '@/components/editor/plate-ui/mark-toolbar-button';
+import { ToolbarGroup, Toolbar } from '@/components/editor/plate-ui/toolbar';
+import {
+  BulletedListToolbarButton,
+  NumberedListToolbarButton,
+} from '@/components/editor/plate-ui/list-toolbar-button';
+import { AlignToolbarButton } from '@/components/editor/plate-ui/align-toolbar-button';
+import {
+  RedoToolbarButton,
+  UndoToolbarButton,
+} from '@/components/editor/plate-ui/history-toolbar-button';
+import { Editor, EditorContainer } from '@/components/editor/plate-ui/editor';
 import {
   Popover,
   PopoverContent,
@@ -41,307 +52,253 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import { cn } from '@/lib/utils';
+import { ToolbarButton } from '@/components/editor/plate-ui/toolbar';
+import { VariablePlugin, insertVariable } from '@/components/editor/plate/variable-plugin';
 import type { ConteudoComposto } from '@/shared/assinatura-digital/types/template.types';
 import {
   getAvailableVariables,
+  tiptapJsonToPlateValue,
+  plateValueToTiptapJson,
   type VariableOption,
-  type TiptapDocument,
-  type TiptapNode,
+  type StorageDocument,
 } from './editor-helpers';
+import { cn } from '@/lib/utils';
+
+const SignatureEditorKit = [
+  ParagraphPlugin.withComponent(ParagraphElement),
+  BlockquotePlugin.configure({
+    node: { component: BlockquoteElement },
+  }),
+
+  BoldPlugin,
+  ItalicPlugin,
+  UnderlinePlugin,
+  StrikethroughPlugin,
+
+  VariablePlugin,
+
+  ...IndentKit,
+  ListPlugin.configure({
+    inject: {
+      targetPlugins: [KEYS.p, KEYS.blockquote],
+    },
+    render: {
+      belowNodes: BlockList,
+    },
+  }),
+
+  TextAlignPlugin.configure({
+    inject: {
+      nodeProps: {
+        defaultNodeValue: 'start',
+        nodeKey: 'align',
+        styleKey: 'textAlign',
+        validNodeValues: ['start', 'left', 'center', 'right', 'justify'],
+      },
+      targetPlugins: [KEYS.p, KEYS.blockquote],
+    },
+  }),
+];
+
+function generateTemplateString(value: Value): string {
+  let result = '';
+
+  const traverse = (node: Record<string, unknown>) => {
+    if ('text' in node) {
+      result += (node.text as string) ?? '';
+      return;
+    }
+
+    const type = node.type as string;
+
+    if (type === 'variable') {
+      const key = node.key as string;
+      if (key) result += `{{${key}}}`;
+      return;
+    }
+
+    const children = node.children as Record<string, unknown>[] | undefined;
+    if (children) {
+      children.forEach(traverse);
+    }
+
+    if (type === 'p' || type === 'blockquote') {
+      result += '\n';
+    }
+  };
+
+  for (const node of value) {
+    traverse(node as Record<string, unknown>);
+  }
+
+  return result.trim();
+}
+
+function VariableInserter({
+  formularios,
+}: {
+  formularios: string[];
+}) {
+  const editor = useEditorRef();
+  const [open, setOpen] = React.useState(false);
+  const variables = getAvailableVariables(formularios);
+
+  const grouped = variables.reduce<Record<string, VariableOption[]>>((acc, v) => {
+    const group = v.label.split(':')[0]?.trim() ?? 'Outros';
+    if (!acc[group]) acc[group] = [];
+    acc[group].push(v);
+    return acc;
+  }, {});
+
+  const handleSelect = (variable: VariableOption) => {
+    insertVariable(editor, variable.value);
+    setOpen(false);
+  };
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <ToolbarButton tooltip="Inserir variável" pressed={open}>
+          <VariableIcon />
+        </ToolbarButton>
+      </PopoverTrigger>
+      <PopoverContent className={cn(/* design-system-escape: p-0 */ "w-80 p-0")} align="start">
+        <Command>
+          <CommandInput placeholder="Buscar variável..." />
+          <CommandList>
+            <CommandEmpty>Nenhuma variável encontrada.</CommandEmpty>
+            {Object.entries(grouped).map(([group, groupVars]) => (
+              <CommandGroup key={group} heading={group}>
+                {groupVars.map((variable) => (
+                  <CommandItem
+                    key={variable.value}
+                    onSelect={() => handleSelect(variable)}
+                  >
+                    {variable.label}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            ))}
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+function SignatureToolbarButtons({
+  formularios,
+  toolbarExtra,
+}: {
+  formularios: string[];
+  toolbarExtra?: React.ReactNode;
+}) {
+  return (
+    <div className={cn(/* design-system-escape: gap-0.5 */ "flex flex-1 flex-wrap items-center gap-0.5")}>
+      <ToolbarGroup>
+        <UndoToolbarButton />
+        <RedoToolbarButton />
+      </ToolbarGroup>
+
+      <ToolbarGroup>
+        <MarkToolbarButton nodeType={KEYS.bold} tooltip="Negrito (⌘+B)">
+          <BoldIcon />
+        </MarkToolbarButton>
+        <MarkToolbarButton nodeType={KEYS.italic} tooltip="Itálico (⌘+I)">
+          <ItalicIcon />
+        </MarkToolbarButton>
+        <MarkToolbarButton nodeType={KEYS.underline} tooltip="Sublinhado (⌘+U)">
+          <UnderlineIcon />
+        </MarkToolbarButton>
+        <MarkToolbarButton nodeType={KEYS.strikethrough} tooltip="Tachado">
+          <StrikethroughIcon />
+        </MarkToolbarButton>
+      </ToolbarGroup>
+
+      <ToolbarGroup>
+        <AlignToolbarButton />
+      </ToolbarGroup>
+
+      <ToolbarGroup>
+        <BulletedListToolbarButton />
+        <NumberedListToolbarButton />
+      </ToolbarGroup>
+
+      <ToolbarGroup>
+        <VariableInserter formularios={formularios} />
+      </ToolbarGroup>
+
+      {toolbarExtra && (
+        <div className="ml-auto flex items-center">
+          {toolbarExtra}
+        </div>
+      )}
+    </div>
+  );
+}
 
 interface RichTextEditorProps {
   value?: ConteudoComposto;
   onChange: (value: ConteudoComposto) => void;
   formularios: string[];
-  /** Elemento extra renderizado no final da toolbar (ex: botão de ajustar altura) */
   toolbarExtra?: React.ReactNode;
-  /** Classes adicionais para o container externo */
   className?: string;
 }
 
-export function RichTextEditor({ value, onChange, formularios, toolbarExtra, className }: RichTextEditorProps) {
-  const [isVariableOpen, setIsVariableOpen] = useState(false);
+export function RichTextEditor({
+  value,
+  onChange,
+  formularios,
+  toolbarExtra,
+  className,
+}: RichTextEditorProps): JSX.Element {
+  const initialValue = React.useMemo<Value>(() => {
+    if (value?.json) {
+      try {
+        return tiptapJsonToPlateValue(value.json as StorageDocument);
+      } catch {
+        // fall through to default
+      }
+    }
+    return [{ type: 'p', children: [{ text: '' }] }];
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const variables = getAvailableVariables(formularios);
-
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      TextAlign.configure({
-        types: ['heading', 'paragraph'],
-      }),
-      Placeholder.configure({
-        placeholder: 'Digite o conteúdo aqui...',
-      }),
-      Variable,
-    ],
-    content: value?.json || {
-      type: 'doc',
-      content: [
-        {
-          type: 'paragraph',
-          content: [],
-        },
-      ],
-    },
-    onUpdate: ({ editor }) => {
-      const json = editor.getJSON();
-      const template = generateTemplateString(json);
-      onChange({ json, template });
-    },
-    // Evitar hydration mismatch em SSR/Next.js
-    immediatelyRender: false,
-    editorProps: {
-      attributes: {
-        class: 'outline-none min-h-40 cursor-text',
-      },
-    },
+  const editor = usePlateEditor({
+    plugins: SignatureEditorKit,
+    value: initialValue,
   });
 
-  // Sync editor content when value prop changes
-  useEffect(() => {
-    if (value?.json && editor && !editor.isFocused) {
-      editor.commands.setContent(value.json);
-    }
-  }, [value?.json, editor]);
-
-  const generateTemplateString = useCallback((json: TiptapDocument): string => {
-    let template = '';
-
-    const traverse = (node: TiptapNode) => {
-      if (node.type === 'text') {
-        template += node.text;
-      } else if (node.type === 'variable') {
-        if (node && node.attrs && typeof node.attrs.key === 'string') {
-          template += `{{${node.attrs.key}}}`;
-        }
-      } else if (node.type === 'hardBreak') {
-        template += '\n';
-      } else if (node.content) {
-        node.content.forEach(traverse);
-        if (node.type === 'paragraph') {
-          template += '\n';
-        }
-      }
-    };
-
-    if (json.content) {
-      json.content.forEach(traverse);
-    }
-
-    return template.trim();
-  }, []);
-
-  const insertVariable = useCallback((variable: VariableOption) => {
-    if (editor) {
-      editor.chain().focus().insertVariable({ key: variable.value }).run();
-      setIsVariableOpen(false);
-    }
-  }, [editor]);
-
-  if (!editor) {
-    return null;
-  }
-
   return (
-    <div className={cn("border rounded-lg flex flex-col", className)}>
-      {/* Toolbar - fixa no topo */}
-      <div className={cn(/* design-system-escape: p-2 → usar <Inset>; gap-1 gap sem token DS */ "border-b p-2 flex flex-wrap items-center gap-1 shrink-0")}>
-        {/* Formatting buttons */}
-        <Button
-          variant={editor.isActive('bold') ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => editor.chain().focus().toggleBold().run()}
+    <Plate
+      editor={editor}
+      onChange={({ value: plateValue }) => {
+        const json = plateValueToTiptapJson(plateValue);
+        const template = generateTemplateString(plateValue);
+        onChange({ json: json as Record<string, unknown>, template });
+      }}
+    >
+      <div className={cn('flex flex-col rounded-lg border', className)}>
+        <Toolbar
+          className={cn(
+            /* design-system-escape: p-1 */ "scrollbar-hide flex-wrap justify-start border-b border-border bg-muted/30 p-1"
+          )}
         >
-          <Bold className="h-4 w-4" />
-        </Button>
-        <Button
-          variant={editor.isActive('italic') ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-        >
-          <Italic className="h-4 w-4" />
-        </Button>
-        <Button
-          variant={editor.isActive('strike') ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => editor.chain().focus().toggleStrike().run()}
-        >
-          <Strikethrough className="h-4 w-4" />
-        </Button>
-        <Button
-          variant={editor.isActive('code') ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => editor.chain().focus().toggleCode().run()}
-        >
-          <Code className="h-4 w-4" />
-        </Button>
+          <SignatureToolbarButtons formularios={formularios} toolbarExtra={toolbarExtra} />
+        </Toolbar>
 
-        <Separator orientation="vertical" className="h-6" />
-
-        {/* Headings */}
-        <Button
-          variant={editor.isActive('heading', { level: 1 }) ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+        <EditorContainer
+          variant="default"
+          className="[&_.slate-selection-area]:bg-transparent"
         >
-          <Heading1 className="h-4 w-4" />
-        </Button>
-        <Button
-          variant={editor.isActive('heading', { level: 2 }) ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        >
-          <Heading2 className="h-4 w-4" />
-        </Button>
-        <Button
-          variant={editor.isActive('heading', { level: 3 }) ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-        >
-          <Heading3 className="h-4 w-4" />
-        </Button>
-
-        <Separator orientation="vertical" className="h-6" />
-
-        {/* Text alignment */}
-        <Button
-          variant={editor.isActive({ textAlign: 'left' }) ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => editor.chain().focus().setTextAlign('left').run()}
-        >
-          <AlignLeft className="h-4 w-4" />
-        </Button>
-        <Button
-          variant={editor.isActive({ textAlign: 'center' }) ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => editor.chain().focus().setTextAlign('center').run()}
-        >
-          <AlignCenter className="h-4 w-4" />
-        </Button>
-        <Button
-          variant={editor.isActive({ textAlign: 'right' }) ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => editor.chain().focus().setTextAlign('right').run()}
-        >
-          <AlignRight className="h-4 w-4" />
-        </Button>
-        <Button
-          variant={editor.isActive({ textAlign: 'justify' }) ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => editor.chain().focus().setTextAlign('justify').run()}
-        >
-          <AlignJustify className="h-4 w-4" />
-        </Button>
-
-        <Separator orientation="vertical" className="h-6" />
-
-        {/* Lists */}
-        <Button
-          variant={editor.isActive('bulletList') ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-        >
-          <List className="h-4 w-4" />
-        </Button>
-        <Button
-          variant={editor.isActive('orderedList') ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
-        >
-          <ListOrdered className="h-4 w-4" />
-        </Button>
-
-        <Separator orientation="vertical" className="h-6" />
-
-        {/* Block elements */}
-        <Button
-          variant={editor.isActive('blockquote') ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => editor.chain().focus().toggleBlockquote().run()}
-        >
-          <Quote className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().setHorizontalRule().run()}
-        >
-          <Minus className="h-4 w-4" />
-        </Button>
-
-        <Separator orientation="vertical" className="h-6" />
-
-        {/* Undo/Redo */}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().undo().run()}
-          disabled={!editor.can().undo()}
-        >
-          <Undo className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().redo().run()}
-          disabled={!editor.can().redo()}
-        >
-          <Redo className="h-4 w-4" />
-        </Button>
-
-        <Separator orientation="vertical" className="h-6" />
-
-        {/* Variable insertion */}
-        <Popover open={isVariableOpen} onOpenChange={setIsVariableOpen}>
-          <PopoverTrigger asChild>
-            <Button variant="ghost" size="sm">
-              <VariableIcon className="h-4 w-4" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-80 p-0")} align="start">
-            <Command>
-              <CommandInput placeholder="Buscar variável..." />
-              <CommandList>
-                <CommandEmpty>Nenhuma variável encontrada.</CommandEmpty>
-                {Object.entries(
-                  variables.reduce<Record<string, VariableOption[]>>((groups, v) => {
-                    const group = v.label.split(':')[0]?.trim() || 'Outros';
-                    if (!groups[group]) groups[group] = [];
-                    groups[group].push(v);
-                    return groups;
-                  }, {})
-                ).map(([group, groupVars]) => (
-                  <CommandGroup key={group} heading={group}>
-                    {groupVars.map((variable: VariableOption) => (
-                      <CommandItem
-                        key={variable.value}
-                        onSelect={() => insertVariable(variable)}
-                      >
-                        {variable.label}
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                ))}
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
-
-        {/* Extra toolbar actions (ex: Ajustar Altura) */}
-        {toolbarExtra && (
-          <>
-            <Separator orientation="vertical" className="h-6" />
-            {toolbarExtra}
-          </>
-        )}
+          <Editor
+            variant="none"
+            className={cn(
+              /* design-system-escape: p-4 */ "min-h-40 flex-1 overflow-y-auto p-4"
+            )}
+            placeholder="Digite o conteúdo aqui..."
+          />
+        </EditorContainer>
       </div>
-
-      {/* Editor - área scrollável */}
-      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex-1 min-h-0 overflow-y-auto p-4")}>
-        <EditorContent editor={editor} />
-      </div>
-    </div>
+    </Plate>
   );
 }

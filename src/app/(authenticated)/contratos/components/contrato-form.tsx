@@ -39,7 +39,13 @@ import {
 import { actionListarSegmentos, type Segmento } from '../actions';
 import { actionBuscarPartesContrariasParaCombobox } from '@/app/(authenticated)/partes/actions/partes-contrarias-actions';
 import { actionBuscarClientesParaCombobox } from '@/app/(authenticated)/partes/actions/clientes-actions';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+} from '@/components/ui/dialog';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
 // =============================================================================
@@ -227,33 +233,16 @@ export function ContratoForm({
   const getFieldError = (field: string) => fieldErrors[field]?.[0];
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title={isEditMode ? 'Editar Contrato' : 'Novo Contrato'}
-      maxWidth="lg"
-      density="compact"
-      footer={
-        <Button
-          type="button"
-          onClick={handleSubmit}
-          disabled={isPending}
-          className="ml-auto"
-        >
-          {isPending ? (
-            <>
-              <LoadingSpinner className="mr-2" />
-              {isEditMode ? 'Salvando...' : 'Criando...'}
-            </>
-          ) : (
-            <>
-              <Check className="h-4 w-4 mr-2" />
-              {isEditMode ? 'Salvar Alterações' : 'Criar Contrato'}
-            </>
-          )}
-        </Button>
-      }
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        data-density="compact"
+        className="sm:max-w-lg glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>{isEditMode ? 'Editar Contrato' : 'Novo Contrato'}</DialogTitle>
+        </DialogHeader>
+        <DialogBody>
       <form ref={formRef} action={formAction} className="space-y-(--density-field-gap)">
         {/* Linha 1: Tipo de Contrato + Tipo de Cobrança */}
         <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
@@ -519,6 +508,30 @@ export function ContratoForm({
           />
         </div>
       </form>
-    </DialogFormShell>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              onClick={handleSubmit}
+              disabled={isPending}
+            >
+              {isPending ? (
+                <>
+                  <LoadingSpinner className="mr-2" />
+                  {isEditMode ? 'Salvando...' : 'Criando...'}
+                </>
+              ) : (
+                <>
+                  <Check className="h-4 w-4 mr-2" />
+                  {isEditMode ? 'Salvar Alterações' : 'Criar Contrato'}
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

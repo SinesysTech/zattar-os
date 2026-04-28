@@ -17,7 +17,13 @@ import { toast } from 'sonner';
 import { useCargos } from '@/app/(authenticated)/cargos';
 import { actionCriarCargo, actionAtualizarCargo, actionDeletarCargo } from '@/app/(authenticated)/cargos';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+} from '@/components/ui/dialog';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -165,12 +171,15 @@ export function CargosManagementDialog({
 
   return (
     <>
-      <DialogFormShell
-        open={open}
-        onOpenChange={onOpenChange}
-        title={<span className="scroll-m-20 text-2xl font-semibold tracking-tight">Gerenciar cargos</span>}
-        maxWidth="3xl"
-      >
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent
+          showCloseButton={false}
+          className="sm:max-w-3xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+        >
+          <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+            <DialogTitle>Gerenciar cargos</DialogTitle>
+          </DialogHeader>
+          <DialogBody>
         <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; space-y-4 → migrar para <Stack gap="default"> */ "p-6 space-y-4")}>
           <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "grid gap-6 lg:grid-cols-2")}>
             {/* Lista */}
@@ -370,7 +379,9 @@ export function CargosManagementDialog({
             </div>
           </div>
         </div>
-      </DialogFormShell>
+          </DialogBody>
+        </DialogContent>
+      </Dialog>
 
       {/* Dialog de confirmação de exclusão */}
       <AlertDialog
