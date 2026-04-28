@@ -17,6 +17,7 @@ import type { ExpedienteInsertInput, ExpedienteUpdateInput } from './repository'
 import { Result, err, appError, PaginatedResponse } from '@/types';
 import { z } from 'zod';
 import { createDbClient } from '@/lib/supabase';
+import { auditLogService, type LogAlteracao } from '@/lib/domain/audit/services/audit-log.service';
 
 type PlainObject = Record<string, unknown>;
 
@@ -318,4 +319,24 @@ export async function atualizarTipoDescricao(
     success: true,
     data: updateResult.data,
   };
+}
+
+
+export async function listarLogsPorExpediente(id: number): Promise<Result<LogAlteracao[]>> {
+  if (id <= 0) {
+    return err(appError('VALIDATION_ERROR', 'ID do expediente inválido.'));
+  }
+  try {
+    const logs = await auditLogService.getLogs('expedientes', id);
+    return { success: true, data: logs };
+  } catch (error) {
+    return err(
+      appError(
+        'DATABASE_ERROR',
+        'Erro ao carregar histórico.',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
 }
