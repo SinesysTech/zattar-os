@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
 const GRAU_LABELS: Record<string, string> = {
@@ -64,13 +64,14 @@ export function CapturaEscopoBadge({
   }, [credencialIds, credenciaisMap]);
 
   if (tribunais.length === 0) {
-    return <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/30")}>—</span>;
+    return <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/55")}>—</span>;
   }
 
   const tribunaisLabel = resumirTribunais(tribunais);
   const grausLabel = resumirGraus(graus);
 
   return (
+    <TooltipProvider>
     <Tooltip>
       <TooltipTrigger asChild>
         <span
@@ -83,8 +84,8 @@ export function CapturaEscopoBadge({
           <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium tabular-nums")}>{tribunaisLabel}</span>
           {grausLabel && (
             <>
-              <span aria-hidden className="text-muted-foreground/40">·</span>
-              <span className="text-muted-foreground/60">{grausLabel}</span>
+              <span aria-hidden className="text-muted-foreground/65">·</span>
+              <span className="text-muted-foreground/75">{grausLabel}</span>
             </>
           )}
         </span>
@@ -109,5 +110,6 @@ export function CapturaEscopoBadge({
         </ul>
       </TooltipContent>
     </Tooltip>
+    </TooltipProvider>
   );
 }

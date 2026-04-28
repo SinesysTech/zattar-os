@@ -91,8 +91,8 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
           {/* Status */}
           <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
-              <Activity className="size-3 text-muted-foreground/50" />
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
+              <Activity className="size-3 text-muted-foreground/70" />
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
                 Status
               </p>
             </div>
@@ -107,8 +107,8 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
           {/* Iniciado em */}
           <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
-              <CalendarClock className="size-3 text-muted-foreground/50" />
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
+              <CalendarClock className="size-3 text-muted-foreground/70" />
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
                 Iniciado em
               </p>
             </div>
@@ -120,28 +120,28 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
           {/* Concluído em */}
           <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
-              <CalendarCheck className="size-3 text-muted-foreground/50" />
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
+              <CalendarCheck className="size-3 text-muted-foreground/70" />
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
                 Concluído em
               </p>
             </div>
             <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm tabular-nums text-foreground/80")}>
               {captura.concluido_em
                 ? new Date(captura.concluido_em).toLocaleString('pt-BR')
-                : <span className="text-muted-foreground/40">—</span>}
+                : <span className="text-muted-foreground/65">—</span>}
             </p>
           </div>
 
           {/* Duração */}
           <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
-              <Timer className="size-3 text-muted-foreground/50" />
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
+              <Timer className="size-3 text-muted-foreground/70" />
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
                 Duração
               </p>
             </div>
             <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm tabular-nums font-display font-semibold text-foreground/80")}>
-              {duracao ?? <span className="text-muted-foreground/40 font-normal">—</span>}
+              {duracao ?? <span className="text-muted-foreground/65 font-normal">—</span>}
             </p>
           </div>
         </div>
@@ -225,7 +225,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
                 </pre>
               ) : (
                 <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 text-center")}>
-                  <p className="text-[11px] text-muted-foreground/60">
+                  <p className="text-[11px] text-muted-foreground/75">
                     Nenhum dado disponível.
                   </p>
                 </div>

@@ -83,7 +83,7 @@ function ValoresDiff({ valores }: { valores: ValorAlteradoLog[] }) {
             <span className="text-[11px] text-muted-foreground line-through decoration-muted-foreground/40">
               {formatarValor(v.antes)}
             </span>
-            <ArrowRight className="size-3 text-muted-foreground/50 shrink-0" />
+            <ArrowRight className="size-3 text-muted-foreground/70 shrink-0" />
             <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-foreground/80")}>
               {formatarValor(v.depois)}
             </span>
@@ -241,7 +241,7 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
   if (rawLogs.length === 0) {
     return (
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-8 → usar <Inset> */ "flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-8 text-center")}>
-        <ScrollText className="h-8 w-8 text-muted-foreground/40" />
+        <ScrollText className="h-8 w-8 text-muted-foreground/65" />
         <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Nenhum log detalhado disponível para esta captura.</p>
       </div>
     );
