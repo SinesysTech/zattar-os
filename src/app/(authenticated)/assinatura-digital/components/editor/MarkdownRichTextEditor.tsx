@@ -1,46 +1,142 @@
-"use client";
+'use client';
 
-import { cn } from '@/lib/utils';
-import React, { useEffect, useRef, useState } from 'react';
-import { useEditor, EditorContent } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import TextAlign from '@tiptap/extension-text-align';
-import Placeholder from '@tiptap/extension-placeholder';
-import Link from '@tiptap/extension-link';
-import { Variable } from './extensions/Variable';
+import * as React from 'react';
+
+import type { Value } from 'platejs';
+import { KEYS } from 'platejs';
 import {
-  getAvailableVariables,
-  type VariableOption,
-  markdownToTiptapJSON,
-  tiptapJSONToMarkdown,
-  type TiptapDocument,
-} from './editor-helpers';
-import { Button } from '@/components/ui/button';
-import { Combobox } from '@/components/ui/combobox';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
+  BoldPlugin,
+  ItalicPlugin,
+  UnderlinePlugin,
+  StrikethroughPlugin,
+} from '@platejs/basic-nodes/react';
+import { ListPlugin } from '@platejs/list/react';
+import { LinkPlugin } from '@platejs/link/react';
+import { TextAlignPlugin } from '@platejs/basic-styles/react';
+import { deserializeMd, MarkdownPlugin, serializeMd } from '@platejs/markdown';
 import {
-  Bold,
-  Italic,
-  Strikethrough,
-  Code,
-  Heading1,
-  Heading2,
-  Heading3,
-  AlignLeft,
-  AlignCenter,
-  AlignRight,
-  AlignJustify,
-  List,
-  ListOrdered,
-  Quote,
-  Minus,
-  Undo,
-  Redo,
-  Link as LinkIcon,
+  BoldIcon,
+  ItalicIcon,
+  UnderlineIcon,
+  StrikethroughIcon,
+  Variable as VariableIcon,
 } from 'lucide-react';
+import { Plate, ParagraphPlugin, usePlateEditor, useEditorRef } from 'platejs/react';
+
+import { Editor, EditorContainer } from '@/components/editor/plate-ui/editor';
+import { Toolbar, ToolbarGroup, ToolbarButton } from '@/components/editor/plate-ui/toolbar';
+import { MarkToolbarButton } from '@/components/editor/plate-ui/mark-toolbar-button';
+import { AlignToolbarButton } from '@/components/editor/plate-ui/align-toolbar-button';
+import {
+  BulletedListToolbarButton,
+  NumberedListToolbarButton,
+} from '@/components/editor/plate-ui/list-toolbar-button';
+import {
+  UndoToolbarButton,
+  RedoToolbarButton,
+} from '@/components/editor/plate-ui/history-toolbar-button';
+import { LinkToolbarButton } from '@/components/editor/plate-ui/link-toolbar-button';
+import { LinkElement } from '@/components/editor/plate-ui/link-node';
+import { LinkFloatingToolbar } from '@/components/editor/plate-ui/link-toolbar';
+import { ParagraphElement } from '@/components/editor/plate-ui/paragraph-node';
+import { BlockList } from '@/components/editor/plate-ui/block-list';
+import { IndentKit } from '@/components/editor/plate/indent-kit';
+import { VariablePlugin, insertVariable } from '@/components/editor/plate/variable-plugin';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
+import { cn } from '@/lib/utils';
+import { getAvailableVariables, type VariableOption } from './editor-helpers';
+
+const MarkdownEditorKit = [
+  ParagraphPlugin.withComponent(ParagraphElement),
+  BoldPlugin,
+  ItalicPlugin,
+  UnderlinePlugin,
+  StrikethroughPlugin,
+  LinkPlugin.configure({
+    render: {
+      node: LinkElement,
+      afterEditable: () => <LinkFloatingToolbar />,
+    },
+  }),
+  VariablePlugin,
+  MarkdownPlugin,
+  ...IndentKit,
+  ListPlugin.configure({
+    inject: { targetPlugins: [KEYS.p] },
+    render: { belowNodes: BlockList },
+  }),
+  TextAlignPlugin.configure({
+    inject: {
+      nodeProps: {
+        defaultNodeValue: 'start',
+        nodeKey: 'align',
+        styleKey: 'textAlign',
+        validNodeValues: ['start', 'left', 'center', 'right', 'justify'],
+      },
+      targetPlugins: [KEYS.p],
+    },
+  }),
+];
+
+function VariableInserter({ formularios }: { formularios: string[] }) {
+  const editor = useEditorRef();
+  const [open, setOpen] = React.useState(false);
+  const variables = getAvailableVariables(formularios);
+
+  const grouped = variables.reduce<Record<string, VariableOption[]>>((acc, v) => {
+    const group = v.label.split(':')[0]?.trim() ?? 'Outros';
+    if (!acc[group]) acc[group] = [];
+    acc[group].push(v);
+    return acc;
+  }, {});
+
+  const handleSelect = (variable: VariableOption) => {
+    insertVariable(editor, variable.value);
+    setOpen(false);
+  };
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <ToolbarButton tooltip="Inserir variável" pressed={open}>
+          <VariableIcon />
+        </ToolbarButton>
+      </PopoverTrigger>
+      <PopoverContent className={cn(/* design-system-escape: p-0 */ 'w-80 p-0')} align="start">
+        <Command>
+          <CommandInput placeholder="Buscar variável..." />
+          <CommandList>
+            <CommandEmpty>Nenhuma variável encontrada.</CommandEmpty>
+            {Object.entries(grouped).map(([group, groupVars]) => (
+              <CommandGroup key={group} heading={group}>
+                {groupVars.map((variable) => (
+                  <CommandItem
+                    key={variable.value}
+                    onSelect={() => handleSelect(variable)}
+                  >
+                    {variable.label}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            ))}
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
 
 interface MarkdownRichTextEditorProps {
   value: string;
@@ -48,292 +144,107 @@ interface MarkdownRichTextEditorProps {
   formularios: string[];
 }
 
-export function MarkdownRichTextEditor({ value, onChange, formularios }: MarkdownRichTextEditorProps) {
-  const [linkDialogOpen, setLinkDialogOpen] = useState(false);
-  const [linkUrl, setLinkUrl] = useState('');
-  const [linkText, setLinkText] = useState('');
-  const [selectedVariable, setSelectedVariable] = useState<string[]>([]);
-  const isInternalUpdate = useRef(false);
+export function MarkdownRichTextEditor({
+  value,
+  onChange,
+  formularios,
+}: MarkdownRichTextEditorProps) {
+  const isInternalUpdate = React.useRef(false);
 
-  const editor = useEditor({
-    immediatelyRender: false,
-    extensions: [
-      StarterKit,
-      TextAlign.configure({
-        types: ['heading', 'paragraph'],
-      }),
-      Placeholder.configure({
-        placeholder: 'Digite seu texto aqui...',
-      }),
-      Link.configure({
-        openOnClick: false,
-      }),
-      Variable,
-    ],
-    content: markdownToTiptapJSON(value),
-    onUpdate: ({ editor }) => {
-      if (isInternalUpdate.current) {
-        isInternalUpdate.current = false;
-        return;
+  const editor = usePlateEditor({
+    plugins: MarkdownEditorKit,
+    value: (e) => {
+      try {
+        return deserializeMd(e, value || '');
+      } catch {
+        return [{ type: 'p', children: [{ text: value || '' }] }];
       }
-      const markdown = tiptapJSONToMarkdown(editor.getJSON() as TiptapDocument);
-      onChange(markdown);
     },
   });
 
-  useEffect(() => {
-    if (editor && !isInternalUpdate.current) {
-      const currentMarkdown = tiptapJSONToMarkdown(editor.getJSON() as TiptapDocument);
-      if (currentMarkdown !== value) {
-        isInternalUpdate.current = true;
-        editor.commands.setContent(markdownToTiptapJSON(value));
+  // Sincroniza value externo quando não está com foco.
+  // editor de usePlateEditor é referência estável — não precisa ser dep.
+  React.useEffect(() => {
+    if (isInternalUpdate.current) {
+      isInternalUpdate.current = false;
+      return;
+    }
+    try {
+      const newValue = deserializeMd(editor, value || '');
+      editor.tf.setValue(newValue);
+    } catch {
+      // ignorar erros de parse
+    }
+  }, [value]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleChange = React.useCallback(
+    ({ value: newValue }: { value: Value }) => {
+      isInternalUpdate.current = true;
+      try {
+        const markdown = serializeMd(editor, { value: newValue });
+        onChange(markdown);
+      } catch {
+        // ignorar
       }
-    }
-  }, [value, editor]);
-
-  const variables = getAvailableVariables(formularios);
-
-  // Efeito para inserir variável quando selecionada
-  useEffect(() => {
-    if (selectedVariable.length > 0 && editor && !editor.isDestroyed) {
-      const variableKey = selectedVariable[0];
-      const variable = variables.find((v: VariableOption) => v.value === variableKey);
-      if (variable) {
-        // Garantir que o editor está pronto e focado
-        const insert = () => {
-          try {
-            if (editor && !editor.isDestroyed) {
-              editor.chain().focus().insertVariable({ key: variable.value }).run();
-              setSelectedVariable([]); // Limpar após inserir
-            }
-          } catch (error) {
-            console.error('Erro ao inserir variável:', error);
-            setSelectedVariable([]);
-          }
-        };
-        
-        // Usar setTimeout para garantir que o popover fechou
-        setTimeout(insert, 150);
-      }
-    }
-  }, [selectedVariable, editor, variables]);
-
-  const openLinkDialog = () => {
-    const { from, to } = editor?.state.selection || { from: 0, to: 0 };
-    const selectedText = editor?.state.doc.textBetween(from ?? 0, to ?? 0);
-    setLinkText(selectedText || '');
-    setLinkUrl('');
-    setLinkDialogOpen(true);
-  };
-
-  const insertLink = () => {
-    if (linkUrl && linkText) {
-      editor?.chain().focus().setLink({ href: linkUrl }).insertContent(linkText).run();
-    }
-    setLinkDialogOpen(false);
-  };
-
-  if (!editor) {
-    return null;
-  }
+    },
+    [editor, onChange]
+  );
 
   return (
-    <div className="border rounded-md">
-      <div className={cn(/* design-system-escape: p-2 → usar <Inset>; gap-1 gap sem token DS */ "border-b p-2 flex flex-wrap gap-1")}>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().toggleBold().run()}
-          className={editor.isActive('bold') ? 'bg-muted' : ''}
+    <Plate editor={editor} onChange={handleChange}>
+      <div className="rounded-md border">
+        <Toolbar
+          className={cn(
+            /* design-system-escape: p-1 */ 'scrollbar-hide flex-wrap justify-start border-b border-border bg-muted/30 p-1'
+          )}
         >
-          <Bold className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={editor.isActive('italic') ? 'bg-muted' : ''}
-        >
-          <Italic className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().toggleStrike().run()}
-          className={editor.isActive('strike') ? 'bg-muted' : ''}
-        >
-          <Strikethrough className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().toggleCode().run()}
-          className={editor.isActive('code') ? 'bg-muted' : ''}
-        >
-          <Code className="h-4 w-4" />
-        </Button>
-        <Separator orientation="vertical" className="h-6" />
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-          className={editor.isActive('heading', { level: 1 }) ? 'bg-muted' : ''}
-        >
-          <Heading1 className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-          className={editor.isActive('heading', { level: 2 }) ? 'bg-muted' : ''}
-        >
-          <Heading2 className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-          className={editor.isActive('heading', { level: 3 }) ? 'bg-muted' : ''}
-        >
-          <Heading3 className="h-4 w-4" />
-        </Button>
-        <Separator orientation="vertical" className="h-6" />
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={editor.isActive('bulletList') ? 'bg-muted' : ''}
-        >
-          <List className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={editor.isActive('orderedList') ? 'bg-muted' : ''}
-        >
-          <ListOrdered className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          className={editor.isActive('blockquote') ? 'bg-muted' : ''}
-        >
-          <Quote className="h-4 w-4" />
-        </Button>
-        <Separator orientation="vertical" className="h-6" />
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().setHorizontalRule().run()}
-        >
-          <Minus className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={openLinkDialog}
-        >
-          <LinkIcon className="h-4 w-4" />
-        </Button>
-        <Separator orientation="vertical" className="h-6" />
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().setTextAlign('left').run()}
-          className={editor.isActive({ textAlign: 'left' }) ? 'bg-muted' : ''}
-        >
-          <AlignLeft className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().setTextAlign('center').run()}
-          className={editor.isActive({ textAlign: 'center' }) ? 'bg-muted' : ''}
-        >
-          <AlignCenter className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().setTextAlign('right').run()}
-          className={editor.isActive({ textAlign: 'right' }) ? 'bg-muted' : ''}
-        >
-          <AlignRight className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().setTextAlign('justify').run()}
-          className={editor.isActive({ textAlign: 'justify' }) ? 'bg-muted' : ''}
-        >
-          <AlignJustify className="h-4 w-4" />
-        </Button>
-        <Separator orientation="vertical" className="h-6" />
-        <Combobox
-          options={variables.map((v: VariableOption) => ({ value: v.value, label: v.label }))}
-          value={selectedVariable}
-          onValueChange={(values: string[]) => {
-            // Atualizar estado - o useEffect vai inserir a variável
-            setSelectedVariable(values);
-          }}
-          placeholder="Inserir variável..."
-          searchPlaceholder="Buscar variável..."
-          emptyText="Nenhuma variável encontrada"
-          className="w-48"
-        />
-        <Separator orientation="vertical" className="h-6" />
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().undo().run()}
-          disabled={!editor.can().undo()}
-        >
-          <Undo className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().redo().run()}
-          disabled={!editor.can().redo()}
-        >
-          <Redo className="h-4 w-4" />
-        </Button>
-      </div>
-      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 max-h-[calc(85vh-250px)] overflow-y-auto")}>
-        <EditorContent editor={editor} />
-      </div>
-      <Dialog open={linkDialogOpen} onOpenChange={setLinkDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Inserir Link</DialogTitle>
-          </DialogHeader>
-          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-            <div>
-              <Label htmlFor="link-text">Texto do Link</Label>
-              <Input
-                id="link-text"
-                value={linkText}
-                onChange={(e) => setLinkText(e.target.value)}
-                placeholder="Texto do link"
-              />
-            </div>
-            <div>
-              <Label htmlFor="link-url">URL</Label>
-              <Input
-                id="link-url"
-                value={linkUrl}
-                onChange={(e) => setLinkUrl(e.target.value)}
-                placeholder="https://exemplo.com"
-              />
-            </div>
-            <Button onClick={insertLink} className="w-full">
-              Inserir link
-            </Button>
+          <div className={cn(/* design-system-escape: gap-0.5 */ 'flex flex-1 flex-wrap items-center gap-0.5')}>
+            <ToolbarGroup>
+              <UndoToolbarButton />
+              <RedoToolbarButton />
+            </ToolbarGroup>
+            <ToolbarGroup>
+              <MarkToolbarButton nodeType={KEYS.bold} tooltip="Negrito (⌘+B)">
+                <BoldIcon />
+              </MarkToolbarButton>
+              <MarkToolbarButton nodeType={KEYS.italic} tooltip="Itálico (⌘+I)">
+                <ItalicIcon />
+              </MarkToolbarButton>
+              <MarkToolbarButton nodeType={KEYS.underline} tooltip="Sublinhado (⌘+U)">
+                <UnderlineIcon />
+              </MarkToolbarButton>
+              <MarkToolbarButton nodeType={KEYS.strikethrough} tooltip="Tachado">
+                <StrikethroughIcon />
+              </MarkToolbarButton>
+            </ToolbarGroup>
+            <ToolbarGroup>
+              <BulletedListToolbarButton />
+              <NumberedListToolbarButton />
+            </ToolbarGroup>
+            <ToolbarGroup>
+              <AlignToolbarButton />
+            </ToolbarGroup>
+            <ToolbarGroup>
+              <LinkToolbarButton />
+            </ToolbarGroup>
+            <ToolbarGroup>
+              <VariableInserter formularios={formularios} />
+            </ToolbarGroup>
           </div>
-        </DialogContent>
-      </Dialog>
-    </div>
+        </Toolbar>
+        <EditorContainer
+          variant="default"
+          className="[&_.slate-selection-area]:bg-transparent"
+        >
+          <Editor
+            variant="none"
+            className={cn(
+              /* design-system-escape: p-4 */ 'min-h-40 flex-1 overflow-y-auto p-4 max-h-[calc(85vh-250px)]'
+            )}
+            placeholder="Digite seu texto aqui..."
+          />
+        </EditorContainer>
+      </div>
+    </Plate>
   );
 }
