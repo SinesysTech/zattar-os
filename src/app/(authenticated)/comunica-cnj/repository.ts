@@ -324,26 +324,42 @@ export async function saveComunicacao(
 export async function saveComunicacoesBatch(
   comunicacoes: InserirComunicacaoParams[]
 ): Promise<Result<BatchResult>> {
-  let inseridas = 0;
-  let duplicadas = 0;
-  let erros = 0;
-
-  for (const comunicacao of comunicacoes) {
-    const result = await saveComunicacao(comunicacao);
-    if (!result.success) {
-      erros++;
-      console.error(
-        "[comunica-cnj-repository] Erro ao inserir comunicação:",
-        result.error
-      );
-    } else if (result.data === null) {
-      duplicadas++;
-    } else {
-      inseridas++;
+  try {
+    if (comunicacoes.length === 0) {
+      return ok({ inseridas: 0, duplicadas: 0, erros: 0 });
     }
-  }
 
-  return ok({ inseridas, duplicadas, erros });
+    const db = createServiceClient();
+    const dadosBanco = comunicacoes.map(converterParaBanco);
+
+    const { data, error } = await db
+      .from(TABLE_COMUNICA_CNJ)
+      .upsert(dadosBanco, {
+        onConflict: "hash",
+        ignoreDuplicates: true,
+      })
+      .select("hash");
+
+    if (error) {
+      return err(
+        appError("DATABASE_ERROR", error.message, { code: error.code })
+      );
+    }
+
+    const inseridas = data?.length ?? 0;
+    const duplicadas = comunicacoes.length - inseridas;
+
+    return ok({ inseridas, duplicadas, erros: 0 });
+  } catch (error) {
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao salvar comunicações em lote.",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
 }
 
 // =============================================================================
