@@ -1,147 +1,49 @@
-import * as React from "react";
-import { Slot } from "@radix-ui/react-slot";
-import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
+import { Slot } from "radix-ui"
 
-import { cn } from "@/lib/utils";
-
-type BadgeTone = "soft" | "solid";
+import { cn } from "@/lib/utils"
 
 const badgeVariants = cva(
-  "inline-flex items-center justify-center font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:pointer-events-none focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 transition-[color,box-shadow] overflow-hidden",
+  "group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-3xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3!",
   {
     variants: {
-      tone: {
-        soft: "",
-        solid: "",
-      },
       variant: {
-        default: "",
-        secondary: "",
-        warning: "",
-        info: "",
-        success: "",
-        destructive: "",
-        outline: "ring-1 ring-inset ring-border/40 text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
-        neutral: "",
-        accent: "",
-      },
-      size: {
-        xs: "px-1.5 py-0 text-[9px] rounded-sm [&>svg]:size-2.5 gap-0.5",
-        sm: "px-2 py-0.5 text-xs rounded-md [&>svg]:size-3 gap-1",
-        md: "px-2.5 py-0.5 text-[13px] rounded-md [&>svg]:size-3.5 gap-1",
+        default: "bg-primary text-primary-foreground [a]:hover:bg-primary/80",
+        secondary:
+          "bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80",
+        destructive:
+          "bg-destructive/10 text-destructive focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40 [a]:hover:bg-destructive/20",
+        outline:
+          "border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground",
+        ghost:
+          "hover:bg-muted hover:text-muted-foreground dark:hover:bg-muted/50",
+        link: "text-primary underline-offset-4 hover:underline",
       },
     },
-    // Compound variants — TODAS as classes usam tokens semânticos do design system.
-    // Light/dark mode são tratados automaticamente pelos tokens em globals.css.
-    compoundVariants: [
-      // ─── Soft (low intensity) ────────────────────────────────────────────
-      {
-        tone: "soft",
-        variant: "default",
-        className: "bg-primary/15 text-primary",
-      },
-      {
-        tone: "soft",
-        variant: "secondary",
-        className: "bg-muted text-muted-foreground",
-      },
-      {
-        tone: "soft",
-        variant: "success",
-        className: "bg-success/15 text-success",
-      },
-      {
-        tone: "soft",
-        variant: "info",
-        className: "bg-info/15 text-info",
-      },
-      {
-        tone: "soft",
-        variant: "warning",
-        className: "bg-warning/15 text-warning",
-      },
-      {
-        tone: "soft",
-        variant: "destructive",
-        className: "bg-destructive/15 text-destructive",
-      },
-      {
-        tone: "soft",
-        variant: "neutral",
-        className: "bg-muted/60 text-muted-foreground",
-      },
-      {
-        tone: "soft",
-        variant: "accent",
-        className: "bg-accent text-accent-foreground",
-      },
-
-      // ─── Solid (high intensity) ──────────────────────────────────────────
-      {
-        tone: "solid",
-        variant: "default",
-        className: "bg-primary text-primary-foreground",
-      },
-      {
-        tone: "solid",
-        variant: "secondary",
-        className: "bg-secondary text-secondary-foreground",
-      },
-      {
-        tone: "solid",
-        variant: "success",
-        className: "bg-success text-success-foreground",
-      },
-      {
-        tone: "solid",
-        variant: "info",
-        className: "bg-info text-info-foreground",
-      },
-      {
-        tone: "solid",
-        variant: "warning",
-        className: "bg-warning text-warning-foreground",
-      },
-      {
-        tone: "solid",
-        variant: "destructive",
-        className: "bg-destructive text-destructive-foreground",
-      },
-      {
-        tone: "solid",
-        variant: "neutral",
-        className: "bg-foreground text-background",
-      },
-      {
-        tone: "solid",
-        variant: "accent",
-        className: "bg-accent text-accent-foreground",
-      },
-    ],
     defaultVariants: {
-      tone: "solid",
       variant: "default",
-      size: "sm",
-    }
+    },
   }
-);
+)
 
 function Badge({
   className,
-  variant,
-  tone,
-  size,
+  variant = "default",
   asChild = false,
   ...props
 }: React.ComponentProps<"span"> &
-  VariantProps<typeof badgeVariants> &
-  { tone?: BadgeTone; asChild?: boolean }) {
-  const Comp = asChild ? Slot : "span";
+  VariantProps<typeof badgeVariants> & { asChild?: boolean }) {
+  const Comp = asChild ? Slot.Root : "span"
 
   return (
-    <Comp data-slot="badge" className={cn(badgeVariants({ variant, tone, size }), className)} {...props} />
-  );
+    <Comp
+      data-slot="badge"
+      data-variant={variant}
+      className={cn(badgeVariants({ variant }), className)}
+      {...props}
+    />
+  )
 }
 
-export { Badge, badgeVariants };
-export type { BadgeTone };
+export { Badge, badgeVariants }

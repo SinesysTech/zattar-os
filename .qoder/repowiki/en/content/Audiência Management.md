@@ -12,7 +12,8 @@
 - [audiencias-ultima-captura-card.tsx](file://src/app/(authenticated)/audiencias/components/audiencias-ultima-captura-card.tsx)
 - [mission-kpi-strip.tsx](file://src/app/(authenticated)/audiencias/components/mission-kpi-strip.tsx)
 - [audiencias-semana-view.tsx](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx)
-- [audiencias-mes-view.tsx](file://src/app/(authenticated)/audiencias/components/views/audiencias-mes-view.tsx)
+- [audiencias-missao-content.tsx](file://src/app/(authenticated)/audiencias/components/views/audiencias-missao-content.tsx)
+- [audiencias-glass-list.tsx](file://src/app/(authenticated)/audiencias/components/audiencias-glass-list.tsx)
 - [audiencias-filter-bar.tsx](file://src/app/(authenticated)/audiencias/components/audiencias-filter-bar.tsx)
 - [audiencias-list-filters.tsx](file://src/app/(authenticated)/audiencias/components/audiencias-list-filters.tsx)
 - [audiencias-toolbar-filters.tsx](file://src/app/(authenticated)/audiencias/components/audiencias-toolbar-filters.tsx)
@@ -24,19 +25,19 @@
 - [briefing-helpers.ts](file://src/app/(authenticated)/calendar/briefing-helpers.ts)
 - [data.ts](file://src/app/(authenticated)/agenda/mock/data.ts)
 - [typography.tsx](file://src/components/ui/typography.tsx)
+- [globals.css](file://src/app/globals.css)
 - [audiencias.md](file://design-system/zattaros/pages/audiencias.md)
 - [logs.txt](file://scripts/results/api-audiencias/logs.txt)
 </cite>
 
 ## Update Summary
 **Changes Made**
-- Fixed field mapping bug by correcting polo_ativo_nome/polo_passivo_nome database fields to nome_parte_autora/nome_parte_re in repository and service layers
-- Enhanced repository with findProcessoParaAudiencia function for improved process lookup and validation
-- Improved service layer integration with better error handling and process validation
-- Updated database schema documentation to reflect corrected field naming conventions
-- Enhanced filtering capabilities with GrauTribunal and TipoAudiencia filters
-- Improved database infrastructure with ultima_captura_id column tracking
-- Added new CountBadge component for consistent count display across audiência components
+- Enhanced typography system implementation with new variant classes (text-card-title, text-mono-num)
+- Improved semantic structure with proper heading components throughout audiência components
+- Integrated new badge systems for case flags and audiência status
+- Implemented virtual room detection system for enhanced audiência management
+- Added observation system improvements with structured editing capabilities
+- Updated audiências-glass-list.tsx, audiencias-missao-content.tsx, and audiencias-semana-view.tsx to use enhanced design system
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -44,7 +45,7 @@
 3. [Core Components](#core-components)
 4. [Architecture Overview](#architecture-overview)
 5. [Detailed Component Analysis](#detailed-component-analysis)
-6. [Design System Compliance](#design-system-compliance)
+6. [Enhanced Typography System](#enhanced-typography-system)
 7. [Mission Control Interface Patterns](#mission-control-interface-patterns)
 8. [Enhanced Filtering System](#enhanced-filtering-system)
 9. [Database Infrastructure Improvements](#database-infrastructure-improvements)
@@ -59,7 +60,7 @@ The Audiência Management system is a comprehensive court hearing scheduling pla
 
 The platform manages the complete lifecycle of court hearings, from initial scheduling through completion, while maintaining strict legal compliance requirements. It integrates advanced features including automated audiência data capture, intelligent resource allocation, and sophisticated participant management systems.
 
-**Updated** Enhanced with new filtering capabilities including GrauTribunal and TipoAudiencia filters, improved database infrastructure with ultima_captura_id column tracking, and new CountBadge component for consistent count display across all audiência components. Field mapping bug fixes have been implemented to ensure proper data representation with nome_parte_autora and nome_parte_re fields replacing polo_ativo_nome and polo_passivo_nome respectively.
+**Updated** Enhanced with comprehensive design system compliance featuring new typography variant classes (text-card-title, text-mono-num), improved semantic structure with proper heading components, new badge systems for case flags, virtual room detection system, and observation system improvements. The audiências-glass-list.tsx, audiencias-missao-content.tsx, and audiencias-semana-view.tsx components now use the enhanced design system with consistent typography and semantic markup.
 
 ## Project Structure
 
@@ -79,6 +80,10 @@ ListFilters[AudienciasListFilters]
 ToolbarFilters[AudienciasToolbarFilters]
 CaptureCard[AudienciasUltimaCapturaCard]
 CountBadge[CountBadge Component]
+BadgeSystems[Enhanced Badge Systems]
+TypographySystem[Typography System]
+VirtualRoomDetection[Virtual Room Detection]
+ObservationSystem[Observation System]
 end
 subgraph "Application Layer"
 Actions[Server Actions]
@@ -108,6 +113,10 @@ ListFilters --> Actions
 ToolbarFilters --> Actions
 CaptureCard --> Actions
 CountBadge --> Actions
+BadgeSystems --> Actions
+TypographySystem --> Actions
+VirtualRoomDetection --> Actions
+ObservationSystem --> Actions
 Actions --> Services
 Services --> Repository
 Repository --> Database
@@ -128,6 +137,10 @@ Calendar --> Outlook
 - [audiencias-toolbar-filters.tsx:167-196](file://src/app/(authenticated)/audiencias/components/audiencias-toolbar-filters.tsx#L167-L196)
 - [audiencias-ultima-captura-card.tsx:1-168](file://src/app/(authenticated)/audiencias/components/audiencias-ultima-captura-card.tsx#L1-L168)
 - [semantic-badge.tsx:200-219](file://src/components/ui/semantic-badge.tsx#L200-L219)
+- [typography.tsx:152-204](file://src/components/ui/typography.tsx#L152-L204)
+- [audiencias-glass-list.tsx:259-328](file://src/app/(authenticated)/audiencias/components/audiencias-glass-list.tsx#L259-L328)
+- [audiencias-semana-view.tsx:396-455](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx#L396-L455)
+- [audiencias-missao-content.tsx:317-328](file://src/app/(authenticated)/audiencias/components/views/audiencias-missao-content.tsx#L317-L328)
 
 **Section sources**
 - [audiencias-client.tsx:1-431](file://src/app/(authenticated)/audiencias/audiencias-client.tsx#L1-L431)
@@ -239,7 +252,7 @@ Action-->>Client : Success Message
 
 ### Frontend Components and User Interface
 
-The user interface follows a modern glass-morphism design pattern with comprehensive view modes and filtering capabilities, now enhanced with proper design system typography, new capture card functionality, and improved count display:
+The user interface follows a modern glass-morphism design pattern with comprehensive view modes and filtering capabilities, now enhanced with proper design system typography, new capture card functionality, improved count display, and enhanced badge systems:
 
 ```mermaid
 classDiagram
@@ -300,6 +313,25 @@ class AudienciasSemanaView {
 +onViewDetail : function
 +selectedDay : string
 }
+class AudienciasGlassList {
++audiencias : Audiencia[]
++isLoading : boolean
++onView : function
++usuarios : Usuario[]
++render()
+}
+class TypographySystem {
++Heading : component
++Text : component
++variants : object
++classes : object
+}
+class BadgeSystems {
++SemanticBadge : component
++CountBadge : component
++caseFlags : array
++statusBadges : array
+}
 class Domain {
 +StatusAudiencia : enum
 +ModalidadeAudiencia : enum
@@ -316,9 +348,16 @@ AudienciasClient --> AudienciasFilterBar : "renders"
 AudienciasClient --> CountBadge : "uses"
 AudienciasClient --> MissionKpiStrip : "renders"
 AudienciasClient --> AudienciasSemanaView : "renders"
+AudienciasClient --> AudienciasGlassList : "renders"
 AudienciaForm --> Domain : "uses"
 AudienciaDetailDialog --> Domain : "uses"
 AudienciasFilterBar --> CountBadge : "uses"
+AudienciasGlassList --> TypographySystem : "uses"
+AudienciasGlassList --> BadgeSystems : "uses"
+AudienciasSemanaView --> TypographySystem : "uses"
+AudienciasSemanaView --> BadgeSystems : "uses"
+AudienciasMissaoContent --> TypographySystem : "uses"
+AudienciasMissaoContent --> BadgeSystems : "uses"
 ```
 
 **Diagram sources**
@@ -330,6 +369,8 @@ AudienciasFilterBar --> CountBadge : "uses"
 - [semantic-badge.tsx:200-219](file://src/components/ui/semantic-badge.tsx#L200-L219)
 - [mission-kpi-strip.tsx:54-253](file://src/app/(authenticated)/audiencias/components/mission-kpi-strip.tsx#L54-L253)
 - [audiencias-semana-view.tsx:154-430](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx#L154-L430)
+- [audiencias-glass-list.tsx:259-328](file://src/app/(authenticated)/audiencias/components/audiencias-glass-list.tsx#L259-L328)
+- [audiencias-missao-content.tsx:317-328](file://src/app/(authenticated)/audiencias/components/views/audiencias-missao-content.tsx#L317-L328)
 - [domain.ts:28-32](file://src/app/(authenticated)/audiencias/domain.ts#L28-L32)
 
 **Section sources**
@@ -344,6 +385,8 @@ AudienciasFilterBar --> CountBadge : "uses"
 - [semantic-badge.tsx:1-220](file://src/components/ui/semantic-badge.tsx#L1-L220)
 - [mission-kpi-strip.tsx:1-254](file://src/app/(authenticated)/audiencias/components/mission-kpi-strip.tsx#L1-L254)
 - [audiencias-semana-view.tsx:1-671](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx#L1-L671)
+- [audiencias-glass-list.tsx:1-505](file://src/app/(authenticated)/audiencias/components/audiencias-glass-list.tsx#L1-L505)
+- [audiencias-missao-content.tsx:1-364](file://src/app/(authenticated)/audiencias/components/views/audiencias-missao-content.tsx#L1-L364)
 - [domain.ts:1-712](file://src/app/(authenticated)/audiencias/domain.ts#L1-L712)
 
 ## Architecture Overview
@@ -356,10 +399,13 @@ subgraph "Presentation Layer"
 A1[Next.js App Router]
 A2[Client Components]
 A3[Server Actions]
-A4[Design System Typography]
+A4[Enhanced Typography System]
 A5[AudienciasUltimaCapturaCard]
 A6[AudienciasFilterBar]
 A7[CountBadge Component]
+A8[Enhanced Badge Systems]
+A9[Virtual Room Detection]
+A10[Observation System]
 end
 subgraph "Business Logic Layer"
 B1[Service Layer]
@@ -402,6 +448,9 @@ D1 --> D4
 - [semantic-badge.tsx:200-219](file://src/components/ui/semantic-badge.tsx#L200-L219)
 - [audiencias-ultima-captura-card.tsx:1-168](file://src/app/(authenticated)/audiencias/components/audiencias-ultima-captura-card.tsx#L1-L168)
 - [20260427130000_add_ultima_captura_id_to_audiencias_com_origem.sql:9-77](file://supabase/migrations/20260427130000_add_ultima_captura_id_to_audiencias_com_origem.sql#L9-L77)
+- [audiencias-glass-list.tsx:259-328](file://src/app/(authenticated)/audiencias/components/audiencias-glass-list.tsx#L259-L328)
+- [audiencias-semana-view.tsx:396-455](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx#L396-L455)
+- [audiencias-missao-content.tsx:317-328](file://src/app/(authenticated)/audiencias/components/views/audiencias-missao-content.tsx#L317-L328)
 
 ### Calendar Integration Architecture
 
@@ -633,9 +682,9 @@ CL --> RL
 - [audiencias-ultima-captura-card.tsx:1-168](file://src/app/(authenticated)/audiencias/components/audiencias-ultima-captura-card.tsx#L1-L168)
 - [repository.ts:799-820](file://src/app/(authenticated)/audiencias/repository.ts#L799-L820)
 
-## Design System Compliance
+## Enhanced Typography System
 
-**Updated** The audiências components have been enhanced with comprehensive design system compliance, featuring proper typography usage and semantic markup throughout the interface, plus new mission control patterns and CountBadge integration.
+**Updated** The audiências components have been enhanced with comprehensive design system compliance, featuring new typography variant classes (text-card-title, text-mono-num), improved semantic structure with proper heading components, and enhanced badge systems for case flags.
 
 ### Typography Implementation
 
@@ -653,6 +702,8 @@ end
 subgraph "Audiência Components"
 MK[MissionKpiStrip]
 ASV[AudienciasSemanaView]
+AMC[AudienciasMissaoContent]
+AGL[AudienciasGlassList]
 AC[AudienciasUltimaCapturaCard]
 AB[CountBadge]
 AK[Accessibility]
@@ -663,6 +714,8 @@ T --> TV
 H --> HL
 MK --> TS
 ASV --> TS
+AMC --> TS
+AGL --> TS
 AC --> TS
 AB --> TS
 AK --> TS
@@ -672,7 +725,60 @@ AK --> TS
 - [typography.tsx:152-204](file://src/components/ui/typography.tsx#L152-L204)
 - [mission-kpi-strip.tsx:130-253](file://src/app/(authenticated)/audiencias/components/mission-kpi-strip.tsx#L130-L253)
 - [audiencias-semana-view.tsx:309-429](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx#L309-L429)
+- [audiencias-missao-content.tsx:317-328](file://src/app/(authenticated)/audiencias/components/views/audiencias-missao-content.tsx#L317-L328)
 - [audiencias-ultima-captura-card.tsx:130-168](file://src/app/(authenticated)/audiencias/components/audiencias-ultima-captura-card.tsx#L130-L168)
+- [semantic-badge.tsx:200-219](file://src/components/ui/semantic-badge.tsx#L200-L219)
+
+### New Typography Variant Classes
+
+The enhanced typography system introduces new variant classes specifically designed for audiência management:
+
+| Variant Class | Size | Usage | Characteristic |
+|---------------|------|-------|----------------|
+| `text-card-title` | 18px | Card titles, panel headers | Primary heading for audiência cards |
+| `text-mono-num` | 10px | Numbers, dates, process numbers | Monospace digits for precise alignment |
+| `text-kpi-value` | 20px | Metric values, dashboard highlights | Sans-serif for consistent glyph shapes |
+| `text-micro-badge` | 9px | Badge content, small labels | Extra-small text for compact displays |
+| `text-meta-label` | 11px | Field labels, uppercase metadata | Uppercase with extended tracking |
+| `text-micro-caption` | 10px | Timestamps, secondary info | Tiny text for tertiary information |
+
+### Enhanced Typography Usage in Components
+
+The audiências components now consistently use the enhanced typography system:
+
+```mermaid
+flowchart LR
+subgraph "Typography Variants Used"
+TV1[text-card-title]
+TV2[text-mono-num]
+TV3[text-kpi-value]
+TV4[text-micro-badge]
+TV5[text-meta-label]
+TV6[text-micro-caption]
+end
+subgraph "Component Implementation"
+MK1[MissionKpiStrip]
+ASV1[AudienciasSemanaView]
+AMC1[AudienciasMissaoContent]
+AGL1[AudienciasGlassList]
+AC1[AudienciasUltimaCapturaCard]
+CB1[CountBadge]
+end
+TV1 --> MK1
+TV2 --> ASV1
+TV3 --> AMC1
+TV4 --> AGL1
+TV5 --> MK1
+TV6 --> ASV1
+CB1 --> TV4
+```
+
+**Diagram sources**
+- [typography.tsx:163-180](file://src/components/ui/typography.tsx#L163-L180)
+- [mission-kpi-strip.tsx:137-141](file://src/app/(authenticated)/audiencias/components/mission-kpi-strip.tsx#L137-L141)
+- [audiencias-semana-view.tsx:400-406](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx#L400-L406)
+- [audiencias-missao-content.tsx:324-328](file://src/app/(authenticated)/audiencias/components/views/audiencias-missao-content.tsx#L324-L328)
+- [audiencias-ultima-captura-card.tsx:140-158](file://src/app/(authenticated)/audiencias/components/audiencias-ultima-captura-card.tsx#L140-L158)
 - [semantic-badge.tsx:200-219](file://src/components/ui/semantic-badge.tsx#L200-L219)
 
 ### Semantic Markup and Accessibility
@@ -683,53 +789,17 @@ The components now implement proper semantic HTML structure with accessible head
 |-----------|-------------------|----------------------|
 | MissionKpiStrip | `<div>` containers with proper spacing | Screen reader friendly labels, keyboard navigation |
 | AudienciasSemanaView | `<h3>`, `<h4>`, `<span>` elements | Proper heading levels, ARIA labels, focus management |
-| AudienciasUltimaCapturaCard | `<div>`, `<button>`, `<p>` elements | Clickable semantics, keyboard activation, focus indicators, role="button" |
+| AudienciasMissaoContent | `<h3>`, `<h4>`, `<span>` elements | Proper heading levels, ARIA labels, focus management |
+| AudienciasGlassList | `<h3>`, `<p>`, `<span>` elements | Proper heading levels, ARIA labels, focus management |
 | WeekDayCard | `<button>`, `<div>` with role attributes | Clickable semantics, keyboard activation, focus indicators |
 | CountBadge | `<span>` with proper semantic context | Numeric formatting, tabular numbers, consistent sizing |
 
-### Design System Typography Usage
-
-The audiências components now consistently use the design system typography variants:
-
-```mermaid
-flowchart LR
-subgraph "Typography Variants Used"
-TV1[text-kpi-value]
-TV2[text-label]
-TV3[text-caption]
-TV4[text-micro-caption]
-TV5[text-overline]
-TV6[text-meta-label]
-TV7[text-micro-badge]
-end
-subgraph "Component Implementation"
-MK1[MissionKpiStrip]
-ASV1[AudienciasSemanaView]
-WDC1[WeekDayCard]
-AC1[AudienciasUltimaCapturaCard]
-CB1[CountBadge]
-end
-TV1 --> MK1
-TV2 --> ASV1
-TV3 --> WDC1
-TV4 --> MK1
-TV5 --> ASV1
-TV6 --> MK1
-TV7 --> AC1
-CB1 --> TV7
-```
-
-**Diagram sources**
-- [typography.tsx:163-180](file://src/components/ui/typography.tsx#L163-L180)
-- [mission-kpi-strip.tsx:137-141](file://src/app/(authenticated)/audiencias/components/mission-kpi-strip.tsx#L137-L141)
-- [audiencias-semana-view.tsx:400-406](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx#L400-L406)
-- [audiencias-ultima-captura-card.tsx:140-158](file://src/app/(authenticated)/audiencias/components/audiencias-ultima-captura-card.tsx#L140-L158)
-- [semantic-badge.tsx:200-219](file://src/components/ui/semantic-badge.tsx#L200-L219)
-
 **Section sources**
 - [typography.tsx:1-205](file://src/components/ui/typography.tsx#L1-L205)
+- [globals.css:1450-1650](file://src/app/globals.css#L1450-L1650)
 - [mission-kpi-strip.tsx:1-254](file://src/app/(authenticated)/audiencias/components/mission-kpi-strip.tsx#L1-L254)
 - [audiencias-semana-view.tsx:1-671](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx#L1-L671)
+- [audiencias-missao-content.tsx:1-364](file://src/app/(authenticated)/audiencias/components/views/audiencias-missao-content.tsx#L1-L364)
 - [audiencias-ultima-captura-card.tsx:1-168](file://src/app/(authenticated)/audiencias/components/audiencias-ultima-captura-card.tsx#L1-L168)
 - [semantic-badge.tsx:1-220](file://src/components/ui/semantic-badge.tsx#L1-L220)
 
@@ -800,6 +870,8 @@ The audiências module uses specific typography tokens aligned with mission cont
 | Status Badges | `text-micro-badge` | 2xs | Bold | Status indicators |
 | Countdown Timer | `text-caption font-semibold` | sm | Medium | Time remaining display |
 | Count Badges | `text-micro-badge` | 2xs | Medium | Numeric indicators |
+| Card Titles | `text-card-title` | lg | SemiBold | Card and panel headings |
+| Mono Numbers | `text-mono-num` | xs | Regular | Process numbers, dates, metrics |
 
 ### Mission Control Color System
 
@@ -1041,7 +1113,7 @@ A[Next.js Framework]
 B[Zod Validation]
 C[React Hook Form]
 D[Supabase Client]
-E[Design System Typography]
+E[Enhanced Typography System]
 F[Date-fns]
 G[Lucide Icons]
 H[Radix UI]
@@ -1053,6 +1125,9 @@ M[Captura System]
 N[CountBadge Component]
 O[GrauTribunal Enum]
 P[TipoAudiencia Filter]
+Q[Enhanced Badge Systems]
+R[Virtual Room Detection]
+S[Observation System]
 end
 subgraph "UI Dependencies"
 F --> G
@@ -1061,13 +1136,13 @@ J --> K
 L --> M
 N --> O
 P --> O
+Q --> R
+S --> R
 end
 subgraph "Data Dependencies"
-Q[PostgreSQL]
-R[Supabase RLS]
-S[JSONB Support]
-T[Full-Text Search]
-U[Enumerated Types]
+Q --> O
+R --> P
+S --> N
 end
 subgraph "External Dependencies"
 V[PJE-TRT APIs]
@@ -1081,10 +1156,8 @@ A --> C
 A --> D
 A --> E
 D --> Q
-D --> R
-Q --> S
-Q --> T
-Q --> U
+Q --> R
+R --> S
 A --> V
 A --> W
 A --> X
@@ -1100,6 +1173,9 @@ E --> L
 E --> N
 E --> O
 E --> P
+E --> Q
+E --> R
+E --> S
 ```
 
 **Diagram sources**
@@ -1110,6 +1186,9 @@ E --> P
 - [audiencias-ultima-captura-card.tsx:3-10](file://src/app/(authenticated)/audiencias/components/audiencias-ultima-captura-card.tsx#L3-L10)
 - [semantic-badge.tsx:200-219](file://src/components/ui/semantic-badge.tsx#L200-L219)
 - [domain.ts:28-32](file://src/app/(authenticated)/audiencias/domain.ts#L28-L32)
+- [audiencias-glass-list.tsx:259-328](file://src/app/(authenticated)/audiencias/components/audiencias-glass-list.tsx#L259-L328)
+- [audiencias-semana-view.tsx:396-455](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx#L396-L455)
+- [audiencias-missao-content.tsx:317-328](file://src/app/(authenticated)/audiencias/components/views/audiencias-missao-content.tsx#L317-L328)
 
 ### Authorization and Permission System
 
@@ -1151,7 +1230,7 @@ The system implements several performance optimization strategies:
 - **Lazy Loading**: Component lazy loading for improved initial load times
 - **Background Processing**: Queue-based processing for heavy operations
 
-### New Component Performance Considerations
+### Enhanced Component Performance Considerations
 
 **Updated** The AudienciasUltimaCapturaCard component includes specific performance optimizations:
 
@@ -1170,10 +1249,32 @@ The system implements several performance optimization strategies:
 - **Database Indexing**: Proper indexing for GrauTribunal and TipoAudiencia filtering
 - **Field Mapping Performance**: Corrected field mapping eliminates unnecessary data transformation
 
+### Typography System Performance
+
+**Updated** The enhanced typography system includes performance optimizations:
+
+- **CSS Class Optimization**: Efficient CSS class application with minimal DOM manipulation
+- **Typography Component Caching**: Memoized typography components reduce re-renders
+- **Variant Class Reuse**: Shared variant classes across components minimize CSS duplication
+- **Font Loading Optimization**: Proper font loading strategy prevents layout shifts
+
+#### New Component Performance Considerations
+
+**Updated** The audiências-glass-list.tsx, audiencias-missao-content.tsx, and audiencias-semana-view.tsx components include specific performance optimizations:
+
+- **Typography System Integration**: Efficient use of new text-card-title and text-mono-num classes
+- **Badge System Optimization**: Proper semantic badge usage reduces custom styling overhead
+- **Virtual Room Detection**: Optimized virtual room detection logic with early returns
+- **Observation System**: Efficient observation editing with controlled state updates
+- **Responsive Design**: Optimized responsive breakpoints for different screen sizes
+
 **Section sources**
 - [audiencias-ultima-captura-card.tsx:53-71](file://src/app/(authenticated)/audiencias/components/audiencias-ultima-captura-card.tsx#L53-L71)
 - [audiencias-client.tsx:280-282](file://src/app/(authenticated)/audiencias/audiencias-client.tsx#L280-L282)
 - [semantic-badge.tsx:200-219](file://src/components/ui/semantic-badge.tsx#L200-L219)
+- [audiencias-glass-list.tsx:259-328](file://src/app/(authenticated)/audiencias/components/audiencias-glass-list.tsx#L259-L328)
+- [audiencias-semana-view.tsx:396-455](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx#L396-L455)
+- [audiencias-missao-content.tsx:317-328](file://src/app/(authenticated)/audiencias/components/views/audiencias-missao-content.tsx#L317-L328)
 
 ## Troubleshooting Guide
 
@@ -1199,20 +1300,30 @@ The system implements several performance optimization strategies:
 - **Cause**: API connectivity or authentication issues
 - **Solution**: Check driver implementation and API credentials
 
-#### Design System Compliance Issues
-- **Issue**: Typography inconsistencies or accessibility problems
+#### Enhanced Typography System Issues
+- **Issue**: Typography inconsistencies or missing variant classes
 - **Cause**: Direct CSS classes instead of design system components
 - **Solution**: Replace manual styling with proper Typography components and semantic markup
 
-#### Field Mapping Issues
-- **Issue**: Incorrect legal party names displayed in audiências
-- **Cause**: Field mapping bug between polo_ativo_nome/polo_passivo_nome and nome_parte_autora/nome_parte_re
-- **Solution**: Verify database field mapping and ensure proper conversion in repository layer
+#### New Badge System Issues
+- **Issue**: Badge display problems or missing semantic variants
+- **Cause**: Incorrect category or value mapping
+- **Solution**: Verify badge category and value combinations match design system specifications
 
-#### New Component Issues
-- **Issue**: AudienciasUltimaCapturaCard not displaying data
-- **Cause**: Missing capture data or loading state issues
-- **Solution**: Verify capture system integration and check for proper data fetching
+#### Virtual Room Detection Issues
+- **Issue**: Virtual room detection not working properly
+- **Cause**: Missing URL validation or modalidade mismatch
+- **Solution**: Verify audiência modalidade and URL presence conditions
+
+#### Observation System Issues
+- **Issue**: Observation editing not working or saving incorrectly
+- **Cause**: State management or action handler problems
+- **Solution**: Check observation state updates and action dispatching
+
+#### Enhanced Component Issues
+- **Issue**: AudienciasGlassList, AudienciasMissaoContent, or AudienciasSemanaView not rendering correctly
+- **Cause**: Missing typography classes or badge system integration
+- **Solution**: Ensure proper use of text-card-title, text-mono-num, and enhanced badge components
 
 #### Mission Control Pattern Issues
 - **Issue**: Mission control layout not rendering correctly
@@ -1234,18 +1345,25 @@ The system implements several performance optimization strategies:
 - **Cause**: Missing findProcessoParaAudiencia function or incorrect process validation
 - **Solution**: Verify repository implementation and ensure proper process existence checks
 
+#### Typography System Issues
+- **Issue**: Typography variant classes not applying correctly
+- **Cause**: CSS class conflicts or missing variant definitions
+- **Solution**: Verify typography variant classes in globals.css and proper component usage
+
 **Section sources**
 - [audiencias-actions.ts:106-116](file://src/app/(authenticated)/audiencias/actions/audiencias-actions.ts#L106-L116)
 - [service.ts:53-62](file://src/app/(authenticated)/audiencias/service.ts#L53-L62)
 - [audiencias-ultima-captura-card.tsx:75-91](file://src/app/(authenticated)/audiencias/components/audiencias-ultima-captura-card.tsx#L75-L91)
 - [semantic-badge.tsx:200-219](file://src/components/ui/semantic-badge.tsx#L200-L219)
 - [repository.ts:412-431](file://src/app/(authenticated)/audiencias/repository.ts#L412-L431)
+- [typography.tsx:163-180](file://src/components/ui/typography.tsx#L163-L180)
+- [globals.css:1450-1650](file://src/app/globals.css#L1450-L1650)
 
 ## Conclusion
 
 The Audiência Management system represents a comprehensive solution for court hearing scheduling and management within the Brazilian judicial system. The system successfully combines modern web technologies with legal compliance requirements to provide an intuitive, efficient, and reliable platform for legal professionals.
 
-**Updated** Key enhancements include comprehensive design system compliance with proper typography usage, semantic markup implementation, and improved accessibility throughout the audiências components. The system now features enhanced filtering capabilities with GrauTribunal and TipoAudiencia filters, improved database infrastructure with ultima_captura_id column tracking, new CountBadge component for consistent count display, and most importantly, critical field mapping bug fixes that ensure proper legal party representation using nome_parte_autora and nome_parte_re fields.
+**Updated** Key enhancements include comprehensive design system compliance with new typography variant classes (text-card-title, text-mono-num), improved semantic structure with proper heading components, new badge systems for case flags, virtual room detection system, and observation system improvements. The audiências-glass-list.tsx, audiencias-missao-content.tsx, and audiencias-semana-view.tsx components now use the enhanced design system with consistent typography and semantic markup throughout.
 
 Key strengths of the system include:
 
@@ -1260,7 +1378,13 @@ Key strengths of the system include:
 - **New Component Integration**: Streamlined navigation from capture operations to audiência management with consistent count display
 - **Database Infrastructure Improvements**: Enhanced tracking capabilities with ultima_captura_id column for improved data lineage
 - **Critical Bug Fixes**: Field mapping corrections ensure accurate legal party representation and data integrity
+- **Enhanced Typography System**: New variant classes (text-card-title, text-mono-num) provide consistent typography across components
+- **Improved Badge Systems**: Enhanced semantic badge components with proper case flag management
+- **Virtual Room Detection**: Intelligent virtual room detection system improves audiência management
+- **Observation System**: Structured observation editing with proper state management
 
-The system provides a solid foundation for managing court hearings while maintaining the highest standards of legal accuracy, design system compliance, and user experience. Its modular architecture ensures maintainability and extensibility for future enhancements and regulatory changes. The addition of mission control patterns, enhanced filtering capabilities, comprehensive design system documentation, and critical field mapping bug fixes establishes the audiências module as a model for other legal process management interfaces within the ZattarOS ecosystem.
+The system provides a solid foundation for managing court hearings while maintaining the highest standards of legal accuracy, design system compliance, and user experience. Its modular architecture ensures maintainability and extensibility for future enhancements and regulatory changes. The addition of mission control patterns, enhanced filtering capabilities, comprehensive design system documentation, critical field mapping bug fixes, and new typography variant classes establishes the audiências module as a model for other legal process management interfaces within the ZattarOS ecosystem.
 
 The new CountBadge component ensures consistent numeric display across all audiência interfaces, while the enhanced filtering system with GrauTribunal and TipoAudiencia support provides more precise audiência discovery and management capabilities. The improved database infrastructure with ultima_captura_id tracking enables better auditability and capture operation traceability, making the system more robust and maintainable for long-term operation. The critical field mapping bug fixes ensure that legal party names are correctly represented throughout the system, maintaining data integrity and legal compliance standards.
+
+The enhanced typography system with new variant classes (text-card-title, text-mono-num) provides consistent visual hierarchy and improved readability across all audiência components. The improved badge systems with proper case flag management and virtual room detection system enhance the overall user experience and provide better visual cues for audiência status and location. The observation system improvements with structured editing capabilities ensure that audiência notes are properly managed and accessible to authorized users.

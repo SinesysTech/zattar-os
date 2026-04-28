@@ -3,9 +3,9 @@
 <cite>
 **Referenced Files in This Document**
 - [MASTER.md](file://design-system/zattaros/MASTER.md)
-- [expedientes.md](file://design-system/zattaros/pages/expedientes.md)
-- [captura.md](file://design-system/zattaros/pages/captura.md)
 - [audiencias.md](file://design-system/zattaros/pages/audiencias.md)
+- [captura.md](file://design-system/zattaros/pages/captura.md)
+- [expedientes.md](file://design-system/zattaros/pages/expedientes.md)
 - [variants.ts](file://src/lib/design-system/variants.ts)
 - [colors-section.tsx](file://src/app/(authenticated)/design-system/_components/colors-section.tsx)
 - [spacing-section.tsx](file://src/app/(authenticated)/design-system/_components/spacing-section.tsx)
@@ -18,15 +18,19 @@
 - [badge.tsx](file://src/components/ui/badge.tsx)
 - [audiencias-filter-bar.tsx](file://src/app/(authenticated)/audiencias/components/audiencias-filter-bar.tsx)
 - [audiencias-semana-view.tsx](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx)
+- [audiencia-status-badge.tsx](file://src/app/(authenticated)/audiencias/components/audiencia-status-badge.tsx)
+- [audiencia-modalidade-badge.tsx](file://src/app/(authenticated)/audiencias/components/audiencia-modalidade-badge.tsx)
+- [audiencia-indicador-badges.tsx](file://src/app/(authenticated)/audiencias/components/audiencia-indicador-badges.tsx)
 </cite>
 
 ## Update Summary
 **Changes Made**
-- Updated to reflect Applied Changes: Added new CountBadge component to the semantic badge system for consistent count display across tabs and badges
-- Enhanced semantic badge system documentation with CountBadge component details
-- Added comprehensive usage examples and implementation patterns for CountBadge
-- Updated badge component architecture to include CountBadge specialization
-- Expanded design system playground with CountBadge testing capabilities
+- Enhanced typography system with comprehensive semantic text classes (kpi-value, meta-label, caption, micro-badge, etc.)
+- Added new CountBadge component for consistent count display across tabs and badges
+- Improved audiência component integration with semantic badge system
+- Enhanced accessibility compliance with proper heading semantics and WCAG AAA standards
+- Updated design system playground with new typography and badge testing capabilities
+- Strengthened migration guidance through design-system-escape comments
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -48,7 +52,7 @@
 ## Introduction
 The ZattarOS Design System represents a comprehensive visual and interaction framework built on shadcn/ui components with semantic badge architecture. The system has evolved to operate on a hierarchical structure where the MASTER.md file serves as the central authority for design system rules, page-specific documentation files provide targeted overrides, and design-system-escape comments guide developers through systematic migration from raw Tailwind CSS classes to standardized components.
 
-**Updated** The system now features major typography improvements with new semantic text classes, enhanced accessibility compliance with WCAG AAA standards, comprehensive anti-pattern prevention measures, and a new CountBadge component for consistent count display across tabs and badges.
+**Updated** The system now features major typography improvements with new semantic text classes, enhanced accessibility compliance with WCAG AAA standards, comprehensive anti-pattern prevention measures, and a new CountBadge component for consistent count display across tabs and badges. The enhanced audiência components demonstrate superior integration with the semantic badge system and improved heading semantics for better accessibility.
 
 This architecture ensures consistency across the legal management platform while allowing for module-specific adaptations through a well-defined override mechanism.
 
@@ -130,10 +134,10 @@ Each page-specific file follows a consistent pattern:
 - Module-specific pre-delivery checklist
 
 **Override Examples**
-The expedientes module demonstrates comprehensive override documentation:
-- **Shells and Composition**: Specific requirements for page layout and component composition
-- **Badge Categories**: Domain-specific semantic badge mappings
-- **Density and Layout**: Module-specific density requirements and layout patterns
+The audiências module demonstrates comprehensive override documentation:
+- **Shells and Composition**: Specific requirements for weekly view layout and component composition
+- **Badge Categories**: Domain-specific semantic badge mappings for audiência status and modalities
+- **Density and Layout**: Module-specific density requirements and layout patterns for weekly scheduling
 - **Typography Specifications**: Specialized typography rules for legal domain
 - **Anti-Patterns**: Module-specific design violations to avoid
 
@@ -537,28 +541,56 @@ The playground includes comprehensive testing capabilities:
 
 ## Page-Specific Implementation Examples
 
-### Expedientes Module Deep Dive
+### Audiências Module Deep Dive
 
-The expedientes module showcases complex operational dashboard patterns with detailed implementation guidance and comprehensive override documentation.
+The audiências module showcases comprehensive integration with the enhanced design system, featuring improved typography, semantic badge system, and accessibility compliance.
 
-**Mission Control Pattern and Governance**
-The expedientes module demonstrates advanced design system implementation with clear governance:
+**Weekly View Implementation and Governance**
+The audiências module demonstrates advanced design system implementation with clear governance:
 - **Page-Specific Rules**: Extensive documentation of module-specific requirements
 - **Badge Category Governance**: Centralized badge category usage with domain-specific mappings
 - **Layout Pattern Governance**: Strict adherence to module-specific density and layout requirements
 - **Component Composition**: Clear guidelines for component hierarchy and relationships
 
-**Typography Implementation and Migration**
+**Enhanced Typography Integration**
 - **KPI Values**: Migration from raw classes to `text-kpi-value` semantic class
 - **Meta Labels**: Implementation of `text-meta-label` for uppercase field labels
 - **Overline Labels**: Usage of `text-overline` for section headers within cards
 - **Caption Text**: Migration to `text-caption` for auxiliary information
 - **Micro Badge Text**: Implementation of `text-micro-badge` for small status indicators
 
+**CountBadge Integration and Usage**
+The audiências module demonstrates comprehensive CountBadge integration with clear usage patterns and governance:
+
+**Tab Count Implementation**
+```typescript
+<TabsTrigger value="todas">
+  Todas
+  <CountBadge>{counts.total}</CountBadge>
+</TabsTrigger>
+<TabsTrigger value={StatusAudiencia.Marcada}>
+  Marcadas
+  <CountBadge>{counts.marcadas}</CountBadge>
+</TabsTrigger>
+```
+
+**Dynamic Count Styling**
+```typescript
+<CountBadge className={lowPrepCount > 0 ? 'bg-warning/15 text-warning' : undefined}>
+  {dayAudiencias.length}
+</CountBadge>
+```
+
+**CountBadge Governance**
+- **Consistent Usage**: All count displays use CountBadge component
+- **Size Standardization**: Appropriate size selection based on context
+- **Styling Guidelines**: Dynamic styling for different count states
+- **Accessibility Compliance**: Proper contrast and semantic meaning
+
 **Component Composition and Migration**
-- **QueueCard Implementation**: Complex card component with migration guidance
-- **DetailPanel Integration**: Component composition with migration tracking
-- **SectionHeader Usage**: Governance of header components with semantic clarity
+- **Weekly View Layout**: Complex card component with migration guidance
+- **Detail Panel Integration**: Component composition with migration tracking
+- **Section Header Usage**: Governance of header components with semantic clarity
 - **Inline Editing Capabilities**: Migration from raw components to standardized solutions
 
 **Migration Examples and Validation**
@@ -617,35 +649,59 @@ The captura module shows systematic migration from raw Tailwind classes with cle
 - **Migration Tracking**: Clear documentation of migration progress
 - **Quality Assurance**: Validation of design system compliance
 
-### Audiências Module Implementation
+### Expedientes Module Implementation
 
-**CountBadge Integration and Usage**
-The audiências module demonstrates comprehensive CountBadge integration with clear usage patterns and governance:
+**Typography Implementation and Migration**
+- **KPI Values**: Migration from raw classes to `text-kpi-value` semantic class
+- **Meta Labels**: Implementation of `text-meta-label` for uppercase field labels
+- **Overline Labels**: Usage of `text-overline` for section headers within cards
+- **Caption Text**: Migration to `text-caption` for auxiliary information
+- **Micro Badge Text**: Implementation of `text-micro-badge` for small status indicators
 
-**Tab Count Implementation**
+**Component Composition and Migration**
+- **QueueCard Implementation**: Complex card component with migration guidance
+- **DetailPanel Integration**: Component composition with migration tracking
+- **SectionHeader Usage**: Governance of header components with semantic clarity
+- **Inline Editing Capabilities**: Migration from raw components to standardized solutions
+
+**Migration Examples and Validation**
+The module shows practical migration from raw classes with comprehensive validation:
 ```typescript
-<TabsTrigger value="todas">
-  Todas
-  <CountBadge>{counts.total}</CountBadge>
-</TabsTrigger>
-<TabsTrigger value={StatusAudiencia.Marcada}>
-  Marcadas
-  <CountBadge>{counts.marcadas}</CountBadge>
-</TabsTrigger>
+// Before migration - raw Tailwind classes
+<div className="flex items-center gap-3">
+  <Badge variant="outline">23 Processos</Badge>
+  <Badge variant="default">Urgente</Badge>
+</div>
+
+// After migration - semantic badge system
+<div className="flex items-center gap-3">
+  <Badge variant="outline">23 Processos</Badge>
+  <Badge variant={getSemanticBadgeVariant('priority', 'urgent')}>
+    Urgente
+  </Badge>
+</div>
 ```
 
-**Dynamic Count Styling**
+**Typography Migration Examples**
 ```typescript
-<CountBadge className={lowPrepCount > 0 ? 'bg-warning/15 text-warning' : undefined}>
-  {dayAudiencias.length}
-</CountBadge>
+// Number formatting in cards
+// Before: text-[10px] font-mono text-muted-foreground tabular-nums
+// After: text-mono-num
+
+// Section headers within cards
+// Before: text-[11px] uppercase tracking-[0.14em] font-semibold
+// After: text-meta-label
+
+// Counter badges
+// Before: text-[9px] font-medium
+// After: text-micro-badge
 ```
 
-**CountBadge Governance**
-- **Consistent Usage**: All count displays use CountBadge component
-- **Size Standardization**: Appropriate size selection based on context
-- **Styling Guidelines**: Dynamic styling for different count states
-- **Accessibility Compliance**: Proper contrast and semantic meaning
+**Governance and Compliance**
+- **Audit Results**: Comprehensive compliance reporting with automated scanning
+- **Override Validation**: Verification that page-specific rules are properly implemented
+- **Migration Tracking**: Quantifiable progress in design system adoption
+- **Quality Assurance**: Multi-layered validation of implementation quality
 
 ## Quality Assurance and Migration Tracking
 
@@ -756,3 +812,5 @@ Through this architecture, the design system supports both current development n
 The governance model established through MASTER.md and page-specific overrides ensures that design decisions are well-documented, consistently applied, and easily maintained over time. This approach enables the design system to evolve with the platform's needs while maintaining the consistency and quality that developers and users expect.
 
 The enhanced typography system with semantic text classes, comprehensive accessibility compliance, systematic migration guidance, and the new CountBadge component position the ZattarOS Design System as a leader in accessible, maintainable, and scalable design systems for legal technology applications. The CountBadge component specifically addresses the need for consistent count display across tabs, badges, and quantity indicators, providing developers with a reliable, accessible solution for numeric count presentation.
+
+The audiências module integration demonstrates the practical benefits of these enhancements, with improved semantic badge usage, better heading semantics for accessibility, and streamlined count display patterns that enhance both developer productivity and user experience. This comprehensive approach to design system evolution ensures that the ZattarOS platform maintains its competitive edge in legal technology while providing a solid foundation for future innovations.

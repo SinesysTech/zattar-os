@@ -18,6 +18,10 @@
 
 @import "./tw-animate.css";
 
+@import "tw-animate-css";
+
+@import "shadcn/tailwind.css";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -102,8 +106,8 @@
   --color-video-skeleton: var(--video-skeleton);
 
   /* --- 8. Tipografia & Layout --- */
-  --font-sans: var(--font-inter);
-  --font-heading: var(--font-montserrat);
+  --font-sans: var(--font-sans);
+  --font-heading: var(--font-sans);
   /* Títulos */
   --font-headline: var(--font-manrope);
   /* Magistrate AI Headline */
@@ -235,6 +239,10 @@
   --density-dialog-padding-x: var(--density-dialog-padding-x);
   --density-dialog-padding-y: var(--density-dialog-padding-y);
   --density-section-gap: var(--density-section-gap);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
 /* --- FUNDAÇÃO DE VARIÁVEIS --- */
@@ -249,7 +257,7 @@
    * ============================================================================ */
 
   /* Configuração Global */
-  --radius: 0.5rem;
+  --radius: 0.625rem;
   /* 8px — mantido neste commit; próxima etapa migra para 0.25rem (4px Zattar) */
 
   /* ========================================================================
@@ -327,36 +335,34 @@
    * Spec canônico: design-system/colors_and_type.css (Glass Briefing)
    * Âncora: hue 281° — Zattar Purple #5523EB
    * ======================================================================== */
-  --background: oklch(0.96 0.01 281);
-  --foreground: oklch(0.15 0.01 281);
 
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.15 0.01 281);
+  --card-foreground: oklch(0.145 0 0);
 
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.15 0.01 281);
+  --popover-foreground: oklch(0.145 0 0);
 
-  --primary: oklch(0.48 0.26 281);
+  --primary: oklch(0.205 0 0);
   /* #5523EB — Zattar Purple */
-  --primary-foreground: oklch(1 0 0);
+  --primary-foreground: oklch(0.985 0 0);
 
-  --secondary: oklch(0.95 0.04 281);
+  --secondary: oklch(0.97 0 0);
   /* purple wash */
-  --secondary-foreground: oklch(0.15 0.01 281);
+  --secondary-foreground: oklch(0.205 0 0);
 
-  --muted: oklch(0.92 0.01 281);
+  --muted: oklch(0.97 0 0);
   /* micro-tinted neutral */
-  --muted-foreground: oklch(0.42 0.01 281);
+  --muted-foreground: oklch(0.556 0 0);
 
-  --accent: oklch(0.95 0.04 281);
-  --accent-foreground: oklch(0.15 0.01 281);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
 
-  --destructive: oklch(0.55 0.22 25);
+  --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(1 0 0);
 
-  --border: oklch(0.87 0.01 281);
-  --input: oklch(0.87 0.01 281);
-  --ring: transparent;
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
   /* Glass Briefing: focus via shadow inset, não ring visível */
 
   /* Skeleton: cinza neutro dedicado para loading */
@@ -367,14 +373,14 @@
    * SEMANTIC TOKENS — Sidebar (SEMPRE escura em ambos os temas)
    * Spec Glass Briefing: hue 281°, chroma 0.01 (premium dark-always)
    * ======================================================================== */
-  --sidebar: oklch(0.22 0.01 281);
-  --sidebar-foreground: oklch(0.98 0 0);
-  --sidebar-primary: oklch(0.70 0.20 281);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.30 0.01 281);
-  --sidebar-accent-foreground: oklch(1 0 0);
-  --sidebar-border: oklch(1 0 0 / 0.10);
-  --sidebar-ring: oklch(0.70 0.20 281);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
 
   /* ========================================================================
    * SEMANTIC TOKENS — Brand (spec Glass Briefing)
@@ -387,15 +393,15 @@
   /* ========================================================================
    * SEMANTIC TOKENS — Charts (spec Glass Briefing — hue 281° anchored)
    * ======================================================================== */
-  --chart-1: oklch(0.48 0.26 281);
+  --chart-1: oklch(0.837 0.128 66.29);
   /* Zattar Purple */
-  --chart-2: oklch(0.60 0.22 45);
+  --chart-2: oklch(0.705 0.213 47.604);
   /* Action Orange */
-  --chart-3: oklch(0.92 0.01 281);
+  --chart-3: oklch(0.646 0.222 41.116);
   /* neutral tinted */
-  --chart-4: oklch(0.55 0.18 150);
+  --chart-4: oklch(0.553 0.195 38.402);
   /* success */
-  --chart-5: oklch(0.70 0.01 281);
+  --chart-5: oklch(0.47 0.157 37.304);
   /* muted neutral */
   --chart-6: var(--navy-body);
   --chart-7: oklch(0.78 0.10 276);
@@ -541,6 +547,8 @@
   --portal-danger-soft: oklch(from var(--accent-ruby) l c h / 0.20);
   --portal-info: var(--zattar-purple-400);
   --portal-info-soft: oklch(from var(--zattar-purple-400) l c h / 0.20);
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
 }
 
 .dark {
@@ -555,34 +563,34 @@
    * Spec canônico: design-system/colors_and_type.css (Glass Briefing)
    * Âncora: hue 281° — neutros micro-tintados em toda a escala
    * ======================================================================== */
-  --background: oklch(0.17 0.005 281);
-  --foreground: oklch(0.98 0 0);
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
 
-  --card: oklch(0.22 0.005 281);
-  --card-foreground: oklch(0.98 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
 
-  --popover: oklch(0.22 0.005 281);
-  --popover-foreground: oklch(0.98 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
 
-  --primary: oklch(0.70 0.20 281);
+  --primary: oklch(0.922 0 0);
   /* dark: lift pra contraste — #9f85ff */
-  --primary-foreground: oklch(0.15 0.10 281);
+  --primary-foreground: oklch(0.205 0 0);
 
-  --secondary: oklch(0.28 0.01 281);
-  --secondary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
 
-  --muted: oklch(0.28 0.005 281);
-  --muted-foreground: oklch(0.65 0.005 281);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
 
-  --accent: oklch(0.28 0.01 281);
-  --accent-foreground: oklch(0.98 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
 
-  --destructive: oklch(0.65 0.20 25);
+  --destructive: oklch(0.704 0.191 22.216);
   --destructive-foreground: oklch(1 0 0);
 
-  --border: oklch(1 0 0 / 0.12);
-  --input: oklch(1 0 0 / 0.12);
-  --ring: transparent;
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
   /* Glass Briefing: focus via shadow inset */
 
   /* Skeleton — alpha branco sobre dark-brand */
@@ -592,14 +600,14 @@
   /* ========================================================================
    * SIDEBAR — Igual ao light mode (sempre dark-brand, hue 281°)
    * ======================================================================== */
-  --sidebar: oklch(0.22 0.01 281);
-  --sidebar-foreground: oklch(0.98 0 0);
-  --sidebar-primary: oklch(0.70 0.20 281);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.30 0.01 281);
-  --sidebar-accent-foreground: oklch(1 0 0);
-  --sidebar-border: oklch(1 0 0 / 0.10);
-  --sidebar-ring: oklch(0.70 0.20 281);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
 
   /* ========================================================================
    * BRAND (Dark) — spec Glass Briefing
@@ -610,11 +618,11 @@
   /* ========================================================================
    * CHARTS — mesma paleta Zattar, ajustada para dark background
    * ======================================================================== */
-  --chart-1: var(--zattar-purple-400);
-  --chart-2: var(--accent-ruby);
-  --chart-3: var(--success-500);
-  --chart-4: var(--accent-magenta);
-  --chart-5: oklch(1 0 0 / 0.40);
+  --chart-1: oklch(0.837 0.128 66.29);
+  --chart-2: oklch(0.705 0.213 47.604);
+  --chart-3: oklch(0.646 0.222 41.116);
+  --chart-4: oklch(0.553 0.195 38.402);
+  --chart-5: oklch(0.47 0.157 37.304);
   --chart-6: var(--zattar-purple-300);
   --chart-7: oklch(0.70 0.15 200);
   --chart-8: oklch(0.70 0.12 80);
@@ -1264,11 +1272,12 @@
   }
 
   * {
-    @apply border-border outline-none;
+    @apply outline-none border-border outline-ring/50;
   }
 
   html {
     font-size: 18px;
+    @apply font-sans;
   }
 
   html.website-root-scale {
@@ -1276,7 +1285,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply font-sans antialiased bg-background text-foreground;
   }
 
   /* Tipografia Zattar */
@@ -1333,6 +1342,9 @@
   /* Prevenir overflow em elementos com largura fixa */
   [style*="width"] {
     max-width: 100% !important;
+  }
+  button:not(:disabled), [role="button"]:not(:disabled) {
+    cursor: pointer;
   }
 }
 

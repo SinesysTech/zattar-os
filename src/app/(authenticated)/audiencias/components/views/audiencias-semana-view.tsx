@@ -25,16 +25,12 @@ import {
   Video,
   Building2,
   Sparkles,
-  Clock3,
-  AlertTriangle,
-  CheckCircle2,
-  CalendarDays,
   Lock,
   ExternalLink,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { GlassPanel } from '@/components/shared/glass-panel';
-import { Heading, Text } from '@/components/ui/typography';
+import { Text } from '@/components/ui/typography';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { Audiencia } from '../../domain';
 import { StatusAudiencia, GRAU_TRIBUNAL_LABELS } from '../../domain';
@@ -90,39 +86,6 @@ function getAudienciaTiming(audiencia: Audiencia, now: Date) {
       isUpcoming: false,
     };
   }
-}
-
-function getDaySummary(audiencias: Audiencia[]) {
-  const now = new Date();
-  const ongoing = audiencias.filter((a) => getAudienciaTiming(a, now).isOngoing);
-  const upcoming = audiencias.filter(
-    (a) => a.status === StatusAudiencia.Marcada && getAudienciaTiming(a, now).isUpcoming,
-  );
-  const completed = audiencias.filter(
-    (a) => a.status === StatusAudiencia.Finalizada || a.status === StatusAudiencia.Cancelada || getAudienciaTiming(a, now).isPast,
-  );
-  const lowPrep = audiencias.filter(
-    (a) => a.status === StatusAudiencia.Marcada && calcPrepScore(calcPrepItems(a)) < 50,
-  );
-  const semResponsavel = audiencias.filter((a) => !a.responsavelId);
-  const semSala = audiencias.filter(
-    (a) => (a.modalidade === 'virtual' || a.modalidade === 'hibrida') && !a.urlAudienciaVirtual,
-  );
-  const avgPrep = audiencias.length > 0
-    ? Math.round(audiencias.reduce((acc, a) => acc + calcPrepScore(calcPrepItems(a)), 0) / audiencias.length)
-    : 0;
-
-  return {
-    total: audiencias.length,
-    ongoing,
-    upcoming,
-    completed,
-    lowPrep,
-    semResponsavel,
-    semSala,
-    avgPrep,
-    nextAudiencia: upcoming[0] ?? ongoing[0] ?? null,
-  };
 }
 
 function getGroupedAudiencias(audiencias: Audiencia[]) {
@@ -242,7 +205,7 @@ export function AudienciasSemanaView({
       </div>
 
       <Tabs value={selectedDay} onValueChange={setSelectedDay} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-        <TabsList className="w-full justify-start overflow-x-auto">
+        <TabsList className="w-full">
           {weekDays.map((day) => {
             const key = getDayKey(day);
             const dayAudiencias = audienciasByDay.get(key) ?? [];
@@ -256,7 +219,7 @@ export function AudienciasSemanaView({
                 key={key}
                 value={key}
                 className={cn(
-                  /* design-system-escape: gap-0.5 gap sem token DS; px-3 py-2 padding direcional sem Inset equiv. */ 'flex flex-col items-center gap-0.5 min-w-16 px-3 py-2 rounded-xl',
+                  /* design-system-escape: gap-0.5 gap sem token DS; px-3 py-2 padding direcional sem Inset equiv. */ 'flex flex-1 flex-col items-center gap-0.5 px-3 py-2 rounded-xl',
                   today && 'bg-primary/12'
                 )}
               >
@@ -285,87 +248,10 @@ export function AudienciasSemanaView({
           const key = getDayKey(day);
           const dayAudiencias = audienciasByDay.get(key) ?? [];
           const dayIsToday = isToday(day);
-          const daySummary = getDaySummary(dayAudiencias);
           const groupedAudiencias = getGroupedAudiencias(dayAudiencias);
-          const nextAudiencia = daySummary.nextAudiencia;
 
           return (
             <TabsContent key={key} value={key} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "mt-0 space-y-4")}>
-              <GlassPanel depth={dayIsToday ? 2 : 1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
-                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between")}>
-                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
-                      <CalendarDays className="size-4 text-primary/70" />
-                      <Text variant="meta-label">
-                        {dayIsToday ? 'Hoje' : 'Dia selecionado'}
-                      </Text>
-                    </div>
-                    <div>
-                      <Heading level="card" className="capitalize">
-                        {format(day, "EEEE, d 'de' MMMM", { locale: ptBR })}
-                      </Heading>
-                      <Text variant="caption" as="p">
-                        {dayIsToday
-                          ? 'Acompanhamento operacional da pauta do dia.'
-                          : 'Visão do preparo, sequência e encerramento das audiências deste dia.'}
-                      </Text>
-                    </div>
-                    {nextAudiencia && (
-                      <Text variant="caption" as="p">
-                        Próxima prioridade: <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/85")}>{fmtTime(nextAudiencia.dataInicio)}</span> · {nextAudiencia.tipoDescricao || 'Audiência'} · {nextAudiencia.numeroProcesso}
-                      </Text>
-                    )}
-                  </div>
-
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2 lg:w-105")}>
-                    <SummaryMetric
-                      icon={Clock3}
-                      label="Em andamento"
-                      value={daySummary.ongoing.length}
-                      tone="success"
-                    />
-                    <SummaryMetric
-                      icon={ChevronRight}
-                      label="Próximas"
-                      value={daySummary.upcoming.length}
-                      tone="primary"
-                    />
-                    <SummaryMetric
-                      icon={AlertTriangle}
-                      label="Pendências"
-                      value={daySummary.lowPrep.length + daySummary.semResponsavel.length + daySummary.semSala.length}
-                      tone="warning"
-                    />
-                    <SummaryMetric
-                      icon={CheckCircle2}
-                      label="Preparo médio"
-                      value={`${daySummary.avgPrep}%`}
-                      tone="muted"
-                    />
-                  </div>
-                </div>
-
-                {(daySummary.lowPrep.length > 0 || daySummary.semResponsavel.length > 0 || daySummary.semSala.length > 0) && (
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-4 flex flex-wrap gap-2")}>
-                    {daySummary.lowPrep.length > 0 && (
-                      <StatusPill>
-                        {daySummary.lowPrep.length} com preparo abaixo de 50%
-                      </StatusPill>
-                    )}
-                    {daySummary.semResponsavel.length > 0 && (
-                      <StatusPill>
-                        {daySummary.semResponsavel.length} sem responsável
-                      </StatusPill>
-                    )}
-                    {daySummary.semSala.length > 0 && (
-                      <StatusPill>
-                        {daySummary.semSala.length} sem link da sala virtual
-                      </StatusPill>
-                    )}
-                  </div>
-                )}
-              </GlassPanel>
-
               {dayAudiencias.length === 0 ? (
                 <GlassPanel className={cn(/* design-system-escape: p-10 → usar <Inset> */ "p-10 text-center")}>
                   <Text variant="label" as="p">
@@ -416,46 +302,6 @@ export function AudienciasSemanaView({
         })}
       </Tabs>
     </div>
-  );
-}
-
-function SummaryMetric({
-  icon: Icon,
-  label,
-  value,
-  tone,
-}: {
-  icon: React.ComponentType<{ className?: string }>;
-  label: string;
-  value: string | number;
-  tone: 'primary' | 'success' | 'warning' | 'muted';
-}) {
-  return (
-    <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "rounded-2xl border border-border/30 bg-background/55 px-3 py-2.5")}>
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
-        <Text variant="meta-label">
-          {label}
-        </Text>
-        <Icon className={cn(
-          'size-3.5',
-          tone === 'primary' && 'text-primary/70',
-          tone === 'success' && 'text-success/70',
-          tone === 'warning' && 'text-warning/75',
-          tone === 'muted' && 'text-muted-foreground/55',
-        )} />
-      </div>
-      <Text variant="kpi-value" className={cn(/* design-system-escape: leading-none sem token DS; tracking-tight sem token DS */ "mt-1 leading-none tracking-tight")}>
-        {value}
-      </Text>
-    </div>
-  );
-}
-
-function StatusPill({ children }: { children: React.ReactNode }) {
-  return (
-    <span className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "rounded-full border border-border/30 bg-background/60 px-2.5 py-1 text-meta-label normal-case")}>
-      {children}
-    </span>
   );
 }
 

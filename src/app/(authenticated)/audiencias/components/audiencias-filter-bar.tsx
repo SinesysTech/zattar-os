@@ -12,8 +12,6 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { CountBadge } from '@/components/ui/semantic-badge';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import { StatusAudiencia, GrauTribunal, GRAU_TRIBUNAL_LABELS } from '../domain';
@@ -98,9 +96,16 @@ function FilterDropdownTrigger({
   );
 }
 
-// ── Status Filter (Tabs inline) ───────────────────────────────────────
+// ── Status Filter (Dropdown chip) ────────────────────────────────────
 
-function StatusTabsFilter({
+const STATUS_OPTIONS: { value: StatusAudiencia | 'todas'; label: string }[] = [
+  { value: 'todas', label: 'Todas' },
+  { value: StatusAudiencia.Marcada, label: 'Marcadas' },
+  { value: StatusAudiencia.Finalizada, label: 'Finalizadas' },
+  { value: StatusAudiencia.Cancelada, label: 'Canceladas' },
+];
+
+function StatusFilter({
   selected,
   onChange,
   counts,
@@ -109,30 +114,59 @@ function StatusTabsFilter({
   onChange: (v: StatusAudiencia | null) => void;
   counts: { total: number; marcadas: number; finalizadas: number; canceladas: number };
 }) {
+  const [open, setOpen] = React.useState(false);
+
+  const countMap: Record<string, number> = {
+    todas: counts.total,
+    [StatusAudiencia.Marcada]: counts.marcadas,
+    [StatusAudiencia.Finalizada]: counts.finalizadas,
+    [StatusAudiencia.Cancelada]: counts.canceladas,
+  };
+
+  const label = selected
+    ? STATUS_OPTIONS.find((o) => o.value === selected)?.label ?? 'Status'
+    : 'Status';
+
   return (
-    <Tabs
-      value={selected ?? 'todas'}
-      onValueChange={(v) => onChange(v === 'todas' ? null : (v as StatusAudiencia))}
-    >
-      <TabsList>
-        <TabsTrigger value="todas">
-          Todas
-          <CountBadge>{counts.total}</CountBadge>
-        </TabsTrigger>
-        <TabsTrigger value={StatusAudiencia.Marcada}>
-          Marcadas
-          <CountBadge>{counts.marcadas}</CountBadge>
-        </TabsTrigger>
-        <TabsTrigger value={StatusAudiencia.Finalizada}>
-          Finalizadas
-          <CountBadge>{counts.finalizadas}</CountBadge>
-        </TabsTrigger>
-        <TabsTrigger value={StatusAudiencia.Cancelada}>
-          Canceladas
-          <CountBadge>{counts.canceladas}</CountBadge>
-        </TabsTrigger>
-      </TabsList>
-    </Tabs>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button type="button">
+          <FilterDropdownTrigger
+            label={label}
+            active={!!selected}
+            onClear={selected ? () => onChange(null) : undefined}
+            open={open}
+          />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className={cn(POPOVER_CLASSES, 'w-44')} align="start" side="bottom">
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-0.5 sem token DS */ "p-2 space-y-0.5")}>
+          {STATUS_OPTIONS.map((opt) => {
+            const isSelected = (selected ?? 'todas') === opt.value;
+            return (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => {
+                  onChange(opt.value === 'todas' ? null : (opt.value as StatusAudiencia));
+                  setOpen(false);
+                }}
+                className={cn(
+                  /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
+                  isSelected
+                    ? 'bg-primary/8 text-primary'
+                    : 'hover:bg-muted/30 text-muted-foreground/70',
+                )}
+              >
+                <span className="flex-1 text-left">{opt.label}</span>
+                <span className="tabular-nums text-[9px] opacity-50">{countMap[opt.value]}</span>
+                {isSelected && <Check className="size-3 shrink-0" />}
+              </button>
+            );
+          })}
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }
 
@@ -559,7 +593,7 @@ export function AudienciasFilterBar({
 }: AudienciasFilterBarProps) {
   return (
     <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
-      <StatusTabsFilter
+      <StatusFilter
         selected={filters.status}
         onChange={(status) => onChange({ ...filters, status })}
         counts={counts}
