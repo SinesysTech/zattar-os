@@ -284,6 +284,7 @@ function storageNodeToPlate(node: StorageNode): Descendant | null {
 function plateNodeToStorage(node: Descendant): StorageNode | null {
   if ('text' in node) {
     const n = node as Record<string, unknown>;
+    if (n.text === '\n') return { type: 'hardBreak' };
     const marks: { type: string }[] = [];
     if (n.bold) marks.push({ type: 'bold' });
     if (n.italic) marks.push({ type: 'italic' });
@@ -334,7 +335,7 @@ function plateNodeToStorage(node: Descendant): StorageNode | null {
   return {
     type: storageType,
     ...(Object.keys(attrs).length > 0 && { attrs }),
-    content,
+    ...(content.length > 0 && { content }),
   };
 }
 
