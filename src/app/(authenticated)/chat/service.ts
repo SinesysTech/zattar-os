@@ -719,9 +719,25 @@ export class ChatService {
   /**
    * Deleta uma mensagem (soft delete)
    */
-  async deletarMensagem(id: number, _usuarioId: number): Promise<Result<void, Error>> {
-    // TODO: Verificar se usuário é dono da mensagem
-    void _usuarioId; // Reserved for future authorization check
+  async deletarMensagem(id: number, usuarioId: number): Promise<Result<void, Error>> {
+    // Busca a mensagem para verificar a propriedade
+    const mensagemResult = await this.messagesRepo.findMensagemById(id);
+
+    if (mensagemResult.isErr()) {
+      return err(mensagemResult.error);
+    }
+
+    const mensagem = mensagemResult.value;
+
+    if (!mensagem) {
+      return err(new Error("Mensagem não encontrada."));
+    }
+
+    // Verifica se o usuário é dono da mensagem
+    if (mensagem.usuarioId !== usuarioId) {
+      return err(new Error("Você não tem permissão para deletar esta mensagem."));
+    }
+
     return this.messagesRepo.softDeleteMensagem(id);
   }
 }

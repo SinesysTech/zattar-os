@@ -628,6 +628,30 @@ export class MessagesRepository {
   /**
    * Salva uma nova mensagem
    */
+
+  /**
+   * Busca uma mensagem por ID
+   */
+  async findMensagemById(id: number): Promise<Result<MensagemChat | null, Error>> {
+    try {
+      const { data, error } = await this.supabase
+        .from("mensagens_chat")
+        .select("*")
+        .eq("id", id)
+        .is("deleted_at", null)
+        .single();
+
+      if (error) {
+        if (error.code === 'PGRST116') return ok(null);
+        return err(new Error(`Erro ao buscar mensagem: ${error.message}`));
+      }
+
+      return ok(converterParaMensagemChat(data));
+    } catch {
+      return err(new Error("Erro inesperado ao buscar mensagem."));
+    }
+  }
+
   async saveMensagem(
     input: Partial<MensagemChat>
   ): Promise<Result<MensagemChat, Error>> {
