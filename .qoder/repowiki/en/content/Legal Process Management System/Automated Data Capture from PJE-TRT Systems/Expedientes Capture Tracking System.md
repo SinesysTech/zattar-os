@@ -18,17 +18,22 @@
 - [audiencias.service.ts](file://src/app/(authenticated)/captura/services/trt/audiencias.service.ts)
 - [timeline-capture.service.ts](file://src/app/(authenticated)/captura/services/timeline/timeline-capture.service.ts)
 - [pendentes-persistence.service.ts](file://src/app/(authenticated)/captura/services/persistence/pendentes-persistence.service.ts)
+- [comparison.util.ts](file://src/app/(authenticated)/captura/services/persistence/comparison.util.ts)
 - [20251204140000_add_comunica_cnj_integration.sql](file://supabase/migrations/20251204140000_add_comunica_cnj_integration.sql)
 - [20260427090510_add_ultima_captura_id_to_expedientes.sql](file://supabase/migrations/20260427090510_add_ultima_captura_id_to_expedientes.sql)
+- [20260428220000_fix_expedientes_unique_key.sql](file://supabase/migrations/20260428220000_fix_expedientes_unique_key.sql)
+- [debug-expedientes-trt3-direto.ts](file://scripts/captura/pendentes/debug-expedientes-trt3-direto.ts)
+- [test-expedientes/2026-04-28T20-00-06-091Z_07_relatorio_final.json](file://test-expedientes/2026-04-28T20-00-06-091Z_07_relatorio_final.json)
+- [test-expedientes/2026-04-28T20-00-06-091Z_00_log.txt](file://test-expedientes/2026-04-28T20-00-06-091Z_00_log.txt)
 </cite>
 
 ## Update Summary
 **Changes Made**
-- Added comprehensive documentation for the new ExpedientesUltimaCapturaCard component (168 lines) with glass panel design and animated metrics
-- Documented the component's integration with the ExpedientesContent dashboard
-- Enhanced documentation coverage for the AnimatedNumber primitive and glass panel design system
-- Updated testing framework documentation to include advanced mocking strategies for database operations
-- Added detailed coverage of the component's loading states, skeleton UI, and interactive elements
+- Updated database migration documentation to reflect the fix for expedientes unique key constraints
+- Enhanced persistence service documentation to include composite key handling implementation
+- Added comprehensive debugging infrastructure documentation for expediente capture testing
+- Updated data integrity and auditing sections to reflect new constraint handling
+- Expanded testing framework documentation to include advanced debugging capabilities
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -42,8 +47,9 @@
 9. [Error Handling](#error-handling)
 10. [Security Model](#security-model)
 11. [Testing Framework](#testing-framework)
-12. [Monitoring and Tracking](#monitoring-and-tracking)
-13. [Conclusion](#conclusion)
+12. [Debugging Infrastructure](#debugging-infrastructure)
+13. [Monitoring and Tracking](#monitoring-and-tracking)
+14. [Conclusion](#conclusion)
 
 ## Introduction
 
@@ -51,7 +57,7 @@ The Expedientes Capture Tracking System is a sophisticated legal process automat
 
 This system represents a comprehensive solution for legal practice automation, combining advanced web scraping technologies with robust database management and document storage systems. The platform enables law firms to maintain real-time visibility of their clients' legal proceedings while ensuring compliance with legal requirements and maintaining detailed audit trails.
 
-**Updated** Added new UI components for enhanced user experience, including the sophisticated ExpedientesUltimaCapturaCard with modern glass-morphism design, comprehensive testing framework for complex business logic validation, and advanced mocking strategies for database operations.
+**Updated** Recent enhancements include sophisticated database constraint handling for unique key management, advanced debugging infrastructure for expediente capture testing, and comprehensive composite key support in the persistence layer to handle complex legal data relationships.
 
 ## System Architecture
 
@@ -64,22 +70,26 @@ UI[User Interface]
 API[REST API Endpoints]
 Components[New UI Components]
 Dashboard[ExpedientesContent Dashboard]
+Debug[Debugging Infrastructure]
 end
 subgraph "Business Logic Layer"
 Service[Expedientes Service]
 Capture[Capture Services]
 Persistence[Persistence Services]
 Actions[Server Actions]
+DebugService[Debug Capture Service]
 end
 subgraph "Data Layer"
 Repository[Repository Layer]
 Database[(PostgreSQL Database)]
 Storage[(Backblaze B2 Storage)]
+Migration[Database Migration Engine]
 end
 subgraph "External Systems"
 PJE[PJe-TRT Platform]
 CNJ[Comunica CNJ API]
 Auth[Authentication Services]
+DebugTools[Debug Tools]
 end
 UI --> API
 API --> Service
@@ -92,17 +102,16 @@ Repository --> Storage
 Capture --> PJE
 Capture --> CNJ
 Service --> Auth
-Components --> GlassPanel[Design System Glass Panel]
-Components --> AnimatedNumber[Animated Number Primitives]
-Dashboard --> Components
+Components --> Debug
+DebugService --> DebugTools
+Debug --> Migration
 ```
 
 **Diagram sources**
-- [repository.ts](file://src/app/(authenticated)/expedientes/repository.ts#L1-L800)
+- [repository.ts](file://src/app/(authenticated)/expedientes/repository.ts#L1-L814)
 - [service.ts](file://src/app/(authenticated)/expedientes/service.ts#L1-L322)
-- [expedientes-ultima-captura-card.tsx](file://src/app/(authenticated)/expedientes/components/expedientes-ultima-captura-card.tsx#L1-L168)
-- [expedientes-captura-banner.tsx](file://src/app/(authenticated)/expedientes/components/expedientes-captura-banner.tsx#L1-L76)
-- [expedientes-content.tsx](file://src/app/(authenticated)/expedientes/components/expedientes-content.tsx#L1-L633)
+- [pendentes-persistence.service.ts](file://src/app/(authenticated)/captura/services/persistence/pendentes-persistence.service.ts#L1-L428)
+- [debug-expedientes-trt3-direto.ts:1-836](file://scripts/captura/pendentes/debug-expedientes-trt3-direto.ts#L1-L836)
 
 The architecture implements a clean separation between presentation, business logic, and data management layers, enabling maintainability and scalability while ensuring proper encapsulation of domain-specific logic.
 
@@ -247,7 +256,7 @@ Note over Repository,Database : Database constraints ensure data integrity
 - [repository.ts](file://src/app/(authenticated)/expedientes/repository.ts#L475-L505)
 
 **Section sources**
-- [repository.ts](file://src/app/(authenticated)/expedientes/repository.ts#L1-L800)
+- [repository.ts](file://src/app/(authenticated)/expedientes/repository.ts#L1-L814)
 - [service.ts](file://src/app/(authenticated)/expedientes/service.ts#L1-L322)
 - [domain.ts](file://src/app/(authenticated)/expedientes/domain.ts#L1-L314)
 
@@ -535,9 +544,29 @@ The system implements comprehensive data integrity measures including:
 3. **Transaction Safety**: Employs PostgreSQL functions for atomic operations
 4. **Validation Layers**: Implements multi-tier validation using Zod schemas and database constraints
 
+**Updated** Enhanced constraint handling with composite key support for unique expediente identification:
+
+The system now implements sophisticated composite key handling to address unique key constraint issues:
+
+```mermaid
+flowchart TD
+A[Unique Key Constraint] --> B{Old Constraint}
+B --> C[(id_pje, trt, grau, numero_processo)]
+C --> D[Problem: Multiple Expedientes per Process]
+D --> E[Solution: Composite Keys]
+E --> F[(id_pje, id_documento, trt, grau, data_criacao_expediente)]
+F --> G[NULLS NOT DISTINCT Support]
+G --> H[Handles NULL Values Gracefully]
+H --> I[Allows Multiple Documents per Process]
+```
+
+**Diagram sources**
+- [20260428220000_fix_expedientes_unique_key.sql:1-L25]
+
 **Section sources**
 - [repository.ts](file://src/app/(authenticated)/expedientes/repository.ts#L507-L625)
 - [pendentes-persistence.service.ts](file://src/app/(authenticated)/captura/services/persistence/pendentes-persistence.service.ts#L216-L280)
+- [20260428220000_fix_expedientes_unique_key.sql:1-25](file://supabase/migrations/20260428220000_fix_expedientes_unique_key.sql#L1-L25)
 
 ## Integration Points
 
@@ -819,6 +848,66 @@ The new component includes comprehensive testing coverage:
 - [resumo-ultima-captura.test.ts](file://src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts#L1-L140)
 - [expedientes-flow.test.ts](file://src/app/(authenticated)/expedientes/__tests__/integration/expedientes-flow.test.ts#L1-L631)
 
+## Debugging Infrastructure
+
+### Advanced Debugging Script for Expediente Capture Testing
+
+The system now includes sophisticated debugging infrastructure specifically designed for expediente capture testing and validation:
+
+```mermaid
+flowchart TD
+A[Debug Script Execution] --> B[Configuration Loading]
+B --> C[Browser Initialization]
+C --> D[Authentication Flow]
+D --> E[Data Extraction]
+E --> F[Duplicates Analysis]
+F --> G[Database Comparison]
+G --> H[Report Generation]
+H --> I[Output Files Creation]
+I --> J[Debug Log Generation]
+```
+
+**Diagram sources**
+- [debug-expedientes-trt3-direto.ts:669-L836]
+
+#### Debug Script Capabilities
+
+The debug script provides comprehensive diagnostic capabilities:
+
+1. **Direct PJe-TRT Integration**: Operates directly via Playwright without HTTP API overhead
+2. **Duplicate Detection**: Identifies and analyzes duplicate expediente IDs
+3. **Database Comparison**: Compares captured data with existing database records
+4. **Multi-Format Output**: Generates structured JSON reports and detailed logs
+5. **Real-time Monitoring**: Provides live feedback during debugging sessions
+
+#### Debug Script Features
+
+The debugging infrastructure includes:
+
+- **TRT3 Configuration Management**: Handles tribunal-specific configuration loading
+- **Credential Management**: Secure credential retrieval and OTP integration
+- **Authentication Flow**: Complete SSO authentication bypass with anti-detection measures
+- **Data Extraction**: Comprehensive process listing with pagination support
+- **Analysis Engine**: Advanced duplicate detection and comparison algorithms
+- **Reporting System**: Structured output generation with timestamped filenames
+
+#### Debug Output Structure
+
+The debug system generates comprehensive output files:
+
+1. **Configuration Files**: `*_config_trt3.json` - Tribunal configuration data
+2. **Process Data**: `*_processos.json` - Raw process information
+3. **Pagination Data**: `*_paginas_raw.json` - Pagination structure analysis
+4. **Duplicate Analysis**: `*_analise_duplicatas.json` - Duplicate detection results
+5. **Database Comparison**: `*_comparacao_banco.json` - Database vs capture comparison
+6. **Final Report**: `*_relatorio_final.json` - Comprehensive debugging report
+7. **Execution Log**: `*_log.txt` - Complete execution timeline and debug information
+
+**Section sources**
+- [debug-expedientes-trt3-direto.ts:1-836](file://scripts/captura/pendentes/debug-expedientes-trt3-direto.ts#L1-L836)
+- [test-expedientes/2026-04-28T20-00-06-091Z_07_relatorio_final.json:1-26](file://test-expedientes/2026-04-28T20-00-06-091Z_07_relatorio_final.json#L1-L26)
+- [test-expedientes/2026-04-28T20-00-06-091Z_00_log.txt:1-76](file://test-expedientes/2026-04-28T20-00-06-091Z_00_log.txt#L1-L76)
+
 ## Monitoring and Tracking
 
 ### Capture Execution Tracking
@@ -880,9 +969,11 @@ Key achievements of the system include:
 - **Enhanced UI Components**: Modern glass-morphism design system with animated primitives
 - **Advanced Testing Framework**: Comprehensive unit and integration testing for complex business logic
 - **Real-time Dashboard Widgets**: Interactive components like ExpedientesUltimaCapturaCard for operational visibility
+- **Sophisticated Debugging Infrastructure**: Advanced diagnostic tools for expediente capture validation
+- **Composite Key Constraint Handling**: Robust unique key management for complex legal data relationships
 
 The system's modular architecture enables future enhancements and extensions while maintaining stability and reliability. The implementation demonstrates best practices in enterprise software development, particularly in handling sensitive data and complex business logic within the legal domain.
 
-**Updated** Recent additions include sophisticated UI components with modern design system integration, comprehensive testing frameworks with advanced mocking strategies, enhanced documentation coverage for complex business logic validation, and seamless integration between dashboard widgets and server-side data fetching.
+**Updated** Recent enhancements include sophisticated database constraint handling for unique key management, advanced debugging infrastructure for expediente capture testing, and comprehensive composite key support in the persistence layer to handle complex legal data relationships. These improvements significantly enhance the system's reliability, data integrity, and diagnostic capabilities.
 
 Future development opportunities include enhanced AI-powered document analysis, expanded integration with additional legal platforms, advanced analytics capabilities for legal practice management, further enhancement of the testing framework for even more complex scenarios, and expansion of the glass-morphism design system to cover additional dashboard components.
