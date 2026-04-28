@@ -7,7 +7,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
 import { X } from "lucide-react";
-import { DialogFormShell } from "@/components/shared/dialog-shell";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AppBadge as Badge } from "@/components/ui/app-badge";
@@ -154,21 +160,15 @@ export function CriarGrupoDialog({ open, onOpenChange, onGrupoCreated }: CriarGr
   };
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title="Criar Grupo"
-      maxWidth="md"
-      footer={
-        <Button
-          type="submit"
-          form="criar-grupo-form"
-          disabled={isPending || membrosSelecionados.length === 0}
-        >
-          {isPending ? "Criando..." : "Criar Grupo"}
-        </Button>
-      }
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="sm:max-w-md glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>Criar Grupo</DialogTitle>
+        </DialogHeader>
+        <DialogBody>
       <Form {...form}>
         <form
           id="criar-grupo-form"
@@ -234,6 +234,20 @@ export function CriarGrupoDialog({ open, onOpenChange, onGrupoCreated }: CriarGr
           </div>
         </form>
       </Form>
-    </DialogFormShell>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            <Button
+              type="submit"
+              form="criar-grupo-form"
+              disabled={isPending || membrosSelecionados.length === 0}
+            >
+              {isPending ? "Criando..." : "Criar Grupo"}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

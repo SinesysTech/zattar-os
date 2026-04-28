@@ -8,7 +8,8 @@ import { toast } from 'sonner';
 import { ArrowRight, ArrowLeft} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { Progress } from '@/components/ui/progress';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody } from '@/components/ui/dialog';
 import { TemplateFormFields } from './template-form-fields';
 import { MarkdownRichTextEditor } from '../editor/MarkdownRichTextEditor';
 import { PdfUploadField, type PdfUploadValue } from '../editor/pdf-upload-field';
@@ -206,103 +207,124 @@ export function TemplateCreateDialog({
       : null;
 
   // Largura dinâmica: etapa 2 com markdown precisa de mais espaço
-  const maxWidth = step === 2 && tipoTemplate === 'markdown' ? '4xl' as const : '2xl' as const;
+  const maxWidthClass = step === 2 && tipoTemplate === 'markdown' ? 'sm:max-w-4xl' : 'sm:max-w-2xl';
 
-  // Footer dinâmico por etapa
-  const footer = step === 1 ? (
-    <Button type="button" onClick={handleNext}>
-      Próximo
-      <ArrowRight className="ml-2 h-4 w-4" />
-    </Button>
-  ) : (
-    <>
-      <Button type="button" variant="outline" onClick={handleBack}>
-        <ArrowLeft className="mr-2 h-4 w-4" />
-        Voltar
-      </Button>
-      <Button
-        type="submit"
-        form="template-create-form"
-        disabled={!canSubmit}
-      >
-        {isSubmitting && <LoadingSpinner className="mr-2" />}
-        Criar Template
-      </Button>
-    </>
-  );
+  const total = 2;
+  const current = step;
+  const progressValue = total <= 1 ? 100 : ((current - 1) / (total - 1)) * 100;
+  const stepTitle = STEP_TITLES[step - 1];
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title="Criar Novo Template"
-      maxWidth={maxWidth}
-      multiStep={{
-        current: step,
-        total: 2,
-        stepTitle: STEP_TITLES[step - 1],
-      }}
-      footer={footer}
-    >
-      {isLoadingSegmentos ? (
-        <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex items-center justify-center py-8")}>
-          <LoadingSpinner className="size-8 text-muted-foreground" />
-        </div>
-      ) : (
-        <form
-          id="template-create-form"
-          onSubmit={handleSubmit(onSubmit)}
-          className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}
-        >
-          {/* Etapa 1: Informações do Template */}
-          {step === 1 && (
-            <TemplateFormFields
-              form={form}
-              tipoTemplate={tipoTemplate}
-              onTipoTemplateChange={handleTipoTemplateChange}
-              segmentos={segmentos}
-              isSubmitting={isSubmitting}
-              hideContent
-            />
-          )}
-
-          {/* Etapa 2: Conteúdo */}
-          {step === 2 && (
-            <>
-              {tipoTemplate === 'markdown' && (
-                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
-                  <Label htmlFor="conteudo_markdown">
-                    Conteúdo Markdown <span className="text-destructive">*</span>
-                  </Label>
-                  <MarkdownRichTextEditor
-                    value={watchedValues.conteudo_markdown || ''}
-                    onChange={(value) => setValue('conteudo_markdown', value)}
-                    formularios={[]}
-                  />
-                  {form.formState.errors.conteudo_markdown && (
-                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
-                      {form.formState.errors.conteudo_markdown.message as string}
-                    </p>
-                  )}
-                </div>
-              )}
-
-              {tipoTemplate === 'pdf' && (
-                <PdfUploadField
-                  value={pdfValue}
-                  onChange={handlePdfChange}
-                  disabled={isSubmitting}
-                  error={
-                    (form.formState.errors.pdf_url?.message as string) ||
-                    (form.formState.errors.arquivo_original?.message as string)
-                  }
-                  required
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        data-density="comfortable"
+        className={cn(
+          "glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col",
+          maxWidthClass
+        )}
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle className="text-card-title">Criar Novo Template</DialogTitle>
+          <DialogDescription className="sr-only">Wizard de criação de template em 2 etapas.</DialogDescription>
+          <div className="mt-3 space-y-1.5">
+            <div className="flex items-center justify-between gap-4">
+              {stepTitle && <span className="text-overline text-foreground/80 truncate">{stepTitle}</span>}
+              <span className="text-micro-caption text-muted-foreground shrink-0">
+                Etapa {current} de {total}
+              </span>
+            </div>
+            <Progress value={progressValue} className="h-1.5" />
+          </div>
+        </DialogHeader>
+        <DialogBody>
+          {isLoadingSegmentos ? (
+            <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex items-center justify-center py-8")}>
+              <LoadingSpinner className="size-8 text-muted-foreground" />
+            </div>
+          ) : (
+            <form
+              id="template-create-form"
+              onSubmit={handleSubmit(onSubmit)}
+              className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}
+            >
+              {/* Etapa 1: Informações do Template */}
+              {step === 1 && (
+                <TemplateFormFields
+                  form={form}
+                  tipoTemplate={tipoTemplate}
+                  onTipoTemplateChange={handleTipoTemplateChange}
+                  segmentos={segmentos}
+                  isSubmitting={isSubmitting}
+                  hideContent
                 />
               )}
-            </>
+
+              {/* Etapa 2: Conteúdo */}
+              {step === 2 && (
+                <>
+                  {tipoTemplate === 'markdown' && (
+                    <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+                      <Label htmlFor="conteudo_markdown">
+                        Conteúdo Markdown <span className="text-destructive">*</span>
+                      </Label>
+                      <MarkdownRichTextEditor
+                        value={watchedValues.conteudo_markdown || ''}
+                        onChange={(value) => setValue('conteudo_markdown', value)}
+                        formularios={[]}
+                      />
+                      {form.formState.errors.conteudo_markdown && (
+                        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
+                          {form.formState.errors.conteudo_markdown.message as string}
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  {tipoTemplate === 'pdf' && (
+                    <PdfUploadField
+                      value={pdfValue}
+                      onChange={handlePdfChange}
+                      disabled={isSubmitting}
+                      error={
+                        (form.formState.errors.pdf_url?.message as string) ||
+                        (form.formState.errors.arquivo_original?.message as string)
+                      }
+                      required
+                    />
+                  )}
+                </>
+              )}
+            </form>
           )}
-        </form>
-      )}
-    </DialogFormShell>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            {step === 1 ? (
+              <Button type="button" onClick={handleNext}>
+                Próximo
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            ) : (
+              <>
+                <Button type="button" variant="outline" onClick={handleBack}>
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Voltar
+                </Button>
+                <Button
+                  type="submit"
+                  form="template-create-form"
+                  disabled={!canSubmit}
+                >
+                  {isSubmitting && <LoadingSpinner className="mr-2" />}
+                  Criar Template
+                </Button>
+              </>
+            )}
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

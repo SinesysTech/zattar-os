@@ -5,7 +5,7 @@ import * as React from 'react';
 import { useActionState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { actionBulkBaixar, type ActionResult } from '../actions';
@@ -99,37 +99,48 @@ export function ExpedientesBulkBaixarDialog({
   );
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title={`Baixar ${expedienteIds.length} ${expedienteIds.length === 1 ? 'Expediente' : 'Expedientes'}`}
-      maxWidth="md"
-      footer={footerButtons}
-    >
-      <form id="bulk-baixar-form" onSubmit={handleSubmit} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-        <BulkSelectionPreview expedientes={selectedExpedientes} />
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-          <Label htmlFor="justificativaBaixa">
-            Justificativa da Baixa <span className="text-destructive">*</span>
-          </Label>
-          <Textarea
-            id="justificativaBaixa"
-            value={justificativa}
-            onChange={(e) => setJustificativa(e.target.value)}
-            placeholder="Informe a justificativa para a baixa dos expedientes selecionados..."
-            className="resize-none min-h-[100px]"
-            disabled={isPending}
-            required
-          />
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
-            Esta justificativa será aplicada a todos os {expedienteIds.length} expediente(s) selecionado(s).
-          </p>
-          {generalError && (
-            <p role="alert" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}>{generalError}</p>
-          )}
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        data-density="comfortable"
+        className="sm:max-w-md glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>{`Baixar ${expedienteIds.length} ${expedienteIds.length === 1 ? 'Expediente' : 'Expedientes'}`}</DialogTitle>
+        </DialogHeader>
+        <DialogBody>
+          <form id="bulk-baixar-form" onSubmit={handleSubmit} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+            <BulkSelectionPreview expedientes={selectedExpedientes} />
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <Label htmlFor="justificativaBaixa">
+                Justificativa da Baixa <span className="text-destructive">*</span>
+              </Label>
+              <Textarea
+                id="justificativaBaixa"
+                value={justificativa}
+                onChange={(e) => setJustificativa(e.target.value)}
+                placeholder="Informe a justificativa para a baixa dos expedientes selecionados..."
+                className="resize-none min-h-25"
+                disabled={isPending}
+                required
+              />
+              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                Esta justificativa será aplicada a todos os {expedienteIds.length} expediente(s) selecionado(s).
+              </p>
+              {generalError && (
+                <p role="alert" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}>{generalError}</p>
+              )}
+            </div>
+          </form>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            {footerButtons}
+          </div>
         </div>
-      </form>
-    </DialogFormShell>
+      </DialogContent>
+    </Dialog>
   );
 }
 

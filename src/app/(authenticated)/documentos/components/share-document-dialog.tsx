@@ -9,14 +9,13 @@ import * as React from 'react';
 import { Search, UserPlus, X, Users, Mail, Trash2, Shield} from 'lucide-react';
 import { Text } from '@/components/ui/typography';
 import {
-  ResponsiveDialog,
-  ResponsiveDialogContent,
-  ResponsiveDialogDescription,
-  ResponsiveDialogFooter,
-  ResponsiveDialogHeader,
-  ResponsiveDialogTitle,
-  ResponsiveDialogBody,
-} from '@/components/ui/responsive-dialog';
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -192,19 +191,22 @@ export function ShareDocumentDialog({
   };
 
   return (
-    <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
-      <ResponsiveDialogContent className="sm:max-w-lg">
-        <ResponsiveDialogHeader>
-          <ResponsiveDialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className={cn(/* design-system-escape: p-0 gap-0 → usar <Inset> */ "sm:max-w-lg glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col")}
+      >
+        <DialogHeader className={cn(/* design-system-escape: px-6 py-4 → usar <Inset> */ "px-6 py-4 border-b border-border/20 shrink-0")}>
+          <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <Users className="h-5 w-5" />
             Compartilhar documento
-          </ResponsiveDialogTitle>
-          <ResponsiveDialogDescription>
+          </DialogTitle>
+          <DialogDescription>
             {documentoTitulo ? `Compartilhe "${documentoTitulo}" com outros usuários` : 'Adicione pessoas que podem acessar este documento'}
-          </ResponsiveDialogDescription>
-        </ResponsiveDialogHeader>
+          </DialogDescription>
+        </DialogHeader>
 
-        <ResponsiveDialogBody>
+        <DialogBody>
           <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             {/* Busca de usuários */}
             <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
@@ -443,14 +445,15 @@ export function ShareDocumentDialog({
               )}
             </div>
           </div>
-        </ResponsiveDialogBody>
+        </DialogBody>
 
-        <ResponsiveDialogFooter>
+        <div className={cn(/* design-system-escape: px-6 py-4 → usar <Inset> */ "px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2")}>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Fechar
           </Button>
-        </ResponsiveDialogFooter>
-      </ResponsiveDialogContent>
-    </ResponsiveDialog>
+          <div className="flex items-center gap-2" />
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

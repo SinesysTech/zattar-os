@@ -4,7 +4,14 @@ import * as React from 'react';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogBody,
+} from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 
 interface EditableTextCellProps {
@@ -71,13 +78,28 @@ export function EditableTextCell({
                 </div>
             </div>
 
-            <DialogFormShell
-                open={isOpen}
-                onOpenChange={setIsOpen}
-                title={title}
-                maxWidth="md"
-                footer={
-                    <div className="flex justify-end gap-2 w-full">
+            <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                <DialogContent
+                    showCloseButton={false}
+                    className="sm:max-w-md glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+                >
+                    <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+                        <DialogTitle>{title}</DialogTitle>
+                        <DialogDescription className="sr-only">Edite o texto e salve as alterações</DialogDescription>
+                    </DialogHeader>
+                    <DialogBody>
+                        <div className="px-6 py-4">
+                            <Textarea
+                                value={text}
+                                onChange={(e) => setText(e.target.value)}
+                                placeholder={placeholder}
+                                className="resize-none min-h-37.5"
+                                disabled={isLoading}
+                                autoFocus
+                            />
+                        </div>
+                    </DialogBody>
+                    <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
                         <Button
                             variant="outline"
                             onClick={() => setIsOpen(false)}
@@ -85,27 +107,18 @@ export function EditableTextCell({
                         >
                             Cancelar
                         </Button>
-                        <Button
-                            onClick={handleSave}
-                            disabled={isLoading}
-                        >
-                            {isLoading && <Loader2 className="mr-2 size-4 animate-spin" />}
-                            Salvar
-                        </Button>
+                        <div className="flex items-center gap-2">
+                            <Button
+                                onClick={handleSave}
+                                disabled={isLoading}
+                            >
+                                {isLoading && <Loader2 className="mr-2 size-4 animate-spin" />}
+                                Salvar
+                            </Button>
+                        </div>
                     </div>
-                }
-            >
-                <div className="py-2">
-                    <Textarea
-                        value={text}
-                        onChange={(e) => setText(e.target.value)}
-                        placeholder={placeholder}
-                        className="resize-none min-h-37.5"
-                        disabled={isLoading}
-                        autoFocus
-                    />
-                </div>
-            </DialogFormShell>
+                </DialogContent>
+            </Dialog>
         </>
     );
 }

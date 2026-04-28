@@ -239,6 +239,7 @@ export function UsuarioEditDialog({
   };
 
   return (
+    <>
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
@@ -665,19 +666,21 @@ export function UsuarioEditDialog({
           </div>
         </div>
       </DialogContent>
-      {/* Avatar Edit Dialog */}
-      <AvatarEditDialog
-        open={avatarDialogOpen}
-        onOpenChange={setAvatarDialogOpen}
-        usuarioId={usuario.id}
-        avatarUrl={currentAvatarUrl}
-        nomeExibicao={formData.nomeExibicao || usuario.nomeExibicao}
-        onSuccess={() => {
-          // Atualiza o avatar localmente após sucesso
-          setCurrentAvatarUrl(getAvatarUrl(usuario.avatarUrl) + `?t=${Date.now()}`);
-          onSuccess?.();
-        }}
-      />
     </Dialog>
+
+    {/* Avatar Edit Dialog */}
+    <AvatarEditDialog
+      open={avatarDialogOpen}
+      onOpenChange={setAvatarDialogOpen}
+      usuarioId={usuario.id}
+      avatarUrl={currentAvatarUrl}
+      nomeExibicao={formData.nomeExibicao || usuario.nomeExibicao}
+      onSuccess={() => {
+        // Atualiza o avatar localmente após sucesso
+        setCurrentAvatarUrl(getAvatarUrl(usuario.avatarUrl) + `?t=${Date.now()}`);
+        onSuccess?.();
+      }}
+    />
+    </>
   );
 }

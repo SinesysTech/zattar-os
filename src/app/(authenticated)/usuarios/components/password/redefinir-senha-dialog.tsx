@@ -8,7 +8,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Text } from '@/components/ui/typography';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogBody,
+} from '@/components/ui/dialog';
 import { Eye, EyeOff, CheckCircle2} from 'lucide-react';
 import { actionRedefinirSenha } from '../../actions/senha-actions';
 import type { Usuario } from '../../domain';
@@ -118,28 +125,19 @@ export function RedefinirSenhaDialog({
   if (!usuario) return null;
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title="Redefinir Senha"
-      description={(
-        <>
-          Digite a nova senha para o usuário <strong>{usuario.nomeExibicao}</strong>.
-          A senha deve ter no mínimo 8 caracteres.
-        </>
-      )}
-      maxWidth="2xl"
-      footer={
-        <Button
-          type="submit"
-          onClick={() => formRef.current?.requestSubmit()}
-          disabled={isLoading || !!successMessage}
-        >
-          {isLoading && <LoadingSpinner className="mr-2" />}
-          Redefinir Senha
-        </Button>
-      }
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="sm:max-w-2xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>Redefinir Senha</DialogTitle>
+          <DialogDescription>
+            Digite a nova senha para o usuário <strong>{usuario.nomeExibicao}</strong>.
+            A senha deve ter no mínimo 8 caracteres.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogBody>
       <form ref={formRef} onSubmit={handleSubmit} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; p-6 → migrar para <Inset variant="dialog"> */ "space-y-4 p-6")}>
         {error && (
           <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-3 text-sm text-destructive")}>
@@ -215,6 +213,21 @@ export function RedefinirSenhaDialog({
           </div>
         </div>
       </form>
-    </DialogFormShell>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            <Button
+              type="submit"
+              onClick={() => formRef.current?.requestSubmit()}
+              disabled={isLoading || !!successMessage}
+            >
+              {isLoading && <LoadingSpinner className="mr-2" />}
+              Redefinir Senha
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

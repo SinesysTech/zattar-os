@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { DialogFormShell } from '@/components/shared/dialog-shell/dialog-form-shell';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -318,303 +318,313 @@ export function FormularioEditDialog({
   if (!formulario) return null;
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title="Editar Formulário"
-      maxWidth="2xl"
-      footer={
-        <Button type="submit" form="formulario-edit-form" disabled={isSubmitting}>
-          {isSubmitting && <LoadingSpinner className="mr-2" />}
-          Salvar Alterações
-        </Button>
-      }
-    >
-      <form id="formulario-edit-form" onSubmit={handleSubmit(onSubmit)} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; p-6 → migrar para <Inset variant="dialog"> */ "space-y-4 p-6")}>
-        {Object.keys(errors).length > 0 && (
-          <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-3 text-sm text-destructive")}>
-            Corrija os erros no formulário antes de continuar.
-          </div>
-        )}
-
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-          <Label htmlFor="edit-nome">
-            Nome <span className="text-destructive">*</span>
-          </Label>
-          <Input
-            id="edit-nome"
-            {...register('nome', { onBlur: handleNomeBlur })}
-            placeholder="Nome do formulário"
-            disabled={isSubmitting}
-          />
-          {errors.nome && <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.nome.message}</p>}
-        </div>
-
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-          <Label htmlFor="edit-slug">
-            Slug <span className="text-destructive">*</span>
-          </Label>
-          <Input
-            id="edit-slug"
-            {...register('slug')}
-            placeholder="Slug único"
-            disabled={isSubmitting}
-          />
-          {errors.slug && <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.slug.message}</p>}
-        </div>
-
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-          <Label>
-            Segmento <span className="text-destructive">*</span>
-          </Label>
-          <Combobox
-            options={segmentoOptions}
-            value={segmentoId ? [segmentoId] : []}
-            onValueChange={(vals) => setSegmentoId(vals[0] || '')}
-            placeholder="Selecione um segmento"
-            multiple={false}
-            disabled={isSubmitting}
-          />
-          {errors.segmento_id && (
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.segmento_id.message}</p>
-          )}
-        </div>
-
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-          <Label htmlFor="edit-descricao">Descrição</Label>
-          <Textarea
-            id="edit-descricao"
-            {...register('descricao')}
-            placeholder="Descrição opcional do formulário"
-            disabled={isSubmitting}
-          />
-          {errors.descricao && (
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.descricao.message}</p>
-          )}
-        </div>
-
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-          <Label>Templates</Label>
-          <Combobox
-            options={templateOptions}
-            value={templateIds}
-            onValueChange={setTemplateIds}
-            placeholder="Selecione templates (opcional)"
-            multiple={true}
-            disabled={isSubmitting}
-          />
-          {templateIds.length > 0 && (
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; pt-1 padding direcional sem Inset equiv. */ "flex flex-wrap gap-1.5 pt-1")}>
-              {templateIds.map((templateUuid) => {
-                const template = templates.find((t) => t.template_uuid === templateUuid);
-                return (
-                  <Badge key={templateUuid} variant="secondary" className={cn(/* design-system-escape: gap-1 gap sem token DS; pr-1 padding direcional sem Inset equiv. */ "gap-1 pr-1")}>
-                    <span className="truncate max-w-37.5">
-                      {template?.nome || templateUuid}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setTemplateIds(templateIds.filter((id) => id !== templateUuid))}
-                      className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-0.5 rounded-full p-0.5 hover:bg-muted-foreground/20")}
-                      disabled={isSubmitting}
-                    >
-                      <X className="h-3 w-3" />
-                      <span className="sr-only">Remover {template?.nome || 'template'}</span>
-                    </button>
-                  </Badge>
-                );
-              })}
-            </div>
-          )}
-        </div>
-
-        {/* Tipo de formulário */}
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-          <Label htmlFor="edit-tipo_formulario">Tipo de Formulário</Label>
-          <select
-            id="edit-tipo_formulario"
-            className={SELECT_CLASS}
-            disabled={isSubmitting}
-            value={tipoFormulario ?? ''}
-            onChange={(e) => {
-              const val = e.target.value;
-              setValue(
-                'tipo_formulario',
-                val === '' ? null : (val as 'contrato' | 'documento' | 'cadastro'),
-              );
-            }}
-          >
-            <option value="">Selecione o tipo (opcional)</option>
-            <option value="contrato">Contrato</option>
-            <option value="documento">Documento</option>
-            <option value="cadastro">Cadastro</option>
-          </select>
-        </div>
-
-        {/* Campos de configuração de contrato */}
-        {tipoFormulario === 'contrato' && (
-          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; p-4 → migrar para <Inset variant="card-compact"> */ "space-y-4 rounded-md border p-4")}>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground")}>
-              Configuração do Contrato
-            </p>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        data-density="comfortable"
+        className="sm:max-w-2xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>Editar Formulário</DialogTitle>
+          <DialogDescription className="sr-only">Edite as informações do formulário.</DialogDescription>
+        </DialogHeader>
+        <DialogBody>
+          <form id="formulario-edit-form" onSubmit={handleSubmit(onSubmit)} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; p-6 → migrar para <Inset variant="dialog"> */ "space-y-4 p-6")}>
+            {Object.keys(errors).length > 0 && (
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-3 text-sm text-destructive")}>
+                Corrija os erros no formulário antes de continuar.
+              </div>
+            )}
 
             <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-              <Label htmlFor="edit-tipo_contrato_id">
-                Tipo de Contrato <span className="text-destructive">*</span>
+              <Label htmlFor="edit-nome">
+                Nome <span className="text-destructive">*</span>
               </Label>
-              <select
-                id="edit-tipo_contrato_id"
-                className={SELECT_CLASS}
-                disabled={isSubmitting || loadingOptions}
-                {...register('contrato_config.tipo_contrato_id')}
-              >
-                <option value="">
-                  {loadingOptions ? 'Carregando...' : 'Selecione o tipo de contrato'}
-                </option>
-                {tiposContrato.map((t) => (
-                  <option key={t.id} value={t.id}>
-                    {t.nome}
-                  </option>
-                ))}
-              </select>
-              {errors.contrato_config?.tipo_contrato_id && (
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
-                  {errors.contrato_config.tipo_contrato_id.message}
-                </p>
+              <Input
+                id="edit-nome"
+                {...register('nome', { onBlur: handleNomeBlur })}
+                placeholder="Nome do formulário"
+                disabled={isSubmitting}
+              />
+              {errors.nome && <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.nome.message}</p>}
+            </div>
+
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <Label htmlFor="edit-slug">
+                Slug <span className="text-destructive">*</span>
+              </Label>
+              <Input
+                id="edit-slug"
+                {...register('slug')}
+                placeholder="Slug único"
+                disabled={isSubmitting}
+              />
+              {errors.slug && <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.slug.message}</p>}
+            </div>
+
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <Label>
+                Segmento <span className="text-destructive">*</span>
+              </Label>
+              <Combobox
+                options={segmentoOptions}
+                value={segmentoId ? [segmentoId] : []}
+                onValueChange={(vals) => setSegmentoId(vals[0] || '')}
+                placeholder="Selecione um segmento"
+                multiple={false}
+                disabled={isSubmitting}
+              />
+              {errors.segmento_id && (
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.segmento_id.message}</p>
               )}
             </div>
 
             <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-              <Label htmlFor="edit-tipo_cobranca_id">
-                Tipo de Cobrança <span className="text-destructive">*</span>
-              </Label>
-              <select
-                id="edit-tipo_cobranca_id"
-                className={SELECT_CLASS}
-                disabled={isSubmitting || loadingOptions}
-                {...register('contrato_config.tipo_cobranca_id')}
-              >
-                <option value="">
-                  {loadingOptions ? 'Carregando...' : 'Selecione o tipo de cobrança'}
-                </option>
-                {tiposCobranca.map((t) => (
-                  <option key={t.id} value={t.id}>
-                    {t.nome}
-                  </option>
-                ))}
-              </select>
-              {errors.contrato_config?.tipo_cobranca_id && (
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
-                  {errors.contrato_config.tipo_cobranca_id.message}
-                </p>
+              <Label htmlFor="edit-descricao">Descrição</Label>
+              <Textarea
+                id="edit-descricao"
+                {...register('descricao')}
+                placeholder="Descrição opcional do formulário"
+                disabled={isSubmitting}
+              />
+              {errors.descricao && (
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.descricao.message}</p>
               )}
             </div>
 
             <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-              <Label htmlFor="edit-papel_cliente">
-                Papel do Cliente <span className="text-destructive">*</span>
-              </Label>
+              <Label>Templates</Label>
+              <Combobox
+                options={templateOptions}
+                value={templateIds}
+                onValueChange={setTemplateIds}
+                placeholder="Selecione templates (opcional)"
+                multiple={true}
+                disabled={isSubmitting}
+              />
+              {templateIds.length > 0 && (
+                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; pt-1 padding direcional sem Inset equiv. */ "flex flex-wrap gap-1.5 pt-1")}>
+                  {templateIds.map((templateUuid) => {
+                    const template = templates.find((t) => t.template_uuid === templateUuid);
+                    return (
+                      <Badge key={templateUuid} variant="secondary" className={cn(/* design-system-escape: gap-1 gap sem token DS; pr-1 padding direcional sem Inset equiv. */ "gap-1 pr-1")}>
+                        <span className="truncate max-w-37.5">
+                          {template?.nome || templateUuid}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setTemplateIds(templateIds.filter((id) => id !== templateUuid))}
+                          className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-0.5 rounded-full p-0.5 hover:bg-muted-foreground/20")}
+                          disabled={isSubmitting}
+                        >
+                          <X className="h-3 w-3" />
+                          <span className="sr-only">Remover {template?.nome || 'template'}</span>
+                        </button>
+                      </Badge>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Tipo de formulário */}
+            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <Label htmlFor="edit-tipo_formulario">Tipo de Formulário</Label>
               <select
-                id="edit-papel_cliente"
+                id="edit-tipo_formulario"
                 className={SELECT_CLASS}
                 disabled={isSubmitting}
-                {...register('contrato_config.papel_cliente')}
+                value={tipoFormulario ?? ''}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setValue(
+                    'tipo_formulario',
+                    val === '' ? null : (val as 'contrato' | 'documento' | 'cadastro'),
+                  );
+                }}
               >
-                <option value="">Selecione o papel do cliente</option>
-                <option value="autora">Autora</option>
-                <option value="re">Ré</option>
+                <option value="">Selecione o tipo (opcional)</option>
+                <option value="contrato">Contrato</option>
+                <option value="documento">Documento</option>
+                <option value="cadastro">Cadastro</option>
               </select>
-              {errors.contrato_config?.papel_cliente && (
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
-                  {errors.contrato_config.papel_cliente.message}
-                </p>
-              )}
             </div>
 
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-              <Label htmlFor="edit-pipeline_id">
-                Pipeline <span className="text-destructive">*</span>
+            {/* Campos de configuração de contrato */}
+            {tipoFormulario === 'contrato' && (
+              <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; p-4 → migrar para <Inset variant="card-compact"> */ "space-y-4 rounded-md border p-4")}>
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground")}>
+                  Configuração do Contrato
+                </p>
+
+                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                  <Label htmlFor="edit-tipo_contrato_id">
+                    Tipo de Contrato <span className="text-destructive">*</span>
+                  </Label>
+                  <select
+                    id="edit-tipo_contrato_id"
+                    className={SELECT_CLASS}
+                    disabled={isSubmitting || loadingOptions}
+                    {...register('contrato_config.tipo_contrato_id')}
+                  >
+                    <option value="">
+                      {loadingOptions ? 'Carregando...' : 'Selecione o tipo de contrato'}
+                    </option>
+                    {tiposContrato.map((t) => (
+                      <option key={t.id} value={t.id}>
+                        {t.nome}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.contrato_config?.tipo_contrato_id && (
+                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
+                      {errors.contrato_config.tipo_contrato_id.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                  <Label htmlFor="edit-tipo_cobranca_id">
+                    Tipo de Cobrança <span className="text-destructive">*</span>
+                  </Label>
+                  <select
+                    id="edit-tipo_cobranca_id"
+                    className={SELECT_CLASS}
+                    disabled={isSubmitting || loadingOptions}
+                    {...register('contrato_config.tipo_cobranca_id')}
+                  >
+                    <option value="">
+                      {loadingOptions ? 'Carregando...' : 'Selecione o tipo de cobrança'}
+                    </option>
+                    {tiposCobranca.map((t) => (
+                      <option key={t.id} value={t.id}>
+                        {t.nome}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.contrato_config?.tipo_cobranca_id && (
+                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
+                      {errors.contrato_config.tipo_cobranca_id.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                  <Label htmlFor="edit-papel_cliente">
+                    Papel do Cliente <span className="text-destructive">*</span>
+                  </Label>
+                  <select
+                    id="edit-papel_cliente"
+                    className={SELECT_CLASS}
+                    disabled={isSubmitting}
+                    {...register('contrato_config.papel_cliente')}
+                  >
+                    <option value="">Selecione o papel do cliente</option>
+                    <option value="autora">Autora</option>
+                    <option value="re">Ré</option>
+                  </select>
+                  {errors.contrato_config?.papel_cliente && (
+                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
+                      {errors.contrato_config.papel_cliente.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                  <Label htmlFor="edit-pipeline_id">
+                    Pipeline <span className="text-destructive">*</span>
+                  </Label>
+                  <select
+                    id="edit-pipeline_id"
+                    className={SELECT_CLASS}
+                    disabled={isSubmitting || !segmentoId}
+                    {...register('contrato_config.pipeline_id')}
+                  >
+                    <option value="">
+                      {!segmentoId
+                        ? 'Selecione um segmento primeiro'
+                        : pipelines.length === 0
+                          ? 'Nenhum pipeline disponível'
+                          : 'Selecione o pipeline'}
+                    </option>
+                    {pipelines.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.nome}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.contrato_config?.pipeline_id && (
+                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
+                      {errors.contrato_config.pipeline_id.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+              <Switch
+                id="edit-foto_necessaria"
+                checked={watch('foto_necessaria')}
+                onCheckedChange={(checked) => setValue('foto_necessaria', checked)}
+                disabled={isSubmitting}
+              />
+              <Label htmlFor="edit-foto_necessaria" className="cursor-pointer">
+                Foto necessária
               </Label>
-              <select
-                id="edit-pipeline_id"
-                className={SELECT_CLASS}
-                disabled={isSubmitting || !segmentoId}
-                {...register('contrato_config.pipeline_id')}
-              >
-                <option value="">
-                  {!segmentoId
-                    ? 'Selecione um segmento primeiro'
-                    : pipelines.length === 0
-                      ? 'Nenhum pipeline disponível'
-                      : 'Selecione o pipeline'}
-                </option>
-                {pipelines.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.nome}
-                  </option>
-                ))}
-              </select>
-              {errors.contrato_config?.pipeline_id && (
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
-                  {errors.contrato_config.pipeline_id.message}
-                </p>
-              )}
             </div>
+
+            <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+              <Switch
+                id="edit-geolocation_necessaria"
+                checked={watch('geolocation_necessaria')}
+                onCheckedChange={(checked) => setValue('geolocation_necessaria', checked)}
+                disabled={isSubmitting}
+              />
+              <Label htmlFor="edit-geolocation_necessaria" className="cursor-pointer">
+                Geolocalização necessária
+              </Label>
+            </div>
+
+            <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+              <Switch
+                id="edit-ativo"
+                checked={watch('ativo')}
+                onCheckedChange={(checked) => setValue('ativo', checked)}
+                disabled={isSubmitting}
+              />
+              <Label htmlFor="edit-ativo" className="cursor-pointer">
+                Formulário ativo
+              </Label>
+            </div>
+
+            <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "pt-2 border-t")}>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                onClick={() => {
+                  onOpenChange(false);
+                  onEditSchema(formulario);
+                }}
+                disabled={isSubmitting}
+              >
+                <Pencil className="mr-2 h-4 w-4" />
+                Editar campos do formulário
+              </Button>
+            </div>
+          </form>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            <Button type="submit" form="formulario-edit-form" disabled={isSubmitting}>
+              {isSubmitting && <LoadingSpinner className="mr-2" />}
+              Salvar Alterações
+            </Button>
           </div>
-        )}
-
-        <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
-          <Switch
-            id="edit-foto_necessaria"
-            checked={watch('foto_necessaria')}
-            onCheckedChange={(checked) => setValue('foto_necessaria', checked)}
-            disabled={isSubmitting}
-          />
-          <Label htmlFor="edit-foto_necessaria" className="cursor-pointer">
-            Foto necessária
-          </Label>
         </div>
-
-        <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
-          <Switch
-            id="edit-geolocation_necessaria"
-            checked={watch('geolocation_necessaria')}
-            onCheckedChange={(checked) => setValue('geolocation_necessaria', checked)}
-            disabled={isSubmitting}
-          />
-          <Label htmlFor="edit-geolocation_necessaria" className="cursor-pointer">
-            Geolocalização necessária
-          </Label>
-        </div>
-
-        <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
-          <Switch
-            id="edit-ativo"
-            checked={watch('ativo')}
-            onCheckedChange={(checked) => setValue('ativo', checked)}
-            disabled={isSubmitting}
-          />
-          <Label htmlFor="edit-ativo" className="cursor-pointer">
-            Formulário ativo
-          </Label>
-        </div>
-
-        <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "pt-2 border-t")}>
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full"
-            onClick={() => {
-              onOpenChange(false);
-              onEditSchema(formulario);
-            }}
-            disabled={isSubmitting}
-          >
-            <Pencil className="mr-2 h-4 w-4" />
-            Editar campos do formulário
-          </Button>
-        </div>
-      </form>
-    </DialogFormShell>
+      </DialogContent>
+    </Dialog>
   );
 }

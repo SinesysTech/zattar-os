@@ -38,7 +38,9 @@ import {
 } from '../../actions';
 import type { ActionResult } from '../../actions/types';
 import type { ParteContraria } from '../../types';
-import { DialogFormShell, DialogNavPrevious, DialogNavNext } from '@/components/shared/dialog-shell';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody } from '@/components/ui/dialog';
+import { DialogNavPrevious, DialogNavNext } from '@/components/shared/dialog-shell';
+import { Progress } from '@/components/ui/progress';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -985,26 +987,82 @@ export function ParteContrariaFormDialog({
   const isFirstStep = currentStep === (isEditMode ? 2 : 1);
   const isLastStep = currentStep === TOTAL_STEPS;
 
+  const multiStepCurrent = isEditMode ? currentStep - 1 : currentStep;
+  const multiStepTotal = isEditMode ? TOTAL_STEPS - 1 : TOTAL_STEPS;
+  const progressValue = multiStepTotal <= 1 ? 100 : ((multiStepCurrent - 1) / (multiStepTotal - 1)) * 100;
+
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title={isEditMode ? 'Editar Parte Contrária' : stepInfo.title}
-      description={stepInfo.description}
-      density="compact"
-      multiStep={{
-        current: isEditMode ? currentStep - 1 : currentStep,
-        total: isEditMode ? TOTAL_STEPS - 1 : TOTAL_STEPS,
-        stepTitle: stepInfo.title,
-      }}
-      footer={
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex justify-end w-full gap-2")}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        data-density="compact"
+        className="sm:max-w-lg glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle className="text-card-title">
+            {isEditMode ? 'Editar Parte Contrária' : stepInfo.title}
+          </DialogTitle>
+          <DialogDescription className="sr-only">{stepInfo.description}</DialogDescription>
+          <div className="mt-3 space-y-1.5">
+            <div className="flex items-center justify-between gap-4">
+              <span className="text-overline text-foreground/80 truncate">{stepInfo.title}</span>
+              <span className="text-micro-caption text-muted-foreground shrink-0">
+                Etapa {multiStepCurrent} de {multiStepTotal}
+              </span>
+            </div>
+            <Progress value={progressValue} className="h-1.5" />
+          </div>
+        </DialogHeader>
+        <DialogBody>
+          <form ref={formRef} action={formAction}>
+            {/* Hidden fields para todos os dados do form */}
+            <input type="hidden" name="tipo_pessoa" value={formData.tipo_pessoa || ''} />
+            <input type="hidden" name="ativo" value={formData.ativo ? 'true' : 'false'} />
+            {/* Campos de identificação (Step 2) */}
+            <input type="hidden" name="nome" value={formData.nome} />
+            <input type="hidden" name="nome_social_fantasia" value={formData.nome_social_fantasia} />
+            <input type="hidden" name="cpf" value={formData.cpf} />
+            <input type="hidden" name="cnpj" value={formData.cnpj} />
+            <input type="hidden" name="rg" value={formData.rg} />
+            <input type="hidden" name="data_nascimento" value={formData.data_nascimento} />
+            <input type="hidden" name="data_abertura" value={formData.data_abertura} />
+            <input type="hidden" name="genero" value={formData.genero} />
+            <input type="hidden" name="estado_civil" value={formData.estado_civil} />
+            <input type="hidden" name="nacionalidade" value={formData.nacionalidade} />
+            <input type="hidden" name="nome_genitora" value={formData.nome_genitora} />
+            <input type="hidden" name="inscricao_estadual" value={formData.inscricao_estadual} />
+            {/* Campos de contato (Step 3) */}
+            <input type="hidden" name="emails" value={JSON.stringify(formData.emails)} />
+            <input type="hidden" name="ddd_celular" value={formData.ddd_celular} />
+            <input type="hidden" name="numero_celular" value={formData.numero_celular} />
+            <input type="hidden" name="ddd_residencial" value={formData.ddd_residencial} />
+            <input type="hidden" name="numero_residencial" value={formData.numero_residencial} />
+            <input type="hidden" name="ddd_comercial" value={formData.ddd_comercial} />
+            <input type="hidden" name="numero_comercial" value={formData.numero_comercial} />
+            {/* Endereço (Step 4) */}
+            <input type="hidden" name="cep" value={formData.cep} />
+            <input type="hidden" name="logradouro" value={formData.logradouro} />
+            <input type="hidden" name="numero" value={formData.numero} />
+            <input type="hidden" name="complemento" value={formData.complemento} />
+            <input type="hidden" name="bairro" value={formData.bairro} />
+            <input type="hidden" name="municipio" value={formData.municipio} />
+            <input type="hidden" name="estado_sigla" value={formData.estado_sigla} />
+            {/* Observações (Step 5) */}
+            <input type="hidden" name="observacoes" value={formData.observacoes} />
+
+            <div>
+              {renderCurrentStep()}
+            </div>
+          </form>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <DialogNavPrevious
               onClick={handlePrevious}
               disabled={isFirstStep || isPending}
               hidden={isFirstStep}
             />
-
             {isLastStep ? (
               <Button
                 type="button"
@@ -1030,79 +1088,39 @@ export function ParteContrariaFormDialog({
               />
             )}
           </div>
-      }
-    >
-        <form ref={formRef} action={formAction}>
-          {/* Hidden fields para todos os dados do form */}
-          <input type="hidden" name="tipo_pessoa" value={formData.tipo_pessoa || ''} />
-          <input type="hidden" name="ativo" value={formData.ativo ? 'true' : 'false'} />
-          {/* Campos de identificação (Step 2) */}
-          <input type="hidden" name="nome" value={formData.nome} />
-          <input type="hidden" name="nome_social_fantasia" value={formData.nome_social_fantasia} />
-          <input type="hidden" name="cpf" value={formData.cpf} />
-          <input type="hidden" name="cnpj" value={formData.cnpj} />
-          <input type="hidden" name="rg" value={formData.rg} />
-          <input type="hidden" name="data_nascimento" value={formData.data_nascimento} />
-          <input type="hidden" name="data_abertura" value={formData.data_abertura} />
-          <input type="hidden" name="genero" value={formData.genero} />
-          <input type="hidden" name="estado_civil" value={formData.estado_civil} />
-          <input type="hidden" name="nacionalidade" value={formData.nacionalidade} />
-          <input type="hidden" name="nome_genitora" value={formData.nome_genitora} />
-          <input type="hidden" name="inscricao_estadual" value={formData.inscricao_estadual} />
-          {/* Campos de contato (Step 3) */}
-          <input type="hidden" name="emails" value={JSON.stringify(formData.emails)} />
-          <input type="hidden" name="ddd_celular" value={formData.ddd_celular} />
-          <input type="hidden" name="numero_celular" value={formData.numero_celular} />
-          <input type="hidden" name="ddd_residencial" value={formData.ddd_residencial} />
-          <input type="hidden" name="numero_residencial" value={formData.numero_residencial} />
-          <input type="hidden" name="ddd_comercial" value={formData.ddd_comercial} />
-          <input type="hidden" name="numero_comercial" value={formData.numero_comercial} />
-          {/* Endereço (Step 4) */}
-          <input type="hidden" name="cep" value={formData.cep} />
-          <input type="hidden" name="logradouro" value={formData.logradouro} />
-          <input type="hidden" name="numero" value={formData.numero} />
-          <input type="hidden" name="complemento" value={formData.complemento} />
-          <input type="hidden" name="bairro" value={formData.bairro} />
-          <input type="hidden" name="municipio" value={formData.municipio} />
-          <input type="hidden" name="estado_sigla" value={formData.estado_sigla} />
-          {/* Observações (Step 5) */}
-          <input type="hidden" name="observacoes" value={formData.observacoes} />
+        </div>
+      </DialogContent>
 
-          <div>
-            {renderCurrentStep()}
-          </div>
-        </form>
-
-        <AlertDialog
-          open={inactiveDuplicateId !== null}
-          onOpenChange={(open) => {
-            if (!open && !isReactivating) setInactiveDuplicateId(null);
-          }}
-        >
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Cadastro inativo encontrado</AlertDialogTitle>
-              <AlertDialogDescription>
-                Já existe uma parte contrária INATIVA com este {isPJ ? 'CNPJ' : 'CPF'}.
-                Deseja reativá-la e atualizar os dados com as informações que você preencheu?
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel disabled={isReactivating}>Cancelar</AlertDialogCancel>
-              <AlertDialogAction onClick={handleConfirmReactivation} disabled={isReactivating}>
-                {isReactivating ? (
-                  <>
-                    <LoadingSpinner className="mr-2" />
-                    Reativando...
-                  </>
-                ) : (
-                  'Reativar e atualizar'
-                )}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-    </DialogFormShell>
+      <AlertDialog
+        open={inactiveDuplicateId !== null}
+        onOpenChange={(open) => {
+          if (!open && !isReactivating) setInactiveDuplicateId(null);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Cadastro inativo encontrado</AlertDialogTitle>
+            <AlertDialogDescription>
+              Já existe uma parte contrária INATIVA com este {isPJ ? 'CNPJ' : 'CPF'}.
+              Deseja reativá-la e atualizar os dados com as informações que você preencheu?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isReactivating}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmReactivation} disabled={isReactivating}>
+              {isReactivating ? (
+                <>
+                  <LoadingSpinner className="mr-2" />
+                  Reativando...
+                </>
+              ) : (
+                'Reativar e atualizar'
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </Dialog>
   );
 }
 

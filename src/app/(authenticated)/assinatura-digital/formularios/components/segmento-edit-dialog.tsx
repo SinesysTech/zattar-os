@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { DialogFormShell } from '@/components/shared/dialog-shell/dialog-form-shell';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -135,85 +135,95 @@ export function SegmentoEditDialog({
   if (!segmento) return null;
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title="Editar Segmento"
-      maxWidth="2xl"
-      footer={
-        <Button type="submit" form="segmento-edit-form" disabled={isSubmitting}>
-          {isSubmitting && <LoadingSpinner className="mr-2" />}
-          Salvar Alterações
-        </Button>
-      }
-    >
-      <form id="segmento-edit-form" onSubmit={handleSubmit(onSubmit)} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-        {Object.keys(errors).length > 0 && (
-          <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-3 text-sm text-destructive")}>
-            Corrija os erros no formulário antes de continuar.
-          </div>
-        )}
-
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 md:col-span-2")}>
-            <Label htmlFor="nome">
-              Nome <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="nome"
-              {...register('nome', {
-                onBlur: handleNomeBlur,
-              })}
-              placeholder="Nome do segmento"
-              disabled={isSubmitting}
-            />
-            {errors.nome && (
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.nome.message}</p>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        data-density="comfortable"
+        className="sm:max-w-2xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>Editar Segmento</DialogTitle>
+          <DialogDescription className="sr-only">Edite as informações do segmento.</DialogDescription>
+        </DialogHeader>
+        <DialogBody>
+          <form id="segmento-edit-form" onSubmit={handleSubmit(onSubmit)} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+            {Object.keys(errors).length > 0 && (
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-3 text-sm text-destructive")}>
+                Corrija os erros no formulário antes de continuar.
+              </div>
             )}
-          </div>
 
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 md:col-span-2")}>
-            <Label htmlFor="slug">
-              Slug <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="slug"
-              {...register('slug')}
-              placeholder="Slug único"
-              disabled={isSubmitting}
-            />
-            {errors.slug && (
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.slug.message}</p>
-            )}
-          </div>
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 md:col-span-2")}>
+                <Label htmlFor="nome">
+                  Nome <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="nome"
+                  {...register('nome', {
+                    onBlur: handleNomeBlur,
+                  })}
+                  placeholder="Nome do segmento"
+                  disabled={isSubmitting}
+                />
+                {errors.nome && (
+                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.nome.message}</p>
+                )}
+              </div>
 
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 md:col-span-2")}>
-            <Label htmlFor="descricao">Descrição</Label>
-            <Textarea
-              id="descricao"
-              {...register('descricao')}
-              placeholder="Descrição opcional do segmento"
-              disabled={isSubmitting}
-              rows={3}
-            />
-            {errors.descricao && (
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.descricao.message}</p>
-            )}
-          </div>
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 md:col-span-2")}>
+                <Label htmlFor="slug">
+                  Slug <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="slug"
+                  {...register('slug')}
+                  placeholder="Slug único"
+                  disabled={isSubmitting}
+                />
+                {errors.slug && (
+                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.slug.message}</p>
+                )}
+              </div>
 
-          <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2 md:col-span-2")}>
-            <Switch
-              id="ativo"
-              checked={watch('ativo')}
-              onCheckedChange={(checked) => setValue('ativo', checked)}
-              disabled={isSubmitting}
-            />
-            <Label htmlFor="ativo" className="cursor-pointer">
-              Segmento ativo
-            </Label>
+              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 md:col-span-2")}>
+                <Label htmlFor="descricao">Descrição</Label>
+                <Textarea
+                  id="descricao"
+                  {...register('descricao')}
+                  placeholder="Descrição opcional do segmento"
+                  disabled={isSubmitting}
+                  rows={3}
+                />
+                {errors.descricao && (
+                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.descricao.message}</p>
+                )}
+              </div>
+
+              <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2 md:col-span-2")}>
+                <Switch
+                  id="ativo"
+                  checked={watch('ativo')}
+                  onCheckedChange={(checked) => setValue('ativo', checked)}
+                  disabled={isSubmitting}
+                />
+                <Label htmlFor="ativo" className="cursor-pointer">
+                  Segmento ativo
+                </Label>
+              </div>
+            </div>
+          </form>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            <Button type="submit" form="segmento-edit-form" disabled={isSubmitting}>
+              {isSubmitting && <LoadingSpinner className="mr-2" />}
+              Salvar Alterações
+            </Button>
           </div>
         </div>
-      </form>
-    </DialogFormShell>
+      </DialogContent>
+    </Dialog>
   );
 }

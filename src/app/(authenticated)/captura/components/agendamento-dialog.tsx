@@ -9,7 +9,13 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+} from '@/components/ui/dialog';
 
 import type { TipoCaptura } from '@/app/(authenticated)/captura';
 import { CapturaFormBase, TipoCapturaSelect, validarCamposCaptura } from '@/app/(authenticated)/captura';
@@ -91,22 +97,15 @@ export function AgendamentoDialog({ open, onOpenChange, onSuccess }: Props) {
   };
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title={<span className="scroll-m-20 text-2xl font-semibold tracking-tight">Novo agendamento</span>}
-      maxWidth="2xl"
-      footer={
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex w-full justify-end gap-2")}>
-          <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isSaving}>
-            Cancelar
-          </Button>
-          <Button type="button" onClick={handleSubmit} disabled={isSaving}>
-            Salvar
-          </Button>
-        </div>
-      }
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="sm:max-w-2xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>Novo agendamento</DialogTitle>
+        </DialogHeader>
+        <DialogBody>
       <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; space-y-6 → migrar para <Stack gap="loose"> */ "p-6 space-y-6")}>
         <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2")}>
           <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
@@ -172,7 +171,19 @@ export function AgendamentoDialog({ open, onOpenChange, onSuccess }: Props) {
           <Switch checked={ativo} onCheckedChange={setAtivo} />
         </div>
       </div>
-    </DialogFormShell>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isSaving}>
+            Cancelar
+          </Button>
+          <div className="flex items-center gap-2">
+            <Button type="button" onClick={handleSubmit} disabled={isSaving}>
+              Salvar
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 

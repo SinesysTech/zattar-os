@@ -18,7 +18,13 @@ import { cn } from '@/lib/utils';
 import { todayDateString } from '@/lib/date-utils';
 import { Check} from 'lucide-react';
 import { toast } from 'sonner';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+} from '@/components/ui/dialog';
 import { Heading } from '@/components/ui/typography';
 import { actionCriarProcessoManual, actionAtualizarProcesso } from '../actions';
 import type { ActionResult } from '../actions/types';
@@ -161,32 +167,15 @@ export function ProcessoForm({
   const getFieldError = (field: string) => fieldErrors[field]?.[0];
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title={isEditMode ? 'Editar Processo' : 'Novo Processo'}
-      maxWidth="2xl"
-      footer={
-        <Button
-          type="button"
-          onClick={handleSubmit}
-          disabled={isPending}
-          className="ml-auto"
-        >
-          {isPending ? (
-            <>
-              <LoadingSpinner className="mr-2" />
-              {isEditMode ? 'Salvando...' : 'Criando...'}
-            </>
-          ) : (
-            <>
-              <Check className="h-4 w-4 mr-2" />
-              {isEditMode ? 'Salvar Alterações' : 'Criar Processo'}
-            </>
-          )}
-        </Button>
-      }
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="sm:max-w-2xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>{isEditMode ? 'Editar Processo' : 'Novo Processo'}</DialogTitle>
+        </DialogHeader>
+        <DialogBody>
       <form ref={formRef} action={formAction} className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
         {/* Seção 1 - Dados Básicos */}
         <div>
@@ -322,6 +311,30 @@ export function ProcessoForm({
         {/* Hidden inputs para campos obrigatórios mockados ou defaults */}
         <input type="hidden" name="origem" value={formData.origem} />
       </form>
-    </DialogFormShell>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              onClick={handleSubmit}
+              disabled={isPending}
+            >
+              {isPending ? (
+                <>
+                  <LoadingSpinner className="mr-2" />
+                  {isEditMode ? 'Salvando...' : 'Criando...'}
+                </>
+              ) : (
+                <>
+                  <Check className="h-4 w-4 mr-2" />
+                  {isEditMode ? 'Salvar Alterações' : 'Criar Processo'}
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

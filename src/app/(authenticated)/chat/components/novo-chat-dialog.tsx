@@ -3,7 +3,13 @@
 import { cn } from '@/lib/utils';
 import { useState, useEffect, useTransition } from "react";
 import { toast } from "sonner";
-import { DialogFormShell } from "@/components/shared/dialog-shell";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -130,20 +136,15 @@ export function NovoChatDialog({ open, onOpenChange, onChatCreated }: NovoChatDi
   };
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={handleOpenChange}
-      title="Nova Conversa"
-      maxWidth="sm"
-      footer={
-        <Button
-          onClick={handleSubmit}
-          disabled={isPending || !selectedUsuarioId}
-        >
-          {isPending ? "Iniciando..." : "Iniciar Conversa"}
-        </Button>
-      }
-    >
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="sm:max-w-sm glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>Nova Conversa</DialogTitle>
+        </DialogHeader>
+        <DialogBody>
       <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "space-y-2 px-6 py-4")}>
         <Label>Com quem você quer conversar?</Label>
         <Select
@@ -162,6 +163,19 @@ export function NovoChatDialog({ open, onOpenChange, onChatCreated }: NovoChatDi
           </SelectContent>
         </Select>
       </div>
-    </DialogFormShell>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => handleOpenChange(false)}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={handleSubmit}
+              disabled={isPending || !selectedUsuarioId}
+            >
+              {isPending ? "Iniciando..." : "Iniciar Conversa"}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

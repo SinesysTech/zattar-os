@@ -5,7 +5,13 @@ import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+} from '@/components/ui/dialog';
 import { TagBadge } from '@/components/ui/tag-badge';
 import { Plus} from 'lucide-react';
 import {
@@ -147,26 +153,16 @@ export function ProcessoTagsDialog({
     return null;
   }
 
-  const footerButtons = (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
-      <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSaving}>
-        Cancelar
-      </Button>
-      <Button onClick={handleSave} disabled={isSaving}>
-        {isSaving && <LoadingSpinner className="mr-2" />}
-        Salvar
-      </Button>
-    </div>
-  );
-
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title="Gerenciar Etiquetas"
-      maxWidth="md"
-      footer={footerButtons}
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="sm:max-w-md glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>Gerenciar Etiquetas</DialogTitle>
+        </DialogHeader>
+        <DialogBody>
       <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         {/* Tags selecionadas */}
         <div>
@@ -322,6 +318,17 @@ export function ProcessoTagsDialog({
           <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}>{error}</p>
         )}
       </div>
-    </DialogFormShell>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSaving}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            <Button onClick={handleSave} disabled={isSaving}>
+              {isSaving && <LoadingSpinner className="mr-2" />}
+              Salvar
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -12,7 +12,7 @@ import { AlertTriangle} from 'lucide-react';
 import { toast } from 'sonner';
 import { actionReverterBaixa, type ActionResult } from '../actions';
 import { Expediente } from '../domain';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody } from '@/components/ui/dialog';
 
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
@@ -109,13 +109,16 @@ export function ExpedientesReverterBaixaDialog({
   );
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title="Reverter Baixa de Expediente"
-      maxWidth="lg"
-      footer={footerButtons}
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        data-density="comfortable"
+        className="sm:max-w-lg glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>Reverter Baixa de Expediente</DialogTitle>
+        </DialogHeader>
+        <DialogBody>
       <form id="reverter-baixa-form" key={formKey} action={formAction} className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
         {/* Informações do expediente */}
         <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; p-4 → migrar para <Inset variant="card-compact"> */ "space-y-2 rounded-lg border p-4 bg-muted/50")}>
@@ -194,6 +197,11 @@ export function ExpedientesReverterBaixaDialog({
           </div>
         )}
       </form>
-    </DialogFormShell>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-end gap-2">
+          {footerButtons}
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

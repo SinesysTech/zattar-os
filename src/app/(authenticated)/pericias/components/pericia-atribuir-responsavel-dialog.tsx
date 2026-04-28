@@ -3,7 +3,13 @@
 import { cn } from '@/lib/utils';
 import * as React from 'react';
 
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import {
   Select,

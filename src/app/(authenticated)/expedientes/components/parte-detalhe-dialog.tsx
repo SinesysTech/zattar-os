@@ -20,7 +20,7 @@ import {
 } from '@/app/(authenticated)/partes';
 import { actionBuscarPartesPorProcessoEPolo } from '@/app/(authenticated)/partes/server-actions';
 import type { ParteComDadosCompletos } from '@/app/(authenticated)/partes';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody } from '@/components/ui/dialog';
 
 interface ParteDetalheDialogProps {
   open: boolean;
@@ -179,77 +179,85 @@ export function ParteDetalheDialog({
   );
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title={
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
-          <AppBadge variant="outline" className={poloColorClass}>
-            {poloLabel}
-          </AppBadge>
-          <span className="truncate">{parte?.nome || nomeExibido}</span>
-        </div>
-      }
-      maxWidth="sm"
-      footer={footerButton}
-    >
-      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-2 padding direcional sem Inset equiv. */ "space-y-4 py-2")}>
-        {/* Loading state */}
-        {isLoading && (
-          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        data-density="comfortable"
+        className="sm:max-w-sm glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle asChild>
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
-              <Skeleton className="h-5 w-5 rounded-full" />
-              <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1 flex-1")}>
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-3 w-1/2" />
-              </div>
+              <AppBadge variant="outline" className={poloColorClass}>
+                {poloLabel}
+              </AppBadge>
+              <span className="truncate">{parte?.nome || nomeExibido}</span>
             </div>
-            <Skeleton className="h-4 w-2/3" />
-            <Skeleton className="h-4 w-1/2" />
-            <Skeleton className="h-9 w-full" />
-          </div>
-        )}
-
-        {/* Error state */}
-        {!isLoading && error && (
-          <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-6 text-center")}>
-            <AlertCircle className="h-10 w-10 text-muted-foreground mb-2" />
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{error}</p>
-          </div>
-        )}
-
-        {/* Parte não encontrada */}
-        {!isLoading && !error && !parte && (
-          <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-6 text-center")}>
-            <AlertCircle className="h-10 w-10 text-muted-foreground mb-2" />
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
-              Parte não encontrada no cadastro
-            </p>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mt-1")}>
-              Nome exibido: {nomeExibido}
-            </p>
-          </div>
-        )}
-
-        {/* Parte encontrada */}
-        {!isLoading && !error && parte && (
-          <>
-            <ParteInfo p={parte} isPrincipal />
-
-            {/* Outras partes do mesmo polo */}
-            {outrasPartes.length > 0 && (
-              <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "pt-3 border-t")}>
-                <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mb-2")}>
-                  Outras partes ({outrasPartes.length})
+          </DialogTitle>
+        </DialogHeader>
+        <DialogBody>
+          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-2 padding direcional sem Inset equiv. */ "space-y-4 py-2")}>
+            {/* Loading state */}
+            {isLoading && (
+              <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                  <Skeleton className="h-5 w-5 rounded-full" />
+                  <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1 flex-1")}>
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-3 w-1/2" />
+                  </div>
                 </div>
-                {outrasPartes.map((p) => (
-                  <ParteInfo key={p.id} p={p} />
-                ))}
+                <Skeleton className="h-4 w-2/3" />
+                <Skeleton className="h-4 w-1/2" />
+                <Skeleton className="h-9 w-full" />
               </div>
             )}
-          </>
-        )}
-      </div>
-    </DialogFormShell>
+
+            {/* Error state */}
+            {!isLoading && error && (
+              <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-6 text-center")}>
+                <AlertCircle className="h-10 w-10 text-muted-foreground mb-2" />
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{error}</p>
+              </div>
+            )}
+
+            {/* Parte não encontrada */}
+            {!isLoading && !error && !parte && (
+              <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-6 text-center")}>
+                <AlertCircle className="h-10 w-10 text-muted-foreground mb-2" />
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                  Parte não encontrada no cadastro
+                </p>
+                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mt-1")}>
+                  Nome exibido: {nomeExibido}
+                </p>
+              </div>
+            )}
+
+            {/* Parte encontrada */}
+            {!isLoading && !error && parte && (
+              <>
+                <ParteInfo p={parte} isPrincipal />
+
+                {/* Outras partes do mesmo polo */}
+                {outrasPartes.length > 0 && (
+                  <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "pt-3 border-t")}>
+                    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mb-2")}>
+                      Outras partes ({outrasPartes.length})
+                    </div>
+                    {outrasPartes.map((p) => (
+                      <ParteInfo key={p.id} p={p} />
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-end gap-2">
+          {footerButton}
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

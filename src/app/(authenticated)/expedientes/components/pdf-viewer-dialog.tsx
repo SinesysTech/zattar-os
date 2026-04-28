@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { FileText} from 'lucide-react';
 import { actionGerarUrlDownload } from '@/app/(authenticated)/documentos';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
@@ -72,53 +72,69 @@ export function PdfViewerDialog({
 
     if (!fileKey) {
         return (
-            <DialogFormShell
-                open={open}
-                onOpenChange={onOpenChange}
-                title={documentTitle}
-                maxWidth="4xl"
-                footer={footerButton}
-            >
-                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center justify-center flex-1 gap-4 h-[60vh] min-h-100")}>
-                    <FileText className="h-16 w-16 text-muted-foreground" />
-                    <p className="text-muted-foreground">Documento não disponível</p>
-                </div>
-            </DialogFormShell>
+            <Dialog open={open} onOpenChange={onOpenChange}>
+                <DialogContent
+                    showCloseButton={false}
+                    data-density="comfortable"
+                    className="sm:max-w-4xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+                >
+                    <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+                        <DialogTitle>{documentTitle}</DialogTitle>
+                    </DialogHeader>
+                    <DialogBody>
+                        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center justify-center flex-1 gap-4 h-[60vh] min-h-100")}>
+                            <FileText className="h-16 w-16 text-muted-foreground" />
+                            <p className="text-muted-foreground">Documento não disponível</p>
+                        </div>
+                    </DialogBody>
+                    <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-end gap-2">
+                        {footerButton}
+                    </div>
+                </DialogContent>
+            </Dialog>
         );
     }
 
     return (
-        <DialogFormShell
-            open={open}
-            onOpenChange={onOpenChange}
-            title={documentTitle}
-            maxWidth="4xl"
-            footer={footerButton}
-        >
-            <div className="relative w-full h-[75vh] min-h-125 border rounded-md overflow-hidden bg-muted/10">
-                {isLoading && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-background/80 z-10">
-                        <LoadingSpinner className="size-8 text-primary" />
-                    </div>
-                )}
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent
+                showCloseButton={false}
+                data-density="comfortable"
+                className="sm:max-w-4xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+            >
+                <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+                    <DialogTitle>{documentTitle}</DialogTitle>
+                </DialogHeader>
+                <DialogBody>
+                    <div className="relative w-full h-[75vh] min-h-125 border rounded-md overflow-hidden bg-muted/10">
+                        {isLoading && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-background/80 z-10">
+                                <LoadingSpinner className="size-8 text-primary" />
+                            </div>
+                        )}
 
-                {error ? (
-                    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center justify-center h-full gap-4")}>
-                        <FileText className="h-16 w-16 text-destructive" />
-                        <p className="text-destructive text-center">{error}</p>
+                        {error ? (
+                            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center justify-center h-full gap-4")}>
+                                <FileText className="h-16 w-16 text-destructive" />
+                                <p className="text-destructive text-center">{error}</p>
+                            </div>
+                        ) : (
+                            presignedUrl && (
+                                <iframe
+                                    src={`${presignedUrl}#toolbar=0&navpanes=0&scrollbar=1`}
+                                    className="w-full h-full"
+                                    title={documentTitle}
+                                    onLoad={handleIframeLoad}
+                                    onError={handleIframeError}
+                                />
+                            )
+                        )}
                     </div>
-                ) : (
-                    presignedUrl && (
-                        <iframe
-                            src={`${presignedUrl}#toolbar=0&navpanes=0&scrollbar=1`}
-                            className="w-full h-full"
-                            title={documentTitle}
-                            onLoad={handleIframeLoad}
-                            onError={handleIframeError}
-                        />
-                    )
-                )}
-            </div>
-        </DialogFormShell>
+                </DialogBody>
+                <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-end gap-2">
+                    {footerButton}
+                </div>
+            </DialogContent>
+        </Dialog>
     );
 }

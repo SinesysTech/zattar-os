@@ -3,7 +3,14 @@
 
 import { cn } from '@/lib/utils';
 import * as React from 'react';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogBody,
+} from '@/components/ui/dialog';
 import { Combobox } from '@/components/ui/combobox';
 import { Text } from '@/components/ui/typography';
 import { actionListarAcervoPaginado, type GrauAcervo } from '@/app/(authenticated)/acervo';
@@ -88,13 +95,16 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
   const selectedProcessoId = dadosIniciais?.processo_id || (processoId.length > 0 ? Number(processoId[0]) : undefined);
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={handleClose}
-      title="Nova Obrigação"
-      maxWidth="3xl"
-      hideFooter
-    >
+    <Dialog open={open} onOpenChange={handleClose}>
+      <DialogContent
+        showCloseButton={false}
+        className="sm:max-w-3xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>Nova Obrigação</DialogTitle>
+          <DialogDescription className="sr-only">Selecione o processo e preencha os dados da obrigação</DialogDescription>
+        </DialogHeader>
+        <DialogBody>
       <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose">; px-6 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv.; md:px-8 sem equivalente DS; md:py-6 sem equivalente DS */ /* design-system-escape: space-y-6 → migrar para <Stack gap="loose">; px-6 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv.; md:px-8 sem equivalente DS; md:py-6 sem equivalente DS */ "space-y-6 px-6 py-5 md:px-8 md:py-6")}>
         {!selectedProcessoId && (
           <div className={cn(/* design-system-escape: space-y-5 sem token DS; p-4 → migrar para <Inset variant="card-compact">; md:p-5 sem equivalente DS */ "space-y-5 rounded-lg border bg-muted/20 p-4 md:p-5")}>
@@ -165,6 +175,8 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
           </div>
         )}
       </div>
-    </DialogFormShell>
+        </DialogBody>
+      </DialogContent>
+    </Dialog>
   );
 }

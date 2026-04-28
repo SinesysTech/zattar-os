@@ -24,7 +24,7 @@ import { ResponsiveFilterPanel } from '@/components/ui/responsive-filter-panel';
 import { AppBadge } from '@/components/ui/app-badge';
 import { Heading } from '@/components/ui/typography';
 
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody } from '@/components/ui/dialog';
 import { FilterPopover, type FilterOption } from '@/app/(authenticated)/partes';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { WeekDaysCarousel } from '@/components/shared';
@@ -379,21 +379,27 @@ export function ExpedientesCalendar() {
             />
 
             {/* Settings Dialog - Tipos de Expedientes */}
-            <DialogFormShell
-                open={isSettingsOpen}
-                onOpenChange={setIsSettingsOpen}
-                title="Tipos de Expedientes"
-                maxWidth="4xl"
-                footer={
-                    <Button variant="outline" onClick={() => setIsSettingsOpen(false)}>
-                        Fechar
-                    </Button>
-                }
-            >
-                <div className="flex-1 overflow-auto h-[60vh]">
-                    <TiposExpedientesList />
-                </div>
-            </DialogFormShell>
+            <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
+                <DialogContent
+                    showCloseButton={false}
+                    data-density="comfortable"
+                    className="sm:max-w-4xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+                >
+                    <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+                        <DialogTitle>Tipos de Expedientes</DialogTitle>
+                    </DialogHeader>
+                    <DialogBody>
+                        <div className="flex-1 overflow-auto h-[60vh]">
+                            <TiposExpedientesList />
+                        </div>
+                    </DialogBody>
+                    <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-end gap-2">
+                        <Button variant="outline" onClick={() => setIsSettingsOpen(false)}>
+                            Fechar
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

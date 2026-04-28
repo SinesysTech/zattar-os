@@ -97,11 +97,6 @@ export function AgendaEventDetail({
       >
         <DialogDescription className="sr-only">Detalhes do evento de agenda</DialogDescription>
         <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
-          <div
-            className={cn(
-              "w-full flex flex-col overflow-hidden",
-            )}
-          >
           {/* ── Header ── */}
           <div className={cn(/* design-system-escape: px-7 padding direcional sem Inset equiv.; pt-6 padding direcional sem Inset equiv.; pb-0 padding direcional sem Inset equiv. */ "px-7 pt-6 pb-0 shrink-0")}>
             {/* Top row */}
@@ -115,14 +110,11 @@ export function AgendaEventDetail({
                 </div>
                 <div className="min-w-0">
                   <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5 flex-wrap mb-1")}>
-                    <Heading
-                      level="card"
-                      as="h2"
-                      id="event-detail-title"
+                    <DialogTitle
                       className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[17px] font-bold text-foreground")}
                     >
                       {event.title}
-                    </Heading>
+                    </DialogTitle>
                     {event.status && (
                       <span className={cn(
                         /* design-system-escape: gap-1 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium",
@@ -337,7 +329,7 @@ export function AgendaEventDetail({
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

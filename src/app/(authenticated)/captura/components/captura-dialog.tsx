@@ -2,7 +2,13 @@
 
 import { cn } from '@/lib/utils';
 import { useRef, useState } from 'react';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { TipoCapturaSelect } from './tipo-captura-select';
 import { AcervoGeralForm } from './acervo-geral-form';
@@ -102,18 +108,15 @@ export function CapturaDialog({ open, onOpenChange, onSuccess }: CapturaDialogPr
   const submitLabel = SUBMIT_LABELS[tipoCaptura];
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={handleOpenChange}
-      title="Nova Captura"
-      maxWidth="3xl"
-      footer={
-        <Button onClick={handleSubmit} disabled={isLoading}>
-          {isLoading && <LoadingSpinner className="mr-2" />}
-          {submitLabel}
-        </Button>
-      }
-    >
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="sm:max-w-3xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>Nova Captura</DialogTitle>
+        </DialogHeader>
+        <DialogBody>
       <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
         <TipoCapturaSelect
           value={tipoCaptura}
@@ -123,6 +126,17 @@ export function CapturaDialog({ open, onOpenChange, onSuccess }: CapturaDialogPr
 
         {renderForm()}
       </div>
-    </DialogFormShell>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => handleOpenChange(false)}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            <Button onClick={handleSubmit} disabled={isLoading}>
+              {isLoading && <LoadingSpinner className="mr-2" />}
+              {submitLabel}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

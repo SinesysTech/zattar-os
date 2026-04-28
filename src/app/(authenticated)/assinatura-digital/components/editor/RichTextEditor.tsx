@@ -28,7 +28,7 @@ import { BlockquoteElement } from '@/components/editor/plate-ui/blockquote-node'
 import { BlockList } from '@/components/editor/plate-ui/block-list';
 import { IndentKit } from '@/components/editor/plate/indent-kit';
 import { MarkToolbarButton } from '@/components/editor/plate-ui/mark-toolbar-button';
-import { ToolbarGroup, Toolbar } from '@/components/editor/plate-ui/toolbar';
+import { ToolbarGroup, Toolbar, ToolbarButton } from '@/components/editor/plate-ui/toolbar';
 import {
   BulletedListToolbarButton,
   NumberedListToolbarButton,
@@ -52,7 +52,6 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import { ToolbarButton } from '@/components/editor/plate-ui/toolbar';
 import { VariablePlugin, insertVariable } from '@/components/editor/plate/variable-plugin';
 import type { ConteudoComposto } from '@/shared/assinatura-digital/types/template.types';
 import {
@@ -122,7 +121,7 @@ function generateTemplateString(value: Value): string {
       children.forEach(traverse);
     }
 
-    if (type === 'p' || type === 'blockquote') {
+    if (type === 'p' || type === 'blockquote' || type === 'li') {
       result += '\n';
     }
   };
@@ -252,6 +251,8 @@ export function RichTextEditor({
   toolbarExtra,
   className,
 }: RichTextEditorProps): JSX.Element {
+  // Plate.js trata value como initialValue — não é reativo por design.
+  // Para refletir mudanças externas, remonte o componente com uma `key` estável no pai.
   const initialValue = React.useMemo<Value>(() => {
     if (value?.json) {
       try {
@@ -261,7 +262,7 @@ export function RichTextEditor({
       }
     }
     return [{ type: 'p', children: [{ text: '' }] }];
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const editor = usePlateEditor({
     plugins: SignatureEditorKit,

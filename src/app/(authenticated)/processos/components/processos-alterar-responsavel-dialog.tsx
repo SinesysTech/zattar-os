@@ -6,7 +6,13 @@ import { useActionState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Text } from '@/components/ui/typography';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+} from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { actionAtualizarProcesso } from '../actions';
 import type { ActionResult } from '../actions/types';
@@ -76,25 +82,16 @@ export function ProcessosAlterarResponsavelDialog({
 
   const generalError = formState && !formState.success ? (formState.error || formState.message) : null;
 
-  const footerButtons = (
-    <Button
-      type="submit"
-      disabled={isPending}
-      form="alterar-responsavel-processo-form"
-    >
-      {isPending && <LoadingSpinner className="mr-2" />}
-      Salvar
-    </Button>
-  );
-
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title="Alterar Responsável"
-      maxWidth="md"
-      footer={footerButtons}
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="sm:max-w-md glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>Alterar Responsável</DialogTitle>
+        </DialogHeader>
+        <DialogBody>
       <form id="alterar-responsavel-processo-form" action={formAction} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         <input
           type="hidden"
@@ -125,6 +122,21 @@ export function ProcessosAlterarResponsavelDialog({
           )}
         </div>
       </form>
-    </DialogFormShell>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            <Button
+              type="submit"
+              disabled={isPending}
+              form="alterar-responsavel-processo-form"
+            >
+              {isPending && <LoadingSpinner className="mr-2" />}
+              Salvar
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

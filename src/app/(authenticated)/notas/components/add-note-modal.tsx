@@ -22,7 +22,14 @@ import {
 import { AppBadge as Badge } from "@/components/ui/app-badge";
 import type { Note, NoteLabel } from "../domain";
 import { useNotes } from "../notes-context";
-import { DialogFormShell } from "@/components/shared/dialog-shell/dialog-form-shell";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogBody,
+} from "@/components/ui/dialog";
 
 type NoteModalBaseProps = {
   mode: "create" | "edit";
@@ -100,21 +107,20 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
   return (
     <>
       {trigger}
-      <DialogFormShell
-        open={open}
-        onOpenChange={setOpen}
-        title={dialogTitle}
-        maxWidth="xl"
-        footer={
-          <Button type="submit" form="note-form" disabled={!title.trim() || isSubmitting}>
-            {isSubmitting ? "Salvando..." : submitLabel}
-          </Button>
-        }
-      >
-        <form
-          id="note-form"
-          className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}
-          onSubmit={async (e) => {
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent
+          showCloseButton={false}
+          className="sm:max-w-xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+        >
+          <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+            <DialogTitle>{dialogTitle}</DialogTitle>
+            <DialogDescription className="sr-only">Preencha os dados para salvar a nota</DialogDescription>
+          </DialogHeader>
+          <DialogBody>
+            <form
+              id="note-form"
+              className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6 px-6 py-4")}
+              onSubmit={async (e) => {
             e.preventDefault();
             setError(null);
 
@@ -224,7 +230,7 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
                               <Tag className="h-4 w-4" />
                             </Button>
                           </PopoverTrigger>
-                          <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-55)}>
+                          <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-55 p-0")}>
                             <Command>
                               <CommandInput placeholder="Buscar etiquetas..." className="h-9" />
                               <CommandList>
@@ -285,8 +291,18 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
               ))}
             </div>
           ) : null}
-        </form>
-      </DialogFormShell>
+            </form>
+          </DialogBody>
+          <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+            <Button variant="outline" onClick={() => setOpen(false)}>Cancelar</Button>
+            <div className="flex items-center gap-2">
+              <Button type="submit" form="note-form" disabled={!title.trim() || isSubmitting}>
+                {isSubmitting ? "Salvando..." : submitLabel}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

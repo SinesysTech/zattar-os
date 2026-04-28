@@ -1,6 +1,12 @@
 import { cn } from '@/lib/utils';
 import { useEffect, useRef } from 'react';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+} from '@/components/ui/dialog';
 import {
   Select,
   SelectContent,
@@ -106,17 +112,15 @@ export function CallSetupDialog({
   };
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title="Configurar Chamada"
-      maxWidth="2xl"
-      footer={
-        <Button onClick={handleJoin}>
-          Entrar
-        </Button>
-      }
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="sm:max-w-2xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>Configurar Chamada</DialogTitle>
+        </DialogHeader>
+        <DialogBody>
       <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose">; p-6 → migrar para <Inset variant="dialog"> */ "flex flex-col gap-6 p-6")}>
         {/* Video Preview Area */}
         {tipo === TipoChamada.Video && (
@@ -246,6 +250,14 @@ export function CallSetupDialog({
           </div>
         )}
       </div>
-    </DialogFormShell>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            <Button onClick={handleJoin}>Entrar</Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

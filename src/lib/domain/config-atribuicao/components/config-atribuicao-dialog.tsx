@@ -7,15 +7,15 @@
 import * as React from "react";
 import { Plus, Pencil, Trash2, AlertTriangle, Power, PowerOff } from "lucide-react";
 
+import { cn } from "@/lib/utils";
 import {
-  ResponsiveDialog,
-  ResponsiveDialogContent,
-  ResponsiveDialogHeader,
-  ResponsiveDialogTitle,
-  ResponsiveDialogDescription,
-  ResponsiveDialogBody,
-  ResponsiveDialogFooter,
-} from "@/components/ui/responsive-dialog";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogBody,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { SemanticBadge } from "@/components/ui/semantic-badge";
 import {
@@ -156,21 +156,21 @@ export function ConfigAtribuicaoDialog({
 
   return (
     <>
-      <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
-        <ResponsiveDialogContent
-          showCloseButton={true}
-          className="sm:max-w-2xl bg-background p-0 gap-0"
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent
+          showCloseButton={false}
+          className={cn(/* design-system-escape: p-0 gap-0 → usar <Inset> */ "sm:max-w-2xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col")}
         >
-          <ResponsiveDialogHeader className="px-6 pt-6 pb-4 border-b shrink-0 space-y-2">
-            <ResponsiveDialogTitle className="text-xl">
+          <DialogHeader className={cn(/* design-system-escape: px-6 pt-6 pb-4 → usar <Inset>; space-y-2 → usar <Stack> */ "px-6 pt-6 pb-4 border-b border-border/20 shrink-0 space-y-2")}>
+            <DialogTitle className="text-xl">
               Configuração de Atribuição Automática
-            </ResponsiveDialogTitle>
-            <ResponsiveDialogDescription>
+            </DialogTitle>
+            <DialogDescription>
               Gerencie as regiões e regras de atribuição automática de responsáveis aos processos
-            </ResponsiveDialogDescription>
-          </ResponsiveDialogHeader>
+            </DialogDescription>
+          </DialogHeader>
 
-          <ResponsiveDialogBody className="bg-background max-h-[60vh] overflow-y-auto">
+          <DialogBody className="bg-background max-h-[60vh] overflow-y-auto">
             {/* Botão Nova Região */}
             <div className="p-4 border-b">
               <Button onClick={handleNovaRegiao} className="w-full sm:w-auto">
@@ -217,15 +217,16 @@ export function ConfigAtribuicaoDialog({
                 ))}
               </div>
             )}
-          </ResponsiveDialogBody>
+          </DialogBody>
 
-          <ResponsiveDialogFooter className="px-6 py-4 border-t shrink-0 bg-muted/50">
+          <div className={cn(/* design-system-escape: px-6 py-4 → usar <Inset> */ "px-6 py-4 border-t border-border/20 shrink-0 bg-muted/50 flex items-center justify-between gap-2")}>
             <Button variant="outline" onClick={() => onOpenChange(false)}>
               Fechar
             </Button>
-          </ResponsiveDialogFooter>
-        </ResponsiveDialogContent>
-      </ResponsiveDialog>
+            <div className="flex items-center gap-2" />
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Dialog de Formulário */}
       <RegiaoFormDialog

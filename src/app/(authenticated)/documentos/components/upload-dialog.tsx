@@ -206,9 +206,9 @@ export function UploadDialog({
               </div>
             )}
           </div>
-        </ResponsiveDialogBody>
+        </DialogBody>
 
-        <ResponsiveDialogFooter>
+        <div className={cn(/* design-system-escape: px-6 py-4 → usar <Inset> */ "px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2")}>
           <Button
             type="button"
             variant="outline"
@@ -217,24 +217,26 @@ export function UploadDialog({
           >
             Cancelar
           </Button>
-          <Button
-            onClick={handleUpload}
-            disabled={!selectedFile || uploading}
-          >
-            {uploading ? (
-              <>
-                <LoadingSpinner className="mr-2" />
-                Enviando...
-              </>
-            ) : (
-              <>
-                <Upload className="mr-2 h-4 w-4" />
-                Enviar
-              </>
-            )}
-          </Button>
-        </ResponsiveDialogFooter>
-      </ResponsiveDialogContent>
-    </ResponsiveDialog>
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={handleUpload}
+              disabled={!selectedFile || uploading}
+            >
+              {uploading ? (
+                <>
+                  <LoadingSpinner className="mr-2" />
+                  Enviando...
+                </>
+              ) : (
+                <>
+                  <Upload className="mr-2 h-4 w-4" />
+                  Enviar
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

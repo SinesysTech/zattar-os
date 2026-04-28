@@ -8,7 +8,7 @@ import { useActionState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody } from '@/components/ui/dialog';
 import { LoadingSpinner } from '@/components/ui/loading-state';
 import { Info } from 'lucide-react';
 import { toast } from 'sonner';
@@ -104,13 +104,16 @@ export function ExpedientesBaixarDialog({
   );
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title="Baixar Expediente"
-      maxWidth="lg"
-      footer={footerButtons}
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        data-density="comfortable"
+        className="sm:max-w-lg glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>Baixar Expediente</DialogTitle>
+        </DialogHeader>
+        <DialogBody>
       <form id="baixar-expediente-form" action={formAction} className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
         {/* Hidden input para o ID do expediente */}
         <input type="hidden" name="expedienteId" value={expediente.id} />
@@ -262,6 +265,14 @@ export function ExpedientesBaixarDialog({
           </div>
         )}
       </form>
-    </DialogFormShell>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            {footerButtons}
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

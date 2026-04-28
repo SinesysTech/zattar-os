@@ -621,433 +621,467 @@ export function AudienciaDetailDialog({
         }
       : undefined;
 
-  return (
-    <DialogDetailShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title={titleNode}
-      titleAccessory={audiencia ? <AudienciaStatusBadge status={audiencia.status} /> : undefined}
-      meta={metaNode}
-      description="Detalhes da audiência"
-      maxWidth="xl"
-      splitMaxWidth="5xl"
-      hero={heroNode}
-      split={splitAta}
-      footer={
-        <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
-          Fechar
-        </Button>
-      }
-    >
-      {isLoading && (
-        <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv. */ "flex items-center justify-center py-10")}>
-          <LoadingSpinner className="size-6 text-muted-foreground" />
-        </div>
-      )}
-      {error && !isLoading && (
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-10 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center gap-2 py-10 text-center")}>
-          <AlertCircle className="size-6 text-destructive" />
-          <Text variant="caption" className="text-destructive">{error}</Text>
-        </div>
-      )}
+  const isSplitOpen = !!splitAta?.open;
 
-      {audiencia && !isLoading && !error && (
-        <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
-          {/* ATA · só quando existe */}
-          {hasAta && (
-            <div>
-              <SectionHeader icon={FileText} label="Ata da Audiência" />
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        data-density="comfortable"
+        className={cn(
+          "glass-dialog flex max-h-[90vh] w-[95vw] flex-col overflow-hidden p-0 gap-0",
+          "[scrollbar-width:thin] transition-[max-width] duration-300 ease-out",
+          isSplitOpen && "md:flex-row",
+          isSplitOpen ? "sm:max-w-5xl md:max-w-6xl" : "sm:max-w-lg md:max-w-xl"
+        )}
+      >
+        <DialogDescription className="sr-only">Detalhes da audiência</DialogDescription>
+        <div className={cn("flex min-w-0 flex-1 flex-col", isSplitOpen && "border-border/50 md:border-r")}>
+          <header className="shrink-0 border-b border-border/40 px-5 pt-4 pb-3">
+            <div className="mb-1 flex items-center justify-between gap-3">
+              <DialogTitle className="min-w-0 flex-1 truncate -tracking-[0.01em] text-foreground">
+                {titleNode}
+              </DialogTitle>
+              {audiencia && <div className="shrink-0"><AudienciaStatusBadge status={audiencia.status} /></div>}
               <button
                 type="button"
-                onClick={() => setAtaOpen((v) => !v)}
-                className={cn(/* design-system-escape: gap-3 gap sem token DS; p-2.5 → usar <Inset> */ "flex w-full cursor-pointer items-center gap-3 rounded-xl border border-success/25 bg-success/8 p-2.5 text-left transition-colors hover:bg-success/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
+                onClick={() => onOpenChange(false)}
+                className="inline-flex size-7 shrink-0 items-center justify-center rounded-md text-muted-foreground/60 transition-colors hover:bg-muted/60 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                aria-label="Fechar"
               >
-                <span className="inline-flex size-7 shrink-0 items-center justify-center rounded-lg bg-success/18 text-success">
-                  <FileText className="size-3.5" />
-                </span>
-                <div className="min-w-0 flex-1">
-                  <Text variant="label" as="div" className="text-foreground">
-                    Ata assinada · PDF
-                  </Text>
-                  <Text variant="micro-caption" as="div" className="text-muted-foreground">
-                    Clique para {ataOpen ? 'fechar' : 'ler ao lado'}
-                  </Text>
-                </div>
-                <ChevronRight
-                  className={cn(
-                    'size-4 text-muted-foreground transition-transform',
-                    ataOpen && 'rotate-90'
-                  )}
-                />
+                <X className="size-3.5" />
               </button>
             </div>
-          )}
+            {metaNode && <div>{metaNode}</div>}
+          </header>
+          {heroNode && <div data-slot="dialog-hero" className="shrink-0">{heroNode}</div>}
+          <div data-slot="dialog-body" className="flex-1 overflow-y-auto px-5 py-3.5 [scrollbar-width:thin]">
+            {isLoading && (
+              <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv. */ "flex items-center justify-center py-10")}>
+                <LoadingSpinner className="size-6 text-muted-foreground" />
+              </div>
+            )}
+            {error && !isLoading && (
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-10 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center gap-2 py-10 text-center")}>
+                <AlertCircle className="size-6 text-destructive" />
+                <Text variant="caption" className="text-destructive">{error}</Text>
+              </div>
+            )}
 
-          {/* LOCAL / ACESSO — condicional por modalidade */}
-          <div>
-            <SectionHeader icon={Building2} label="Local / Acesso" />
-            <SectionCard>
-              {(isVirtual || isHibrida) && (
-                <div className={isHibrida ? /* design-system-escape: pb-3 padding direcional sem Inset equiv. */ 'mb-3 pb-3 border-b border-border/40' : ''}>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
-                      <Text variant="caption" as="span" className="text-muted-foreground">
-                        Link da sala virtual
-                      </Text>
-                      {urlObrigatoriaFaltando && (
-                        <span
-                          className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 rounded-full bg-warning/12 px-1.5 py-px text-micro-badge font-semibold uppercase tracking-[0.08em] text-warning")}
-                          role="status"
-                          aria-label="Campo obrigatório não preenchido"
-                        >
-                          <AlertCircle className="size-2.5" />
-                          Obrigatório
-                        </span>
-                      )}
-                    </div>
-                    {!editingUrl && canEditUrl && (
-                      <button
-                        type="button"
-                        onClick={handleStartEditUrl}
-                        className={cn(/* design-system-escape: gap-1 gap sem token DS; font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "flex cursor-pointer items-center gap-1 text-micro-caption font-semibold uppercase tracking-wider text-primary/70 transition-colors hover:text-primary")}
-                      >
-                        <Pencil className="size-2.5" />
-                        {audiencia.urlAudienciaVirtual ? 'Editar' : 'Adicionar'}
-                      </button>
-                    )}
-                  </div>
-                  {editingUrl ? (
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
-                      <Input
-                        type="url"
-                        placeholder="https://..."
-                        value={urlDraft}
-                        onChange={(e) => setUrlDraft(e.target.value)}
-                        className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs flex-1")}
-                        autoFocus
+            {audiencia && !isLoading && !error && (
+              <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
+                {/* ATA · só quando existe */}
+                {hasAta && (
+                  <div>
+                    <SectionHeader icon={FileText} label="Ata da Audiência" />
+                    <button
+                      type="button"
+                      onClick={() => setAtaOpen((v) => !v)}
+                      className={cn(/* design-system-escape: gap-3 gap sem token DS; p-2.5 → usar <Inset> */ "flex w-full cursor-pointer items-center gap-3 rounded-xl border border-success/25 bg-success/8 p-2.5 text-left transition-colors hover:bg-success/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
+                    >
+                      <span className="inline-flex size-7 shrink-0 items-center justify-center rounded-lg bg-success/18 text-success">
+                        <FileText className="size-3.5" />
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <Text variant="label" as="div" className="text-foreground">
+                          Ata assinada · PDF
+                        </Text>
+                        <Text variant="micro-caption" as="div" className="text-muted-foreground">
+                          Clique para {ataOpen ? 'fechar' : 'ler ao lado'}
+                        </Text>
+                      </div>
+                      <ChevronRight
+                        className={cn(
+                          'size-4 text-muted-foreground transition-transform',
+                          ataOpen && 'rotate-90'
+                        )}
                       />
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="size-7 shrink-0"
-                        onClick={handleSaveUrl}
-                        disabled={savingUrl}
-                      >
-                        {savingUrl ? (
-                          <LoadingSpinner size="sm" />
-                        ) : (
-                          <Check className="size-3.5 text-success" />
-                        )}
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="size-7 shrink-0"
-                        onClick={() => setEditingUrl(false)}
-                      >
-                        <X className="size-3.5 text-muted-foreground" />
-                      </Button>
-                    </div>
-                  ) : audiencia.urlAudienciaVirtual ? (
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
-                      <Video className="size-3.5 text-muted-foreground/60 shrink-0" />
-                      <a
-                        href={audiencia.urlAudienciaVirtual}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-caption text-primary truncate hover:underline"
-                      >
-                        {audiencia.urlAudienciaVirtual}
-                      </a>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="size-7 shrink-0"
-                        onClick={() => handleCopyUrl(audiencia.urlAudienciaVirtual!)}
-                      >
-                        {copiedUrl ? (
-                          <Check className="size-3.5 text-success" />
-                        ) : (
-                          <Copy className="size-3.5" />
-                        )}
-                      </Button>
-                    </div>
-                  ) : (
-                    <Text variant="caption" className="text-muted-foreground/60 italic">
-                      Nenhum link cadastrado
-                    </Text>
-                  )}
-                </div>
-              )}
-
-              {(isPresencial || isHibrida) && (
-                <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
-                      <Text variant="caption" as="span" className="text-muted-foreground">
-                        Endereço presencial
-                      </Text>
-                      {enderecoObrigatorioFaltando && (
-                        <span
-                          className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 rounded-full bg-warning/12 px-1.5 py-px text-micro-badge font-semibold uppercase tracking-[0.08em] text-warning")}
-                          role="status"
-                          aria-label="Campo obrigatório não preenchido"
-                        >
-                          <AlertCircle className="size-2.5" />
-                          Obrigatório
-                        </span>
-                      )}
-                    </div>
-                    {!editingEndereco && canEditGeneral && (
-                      <button
-                        type="button"
-                        onClick={handleStartEditEndereco}
-                        className={cn(/* design-system-escape: gap-1 gap sem token DS; font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "flex cursor-pointer items-center gap-1 text-micro-caption font-semibold uppercase tracking-wider text-primary/70 transition-colors hover:text-primary")}
-                      >
-                        <Pencil className="size-2.5" />
-                        {audiencia.enderecoPresencial ? 'Editar' : 'Adicionar'}
-                      </button>
-                    )}
+                    </button>
                   </div>
-                  {editingEndereco ? (
-                    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-[1fr_80px] gap-2")}>
-                        <Input
-                          placeholder="Logradouro"
-                          value={enderecoDraft.logradouro}
-                          onChange={(e) =>
-                            setEnderecoDraft((d) => ({ ...d, logradouro: e.target.value }))
-                          }
-                          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
+                )}
+
+                {/* LOCAL / ACESSO — condicional por modalidade */}
+                <div>
+                  <SectionHeader icon={Building2} label="Local / Acesso" />
+                  <SectionCard>
+                    {(isVirtual || isHibrida) && (
+                      <div className={isHibrida ? /* design-system-escape: pb-3 padding direcional sem Inset equiv. */ 'mb-3 pb-3 border-b border-border/40' : ''}>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+                            <Text variant="caption" as="span" className="text-muted-foreground">
+                              Link da sala virtual
+                            </Text>
+                            {urlObrigatoriaFaltando && (
+                              <span
+                                className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 rounded-full bg-warning/12 px-1.5 py-px text-micro-badge font-semibold uppercase tracking-[0.08em] text-warning")}
+                                role="status"
+                                aria-label="Campo obrigatório não preenchido"
+                              >
+                                <AlertCircle className="size-2.5" />
+                                Obrigatório
+                              </span>
+                            )}
+                          </div>
+                          {!editingUrl && canEditUrl && (
+                            <button
+                              type="button"
+                              onClick={handleStartEditUrl}
+                              className={cn(/* design-system-escape: gap-1 gap sem token DS; font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "flex cursor-pointer items-center gap-1 text-micro-caption font-semibold uppercase tracking-wider text-primary/70 transition-colors hover:text-primary")}
+                            >
+                              <Pencil className="size-2.5" />
+                              {audiencia.urlAudienciaVirtual ? 'Editar' : 'Adicionar'}
+                            </button>
+                          )}
+                        </div>
+                        {editingUrl ? (
+                          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                            <Input
+                              type="url"
+                              placeholder="https://..."
+                              value={urlDraft}
+                              onChange={(e) => setUrlDraft(e.target.value)}
+                              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs flex-1")}
+                              autoFocus
+                            />
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="size-7 shrink-0"
+                              onClick={handleSaveUrl}
+                              disabled={savingUrl}
+                            >
+                              {savingUrl ? (
+                                <LoadingSpinner size="sm" />
+                              ) : (
+                                <Check className="size-3.5 text-success" />
+                              )}
+                            </Button>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="size-7 shrink-0"
+                              onClick={() => setEditingUrl(false)}
+                            >
+                              <X className="size-3.5 text-muted-foreground" />
+                            </Button>
+                          </div>
+                        ) : audiencia.urlAudienciaVirtual ? (
+                          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
+                            <Video className="size-3.5 text-muted-foreground/60 shrink-0" />
+                            <a
+                              href={audiencia.urlAudienciaVirtual}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-caption text-primary truncate hover:underline"
+                            >
+                              {audiencia.urlAudienciaVirtual}
+                            </a>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="size-7 shrink-0"
+                              onClick={() => handleCopyUrl(audiencia.urlAudienciaVirtual!)}
+                            >
+                              {copiedUrl ? (
+                                <Check className="size-3.5 text-success" />
+                              ) : (
+                                <Copy className="size-3.5" />
+                              )}
+                            </Button>
+                          </div>
+                        ) : (
+                          <Text variant="caption" className="text-muted-foreground/60 italic">
+                            Nenhum link cadastrado
+                          </Text>
+                        )}
+                      </div>
+                    )}
+
+                    {(isPresencial || isHibrida) && (
+                      <div>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+                            <Text variant="caption" as="span" className="text-muted-foreground">
+                              Endereço presencial
+                            </Text>
+                            {enderecoObrigatorioFaltando && (
+                              <span
+                                className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 rounded-full bg-warning/12 px-1.5 py-px text-micro-badge font-semibold uppercase tracking-[0.08em] text-warning")}
+                                role="status"
+                                aria-label="Campo obrigatório não preenchido"
+                              >
+                                <AlertCircle className="size-2.5" />
+                                Obrigatório
+                              </span>
+                            )}
+                          </div>
+                          {!editingEndereco && canEditGeneral && (
+                            <button
+                              type="button"
+                              onClick={handleStartEditEndereco}
+                              className={cn(/* design-system-escape: gap-1 gap sem token DS; font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "flex cursor-pointer items-center gap-1 text-micro-caption font-semibold uppercase tracking-wider text-primary/70 transition-colors hover:text-primary")}
+                            >
+                              <Pencil className="size-2.5" />
+                              {audiencia.enderecoPresencial ? 'Editar' : 'Adicionar'}
+                            </button>
+                          )}
+                        </div>
+                        {editingEndereco ? (
+                          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-[1fr_80px] gap-2")}>
+                              <Input
+                                placeholder="Logradouro"
+                                value={enderecoDraft.logradouro}
+                                onChange={(e) =>
+                                  setEnderecoDraft((d) => ({ ...d, logradouro: e.target.value }))
+                                }
+                                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
+                                autoFocus
+                              />
+                              <Input
+                                placeholder="Nº"
+                                value={enderecoDraft.numero}
+                                onChange={(e) =>
+                                  setEnderecoDraft((d) => ({ ...d, numero: e.target.value }))
+                                }
+                                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
+                              />
+                            </div>
+                            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2")}>
+                              <Input
+                                placeholder="Complemento"
+                                value={enderecoDraft.complemento || ''}
+                                onChange={(e) =>
+                                  setEnderecoDraft((d) => ({ ...d, complemento: e.target.value }))
+                                }
+                                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
+                              />
+                              <Input
+                                placeholder="Bairro"
+                                value={enderecoDraft.bairro}
+                                onChange={(e) =>
+                                  setEnderecoDraft((d) => ({ ...d, bairro: e.target.value }))
+                                }
+                                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
+                              />
+                            </div>
+                            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-[1fr_60px_100px] gap-2")}>
+                              <Input
+                                placeholder="Cidade"
+                                value={enderecoDraft.cidade}
+                                onChange={(e) =>
+                                  setEnderecoDraft((d) => ({ ...d, cidade: e.target.value }))
+                                }
+                                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
+                              />
+                              <Input
+                                placeholder="UF"
+                                maxLength={2}
+                                value={enderecoDraft.uf}
+                                onChange={(e) =>
+                                  setEnderecoDraft((d) => ({
+                                    ...d,
+                                    uf: e.target.value.toUpperCase(),
+                                  }))
+                                }
+                                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
+                              />
+                              <Input
+                                placeholder="CEP"
+                                value={enderecoDraft.cep}
+                                onChange={(e) =>
+                                  setEnderecoDraft((d) => ({ ...d, cep: e.target.value }))
+                                }
+                                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
+                              />
+                            </div>
+                            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex justify-end gap-1.5 mt-1")}>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => setEditingEndereco(false)}
+                                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-7 text-xs")}
+                              >
+                                Cancelar
+                              </Button>
+                              <Button
+                                size="sm"
+                                onClick={handleSaveEndereco}
+                                disabled={savingEndereco}
+                                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-7 text-xs")}
+                              >
+                                {savingEndereco && (
+                                  <LoadingSpinner size="sm" className="mr-1" />
+                                )}
+                                Salvar
+                              </Button>
+                            </div>
+                          </div>
+                        ) : audiencia.enderecoPresencial ? (
+                          <Text variant="caption" className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-foreground/90 leading-relaxed")}>
+                            {audiencia.enderecoPresencial.logradouro},{' '}
+                            {audiencia.enderecoPresencial.numero}
+                            {audiencia.enderecoPresencial.complemento &&
+                              ` — ${audiencia.enderecoPresencial.complemento}`}
+                            <br />
+                            <span className="text-muted-foreground">
+                              {audiencia.enderecoPresencial.bairro},{' '}
+                              {audiencia.enderecoPresencial.cidade} —{' '}
+                              {audiencia.enderecoPresencial.uf}
+                              {audiencia.enderecoPresencial.cep &&
+                                ` · CEP ${audiencia.enderecoPresencial.cep}`}
+                            </span>
+                          </Text>
+                        ) : (
+                          <Text variant="caption" className="text-muted-foreground/60 italic">
+                            Nenhum endereço cadastrado
+                          </Text>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Híbrida: quem é presencial? */}
+                    {isHibrida && (
+                      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 pt-3 border-t border-border/40")}>
+                        <Text variant="caption" as="span" className="mb-2 block text-muted-foreground">
+                          Quem participa presencialmente?
+                        </Text>
+                        <div className={cn(/* design-system-escape: gap-1 gap sem token DS; p-1 → usar <Inset> */ "inline-flex gap-1 p-1 rounded-lg bg-muted/60 border border-border/40")}>
+                          {(
+                            [
+                              { v: PresencaHibrida.Advogado, label: 'Advogados' },
+                              { v: PresencaHibrida.Cliente, label: 'Clientes' },
+                            ] as const
+                          ).map(({ v, label }) => (
+                            <button
+                              key={v}
+                              type="button"
+                              disabled={presencaDisabled}
+                              onClick={() => handleChangePresencaHibrida(v)}
+                              title={
+                                !canEditGeneral
+                                  ? 'Você não tem permissão para editar audiências'
+                                  : undefined
+                              }
+                              className={cn(
+                                /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'rounded-md px-3 py-1 text-overline transition-colors',
+                                audiencia.presencaHibrida === v
+                                  ? 'bg-card text-foreground shadow-sm'
+                                  : 'text-muted-foreground hover:text-foreground',
+                                presencaDisabled && 'cursor-not-allowed opacity-60'
+                              )}
+                            >
+                              {label}
+                            </button>
+                          ))}
+                        </div>
+                        <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-micro-caption mt-2 leading-relaxed text-muted-foreground/80")}>
+                          Os demais participam por videoconferência.
+                        </p>
+                      </div>
+                    )}
+                  </SectionCard>
+                </div>
+
+                {/* INDICADORES */}
+                {hasIndicadores && (
+                  <div>
+                    <SectionHeader icon={Clock} label="Indicadores" />
+                    <SectionCard>
+                      <AudienciaIndicadorBadges
+                        audiencia={audiencia}
+                        show={['segredo_justica', 'juizo_digital', 'designada', 'documento_ativo']}
+                      />
+                    </SectionCard>
+                  </div>
+                )}
+
+                {/* OBSERVAÇÕES — inline edit */}
+                <div>
+                  <SectionHeader
+                    icon={MessageSquare}
+                    label="Observações"
+                    action={
+                      !editingObs && canEditGeneral && (
+                        <button
+                          type="button"
+                          onClick={handleStartEditObs}
+                          className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; gap-1 gap sem token DS */ "text-micro-caption font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center gap-1")}
+                        >
+                          <Pencil className="size-2.5" />
+                          {audiencia.observacoes ? 'Editar' : 'Adicionar'}
+                        </button>
+                      )
+                    }
+                  />
+                  <SectionCard>
+                    {editingObs ? (
+                      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                        <Textarea
+                          placeholder="Anotações sobre a audiência..."
+                          value={obsDraft}
+                          onChange={(e) => setObsDraft(e.target.value)}
+                          rows={3}
+                          className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}
                           autoFocus
                         />
-                        <Input
-                          placeholder="Nº"
-                          value={enderecoDraft.numero}
-                          onChange={(e) =>
-                            setEnderecoDraft((d) => ({ ...d, numero: e.target.value }))
-                          }
-                          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
-                        />
+                        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex justify-end gap-1.5")}>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setEditingObs(false)}
+                            className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-7 text-xs")}
+                          >
+                            Cancelar
+                          </Button>
+                          <Button
+                            size="sm"
+                            onClick={handleSaveObs}
+                            disabled={savingObs}
+                            className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-7 text-xs")}
+                          >
+                            {savingObs && <LoadingSpinner size="sm" className="mr-1" />}
+                            Salvar
+                          </Button>
+                        </div>
                       </div>
-                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2")}>
-                        <Input
-                          placeholder="Complemento"
-                          value={enderecoDraft.complemento || ''}
-                          onChange={(e) =>
-                            setEnderecoDraft((d) => ({ ...d, complemento: e.target.value }))
-                          }
-                          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
-                        />
-                        <Input
-                          placeholder="Bairro"
-                          value={enderecoDraft.bairro}
-                          onChange={(e) =>
-                            setEnderecoDraft((d) => ({ ...d, bairro: e.target.value }))
-                          }
-                          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
-                        />
-                      </div>
-                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-[1fr_60px_100px] gap-2")}>
-                        <Input
-                          placeholder="Cidade"
-                          value={enderecoDraft.cidade}
-                          onChange={(e) =>
-                            setEnderecoDraft((d) => ({ ...d, cidade: e.target.value }))
-                          }
-                          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
-                        />
-                        <Input
-                          placeholder="UF"
-                          maxLength={2}
-                          value={enderecoDraft.uf}
-                          onChange={(e) =>
-                            setEnderecoDraft((d) => ({
-                              ...d,
-                              uf: e.target.value.toUpperCase(),
-                            }))
-                          }
-                          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
-                        />
-                        <Input
-                          placeholder="CEP"
-                          value={enderecoDraft.cep}
-                          onChange={(e) =>
-                            setEnderecoDraft((d) => ({ ...d, cep: e.target.value }))
-                          }
-                          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
-                        />
-                      </div>
-                      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex justify-end gap-1.5 mt-1")}>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => setEditingEndereco(false)}
-                          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-7 text-xs")}
-                        >
-                          Cancelar
-                        </Button>
-                        <Button
-                          size="sm"
-                          onClick={handleSaveEndereco}
-                          disabled={savingEndereco}
-                          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-7 text-xs")}
-                        >
-                          {savingEndereco && (
-                            <LoadingSpinner size="sm" className="mr-1" />
-                          )}
-                          Salvar
-                        </Button>
-                      </div>
-                    </div>
-                  ) : audiencia.enderecoPresencial ? (
-                    <Text variant="caption" className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-foreground/90 leading-relaxed")}>
-                      {audiencia.enderecoPresencial.logradouro},{' '}
-                      {audiencia.enderecoPresencial.numero}
-                      {audiencia.enderecoPresencial.complemento &&
-                        ` — ${audiencia.enderecoPresencial.complemento}`}
-                      <br />
-                      <span className="text-muted-foreground">
-                        {audiencia.enderecoPresencial.bairro},{' '}
-                        {audiencia.enderecoPresencial.cidade} —{' '}
-                        {audiencia.enderecoPresencial.uf}
-                        {audiencia.enderecoPresencial.cep &&
-                          ` · CEP ${audiencia.enderecoPresencial.cep}`}
-                      </span>
-                    </Text>
-                  ) : (
-                    <Text variant="caption" className="text-muted-foreground/60 italic">
-                      Nenhum endereço cadastrado
-                    </Text>
-                  )}
+                    ) : audiencia.observacoes ? (
+                      <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-body-sm leading-relaxed whitespace-pre-wrap")}>
+                        {audiencia.observacoes}
+                      </p>
+                    ) : (
+                      <Text variant="caption" className="text-muted-foreground/60 italic">
+                        Nenhuma observação registrada
+                      </Text>
+                    )}
+                  </SectionCard>
                 </div>
-              )}
 
-              {/* Híbrida: quem é presencial? */}
-              {isHibrida && (
-                <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 pt-3 border-t border-border/40")}>
-                  <Text variant="caption" as="span" className="mb-2 block text-muted-foreground">
-                    Quem participa presencialmente?
-                  </Text>
-                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS; p-1 → usar <Inset> */ "inline-flex gap-1 p-1 rounded-lg bg-muted/60 border border-border/40")}>
-                    {(
-                      [
-                        { v: PresencaHibrida.Advogado, label: 'Advogados' },
-                        { v: PresencaHibrida.Cliente, label: 'Clientes' },
-                      ] as const
-                    ).map(({ v, label }) => (
-                      <button
-                        key={v}
-                        type="button"
-                        disabled={presencaDisabled}
-                        onClick={() => handleChangePresencaHibrida(v)}
-                        title={
-                          !canEditGeneral
-                            ? 'Você não tem permissão para editar audiências'
-                            : undefined
-                        }
-                        className={cn(
-                          /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'rounded-md px-3 py-1 text-overline transition-colors',
-                          audiencia.presencaHibrida === v
-                            ? 'bg-card text-foreground shadow-sm'
-                            : 'text-muted-foreground hover:text-foreground',
-                          presencaDisabled && 'cursor-not-allowed opacity-60'
-                        )}
-                      >
-                        {label}
-                      </button>
-                    ))}
-                  </div>
-                  <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-micro-caption mt-2 leading-relaxed text-muted-foreground/80")}>
-                    Os demais participam por videoconferência.
-                  </p>
+                {/* HISTÓRICO */}
+                <div>
+                  <SectionHeader icon={Clock} label="Histórico de Alterações" />
+                  <AudienciaTimeline audienciaId={audiencia.id} audiencia={audiencia} />
                 </div>
-              )}
-            </SectionCard>
+              </div>
+            )}
           </div>
-
-          {/* INDICADORES */}
-          {hasIndicadores && (
-            <div>
-              <SectionHeader icon={Clock} label="Indicadores" />
-              <SectionCard>
-                <AudienciaIndicadorBadges
-                  audiencia={audiencia}
-                  show={['segredo_justica', 'juizo_digital', 'designada', 'documento_ativo']}
-                />
-              </SectionCard>
-            </div>
-          )}
-
-          {/* OBSERVAÇÕES — inline edit */}
-          <div>
-            <SectionHeader
-              icon={MessageSquare}
-              label="Observações"
-              action={
-                !editingObs && canEditGeneral && (
-                  <button
-                    type="button"
-                    onClick={handleStartEditObs}
-                    className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; gap-1 gap sem token DS */ "text-micro-caption font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center gap-1")}
-                  >
-                    <Pencil className="size-2.5" />
-                    {audiencia.observacoes ? 'Editar' : 'Adicionar'}
-                  </button>
-                )
-              }
-            />
-            <SectionCard>
-              {editingObs ? (
-                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-                  <Textarea
-                    placeholder="Anotações sobre a audiência..."
-                    value={obsDraft}
-                    onChange={(e) => setObsDraft(e.target.value)}
-                    rows={3}
-                    className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}
-                    autoFocus
-                  />
-                  <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex justify-end gap-1.5")}>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => setEditingObs(false)}
-                      className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-7 text-xs")}
-                    >
-                      Cancelar
-                    </Button>
-                    <Button
-                      size="sm"
-                      onClick={handleSaveObs}
-                      disabled={savingObs}
-                      className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-7 text-xs")}
-                    >
-                      {savingObs && <LoadingSpinner size="sm" className="mr-1" />}
-                      Salvar
-                    </Button>
-                  </div>
-                </div>
-              ) : audiencia.observacoes ? (
-                <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-body-sm leading-relaxed whitespace-pre-wrap")}>
-                  {audiencia.observacoes}
-                </p>
-              ) : (
-                <Text variant="caption" className="text-muted-foreground/60 italic">
-                  Nenhuma observação registrada
-                </Text>
-              )}
-            </SectionCard>
-          </div>
-
-          {/* HISTÓRICO */}
-          <div>
-            <SectionHeader icon={Clock} label="Histórico de Alterações" />
-            <AudienciaTimeline audienciaId={audiencia.id} audiencia={audiencia} />
-          </div>
+          <footer className="flex shrink-0 items-center justify-end border-t border-border/40 bg-card/40 px-5 py-2.5">
+            <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
+              Fechar
+            </Button>
+          </footer>
         </div>
-      )}
-    </DialogDetailShell>
+        {isSplitOpen && splitAta && (
+          <aside className={cn(
+            "w-full shrink-0 flex flex-col overflow-hidden bg-muted/30",
+            "border-t border-border/50 md:border-t-0",
+            "max-h-[50vh] md:max-h-none md:w-1/2"
+          )}>
+            {splitAta.content}
+          </aside>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 }
 

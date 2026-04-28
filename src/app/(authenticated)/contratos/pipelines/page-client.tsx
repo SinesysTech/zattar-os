@@ -10,7 +10,13 @@ import {
   Plus, Pencil, Star, Trash2, GripVertical, Settings} from 'lucide-react';
 import { toast } from 'sonner';
 
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+} from '@/components/ui/dialog';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { Heading } from '@/components/ui/typography';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
@@ -212,18 +218,15 @@ function PipelineDialog({ open, onOpenChange, pipeline, segmentos, onSuccess }: 
   };
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title={isEditing ? 'Editar Pipeline' : 'Novo Pipeline'}
-      maxWidth="md"
-      footer={
-        <Button type="submit" form="pipeline-form" disabled={isSubmitting}>
-          {isSubmitting && <LoadingSpinner className="mr-2" />}
-          {isEditing ? 'Salvar alterações' : 'Criar pipeline'}
-        </Button>
-      }
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="sm:max-w-md glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>{isEditing ? 'Editar Pipeline' : 'Novo Pipeline'}</DialogTitle>
+        </DialogHeader>
+        <DialogBody>
       <Form {...form}>
         <form id="pipeline-form" onSubmit={form.handleSubmit(onSubmit)} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           {!isEditing && (
@@ -288,7 +291,18 @@ function PipelineDialog({ open, onOpenChange, pipeline, segmentos, onSuccess }: 
           />
         </form>
       </Form>
-    </DialogFormShell>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            <Button type="submit" form="pipeline-form" disabled={isSubmitting}>
+              {isSubmitting && <LoadingSpinner className="mr-2" />}
+              {isEditing ? 'Salvar alterações' : 'Criar pipeline'}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -376,96 +390,104 @@ function EstagioDialog({ open, onOpenChange, pipelineId, estagio, onSuccess }: E
   };
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title={isEditing ? 'Editar Estágio' : 'Novo Estágio'}
-      maxWidth="md"
-      footer={
-        <Button type="submit" form="estagio-form" disabled={isSubmitting}>
-          {isSubmitting && <LoadingSpinner className="mr-2" />}
-          {isEditing ? 'Salvar alterações' : 'Criar estágio'}
-        </Button>
-      }
-    >
-      <Form {...form}>
-        <form id="estagio-form" onSubmit={form.handleSubmit(onSubmit)} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-          <FormField
-            control={form.control}
-            name="nome"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Nome</FormLabel>
-                <FormControl>
-                  <Input placeholder="Ex: Em Análise" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="sm:max-w-md glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>{isEditing ? 'Editar Estágio' : 'Novo Estágio'}</DialogTitle>
+        </DialogHeader>
+        <DialogBody>
+          <Form {...form}>
+            <form id="estagio-form" onSubmit={form.handleSubmit(onSubmit)} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+              <FormField
+                control={form.control}
+                name="nome"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nome</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ex: Em Análise" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name="slug"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Slug</FormLabel>
-                <FormControl>
-                  <Input placeholder="ex: em_analise" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              <FormField
+                control={form.control}
+                name="slug"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Slug</FormLabel>
+                    <FormControl>
+                      <Input placeholder="ex: em_analise" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name="cor"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Cor</FormLabel>
-                <FormControl>
-                  <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
-                    <input
-                      type="color"
-                      className={cn(/* design-system-escape: p-1 → usar <Inset> */ "h-9 w-12 cursor-pointer rounded-md border border-input p-1")}
-                      value={field.value}
-                      onChange={(e) => field.onChange(e.target.value)}
-                    />
-                    <Input
-                      placeholder="#6B7280"
-                      value={field.value}
-                      onChange={(e) => field.onChange(e.target.value)}
-                      className="font-mono"
-                    />
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              <FormField
+                control={form.control}
+                name="cor"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Cor</FormLabel>
+                    <FormControl>
+                      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+                        <input
+                          type="color"
+                          className={cn(/* design-system-escape: p-1 → usar <Inset> */ "h-9 w-12 cursor-pointer rounded-md border border-input p-1")}
+                          value={field.value}
+                          onChange={(e) => field.onChange(e.target.value)}
+                        />
+                        <Input
+                          placeholder="#6B7280"
+                          value={field.value}
+                          onChange={(e) => field.onChange(e.target.value)}
+                          className="font-mono"
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name="isDefault"
-            render={({ field }) => (
-              <FormItem>
-                <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <FormLabel className="mt-0!">Estágio padrão</FormLabel>
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </form>
-      </Form>
-    </DialogFormShell>
+              <FormField
+                control={form.control}
+                name="isDefault"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormLabel className="mt-0!">Estágio padrão</FormLabel>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </form>
+          </Form>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            <Button type="submit" form="estagio-form" disabled={isSubmitting}>
+              {isSubmitting && <LoadingSpinner className="mr-2" />}
+              {isEditing ? 'Salvar alterações' : 'Criar estágio'}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 
