@@ -453,8 +453,10 @@ export async function periciasCapture(
     // 6.3 Persistir timelines no PostgreSQL (JSONB) — apenas processos não pulados
     console.log('   📜 Persistindo timelines no PostgreSQL...');
     let timelinesPersistidas = 0;
-    for (const [processoId, dados] of dadosComplementares.porProcesso) {
-      if (dados.timeline && Array.isArray(dados.timeline) && dados.timeline.length > 0) {
+
+    const timelinePromises = Array.from(dadosComplementares.porProcesso.entries())
+      .filter(([_, dados]) => dados.timeline && Array.isArray(dados.timeline) && dados.timeline.length > 0)
+      .map(async ([processoId, dados]) => {
         try {
           await salvarTimeline({
             processoId: String(processoId),
@@ -463,7 +465,7 @@ export async function periciasCapture(
             timeline: dados.timeline as TimelineItemEnriquecido[],
             advogadoId: advogadoDb.id,
           });
-          timelinesPersistidas++;
+          return true;
         } catch (e) {
           console.warn(`   ⚠️ Erro ao persistir timeline do processo ${processoId}:`, e);
           captureLogService.logErro('timeline', e instanceof Error ? e.message : String(e), {
@@ -471,9 +473,13 @@ export async function periciasCapture(
             trt: params.config.codigo,
             grau: params.config.grau,
           });
+          return false;
         }
-      }
-    }
+      });
+
+    const timelineResults = await Promise.all(timelinePromises);
+    timelinesPersistidas = timelineResults.filter(Boolean).length;
+
     console.log(`   ✅ ${timelinesPersistidas} timelines persistidas no PostgreSQL`);
 
     // 6.4 Persistir partes (usa dados já buscados, sem refetch da API)
