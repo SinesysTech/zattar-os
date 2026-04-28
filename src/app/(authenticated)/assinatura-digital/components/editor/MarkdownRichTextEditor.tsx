@@ -14,6 +14,7 @@ import { ListPlugin } from '@platejs/list/react';
 import { LinkPlugin } from '@platejs/link/react';
 import { TextAlignPlugin } from '@platejs/basic-styles/react';
 import { deserializeMd, MarkdownPlugin, serializeMd } from '@platejs/markdown';
+import { VARIABLE_ELEMENT } from '@/components/editor/plate/variable-plugin';
 import {
   BoldIcon,
   ItalicIcon,
@@ -71,7 +72,19 @@ const MarkdownEditorKit = [
     },
   }),
   VariablePlugin,
-  MarkdownPlugin,
+  MarkdownPlugin.configure({
+    options: {
+      rules: {
+        // Serializa nós inline void de variável como {{key}} no markdown
+        [VARIABLE_ELEMENT]: {
+          serialize: (node: Record<string, unknown>) => ({
+            type: 'text',
+            value: `{{${(node.key as string) ?? ''}}}`,
+          }),
+        },
+      },
+    },
+  }),
   ...IndentKit,
   ListPlugin.configure({
     inject: { targetPlugins: [KEYS.p] },
