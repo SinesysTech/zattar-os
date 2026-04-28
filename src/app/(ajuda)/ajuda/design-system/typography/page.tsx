@@ -1,6 +1,5 @@
 'use client';
 
-import { Heading } from '@/components/ui/typography';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ClientOnlyTabs } from '@/components/ui/client-only-tabs';
 import { TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';

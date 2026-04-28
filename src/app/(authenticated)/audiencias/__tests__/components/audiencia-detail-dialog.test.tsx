@@ -130,7 +130,6 @@ jest.mock('@/components/ui/button', () => ({
     children,
     onClick,
     disabled,
-    asChild,
     ...rest
   }: React.ButtonHTMLAttributes<HTMLButtonElement> & { asChild?: boolean }) => (
     <button onClick={onClick} disabled={disabled} {...rest}>

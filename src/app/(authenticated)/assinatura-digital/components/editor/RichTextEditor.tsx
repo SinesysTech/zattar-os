@@ -262,7 +262,7 @@ export function RichTextEditor({
       }
     }
     return [{ type: 'p', children: [{ text: '' }] }];
-  }, []);
+  }, [value?.json]);
 
   const editor = usePlateEditor({
     plugins: SignatureEditorKit,
