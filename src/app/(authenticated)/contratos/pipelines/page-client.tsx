@@ -231,7 +231,7 @@ function PipelineDialog({ open, onOpenChange, pipeline, segmentos, onSuccess }: 
         showCloseButton={false}
         className="sm:max-w-md  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
       >
-        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+        <DialogHeader className="px-6 py-4 border-b border-border/40 shrink-0">
           <DialogTitle>{isEditing ? 'Editar Pipeline' : 'Novo Pipeline'}</DialogTitle>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
@@ -300,7 +300,7 @@ function PipelineDialog({ open, onOpenChange, pipeline, segmentos, onSuccess }: 
         </form>
       </Form>
         </div>
-        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+        <div className="px-6 py-4 border-t border-border/40 shrink-0 flex items-center justify-between gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <div className="flex items-center gap-2">
             <Button type="submit" form="pipeline-form" disabled={isSubmitting}>
@@ -403,7 +403,7 @@ function EstagioDialog({ open, onOpenChange, pipelineId, estagio, onSuccess }: E
         showCloseButton={false}
         className="sm:max-w-md  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
       >
-        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+        <DialogHeader className="px-6 py-4 border-b border-border/40 shrink-0">
           <DialogTitle>{isEditing ? 'Editar Estágio' : 'Novo Estágio'}</DialogTitle>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
@@ -485,7 +485,7 @@ function EstagioDialog({ open, onOpenChange, pipelineId, estagio, onSuccess }: E
             </form>
           </Form>
         </div>
-        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+        <div className="px-6 py-4 border-t border-border/40 shrink-0 flex items-center justify-between gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <div className="flex items-center gap-2">
             <Button type="submit" form="estagio-form" disabled={isSubmitting}>

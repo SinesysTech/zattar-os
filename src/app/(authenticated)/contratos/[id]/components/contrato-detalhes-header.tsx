@@ -110,7 +110,7 @@ function HeroStatField({ label, icon: Icon, value, muted }: HeroStatFieldProps) 
         <Icon
           className={cn(
             'size-3.5 shrink-0',
-            muted ? 'text-muted-foreground/50' : 'text-primary/70',
+            muted ? 'text-muted-foreground/70' : 'text-primary/70',
           )}
           aria-hidden="true"
         />
@@ -186,7 +186,7 @@ export function ContratoDetalhesHeader({
                 <span className="min-w-0 truncate">{clienteNome}</span>
                 {parteContraria && (
                   <>
-                    <span aria-hidden="true" className="text-muted-foreground/50 font-normal">
+                    <span aria-hidden="true" className="text-muted-foreground/70 font-normal">
                       ×
                     </span>
                     <span className="min-w-0 truncate">{parteContraria.nome}</span>

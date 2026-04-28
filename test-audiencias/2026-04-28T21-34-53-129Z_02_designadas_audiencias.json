@@ -1,0 +1,2094 @@
+{
+  "meta": {
+    "situacao": "M",
+    "label": "designadas",
+    "periodo": {
+      "dataInicio": "2026-04-28",
+      "dataFim": "2027-04-28"
+    },
+    "capturado_em": "2026-04-28T21:35:20.019Z",
+    "total": 31
+  },
+  "audiencias": [
+    {
+      "id": 5659661,
+      "dataInicio": "2026-04-29T10:35:00",
+      "dataFim": "2026-04-29T10:36:00",
+      "salaAudiencia": {
+        "nome": "Sala Principal"
+      },
+      "status": "M",
+      "processo": {
+        "id": 3085784,
+        "numero": "0010825-87.2025.5.03.0011",
+        "classeJudicial": {
+          "id": 608,
+          "codigo": "1125",
+          "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+          "sigla": "ATSum",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 3242.01,
+          "tetoValorCausa": 64840,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": false,
+        "orgaoJulgador": {
+          "id": 127,
+          "descricao": "11ª VARA DO TRABALHO DE BELO HORIZONTE",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 48,
+        "descricao": "Encerramento de instrução por videoconferência",
+        "codigo": "7694",
+        "isVirtual": false
+      },
+      "designada": false,
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "RENAN JACQUES DE JESUS",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": true
+      },
+      "poloPassivo": {
+        "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": true
+      },
+      "pautaAudienciaHorario": {
+        "id": 5659661,
+        "horaInicial": "10:35:00",
+        "horaFinal": "10:36:00"
+      },
+      "statusDescricao": "Designada",
+      "idProcesso": 3085784,
+      "nrProcesso": "0010825-87.2025.5.03.0011"
+    },
+    {
+      "id": 5699406,
+      "dataInicio": "2026-04-29T10:36:00",
+      "dataFim": "2026-04-29T11:06:00",
+      "salaAudiencia": {
+        "nome": "TATIANA"
+      },
+      "status": "M",
+      "processo": {
+        "id": 3029586,
+        "numero": "0010621-55.2025.5.03.0007",
+        "classeJudicial": {
+          "id": 608,
+          "codigo": "1125",
+          "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+          "sigla": "ATSum",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 3242.01,
+          "tetoValorCausa": 64840,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 260,
+          "descricao": "CEJUSC-JT 1º Grau",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 44,
+        "descricao": "Conciliação em Execução por videoconferência",
+        "codigo": "7693",
+        "isVirtual": false
+      },
+      "designada": false,
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "SONIA MARIA DUARTE",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "SC DISTRIBUICAO LTDA",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": false
+      },
+      "pautaAudienciaHorario": {
+        "id": 5699406,
+        "horaInicial": "10:36:00",
+        "horaFinal": "11:06:00"
+      },
+      "statusDescricao": "Designada",
+      "idProcesso": 3029586,
+      "nrProcesso": "0010621-55.2025.5.03.0007"
+    },
+    {
+      "id": 5695203,
+      "dataInicio": "2026-04-30T08:33:00",
+      "dataFim": "2026-04-30T09:03:00",
+      "salaAudiencia": {
+        "nome": "LILIANE"
+      },
+      "status": "M",
+      "processo": {
+        "id": 2760079,
+        "numero": "0010801-78.2024.5.03.0113",
+        "classeJudicial": {
+          "id": 608,
+          "codigo": "1125",
+          "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+          "sigla": "ATSum",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 3242.01,
+          "tetoValorCausa": 64840,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 260,
+          "descricao": "CEJUSC-JT 1º Grau",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 44,
+        "descricao": "Conciliação em Execução por videoconferência",
+        "codigo": "7693",
+        "isVirtual": false
+      },
+      "designada": false,
+      "urlAudienciaVirtual": "https://trt3-jus-br.zoom.us/my/lilianec",
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "FABIO DE JESUS SOUZA SILVA",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "HELIO MOISE RODRIGUES VIANA LTDA",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": true
+      },
+      "pautaAudienciaHorario": {
+        "id": 5695203,
+        "horaInicial": "08:33:00",
+        "horaFinal": "09:03:00"
+      },
+      "statusDescricao": "Designada",
+      "idProcesso": 2760079,
+      "nrProcesso": "0010801-78.2024.5.03.0113"
+    },
+    {
+      "id": 5650941,
+      "dataInicio": "2026-04-30T09:15:00",
+      "dataFim": "2026-04-30T09:16:00",
+      "salaAudiencia": {
+        "nome": "Sala de Audiências Virtuais (18ª VT/ZOOM)"
+      },
+      "status": "M",
+      "processo": {
+        "id": 2748412,
+        "numero": "0010653-61.2024.5.03.0018",
+        "classeJudicial": {
+          "id": 608,
+          "codigo": "1125",
+          "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+          "sigla": "ATSum",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 3242.01,
+          "tetoValorCausa": 64840,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": false,
+        "orgaoJulgador": {
+          "id": 134,
+          "descricao": "18ª VARA DO TRABALHO DE BELO HORIZONTE",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 47,
+        "descricao": "Instrução por videoconferência",
+        "codigo": "7696",
+        "isVirtual": false
+      },
+      "designada": false,
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "PEDRO HENRIQUE SANTOS",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "TIM S A",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": false
+      },
+      "pautaAudienciaHorario": {
+        "id": 5650941,
+        "horaInicial": "09:15:00",
+        "horaFinal": "09:16:00"
+      },
+      "statusDescricao": "Designada",
+      "idProcesso": 2748412,
+      "nrProcesso": "0010653-61.2024.5.03.0018"
+    },
+    {
+      "id": 5699672,
+      "dataInicio": "2026-04-30T10:17:00",
+      "dataFim": "2026-04-30T10:47:00",
+      "salaAudiencia": {
+        "nome": "MARIA CAROLINA"
+      },
+      "status": "M",
+      "processo": {
+        "id": 2747621,
+        "numero": "0010563-32.2024.5.03.0025",
+        "classeJudicial": {
+          "id": 608,
+          "codigo": "1125",
+          "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+          "sigla": "ATSum",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 3242.01,
+          "tetoValorCausa": 64840,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 260,
+          "descricao": "CEJUSC-JT 1º Grau",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 44,
+        "descricao": "Conciliação em Execução por videoconferência",
+        "codigo": "7693",
+        "isVirtual": false
+      },
+      "designada": false,
+      "urlAudienciaVirtual": "https://trt3-jus-br.zoom.us/my/mariacst",
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "JOSIANE RODRIGUES DA SILVA",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "JF LANCHES LTDA",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": false
+      },
+      "pautaAudienciaHorario": {
+        "id": 5699672,
+        "horaInicial": "10:17:00",
+        "horaFinal": "10:47:00"
+      },
+      "statusDescricao": "Designada",
+      "idProcesso": 2747621,
+      "nrProcesso": "0010563-32.2024.5.03.0025"
+    },
+    {
+      "id": 5687222,
+      "dataInicio": "2026-05-04T11:03:00",
+      "dataFim": "2026-05-04T11:33:00",
+      "salaAudiencia": {
+        "nome": "LILIANE"
+      },
+      "status": "M",
+      "processo": {
+        "id": 2791852,
+        "numero": "0010809-74.2024.5.03.0139",
+        "classeJudicial": {
+          "id": 608,
+          "codigo": "1125",
+          "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+          "sigla": "ATSum",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 3242.01,
+          "tetoValorCausa": 64840,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 260,
+          "descricao": "CEJUSC-JT 1º Grau",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 43,
+        "descricao": "Conciliação em Conhecimento por videoconferência",
+        "codigo": "7692",
+        "isVirtual": false
+      },
+      "designada": false,
+      "urlAudienciaVirtual": "https://trt3-jus-br.zoom.us/my/lilianec",
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "RAYSSA EMANUELLE MACEDO SENA",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "ADOBE ASSESSORIA DE SERVICOS CADASTRAIS S.A.",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": false
+      },
+      "pautaAudienciaHorario": {
+        "id": 5687222,
+        "horaInicial": "11:03:00",
+        "horaFinal": "11:33:00"
+      },
+      "statusDescricao": "Designada",
+      "idProcesso": 2791852,
+      "nrProcesso": "0010809-74.2024.5.03.0139"
+    },
+    {
+      "id": 5687888,
+      "dataInicio": "2026-05-07T08:40:00",
+      "dataFim": "2026-05-07T08:50:00",
+      "salaAudiencia": {
+        "nome": "Iniciais e Unas"
+      },
+      "status": "M",
+      "processo": {
+        "id": 3264222,
+        "numero": "0010361-42.2026.5.03.0136",
+        "classeJudicial": {
+          "id": 608,
+          "codigo": "1125",
+          "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+          "sigla": "ATSum",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 3242.01,
+          "tetoValorCausa": 64840,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 152,
+          "descricao": "36ª VARA DO TRABALHO DE BELO HORIZONTE",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 52,
+        "descricao": "Inicial por videoconferência (rito sumaríssimo)",
+        "codigo": "7700",
+        "isVirtual": false
+      },
+      "designada": false,
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "FLAVIO MARCELINO DE OLIVEIRA",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "99 TECNOLOGIA LTDA",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": false
+      },
+      "pautaAudienciaHorario": {
+        "id": 5687888,
+        "horaInicial": "08:40:00",
+        "horaFinal": "08:50:00"
+      },
+      "statusDescricao": "Designada",
+      "idProcesso": 3264222,
+      "nrProcesso": "0010361-42.2026.5.03.0136"
+    },
+    {
+      "id": 5682827,
+      "dataInicio": "2026-05-11T12:50:00",
+      "dataFim": "2026-05-11T13:00:00",
+      "salaAudiencia": {
+        "nome": "Pauta Audiência Principal"
+      },
+      "status": "M",
+      "processo": {
+        "id": 3254625,
+        "numero": "0010485-64.2026.5.03.0026",
+        "classeJudicial": {
+          "id": 608,
+          "codigo": "1125",
+          "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+          "sigla": "ATSum",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 3242.01,
+          "tetoValorCausa": 64840,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 40,
+          "descricao": "1ª Vara do Trabalho de Betim",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 18,
+        "descricao": "Una (rito sumaríssimo)",
+        "codigo": "7450",
+        "isVirtual": false
+      },
+      "designada": false,
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "FRANCISMAR FRANK GOMES MARTINS",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": false
+      },
+      "pautaAudienciaHorario": {
+        "id": 5682827,
+        "horaInicial": "12:50:00",
+        "horaFinal": "13:00:00"
+      },
+      "statusDescricao": "Designada",
+      "idProcesso": 3254625,
+      "nrProcesso": "0010485-64.2026.5.03.0026"
+    },
+    {
+      "id": 5684278,
+      "dataInicio": "2026-05-13T08:40:00",
+      "dataFim": "2026-05-13T08:50:00",
+      "salaAudiencia": {
+        "nome": "Sala Principal"
+      },
+      "status": "M",
+      "processo": {
+        "id": 3098521,
+        "numero": "0010808-81.2025.5.03.0001",
+        "classeJudicial": {
+          "id": 608,
+          "codigo": "1125",
+          "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+          "sigla": "ATSum",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 3242.01,
+          "tetoValorCausa": 64840,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 116,
+          "descricao": "1ª VARA DO TRABALHO DE BELO HORIZONTE",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 54,
+        "descricao": "Una por videoconferência (rito sumaríssimo)",
+        "codigo": "7703",
+        "isVirtual": false
+      },
+      "designada": false,
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "FABIANA SAIB DA SILVA RHIS",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "EDILSON DE REZENDE MOURA LTDA",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": false
+      },
+      "pautaAudienciaHorario": {
+        "id": 5684278,
+        "horaInicial": "08:40:00",
+        "horaFinal": "08:50:00"
+      },
+      "statusDescricao": "Designada",
+      "idProcesso": 3098521,
+      "nrProcesso": "0010808-81.2025.5.03.0001"
+    },
+    {
+      "id": 5692843,
+      "dataInicio": "2026-05-13T13:40:00",
+      "dataFim": "2026-05-13T13:50:00",
+      "salaAudiencia": {
+        "nome": "Sala Principal"
+      },
+      "status": "M",
+      "processo": {
+        "id": 3264245,
+        "numero": "0010370-21.2026.5.03.0001",
+        "classeJudicial": {
+          "id": 608,
+          "codigo": "1125",
+          "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+          "sigla": "ATSum",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 3242.01,
+          "tetoValorCausa": 64840,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 118,
+          "descricao": "3ª VARA DO TRABALHO DE BELO HORIZONTE",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 18,
+        "descricao": "Una (rito sumaríssimo)",
+        "codigo": "7450",
+        "isVirtual": false
+      },
+      "designada": false,
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "JEFFERSON EDUARDO DA LUZ",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "99 TECNOLOGIA LTDA",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": false
+      },
+      "pautaAudienciaHorario": {
+        "id": 5692843,
+        "horaInicial": "13:40:00",
+        "horaFinal": "13:50:00"
+      },
+      "statusDescricao": "Designada",
+      "idProcesso": 3264245,
+      "nrProcesso": "0010370-21.2026.5.03.0001"
+    },
+    {
+      "id": 5396250,
+      "dataInicio": "2026-05-18T10:30:00",
+      "dataFim": "2026-05-18T11:00:00",
+      "salaAudiencia": {
+        "nome": "Sala Principal"
+      },
+      "status": "M",
+      "processo": {
+        "id": 3077488,
+        "numero": "0010822-07.2025.5.03.0182",
+        "classeJudicial": {
+          "id": 535,
+          "codigo": "985",
+          "descricao": "Ação Trabalhista - Rito Ordinário",
+          "sigla": "ATOrd",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 64840.01,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": true,
+        "juizoDigital": false,
+        "orgaoJulgador": {
+          "id": 160,
+          "descricao": "44ª VARA DO TRABALHO DE BELO HORIZONTE",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 6,
+        "descricao": "Instrução",
+        "codigo": "22",
+        "isVirtual": false
+      },
+      "designada": false,
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "R.C.P.D.S.D.S.",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "C.D.E.M.M.",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": false
+      },
+      "pautaAudienciaHorario": {
+        "id": 5396250,
+        "horaInicial": "10:30:00",
+        "horaFinal": "11:00:00"
+      },
+      "prioridades": "Acidente de Trabalho; Assédio Moral ou Sexual",
+      "statusDescricao": "Designada",
+      "idProcesso": 3077488,
+      "nrProcesso": "0010822-07.2025.5.03.0182"
+    },
+    {
+      "id": 5706140,
+      "dataInicio": "2026-05-19T08:11:00",
+      "dataFim": "2026-05-19T08:12:00",
+      "salaAudiencia": {
+        "nome": "Sala Principal"
+      },
+      "status": "M",
+      "processo": {
+        "id": 3273865,
+        "numero": "0010755-62.2026.5.03.0164",
+        "classeJudicial": {
+          "id": 608,
+          "codigo": "1125",
+          "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+          "sigla": "ATSum",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 3242.01,
+          "tetoValorCausa": 64840,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 52,
+          "descricao": "6ª Vara do Trabalho de Contagem",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 54,
+        "descricao": "Una por videoconferência (rito sumaríssimo)",
+        "codigo": "7703",
+        "isVirtual": false
+      },
+      "designada": false,
+      "urlAudienciaVirtual": "https://trt3-jus-br.zoom.us/j/82290325541",
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "ROSIMEIRE SILVA CUNHA",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "GI GROUP BRASIL RECURSOS HUMANOS LTDA",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": true
+      },
+      "pautaAudienciaHorario": {
+        "id": 5706140,
+        "horaInicial": "08:11:00",
+        "horaFinal": "08:12:00"
+      },
+      "statusDescricao": "Designada",
+      "idProcesso": 3273865,
+      "nrProcesso": "0010755-62.2026.5.03.0164"
+    },
+    {
+      "id": 5706113,
+      "dataInicio": "2026-05-19T08:39:00",
+      "dataFim": "2026-05-19T08:40:00",
+      "salaAudiencia": {
+        "nome": "Sala 2"
+      },
+      "status": "M",
+      "processo": {
+        "id": 3273784,
+        "numero": "0010754-77.2026.5.03.0164",
+        "classeJudicial": {
+          "id": 608,
+          "codigo": "1125",
+          "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+          "sigla": "ATSum",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 3242.01,
+          "tetoValorCausa": 64840,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 52,
+          "descricao": "6ª Vara do Trabalho de Contagem",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 54,
+        "descricao": "Una por videoconferência (rito sumaríssimo)",
+        "codigo": "7703",
+        "isVirtual": false
+      },
+      "designada": false,
+      "urlAudienciaVirtual": "https://trt3-jus-br.zoom.us/j/81126952316",
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "JOEL GREGORIO CESAR DA SILVA",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "GI GROUP BRASIL RECURSOS HUMANOS LTDA",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": true
+      },
+      "pautaAudienciaHorario": {
+        "id": 5706113,
+        "horaInicial": "08:39:00",
+        "horaFinal": "08:40:00"
+      },
+      "statusDescricao": "Designada",
+      "idProcesso": 3273784,
+      "nrProcesso": "0010754-77.2026.5.03.0164"
+    },
+    {
+      "id": 5697780,
+      "dataInicio": "2026-05-20T09:45:00",
+      "dataFim": "2026-05-20T10:00:00",
+      "salaAudiencia": {
+        "nome": "pauta padrão"
+      },
+      "status": "M",
+      "processo": {
+        "id": 2981991,
+        "numero": "0010410-11.2025.5.03.0139",
+        "classeJudicial": {
+          "id": 608,
+          "codigo": "1125",
+          "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+          "sigla": "ATSum",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 3242.01,
+          "tetoValorCausa": 64840,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 155,
+          "descricao": "39ª VARA DO TRABALHO DE BELO HORIZONTE",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 48,
+        "descricao": "Encerramento de instrução por videoconferência",
+        "codigo": "7694",
+        "isVirtual": false
+      },
+      "designada": false,
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "RODRIGO FONTES DE OLIVEIRA",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": false
+      },
+      "pautaAudienciaHorario": {
+        "id": 5697780,
+        "horaInicial": "09:45:00",
+        "horaFinal": "10:00:00"
+      },
+      "statusDescricao": "Designada",
+      "idProcesso": 2981991,
+      "nrProcesso": "0010410-11.2025.5.03.0139"
+    },
+    {
+      "id": 5704884,
+      "dataInicio": "2026-06-01T09:05:00",
+      "dataFim": "2026-06-01T09:15:00",
+      "salaAudiencia": {
+        "nome": "Sala Principal"
+      },
+      "status": "M",
+      "processo": {
+        "id": 3273298,
+        "numero": "0010391-36.2026.5.03.0182",
+        "classeJudicial": {
+          "id": 608,
+          "codigo": "1125",
+          "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+          "sigla": "ATSum",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 3242.01,
+          "tetoValorCausa": 64840,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 160,
+          "descricao": "44ª VARA DO TRABALHO DE BELO HORIZONTE",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 5,
+        "descricao": "Una",
+        "codigo": "7195",
+        "isVirtual": false
+      },
+      "designada": false,
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "JULES DARWIN NUNES OLIVEIRA",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": false
+      },
+      "pautaAudienciaHorario": {
+        "id": 5704884,
+        "horaInicial": "09:05:00",
+        "horaFinal": "09:15:00"
+      },
+      "statusDescricao": "Designada",
+      "idProcesso": 3273298,
+      "nrProcesso": "0010391-36.2026.5.03.0182"
+    },
+    {
+      "id": 5357844,
+      "dataInicio": "2026-06-03T09:30:00",
+      "dataFim": "2026-06-03T09:45:00",
+      "salaAudiencia": {
+        "nome": "Sala Principal"
+      },
+      "status": "M",
+      "processo": {
+        "id": 3062381,
+        "numero": "0010753-06.2025.5.03.0010",
+        "classeJudicial": {
+          "id": 535,
+          "codigo": "985",
+          "descricao": "Ação Trabalhista - Rito Ordinário",
+          "sigla": "ATOrd",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 64840.01,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 126,
+          "descricao": "10ª VARA DO TRABALHO DE BELO HORIZONTE",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 47,
+        "descricao": "Instrução por videoconferência",
+        "codigo": "7696",
+        "isVirtual": false
+      },
+      "designada": false,
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "REJANE DOS SANTOS",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "LOKAMIG RENT A CAR LTDA",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": false
+      },
+      "pautaAudienciaHorario": {
+        "id": 5357844,
+        "horaInicial": "09:30:00",
+        "horaFinal": "09:45:00"
+      },
+      "prioridades": "Acidente de Trabalho",
+      "statusDescricao": "Designada",
+      "idProcesso": 3062381,
+      "nrProcesso": "0010753-06.2025.5.03.0010"
+    },
+    {
+      "id": 5647904,
+      "dataInicio": "2026-06-10T10:20:00",
+      "dataFim": "2026-06-10T10:40:00",
+      "salaAudiencia": {
+        "nome": "Sala 1"
+      },
+      "status": "M",
+      "processo": {
+        "id": 2526892,
+        "numero": "0011199-05.2023.5.03.0131",
+        "classeJudicial": {
+          "id": 535,
+          "codigo": "985",
+          "descricao": "Ação Trabalhista - Rito Ordinário",
+          "sigla": "ATOrd",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 64840.01,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 51,
+          "descricao": "5ª Vara do Trabalho de Contagem",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 47,
+        "descricao": "Instrução por videoconferência",
+        "codigo": "7696",
+        "isVirtual": false
+      },
+      "designada": false,
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "ANDRE DE ALCKMIN CAGNONI ADRIANO",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "3AM IT SERVICES LTDA",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": true
+      },
+      "pautaAudienciaHorario": {
+        "id": 5647904,
+        "horaInicial": "10:20:00",
+        "horaFinal": "10:40:00"
+      },
+      "statusDescricao": "Designada",
+      "idProcesso": 2526892,
+      "nrProcesso": "0011199-05.2023.5.03.0131"
+    },
+    {
+      "id": 5644732,
+      "dataInicio": "2026-06-18T10:30:00",
+      "dataFim": "2026-06-18T11:00:00",
+      "salaAudiencia": {
+        "nome": "Sala Principal"
+      },
+      "status": "M",
+      "processo": {
+        "id": 3123640,
+        "numero": "0011004-27.2025.5.03.0106",
+        "classeJudicial": {
+          "id": 535,
+          "codigo": "985",
+          "descricao": "Ação Trabalhista - Rito Ordinário",
+          "sigla": "ATOrd",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 64840.01,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 143,
+          "descricao": "27ª VARA DO TRABALHO DE BELO HORIZONTE",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 47,
+        "descricao": "Instrução por videoconferência",
+        "codigo": "7696",
+        "isVirtual": false
+      },
+      "designada": false,
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "VANUZA ESTEFANE MIRANDA JACO",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "TIM S A",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": false
+      },
+      "pautaAudienciaHorario": {
+        "id": 5644732,
+        "horaInicial": "10:30:00",
+        "horaFinal": "11:00:00"
+      },
+      "prioridades": "Assédio Moral ou Sexual",
+      "statusDescricao": "Designada",
+      "idProcesso": 3123640,
+      "nrProcesso": "0011004-27.2025.5.03.0106"
+    },
+    {
+      "id": 5611743,
+      "dataInicio": "2026-06-22T09:20:00",
+      "dataFim": "2026-06-22T09:40:00",
+      "salaAudiencia": {
+        "nome": ".Sala Principal"
+      },
+      "status": "M",
+      "processo": {
+        "id": 3039340,
+        "numero": "0011144-92.2025.5.03.0031",
+        "classeJudicial": {
+          "id": 535,
+          "codigo": "985",
+          "descricao": "Ação Trabalhista - Rito Ordinário",
+          "sigla": "ATOrd",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 64840.01,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 49,
+          "descricao": "3ª Vara do Trabalho de Contagem",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 47,
+        "descricao": "Instrução por videoconferência",
+        "codigo": "7696",
+        "isVirtual": false
+      },
+      "designada": false,
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "CAMILA CRISTIANE EUSTAQUIO",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "MOVIDA PARTICIPACOES S.A.",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": false
+      },
+      "pautaAudienciaHorario": {
+        "id": 5611743,
+        "horaInicial": "09:20:00",
+        "horaFinal": "09:40:00"
+      },
+      "prioridades": "Assédio Moral ou Sexual",
+      "statusDescricao": "Designada",
+      "idProcesso": 3039340,
+      "nrProcesso": "0011144-92.2025.5.03.0031"
+    },
+    {
+      "id": 5679913,
+      "dataInicio": "2026-06-24T15:01:00",
+      "dataFim": "2026-06-24T15:02:00",
+      "salaAudiencia": {
+        "nome": "SALA PRINCIPAL"
+      },
+      "status": "M",
+      "processo": {
+        "id": 3078144,
+        "numero": "0011450-67.2025.5.03.0029",
+        "classeJudicial": {
+          "id": 535,
+          "codigo": "985",
+          "descricao": "Ação Trabalhista - Rito Ordinário",
+          "sigla": "ATOrd",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 64840.01,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 47,
+          "descricao": "1ª Vara do Trabalho de Contagem",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 47,
+        "descricao": "Instrução por videoconferência",
+        "codigo": "7696",
+        "isVirtual": false
+      },
+      "designada": false,
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "SIMONE APARECIDA DE VASCONCELOS",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "INSTITUICAO ESPIRITA LAR DE MARCOS",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": false
+      },
+      "pautaAudienciaHorario": {
+        "id": 5679913,
+        "horaInicial": "15:01:00",
+        "horaFinal": "15:02:00"
+      },
+      "prioridades": "Acidente de Trabalho",
+      "statusDescricao": "Designada",
+      "idProcesso": 3078144,
+      "nrProcesso": "0011450-67.2025.5.03.0029"
+    },
+    {
+      "id": 5547478,
+      "dataInicio": "2026-06-29T10:00:00",
+      "dataFim": "2026-06-29T10:01:00",
+      "salaAudiencia": {
+        "nome": "Sala Principal"
+      },
+      "status": "M",
+      "processo": {
+        "id": 3064668,
+        "numero": "0010769-63.2025.5.03.0008",
+        "classeJudicial": {
+          "id": 608,
+          "codigo": "1125",
+          "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+          "sigla": "ATSum",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 3242.01,
+          "tetoValorCausa": 64840,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 149,
+          "descricao": "33ª VARA DO TRABALHO DE BELO HORIZONTE",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 47,
+        "descricao": "Instrução por videoconferência",
+        "codigo": "7696",
+        "isVirtual": false
+      },
+      "designada": false,
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "FRANCIS DE ALMEIDA SILVEIRA",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "LITORAL MED SERVICOS MEDICOS LTDA",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": false
+      },
+      "pautaAudienciaHorario": {
+        "id": 5547478,
+        "horaInicial": "10:00:00",
+        "horaFinal": "10:01:00"
+      },
+      "statusDescricao": "Designada",
+      "idProcesso": 3064668,
+      "nrProcesso": "0010769-63.2025.5.03.0008"
+    },
+    {
+      "id": 5708818,
+      "dataInicio": "2026-07-06T09:05:00",
+      "dataFim": "2026-07-06T09:30:00",
+      "salaAudiencia": {
+        "nome": "1ª - SALA 1 PRINCIPAL - 2ªVT/BH"
+      },
+      "status": "M",
+      "processo": {
+        "id": 2842154,
+        "numero": "0011040-27.2024.5.03.0002",
+        "classeJudicial": {
+          "id": 608,
+          "codigo": "1125",
+          "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+          "sigla": "ATSum",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 3242.01,
+          "tetoValorCausa": 64840,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 117,
+          "descricao": "2ª VARA DO TRABALHO DE BELO HORIZONTE",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 12,
+        "descricao": "Instrução (rito sumaríssimo)",
+        "codigo": "7578",
+        "isVirtual": false
+      },
+      "designada": false,
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "VITOR ROCHA DOS SANTOS",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "99 TECNOLOGIA LTDA",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": false
+      },
+      "pautaAudienciaHorario": {
+        "id": 5708818,
+        "horaInicial": "09:05:00",
+        "horaFinal": "09:30:00"
+      },
+      "statusDescricao": "Designada",
+      "idProcesso": 2842154,
+      "nrProcesso": "0011040-27.2024.5.03.0002"
+    },
+    {
+      "id": 5678086,
+      "dataInicio": "2026-07-06T10:00:00",
+      "dataFim": "2026-07-06T10:30:00",
+      "salaAudiencia": {
+        "nome": "21ª VT SALA"
+      },
+      "status": "M",
+      "processo": {
+        "id": 3087462,
+        "numero": "0010831-94.2025.5.03.0011",
+        "classeJudicial": {
+          "id": 608,
+          "codigo": "1125",
+          "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+          "sigla": "ATSum",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 3242.01,
+          "tetoValorCausa": 64840,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 137,
+          "descricao": "21ª VARA DO TRABALHO DE BELO HORIZONTE",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 6,
+        "descricao": "Instrução",
+        "codigo": "22",
+        "isVirtual": false
+      },
+      "designada": false,
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "LAILA FABIANO RODRIGUES",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "EBAZAR.COM.BR. LTDA",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": true
+      },
+      "pautaAudienciaHorario": {
+        "id": 5678086,
+        "horaInicial": "10:00:00",
+        "horaFinal": "10:30:00"
+      },
+      "prioridades": "Acidente de Trabalho",
+      "statusDescricao": "Designada",
+      "idProcesso": 3087462,
+      "nrProcesso": "0010831-94.2025.5.03.0011"
+    },
+    {
+      "id": 5416190,
+      "dataInicio": "2026-07-08T09:40:00",
+      "dataFim": "2026-07-08T10:00:00",
+      "salaAudiencia": {
+        "nome": "3ª Betim - Sala Principal"
+      },
+      "status": "M",
+      "processo": {
+        "id": 2608954,
+        "numero": "0010025-42.2024.5.03.0028",
+        "classeJudicial": {
+          "id": 535,
+          "codigo": "985",
+          "descricao": "Ação Trabalhista - Rito Ordinário",
+          "sigla": "ATOrd",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 64840.01,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 42,
+          "descricao": "3ª Vara do Trabalho de Betim",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 47,
+        "descricao": "Instrução por videoconferência",
+        "codigo": "7696",
+        "isVirtual": false
+      },
+      "designada": false,
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "CARLA LAIA DA SILVA",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "NET+PHONE TELECOMUNICACOES LTDA.",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": true
+      },
+      "pautaAudienciaHorario": {
+        "id": 5416190,
+        "horaInicial": "09:40:00",
+        "horaFinal": "10:00:00"
+      },
+      "prioridades": "Acidente de Trabalho; Assédio Moral ou Sexual",
+      "statusDescricao": "Designada",
+      "idProcesso": 2608954,
+      "nrProcesso": "0010025-42.2024.5.03.0028"
+    },
+    {
+      "id": 5617356,
+      "dataInicio": "2026-07-14T09:45:00",
+      "dataFim": "2026-07-14T10:00:00",
+      "salaAudiencia": {
+        "nome": "1ª - SALA 1 PRINCIPAL - 2ªVT/BH"
+      },
+      "status": "M",
+      "processo": {
+        "id": 3082476,
+        "numero": "0010823-47.2025.5.03.0002",
+        "classeJudicial": {
+          "id": 535,
+          "codigo": "985",
+          "descricao": "Ação Trabalhista - Rito Ordinário",
+          "sigla": "ATOrd",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 64840.01,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 117,
+          "descricao": "2ª VARA DO TRABALHO DE BELO HORIZONTE",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 6,
+        "descricao": "Instrução",
+        "codigo": "22",
+        "isVirtual": false
+      },
+      "designada": false,
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "THALIA VITORIA DE SOUZA",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "ALEGRIA MG CONSULTORIA E TREINAMENTOS LTDA",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": true
+      },
+      "pautaAudienciaHorario": {
+        "id": 5617356,
+        "horaInicial": "09:45:00",
+        "horaFinal": "10:00:00"
+      },
+      "statusDescricao": "Designada",
+      "idProcesso": 3082476,
+      "nrProcesso": "0010823-47.2025.5.03.0002"
+    },
+    {
+      "id": 5663580,
+      "dataInicio": "2026-08-06T15:25:00",
+      "dataFim": "2026-08-06T15:30:00",
+      "salaAudiencia": {
+        "nome": "SALA PRINCIPAL"
+      },
+      "status": "M",
+      "processo": {
+        "id": 3119291,
+        "numero": "0011751-14.2025.5.03.0029",
+        "classeJudicial": {
+          "id": 608,
+          "codigo": "1125",
+          "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+          "sigla": "ATSum",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 3242.01,
+          "tetoValorCausa": 64840,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 47,
+          "descricao": "1ª Vara do Trabalho de Contagem",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 50,
+        "descricao": "Instrução por videoconferência (rito sumaríssimo)",
+        "codigo": "7697",
+        "isVirtual": false
+      },
+      "designada": false,
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "AMANDA GABRIELA SILVESTRE GURGEL",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "MOVIDA PARTICIPACOES S.A.",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": false
+      },
+      "pautaAudienciaHorario": {
+        "id": 5663580,
+        "horaInicial": "15:25:00",
+        "horaFinal": "15:30:00"
+      },
+      "statusDescricao": "Designada",
+      "idProcesso": 3119291,
+      "nrProcesso": "0011751-14.2025.5.03.0029"
+    },
+    {
+      "id": 5696462,
+      "dataInicio": "2026-08-21T13:10:00",
+      "dataFim": "2026-08-21T13:11:00",
+      "salaAudiencia": {
+        "nome": "Sala Principal"
+      },
+      "status": "M",
+      "processo": {
+        "id": 2321918,
+        "numero": "0010837-03.2022.5.03.0110",
+        "classeJudicial": {
+          "id": 608,
+          "codigo": "1125",
+          "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+          "sigla": "ATSum",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 3242.01,
+          "tetoValorCausa": 64840,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": false,
+        "orgaoJulgador": {
+          "id": 122,
+          "descricao": "7ª VARA DO TRABALHO DE BELO HORIZONTE",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 6,
+        "descricao": "Instrução",
+        "codigo": "22",
+        "isVirtual": false
+      },
+      "designada": false,
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "ALISON LEANDRO PEREIRA",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "99 TECNOLOGIA LTDA",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": false
+      },
+      "pautaAudienciaHorario": {
+        "id": 5696462,
+        "horaInicial": "13:10:00",
+        "horaFinal": "13:11:00"
+      },
+      "statusDescricao": "Designada",
+      "idProcesso": 2321918,
+      "nrProcesso": "0010837-03.2022.5.03.0110"
+    },
+    {
+      "id": 5532063,
+      "dataInicio": "2026-09-16T08:18:00",
+      "dataFim": "2026-09-16T08:19:00",
+      "salaAudiencia": {
+        "nome": "Pauta Audiência Principal"
+      },
+      "status": "M",
+      "processo": {
+        "id": 3029733,
+        "numero": "0010900-81.2025.5.03.0026",
+        "classeJudicial": {
+          "id": 535,
+          "codigo": "985",
+          "descricao": "Ação Trabalhista - Rito Ordinário",
+          "sigla": "ATOrd",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 64840.01,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 40,
+          "descricao": "1ª Vara do Trabalho de Betim",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 47,
+        "descricao": "Instrução por videoconferência",
+        "codigo": "7696",
+        "isVirtual": false
+      },
+      "designada": false,
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "MAYRA CRISTINA DA SILVA NASCIMENTO",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "MINERAL DO BRASIL LTDA",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": false
+      },
+      "pautaAudienciaHorario": {
+        "id": 5532063,
+        "horaInicial": "08:18:00",
+        "horaFinal": "08:19:00"
+      },
+      "prioridades": "Assédio Moral ou Sexual",
+      "statusDescricao": "Designada",
+      "idProcesso": 3029733,
+      "nrProcesso": "0010900-81.2025.5.03.0026"
+    },
+    {
+      "id": 5685840,
+      "dataInicio": "2026-09-17T10:00:00",
+      "dataFim": "2026-09-17T10:30:00",
+      "salaAudiencia": {
+        "nome": "Sala Principal"
+      },
+      "status": "M",
+      "processo": {
+        "id": 3241168,
+        "numero": "0010257-37.2026.5.03.0011",
+        "classeJudicial": {
+          "id": 608,
+          "codigo": "1125",
+          "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+          "sigla": "ATSum",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 3242.01,
+          "tetoValorCausa": 64840,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 127,
+          "descricao": "11ª VARA DO TRABALHO DE BELO HORIZONTE",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 50,
+        "descricao": "Instrução por videoconferência (rito sumaríssimo)",
+        "codigo": "7697",
+        "isVirtual": false
+      },
+      "designada": false,
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "VALDECI AUGUSTO",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "GIDE ENGENHARIA LTDA",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": false
+      },
+      "pautaAudienciaHorario": {
+        "id": 5685840,
+        "horaInicial": "10:00:00",
+        "horaFinal": "10:30:00"
+      },
+      "statusDescricao": "Designada",
+      "idProcesso": 3241168,
+      "nrProcesso": "0010257-37.2026.5.03.0011"
+    },
+    {
+      "id": 5589152,
+      "dataInicio": "2026-10-02T08:17:00",
+      "dataFim": "2026-10-02T08:18:00",
+      "salaAudiencia": {
+        "nome": "Pauta Audiência Principal"
+      },
+      "status": "M",
+      "processo": {
+        "id": 3116942,
+        "numero": "0011495-80.2025.5.03.0026",
+        "classeJudicial": {
+          "id": 535,
+          "codigo": "985",
+          "descricao": "Ação Trabalhista - Rito Ordinário",
+          "sigla": "ATOrd",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 64840.01,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 40,
+          "descricao": "1ª Vara do Trabalho de Betim",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 47,
+        "descricao": "Instrução por videoconferência",
+        "codigo": "7696",
+        "isVirtual": false
+      },
+      "designada": false,
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "MARCOS GONCALVES COIMBRA",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "VJR DISTRIBUIDORA E IMPORTADORA DE ALIMENTOS LTDA",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": false
+      },
+      "pautaAudienciaHorario": {
+        "id": 5589152,
+        "horaInicial": "08:17:00",
+        "horaFinal": "08:18:00"
+      },
+      "statusDescricao": "Designada",
+      "idProcesso": 3116942,
+      "nrProcesso": "0011495-80.2025.5.03.0026"
+    },
+    {
+      "id": 5662744,
+      "dataInicio": "2026-11-06T10:15:00",
+      "dataFim": "2026-11-06T11:00:00",
+      "salaAudiencia": {
+        "nome": "Sala Principal"
+      },
+      "status": "M",
+      "processo": {
+        "id": 3187560,
+        "numero": "0010032-59.2026.5.03.0094",
+        "classeJudicial": {
+          "id": 535,
+          "codigo": "985",
+          "descricao": "Ação Trabalhista - Rito Ordinário",
+          "sigla": "ATOrd",
+          "requerProcessoReferenciaCodigo": "NE",
+          "controlaValorCausa": true,
+          "podeIncluirAutoridade": false,
+          "pisoValorCausa": 64840.01,
+          "ativo": true,
+          "idClasseJudicialPai": 593,
+          "possuiFilhos": false
+        },
+        "segredoDeJustica": false,
+        "juizoDigital": true,
+        "orgaoJulgador": {
+          "id": 58,
+          "descricao": "Vara do Trabalho de Sabará",
+          "cejusc": false,
+          "ativo": false,
+          "postoAvancado": false,
+          "novoOrgaoJulgador": false,
+          "codigoServentiaCnj": 0
+        }
+      },
+      "tipo": {
+        "id": 47,
+        "descricao": "Instrução por videoconferência",
+        "codigo": "7696",
+        "isVirtual": false
+      },
+      "designada": false,
+      "urlAudienciaVirtual": "https://trt3-jus-br.zoom.us/my/sabara",
+      "emAndamento": false,
+      "documentoAtivo": false,
+      "poloAtivo": {
+        "nome": "MATEUS SILVA AUGUSTO",
+        "polo": "ativo",
+        "poloEnum": "ATIVO",
+        "representaVarios": false
+      },
+      "poloPassivo": {
+        "nome": "IFOOD.COM AGENCIA DE RESTAURANTES ONLINE S.A.",
+        "polo": "passivo",
+        "poloEnum": "PASSIVO",
+        "representaVarios": false
+      },
+      "pautaAudienciaHorario": {
+        "id": 5662744,
+        "horaInicial": "10:15:00",
+        "horaFinal": "11:00:00"
+      },
+      "statusDescricao": "Designada",
+      "idProcesso": 3187560,
+      "nrProcesso": "0010032-59.2026.5.03.0094"
+    }
+  ]
+}

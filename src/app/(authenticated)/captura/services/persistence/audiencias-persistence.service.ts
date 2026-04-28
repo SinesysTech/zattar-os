@@ -51,6 +51,8 @@ export interface SalvarAudienciasResult {
   naoAtualizados: number;
   /** Audiências puladas porque o processo não existe no acervo */
   pulados: number;
+  /** Conflitos OCC: outro scraper atualizou a linha entre o SELECT e o UPDATE */
+  conflitos: number;
   erros: number;
   total: number;
   orgaosJulgadoresCriados: number;
@@ -131,6 +133,7 @@ export async function salvarAudiencias(
       atualizados: 0,
       naoAtualizados: 0,
       pulados: 0,
+      conflitos: 0,
       erros: 0,
       total: 0,
       orgaosJulgadoresCriados: 0,
@@ -329,9 +332,39 @@ export async function salvarAudiencias(
   let atualizados = 0;
   let naoAtualizados = 0;
   let pulados = 0;
+  let conflitos = 0;
   let erros = 0;
 
   const entidade: TipoEntidade = "audiencias";
+
+  // Batch: buscar todos os registros existentes de uma vez (evita N+1 queries)
+  const idsPje = audiencias.map((a) => a.id);
+  const existentesMap = new Map<string, Record<string, unknown>>();
+
+  try {
+    const { data: existentes, error: erroBatch } = await supabase
+      .from("audiencias")
+      .select("*")
+      .in("id_pje", idsPje)
+      .eq("trt", trt)
+      .eq("grau", grau);
+
+    if (erroBatch) {
+      console.warn(
+        `⚠️ [Audiências] Erro ao buscar existentes em batch: ${erroBatch.message}. Continuando sem cache.`,
+      );
+    } else if (existentes) {
+      for (const reg of existentes) {
+        // Chave espelha a constraint UNIQUE (id_pje, trt, grau, numero_processo)
+        const key = `${reg.id_pje}::${(reg.numero_processo as string) ?? ""}`;
+        existentesMap.set(key, reg as Record<string, unknown>);
+      }
+    }
+  } catch {
+    console.warn(
+      `⚠️ [Audiências] Exceção ao buscar existentes em batch. Continuando sem cache.`,
+    );
+  }
 
   // Processar cada audiência individualmente
   for (const {

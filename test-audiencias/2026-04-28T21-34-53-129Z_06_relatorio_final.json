@@ -1,0 +1,39 @@
+{
+  "iniciado": "2026-04-28T21:34:53.137Z",
+  "finalizado": "2026-04-28T21:35:20.240Z",
+  "duracao_segundos": 27.103,
+  "trt": "TRT3",
+  "grau": "primeiro_grau",
+  "idAdvogado": "29203",
+  "periodo": {
+    "dataInicio": "2026-04-28",
+    "dataFim": "2027-04-28"
+  },
+  "totais": {
+    "designadas": 31
+  },
+  "analise_ids": {
+    "total": 31,
+    "idsUnicos": 31,
+    "idsDuplicados": 0,
+    "audienciasComIdRepetido": 0,
+    "idsDuplicadosComProcessosDiferentes": 0,
+    "processosComMultiplasAudiencias": 0,
+    "audienciasComNrProcessoVazio": 0
+  },
+  "constraint_check": {
+    "conflitos": 0,
+    "status": "OK"
+  },
+  "comparacao_banco": {
+    "capturado_agora": 31,
+    "ja_no_banco": 28,
+    "novas_nao_no_banco": 3,
+    "sumidas_apenas_no_banco": 0,
+    "conflitos_constraint_no_banco": 0
+  },
+  "diagnostico": {
+    "reuso_de_ids_detectado": false,
+    "ids_duplicados_sem_diferenca": 0
+  }
+}

@@ -143,7 +143,7 @@ const MonthGrid = React.memo(function MonthGrid({
           type="button"
           onClick={() => count > 0 && onDayClick(monthIndex, d)}
           className={cn(
-            'aspect-square rounded-[2px] transition-all duration-100',
+            'aspect-square rounded-xs transition-all duration-100',
             getDayIntensity(count),
             today && 'ring-[1.5px] ring-primary ring-offset-1 ring-offset-transparent',
             count > 0 && 'cursor-pointer hover:opacity-80 hover:scale-[1.3]',
@@ -300,16 +300,16 @@ export function AudienciasYearHeatmap({
             <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "mt-8 flex items-center gap-3")}>
               <span className="text-micro-caption">Menos</span>
               <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
-                <div className="w-2.5 h-2.5 rounded-[2px] bg-muted/50" />
-                <div className="w-2.5 h-2.5 rounded-[2px] bg-primary/30" />
-                <div className="w-2.5 h-2.5 rounded-[2px] bg-primary/55" />
-                <div className="w-2.5 h-2.5 rounded-[2px] bg-primary/65" />
-                <div className="w-2.5 h-2.5 rounded-[2px] bg-primary/85" />
+                <div className="w-2.5 h-2.5 rounded-xs-muted/50" />
+                <div className="w-2.5 h-2.5 rounded-xs bg-primary/30" />
+                <div className="w-2.5 h-2.5 rounded-xs bg-primary/55" />
+                <div className="w-2.5 h-2.5 rounded-xs bg-primary/65" />
+                <div className="w-2.5 h-2.5 rounded-xs bg-primary/85" />
               </div>
               <span className="text-micro-caption">Mais</span>
               <span className={cn(/* design-system-escape: mx-2 margin sem primitiva DS */ "text-muted-foreground/65 mx-2 text-micro-caption")}>·</span>
               <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
-                <div className="w-2.5 h-2.5 rounded-[2px] bg-muted/50 ring-[1.5px] ring-primary ring-offset-1 ring-offset-transparent" />
+                <div className="w-2.5 h-2.5 rounded-xs bg-muted/50 ring-[1.5px] ring-primary ring-offset-1 ring-offset-transparent" />
                 <span className="text-micro-caption">Hoje</span>
               </div>
             </div>

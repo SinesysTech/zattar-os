@@ -171,11 +171,11 @@ function SegmentoFilter({
           </div>
           <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-52 px-1.5 pb-1.5")}>
             {isLoading ? (
-              <Text variant="caption" as="div" className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "py-6 text-center text-muted-foreground/40")}>Carregando...</Text>
+              <Text variant="caption" as="div" className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "py-6 text-center text-muted-foreground/65")}>Carregando...</Text>
             ) : (
               <>
                 <CommandEmpty>
-                  <Text variant="caption" as="span" className="text-muted-foreground/40">Nenhum segmento</Text>
+                  <Text variant="caption" as="span" className="text-muted-foreground/65">Nenhum segmento</Text>
                 </CommandEmpty>
                 <CommandGroup>
                   {segmentos.map((segmento) => {
@@ -350,7 +350,7 @@ function SortFilter({
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-56')} align="start" side="bottom">
         <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-0.5 sem token DS */ "p-2 space-y-0.5")}>
-          <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; pt-1 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-2 pt-1 pb-1.5 text-meta-label text-muted-foreground/50")}>
+          <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; pt-1 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-2 pt-1 pb-1.5 text-meta-label text-muted-foreground/70")}>
             Ordenar por
           </div>
           {CONTRATOS_SORT_OPTIONS.map(({ campo, label: optLabel }) => (
@@ -373,7 +373,7 @@ function SortFilter({
             </button>
           ))}
           <div className={cn(/* design-system-escape: my-1.5 margin sem primitiva DS; mx-1 margin sem primitiva DS */ "h-px bg-border/40 my-1.5 mx-1")} />
-          <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; pb-1 padding direcional sem Inset equiv. */ "px-2 pb-1 text-meta-label text-muted-foreground/50")}>
+          <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; pb-1 padding direcional sem Inset equiv. */ "px-2 pb-1 text-meta-label text-muted-foreground/70")}>
             Direção
           </div>
           {(['desc', 'asc'] as const).map((ord) => (

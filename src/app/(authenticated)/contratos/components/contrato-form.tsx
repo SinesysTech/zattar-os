@@ -248,7 +248,7 @@ export function ContratoForm({
         data-density="compact"
         className="sm:max-w-lg  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
       >
-        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+        <DialogHeader className="px-6 py-4 border-b border-border/40 shrink-0">
           <DialogTitle>{isEditMode ? 'Editar Contrato' : 'Novo Contrato'}</DialogTitle>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
@@ -518,7 +518,7 @@ export function ContratoForm({
         </div>
       </form>
         </div>
-        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+        <div className="px-6 py-4 border-t border-border/40 shrink-0 flex items-center justify-between gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <div className="flex items-center gap-2">
             <Button
