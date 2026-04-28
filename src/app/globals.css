@@ -106,8 +106,8 @@
   --color-video-skeleton: var(--video-skeleton);
 
   /* --- 8. Tipografia & Layout --- */
-  --font-sans: var(--font-sans);
-  --font-heading: var(--font-sans);
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-montserrat);
   /* Títulos */
   --font-headline: var(--font-manrope);
   /* Magistrate AI Headline */
@@ -336,33 +336,36 @@
    * Âncora: hue 281° — Zattar Purple #5523EB
    * ======================================================================== */
 
+  --background: oklch(0.96 0.01 281);
+  --foreground: oklch(0.15 0.01 281);
+
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.15 0.01 281);
 
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.15 0.01 281);
 
-  --primary: oklch(0.205 0 0);
+  --primary: oklch(0.48 0.26 281);
   /* #5523EB — Zattar Purple */
-  --primary-foreground: oklch(0.985 0 0);
+  --primary-foreground: oklch(1 0 0);
 
-  --secondary: oklch(0.97 0 0);
+  --secondary: oklch(0.95 0.04 281);
   /* purple wash */
-  --secondary-foreground: oklch(0.205 0 0);
+  --secondary-foreground: oklch(0.15 0.01 281);
 
-  --muted: oklch(0.97 0 0);
+  --muted: oklch(0.92 0.01 281);
   /* micro-tinted neutral */
-  --muted-foreground: oklch(0.556 0 0);
+  --muted-foreground: oklch(0.42 0.01 281);
 
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --accent: oklch(0.95 0.04 281);
+  --accent-foreground: oklch(0.15 0.01 281);
 
-  --destructive: oklch(0.577 0.245 27.325);
+  --destructive: oklch(0.55 0.22 25);
   --destructive-foreground: oklch(1 0 0);
 
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: oklch(0.87 0.01 281);
+  --input: oklch(0.87 0.01 281);
+  --ring: transparent;
   /* Glass Briefing: focus via shadow inset, não ring visível */
 
   /* Skeleton: cinza neutro dedicado para loading */
@@ -373,14 +376,14 @@
    * SEMANTIC TOKENS — Sidebar (SEMPRE escura em ambos os temas)
    * Spec Glass Briefing: hue 281°, chroma 0.01 (premium dark-always)
    * ======================================================================== */
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar: oklch(0.22 0.01 281);
+  --sidebar-foreground: oklch(0.98 0 0);
+  --sidebar-primary: oklch(0.70 0.20 281);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.30 0.01 281);
+  --sidebar-accent-foreground: oklch(1 0 0);
+  --sidebar-border: oklch(1 0 0 / 0.10);
+  --sidebar-ring: oklch(0.70 0.20 281);
 
   /* ========================================================================
    * SEMANTIC TOKENS — Brand (spec Glass Briefing)
@@ -547,8 +550,6 @@
   --portal-danger-soft: oklch(from var(--accent-ruby) l c h / 0.20);
   --portal-info: var(--zattar-purple-400);
   --portal-info-soft: oklch(from var(--zattar-purple-400) l c h / 0.20);
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
 }
 
 .dark {
@@ -563,34 +564,34 @@
    * Spec canônico: design-system/colors_and_type.css (Glass Briefing)
    * Âncora: hue 281° — neutros micro-tintados em toda a escala
    * ======================================================================== */
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
+  --background: oklch(0.17 0.005 281);
+  --foreground: oklch(0.98 0 0);
 
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
+  --card: oklch(0.22 0.005 281);
+  --card-foreground: oklch(0.98 0 0);
 
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.22 0.005 281);
+  --popover-foreground: oklch(0.98 0 0);
 
-  --primary: oklch(0.922 0 0);
+  --primary: oklch(0.70 0.20 281);
   /* dark: lift pra contraste — #9f85ff */
-  --primary-foreground: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.15 0.10 281);
 
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.28 0.01 281);
+  --secondary-foreground: oklch(0.98 0 0);
 
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
+  --muted: oklch(0.28 0.005 281);
+  --muted-foreground: oklch(0.65 0.005 281);
 
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --accent: oklch(0.28 0.01 281);
+  --accent-foreground: oklch(0.98 0 0);
 
-  --destructive: oklch(0.704 0.191 22.216);
+  --destructive: oklch(0.65 0.20 25);
   --destructive-foreground: oklch(1 0 0);
 
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --border: oklch(1 0 0 / 0.12);
+  --input: oklch(1 0 0 / 0.12);
+  --ring: transparent;
   /* Glass Briefing: focus via shadow inset */
 
   /* Skeleton — alpha branco sobre dark-brand */
@@ -598,16 +599,16 @@
   --skeleton-highlight: oklch(1 0 0 / 0.10);
 
   /* ========================================================================
-   * SIDEBAR — Igual ao light mode (sempre dark-brand, hue 281°)
+   * SIDEBAR — Sempre dark-brand hue 281°
    * ======================================================================== */
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar: oklch(0.22 0.01 281);
+  --sidebar-foreground: oklch(0.98 0 0);
+  --sidebar-primary: oklch(0.70 0.20 281);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.30 0.01 281);
+  --sidebar-accent-foreground: oklch(1 0 0);
+  --sidebar-border: oklch(1 0 0 / 0.10);
+  --sidebar-ring: oklch(0.70 0.20 281);
 
   /* ========================================================================
    * BRAND (Dark) — spec Glass Briefing
@@ -1353,100 +1354,23 @@
   /* =============================================================================
    * TABS COMPONENT (shadcn/ui)
    * =============================================================================
-   * Estilos para garantir que as tabs tenham o visual correto
+   * O componente shadcn tabs.tsx (com shadcn/tailwind.css) já provê bg-muted,
+   * text-muted-foreground, active state (data-active:bg-background), hover e
+   * height (h-9 horizontal / h-fit vertical) via @layer utilities — que tem
+   * prioridade maior que @layer components.
+   *
+   * Override necessário: apenas border-radius (rounded-full → rounded-lg).
+   * Use-cases especiais (day-picker flex-col): adicionar h-auto! rounded-2xl!
+   * diretamente no className do componente (v. audiencias-semana-view.tsx).
    */
-
-  /* TabsList - Container das tabs com fundo cinza */
   [data-slot="tabs-list"] {
-    @apply bg-muted rounded-lg p-1 h-auto;
+    border-radius: var(--radius) !important;
   }
 
-  /* TabsTrigger - Cada tab individual */
   [data-slot="tabs-trigger"] {
-    @apply rounded-md px-3 py-1.5 text-sm font-medium transition-all;
-    @apply text-muted-foreground;
+    border-radius: calc(var(--radius) - 2px) !important;
   }
 
-  /* TabsTrigger - Estado ativo (tab selecionada) */
-  [data-slot="tabs-trigger"][data-state="active"] {
-    @apply bg-background text-foreground shadow-sm;
-  }
-
-  /* TabsTrigger - Hover */
-  [data-slot="tabs-trigger"]:hover:not([data-state="active"]) {
-    @apply text-foreground/80;
-  }
-
-  /* =============================================================================
-   * TIPOGRAFIA (TOKENS)
-   * =============================================================================
-   * Preferir `Typography.*` (src/components/ui/typography.tsx).
-   * As classes abaixo existem como fallback e para casos específicos (ex.: MDX).
-   */
-
-  .typography-h1 {
-    @apply scroll-m-20 text-3xl font-bold tracking-tight md:text-4xl;
-  }
-
-  .typography-h2 {
-    @apply scroll-m-20 text-2xl font-semibold tracking-tight;
-  }
-
-  .typography-h3 {
-    @apply scroll-m-20 text-xl font-semibold tracking-tight;
-  }
-
-  .typography-h4 {
-    @apply scroll-m-20 text-lg font-semibold tracking-tight;
-  }
-
-  .typography-p {
-    @apply leading-7 text-foreground;
-  }
-
-  .typography-lead {
-    @apply text-lg text-muted-foreground;
-  }
-
-  .typography-large {
-    @apply text-lg font-semibold;
-  }
-
-  .typography-small {
-    @apply text-sm font-medium leading-none;
-  }
-
-  .typography-muted {
-    @apply text-sm text-muted-foreground;
-  }
-
-  .typography-blockquote {
-    @apply border-l-2 border-border pl-6 italic text-muted-foreground;
-  }
-
-  .typography-list {
-    @apply my-6 ml-6 list-disc [&>li]:mt-2;
-  }
-
-  .typography-inline-code {
-    @apply rounded bg-muted px-1.5 py-0.5 font-mono text-sm;
-  }
-
-  .typography-table-wrapper {
-    @apply my-6 w-full overflow-x-auto rounded-md border;
-  }
-
-  .typography-table {
-    @apply w-full text-sm;
-  }
-
-  .typography-table th {
-    @apply border-b bg-muted/40 px-3 py-2 text-left font-medium;
-  }
-
-  .typography-table td {
-    @apply border-b px-3 py-2 align-top;
-  }
 
   /* =============================================================================
    * ESCALA TIPOGRÁFICA UNIFICADA — DESIGN SYSTEM ZATTAR

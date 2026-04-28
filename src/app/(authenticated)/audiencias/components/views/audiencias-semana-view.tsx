@@ -205,7 +205,7 @@ export function AudienciasSemanaView({
       </div>
 
       <Tabs value={selectedDay} onValueChange={setSelectedDay} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-        <TabsList className="w-full">
+        <TabsList variant="week">
           {weekDays.map((day) => {
             const key = getDayKey(day);
             const dayAudiencias = audienciasByDay.get(key) ?? [];
@@ -218,27 +218,18 @@ export function AudienciasSemanaView({
               <TabsTrigger
                 key={key}
                 value={key}
-                className={cn(
-                  /* design-system-escape: gap-0.5 gap sem token DS; px-3 py-2 padding direcional sem Inset equiv. */ 'flex flex-1 flex-col items-center gap-0.5 px-3 py-2 rounded-xl',
-                  today && 'bg-primary/12'
-                )}
+                className={cn('flex-1 gap-1.5', today && 'text-primary')}
               >
-                <span className={cn('text-overline capitalize', today && 'text-primary')}>
-                  {format(day, 'EEE', { locale: ptBR })}
-                </span>
-                <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
-                  <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-caption font-semibold tabular-nums', today && 'text-primary')}>
-                    {format(day, 'd')}
+                <span className="capitalize">{format(day, 'EEE', { locale: ptBR })}</span>
+                <span className="font-semibold tabular-nums">{format(day, 'd')}</span>
+                {dayAudiencias.length > 0 && (
+                  <span className={cn(
+                    'inline-flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-semibold tabular-nums',
+                    lowPrepCount > 0 ? 'bg-warning/15 text-warning' : 'bg-primary/15 text-primary',
+                  )}>
+                    {dayAudiencias.length}
                   </span>
-                  {dayAudiencias.length > 0 && (
-                    <span className={cn(
-                      /* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ 'text-micro-badge tabular-nums rounded-full px-1.5 py-px inline-flex items-center justify-center',
-                      lowPrepCount > 0 ? 'bg-warning/15 text-warning' : 'bg-primary/15 text-primary'
-                    )}>
-                      {dayAudiencias.length}
-                    </span>
-                  )}
-                </div>
+                )}
               </TabsTrigger>
             );
           })}

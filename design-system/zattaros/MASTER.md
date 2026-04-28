@@ -6,7 +6,7 @@
 ---
 
 **Projeto:** ZattarOS (Synthropic)  
-**Atualizado:** 2026-04-27  
+**Atualizado:** 2026-04-28  
 **Stack:** Next.js 16 · React 19 · TypeScript 5 · Tailwind 4 · shadcn/ui (new-york) · Supabase
 
 ---
@@ -18,22 +18,40 @@ de vidro (`GlassPanel`), KPI strips no topo, insight banners contextuais e view 
 
 ---
 
+## Tema shadcn Instalado
+
+O projeto importa `shadcn/tailwind.css` que registra **custom variants** essenciais:
+
+| Variant | Selector gerado | Uso |
+|---|---|---|
+| `data-active:` | `[data-state="active"]` ou `[data-active]` | Tabs, itens de lista selecionados |
+| `data-horizontal:` | `[data-orientation="horizontal"]` | Layout de componentes Radix |
+| `data-vertical:` | `[data-orientation="vertical"]` | Layout de componentes Radix |
+| `data-open:` | `[data-state="open"]` | Dropdowns, Collapsibles |
+| `data-checked:` | `[data-state="checked"]` | Checkboxes, Radios |
+
+Esses variants estão disponíveis para qualquer componente Radix UI/shadcn.
+
+---
+
 ## Paleta de Cores
 
 As cores são controladas por **variáveis CSS** do tema (Tailwind 4 + shadcn). Nunca usar HEX hardcoded.
 
-| Token Tailwind | Papel | Uso |
-|---|---|---|
-| `bg-background` | Fundo da página | Base |
-| `bg-card` | Fundo dos cards | Substituir por `GlassPanel` em painéis principais |
-| `text-foreground` | Texto primário | Títulos, labels principais |
-| `text-muted-foreground` | Texto secundário | Subtítulos, metadados |
-| `bg-primary / text-primary` | Cor de destaque | Ações principais, badges de status neutro |
-| `bg-success / text-success` | Verde | Concluído, realizado, OK |
-| `bg-warning / text-warning` | Amarelo | Atenção, próximo prazo |
-| `bg-destructive / text-destructive` | Vermelho | Crítico, vencido, erro |
-| `bg-info / text-info` | Azul | Informativo, capture, link |
-| `border-border` | Bordas | Divisores, bordas de cards |
+| Token Tailwind | Papel | Valor light | Valor dark |
+|---|---|---|---|
+| `bg-background` | Fundo da página | `oklch(0.96 0.01 281)` — branco micro-tintado | `oklch(0.17 0.005 281)` — dark brand |
+| `bg-card` | Fundo dos cards | `oklch(1 0 0)` — branco puro | `oklch(0.22 0.005 281)` |
+| `text-foreground` | Texto primário | `oklch(0.15 0.01 281)` | `oklch(0.98 0 0)` |
+| `text-muted-foreground` | Texto secundário | `oklch(0.42 0.01 281)` | `oklch(0.65 0.005 281)` |
+| `bg-primary / text-primary` | Ação principal — **Roxo Zattar** | `oklch(0.48 0.26 281)` — #5523EB | `oklch(0.70 0.20 281)` |
+| `bg-brand / text-brand` | Alias do roxo puro (decorativo) | `oklch(0.48 0.26 281)` | `oklch(0.70 0.20 281)` |
+| `bg-muted` | Superfície neutra (TabsList, inputs) | `oklch(0.92 0.01 281)` | `oklch(0.28 0.005 281)` |
+| `bg-success / text-success` | Verde | Concluído, realizado, OK | — |
+| `bg-warning / text-warning` | Amarelo | Atenção, próximo prazo | — |
+| `bg-destructive / text-destructive` | Vermelho | Crítico, vencido, erro | — |
+| `bg-info / text-info` | Azul/roxo | Informativo, capture, link | — |
+| `border-border` | Bordas | `oklch(0.87 0.01 281)` — tintado | `oklch(1 0 0 / 0.12)` |
 
 **Opacidades comuns:** `/5`, `/8`, `/10`, `/15`, `/20`, `/25`, `/40`, `/50`, `/60`
 
@@ -122,6 +140,51 @@ Tailwind brutas** (`text-sm`, `text-xs`, `text-xl` etc.).
 <InsightBanner type="warning">  // amarelo — atenção
 ```
 
+### Tabs (shadcn padrão)
+
+```tsx
+// Padrão — pill com bg-muted, trigger ativo com bg-background
+<Tabs defaultValue="tab1">
+  <TabsList>                         // rounded-lg (sobrescrito pelo globals.css)
+    <TabsTrigger value="tab1">Tab 1</TabsTrigger>
+    <TabsTrigger value="tab2">Tab 2</TabsTrigger>
+  </TabsList>
+  <TabsContent value="tab1">...</TabsContent>
+</Tabs>
+
+// Variante linha (underline)
+<TabsList variant="line">
+  <TabsTrigger value="tab1">Tab 1</TabsTrigger>
+</TabsList>
+```
+
+**Day-picker (flex-col triggers)** — padrão da view Semana:
+```tsx
+// Triggers precisam ser flex-col (empilham nome do dia + data).
+// h-auto! e rounded-2xl! sobrescrevem h-9 e rounded-full da base shadcn.
+<TabsList className="w-full! h-auto! rounded-2xl!">
+  <TabsTrigger
+    value={key}
+    className={cn(
+      'flex h-auto! flex-1 flex-col items-center gap-0.5 px-3 py-2',
+      today && 'bg-primary/12',
+    )}
+  >
+    <span className={cn('text-overline capitalize', today && 'text-primary')}>
+      {format(day, 'EEE', { locale: ptBR })}
+    </span>
+    <span className={cn('text-caption font-semibold tabular-nums', today && 'text-primary')}>
+      {format(day, 'd')}
+    </span>
+  </TabsTrigger>
+</TabsList>
+```
+
+> **Por que `!` (important)?** Os modificadores `w-full!`, `h-auto!`, `rounded-2xl!`
+> geram `!important` no CSS. A variante base shadcn usa `w-fit`, `h-9` (horizontal) e
+> `rounded-full` em `@layer utilities` — mesma camada, maior especificidade pelo selector
+> condicional `group-data-horizontal/tabs:h-9`. O `!important` garante a sobrescrita.
+
 ### Dialogs (sem Sheet)
 - Todos os painéis de detalhe e formulários usam `DialogFormShell` centralizado
 - **Nunca usar `Sheet`** — violação de regra arquitetural
@@ -172,3 +235,5 @@ Antes de entregar qualquer código de UI, verificar:
 - [ ] Focus states visíveis (focus-visible:ring-1)
 - [ ] prefers-reduced-motion respeitado
 - [ ] Responsivo: 375px, 768px, 1024px, 1440px
+- [ ] Tabs day-picker usam `h-auto! rounded-2xl!` no TabsList e `h-auto!` nos triggers
+- [ ] `--brand` (oklch 0.48 0.26 281) para roxo Zattar; `--primary` para ações dark

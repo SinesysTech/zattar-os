@@ -31,6 +31,7 @@ const tabsListVariants = cva(
       variant: {
         default: "bg-muted",
         line: "gap-1 bg-transparent",
+        week: "w-full bg-muted",
       },
     },
     defaultVariants: {
