@@ -1,0 +1,23 @@
+[
+  {
+    "quantidadeProcessos": 1119,
+    "idAgrupamentoProcessoTarefa": 1,
+    "nomeAgrupamentoTarefa": "Acervo Geral",
+    "ordem": 1,
+    "destaque": false
+  },
+  {
+    "quantidadeProcessos": 46,
+    "idAgrupamentoProcessoTarefa": 2,
+    "nomeAgrupamentoTarefa": "Pendentes de Manifestação",
+    "ordem": 2,
+    "destaque": false
+  },
+  {
+    "quantidadeProcessos": 8978,
+    "idAgrupamentoProcessoTarefa": 5,
+    "nomeAgrupamentoTarefa": "Arquivados",
+    "ordem": 3,
+    "destaque": false
+  }
+]

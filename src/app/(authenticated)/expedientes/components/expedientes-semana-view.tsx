@@ -68,7 +68,7 @@ const URGENCY_BORDER: Record<UrgencyLevel, string> = {
   alto: 'border-l-warning/60',
   medio: 'border-l-primary/50',
   baixo: 'border-l-success/40',
-  ok: 'border-l-border/30',
+  ok: 'border-l-border/50',
 };
 
 const URGENCY_DOT: Record<UrgencyLevel, string> = {
@@ -76,7 +76,7 @@ const URGENCY_DOT: Record<UrgencyLevel, string> = {
   alto: 'bg-warning',
   medio: 'bg-info',
   baixo: 'bg-success',
-  ok: 'bg-muted-foreground/30',
+  ok: 'bg-muted-foreground/55',
 };
 
 const URGENCY_BADGE: Record<UrgencyLevel, string> = {
@@ -84,7 +84,7 @@ const URGENCY_BADGE: Record<UrgencyLevel, string> = {
   alto: 'bg-warning/15 text-warning',
   medio: 'bg-info/15 text-info',
   baixo: 'bg-success/15 text-success',
-  ok: 'bg-muted/30 text-muted-foreground/50',
+  ok: 'bg-muted/30 text-muted-foreground/70',
 };
 
 // ─── Helpers ─────────────────────────────────────────────────────────────
@@ -195,7 +195,7 @@ export function ExpedientesSemanaView({
             /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer',
             isCurrentWeek
               ? 'bg-primary/12 text-primary'
-              : 'bg-border/8 text-muted-foreground/50 hover:bg-border/15',
+              : 'bg-border/8 text-muted-foreground/70 hover:bg-border/15',
           )}
         >
           Hoje
@@ -245,7 +245,7 @@ export function ExpedientesSemanaView({
                   </span>
                 </div>
                 {dayExps.length > 0 && (
-                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] tabular-nums text-muted-foreground/45 font-medium")}>
+                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] tabular-nums text-muted-foreground/65 font-medium")}>
                     {dayExps.length}
                   </span>
                 )}
@@ -254,7 +254,7 @@ export function ExpedientesSemanaView({
               {/* Expedientes */}
               {dayExps.length === 0 ? (
                 <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex-1 flex items-center justify-center py-6")}>
-                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/30")}>—</span>
+                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/55")}>—</span>
                 </div>
               ) : (
                 <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
@@ -324,7 +324,7 @@ function WeekDayCard({
       {/* Row 1: Prazo date + Urgency indicators */}
       <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center justify-between gap-1")}>
         <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs tabular-nums font-semibold text-foreground/80")}>
-          {prazoLabel ?? <span className="italic text-muted-foreground/40">Sem prazo</span>}
+          {prazoLabel ?? <span className="italic text-muted-foreground/65">Sem prazo</span>}
         </span>
         <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
           {!isBaixado && urgency !== 'ok' && (
@@ -363,7 +363,7 @@ function WeekDayCard({
       {(partes.autora || partes.re) && (
         <p className="text-[10px] text-muted-foreground/55 mt-1 truncate">
           {partes.autora || '—'}{' '}
-          <span className="text-muted-foreground/35">vs</span>{' '}
+          <span className="text-muted-foreground/55">vs</span>{' '}
           {partes.re || '—'}
         </p>
       )}
@@ -376,7 +376,7 @@ function WeekDayCard({
           </span>
         )}
         {expediente.grau && (
-          <span className="text-[9px] text-muted-foreground/45 shrink-0">
+          <span className="text-[9px] text-muted-foreground/65 shrink-0">
             {GRAU_TRIBUNAL_LABELS[expediente.grau]}
           </span>
         )}
@@ -388,7 +388,7 @@ function WeekDayCard({
       {/* Row 5: Orgao julgador */}
       {(expediente.orgaoJulgadorOrigem || expediente.descricaoOrgaoJulgador) && (
         <p
-          className="text-[9px] text-muted-foreground/45 mt-0.5 truncate"
+          className="text-[9px] text-muted-foreground/65 mt-0.5 truncate"
           title={expediente.orgaoJulgadorOrigem || expediente.descricaoOrgaoJulgador || undefined}
         >
           {expediente.orgaoJulgadorOrigem || expediente.descricaoOrgaoJulgador}
@@ -402,7 +402,7 @@ function WeekDayCard({
         onKeyDown={(e) => e.stopPropagation()}
       >
         <div>
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[8px] font-medium text-muted-foreground/40 uppercase tracking-wider mb-0.5")}>
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[8px] font-medium text-muted-foreground/65 uppercase tracking-wider mb-0.5")}>
             Descrição
           </p>
           <ExpedienteTextEditor
@@ -415,7 +415,7 @@ function WeekDayCard({
           />
         </div>
         <div>
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[8px] font-medium text-muted-foreground/40 uppercase tracking-wider mb-0.5")}>
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[8px] font-medium text-muted-foreground/65 uppercase tracking-wider mb-0.5")}>
             Observações
           </p>
           <ExpedienteTextEditor

@@ -1,0 +1,26 @@
+{
+  "iniciado": "2026-04-28T20:00:06.105Z",
+  "finalizado": "2026-04-28T20:00:38.284Z",
+  "duracao_segundos": 32.18,
+  "trt": "TRT3",
+  "grau": "primeiro_grau",
+  "idAdvogado": "29203",
+  "totais": {
+    "no_prazo": 37,
+    "sem_prazo": 9,
+    "total": 46
+  },
+  "analise_ids": {
+    "total": 46,
+    "idsUnicos": 43,
+    "idsDuplicados": 1,
+    "processosComIdRepetido": 4,
+    "processosIdDuplicadoComNumerosDiferentes": 0
+  },
+  "comparacao_banco": {
+    "capturado_agora": 43,
+    "ja_no_banco": 40,
+    "novos_nao_no_banco": 3,
+    "sumidos_apenas_no_banco": 0
+  }
+}

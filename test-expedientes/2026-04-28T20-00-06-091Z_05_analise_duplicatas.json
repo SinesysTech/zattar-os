@@ -1,0 +1,24 @@
+{
+  "resumo": {
+    "total": 46,
+    "idsUnicos": 43,
+    "idsDuplicados": 1,
+    "processosComIdRepetido": 4,
+    "processosIdDuplicadoComNumerosDiferentes": 0
+  },
+  "duplicatas": [
+    {
+      "id": 3071219,
+      "count": 4,
+      "numeroProcesso": "0010876-63.2025.5.03.0152",
+      "idDocumento": [
+        246262759,
+        246262758,
+        246862297
+      ],
+      "agrupadores": [
+        "N+I+I"
+      ]
+    }
+  ]
+}

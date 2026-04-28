@@ -62,10 +62,10 @@ export function RiskScoreGauge(props: RiskScoreGaugeProps) {
     <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
         <div>
-          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/45")}>Saude</p>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/65")}>Saude</p>
           <Heading level="widget" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-1 text-sm")}>Score operacional</Heading>
         </div>
-        <ShieldCheck className="size-4 text-muted-foreground/45" />
+        <ShieldCheck className="size-4 text-muted-foreground/65" />
       </div>
 
       <div className="mt-4 flex flex-col items-center">
@@ -125,10 +125,10 @@ export function AgingFunnel({
     <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
         <div>
-          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/45")}>Distribuicao</p>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/65")}>Distribuicao</p>
           <Heading level="widget" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-1 text-sm")}>Funil de prazos</Heading>
         </div>
-        <TrendingDown className="size-4 text-muted-foreground/45" />
+        <TrendingDown className="size-4 text-muted-foreground/65" />
       </div>
 
       <div className={cn(/* design-system-escape: space-y-2.5 sem token DS */ "mt-4 space-y-2.5")}>
@@ -210,10 +210,10 @@ export function ActivityHeatmap({ baixasPorDia }: ActivityHeatmapProps) {
     <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
         <div>
-          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/45")}>Atividade</p>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/65")}>Atividade</p>
           <Heading level="widget" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-1 text-sm")}>Baixas 35 dias</Heading>
         </div>
-        <Activity className="size-4 text-muted-foreground/45" />
+        <Activity className="size-4 text-muted-foreground/65" />
       </div>
 
       <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "mt-4 grid grid-cols-7 gap-1")}>
@@ -232,7 +232,7 @@ export function ActivityHeatmap({ baixasPorDia }: ActivityHeatmapProps) {
         })}
       </div>
 
-      <div className="mt-3 flex items-center justify-between text-[10px] text-muted-foreground/45">
+      <div className="mt-3 flex items-center justify-between text-[10px] text-muted-foreground/65">
         <span>{totalBaixas} baixas no periodo</span>
         <span>media {mediaDiaria}/dia</span>
       </div>

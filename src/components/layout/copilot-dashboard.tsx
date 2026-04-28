@@ -87,7 +87,7 @@ function PedrinhoHeaderToggle({
         className={cn(
           "pedrinho-header-toggle group/pedrinho relative flex items-center justify-center",
           "size-9 rounded-xl cursor-pointer",
-          "bg-card/50 border border-border/30",
+          "bg-card/80 border border-border",
           "hover:bg-primary/8 hover:border-primary/25",
           "hover:shadow-[0_0_16px_oklch(var(--primary)/0.12)]",
           "active:scale-95",

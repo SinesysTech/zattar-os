@@ -250,8 +250,8 @@ export function HubPanel({
         {accountBar}
 
         {/* Search */}
-        <div className="flex items-center gap-3 px-4 py-3.5 border-b border-border/30">
-          <Search className="size-4 text-muted-foreground/50 shrink-0" />
+        <div className="flex items-center gap-3 px-4 py-3.5 border-b border-border/50">
+          <Search className="size-4 text-muted-foreground/70 shrink-0" />
           <input
             ref={searchRef}
             type="text"
@@ -261,9 +261,9 @@ export function HubPanel({
               setFocusedIndex(-1)
             }}
             placeholder="Buscar módulo..."
-            className="flex-1 bg-transparent text-sm placeholder:text-muted-foreground/40 outline-none"
+            className="flex-1 bg-transparent text-sm placeholder:text-muted-foreground/60 outline-none"
           />
-          <kbd className="hidden sm:flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-muted/50 text-[10px] text-muted-foreground/60 font-mono">
+          <kbd className="hidden sm:flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-muted/50 text-[10px] text-muted-foreground/70 font-mono">
             ESC
           </kbd>
         </div>
@@ -274,8 +274,8 @@ export function HubPanel({
           {!search.trim() && recentItems.length > 0 && (
             <div className="mb-1">
               <div className="flex items-center gap-2 px-3 py-2">
-                <Clock className="size-3 text-muted-foreground/40" />
-                <span className="text-[10px] font-medium text-muted-foreground/50 uppercase tracking-widest">
+                <Clock className="size-3 text-muted-foreground/60" />
+                <span className="text-[10px] font-medium text-muted-foreground/70 uppercase tracking-widest">
                   Recentes
                 </span>
               </div>
@@ -304,12 +304,12 @@ export function HubPanel({
                         transition-all duration-200
                         ${isActive
                           ? "bg-primary/15 text-primary"
-                          : "bg-muted/40 text-muted-foreground/60 group-hover:bg-muted/60 group-hover:text-foreground/80"
+                          : "bg-muted/50 text-muted-foreground/75 group-hover:bg-muted/70 group-hover:text-foreground/90"
                         }
                       `}>
                         <Icon className="size-4" />
                       </div>
-                      <span className="text-[10px] font-medium text-muted-foreground/70 group-hover:text-foreground/80 transition-colors">
+                      <span className="text-[10px] font-medium text-muted-foreground/80 group-hover:text-foreground/90 transition-colors">
                         {item.title.length > 8 ? item.title.slice(0, 7) + "…" : item.title}
                       </span>
                     </button>
@@ -324,10 +324,10 @@ export function HubPanel({
           {filteredSections.map((section) => (
             <div key={section.label} className="mb-1">
               <div className="flex items-center gap-2 px-3 py-2">
-                <span className="text-[10px] font-medium text-muted-foreground/50 uppercase tracking-widest">
+                <span className="text-[10px] font-semibold text-muted-foreground/70 uppercase tracking-widest">
                   {section.label}
                 </span>
-                <span className="text-[10px] text-muted-foreground/30">{section.items.length}</span>
+                <span className="text-[10px] text-muted-foreground/50">{section.items.length}</span>
               </div>
 
               <div className="grid grid-cols-2 gap-0.5 px-1">
@@ -361,7 +361,7 @@ export function HubPanel({
                         transition-all duration-200
                         ${isActive
                           ? "bg-primary/15 text-primary shadow-[0_0_12px_oklch(from var(--primary) l c h / 0.15)]"
-                          : "bg-muted/30 text-muted-foreground/60 group-hover:text-foreground/80"
+                          : "bg-muted/40 text-muted-foreground/75 group-hover:text-foreground/90"
                         }
                       `}>
                         <Icon className="size-4" />
@@ -372,13 +372,13 @@ export function HubPanel({
                             {item.title}
                           </span>
                           {item.shortcut && (
-                            <kbd className="text-[9px] text-muted-foreground/30 font-mono ml-1 shrink-0">
+                            <kbd className="text-[9px] text-muted-foreground/50 font-mono ml-1 shrink-0">
                               {item.shortcut}
                             </kbd>
                           )}
                         </div>
                         {item.description && (
-                          <p className="text-[10px] text-muted-foreground/40 truncate">
+                          <p className="text-[10px] text-muted-foreground/65 truncate">
                             {item.description}
                           </p>
                         )}
@@ -393,16 +393,16 @@ export function HubPanel({
           {/* Empty state */}
           {allFilteredItems.length === 0 && (
             <div className="flex flex-col items-center justify-center py-12 gap-3">
-              <Search className="size-8 text-muted-foreground/20" />
-              <p className="text-sm text-muted-foreground/40">Nenhum módulo encontrado</p>
-              <p className="text-[11px] text-muted-foreground/30">Tente outro termo de busca</p>
+              <Search className="size-8 text-muted-foreground/40" />
+              <p className="text-sm text-muted-foreground/70">Nenhum módulo encontrado</p>
+              <p className="text-[11px] text-muted-foreground/55">Tente outro termo de busca</p>
             </div>
           )}
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between px-4 py-2.5 border-t border-border/20 bg-muted/20">
-          <div className="flex items-center gap-3 text-[10px] text-muted-foreground/40">
+        <div className="flex items-center justify-between px-4 py-2.5 border-t border-border/40 bg-muted/20">
+          <div className="flex items-center gap-3 text-[10px] text-muted-foreground/60">
             <span className="flex items-center gap-1">
               <kbd className="px-1 py-0.5 rounded bg-muted/60 font-mono text-[9px]">↑↓</kbd>
               navegar
@@ -420,7 +420,7 @@ export function HubPanel({
             href="https://synthropic.com.br"
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-center gap-1.5 text-[10px] text-muted-foreground/30 hover:text-muted-foreground/60 transition-colors cursor-pointer"
+            className="group flex items-center gap-1.5 text-[10px] text-muted-foreground/50 hover:text-muted-foreground/70 transition-colors cursor-pointer"
           >
             <SynthropicLogo />
             <span>Synthropic</span>

@@ -129,7 +129,7 @@ export function ExpedienteResponsavelPopover({
       >
         <Command className="bg-transparent">
           <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/40 uppercase tracking-wider mb-2")}>
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/65 uppercase tracking-wider mb-2")}>
               Responsável
             </p>
             <CommandInput
@@ -140,8 +140,8 @@ export function ExpedienteResponsavelPopover({
           <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-52 px-1.5 pb-1.5")}>
             <CommandEmpty>
               <div className={cn(/* design-system-escape: gap-1 gap sem token DS; py-3 padding direcional sem Inset equiv. */ "flex flex-col items-center gap-1 py-3")}>
-                <Search className="size-4 text-muted-foreground/30" />
-                <span className="text-[11px] text-muted-foreground/40">Nenhum usuário encontrado</span>
+                <Search className="size-4 text-muted-foreground/55" />
+                <span className="text-[11px] text-muted-foreground/65">Nenhum usuário encontrado</span>
               </div>
             </CommandEmpty>
             <CommandGroup>
@@ -150,7 +150,7 @@ export function ExpedienteResponsavelPopover({
                 onSelect={() => handleSelect(null)}
                 className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-xs px-2 py-1.5")}
               >
-                <UserX className="size-3.5 text-muted-foreground/40" />
+                <UserX className="size-3.5 text-muted-foreground/65" />
                 <span>Sem responsável</span>
                 {!responsavel && (
                   <Check className="size-3 ml-auto text-primary" />
@@ -222,11 +222,11 @@ export function ResponsavelTriggerContent({
         'rounded-full bg-muted/40 flex items-center justify-center shrink-0',
         size === 'sm' ? 'size-4' : 'size-7',
       )}>
-        <User className={cn('text-muted-foreground/40', size === 'sm' ? 'size-2.5' : 'size-3.5')} />
+        <User className={cn('text-muted-foreground/65', size === 'sm' ? 'size-2.5' : 'size-3.5')} />
       </div>
       <span className={cn(
         'italic',
-        size === 'sm' ? 'text-[9px] text-warning/60' : 'text-caption text-muted-foreground/50',
+        size === 'sm' ? 'text-[9px] text-warning/60' : 'text-caption text-muted-foreground/70',
       )}>
         {size === 'sm' ? 'Sem resp.' : 'Clique para atribuir'}
       </span>

@@ -89,17 +89,17 @@ function GlassEmptyState() {
         /* design-system-escape: py-16 vertical breathing room do empty state — mirror do estado de captura/audiências */ 'flex flex-col items-center justify-center py-16 opacity-60',
       )}
     >
-      <FileSearch className="mb-4 size-10 text-muted-foreground/30" />
+      <FileSearch className="mb-4 size-10 text-muted-foreground/55" />
       <p
         className={cn(
-          /* design-system-escape: text-sm/font-medium do título do empty state — peso visual canônico */ 'text-sm font-medium text-muted-foreground/50',
+          /* design-system-escape: text-sm/font-medium do título do empty state — peso visual canônico */ 'text-sm font-medium text-muted-foreground/70',
         )}
       >
         Nenhum expediente encontrado
       </p>
       <p
         className={cn(
-          /* design-system-escape: text-xs do subtítulo do empty state */ 'mt-1 text-xs text-muted-foreground/30',
+          /* design-system-escape: text-xs do subtítulo do empty state */ 'mt-1 text-xs text-muted-foreground/55',
         )}
       >
         Tente ajustar os filtros ou criar um novo expediente

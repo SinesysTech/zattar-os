@@ -1,0 +1,75 @@
+[2026-04-28T20:00:06.105Z] ═══════════════════════════════════════════════════════════
+[2026-04-28T20:00:06.105Z]   DEBUG: Captura direta de expedientes TRT3 (1º grau)
+[2026-04-28T20:00:06.105Z]   Iniciado: 2026-04-28T20:00:06.105Z
+[2026-04-28T20:00:06.105Z]   Sem persistência | Sem download de documentos
+[2026-04-28T20:00:06.105Z] ═══════════════════════════════════════════════════════════
+[2026-04-28T20:00:06.106Z] 📋 Buscando config TRT3 (primeiro_grau) no banco...
+[2026-04-28T20:00:06.381Z] ✅ Config TRT3 encontrada (estratégia JOIN)
+[2026-04-28T20:00:06.381Z] 💾 Salvo: /Users/jordanmedeiros/Projetos/zattar-os/test-expedientes/2026-04-28T20-00-06-091Z_01_config_trt3.json
+[2026-04-28T20:00:06.381Z] ✅ Config | loginUrl=https://pje.trt3.jus.br/primeirograu/login.seam | apiUrl=https://pje.trt3.jus.br/pje-comum-api/api
+[2026-04-28T20:00:06.381Z] 🔑 Buscando credencial TRT3 ativa no banco...
+[2026-04-28T20:00:06.456Z] ✅ Credencial carregada | CPF: ***4610
+[2026-04-28T20:00:06.456Z] 
+🌐 Lançando Chromium local (headless)...
+[2026-04-28T20:00:09.875Z] 
+🔐 Fase 1: Autenticando no PJE TRT3...
+[2026-04-28T20:00:09.881Z] 🌐 Navegando para https://pje.trt3.jus.br/primeirograu/login.seam
+[2026-04-28T20:00:13.623Z] 🔑 Clicando em SSO PDPJ...
+[2026-04-28T20:00:15.621Z] 📝 Preenchendo CPF e senha...
+[2026-04-28T20:00:19.898Z] 🚀 Submetendo login...
+[2026-04-28T20:00:25.045Z] ⏳ Aguardando campo OTP...
+[2026-04-28T20:00:25.092Z] ✅ Campo OTP encontrado: #otp
+[2026-04-28T20:00:25.092Z] 📱 Buscando OTP do 2FAuth...
+[2026-04-28T20:00:25.491Z] ✅ OTP obtido com sucesso
+[2026-04-28T20:00:31.585Z] ✅ Saiu do SSO: pje.trt3.jus.br
+[2026-04-28T20:00:35.133Z] ✅ Autenticado | idAdvogado=29203 | nome=N/A
+[2026-04-28T20:00:35.138Z] 
+📊 Fase 2: Buscando totalizadores...
+[2026-04-28T20:00:36.038Z] 💾 Salvo: /Users/jordanmedeiros/Projetos/zattar-os/test-expedientes/2026-04-28T20-00-06-091Z_02_totalizadores.json
+[2026-04-28T20:00:36.039Z]    [{"quantidadeProcessos":1119,"idAgrupamentoProcessoTarefa":1,"nomeAgrupamentoTarefa":"Acervo Geral","ordem":1,"destaque":false},{"quantidadeProcessos":46,"idAgrupamentoProcessoTarefa":2,"nomeAgrupamentoTarefa":"Pendentes de Manifestação","ordem":2,"destaque":false},{"quantidadeProcessos":8978,"idAgr
+[2026-04-28T20:00:36.039Z] 
+📡 Fase 3: Expedientes no_prazo (agrupador=N)...
+[2026-04-28T20:00:36.041Z] 
+📡 Buscando expedientes [no_prazo] (agrupador=N)...
+[2026-04-28T20:00:36.634Z]    Página 1: 37 registros | qtdPaginas=1 | totalRegistros=37
+[2026-04-28T20:00:36.635Z] ✅ Total [no_prazo]: 37 expedientes
+[2026-04-28T20:00:36.640Z] 💾 Salvo: /Users/jordanmedeiros/Projetos/zattar-os/test-expedientes/2026-04-28T20-00-06-091Z_03_no_prazo_processos.json
+[2026-04-28T20:00:36.641Z] 💾 Salvo: /Users/jordanmedeiros/Projetos/zattar-os/test-expedientes/2026-04-28T20-00-06-091Z_03_no_prazo_paginas_raw.json
+[2026-04-28T20:00:36.641Z] 
+📡 Fase 4: Expedientes sem_prazo (agrupador=I)...
+[2026-04-28T20:00:37.642Z] 
+📡 Buscando expedientes [sem_prazo] (agrupador=I)...
+[2026-04-28T20:00:37.947Z]    Página 1: 9 registros | qtdPaginas=1 | totalRegistros=9
+[2026-04-28T20:00:37.947Z] ✅ Total [sem_prazo]: 9 expedientes
+[2026-04-28T20:00:37.948Z] 💾 Salvo: /Users/jordanmedeiros/Projetos/zattar-os/test-expedientes/2026-04-28T20-00-06-091Z_04_sem_prazo_processos.json
+[2026-04-28T20:00:37.950Z] 💾 Salvo: /Users/jordanmedeiros/Projetos/zattar-os/test-expedientes/2026-04-28T20-00-06-091Z_04_sem_prazo_paginas_raw.json
+[2026-04-28T20:00:37.950Z] 
+🔎 Fase 5: Analisando duplicatas de IDs...
+[2026-04-28T20:00:37.954Z] 💾 Salvo: /Users/jordanmedeiros/Projetos/zattar-os/test-expedientes/2026-04-28T20-00-06-091Z_05_analise_duplicatas.json
+[2026-04-28T20:00:37.955Z]    Total: 46 processos
+[2026-04-28T20:00:37.955Z]    IDs únicos: 43
+[2026-04-28T20:00:37.955Z]    IDs duplicados: 1
+[2026-04-28T20:00:37.955Z]    Processos com ID repetido: 4
+[2026-04-28T20:00:37.955Z]    IDs duplicados com números DIFERENTES: 0
+[2026-04-28T20:00:37.955Z] 
+   ⚠️  TOP 10 IDs duplicados:
+[2026-04-28T20:00:37.955Z]       id=3071219 count=4 agrupadores=[N+I+I] nums="0010876-63.2025.5.03.0152" idDocumento=[246262759,246262758,246862297]
+[2026-04-28T20:00:37.956Z] 
+🗄️  Fase 6: Comparando com banco de dados...
+[2026-04-28T20:00:37.957Z] 
+🔍 Comparando com banco de dados...
+[2026-04-28T20:00:38.284Z]    Capturados agora: 43 IDs únicos | No banco: 40 | Apenas no capturado (novos): 3 | Apenas no banco (sumidos): 0
+[2026-04-28T20:00:38.284Z] 💾 Salvo: /Users/jordanmedeiros/Projetos/zattar-os/test-expedientes/2026-04-28T20-00-06-091Z_06_comparacao_banco.json
+[2026-04-28T20:00:38.285Z] 💾 Salvo: /Users/jordanmedeiros/Projetos/zattar-os/test-expedientes/2026-04-28T20-00-06-091Z_07_relatorio_final.json
+[2026-04-28T20:00:38.286Z] 
+═══════════════════════════════════════════════════════════
+[2026-04-28T20:00:38.286Z] ✅ Diagnóstico concluído!
+[2026-04-28T20:00:38.286Z]    No prazo:           37 expedientes
+[2026-04-28T20:00:38.286Z]    Sem prazo:          9 expedientes
+[2026-04-28T20:00:38.286Z]    Total:              46
+[2026-04-28T20:00:38.286Z]    IDs duplicados:     1
+[2026-04-28T20:00:38.286Z]    Novos (não no BD):  3
+[2026-04-28T20:00:38.286Z]    Pasta de saída:     /Users/jordanmedeiros/Projetos/zattar-os/test-expedientes
+[2026-04-28T20:00:38.286Z] ═══════════════════════════════════════════════════════════
+
+[2026-04-28T20:00:38.471Z] 🔒 Browser fechado

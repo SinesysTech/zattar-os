@@ -105,7 +105,7 @@ export function ExpedientePrazoPopover({
         onKeyDown={(e) => e.stopPropagation()}
       >
         <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/40 uppercase tracking-wider")}>
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/65 uppercase tracking-wider")}>
             Prazo legal
           </p>
         </div>
@@ -116,7 +116,7 @@ export function ExpedientePrazoPopover({
           initialFocus
         />
         {allowClear && dataPrazoLegalParte && (
-          <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "border-t border-border/30 p-2")}>
+          <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "border-t border-border/50 p-2")}>
             <Button
               type="button"
               variant="ghost"
@@ -153,7 +153,7 @@ export function PrazoTriggerContent({
       <CalendarIcon className={cn(
         'shrink-0',
         size === 'sm' ? 'size-3' : 'size-3.5',
-        vencido ? 'text-destructive/70' : 'text-muted-foreground/50',
+        vencido ? 'text-destructive/70' : 'text-muted-foreground/70',
       )} />
       {label ? (
         <span className={cn(
@@ -165,7 +165,7 @@ export function PrazoTriggerContent({
         </span>
       ) : (
         <span className={cn(
-          'italic text-muted-foreground/50',
+          'italic text-muted-foreground/70',
           size === 'sm' ? 'text-[11px]' : /* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ 'text-sm',
         )}>
           Sem prazo

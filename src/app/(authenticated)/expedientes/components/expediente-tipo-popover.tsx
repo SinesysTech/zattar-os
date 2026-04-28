@@ -95,7 +95,7 @@ export function ExpedienteTipoPopover({
       >
         <Command className="bg-transparent">
           <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/40 uppercase tracking-wider mb-2")}>
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/65 uppercase tracking-wider mb-2")}>
               Tipo de expediente
             </p>
             <CommandInput
@@ -106,8 +106,8 @@ export function ExpedienteTipoPopover({
           <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-64 px-1.5 pb-1.5")}>
             <CommandEmpty>
               <div className={cn(/* design-system-escape: gap-1 gap sem token DS; py-3 padding direcional sem Inset equiv. */ "flex flex-col items-center gap-1 py-3")}>
-                <TagIcon className="size-4 text-muted-foreground/30" />
-                <span className="text-[11px] text-muted-foreground/40">Nenhum tipo encontrado</span>
+                <TagIcon className="size-4 text-muted-foreground/55" />
+                <span className="text-[11px] text-muted-foreground/65">Nenhum tipo encontrado</span>
               </div>
             </CommandEmpty>
             <CommandGroup>
@@ -116,7 +116,7 @@ export function ExpedienteTipoPopover({
                 onSelect={() => handleSelect(null)}
                 className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-xs px-2 py-1.5")}
               >
-                <Tag className="size-3.5 text-muted-foreground/40" />
+                <Tag className="size-3.5 text-muted-foreground/65" />
                 <span className="italic text-muted-foreground/60">Sem tipo</span>
                 {!tipoExpedienteId && (
                   <Check className="size-3 ml-auto text-primary" />
@@ -129,7 +129,7 @@ export function ExpedienteTipoPopover({
                   onSelect={() => handleSelect(tipo.id)}
                   className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-xs px-2 py-1.5")}
                 >
-                  <Tag className="size-3.5 text-muted-foreground/40" />
+                  <Tag className="size-3.5 text-muted-foreground/65" />
                   <span>{getTipoLabel(tipo)}</span>
                   {tipoExpedienteId === tipo.id && (
                     <Check className="size-3 ml-auto text-primary shrink-0" />
@@ -165,7 +165,7 @@ export function TipoTriggerContent({
       <>
         {showIcon && (
           <Tag className={cn(
-            'shrink-0 text-muted-foreground/50',
+            'shrink-0 text-muted-foreground/70',
             size === 'sm' ? 'size-3' : 'size-3.5',
           )} />
         )}
@@ -183,13 +183,13 @@ export function TipoTriggerContent({
     <>
       {showIcon && (
         <Tag className={cn(
-          'shrink-0 text-muted-foreground/30',
+          'shrink-0 text-muted-foreground/55',
           size === 'sm' ? 'size-3' : 'size-3.5',
         )} />
       )}
       <span className={cn(
         'italic',
-        size === 'sm' ? 'text-[11px] text-muted-foreground/50' : /* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ 'text-sm text-muted-foreground/50',
+        size === 'sm' ? 'text-[11px] text-muted-foreground/70' : /* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ 'text-sm text-muted-foreground/70',
       )}>
         Sem tipo
       </span>

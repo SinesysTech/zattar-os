@@ -47,6 +47,7 @@
 - Added detailed examples of metadata implementation across website pages
 - Expanded testing infrastructure documentation to include metadata validation strategies
 - Updated build process documentation with metadata optimization techniques
+- **Updated** Enhanced generateMeta function documentation to reflect the new optional description parameter with automatic fallback mechanism
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -67,7 +68,7 @@
 ## Introduction
 This development guide provides a comprehensive overview of the ZattarOS project's development environment, architecture, testing strategy, and deployment processes. The project follows an AI-first approach with Next.js 16 App Router, TypeScript, Feature-Sliced Design (FSD), and strict code quality controls enforced by ESLint and custom rules. It integrates Supabase for backend services, implements a robust testing framework with Jest, Playwright, and property-based testing using fast-check, and uses a PWA setup via Serwist. The guide also documents the build pipeline, TypeScript configuration, import restrictions, barrel export patterns, and CI/CD deployment strategies.
 
-**Updated** Enhanced with comprehensive property-based testing infrastructure for dialog components, improved AI instructions formatting with structured prompt building utilities, updated shared component documentation standards with new dialog component patterns, and comprehensive metadata management with standardized SEO and social media optimization.
+**Updated** Enhanced with comprehensive property-based testing infrastructure for dialog components, improved AI instructions formatting with structured prompt building utilities, updated shared component documentation standards with new dialog component patterns, and comprehensive metadata management with standardized SEO and social media optimization including the enhanced generateMeta function with optional description parameter and default fallback mechanism.
 
 ## Project Structure
 The repository is organized around Next.js App Router conventions with a strong emphasis on modular feature development. Key areas include:
@@ -258,7 +259,7 @@ AIU --> DS
 ## Detailed Component Analysis
 
 ### Feature-Sliced Design Implementation
-- Feature Modules: Each feature module defines a barrel export index that re-exports components, hooks, actions, domain types, and server-only service/repository functions. This enforces controlled imports and reduces coupling.
+- Feature Modules: Each feature module defines a barrel export that re-exports components, hooks, actions, domain types, and server-only service/repository functions. This enforces controlled imports and reduces coupling.
 - Import Restrictions: ESLint restricts direct internal paths within modules and legacy imports from legacy paths, encouraging barrel exports and relative imports within modules.
 
 ```mermaid
@@ -694,34 +695,31 @@ test('Property 34: DialogFormShell uses ResponsiveDialog on mobile', async () =>
 
 #### Metadata Management Development Example
 
-**New Section** Comprehensive example of implementing standardized metadata management.
+**Updated** Comprehensive example of implementing standardized metadata management with the enhanced generateMeta function.
 
 When implementing metadata for website pages:
 
 1. **Use buildWebsiteMetadata for standard website routes** with consistent SEO optimization
-2. **Use generateMeta for custom metadata scenarios** with flexible configuration
+2. **Use generateMeta for custom metadata scenarios** with flexible configuration and enhanced optional description parameter
 3. **Follow standardized patterns** for title, description, and social media optimization
 4. **Ensure canonical URLs and Open Graph compliance** for all public routes
 
-Example of buildWebsiteMetadata usage:
-```typescript
-export const metadata = buildWebsiteMetadata({
-  title: "Contact",
-  description: "Talk to specialists in Labor Law. Belo Horizonte, digital service, quick response.",
-  path: "/contact",
-});
-```
+**Enhanced** The generateMeta function now provides an optional description parameter with automatic fallback mechanism:
 
-Example of generateMeta usage:
 ```typescript
+// Enhanced generateMeta function with optional description parameter
 const metadata = generateMeta({
   title: "Article Title",
-  description: "Article excerpt or subtitle",
+  // description is now optional - if omitted, it automatically falls back to using the title value
+  // description: "Article excerpt or subtitle", // Optional - omitted here
   canonical: "https://zattaradvogados.com/articles/article-slug",
   imageUrl: "https://zattaradvogados.com/images/article-image.jpg",
   keywords: ["keyword1", "keyword2", "keyword3"],
   ogType: "article"
 });
+
+// The description parameter is now optional (description?: string) and automatically falls back to using the title value when no description is provided
+// This improves backward compatibility and developer experience
 ```
 
 **Section sources**
@@ -986,7 +984,7 @@ CheckComment --> |No| GenerateMode
 
 ## Metadata Management and SEO Optimization
 
-**New Section** Comprehensive documentation of metadata management with standardized SEO and social media optimization.
+**Updated** Comprehensive documentation of metadata management with standardized SEO and social media optimization including the enhanced generateMeta function.
 
 ### Standardized Metadata Generation
 
@@ -1028,18 +1026,18 @@ Robots --> FinalMetadata
 
 #### generateMeta Function
 
-The `generateMeta` function provides flexible metadata generation for custom scenarios with comprehensive SEO optimization:
+**Enhanced** The `generateMeta` function now provides enhanced flexibility with an optional description parameter and automatic fallback mechanism:
 
 ```mermaid
 flowchart TD
 Params["GenerateMeta Parameters"] --> Title["Title (required)"]
-Params --> Description["Description (optional)"]
+Params --> Description["Description (optional)<br/>Defaults to title value"]
 Params --> Canonical["Canonical URL (optional)"]
 Params --> ImageUrl["Image URL (optional)"]
 Params --> Keywords["Keywords (optional)"]
-Params --> OgType["Open Graph Type (optional)"]
+Params --> OgType["Open Graph Type (optional)<br/>Defaults to 'website'"]
 Title --> MetaTitle["Metadata Title"]
-Description --> MetaDesc["Metadata Description"]
+Description --> MetaDesc["Metadata Description<br/>(Uses title if omitted)"]
 Canonical --> Alternates["Alternates Canonical"]
 ImageUrl --> OpenGraphImages["Open Graph Images"]
 Keywords --> MetaKeywords["Metadata Keywords"]
@@ -1056,6 +1054,31 @@ Twitter --> FinalObject
 
 **Diagram sources**
 - [src/lib/utils.ts:18-39](file://src/lib/utils.ts#L18-L39)
+
+**Enhanced Function Signature**:
+The generateMeta function now accepts an optional description parameter with automatic fallback:
+
+```typescript
+interface GenerateMetaParams {
+  title: string
+  description?: string  // Now optional with automatic fallback to title
+  canonical?: string
+  imageUrl?: string
+  keywords?: string[]
+  ogType?: string
+}
+
+export function generateMeta({
+  title,
+  description = title,  // Automatic fallback to title value
+  canonical,
+  imageUrl,
+  keywords,
+  ogType = "website",
+}: GenerateMetaParams): Metadata {
+  // Implementation remains the same
+}
+```
 
 ### Website Metadata Implementation Patterns
 
@@ -1099,16 +1122,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 #### Custom Metadata Scenarios
 
-For custom metadata scenarios, use the `generateMeta` function:
+For custom metadata scenarios, use the `generateMeta` function with enhanced optional description parameter:
 
 ```typescript
+// Enhanced usage with optional description parameter
 const metadata = generateMeta({
   title: "Custom Page Title",
-  description: "Custom description text",
+  // description: "Custom description text", // Optional - if omitted, automatically uses "Custom Page Title"
   canonical: "https://example.com/custom-page",
   imageUrl: "https://example.com/image.jpg",
   keywords: ["keyword1", "keyword2", "keyword3"],
   ogType: "website" // or "article" | "profile"
+});
+
+// Backward compatibility maintained - description parameter is truly optional
+const simpleMetadata = generateMeta({
+  title: "Simple Page Title",
+  // description omitted - automatically falls back to "Simple Page Title"
+  canonical: "https://example.com/simple-page"
 });
 ```
 
@@ -1251,7 +1282,7 @@ AI --> Formatting["Formatting"]
 ## Conclusion
 This guide outlines the development workflow, architecture, and operational practices for ZattarOS. By adhering to Feature-Sliced Design, enforcing streamlined design system governance, leveraging comprehensive property-based testing infrastructure, implementing standardized metadata management with SEO optimization, and optimizing the build and deployment pipeline, contributors can maintain a scalable, secure, and high-performance legal management platform.
 
-**Updated** Enhanced with comprehensive property-based testing infrastructure for dialog components, improved AI instructions formatting with structured prompt building utilities, updated shared component documentation standards with new dialog component patterns, comprehensive metadata management with standardized SEO and social media optimization, and expanded testing strategies for metadata validation.
+**Updated** Enhanced with comprehensive property-based testing infrastructure for dialog components, improved AI instructions formatting with structured prompt building utilities, updated shared component documentation standards with new dialog component patterns, comprehensive metadata management with standardized SEO and social media optimization including the enhanced generateMeta function with optional description parameter and default fallback mechanism, and expanded testing strategies for metadata validation.
 
 ## Appendices
 
@@ -1377,7 +1408,7 @@ This guide outlines the development workflow, architecture, and operational prac
 
 ### Metadata Management Best Practices
 
-**New Section** Comprehensive guidelines for metadata management and SEO optimization.
+**Updated** Comprehensive guidelines for metadata management and SEO optimization including the enhanced generateMeta function.
 
 #### Metadata Generation Patterns
 - **Consistent Title Structure**: Use site name suffix for all public pages
@@ -1385,11 +1416,17 @@ This guide outlines the development workflow, architecture, and operational prac
 - **Image Optimization**: Use 1200x630 pixel images for Open Graph
 - **Canonical URL Management**: Ensure consistent canonical URLs across all routes
 
+#### Enhanced generateMeta Function Usage
+- **Optional Description Parameter**: Use when you want to override the automatic fallback
+- **Automatic Fallback**: If description is omitted, it automatically uses the title value
+- **Backward Compatibility**: Existing code continues to work without modifications
+- **Improved Developer Experience**: Reduces boilerplate code for simple metadata scenarios
+
 #### SEO Validation Strategies
 - **Google Search Console**: Monitor crawl errors and indexing status
 - **Social Media Preview**: Test with Facebook Sharing Debugger and LinkedIn Post Inspector
 - **Schema Markup**: Validate structured data with Google Rich Results Test
-- **Performance Impact**: Monitor metadata impact on page load performance
+- **Performance Impact**: Monitor metadata generation performance impact
 
 #### Metadata Testing Approaches
 - **Unit Testing**: Test metadata generation functions with various input combinations

@@ -91,6 +91,7 @@
     "ai:index-existing": "tsx scripts/ai/index-existing-documents.ts",
     "ai:index-dry-run": "tsx scripts/ai/index-existing-documents.ts --dry-run",
     "test:api-pendentes-manifestacao": "tsx scripts/captura/pendentes/test-api-pendentes-manifestacao.ts",
+    "debug:expedientes-trt3": "tsx scripts/captura/pendentes/debug-expedientes-trt3-direto.ts",
     "populate:tabelas-audiencias": "tsx scripts/database/population/populate-tabelas-auxiliares-audiencias.ts",
     "sincronizar-usuarios": "tsx scripts/sincronizacao/usuarios/sincronizar-usuarios.ts",
     "diagnostico:disk-io": "tsx scripts/database/diagnostico-disk-io.ts",

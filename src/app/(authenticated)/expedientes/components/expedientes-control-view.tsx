@@ -124,7 +124,7 @@ function SectionHeader({
     <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
       <Icon className={cn('size-3.5', accentClass)} />
       <h3 className="text-overline">{label}</h3>
-      <span className="text-mono-num text-muted-foreground/40">{count}</span>
+      <span className="text-mono-num text-muted-foreground/65">{count}</span>
     </div>
   );
 }
@@ -177,7 +177,7 @@ function DetailPanel({
           aria-label="Fechar painel de detalhes"
           className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-lg transition-colors hover:bg-foreground/4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
-          <X className="size-3.5 text-muted-foreground/50" />
+          <X className="size-3.5 text-muted-foreground/70" />
         </button>
       </div>
 
@@ -380,7 +380,7 @@ export function ExpedientesControlView({
           label: 'Sem prazo definido',
           icon: CircleDashed,
           items: semPrazoItems,
-          accentClass: 'text-muted-foreground/40',
+          accentClass: 'text-muted-foreground/65',
         },
       ].filter((s) => s.items.length > 0),
     [vencidos, hojeItems, proximosItems, noPrazoItems, semPrazoItems],
@@ -391,10 +391,10 @@ export function ExpedientesControlView({
     return (
       <GlassPanel depth={1} className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex min-h-52 flex-col items-center justify-center p-8 text-center")}>
         <SearchX className="size-8 text-muted-foreground/20" />
-        <Heading level="card" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-4 text-sm text-muted-foreground/50")}>
+        <Heading level="card" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-4 text-sm text-muted-foreground/70")}>
           Nenhum expediente encontrado
         </Heading>
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "mt-1.5 max-w-sm text-xs text-muted-foreground/30")}>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "mt-1.5 max-w-sm text-xs text-muted-foreground/55")}>
           Ajuste os filtros ou a busca para ampliar o recorte operacional.
         </p>
       </GlassPanel>

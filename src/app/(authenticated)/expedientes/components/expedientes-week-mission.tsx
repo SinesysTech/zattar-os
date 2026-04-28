@@ -124,7 +124,7 @@ const SECTION_CONFIG: Record<Urgencia, {
   sem_prazo: {
     label: 'Sem prazo definido',
     icon: CircleDashed,
-    color: 'text-muted-foreground/50',
+    color: 'text-muted-foreground/70',
     bgColor: 'bg-muted/3',
   },
   baixado: {
@@ -147,8 +147,8 @@ function SectionDivider({ urgencia, count }: { urgencia: Urgencia; count: number
           {config.label}
         </span>
       </div>
-      <span className="text-[10px] tabular-nums text-muted-foreground/40">{count}</span>
-      <div className="flex-1 border-t border-border/10" />
+      <span className="text-[10px] tabular-nums text-muted-foreground/65">{count}</span>
+      <div className="flex-1 border-t border-border/30" />
     </div>
   );
 }
@@ -241,7 +241,7 @@ function MissionItem({
           <AppBadge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "px-1.5 text-[10px]")}>{GRAU_TRIBUNAL_LABELS[expediente.grau]}</AppBadge>
         </div>
         {responsavelNome && (
-          <p className="hidden max-w-32 truncate text-[11px] text-muted-foreground/45 lg:block">{responsavelNome}</p>
+          <p className="hidden max-w-32 truncate text-[11px] text-muted-foreground/65 lg:block">{responsavelNome}</p>
         )}
         <div className="shrink-0 text-right">
           {isBaixado ? (
@@ -251,12 +251,12 @@ function MissionItem({
           ) : expediente.dataPrazoLegalParte ? (
             <p className={cn(
               /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[10px] tabular-nums font-medium',
-              urgencia === 'urgente' ? 'text-destructive/70' : 'text-muted-foreground/50',
+              urgencia === 'urgente' ? 'text-destructive/70' : 'text-muted-foreground/70',
             )}>
               {getDiasLabel(dias, expediente.prazoVencido)}
             </p>
           ) : (
-            <p className="text-[10px] text-muted-foreground/35">—</p>
+            <p className="text-[10px] text-muted-foreground/55">—</p>
           )}
         </div>
       </div>
@@ -433,7 +433,7 @@ export function ExpedientesWeekMission({
           <GlassPanel key={kpi.label} depth={kpi.highlight ? 2 : 1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ 'px-4 py-3', kpi.highlight && 'border-destructive/15')}>
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
               <div>
-                <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/45")}>{kpi.label}</p>
+                <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/65")}>{kpi.label}</p>
                 <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; tracking-tight sem token DS */ 'mt-1 text-xl font-bold tabular-nums tracking-tight', kpi.highlight && 'text-destructive/80')}>
                   <AnimatedNumber value={kpi.value} />
                 </p>
@@ -445,7 +445,7 @@ export function ExpedientesWeekMission({
       </div>
 
       {/* Day Label */}
-      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[11px] font-medium uppercase tracking-wider text-muted-foreground/40")}>
+      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[11px] font-medium uppercase tracking-wider text-muted-foreground/65")}>
         {dateLabel}
       </p>
 
@@ -453,7 +453,7 @@ export function ExpedientesWeekMission({
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
         {doDia.length === 0 ? (
           <GlassPanel depth={1} className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex min-h-45 flex-col items-center justify-center p-8 text-center")}>
-            <CalendarClock className="size-10 text-muted-foreground/20" />
+            <CalendarClock className="size-10 text-muted-foreground/40" />
             <Heading level="card" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-4 text-sm")}>Nenhum expediente neste dia</Heading>
             <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-1.5 max-w-sm text-sm text-muted-foreground/55")}>
               Selecione outro dia na barra de semana acima.
