@@ -47,9 +47,10 @@ export const VariablePlugin = createPlatePlugin({
 });
 
 export function insertVariable(editor: PlateEditor, key: string) {
-  editor.tf.insertNodes<VariableElementType>({
+  const node: VariableElementType = {
     type: VARIABLE_ELEMENT,
     key,
     children: [{ text: '' }],
-  });
+  };
+  editor.tf.insertNodes(node);
 }
