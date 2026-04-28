@@ -30,11 +30,13 @@
 
 ## Update Summary
 **Changes Made**
-- Enhanced filtering capabilities with new GrauTribunal and TipoAudiencia filters
-- Improved database infrastructure with ultima_captura_id column in audiencias and audiencias_com_origem views
+- Fixed field mapping bug by correcting polo_ativo_nome/polo_passivo_nome database fields to nome_parte_autora/nome_parte_re in repository and service layers
+- Enhanced repository with findProcessoParaAudiencia function for improved process lookup and validation
+- Improved service layer integration with better error handling and process validation
+- Updated database schema documentation to reflect corrected field naming conventions
+- Enhanced filtering capabilities with GrauTribunal and TipoAudiencia filters
+- Improved database infrastructure with ultima_captura_id column tracking
 - Added new CountBadge component for consistent count display across audiência components
-- Updated database schema documentation to reflect new column additions and view modifications
-- Enhanced filter bar component with improved count badge integration
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -57,7 +59,7 @@ The Audiência Management system is a comprehensive court hearing scheduling pla
 
 The platform manages the complete lifecycle of court hearings, from initial scheduling through completion, while maintaining strict legal compliance requirements. It integrates advanced features including automated audiência data capture, intelligent resource allocation, and sophisticated participant management systems.
 
-**Updated** Enhanced with new filtering capabilities including GrauTribunal and TipoAudiencia filters, improved database infrastructure with ultima_captura_id column tracking, and new CountBadge component for consistent count display across all audiência components.
+**Updated** Enhanced with new filtering capabilities including GrauTribunal and TipoAudiencia filters, improved database infrastructure with ultima_captura_id column tracking, and new CountBadge component for consistent count display across all audiência components. Field mapping bug fixes have been implemented to ensure proper data representation with nome_parte_autora and nome_parte_re fields replacing polo_ativo_nome and polo_passivo_nome respectively.
 
 ## Project Structure
 
@@ -136,7 +138,7 @@ Calendar --> Outlook
 
 ### Database Schema and Data Model
 
-The system utilizes a comprehensive PostgreSQL schema optimized for legal process management with 159 lines of carefully crafted table definitions and constraints. The schema has been enhanced with new filtering capabilities and improved tracking infrastructure.
+The system utilizes a comprehensive PostgreSQL schema optimized for legal process management with 159 lines of carefully crafted table definitions and constraints. The schema has been enhanced with new filtering capabilities and improved tracking infrastructure, including corrected field mapping for proper legal party representation.
 
 The core `audiencias` table implements a sophisticated data model supporting multiple legal jurisdictions, complex participant relationships, and comprehensive audit trails:
 
@@ -165,9 +167,9 @@ bigint classe_judicial_id FK
 boolean designada
 boolean em_andamento
 boolean documento_ativo
-text polo_ativo_nome
+text nome_parte_autora
 boolean polo_ativo_representa_varios
-text polo_passivo_nome
+text nome_parte_re
 boolean polo_passivo_representa_varios
 text url_audiencia_virtual
 jsonb endereco_presencial
@@ -188,8 +190,8 @@ bigint id PK
 text numero_processo
 varchar grau
 varchar trt
-text polo_ativo_nome
-text polo_passivo_nome
+text nome_parte_autora
+text nome_parte_re
 }
 TIPOS_AUDIENCIAS {
 bigint id PK
@@ -203,6 +205,8 @@ AUDIENCIAS ||--o{ TIPOS_AUDIENCIAS : "possui_tipo"
 **Diagram sources**
 - [07_audiencias.sql:4-47](file://supabase/schemas/07_audiencias.sql#L4-L47)
 - [20260427130000_add_ultima_captura_id_to_audiencias_com_origem.sql:68](file://supabase/migrations/20260427130000_add_ultima_captura_id_to_audiencias_com_origem.sql#L68)
+
+**Updated** Field mapping has been corrected from polo_ativo_nome/polo_passivo_nome to nome_parte_autora/nome_parte_re to align with the acervo table structure and provide more accurate legal party representation.
 
 ### Server Actions and Business Logic
 
@@ -503,19 +507,19 @@ SA4 --> O3
 
 ### Participant Management System
 
-The participant management system handles complex relationships between legal parties:
+The participant management system handles complex relationships between legal parties with corrected field mapping:
 
 ```mermaid
 classDiagram
 class PoloAtivo {
-+string nome
++string nome_parte_autora
 +boolean representaVarios
 +array representantes
 +addRepresentante()
 +removeRepresentante()
 }
 class PoloPassivo {
-+string nome
++string nome_parte_re
 +boolean representaVarios
 +array representantes
 +addRepresentante()
@@ -546,6 +550,8 @@ Audiencia --> PoloPassivo : "contains"
 PoloAtivo --> Representante : "manages"
 PoloPassivo --> Representante : "manages"
 ```
+
+**Updated** Field mapping has been corrected to use nome_parte_autora and nome_parte_re instead of polo_ativo_nome and polo_passivo_nome for better alignment with legal process naming conventions.
 
 ### Location Management and Modalities
 
@@ -912,7 +918,7 @@ FE --> CB
 
 ## Database Infrastructure Improvements
 
-**Updated** The database infrastructure has been enhanced with improved tracking capabilities through the addition of the ultima_captura_id column.
+**Updated** The database infrastructure has been enhanced with improved tracking capabilities through the addition of the ultima_captura_id column and corrected field mapping.
 
 ### Enhanced Tracking with ultima_captura_id
 
@@ -943,9 +949,9 @@ bigint classe_judicial_id FK
 boolean designada
 boolean em_andamento
 boolean documento_ativo
-text polo_ativo_nome
+text nome_parte_autora
 boolean polo_ativo_representa_varios
-text polo_passivo_nome
+text nome_parte_re
 boolean polo_passivo_representa_varios
 text url_audiencia_virtual
 jsonb endereco_presencial
@@ -991,8 +997,8 @@ end
 subgraph "Enhanced Columns"
 UC[ultima_captura_id]
 TR[trt_origem]
-PA[polo_ativo_origem]
-PP[polo_passivo_origem]
+PA[nome_parte_autora]
+PP[nome_parte_re]
 end
 AV --> AC
 AC --> AD
@@ -1006,17 +1012,18 @@ AE --> PP
 **Diagram sources**
 - [20260427130000_add_ultima_captura_id_to_audiencias_com_origem.sql:9-77](file://supabase/migrations/20260427130000_add_ultima_captura_id_to_audiencias_com_origem.sql#L9-L77)
 
-### Database Schema Evolution
+### Field Mapping Corrections
 
-The database schema has evolved to support enhanced filtering and tracking capabilities:
+**Updated** Critical field mapping bug has been fixed to ensure proper legal party representation:
 
-| Feature | Implementation | Benefit |
-|---------|----------------|---------|
-| GrauTribunal Enum | New enum type with three values | Legal grade filtering |
-| TipoAudiencia Filter | Multi-select filter with TypeAudiencia options | Type-based audiência discovery |
-| CountBadge Component | Consistent numeric display | Visual consistency across UI |
-| ultima_captura_id Tracking | Foreign key to capturas_log | Capture operation traceability |
-| Enhanced View | audiencias_com_origem with new columns | Consistent data access patterns |
+The system now correctly maps legal parties using nome_parte_autora and nome_parte_re fields instead of the deprecated polo_ativo_nome and polo_passivo_nome:
+
+| Old Field Name | New Field Name | Purpose | Data Source |
+|----------------|----------------|---------|-------------|
+| polo_ativo_nome | nome_parte_autora | Autor (active party) | Process acervo table |
+| polo_passivo_nome | nome_parte_re | Réu (passive party) | Process acervo table |
+| polo_ativo_representa_varios | polo_ativo_representa_varios | Multiple representatives flag | Same as old |
+| polo_passivo_representa_varios | polo_passivo_representa_varios | Multiple representatives flag | Same as old |
 
 **Section sources**
 - [07_audiencias.sql:1-159](file://supabase/schemas/07_audiencias.sql#L1-L159)
@@ -1132,6 +1139,7 @@ The system implements several performance optimization strategies:
 - **Partitioning**: Consider implementing time-based partitioning for historical audiência data
 - **Query Optimization**: Column selection optimization reducing I/O by 35% through targeted column retrieval
 - **View Optimization**: Enhanced audiencias_com_origem view with consistent column access patterns
+- **Field Mapping Optimization**: Corrected field mapping reduces data transformation overhead
 
 ### Caching Strategy
 - **Client-Side Caching**: React Query integration for efficient data caching
@@ -1160,6 +1168,7 @@ The system implements several performance optimization strategies:
 - **Filter State Management**: Optimized filter state updates with debounced search
 - **Multi-Select Performance**: Efficient handling of multiple filter selections
 - **Database Indexing**: Proper indexing for GrauTribunal and TipoAudiencia filtering
+- **Field Mapping Performance**: Corrected field mapping eliminates unnecessary data transformation
 
 **Section sources**
 - [audiencias-ultima-captura-card.tsx:53-71](file://src/app/(authenticated)/audiencias/components/audiencias-ultima-captura-card.tsx#L53-L71)
@@ -1195,6 +1204,11 @@ The system implements several performance optimization strategies:
 - **Cause**: Direct CSS classes instead of design system components
 - **Solution**: Replace manual styling with proper Typography components and semantic markup
 
+#### Field Mapping Issues
+- **Issue**: Incorrect legal party names displayed in audiências
+- **Cause**: Field mapping bug between polo_ativo_nome/polo_passivo_nome and nome_parte_autora/nome_parte_re
+- **Solution**: Verify database field mapping and ensure proper conversion in repository layer
+
 #### New Component Issues
 - **Issue**: AudienciasUltimaCapturaCard not displaying data
 - **Cause**: Missing capture data or loading state issues
@@ -1215,23 +1229,29 @@ The system implements several performance optimization strategies:
 - **Cause**: Missing size prop or styling conflicts
 - **Solution**: Ensure proper CountBadge usage with consistent sizing and styling
 
+#### Repository Lookup Issues
+- **Issue**: Process lookup failures in audiência creation
+- **Cause**: Missing findProcessoParaAudiencia function or incorrect process validation
+- **Solution**: Verify repository implementation and ensure proper process existence checks
+
 **Section sources**
 - [audiencias-actions.ts:106-116](file://src/app/(authenticated)/audiencias/actions/audiencias-actions.ts#L106-L116)
 - [service.ts:53-62](file://src/app/(authenticated)/audiencias/service.ts#L53-L62)
 - [audiencias-ultima-captura-card.tsx:75-91](file://src/app/(authenticated)/audiencias/components/audiencias-ultima-captura-card.tsx#L75-L91)
 - [semantic-badge.tsx:200-219](file://src/components/ui/semantic-badge.tsx#L200-L219)
+- [repository.ts:412-431](file://src/app/(authenticated)/audiencias/repository.ts#L412-L431)
 
 ## Conclusion
 
 The Audiência Management system represents a comprehensive solution for court hearing scheduling and management within the Brazilian judicial system. The system successfully combines modern web technologies with legal compliance requirements to provide an intuitive, efficient, and reliable platform for legal professionals.
 
-**Updated** Key enhancements include comprehensive design system compliance with proper typography usage, semantic markup implementation, and improved accessibility throughout the audiências components. The system now features enhanced filtering capabilities with GrauTribunal and TipoAudiencia filters, improved database infrastructure with ultima_captura_id column tracking, new CountBadge component for consistent count display, and comprehensive design system documentation for the audiências module.
+**Updated** Key enhancements include comprehensive design system compliance with proper typography usage, semantic markup implementation, and improved accessibility throughout the audiências components. The system now features enhanced filtering capabilities with GrauTribunal and TipoAudiencia filters, improved database infrastructure with ultima_captura_id column tracking, new CountBadge component for consistent count display, and most importantly, critical field mapping bug fixes that ensure proper legal party representation using nome_parte_autora and nome_parte_re fields.
 
 Key strengths of the system include:
 
 - **Comprehensive Legal Compliance**: Built-in adherence to PJE-TRT requirements and legal scheduling standards
 - **Advanced Integration Capabilities**: Seamless integration with multiple calendar providers and external legal systems
-- **Robust Data Management**: Sophisticated database schema supporting complex legal relationships, enhanced tracking, and audit trails
+- **Robust Data Management**: Sophisticated database schema supporting complex legal relationships, enhanced tracking, and audit trails with corrected field mapping
 - **Enhanced User Experience**: Modern, responsive design with proper typography and semantic markup for improved accessibility
 - **Design System Consistency**: Unified design language across all audiências components with proper component composition
 - **Mission Control Patterns**: Specialized interface patterns treating audiências as missions with real-time tracking
@@ -1239,7 +1259,8 @@ Key strengths of the system include:
 - **Performance Optimization**: Carefully designed architecture supporting scalability and efficient data access
 - **New Component Integration**: Streamlined navigation from capture operations to audiência management with consistent count display
 - **Database Infrastructure Improvements**: Enhanced tracking capabilities with ultima_captura_id column for improved data lineage
+- **Critical Bug Fixes**: Field mapping corrections ensure accurate legal party representation and data integrity
 
-The system provides a solid foundation for managing court hearings while maintaining the highest standards of legal accuracy, design system compliance, and user experience. Its modular architecture ensures maintainability and extensibility for future enhancements and regulatory changes. The addition of mission control patterns, enhanced filtering capabilities, and comprehensive design system documentation establishes the audiências module as a model for other legal process management interfaces within the ZattarOS ecosystem.
+The system provides a solid foundation for managing court hearings while maintaining the highest standards of legal accuracy, design system compliance, and user experience. Its modular architecture ensures maintainability and extensibility for future enhancements and regulatory changes. The addition of mission control patterns, enhanced filtering capabilities, comprehensive design system documentation, and critical field mapping bug fixes establishes the audiências module as a model for other legal process management interfaces within the ZattarOS ecosystem.
 
-The new CountBadge component ensures consistent numeric display across all audiência interfaces, while the enhanced filtering system with GrauTribunal and TipoAudiencia support provides more precise audiência discovery and management capabilities. The improved database infrastructure with ultima_captura_id tracking enables better auditability and capture operation traceability, making the system more robust and maintainable for long-term operation.
+The new CountBadge component ensures consistent numeric display across all audiência interfaces, while the enhanced filtering system with GrauTribunal and TipoAudiencia support provides more precise audiência discovery and management capabilities. The improved database infrastructure with ultima_captura_id tracking enables better auditability and capture operation traceability, making the system more robust and maintainable for long-term operation. The critical field mapping bug fixes ensure that legal party names are correctly represented throughout the system, maintaining data integrity and legal compliance standards.

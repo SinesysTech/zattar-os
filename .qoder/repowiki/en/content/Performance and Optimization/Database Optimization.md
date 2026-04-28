@@ -15,7 +15,19 @@
 - [00_permissions.sql](file://supabase/schemas/00_permissions.sql)
 - [08_usuarios.sql](file://supabase/schemas/08_usuarios.sql)
 - [09_clientes.sql](file://supabase/schemas/09_clientes.sql)
+- [acervo-actions.ts](file://src/app/(authenticated)/acervo/actions/acervo-actions.ts)
+- [repository.ts](file://src/app/(authenticated)/acervo/repository.ts)
+- [domain.ts](file://src/app/(authenticated)/acervo/domain.ts)
+- [editar-audiencia-dialog.tsx](file://src/app/(authenticated)/audiencias/components/editar-audiencia-dialog.tsx)
+- [nova-audiencia-dialog.tsx](file://src/app/(authenticated)/audiencias/components/nova-audiencia-dialog.tsx)
 </cite>
+
+## Update Summary
+**Changes Made**
+- Added new lightweight lookup path with getAcervoColumnsForSelector for optimized selector queries
+- Enhanced actionBuscarProcessosParaSelector with filtered searching capabilities
+- Improved error handling for Supabase GenericStringError inference issues
+- Updated audiência components to utilize the new optimized selector functionality
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -32,11 +44,14 @@
 ## Introduction
 This document provides comprehensive database optimization guidance for the legal management system built on Supabase/PostgreSQL. It focuses on PostgreSQL performance tuning, indexing strategies, and query optimization tailored to legal data structures such as process management, contract tracking, and audiência scheduling. It also documents the disk I/O diagnostic script implementation, cache hit rate monitoring, slow query identification, sequential scan analysis, index optimization techniques, vacuum maintenance procedures, autovacuum configuration, table bloat analysis, practical query performance profiling, explain plan analysis, optimization implementation, database migration strategies, schema optimization for large legal datasets, and capacity planning for multi-instance process tracking.
 
+**Updated** Added new lightweight lookup path with getAcervoColumnsForSelector for optimized selector queries, enhanced actionBuscarProcessosParaSelector with filtered searching capabilities, and improved error handling for Supabase GenericStringError inference issues.
+
 ## Project Structure
 The database optimization effort spans:
 - Supabase migrations that define schema, indexes, triggers, policies, and monitoring functions
 - TypeScript scripts that collect metrics and generate diagnostics
 - Schema files that define legal data structures and their indexes
+- Optimized acervo module with lightweight column selection for selector queries
 
 ```mermaid
 graph TB
@@ -58,6 +73,15 @@ T4["11_contratos.sql"]
 T5["08_usuarios.sql"]
 T6["09_clientes.sql"]
 P1["00_permissions.sql"]
+end
+subgraph "Acervo Module"
+A1["acervo-actions.ts"]
+A2["repository.ts"]
+A3["domain.ts"]
+end
+subgraph "Audiência Components"
+C1["editar-audiencia-dialog.tsx"]
+C2["nova-audiencia-dialog.tsx"]
 end
 S1 --> M1
 S2 --> M3
@@ -81,6 +105,10 @@ P1 --> T3
 P1 --> T4
 P1 --> T5
 P1 --> T6
+A1 --> A2
+A2 --> A3
+C1 --> A1
+C2 --> A1
 ```
 
 **Diagram sources**
@@ -97,6 +125,11 @@ P1 --> T6
 - [08_usuarios.sql:1-100](file://supabase/schemas/08_usuarios.sql#L1-L100)
 - [09_clientes.sql:1-139](file://supabase/schemas/09_clientes.sql#L1-L139)
 - [00_permissions.sql:1-21](file://supabase/schemas/00_permissions.sql#L1-L21)
+- [acervo-actions.ts:460-488](file://src/app/(authenticated)/acervo/actions/acervo-actions.ts#L460-L488)
+- [repository.ts:764-795](file://src/app/(authenticated)/acervo/repository.ts#L764-L795)
+- [domain.ts:595-598](file://src/app/(authenticated)/acervo/domain.ts#L595-L598)
+- [editar-audiencia-dialog.tsx:184-218](file://src/app/(authenticated)/audiencias/components/editar-audiencia-dialog.tsx#L184-L218)
+- [nova-audiencia-dialog.tsx:179-197](file://src/app/(authenticated)/audiencias/components/nova-audiencia-dialog.tsx#L179-L197)
 
 **Section sources**
 - [diagnostico-disk-io.ts:1-416](file://scripts/database/diagnostico-disk-io.ts#L1-L416)
@@ -112,6 +145,11 @@ P1 --> T6
 - [08_usuarios.sql:1-100](file://supabase/schemas/08_usuarios.sql#L1-L100)
 - [09_clientes.sql:1-139](file://supabase/schemas/09_clientes.sql#L1-L139)
 - [00_permissions.sql:1-21](file://supabase/schemas/00_permissions.sql#L1-L21)
+- [acervo-actions.ts:460-488](file://src/app/(authenticated)/acervo/actions/acervo-actions.ts#L460-L488)
+- [repository.ts:764-795](file://src/app/(authenticated)/acervo/repository.ts#L764-L795)
+- [domain.ts:595-598](file://src/app/(authenticated)/acervo/domain.ts#L595-L598)
+- [editar-audiencia-dialog.tsx:184-218](file://src/app/(authenticated)/audiencias/components/editar-audiencia-dialog.tsx#L184-L218)
+- [nova-audiencia-dialog.tsx:179-197](file://src/app/(authenticated)/audiencias/components/nova-audiencia-dialog.tsx#L179-L197)
 
 ## Core Components
 - Disk I/O diagnostic script: Collects cache hit rates, slow queries, sequential scans, and runs Supabase CLI inspections for bloat and unused indexes. Outputs a Markdown report.
@@ -119,6 +157,7 @@ P1 --> T6
 - Autovacuum aggressive configuration: Adjusts vacuum/analyzer thresholds for high-frequency tables.
 - Monitoring functions: Expose cache hit rate, slow queries, sequential scans, and unused indexes via RPC functions.
 - Legal data schemas: Define core tables (processes, audiências, parties, contracts) with targeted indexes and RLS policies.
+- **Optimized acervo module**: Lightweight column selection for selector queries with filtered searching capabilities and improved error handling.
 
 Key capabilities:
 - Real-time cache hit rate calculation
@@ -127,6 +166,9 @@ Key capabilities:
 - Bloat detection and recommendations
 - Unused index discovery
 - Autovacuum tuning for hot tables
+- **Lightweight selector queries with getAcervoColumnsForSelector**
+- **Enhanced filtered searching for process lookup**
+- **Improved error handling for Supabase GenericStringError inference**
 
 **Section sources**
 - [diagnostico-disk-io.ts:93-221](file://scripts/database/diagnostico-disk-io.ts#L93-L221)
@@ -134,9 +176,12 @@ Key capabilities:
 - [20260109123000_add_disk_io_metrics_functions.sql:3-75](file://supabase/migrations/20260109123000_add_disk_io_metrics_functions.sql#L3-L75)
 - [20260110120001_create_vacuum_diagnostics_function.sql:8-46](file://supabase/migrations/20260110120001_create_vacuum_diagnostics_function.sql#L8-L46)
 - [20260110120000_configure_autovacuum_aggressive.sql:9-31](file://supabase/migrations/20260110120000_configure_autovacuum_aggressive.sql#L9-L31)
+- [acervo-actions.ts:31-39](file://src/app/(authenticated)/acervo/actions/acervo-actions.ts#L31-L39)
+- [repository.ts:764-795](file://src/app/(authenticated)/acervo/repository.ts#L764-L795)
+- [domain.ts:595-598](file://src/app/(authenticated)/acervo/domain.ts#L595-L598)
 
 ## Architecture Overview
-The optimization architecture integrates client-side diagnostics with server-side monitoring functions and migrations.
+The optimization architecture integrates client-side diagnostics with server-side monitoring functions, migrations, and optimized acervo module functionality.
 
 ```mermaid
 sequenceDiagram
@@ -146,6 +191,7 @@ participant Supabase as "Supabase API"
 participant Functions as "RPC Functions"
 participant PGStats as "pg_stat_statements"
 participant CLI2 as "Supabase CLI"
+participant Selector as "getAcervoColumnsForSelector"
 CLI->>Script : Run diagnostics
 Script->>Supabase : Query pg_statio_user_tables (cache)
 Supabase-->>Script : Cache hit aggregates
@@ -158,15 +204,20 @@ CLI2-->>Script : Bloat report
 Script->>CLI2 : Execute "inspect db unused-indexes"
 CLI2-->>Script : Unused indexes report
 Script-->>CLI : Write DIAGNOSTICO_DISK_IO.md
+Note over Selector : Optimized selector queries
+Selector->>Supabase : Column-specific queries
+Supabase-->>Selector : Lightweight results
 ```
 
 **Diagram sources**
 - [diagnostico-disk-io.ts:93-221](file://scripts/database/diagnostico-disk-io.ts#L93-L221)
 - [20260109123000_add_disk_io_metrics_functions.sql:3-75](file://supabase/migrations/20260109123000_add_disk_io_metrics_functions.sql#L3-L75)
+- [domain.ts:595-598](file://src/app/(authenticated)/acervo/domain.ts#L595-L598)
 
 **Section sources**
 - [diagnostico-disk-io.ts:359-415](file://scripts/database/diagnostico-disk-io.ts#L359-L415)
 - [20260109123000_add_disk_io_metrics_functions.sql:3-75](file://supabase/migrations/20260109123000_add_disk_io_metrics_functions.sql#L3-L75)
+- [domain.ts:595-598](file://src/app/(authenticated)/acervo/domain.ts#L595-L598)
 
 ## Detailed Component Analysis
 
@@ -239,6 +290,74 @@ Verify --> End(["Done"])
 **Section sources**
 - [20260110120000_configure_autovacuum_aggressive.sql:9-43](file://supabase/migrations/20260110120000_configure_autovacuum_aggressive.sql#L9-L43)
 
+### Optimized Acervo Module Performance Enhancements
+
+#### Lightweight Lookup Path with getAcervoColumnsForSelector
+The new getAcervoColumnsForSelector function provides a lightweight column selection specifically designed for selector/combobox queries, avoiding unnecessary data transfer and improving performance for dropdown menus and autocomplete functionality.
+
+**Updated** Added new lightweight lookup path with optimized column selection for selector queries.
+
+```mermaid
+flowchart TD
+Start(["Selector Query Request"]) --> Columns["getAcervoColumnsForSelector()"]
+Columns --> Query["SELECT id, numero_processo, nome_parte_autora, nome_parte_re, trt, grau"]
+Query --> Filter["Apply TRT + Grau filters"]
+Filter --> Search["Optional: Apply search term filtering"]
+Search --> Limit["Apply LIMIT (max 500)"]
+Limit --> Order["ORDER BY numero_processo ASC"]
+Order --> Execute["Execute query"]
+Execute --> Result["Return lightweight ProcessoParaSelector[]"]
+```
+
+**Diagram sources**
+- [domain.ts:595-598](file://src/app/(authenticated)/acervo/domain.ts#L595-L598)
+- [repository.ts:764-795](file://src/app/(authenticated)/acervo/repository.ts#L764-L795)
+
+**Section sources**
+- [domain.ts:595-598](file://src/app/(authenticated)/acervo/domain.ts#L595-L598)
+- [repository.ts:764-795](file://src/app/(authenticated)/acervo/repository.ts#L764-L795)
+
+#### Enhanced actionBuscarProcessosParaSelector with Filtered Searching
+The actionBuscarProcessosParaSelector now supports filtered searching capabilities, allowing users to search by process number, party names, or other criteria while maintaining optimal performance through column selection.
+
+**Updated** Enhanced actionBuscarProcessosParaSelector with filtered searching capabilities.
+
+```mermaid
+flowchart TD
+Start(["actionBuscarProcessosParaSelector"]) --> Auth["Authenticate user"]
+Auth --> Permission["Check acervo:visualizar permission"]
+Permission --> Build["Build query with getAcervoColumnsForSelector"]
+Build --> Filter["Apply TRT + Grau filters"]
+Filter --> Search{"Has search term?"}
+Search --> |Yes| Or["Add OR conditions for numero_processo, nome_parte_autora, nome_parte_re"]
+Search --> |No| Limit["Apply LIMIT (min 200, max 500)"]
+Or --> Limit
+Limit --> Order["ORDER BY numero_processo ASC"]
+Order --> Execute["Execute query"]
+Execute --> HandleError{"Error occurred?"}
+HandleError --> |Yes| Log["Log error and return empty array"]
+HandleError --> |No| Success["Return process list"]
+Log --> Return["Return []"]
+Success --> Return["Return ProcessoParaSelector[]"]
+```
+
+**Diagram sources**
+- [acervo-actions.ts:460-488](file://src/app/(authenticated)/acervo/actions/acervo-actions.ts#L460-L488)
+- [repository.ts:764-795](file://src/app/(authenticated)/acervo/repository.ts#L764-L795)
+
+**Section sources**
+- [acervo-actions.ts:460-488](file://src/app/(authenticated)/acervo/actions/acervo-actions.ts#L460-L488)
+- [repository.ts:764-795](file://src/app/(authenticated)/acervo/repository.ts#L764-L795)
+
+#### Improved Error Handling for Supabase GenericStringError
+Enhanced error handling in the acervo actions module provides better error inference and user-friendly error messages for Supabase GenericStringError scenarios.
+
+**Updated** Improved error handling for Supabase GenericStringError inference issues.
+
+**Section sources**
+- [acervo-actions.ts:31-39](file://src/app/(authenticated)/acervo/actions/acervo-actions.ts#L31-L39)
+- [acervo-actions.ts:483-486](file://src/app/(authenticated)/acervo/actions/acervo-actions.ts#L483-L486)
+
 ### Index Optimization Techniques for Legal Data Structures
 Targeted indexes improve performance for legal data:
 
@@ -249,6 +368,7 @@ Targeted indexes improve performance for legal data:
 - acervo
   - Advogado, origem, TRT, grau, número do processo, ID PJE, data autuação, data arquivamento
   - Composite indexes: (advogado_id, trt, grau), (numero_processo, trt, grau)
+  - **Optimized selectors with getAcervoColumnsForSelector for faster dropdown loading**
 
 - processo_partes
   - Processo, entidade (polymorphic), polo, TRT+grau, número do processo, ID pessoa PJE
@@ -359,14 +479,17 @@ USUARIOS ||--o{ CONTRATOS : "responsável"
 - Leverage composite indexes aligned with WHERE/HAVING/ORDER BY clauses
 - Monitor sequential scans and add indexes for high-read tables
 - Use explain analyze to validate index usage and query plans
-
-[No sources needed since this section provides general guidance]
+- **Implement lightweight column selection for selector queries using getAcervoColumnsForSelector**
+- **Add filtered searching capabilities for improved user experience**
+- **Use explain analyze to validate index usage and query plans**
 
 ### Practical Examples of Query Performance Profiling
 - Use the slow query RPC to retrieve top-N queries by max time
 - Cross-reference with pg_stat_statements to identify long-running queries
 - Inspect sequential scans to prioritize index creation
 - Combine with bloat diagnostics to decide between vacuum/reindex actions
+- **Monitor selector query performance using getAcervoColumnsForSelector**
+- **Profile filtered search queries for optimal performance**
 
 **Section sources**
 - [20260109123000_add_disk_io_metrics_functions.sql:23-45](file://supabase/migrations/20260109123000_add_disk_io_metrics_functions.sql#L23-L45)
@@ -377,14 +500,15 @@ USUARIOS ||--o{ CONTRATOS : "responsável"
 - Add missing indexes for filtered/ordered columns
 - Remove unnecessary sequential scans by adding appropriate indexes
 - Regularly update statistics after bulk operations
-
-[No sources needed since this section provides general guidance]
+- **Analyze selector query plans for getAcervoColumnsForSelector usage**
+- **Optimize filtered search queries with proper index coverage**
 
 ### Database Migration Strategies and Schema Optimization
 - Apply migrations incrementally and verify index coverage
 - Use polymorphic relations (processo_partes) to reduce duplication and maintain referential integrity
 - Normalize legal entities (clientes, partes_contrarias, terceiros) with unique identifiers
 - Keep RLS policies aligned with business rules and minimize per-row overhead
+- **Maintain optimized column selection functions for performance-critical queries**
 
 **Section sources**
 - [17_processo_partes.sql:98-99](file://supabase/schemas/17_processo_partes.sql#L98-L99)
@@ -396,11 +520,43 @@ USUARIOS ||--o{ CONTRATOS : "responsável"
 - Track bloat trends and schedule maintenance windows for vacuum/reindex
 - Use autovacuum tuning for hot tables to sustain write throughput
 - Plan for concurrent access patterns across multiple instances
+- **Monitor selector query performance under load**
+- **Plan for increased selector query volume with optimized column selection**
 
 **Section sources**
 - [20260109123000_add_disk_io_metrics_functions.sql:3-18](file://supabase/migrations/20260109123000_add_disk_io_metrics_functions.sql#L3-L18)
 - [20260110120000_configure_autovacuum_aggressive.sql:9-31](file://supabase/migrations/20260110120000_configure_autovacuum_aggressive.sql#L9-L31)
 - [20260110120001_create_vacuum_diagnostics_function.sql:8-46](file://supabase/migrations/20260110120001_create_vacuum_diagnostics_function.sql#L8-L46)
+
+### Audiência Component Integration
+The audiência components now utilize the optimized selector functionality for improved performance when selecting processes for scheduling.
+
+**Updated** Audiência components integrated with new optimized selector functionality.
+
+```mermaid
+flowchart TD
+Start(["Audiência Dialog Open"]) --> Load["Load TRT + Grau options"]
+Load --> UserSelect["User selects TRT + Grau"]
+UserSelect --> CallAction["Call actionBuscarProcessosParaSelector"]
+CallAction --> Auth["Authenticate user"]
+Auth --> Permission["Check permissions"]
+Permission --> BuildQuery["Build optimized query with getAcervoColumnsForSelector"]
+BuildQuery --> Filter["Apply TRT + Grau filters"]
+Filter --> OptionalSearch["Optional: Apply search term"]
+OptionalSearch --> Execute["Execute query"]
+Execute --> HandleResult["Handle result or error"]
+HandleResult --> Display["Display process list in dropdown"]
+```
+
+**Diagram sources**
+- [editar-audiencia-dialog.tsx:184-218](file://src/app/(authenticated)/audiencias/components/editar-audiencia-dialog.tsx#L184-L218)
+- [nova-audiencia-dialog.tsx:179-197](file://src/app/(authenticated)/audiencias/components/nova-audiencia-dialog.tsx#L179-L197)
+- [acervo-actions.ts:460-488](file://src/app/(authenticated)/acervo/actions/acervo-actions.ts#L460-L488)
+
+**Section sources**
+- [editar-audiencia-dialog.tsx:184-218](file://src/app/(authenticated)/audiencias/components/editar-audiencia-dialog.tsx#L184-L218)
+- [nova-audiencia-dialog.tsx:179-197](file://src/app/(authenticated)/audiencias/components/nova-audiencia-dialog.tsx#L179-L197)
+- [acervo-actions.ts:460-488](file://src/app/(authenticated)/acervo/actions/acervo-actions.ts#L460-L488)
 
 ## Dependency Analysis
 The optimization stack depends on:
@@ -408,6 +564,7 @@ The optimization stack depends on:
 - pg_stat_statements for slow query tracking
 - pg_stat_user_tables/pg_statio_user_tables for cache hit and sequential scan metrics
 - Supabase CLI for bloat and unused index inspection
+- **Optimized acervo module with lightweight column selection functions**
 
 ```mermaid
 graph TB
@@ -417,17 +574,26 @@ Functions --> Scripts["Diagnostic scripts"]
 Scripts --> Reports["Markdown reports"]
 Functions --> Stats["pg_stat_* views"]
 Scripts --> CLI["Supabase CLI"]
+Selectors["getAcervoColumnsForSelector<br/>Lightweight column selection"] --> Repository["Repository layer"]
+Repository --> Actions["Acervo Actions"]
+Actions --> AudienciaComponents["Audiência Components"]
 ```
 
 **Diagram sources**
 - [00_permissions.sql:4-19](file://supabase/schemas/00_permissions.sql#L4-L19)
 - [20260109123000_add_disk_io_metrics_functions.sql:3-75](file://supabase/migrations/20260109123000_add_disk_io_metrics_functions.sql#L3-L75)
 - [diagnostico-disk-io.ts:223-249](file://scripts/database/diagnostico-disk-io.ts#L223-L249)
+- [domain.ts:595-598](file://src/app/(authenticated)/acervo/domain.ts#L595-L598)
+- [repository.ts:764-795](file://src/app/(authenticated)/acervo/repository.ts#L764-L795)
+- [acervo-actions.ts:460-488](file://src/app/(authenticated)/acervo/actions/acervo-actions.ts#L460-L488)
 
 **Section sources**
 - [00_permissions.sql:4-19](file://supabase/schemas/00_permissions.sql#L4-L19)
 - [20260109123000_add_disk_io_metrics_functions.sql:3-75](file://supabase/migrations/20260109123000_add_disk_io_metrics_functions.sql#L3-L75)
 - [diagnostico-disk-io.ts:223-249](file://scripts/database/diagnostico-disk-io.ts#L223-L249)
+- [domain.ts:595-598](file://src/app/(authenticated)/acervo/domain.ts#L595-L598)
+- [repository.ts:764-795](file://src/app/(authenticated)/acervo/repository.ts#L764-L795)
+- [acervo-actions.ts:460-488](file://src/app/(authenticated)/acervo/actions/acervo-actions.ts#L460-L488)
 
 ## Performance Considerations
 - Maintain up-to-date statistics and analyze heavy tables regularly
@@ -435,8 +601,9 @@ Scripts --> CLI["Supabase CLI"]
 - Monitor and act on sequential scans promptly
 - Tune autovacuum for high-write tables to prevent bloat
 - Use explain analyze to validate plan changes
-
-[No sources needed since this section provides general guidance]
+- **Implement getAcervoColumnsForSelector for all selector queries to reduce bandwidth**
+- **Use filtered searching capabilities for improved user experience**
+- **Monitor and optimize audiência component selector performance**
 
 ## Troubleshooting Guide
 Common issues and resolutions:
@@ -444,16 +611,19 @@ Common issues and resolutions:
 - High sequential scans: Add indexes for filtered/ordered columns; rewrite queries to use indexed columns
 - High bloat (>20%): Run VACUUM ANALYZE; consider VACUUM FULL during low-traffic periods for severe cases
 - Slow queries: Review pg_stat_statements output; add indexes; avoid SELECT *; optimize joins
+- **Selector query timeouts**: Verify getAcervoColumnsForSelector is being used instead of full column queries
+- **Filtered search performance issues**: Ensure proper index coverage for search fields (numero_processo, nome_parte_autora, nome_parte_re)
+- **GenericStringError inference problems**: Check error handling in acervo actions module for proper error categorization
 
 **Section sources**
 - [diagnostico-disk-io.ts:276-297](file://scripts/database/diagnostico-disk-io.ts#L276-L297)
 - [check-bloat.ts:66-92](file://scripts/db/check-bloat.ts#L66-L92)
 - [20260110120001_create_vacuum_diagnostics_function.sql:30-40](file://supabase/migrations/20260110120001_create_vacuum_diagnostics_function.sql#L30-L40)
+- [repository.ts:789-791](file://src/app/(authenticated)/acervo/repository.ts#L789-L791)
+- [acervo-actions.ts:483-486](file://src/app/(authenticated)/acervo/actions/acervo-actions.ts#L483-L486)
 
 ## Conclusion
-By combining automated diagnostics, targeted indexing, autovacuum tuning, and continuous monitoring, the legal management system can achieve robust performance at scale. The provided scripts and migrations offer a practical foundation for ongoing database optimization, ensuring efficient query execution, reduced disk I/O, and reliable maintenance of large legal datasets.
-
-[No sources needed since this section summarizes without analyzing specific files]
+By combining automated diagnostics, targeted indexing, autovacuum tuning, and continuous monitoring with the new optimized acervo module functionality, the legal management system can achieve robust performance at scale. The lightweight column selection with getAcervoColumnsForSelector, enhanced filtered searching capabilities, and improved error handling provide significant performance improvements for selector queries while maintaining reliability. The provided scripts and migrations offer a practical foundation for ongoing database optimization, ensuring efficient query execution, reduced disk I/O, and reliable maintenance of large legal datasets.
 
 ## Appendices
 
@@ -471,3 +641,22 @@ By combining automated diagnostics, targeted indexing, autovacuum tuning, and co
 
 **Section sources**
 - [20260110120002_add_disk_io_metrics_function.sql:6-26](file://supabase/migrations/20260110120002_add_disk_io_metrics_function.sql#L6-L26)
+
+### Appendix C: Optimized Acervo Module Functions
+- getAcervoColumnsForSelector: Lightweight column selection for selector queries
+- getAcervoColumnsBasic: Basic columns for acervo listing
+- getAcervoColumnsFull: Full columns including timeline_jsonb
+- getAcervoColumnsClienteCpf: Columns for client-by-CPF queries
+
+**Section sources**
+- [domain.ts:595-661](file://src/app/(authenticated)/acervo/domain.ts#L595-L661)
+
+### Appendix D: Enhanced Selector Query Implementation
+- actionBuscarProcessosParaSelector: Optimized action with filtered searching
+- buscarProcessosParaSelector: Repository method with column selection
+- ProcessoParaSelector interface: Lightweight selector data structure
+
+**Section sources**
+- [acervo-actions.ts:460-488](file://src/app/(authenticated)/acervo/actions/acervo-actions.ts#L460-L488)
+- [repository.ts:764-795](file://src/app/(authenticated)/acervo/repository.ts#L764-L795)
+- [repository.ts:755-762](file://src/app/(authenticated)/acervo/repository.ts#L755-L762)
