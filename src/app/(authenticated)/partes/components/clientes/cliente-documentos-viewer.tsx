@@ -18,6 +18,8 @@ import { Heading } from '@/components/ui/typography';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog';
@@ -215,6 +217,9 @@ export function ClienteDocumentosViewer({
         <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset>; gap-0 gap sem token DS */ "max-w-[90vw] h-[90vh] flex flex-col p-0 gap-0")}>
           <DialogHeader className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 border-b")}>
             <DialogTitle>{selectedDoc?.name}</DialogTitle>
+            <DialogDescription className="sr-only">
+              Visualização do documento selecionado em um iframe com ações para abrir ou fechar.
+            </DialogDescription>
           </DialogHeader>
           <div className="flex-1 w-full min-h-0 bg-muted/20">
             {selectedDoc && (
@@ -225,6 +230,18 @@ export function ClienteDocumentosViewer({
               />
             )}
           </div>
+          <DialogFooter className="border-t px-4 py-3">
+            {selectedDoc && (
+              <Button variant="outline" size="sm" asChild>
+                <a href={selectedDoc.url} target="_blank" rel="noopener noreferrer">
+                  Abrir em nova aba
+                </a>
+              </Button>
+            )}
+            <Button variant="outline" size="sm" onClick={() => setSelectedDoc(null)}>
+              Fechar
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

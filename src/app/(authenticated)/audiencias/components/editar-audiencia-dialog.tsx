@@ -22,6 +22,7 @@ import { Combobox,
   type ComboboxOption } from '@/components/ui/combobox';
 import { Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogDescription
@@ -856,7 +857,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
         </div>
       </form>
         </div>
-        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+        <DialogFooter className="px-6 py-4 border-t border-border/20 shrink-0 justify-between sm:justify-between">
           <Button variant="outline" onClick={handleClose}>Cancelar</Button>
           <div className="flex items-center gap-2">
             <Button type="submit" form="editar-audiencia-form" disabled={isLoading}>
@@ -864,7 +865,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
               Salvar
             </Button>
           </div>
-        </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

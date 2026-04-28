@@ -43,6 +43,10 @@
 - Documented major design system modernization with OKLCH color system implementation
 - Added detailed coverage of theme presets, radius variations, and scale adjustments
 - Updated design system governance with enhanced color consistency standards and typography improvements
+- **Updated** Unified font families with 'font-inter' system across typography architecture
+- **Updated** Comprehensive typography improvements with typed Typography components replacing deprecated custom components
+- **Updated** Removal of glass dialog overlay variants from token system affecting design token governance
+- **Updated** Enhanced CSS variable management with systematic font family property updates
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -1128,7 +1132,6 @@ The audiências module demonstrates comprehensive CountBadge integration with cl
 <TabsTrigger value={StatusAudiencia.Marcada}>
   Marcadas
   <CountBadge>{counts.marcadas}</CountBadge>
-</TabsTrigger>
 ```
 
 **Dynamic Count Styling**

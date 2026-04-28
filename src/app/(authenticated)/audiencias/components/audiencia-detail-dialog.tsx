@@ -483,7 +483,7 @@ export function AudienciaDetailDialog({
                       key={m}
                       type="button"
                       onClick={() => handleChangeModalidade(m)}
-                      className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex w-full cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-micro-caption transition-colors hover:bg-muted/60")}
+                      className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap=\"tight\">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex w-full cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-micro-caption transition-colors hover:bg-muted/60")}
                     >
                       <Icon className="size-3.5 text-muted-foreground" />
                       <span>{MODALIDADE_LABELS[m]}</span>
@@ -571,7 +571,7 @@ export function AudienciaDetailDialog({
               <ExternalLink className="size-3" />
               Abrir no PJe
             </Button>
-          )}
+          </div>
         </div>
       </div>
     ) : undefined;

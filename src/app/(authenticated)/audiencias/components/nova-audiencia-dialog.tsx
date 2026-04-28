@@ -32,6 +32,7 @@ import { Stack,
   Inline } from '@/components/ui/stack';
 import { Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogDescription
@@ -755,7 +756,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
         </Stack>
         </form>
         </div>
-        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+        <DialogFooter className="px-6 py-4 border-t border-border/20 shrink-0 justify-between sm:justify-between">
           <Button variant="outline" onClick={handleClose}>Cancelar</Button>
           <div className="flex items-center gap-2">
             <Button type="submit" form="nova-audiencia-form" disabled={isLoading}>
@@ -763,7 +764,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
               Salvar Audiência
             </Button>
           </div>
-        </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

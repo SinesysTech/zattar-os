@@ -36,10 +36,11 @@
 
 ## Update Summary
 **Changes Made**
-- Removed documentation for specialized dialog shell components (DialogFormShell, DialogDetailShell) and ResponsiveDialog component
-- Updated dialog system documentation to reflect architectural simplification toward native Dialog and Drawer components
+- Updated dialog system documentation to reflect enhanced DialogHeader and DialogFooter components
+- Removed documentation for DialogBody component which has been deprecated
+- Updated dialog architecture to reflect simplified system using native Dialog and Drawer components
+- Enhanced testing infrastructure documentation with property-based testing enhancements
 - Revised component composition patterns to emphasize DialogSection and DialogNavButtons as consolidated dialog utilities
-- Updated troubleshooting guidance to reflect simplified dialog architecture
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -365,14 +366,16 @@ PctCalc --> KpiData
 - [src/app/(authenticated)/dashboard/widgets/primitives.tsx:365-402](file://src/app/(authenticated)/dashboard/widgets/primitives.tsx#L365-L402)
 - [src/app/(authenticated)/captura/captura-client.tsx:93-100](file://src/app/(authenticated)/captura/captura-client.tsx#L93-L100)
 
-### Simplified Dialog System Architecture
+### Enhanced Dialog System Architecture
 
-**Updated** The dialog system has undergone architectural simplification, consolidating specialized components into a streamlined approach using native Dialog and Drawer components with focused utility components.
+**Updated** The dialog system has undergone significant architectural improvements, introducing new DialogHeader and DialogFooter components while removing the deprecated DialogBody component. The system now focuses on a streamlined approach using native Dialog and Drawer components with enhanced utility components.
 
-#### Native Dialog and Drawer Components
-The system now relies on two primary components:
+#### Enhanced Dialog Components
+The system now provides three primary structural components:
 - **Dialog**: Desktop-first modal dialog with overlay, content area, and structured sections
-- **Drawer**: Mobile-first bottom sheet drawer with backdrop and directional positioning
+- **DialogHeader**: Dedicated header area for titles and actions
+- **DialogFooter**: Footer area for action buttons and navigation controls
+- **DialogContent**: Main content area with optional close button control
 
 #### Consolidated Dialog Utilities
 Utility components provide focused functionality:
@@ -380,12 +383,20 @@ Utility components provide focused functionality:
 - **DialogNavButtons**: Navigation controls for multi-step workflows
 - **ResponsiveDialog**: Automatic desktop/mobile adaptation (deprecated - replaced by native components)
 
+#### New DialogHeader and DialogFooter Components
+The enhanced dialog system introduces dedicated header and footer components:
+- **DialogHeader**: Provides semantic structure for dialog headers with consistent spacing
+- **DialogFooter**: Offers flexible footer layout with proper button alignment
+- **DialogSection**: Replaces previous DialogBody functionality with enhanced content organization
+
 #### Component Composition Pattern
 ```mermaid
 graph TB
-subgraph "Dialog System"
+subgraph "Enhanced Dialog System"
 Dialog["Dialog (Desktop)"]
 Drawer["Drawer (Mobile)"]
+DialogHeader["DialogHeader"]
+DialogFooter["DialogFooter"]
 DialogSection["DialogSection"]
 DialogNavButtons["DialogNavButtons"]
 end
@@ -394,7 +405,9 @@ FormDialog["Form Dialogs"]
 DetailDialog["Detail Panels"]
 WizardDialog["Multi-step Wizards"]
 end
+Dialog --> DialogHeader
 Dialog --> DialogSection
+Dialog --> DialogFooter
 Dialog --> DialogNavButtons
 Drawer --> DialogSection
 FormDialog --> Dialog
@@ -408,7 +421,9 @@ WizardDialog --> Dialog
 - [src/components/shared/dialog-shell/dialog-section.tsx:67-135](file://src/components/shared/dialog-shell/dialog-section.tsx#L67-L135)
 - [src/components/shared/dialog-shell/dialog-nav-buttons.tsx:43-93](file://src/components/shared/dialog-shell/dialog-nav-buttons.tsx#L43-L93)
 
-#### Key Benefits of Simplification
+#### Key Benefits of Enhancements
+- **Semantic Clarity**: Dedicated header and footer components improve accessibility
+- **Content Organization**: DialogSection replaces DialogBody with better content structuring
 - **Reduced Complexity**: Fewer specialized components to maintain
 - **Better Performance**: Direct use of Radix UI primitives eliminates abstraction overhead
 - **Improved Accessibility**: Native components provide better screen reader support
@@ -416,11 +431,12 @@ WizardDialog --> Dialog
 - **Streamlined Testing**: Fewer components mean simpler test coverage
 
 #### Implementation Guidelines
-- **Desktop**: Use Dialog for centered modals with structured sections
+- **Desktop**: Use Dialog with DialogHeader, DialogSection, and DialogFooter for structured layouts
 - **Mobile**: Use Drawer for bottom sheets with appropriate sizing
 - **Multi-step**: Combine DialogSection with DialogNavButtons for wizard flows
 - **Detail Panels**: Use Dialog for comprehensive detail views (no Sheet usage)
 - **Forms**: Structure content with DialogSection for consistent spacing and typography
+- **Deprecated**: DialogBody is no longer supported - use DialogSection instead
 
 **Section sources**
 - [src/components/ui/dialog.tsx:10-168](file://src/components/ui/dialog.tsx#L10-L168)
@@ -429,13 +445,44 @@ WizardDialog --> Dialog
 - [src/components/shared/dialog-shell/dialog-nav-buttons.tsx:43-93](file://src/components/shared/dialog-shell/dialog-nav-buttons.tsx#L43-L93)
 - [src/app/globals.css:1134-1156](file://src/app/globals.css#L1134-L1156)
 
+### Enhanced Testing Infrastructure with Property-Based Testing
+
+**Updated** The testing infrastructure has been significantly enhanced with property-based testing capabilities, providing comprehensive validation of UI components across various scenarios and edge cases.
+
+#### Property-Based Testing Framework
+The testing system now utilizes FastCheck (fc) for property-based testing:
+- **Randomized Test Generation**: Automatically generates thousands of test scenarios
+- **Edge Case Coverage**: Tests boundary conditions and unexpected inputs
+- **Performance Validation**: Ensures components work under various viewport sizes and conditions
+- **Integration Testing**: Validates component interactions and data flow
+
+#### Enhanced Dialog Testing Capabilities
+Dialog components are now tested with comprehensive property-based validation:
+- **Responsive Behavior**: Tests dialog rendering across all viewport sizes (320px to 1200px)
+- **Accessibility Compliance**: Validates ARIA attributes and keyboard navigation
+- **Animation Testing**: Ensures smooth transitions and state changes
+- **Content Validation**: Verifies proper content rendering and styling
+
+#### Testing Examples and Coverage
+The enhanced testing infrastructure includes:
+- **Dialog Responsiveness**: Property 24 validates mobile dialog width behavior
+- **Background Consistency**: Property 33 ensures explicit white backgrounds
+- **Max-Width Validation**: Tests responsive max-width behavior across breakpoints
+- **Integration Scenarios**: Validates component combinations and data flow
+
+**Section sources**
+- [src/components/ui/__tests__/dialog.test.tsx:90-216](file://src/components/ui/__tests__/dialog.test.tsx#L90-L216)
+- [src/components/shared/dialog-shell/__tests__/dialog-form-shell.test.tsx:1-81](file://src/components/shared/dialog-shell/__tests__/dialog-form-shell.test.tsx#L1-L81)
+- [src/components/ui/__tests__/responsive-dialog.test.tsx:43-64](file://src/components/ui/__tests__/responsive-dialog.test.tsx#L43-L64)
+
 ### Shared Components and Consistency
 - Theme provider and toasts are initialized in the client wrapper for consistent UX
 - Command menu and active theme provider enable quick actions and theme switching
 - Server action version guard helps maintain compatibility across deployments
 - Auth layout provides a consistent branded experience for login pages
 - **Updated** GlassPanel component provides consistent glass effect across all dashboard components
-- **Updated** Dialog utilities offer focused functionality without specialized shell components
+- **Updated** Enhanced dialog utilities offer focused functionality without specialized shell components
+- **Updated** Property-based testing ensures component reliability across diverse scenarios
 
 **Section sources**
 - [src/app/layout-client.tsx:24-42](file://src/app/layout-client.tsx#L24-L42)
@@ -491,6 +538,7 @@ Fallback --> UpdateMsg["Listen for CLEAR_CACHE / SKIP_WAITING"]
 - **Updated** Audiências components depend on unified hook, domain types, and repository layer
 - **Updated** Capture dashboard components depend on GlassPanel and AnimatedNumber primitives
 - **Updated** Dialog system depends on native Dialog/Drawer components and consolidated utilities
+- **Updated** Testing infrastructure depends on FastCheck for property-based testing
 
 ```mermaid
 graph TB
@@ -507,10 +555,15 @@ UnifiedHook --> Service["Service Layer"]
 Service --> Repository["Repository"]
 CapturaKpi["CapturaKpiStrip"] --> GlassPanel["GlassPanel"]
 CapturaKpi --> AnimatedNumber["AnimatedNumber"]
-DialogSystem["Dialog System"] --> Dialog["Dialog (Desktop)"]
+DialogSystem["Enhanced Dialog System"] --> Dialog["Dialog (Desktop)"]
 DialogSystem --> Drawer["Drawer (Mobile)"]
+DialogSystem --> DialogHeader["DialogHeader"]
+DialogSystem --> DialogFooter["DialogFooter"]
 DialogSystem --> DialogSection["DialogSection"]
 DialogSystem --> DialogNavButtons["DialogNavButtons"]
+TestingInfra["Enhanced Testing Infrastructure"] --> FastCheck["FastCheck Property Testing"]
+TestingInfra --> DialogTests["Dialog Component Tests"]
+TestingInfra --> ResponsiveTests["Responsive Behavior Tests"]
 ```
 
 **Diagram sources**
@@ -563,6 +616,7 @@ DialogSystem --> DialogNavButtons["DialogNavButtons"]
 - **Updated** Component performance: GlassPanel and AnimatedNumber components are optimized for smooth animations and efficient rendering
 - **Updated** Database optimization: Column selection reduces disk I/O by 35%, and optimized queries prevent N+1 problems
 - **Updated** Dialog system performance: Native components eliminate abstraction overhead and improve accessibility
+- **Updated** Testing performance: Property-based testing with FastCheck provides comprehensive coverage without manual test maintenance
 
 **Section sources**
 - [next.config.ts:294-313](file://next.config.ts#L294-L313)
@@ -583,8 +637,10 @@ DialogSystem --> DialogNavButtons["DialogNavButtons"]
 - **Updated** Search performance problems: check debounced search timing and parameter normalization
 - **Updated** KPI component issues: verify GlassPanel depth values and AnimatedNumber props are correctly configured
 - **Updated** Responsive layout problems: check grid column classes and media query breakpoints
-- **Updated** Dialog system issues: verify Dialog and Drawer components are used appropriately for desktop/mobile contexts
-- **Updated** Dialog utility conflicts: ensure DialogSection and DialogNavButtons are used consistently without specialized shell components
+- **Updated** Dialog system issues: verify DialogHeader and DialogFooter components are used appropriately for desktop/mobile contexts
+- **Updated** Dialog utility conflicts: ensure DialogSection is used instead of deprecated DialogBody, and DialogNavButtons are used consistently
+- **Updated** Testing infrastructure issues: verify FastCheck property-based tests are running correctly and covering edge cases
+- **Updated** Property-based testing failures: check test configurations and ensure proper viewport mocking for responsive components
 
 **Section sources**
 - [src/middleware/security-headers.ts:285-302](file://src/middleware/security-headers.ts#L285-L302)
@@ -606,4 +662,6 @@ The frontend leverages Next.js 16's App Router to organize routes into logical g
 
 **Updated** The capture dashboard components demonstrate the evolution toward modern design system patterns, with the new CapturaKpiStrip replacing the legacy PulseStrip approach through the integration of GlassPanel and AnimatedNumber components, providing enhanced visual hierarchy, smooth animations, and responsive layouts that improve both user experience and maintainability.
 
-**Updated** The dialog system architecture reflects a successful simplification effort, consolidating specialized components into a streamlined approach using native Dialog and Drawer components with focused utility functions. This architectural simplification reduces complexity, improves performance, and enhances maintainability while preserving all essential functionality through DialogSection and DialogNavButtons components.
+**Updated** The dialog system architecture reflects a successful simplification and enhancement effort, consolidating specialized components into a streamlined approach using native Dialog and Drawer components with enhanced DialogHeader and DialogFooter components. The removal of DialogBody and introduction of DialogSection provides better content organization while the addition of property-based testing ensures comprehensive validation across diverse scenarios. This architectural evolution reduces complexity, improves performance, and enhances maintainability while preserving all essential functionality.
+
+**Updated** The testing infrastructure demonstrates modern quality assurance practices through the adoption of property-based testing with FastCheck, providing comprehensive coverage of edge cases and ensuring component reliability across various scenarios. This approach reduces manual test maintenance while improving confidence in component behavior under diverse conditions.

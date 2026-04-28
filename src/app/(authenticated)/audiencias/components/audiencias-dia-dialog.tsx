@@ -16,7 +16,14 @@ import { ptBR } from 'date-fns/locale';
 
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { IconContainer } from '@/components/ui/icon-container';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { TabPills } from '@/components/dashboard/tab-pills';
@@ -254,8 +261,7 @@ export function AudienciasDiaDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset>; gap-0 gap sem token DS */ "sm:max-w-xl max-h-[85vh] flex flex-col p-0 gap-0 overflow-hidden")}>
         <DialogDescription className="sr-only">Audiências do dia</DialogDescription>
-        {/* ── HEADER ── */}
-        <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; pt-5 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv. */ "shrink-0 px-6 pt-5 pb-4 border-b border-border/20")}>
+        <DialogHeader className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; pt-5 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv. */ "shrink-0 gap-0 px-6 pt-5 pb-4 border-b border-border/20")}>
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
             <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 min-w-0")}>
               <IconContainer size="md" className="bg-primary/10 shrink-0">
@@ -296,7 +302,7 @@ export function AudienciasDiaDialog({
               </div>
             )}
           </div>
-        </div>
+        </DialogHeader>
 
         {/* ── BODY — conteúdo direto, sem cards aninhados ── */}
         <ScrollArea className="flex-1 min-h-0">
@@ -308,6 +314,12 @@ export function AudienciasDiaDialog({
             />
           </div>
         </ScrollArea>
+
+        <DialogFooter className="shrink-0 border-t border-border/20 px-6 py-3">
+          <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
+            Fechar
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

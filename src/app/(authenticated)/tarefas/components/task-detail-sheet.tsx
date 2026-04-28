@@ -19,6 +19,8 @@ import {
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
+    DialogFooter,
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
@@ -313,6 +315,9 @@ export function TaskDetailSheet() {
                             <DialogTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-tight sem token DS */ "mt-4 text-2xl font-bold leading-tight")}>
                                 {tarefa.title}
                             </DialogTitle>
+                            <DialogDescription className="sr-only">
+                                Detalhes da tarefa, incluindo status, subtarefas, anexos e comentários.
+                            </DialogDescription>
                         </DialogHeader>
 
                         <ScrollArea className="flex-1">
@@ -528,6 +533,12 @@ export function TaskDetailSheet() {
                                 </div>
                             </div>
                         </ScrollArea>
+
+                        <DialogFooter className="shrink-0 border-t border-border/30 px-6 py-3">
+                            <Button variant="outline" size="sm" onClick={handleClose}>
+                                Fechar
+                            </Button>
+                        </DialogFooter>
                     </div>
                 )}
             </DialogContent>

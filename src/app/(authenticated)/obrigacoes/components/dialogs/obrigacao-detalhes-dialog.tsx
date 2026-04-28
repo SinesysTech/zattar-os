@@ -30,6 +30,8 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
+  DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -363,7 +365,7 @@ export function ObrigacaoDetalhesDialog({
         </DialogDescription>
 
         {/* ══════════ HEADER · Capa do processo ══════════ */}
-        <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; pt-5 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv. */ "shrink-0 px-6 pt-5 pb-4 border-b border-border/50")}>
+        <DialogHeader className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; pt-5 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv. */ "shrink-0 gap-0 px-6 pt-5 pb-4 border-b border-border/50")}>
           <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center justify-between gap-4 mb-1.5")}>
             <DialogTitle className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "flex-1 min-w-0 text-[16px] font-semibold text-foreground leading-[1.3] -tracking-[0.01em] truncate")}>
               {tituloPartes}
@@ -416,7 +418,7 @@ export function ObrigacaoDetalhesDialog({
               )}
             </div>
           )}
-        </div>
+        </DialogHeader>
 
         {/* ══════════ BLOCO PRINCIPAL · Tipo, valor e vencimento ══════════ */}
         <div className={cn(/* design-system-escape: mx-6 margin sem primitiva DS; p-4 → migrar para <Inset variant="card-compact"> */ "shrink-0 mx-6 mt-4 p-4 rounded-xl bg-primary/5 border border-primary/15")}>
@@ -805,11 +807,11 @@ export function ObrigacaoDetalhesDialog({
         </div>
 
         {/* ══════════ FOOTER ══════════ */}
-        <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "shrink-0 px-6 py-3 border-t border-border/50 flex items-center justify-end bg-card/40")}>
+        <DialogFooter className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "shrink-0 px-6 py-3 border-t border-border/50 bg-card/40")}>
           <Button variant="outline" size="sm" onClick={handleClose}>
             Fechar
           </Button>
-        </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

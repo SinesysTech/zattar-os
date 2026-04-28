@@ -2,6 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import {
+  DialogClose,
   Dialog,
   DialogContent,
   DialogHeader,
@@ -70,10 +71,10 @@ export function VisualizarDeclaracaoDialog({
           </Button>
           <Button
             size="sm"
-            onClick={() => onOpenChange(false)}
             className="rounded-xl"
+            asChild
           >
-            Fechar
+            <DialogClose>Fechar</DialogClose>
           </Button>
         </DialogFooter>
       </DialogContent>
