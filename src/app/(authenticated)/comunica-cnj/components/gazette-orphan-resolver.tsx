@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useRouter } from "next/navigation";
+
 import {
   ChevronLeft,
   ChevronRight,
@@ -16,6 +18,8 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { GlassPanel } from '@/components/shared/glass-panel';
+import { usePesquisaStore } from "./hooks/use-pesquisa-store";
+
 import { Heading, Text } from '@/components/ui/typography';
 import { useGazetteStore } from './hooks/use-gazette-store';
 import type {
@@ -231,6 +235,35 @@ export function GazetteOrphanResolver() {
     () => orphans.filter((o) => o.matchSugestao && o.matchSugestao.confianca >= 85).length,
     [orphans],
   );
+
+  // Store navigation for fallback
+  const setTermo = usePesquisaStore((s) => s.setTermo);
+  const setFiltros = usePesquisaStore((s) => s.setFiltros);
+  const router = useRouter();
+
+  const handleBuscarManualmente = useCallback(
+    (orphan: ComunicacaoCNJEnriquecida) => {
+      if (orphan.numeroProcessoMascara || orphan.numeroProcesso) {
+        setTermo(orphan.numeroProcessoMascara ?? orphan.numeroProcesso);
+      } else {
+        setTermo(orphan.partesAutor?.[0] ?? orphan.partesReu?.[0] ?? '');
+      }
+
+      if (orphan.nomeOrgao) {
+        setFiltros({ nomeParte: orphan.nomeOrgao });
+      }
+
+      toast('Redirecionando para busca...', {
+        description: 'Os parâmetros da comunicação foram copiados para a barra de pesquisa.'
+      });
+      router.push('/comunica-cnj');
+    },
+    [setTermo, setFiltros, router]
+  );
+
+  const handleCriarExpediente = useCallback(() => {
+    toast('Em breve', { description: 'Módulo de criação de expedientes diretamente da comunicação em desenvolvimento.' });
+  }, []);
 
   // ── Actions ──
 
@@ -604,7 +637,7 @@ export function GazetteOrphanResolver() {
                     size="sm"
                     className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "h-9 gap-1.5 text-xs")}
                     onClick={() => {
-                      /* TODO: buscar outro */
+                      handleBuscarManualmente(current);
                     }}
                   >
                     <Search className="size-3" aria-hidden />
@@ -615,7 +648,7 @@ export function GazetteOrphanResolver() {
                     size="sm"
                     className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "h-9 gap-1.5 text-xs")}
                     onClick={() => {
-                      /* TODO: criar expediente */
+                      handleCriarExpediente();
                     }}
                   >
                     <Plus className="size-3" aria-hidden />
@@ -635,10 +668,10 @@ export function GazetteOrphanResolver() {
           ) : (
             <NoMatchState
               onBuscarManualmente={() => {
-                /* TODO */
+                handleBuscarManualmente(current);
               }}
               onCriarNovo={() => {
-                /* TODO */
+                handleCriarExpediente();
               }}
               onIgnorar={() => handleIgnorar(current)}
             />
