@@ -100,6 +100,16 @@ jest.mock('@/components/ui/dialog', () => ({
       {children}
     </div>
   ),
+  DialogHeader: ({ children, className }: { children: React.ReactNode; className?: string }) => (
+    <div data-testid="dialog-header" className={className}>
+      {children}
+    </div>
+  ),
+  DialogFooter: ({ children, className }: { children: React.ReactNode; className?: string }) => (
+    <div data-testid="dialog-footer" className={className}>
+      {children}
+    </div>
+  ),
   DialogTitle: ({ children, asChild }: { children: React.ReactNode; asChild?: boolean }) =>
     asChild ? <>{children}</> : <h2>{children}</h2>,
   DialogDescription: ({ children }: { children: React.ReactNode }) => (
@@ -120,8 +130,9 @@ jest.mock('@/components/ui/button', () => ({
     children,
     onClick,
     disabled,
+    asChild,
     ...rest
-  }: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
+  }: React.ButtonHTMLAttributes<HTMLButtonElement> & { asChild?: boolean }) => (
     <button onClick={onClick} disabled={disabled} {...rest}>
       {children}
     </button>
