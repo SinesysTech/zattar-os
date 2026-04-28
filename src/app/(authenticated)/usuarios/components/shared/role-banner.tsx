@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 
 interface RoleBannerProps {
   cargoNome: string | null | undefined;
+  coverUrl?: string | null;
   inactive?: boolean;
   height?: string; // default 'h-14'
   className?: string;
@@ -32,6 +33,7 @@ export function getRoleBannerGradient(
 
 export function RoleBanner({
   cargoNome,
+  coverUrl,
   inactive = false,
   height = 'h-14',
   className,
@@ -42,12 +44,19 @@ export function RoleBanner({
     <div
       className={cn(
         'bg-linear-to-br relative w-full overflow-hidden',
-        gradient,
+        !coverUrl && gradient,
         height,
         inactive && 'grayscale',
         className,
       )}
     >
+      {coverUrl && (
+        <img
+          src={coverUrl}
+          alt="Capa do perfil"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      )}
       {/* Bottom overlay */}
       <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-background/60" />
     </div>
