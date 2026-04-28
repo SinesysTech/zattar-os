@@ -59,7 +59,7 @@ import {
 import { cn } from '@/lib/utils';
 import { getAvailableVariables, type VariableOption } from './editor-helpers';
 
-const VARIABLE_REGEX = /\{\{([^}]+)\}\}/g;
+const VARIABLE_TEST_REGEX = /\{\{[^}]+\}\}/;
 
 // Pós-processa um Value deserializado substituindo textos {{key}} por nós variable inline
 function injectVariableNodes(value: Value): Value {
@@ -73,12 +73,13 @@ function injectInNode(node: Record<string, unknown>): Record<string, unknown> {
   const newChildren: unknown[] = [];
   for (const child of children) {
     const childText = child.text as string | undefined;
-    if (typeof childText === 'string' && VARIABLE_REGEX.test(childText)) {
-      VARIABLE_REGEX.lastIndex = 0;
+    if (typeof childText === 'string' && VARIABLE_TEST_REGEX.test(childText)) {
+      // Regex local com /g para evitar estado compartilhado entre chamadas
+      const varRegex = /\{\{([^}]+)\}\}/g;
       const { text, ...marks } = child as Record<string, unknown>;
       let lastIndex = 0;
       let match: RegExpExecArray | null;
-      while ((match = VARIABLE_REGEX.exec(childText)) !== null) {
+      while ((match = varRegex.exec(childText)) !== null) {
         if (match.index > lastIndex) {
           newChildren.push({ ...marks, text: childText.slice(lastIndex, match.index) });
         }
@@ -88,7 +89,7 @@ function injectInNode(node: Record<string, unknown>): Record<string, unknown> {
           children: [{ text: '' }],
         };
         newChildren.push(varNode);
-        lastIndex = VARIABLE_REGEX.lastIndex;
+        lastIndex = varRegex.lastIndex;
       }
       if (lastIndex < childText.length) {
         newChildren.push({ ...marks, text: childText.slice(lastIndex) });
