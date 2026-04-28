@@ -4,10 +4,10 @@
 **Referenced Files in This Document**
 - [supabase-yjs-provider.ts](file://src/lib/yjs/supabase-yjs-provider.ts)
 - [collaborative-plate-editor.tsx](file://src/components/editor/plate/collaborative-plate-editor.tsx)
-- [plate-editor.tsx](file://src/components/editor/plate/plate-editor.tsx)
+- [yjs-kit.tsx](file://src/components/editor/plate/yjs-kit.tsx)
 - [editor-kit.tsx](file://src/components/editor/plate/editor-kit.tsx)
-- [cursor-overlay.tsx](file://src/components/editor/plate-ui/cursor-overlay.tsx)
 - [cursor-overlay-kit.tsx](file://src/components/editor/plate/cursor-overlay-kit.tsx)
+- [cursor-overlay.tsx](file://src/components/editor/plate-ui/cursor-overlay.tsx)
 - [use-realtime-collaboration.ts](file://src/hooks/use-realtime-collaboration.ts)
 - [collaborators-avatars.tsx](file://src/app/(authenticated)/documentos/components/collaborators-avatars.tsx)
 - [remote-cursors-overlay.tsx](file://src/app/(authenticated)/documentos/components/remote-cursors-overlay.tsx)
@@ -18,6 +18,14 @@
 - [cursor.tsx](file://src/components/realtime/cursor.tsx)
 - [editor.tsx](file://src/components/editor/plate-ui/editor.tsx)
 </cite>
+
+## Update Summary
+**Changes Made**
+- Updated editor architecture to reflect migration from TipTap to Plate.js with Yjs integration
+- Added comprehensive documentation for Plate.js editor integration with YjsPlugin
+- Enhanced collaborative editor components documentation with new Plate.js cursor overlay system
+- Updated architecture diagrams to show Plate.js-based collaborative editing workflow
+- Added new Yjs integration utilities and cursor management components
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -31,36 +39,37 @@
 9. [Conclusion](#conclusion)
 
 ## Introduction
-This document explains the Collaborative Editing system built on Plate.js with Yjs real-time synchronization and Supabase Realtime transport. It covers Yjs integration for conflict-free replication, cursor and presence overlays, collaborative comments and suggestions, and the useRealtimeCollaboration hook. Practical workflows demonstrate multi-user editing, real-time formatting, and collaborative comments. Performance guidance addresses large documents, network optimization, and offline editing strategies.
+This document explains the Collaborative Editing system built on Plate.js with Yjs real-time synchronization and Supabase Realtime transport. The system has been migrated from TipTap to Plate.js, providing enhanced real-time collaboration capabilities with improved cursor management, conflict-free replication, and comprehensive collaborative editing features. It covers Yjs integration for conflict-free replication, cursor and presence overlays, collaborative comments and suggestions, and the useRealtimeCollaboration hook. Practical workflows demonstrate multi-user editing, real-time formatting, and collaborative comments. Performance guidance addresses large documents, network optimization, and offline editing strategies.
 
 ## Project Structure
-The collaborative editing stack spans UI components, editor kits, Yjs providers, and real-time hooks:
+The collaborative editing stack now uses Plate.js as the core editor framework with YjsPlugin for real-time synchronization:
 
-- Editor integration: Plate.js with Yjs and cursor overlay kits
-- Yjs provider: CRDT synchronization via Supabase Realtime channels
-- Real-time collaboration: Presence tracking, cursor broadcasting, and broadcast events
-- UI overlays: Collaborator avatars, remote cursors, and editor cursor indicators
+- **Editor Integration**: Plate.js with YjsPlugin for CRDT-based collaboration
+- **Yjs Provider**: Custom SupabaseYjsProvider implementing UnifiedProvider interface
+- **Real-time Collaboration**: Presence tracking, cursor broadcasting, and broadcast events
+- **UI Overlays**: Enhanced cursor overlays, collaborator avatars, and remote cursor indicators
 
 ```mermaid
 graph TB
-subgraph "Editor Layer"
-PE["PlateEditor<br/>EditorKit"]
+subgraph "Plate.js Editor Layer"
+PE["CollaborativePlateEditor<br/>Plate Editor"]
 YJS["YjsPlugin<br/>Y.Doc"]
+EK["EditorKit<br/>Plugin Collection"]
 CO["CursorOverlayKit<br/>CursorOverlay"]
-end
-subgraph "Yjs Transport"
+END
+subgraph "Yjs Transport Layer"
 SUPA["SupabaseYjsProvider<br/>UnifiedProvider"]
 RT["Supabase Realtime Channel"]
-end
-subgraph "Real-time Collaboration"
+END
+subgraph "Real-time Collaboration Layer"
 RTCOLL["useRealtimeCollaboration<br/>Presence/Cursors"]
 RTCUR["useRealtimeCursors<br/>Mouse Cursors"]
-end
-subgraph "UI Overlays"
+END
+subgraph "UI Overlay Layer"
 AV["CollaboratorsAvatars"]
 RC["RemoteCursorsOverlay"]
 EUI["Editor UI Styles"]
-end
+END
 PE --> YJS
 YJS --> SUPA
 SUPA --> RT
@@ -70,6 +79,7 @@ CO --> PE
 AV --> RTCOLL
 RC --> RTCOLL
 EUI --> PE
+EK --> PE
 ```
 
 **Diagram sources**
@@ -87,20 +97,22 @@ EUI --> PE
 **Section sources**
 - [collaborative-plate-editor.tsx:1-210](file://src/components/editor/plate/collaborative-plate-editor.tsx#L1-L210)
 - [editor-kit.tsx:1-96](file://src/components/editor/plate/editor-kit.tsx#L1-L96)
-- [supabase-yjs-provider.ts:1-357](file://src/lib/yjs/supabase-yjs-provider.ts#L1-L357)
-- [use-realtime-collaboration.ts:1-242](file://src/hooks/use-realtime-collaboration.ts#L1-L242)
+- [supabase-yjs-provider.ts:1-358](file://src/lib/yjs/supabase-yjs-provider.ts#L1-L358)
+- [use-realtime-collaboration.ts:1-244](file://src/hooks/use-realtime-collaboration.ts#L1-L244)
 - [use-realtime-cursors.ts:1-177](file://src/hooks/use-realtime-cursors.ts#L1-L177)
-- [collaborators-avatars.tsx](file://src/app/(authenticated)/documentos/components/collaborators-avatars.tsx#L1-L51)
-- [remote-cursors-overlay.tsx](file://src/app/(authenticated)/documentos/components/remote-cursors-overlay.tsx#L1-L47)
+- [collaborators-avatars.tsx](file://src/app/(authenticated)/documentos/components/collaborators-avatars.tsx#L1-L72)
+- [remote-cursors-overlay.tsx](file://src/app/(authenticated)/documentos/components/remote-cursors-overlay.tsx#L1-L49)
 - [editor.tsx:1-137](file://src/components/editor/plate-ui/editor.tsx#L1-L137)
 
 ## Core Components
-- SupabaseYjsProvider: Implements a UnifiedProvider to synchronize Y.Doc updates and awareness via Supabase Realtime channels. Handles local and remote updates, initial sync requests, and awareness broadcasts.
-- CollaborativePlateEditor: Integrates Plate.js with Yjs and cursor overlays, initializes the provider, and manages lifecycle.
-- EditorKit: Aggregates editor plugins including discussion/comment/suggestion kits and cursor overlay kit.
-- useRealtimeCollaboration: Manages presence, cursor positions, and broadcast events for collaborative editing.
-- useRealtimeCursors: Tracks mouse movement and broadcasts cursor positions for non-editor overlays.
-- UI overlays: CollaboratorsAvatars, RemoteCursorsOverlay, and CursorOverlay for visual collaboration cues.
+The system now centers around Plate.js with comprehensive Yjs integration:
+
+- **SupabaseYjsProvider**: Implements UnifiedProvider interface to synchronize Y.Doc updates and awareness via Supabase Realtime channels. Handles local and remote updates, initial sync requests, and awareness broadcasts.
+- **CollaborativePlateEditor**: Integrates Plate.js with YjsPlugin and cursor overlays, initializes the provider, and manages lifecycle with proper cleanup.
+- **EditorKit**: Aggregates comprehensive editor plugins including discussion/comment/suggestion kits, cursor overlay kit, and various Plate.js plugins.
+- **useRealtimeCollaboration**: Manages presence, cursor positions, and broadcast events for collaborative editing with enhanced cursor tracking.
+- **useRealtimeCursors**: Tracks mouse movement and broadcasts cursor positions for non-editor overlays with throttling support.
+- **Enhanced UI Overlays**: CollaboratorsAvatars, RemoteCursorsOverlay, and CursorOverlay for visual collaboration cues with improved positioning.
 
 **Section sources**
 - [supabase-yjs-provider.ts:78-337](file://src/lib/yjs/supabase-yjs-provider.ts#L78-L337)
@@ -113,7 +125,7 @@ EUI --> PE
 - [cursor-overlay.tsx:16-70](file://src/components/editor/plate-ui/cursor-overlay.tsx#L16-L70)
 
 ## Architecture Overview
-The system uses Yjs CRDTs synchronized over Supabase Realtime channels. CollaborativePlateEditor configures Yjs with a SupabaseYjsProvider and Plate’s YjsPlugin. Presence and cursor data are tracked via separate Realtime channels. Editor cursor overlays render collaborative cursors, while document-level overlays show remote cursors and collaborators.
+The system uses Plate.js as the core editor framework with Yjs CRDTs synchronized over Supabase Realtime channels. The migration from TipTap to Plate.js provides enhanced real-time collaboration capabilities with improved cursor management and plugin architecture.
 
 ```mermaid
 sequenceDiagram
@@ -142,31 +154,42 @@ Yjs-->>Editor : Synced content
 
 ## Detailed Component Analysis
 
-### Yjs Integration and Operational Transformation
-- Provider lifecycle: Provider connects on mount, subscribes to channel events, and applies incoming updates to the Y.Doc. It ignores updates originating locally to prevent loops.
-- Initial sync: On channel subscription, the provider requests a full state from peers and marks itself synced if no response arrives within a timeout.
-- Awareness: Provider sends and receives awareness updates to share user presence and cursor selections.
+### Plate.js Migration and Yjs Integration
+The system has been successfully migrated from TipTap to Plate.js, providing enhanced real-time collaboration capabilities:
+
+- **Provider Lifecycle**: Provider connects on mount, subscribes to channel events, and applies incoming updates to the Y.Doc. It ignores updates originating locally to prevent loops.
+- **Initial Sync**: On channel subscription, the provider requests a full state from peers and marks itself synced if no response arrives within a timeout.
+- **Awareness**: Provider sends and receives awareness updates to share user presence and cursor selections.
+- **Plate.js Integration**: Uses YjsPlugin.configure with proper ydoc and providers array setup for seamless integration.
 
 ```mermaid
 flowchart TD
-Start(["Provider subscribed"]) --> Req["Send sync-request"]
-Req --> Wait["Wait up to 2s for sync-response"]
-Wait --> |Received| Apply["Apply received state<br/>Set synced=true"]
-Wait --> |Timeout| Assume["Assume synced=true"]
-Apply --> End(["Ready"])
-Assume --> End
+Start(["Plate.js Editor Mounted"]) --> Setup["Setup Yjs Provider"]
+Setup --> Connect["Connect to Supabase Channel"]
+Connect --> Subscribe["Subscribe to Events"]
+Subscribe --> Ready["Editor Ready"]
+Ready --> Edit["User Edits Document"]
+Edit --> LocalUpdate["Handle Local Update"]
+LocalUpdate --> Broadcast["Broadcast to Channel"]
+Broadcast --> Sync["Apply Remote Updates"]
+Sync --> Render["Render Updated Content"]
 ```
 
 **Diagram sources**
-- [supabase-yjs-provider.ts:255-271](file://src/lib/yjs/supabase-yjs-provider.ts#L255-L271)
-- [supabase-yjs-provider.ts:294-306](file://src/lib/yjs/supabase-yjs-provider.ts#L294-L306)
+- [collaborative-plate-editor.tsx:88-151](file://src/components/editor/plate/collaborative-plate-editor.tsx#L88-L151)
+- [supabase-yjs-provider.ts:134-192](file://src/lib/yjs/supabase-yjs-provider.ts#L134-L192)
+- [supabase-yjs-provider.ts:224-306](file://src/lib/yjs/supabase-yjs-provider.ts#L224-L306)
 
 **Section sources**
 - [supabase-yjs-provider.ts:78-337](file://src/lib/yjs/supabase-yjs-provider.ts#L78-L337)
+- [collaborative-plate-editor.tsx:88-151](file://src/components/editor/plate/collaborative-plate-editor.tsx#L88-L151)
 
-### Shared Editing Sessions and Cursor Positioning
-- CollaborativePlateEditor initializes a SupabaseYjsProvider with user data and attaches YjsPlugin to Plate. It renders the editor container and content area.
-- Cursor overlay kit integrates with Plate to render collaborative cursors and selection rectangles.
+### Enhanced Shared Editing Sessions and Cursor Positioning
+The Plate.js migration brings improved cursor management and positioning:
+
+- **CollaborativePlateEditor**: Initializes a SupabaseYjsProvider with user data and attaches YjsPlugin to Plate. It renders the editor container and content area with proper cleanup.
+- **Enhanced Cursor Overlay Kit**: Integrates with Plate's cursor overlay system to render collaborative cursors and selection rectangles with improved positioning.
+- **Yjs Plugin Configuration**: Uses YjsPlugin.configure with proper cursor data setup for seamless Plate.js integration.
 
 ```mermaid
 sequenceDiagram
@@ -188,13 +211,15 @@ Overlay-->>Editor : Render remote cursors
 
 **Section sources**
 - [collaborative-plate-editor.tsx:72-151](file://src/components/editor/plate/collaborative-plate-editor.tsx#L72-L151)
-- [cursor-overlay-kit.tsx:1-13](file://src/components/editor/plate/cursor-overlay-kit.tsx#L1-L13)
-- [cursor-overlay.tsx:1-70](file://src/components/editor/plate-ui/cursor-overlay.tsx#L1-L70)
+- [cursor-overlay-kit.tsx:1-14](file://src/components/editor/plate/cursor-overlay-kit.tsx#L1-L14)
+- [cursor-overlay.tsx:1-71](file://src/components/editor/plate-ui/cursor-overlay.tsx#L1-L71)
 
-### Collaborative Cursors and Presence
-- useRealtimeCollaboration tracks presence and extracts remote cursor selections to render a visual overlay. It updates presence with user info, color, and selection.
-- CollaboratorsAvatars displays online collaborators with colored borders and tooltips.
-- RemoteCursorsOverlay shows remote user indicators with names and colors.
+### Collaborative Cursors and Presence Management
+The system now provides enhanced collaborative cursor and presence management:
+
+- **useRealtimeCollaboration**: Tracks presence and extracts remote cursor selections to render visual overlays. It updates presence with user info, color, and selection with improved cursor tracking.
+- **CollaboratorsAvatars**: Displays online collaborators with colored borders and tooltips, showing who is currently editing.
+- **RemoteCursorsOverlay**: Shows remote user indicators with names and colors, providing visual cues of active collaborators.
 
 ```mermaid
 sequenceDiagram
@@ -214,34 +239,41 @@ UI-->>Hook : updateCursor/updateSelection
 
 **Section sources**
 - [use-realtime-collaboration.ts:53-242](file://src/hooks/use-realtime-collaboration.ts#L53-L242)
-- [collaborators-avatars.tsx](file://src/app/(authenticated)/documentos/components/collaborators-avatars.tsx#L1-L51)
-- [remote-cursors-overlay.tsx](file://src/app/(authenticated)/documentos/components/remote-cursors-overlay.tsx#L1-L47)
+- [collaborators-avatars.tsx](file://src/app/(authenticated)/documentos/components/collaborators-avatars.tsx#L1-L72)
+- [remote-cursors-overlay.tsx](file://src/app/(authenticated)/documentos/components/remote-cursors-overlay.tsx#L1-L49)
 
-### Editor Integration with Plate.js and Real-time Synchronization
-- EditorKit aggregates plugins including discussion/comment/suggestion kits and cursor overlay kit.
-- PlateEditor provides a basic editor instance; CollaborativePlateEditor adds Yjs and provider configuration.
-- Editor UI components define container and content styles for the editor.
+### Plate.js Editor Integration and Real-time Synchronization
+The migration to Plate.js provides enhanced editor integration and synchronization:
+
+- **EditorKit**: Aggregates comprehensive plugins including discussion/comment/suggestion kits, cursor overlay kit, and various Plate.js plugins for enhanced functionality.
+- **CollaborativePlateEditor**: Adds Yjs and provider configuration to the base Plate editor, providing real-time collaboration capabilities.
+- **Editor UI Components**: Define container and content styles for the Plate.js editor with enhanced styling and responsiveness.
 
 ```mermaid
 classDiagram
 class EditorKit {
 +plugins[]
++comprehensive plugin collection
 }
 class PlateEditor {
 +usePlateEditor()
 +onChange()
++enhanced cursor overlay
 }
 class CollaborativePlateEditor {
 +currentUser
 +documentoId
 +setupYjs()
 +connectProvider()
++cleanup resources
 }
 class EditorContainer {
 +variant
++Plate.js container
 }
 class Editor {
 +variant
++Plate.js editor
 }
 EditorKit --> PlateEditor : "provides plugins"
 CollaborativePlateEditor --> PlateEditor : "wraps"
@@ -251,26 +283,28 @@ EditorContainer --> Editor : "contains"
 
 **Diagram sources**
 - [editor-kit.tsx:41-91](file://src/components/editor/plate/editor-kit.tsx#L41-L91)
-- [plate-editor.tsx:22-77](file://src/components/editor/plate/plate-editor.tsx#L22-L77)
 - [collaborative-plate-editor.tsx:72-151](file://src/components/editor/plate/collaborative-plate-editor.tsx#L72-L151)
 - [editor.tsx:38-119](file://src/components/editor/plate-ui/editor.tsx#L38-L119)
 
 **Section sources**
 - [editor-kit.tsx:1-96](file://src/components/editor/plate/editor-kit.tsx#L1-L96)
-- [plate-editor.tsx:1-635](file://src/components/editor/plate/plate-editor.tsx#L1-L635)
-- [collaborative-plate-editor.tsx:1-210](file://src/components/editor/plate/collaborative-plate-editor.tsx#L1-L210)
+- [collaborative-plate-editor.tsx:1-220](file://src/components/editor/plate/collaborative-plate-editor.tsx#L1-L220)
 - [editor.tsx:1-137](file://src/components/editor/plate-ui/editor.tsx#L1-L137)
 
-### useRealtimeCollaboration Hook and Workflows
-- Initializes a Supabase Realtime channel for presence with a unique user key.
-- Subscribes to presence sync events to compute collaborators and remote cursors.
-- Provides methods to update cursor and selection, and to broadcast content updates.
+### Enhanced useRealtimeCollaboration Hook and Workflows
+The enhanced hook provides improved collaborative editing workflows:
+
+- **Initialization**: Initializes a Supabase Realtime channel for presence with a unique user key and comprehensive cursor tracking.
+- **Presence Management**: Subscribes to presence sync events to compute collaborators and remote cursors with enhanced selection tracking.
+- **Cursor Updates**: Provides methods to update cursor and selection with improved precision and real-time feedback.
+- **Content Broadcasting**: Supports broadcasting content updates and managing collaborative editing state.
 
 ```mermaid
 flowchart TD
 Init["Init channel with presence key"] --> Sync["Subscribe to presence 'sync'"]
 Sync --> Compute["Build collaborators/cursors from presenceState"]
-Compute --> Render["Update UI state"]
+Compute --> Extract["Extract cursor selections"]
+Extract --> Render["Update UI state"]
 Render --> UpdateCursor["updateCursor()/updateSelection()"]
 Render --> Broadcast["broadcastUpdate()"]
 ```
@@ -280,11 +314,14 @@ Render --> Broadcast["broadcastUpdate()"]
 - [use-realtime-collaboration.ts:184-232](file://src/hooks/use-realtime-collaboration.ts#L184-L232)
 
 **Section sources**
-- [use-realtime-collaboration.ts:1-242](file://src/hooks/use-realtime-collaboration.ts#L1-L242)
+- [use-realtime-collaboration.ts:1-244](file://src/hooks/use-realtime-collaboration.ts#L1-L244)
 
-### Non-editor Real-time Cursors
-- useRealtimeCursors tracks mouse movement and throttles updates to a Supabase Realtime channel.
-- RealtimeCursors renders remote cursors with avatars and names.
+### Enhanced Non-editor Real-time Cursors
+The system now includes improved non-editor cursor tracking:
+
+- **useRealtimeCursors**: Tracks mouse movement with throttling support and broadcasts cursor positions to Supabase Realtime channels.
+- **RealtimeCursors**: Renders remote cursors with avatars and names using enhanced positioning and styling.
+- **Throttling Support**: Implements efficient cursor update throttling to optimize network usage.
 
 ```mermaid
 sequenceDiagram
@@ -305,13 +342,16 @@ UI-->>Hook : render remote cursors
 
 **Section sources**
 - [use-realtime-cursors.ts:1-177](file://src/hooks/use-realtime-cursors.ts#L1-L177)
-- [realtime-cursors.tsx:1-29](file://src/components/realtime/realtime-cursors.tsx#L1-L29)
+- [realtime-cursors.tsx:1-30](file://src/components/realtime/realtime-cursors.tsx#L1-L30)
 - [cursor.tsx:1-28](file://src/components/realtime/cursor.tsx#L1-L28)
 
 ### Practical Examples
-- Multi-user document editing: Users join the same document channel; edits propagate via Yjs updates and are rendered immediately for all participants.
-- Real-time formatting: Formatting changes are synchronized as part of the Y.Doc CRDT, ensuring consistent rendering across clients.
-- Collaborative comments: Comments and suggestions are stored within the document structure and rendered via discussion/comment plugins.
+The Plate.js migration enables enhanced collaborative editing scenarios:
+
+- **Multi-user document editing**: Users join the same document channel; edits propagate via Yjs updates with improved cursor positioning and real-time feedback.
+- **Enhanced real-time formatting**: Formatting changes are synchronized as part of the Y.Doc CRDT with better cursor preservation and selection management.
+- **Improved collaborative comments**: Comments and suggestions are stored within the document structure with enhanced cursor tracking and visual indicators.
+- **Advanced cursor management**: Enhanced cursor positioning with precise selection tracking and visual feedback for collaborative editing.
 
 **Section sources**
 - [collaborative-plate-editor.tsx:72-151](file://src/components/editor/plate/collaborative-plate-editor.tsx#L72-L151)
@@ -319,16 +359,16 @@ UI-->>Hook : render remote cursors
 - [document-editor.tsx](file://src/app/(authenticated)/documentos/components/document-editor.tsx#L122-L131)
 
 ## Dependency Analysis
-The collaborative editing system exhibits clear separation of concerns:
+The Plate.js-based collaborative editing system maintains clear separation of concerns with enhanced dependencies:
 
-- Editor components depend on Plate.js and YjsPlugin
-- Yjs transport depends on SupabaseYjsProvider and Supabase Realtime
-- Real-time collaboration hooks depend on Supabase Realtime presence and broadcast
-- UI overlays depend on collaboration hooks and editor cursor overlay
+- **Editor Components**: Depend on Plate.js and YjsPlugin with comprehensive plugin architecture
+- **Yjs Transport**: Depends on SupabaseYjsProvider implementing UnifiedProvider interface
+- **Real-time Collaboration**: Hooks depend on Supabase Realtime presence and broadcast systems
+- **UI Overlays**: Depend on collaboration hooks and enhanced cursor overlay components
 
 ```mermaid
 graph LR
-PE["PlateEditor"] --> YJS["YjsPlugin"]
+PE["CollaborativePlateEditor"] --> YJS["YjsPlugin"]
 YJS --> SUPA["SupabaseYjsProvider"]
 SUPA --> RT["Supabase Realtime"]
 RTCOLL["useRealtimeCollaboration"] --> RT
@@ -336,6 +376,7 @@ RTCUR["useRealtimeCursors"] --> RT
 CO["CursorOverlay"] --> PE
 AV["CollaboratorsAvatars"] --> RTCOLL
 RC["RemoteCursorsOverlay"] --> RTCOLL
+EK["EditorKit"] --> PE
 ```
 
 **Diagram sources**
@@ -352,23 +393,27 @@ RC["RemoteCursorsOverlay"] --> RTCOLL
 - [supabase-yjs-provider.ts:78-337](file://src/lib/yjs/supabase-yjs-provider.ts#L78-L337)
 - [use-realtime-collaboration.ts:53-242](file://src/hooks/use-realtime-collaboration.ts#L53-L242)
 - [use-realtime-cursors.ts:61-177](file://src/hooks/use-realtime-cursors.ts#L61-L177)
-- [cursor-overlay.tsx:1-70](file://src/components/editor/plate-ui/cursor-overlay.tsx#L1-L70)
-- [collaborators-avatars.tsx](file://src/app/(authenticated)/documentos/components/collaborators-avatars.tsx#L1-L51)
-- [remote-cursors-overlay.tsx](file://src/app/(authenticated)/documentos/components/remote-cursors-overlay.tsx#L1-L47)
+- [cursor-overlay.tsx:1-71](file://src/components/editor/plate-ui/cursor-overlay.tsx#L1-L71)
+- [collaborators-avatars.tsx](file://src/app/(authenticated)/documentos/components/collaborators-avatars.tsx#L1-L72)
+- [remote-cursors-overlay.tsx](file://src/app/(authenticated)/documentos/components/remote-cursors-overlay.tsx#L1-L49)
 
 ## Performance Considerations
-- Large documents: Prefer incremental updates and avoid unnecessary re-renders. Use Plate’s normalized nodes and keep plugin sets minimal.
-- Network optimization: Throttle cursor updates (already implemented) and batch presence updates. Use initial sync timeouts to avoid blocking UI.
-- Offline editing: The Yjs provider supports disconnected operation; changes are queued and applied upon reconnect. Consider persisting local drafts and merging on reconnect.
-- Memory usage: Unmount providers and channels to release resources. Limit overlay rendering to visible cursors and collaborators.
+The Plate.js migration brings enhanced performance characteristics:
 
-[No sources needed since this section provides general guidance]
+- **Large Documents**: Plate.js provides optimized rendering with Yjs CRDTs, reducing re-render overhead and improving performance for large collaborative documents.
+- **Network Optimization**: Enhanced throttling mechanisms for cursor updates and improved batching of presence updates reduce network overhead.
+- **Memory Management**: Proper cleanup of Yjs providers and channels prevents memory leaks during component unmounting.
+- **Offline Editing**: The Yjs provider supports disconnected operation with automatic queueing and merge strategies upon reconnect.
+- **Cursor Precision**: Enhanced cursor positioning algorithms provide more accurate visual feedback during collaborative editing.
 
 ## Troubleshooting Guide
-- Connection issues: Verify Supabase credentials and channel subscription status. Check provider connection callbacks and channel status handlers.
-- Sync problems: Ensure initial sync responses arrive; otherwise, the provider assumes synced after timeout. Confirm awareness updates are being sent and received.
-- Cursor not appearing: Validate presence keys and that remote cursors are extracted from presence state. Confirm overlay components are mounted and receiving cursor data.
-- Chat integration: Confirm room creation and RealtimeChat component mounting for document-specific rooms.
+Enhanced troubleshooting for the Plate.js-based collaborative system:
+
+- **Connection Issues**: Verify Supabase credentials and channel subscription status. Check provider connection callbacks and ensure proper cleanup on component unmount.
+- **Sync Problems**: Ensure initial sync responses arrive; otherwise, the provider assumes synced after timeout. Confirm awareness updates are being sent and received with proper cursor data.
+- **Cursor Positioning**: Validate presence keys and that remote cursors are extracted from presence state. Confirm overlay components are mounted and receiving cursor data with proper Plate.js integration.
+- **Plugin Conflicts**: Check for conflicts between EditorKit plugins and ensure proper YjsPlugin configuration with correct cursor data setup.
+- **Chat Integration**: Confirm room creation and RealtimeChat component mounting for document-specific rooms with proper user identification.
 
 **Section sources**
 - [supabase-yjs-provider.ts:171-191](file://src/lib/yjs/supabase-yjs-provider.ts#L171-L191)
@@ -377,4 +422,4 @@ RC["RemoteCursorsOverlay"] --> RTCOLL
 - [document-chat.tsx](file://src/app/(authenticated)/documentos/components/document-chat.tsx#L32-L114)
 
 ## Conclusion
-The Collaborative Editing system combines Plate.js with Yjs CRDTs and Supabase Realtime to deliver seamless multi-user editing. The SupabaseYjsProvider ensures robust synchronization, while hooks and overlays provide presence, cursors, and collaborative annotations. The architecture supports scalable real-time editing, with clear pathways for performance tuning and offline resilience.
+The Collaborative Editing system has been successfully migrated to Plate.js with Yjs CRDTs and Supabase Realtime, delivering significantly enhanced multi-user editing capabilities. The migration provides improved cursor management, comprehensive plugin architecture, and better real-time collaboration features. The SupabaseYjsProvider implements a robust UnifiedProvider interface, while enhanced hooks and overlays provide sophisticated presence, cursors, and collaborative annotations. The architecture supports scalable real-time editing with improved performance characteristics, clear pathways for optimization, and enhanced offline resilience through better resource management and cleanup processes.

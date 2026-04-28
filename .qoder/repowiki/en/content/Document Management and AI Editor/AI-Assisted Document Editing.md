@@ -9,8 +9,13 @@
 - [collaborative-plate-editor.tsx](file://src/components/editor/plate/collaborative-plate-editor.tsx)
 - [ai-kit.tsx](file://src/components/editor/plate/ai-kit.tsx)
 - [copilot-kit.tsx](file://src/components/editor/plate/copilot-kit.tsx)
+- [markdown-kit.tsx](file://src/components/editor/plate/markdown-kit.tsx)
+- [MarkdownRichTextEditor.tsx](file://src/app/(authenticated)/assinatura-digital/components/editor/MarkdownRichTextEditor.tsx)
 - [editor-helpers.ts](file://src/app/(authenticated)/assinatura-digital/components/editor/editor-helpers.ts)
-- [RichTextEditor.tsx](file://src/app/(authenticated)/assinatura-digital/components/editor/RichTextEditor.tsx)
+- [fixed-toolbar-buttons.tsx](file://src/components/editor/plate-ui/fixed-toolbar-buttons.tsx)
+- [floating-toolbar-buttons.tsx](file://src/components/editor/plate-ui/floating-toolbar-buttons.tsx)
+- [ai-toolbar-button.tsx](file://src/components/editor/plate-ui/ai-toolbar-button.tsx)
+- [insert-toolbar-button.tsx](file://src/components/editor/plate-ui/insert-toolbar-button.tsx)
 - [ai-menu.tsx](file://src/components/editor/plate-ui/ai-menu.tsx)
 - [ai-node.tsx](file://src/components/editor/plate-ui/ai-node.tsx)
 - [ai-chat-editor.tsx](file://src/components/editor/plate-ui/ai-chat-editor.tsx)
@@ -23,11 +28,13 @@
 
 ## Update Summary
 **Changes Made**
-- Added new VariablePlugin for Plate.js inline variable elements
-- Enhanced EditorKit with VariablePlugin integration
-- Implemented bidirectional TipTap ↔ Plate.js JSON converters
-- Updated editor architecture to support seamless migration from TipTap
-- Added comprehensive variable insertion and management system
+- Migrated from TipTap to Plate.js architecture with enhanced plugin system
+- Integrated new VariablePlugin for inline variable elements with markdown serialization
+- Enhanced EditorKit with comprehensive plugin aggregation including markdown support
+- Updated toolbar components with new AI toolbar buttons and improved UI
+- Implemented responsive editor architecture with breakpoint-aware toolbars
+- Enhanced collaborative editing with Yjs integration and real-time cursors
+- Improved markdown conversion system with variable node serialization
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -43,33 +50,39 @@
 11. [Conclusion](#conclusion)
 
 ## Introduction
-This document describes the AI-assisted document editing capabilities built with Plate.js and the CopilotKit framework. The system has been enhanced with a new VariablePlugin for inline variable insertion, bidirectional TipTap ↔ Plate.js JSON converters, and improved editor architecture. The implementation maintains backward compatibility while migrating from TipTap to Plate.js, ensuring seamless data preservation and feature continuity.
+This document describes the AI-assisted document editing capabilities built with Plate.js and the CopilotKit framework. The system has been completely migrated from TipTap to Plate.js architecture, featuring enhanced plugin systems, comprehensive variable management, improved markdown serialization, and new toolbar components. The implementation provides seamless AI-assisted editing with collaborative capabilities, responsive design, and robust performance optimizations.
 
 ## Project Structure
-The AI-assisted editing system is organized around four enhanced layers:
-- Editor Core: Plate.js-based editors with modular plugin kits and variable support
-- AI Integration: Plate.js AI plugin with CopilotKit and custom hooks
-- Migration Layer: Bidirectional JSON converters for TipTap compatibility
-- API Layer: Secure server-side endpoints for AI processing and rate limiting
+The AI-assisted editing system is organized around a comprehensive Plate.js architecture with enhanced plugin integration:
+- **Editor Core**: Plate.js-based editors with modular plugin kits and enhanced variable support
+- **AI Integration**: Plate.js AI plugin with CopilotKit and custom hooks
+- **Toolbar System**: Responsive toolbar components with AI integration
+- **Collaboration**: Real-time editing with Yjs and Supabase integration
+- **Markdown Processing**: Enhanced markdown serialization with variable support
+- **API Layer**: Secure server-side endpoints for AI processing and rate limiting
 
 ```mermaid
 graph TB
-subgraph "Enhanced Editor Core"
+subgraph "Plate.js Editor Core"
 PE["PlateEditor<br/>src/components/editor/plate/plate-editor.tsx"]
 RPE["ResponsivePlateEditor<br/>src/components/editor/plate/responsive-plate-editor.tsx"]
 CPE["CollaborativePlateEditor<br/>src/components/editor/plate/collaborative-plate-editor.tsx"]
 EK["EditorKit<br/>src/components/editor/plate/editor-kit.tsx"]
-AIK["AIKit<br/>src/components/editor/plate/ai-kit.tsx"]
-CK["CopilotKit<br/>src/components/editor/plate/copilot-kit.tsx"]
+MK["MarkdownKit<br/>src/components/editor/plate/markdown-kit.tsx"]
 VP["VariablePlugin<br/>src/components/editor/plate/variable-plugin.tsx"]
 end
-subgraph "Migration Layer"
-TH["TipTap JSON Converters<br/>src/app/(authenticated)/assinatura-digital/components/editor/editor-helpers.ts"]
-end
-subgraph "UI Components"
+subgraph "AI Integration Layer"
+AIK["AIKit<br/>src/components/editor/plate/ai-kit.tsx"]
+CK["CopilotKit<br/>src/components/editor/plate/copilot-kit.tsx"]
 AIM["AIMenu<br/>src/components/editor/plate-ui/ai-menu.tsx"]
 AIN["AILeaf/AIAnchor<br/>src/components/editor/plate-ui/ai-node.tsx"]
 ACE["AIChatEditor<br/>src/components/editor/plate-ui/ai-chat-editor.tsx"]
+AITB["AIToolbarButton<br/>src/components/editor/plate-ui/ai-toolbar-button.tsx"]
+end
+subgraph "Toolbar System"
+FTB["FixedToolbarButtons<br/>src/components/editor/plate-ui/fixed-toolbar-buttons.tsx"]
+FTB2["FloatingToolbarButtons<br/>src/components/editor/plate-ui/floating-toolbar-buttons.tsx"]
+ITB["InsertToolbarButton<br/>src/components/editor/plate-ui/insert-toolbar-button.tsx"]
 end
 subgraph "API Layer"
 API["/api/plate/ai<br/>src/app/api/plate/ai/route.ts"]
@@ -79,58 +92,67 @@ PE --> EK
 RPE --> EK
 CPE --> EK
 EK --> VP
+EK --> MK
 EK --> AIK
 EK --> CK
-TH --> PE
-TH --> RPE
+AIK --> AIM
 AIM --> ACE
-ACE --> API
 CK --> API
 API --> SCP
+FTB --> AITB
+FTB2 --> AITB
+ITB --> VP
 ```
 
 **Diagram sources**
-- [variable-plugin.tsx:38-46](file://src/components/editor/plate/variable-plugin.tsx#L38-L46)
-- [editor-kit.tsx:41-91](file://src/components/editor/plate/editor-kit.tsx#L41-L91)
-- [editor-helpers.ts:227-355](file://src/app/(authenticated)/assinatura-digital/components/editor/editor-helpers.ts#L227-L355)
 - [plate-editor.tsx:22-77](file://src/components/editor/plate/plate-editor.tsx#L22-L77)
 - [responsive-plate-editor.tsx:24-55](file://src/components/editor/plate/responsive-plate-editor.tsx#L24-L55)
 - [collaborative-plate-editor.tsx:72-187](file://src/components/editor/plate/collaborative-plate-editor.tsx#L72-L187)
+- [editor-kit.tsx:41-91](file://src/components/editor/plate/editor-kit.tsx#L41-L91)
+- [markdown-kit.tsx:6-13](file://src/components/editor/plate/markdown-kit.tsx#L6-L13)
+- [variable-plugin.tsx:38-55](file://src/components/editor/plate/variable-plugin.tsx#L38-L55)
 - [ai-kit.tsx:106-112](file://src/components/editor/plate/ai-kit.tsx#L106-L112)
 - [copilot-kit.tsx:12-75](file://src/components/editor/plate/copilot-kit.tsx#L12-L75)
 - [ai-menu.tsx:51-247](file://src/components/editor/plate-ui/ai-menu.tsx#L51-L247)
 - [ai-node.tsx:14-43](file://src/components/editor/plate-ui/ai-node.tsx#L14-L43)
 - [ai-chat-editor.tsx:12-25](file://src/components/editor/plate-ui/ai-chat-editor.tsx#L12-L25)
+- [ai-toolbar-button.tsx:10-26](file://src/components/editor/plate-ui/ai-toolbar-button.tsx#L10-L26)
+- [fixed-toolbar-buttons.tsx:48-167](file://src/components/editor/plate-ui/fixed-toolbar-buttons.tsx#L48-L167)
+- [floating-toolbar-buttons.tsx:24-82](file://src/components/editor/plate-ui/floating-toolbar-buttons.tsx#L24-L82)
+- [insert-toolbar-button.tsx:220-256](file://src/components/editor/plate-ui/insert-toolbar-button.tsx#L220-L256)
 - [route.ts:99-297](file://src/app/api/plate/ai/route.ts#L99-L297)
 - [system-prompt.ts:16-32](file://src/lib/copilotkit/system-prompt.ts#L16-L32)
 
 **Section sources**
 - [variable-plugin.tsx:1-56](file://src/components/editor/plate/variable-plugin.tsx#L1-L56)
 - [editor-kit.tsx:1-96](file://src/components/editor/plate/editor-kit.tsx#L1-L96)
-- [editor-helpers.ts:1-358](file://src/app/(authenticated)/assinatura-digital/components/editor/editor-helpers.ts#L1-L358)
+- [plate-editor.tsx:1-635](file://src/components/editor/plate/plate-editor.tsx#L1-L635)
 
 ## Core Components
-- **PlateEditor**: The primary editor component with configurable plugins, placeholder, and imperative methods for text insertion and focus.
-- **EditorKit**: Central plugin aggregator combining AI, Copilot, UI, collaboration, parsers, and the new VariablePlugin.
-- **AIKit**: Integrates Plate.js AI plugin with streaming, suggestions, and UI hooks.
-- **CopilotKit**: Provides ghost text predictions and keyboard shortcuts for AI-assisted writing.
-- **VariablePlugin**: New inline variable element plugin for Plate.js with proper rendering and insertion functionality.
-- **Migration Converters**: Bidirectional JSON converters enabling seamless TipTap to Plate.js migration.
-- **AIMenu**: Command palette UI for AI actions (generate, edit, comment, grammar fixes).
-- **API Route**: Secure server endpoint for AI processing with rate limiting and tool orchestration.
+The enhanced Plate.js architecture provides comprehensive document editing capabilities:
+
+- **PlateEditor**: Primary editor component with configurable plugins, placeholder, and imperative methods for text insertion and focus
+- **EditorKit**: Central plugin aggregator combining AI, Copilot, UI, collaboration, parsers, markdown, and the new VariablePlugin
+- **AIKit**: Integrates Plate.js AI plugin with streaming, suggestions, and UI hooks for AI-powered editing
+- **CopilotKit**: Provides ghost text predictions and keyboard shortcuts for AI-assisted writing
+- **VariablePlugin**: New inline variable element plugin for Plate.js with proper rendering and markdown serialization
+- **MarkdownKit**: Enhanced markdown processing with GFM, math, MDX, and mention support
+- **Responsive Toolbar System**: Adaptive toolbar components with breakpoint-aware layouts
+- **Collaborative Editing**: Real-time editing with Yjs, Supabase, and cursor synchronization
+- **Enhanced AI Menu**: Comprehensive command palette with 20+ AI actions and streaming support
 
 **Section sources**
 - [plate-editor.tsx:11-77](file://src/components/editor/plate/plate-editor.tsx#L11-L77)
 - [editor-kit.tsx:41-91](file://src/components/editor/plate/editor-kit.tsx#L41-L91)
 - [variable-plugin.tsx:10-55](file://src/components/editor/plate/variable-plugin.tsx#L10-L55)
-- [editor-helpers.ts:227-355](file://src/app/(authenticated)/assinatura-digital/components/editor/editor-helpers.ts#L227-L355)
+- [markdown-kit.tsx:6-13](file://src/components/editor/plate/markdown-kit.tsx#L6-L13)
 - [ai-kit.tsx:21-112](file://src/components/editor/plate/ai-kit.tsx#L21-L112)
 - [copilot-kit.tsx:12-75](file://src/components/editor/plate/copilot-kit.tsx#L12-L75)
-- [ai-menu.tsx:51-247](file://src/components/editor/plate-ui/ai-menu.tsx#L51-L247)
+- [ai-menu.tsx:275-503](file://src/components/editor/plate-ui/ai-menu.tsx#L275-L503)
 - [route.ts:99-297](file://src/app/api/plate/ai/route.ts#L99-L297)
 
 ## Architecture Overview
-The enhanced AI-assisted editing pipeline now includes variable management and seamless TipTap migration capabilities, connecting the client-side editor to server-side AI processing with robust error handling and streaming support.
+The enhanced AI-assisted editing pipeline leverages Plate.js's advanced plugin architecture to provide seamless AI integration, collaborative editing, and responsive design.
 
 ```mermaid
 sequenceDiagram
@@ -165,16 +187,7 @@ Editor-->>User : "Updated content with AI assistance"
 ## Detailed Component Analysis
 
 ### Enhanced PlateEditor and Plugin System
-PlateEditor initializes a Plate.js editor with the enhanced EditorKit, now including the VariablePlugin. The EditorKit aggregates:
-- AI and Copilot plugins for AI assistance
-- Basic blocks, code, tables, toggles, TOC, media, callouts, columns, math, dates, links, mentions
-- Marks (basic styles, fonts)
-- Block styles (lists, alignment, line height)
-- Collaboration (discussion, comments, suggestions)
-- Editing aids (slash commands, autoformat, cursor overlay, block menu, drag-and-drop, emoji, exit break)
-- Parsers (DOCX, Markdown)
-- **VariablePlugin**: Inline variable element support
-- UI components (placeholders, fixed and floating toolbars)
+The PlateEditor now initializes with the comprehensive EditorKit, featuring the new VariablePlugin and enhanced markdown support:
 
 ```mermaid
 classDiagram
@@ -186,6 +199,9 @@ class PlateEditor {
 class EditorKit {
 +plugins : AnyPluginConfig[]
 +includes VariablePlugin
++includes MarkdownKit
++includes AIKit
++includes CopilotKit
 }
 class VariablePlugin {
 +VARIABLE_ELEMENT : 'variable'
@@ -202,10 +218,18 @@ class CopilotKit {
 +CopilotPlugin
 +GhostText
 }
+class MarkdownKit {
++MarkdownPlugin
++remarkGfm
++remarkMath
++remarkMdx
++remarkMention
+}
 PlateEditor --> EditorKit : "uses"
 EditorKit --> VariablePlugin : "includes"
 EditorKit --> AIKit : "includes"
 EditorKit --> CopilotKit : "includes"
+EditorKit --> MarkdownKit : "includes"
 ```
 
 **Diagram sources**
@@ -214,6 +238,7 @@ EditorKit --> CopilotKit : "includes"
 - [variable-plugin.tsx:38-55](file://src/components/editor/plate/variable-plugin.tsx#L38-L55)
 - [ai-kit.tsx:106-112](file://src/components/editor/plate/ai-kit.tsx#L106-L112)
 - [copilot-kit.tsx:12-75](file://src/components/editor/plate/copilot-kit.tsx#L12-L75)
+- [markdown-kit.tsx:6-13](file://src/components/editor/plate/markdown-kit.tsx#L6-L13)
 
 **Section sources**
 - [plate-editor.tsx:11-77](file://src/components/editor/plate/plate-editor.tsx#L11-L77)
@@ -221,11 +246,12 @@ EditorKit --> CopilotKit : "includes"
 - [variable-plugin.tsx:10-55](file://src/components/editor/plate/variable-plugin.tsx#L10-L55)
 
 ### AI Assistant Integration (Plate.js AI + CopilotKit)
-The AI integration consists of:
-- AIKit: Extends AIChatPlugin with streaming, suggestions, and UI hooks. It renders an AI loading bar and menu, and handles chunked responses to insert or apply suggestions.
-- CopilotKit: Provides ghost text completions with customizable system prompts and keyboard shortcuts (Tab, Ctrl+Space, arrow keys).
-- AIMenu: A command palette offering actions like "Continue writing", "Summarize", "Explain", "Improve writing", "Fix spelling", "Simplify language", and "Replace selection".
-- AIChatEditor: Renders AI-generated content in a static editor for review and acceptance.
+The AI integration provides comprehensive assistance through multiple channels:
+
+- **AIKit**: Extends AIChatPlugin with streaming, suggestions, and UI hooks, supporting 20+ AI actions
+- **CopilotKit**: Provides intelligent ghost text completions with Brazilian legal context
+- **AIMenu**: Advanced command palette with contextual suggestions and streaming responses
+- **AIChatEditor**: Static editor for reviewing AI-generated content before acceptance
 
 ```mermaid
 flowchart TD
@@ -252,11 +278,13 @@ UpdateUI --> End(["Done"])
 - [ai-menu.tsx:51-247](file://src/components/editor/plate-ui/ai-menu.tsx#L51-L247)
 - [ai-chat-editor.tsx:12-25](file://src/components/editor/plate-ui/ai-chat-editor.tsx#L12-L25)
 
-### Collaborative Editing
-CollaborativePlateEditor integrates Yjs via Supabase for real-time synchronization. It supports:
-- Real-time cursors with user colors
-- Connection and sync status callbacks
-- Non-colaborative fallback (SimplePlateEditor)
+### Collaborative Editing with Yjs
+Enhanced collaborative editing provides real-time synchronization with advanced features:
+
+- **Real-time Cursors**: Color-coded cursors for multiple users with smooth animations
+- **Connection Management**: Robust connection handling with automatic reconnection
+- **Sync Status**: Visual indicators for connection and synchronization states
+- **Fallback Support**: Non-collaborative mode for offline or unsupported scenarios
 
 ```mermaid
 sequenceDiagram
@@ -267,6 +295,8 @@ UserA->>Yjs : "Edit document"
 Yjs-->>UserB : "Broadcast changes"
 UserB->>Yjs : "Receive and apply"
 Yjs-->>UserA : "Update cursors/colors"
+UserA->>Yjs : "Disconnect"
+Yjs-->>UserB : "Handle disconnection gracefully"
 ```
 
 **Diagram sources**
@@ -275,11 +305,27 @@ Yjs-->>UserA : "Update cursors/colors"
 **Section sources**
 - [collaborative-plate-editor.tsx:38-219](file://src/components/editor/plate/collaborative-plate-editor.tsx#L38-L219)
 
+### Responsive Toolbar System
+The toolbar system adapts to different screen sizes with optimized layouts:
+
+- **FixedToolbarButtons**: Desktop-optimized toolbar with comprehensive formatting options
+- **FloatingToolbarButtons**: Mobile-first floating toolbar with essential actions
+- **AI Toolbar Button**: Dedicated AI command button with tooltip support
+- **Insert Toolbar Button**: Advanced dropdown with categorized content insertion options
+
+**Section sources**
+- [fixed-toolbar-buttons.tsx:48-167](file://src/components/editor/plate-ui/fixed-toolbar-buttons.tsx#L48-L167)
+- [floating-toolbar-buttons.tsx:24-82](file://src/components/editor/plate-ui/floating-toolbar-buttons.tsx#L24-L82)
+- [ai-toolbar-button.tsx:10-26](file://src/components/editor/plate-ui/ai-toolbar-button.tsx#L10-L26)
+- [insert-toolbar-button.tsx:220-256](file://src/components/editor/plate-ui/insert-toolbar-button.tsx#L220-L256)
+
 ### Export and Accessibility
-Export toolbar supports PDF, image, HTML, and Markdown exports. The HTML export includes Tailwind and KaTeX styles for faithful rendering. Accessibility features include:
-- Keyboard navigation for AI menu (Esc to stop, Enter to submit)
-- Focus management and ARIA attributes in command components
-- Responsive breakpoints for mobile and desktop toolbars
+Enhanced export capabilities with comprehensive format support:
+
+- **Export Toolbar**: Supports PDF, image, HTML, and Markdown exports
+- **HTML Export**: Includes Tailwind and KaTeX styles for faithful rendering
+- **Accessibility**: Keyboard navigation, focus management, and ARIA attributes
+- **Responsive Design**: Adaptive toolbar layouts for mobile and desktop
 
 **Section sources**
 - [export-toolbar-button.tsx:75-148](file://src/components/editor/plate-ui/export-toolbar-button.tsx#L75-L148)
@@ -288,12 +334,13 @@ Export toolbar supports PDF, image, HTML, and Markdown exports. The HTML export 
 ## Variable System Integration
 
 ### VariablePlugin Implementation
-The new VariablePlugin provides comprehensive inline variable support for Plate.js:
+The new VariablePlugin provides comprehensive inline variable support with enhanced markdown serialization:
 
 - **Element Type**: `VARIABLE_ELEMENT = 'variable'` defines the custom element type
 - **Interface**: `VariableElementType` extends TElement with key property for variable identification
 - **Rendering**: Custom `VariableElementComponent` renders variables as styled inline spans with `{{key}}` notation
 - **Insertion**: `insertVariable` function programmatically inserts variable nodes at cursor position
+- **Serialization**: MarkdownKit includes custom serializer for `{{key}}` format during markdown export
 - **Properties**: Variables are rendered as non-editable inline elements with dark/light theme support
 
 ```mermaid
@@ -320,97 +367,97 @@ class VariableElementType {
 +key : string
 +children : [{ text : '' }]
 }
+class MarkdownKit {
++serialize : {
++[VARIABLE_ELEMENT] : {
++serialize : (node) => "{{key}}"
++}
++}
+}
 VariablePlugin --> VariableElementComponent : "uses"
 VariablePlugin --> VariableElementType : "defines"
+VariablePlugin --> MarkdownKit : "integrates with"
 ```
 
 **Diagram sources**
 - [variable-plugin.tsx:38-46](file://src/components/editor/plate/variable-plugin.tsx#L38-L46)
 - [variable-plugin.tsx:18-36](file://src/components/editor/plate/variable-plugin.tsx#L18-L36)
 - [variable-plugin.tsx:12-16](file://src/components/editor/plate/variable-plugin.tsx#L12-L16)
+- [markdown-kit.tsx:6-13](file://src/components/editor/plate/markdown-kit.tsx#L6-L13)
 
 **Section sources**
 - [variable-plugin.tsx:10-55](file://src/components/editor/plate/variable-plugin.tsx#L10-L55)
 
 ### Variable Management in Rich Text Editors
-The VariablePlugin integrates seamlessly with existing rich text editors:
+The VariablePlugin integrates seamlessly with existing rich text editors and markdown processors:
 
 - **Toolbar Integration**: Variable insertion button in signature document editors
 - **Command Palette**: Searchable variable selection with grouping and filtering
+- **Markdown Serialization**: Custom serializer converts variable nodes to `{{key}}` format
+- **Deserialization**: Injects variable nodes during markdown import processing
 - **Data Management**: Comprehensive variable catalog covering clients, parties, segments, and system variables
-- **Migration Support**: Automatic conversion between TipTap and Plate.js variable formats
 
 **Section sources**
-- [RichTextEditor.tsx:152-186](file://src/app/(authenticated)/assinatura-digital/components/editor/RichTextEditor.tsx#L152-L186)
+- [MarkdownRichTextEditor.tsx:150-196](file://src/app/(authenticated)/assinatura-digital/components/editor/MarkdownRichTextEditor.tsx#L150-L196)
+- [MarkdownRichTextEditor.tsx:64-104](file://src/app/(authenticated)/assinatura-digital/components/editor/MarkdownRichTextEditor.tsx#L64-L104)
 - [editor-helpers.ts:21-93](file://src/app/(authenticated)/assinatura-digital/components/editor/editor-helpers.ts#L21-L93)
 
 ## Migration Architecture
 
-### Bidirectional JSON Converters
-The migration system provides seamless compatibility between TipTap and Plate.js through comprehensive JSON conversion:
+### Enhanced Markdown Processing
+The migration system provides seamless compatibility with enhanced markdown processing:
 
-- **Storage Format**: Maintains TipTap-compatible JSON structure in database fields
-- **Converters**: Bidirectional functions for seamless data transformation
-- **Variable Support**: Special handling for variable nodes during conversion
-- **Backward Compatibility**: Existing TipTap data loads correctly in Plate.js editors
+- **Custom Serializer**: MarkdownKit includes custom serializer for variable nodes
+- **Injection Processing**: Deserializes markdown and injects variable nodes automatically
+- **Bidirectional Conversion**: Maintains compatibility with existing markdown content
+- **Variable Extraction**: Enhanced extraction of variables from Plate content for processing
 
 ```mermaid
 flowchart LR
-subgraph "TipTap JSON Storage"
-TDoc["TiptapDocument<br/>{ type: 'doc', content: [...] }"]
-TNode["TiptapNode<br/>{ type: string, attrs?, content?, text? }"]
-TVar["Variable Node<br/>{ type: 'variable', attrs: { key } }"]
+subgraph "Enhanced Markdown Processing"
+MD["Markdown Input<br/>text with {{key}}"]
+SER["MarkdownSerializer<br/>Custom variable serializer"]
+VAR["Variable Nodes<br/>{ type: 'variable', key }"]
+END["Final Value<br/>with injected variables"]
 end
-subgraph "Conversion Functions"
-Conv1["storageNodeToPlate<br/>Converts to Plate.js Descendant"]
-Conv2["plateNodeToStorage<br/>Converts to Tiptap StorageNode"]
-Conv3["tiptapJsonToPlateValue<br/>Full document conversion"]
-Conv4["plateValueToTiptapJson<br/>Full document conversion"]
-end
-subgraph "Plate.js Value"
-PVal["Plate.js Value<br/>Descendant[]"]
-PNode["Plate.js Descendant<br/>{ type: string, children, key? }"]
-PVar["Variable Node<br/>{ type: 'variable', key, children: [{ text: '' }] }"]
-end
-TDoc --> Conv3
-TNode --> Conv1
-TVar --> Conv1
-Conv1 --> PNode
-Conv2 --> TNode
-Conv4 --> TDoc
-PVal --> Conv4
-PNode --> Conv2
-PVar --> Conv2
+MD --> SER
+SER --> VAR
+VAR --> END
 ```
 
 **Diagram sources**
-- [editor-helpers.ts:227-355](file://src/app/(authenticated)/assinatura-digital/components/editor/editor-helpers.ts#L227-L355)
+- [MarkdownRichTextEditor.tsx:119-131](file://src/app/(authenticated)/assinatura-digital/components/editor/MarkdownRichTextEditor.tsx#L119-L131)
+- [MarkdownRichTextEditor.tsx:64-104](file://src/app/(authenticated)/assinatura-digital/components/editor/MarkdownRichTextEditor.tsx#L64-L104)
 
 **Section sources**
-- [editor-helpers.ts:212-355](file://src/app/(authenticated)/assinatura-digital/components/editor/editor-helpers.ts#L212-L355)
+- [MarkdownRichTextEditor.tsx:106-148](file://src/app/(authenticated)/assinatura-digital/components/editor/MarkdownRichTextEditor.tsx#L106-L148)
 
 ### Migration Benefits
-The migration architecture provides several key advantages:
+The enhanced migration architecture provides several key advantages:
 
-- **Zero Data Loss**: All existing TipTap JSON data remains compatible
-- **Seamless Transition**: No downtime or data reprocessing required
+- **Zero Data Loss**: All existing markdown data maintains variable formatting
+- **Seamless Transition**: Enhanced markdown processing preserves content integrity
 - **Future-Proof**: Plate.js provides better performance and extensibility
 - **Plugin Compatibility**: All existing plugins and functionality preserved
 - **Developer Experience**: Simplified dependency management and reduced conflicts
 
 **Section sources**
-- [editor-helpers.ts:1-20](file://src/app/(authenticated)/assinatura-digital/components/editor/editor-helpers.ts#L1-L20)
+- [MarkdownRichTextEditor.tsx:1-308](file://src/app/(authenticated)/assinatura-digital/components/editor/MarkdownRichTextEditor.tsx#L1-L308)
 
 ## Dependency Analysis
-The enhanced AI-assisted editor relies on external libraries and internal modules with improved architecture:
+The enhanced AI-assisted editor relies on a comprehensive Plate.js ecosystem with improved architecture:
 
-- Plate.js ecosystem for editor core and plugins
-- @platejs/ai for AI chat, suggestions, and streaming
-- @copilotkit/react-core for CopilotKit integration
-- **@platejs/yjs for collaborative editing**
-- **New VariablePlugin for inline variable support**
-- Next.js API routes for secure AI processing
-- Supabase for Yjs collaboration
+- **Plate.js Core**: Advanced editor framework with plugin architecture
+- **@platejs/ai**: AI chat, suggestions, and streaming integration
+- **@copilotkit/react-core**: CopilotKit integration with ghost text
+- **@platejs/yjs**: Real-time collaboration with Yjs
+- **@platejs/markdown**: Enhanced markdown processing with GFM, math, MDX, mentions
+- **@platejs/basic-nodes**: Essential formatting plugins
+- **@platejs/list**: Advanced list handling
+- **@platejs/link**: Enhanced link management
+- **@platejs/basic-styles**: Core styling plugins
+- **Next.js API Routes**: Secure AI processing endpoints
+- **Supabase**: Real-time collaboration infrastructure
 
 ```mermaid
 graph LR
@@ -418,13 +465,15 @@ PE["PlateEditor"] --> EK["EditorKit"]
 EK --> VP["VariablePlugin"]
 EK --> AIK["AIKit"]
 EK --> CK["CopilotKit"]
+EK --> MK["MarkdownKit"]
 AIK --> PM["@platejs/ai/react"]
 CK --> PM
 PM --> API["/api/plate/ai"]
 API --> Provider["AI Provider"]
 CPE["CollaborativePlateEditor"] --> Yjs["SupabaseYjsProvider"]
-TH["TipTap Converters"] --> PE
-TH --> RPE["Responsive Editor"]
+CPE --> YjsLib["@platejs/yjs/react"]
+MK --> MD["@platejs/markdown"]
+VP --> PL["@platejs/basic-nodes/react"]
 ```
 
 **Diagram sources**
@@ -432,9 +481,9 @@ TH --> RPE["Responsive Editor"]
 - [variable-plugin.tsx:38-46](file://src/components/editor/plate/variable-plugin.tsx#L38-L46)
 - [ai-kit.tsx:106-112](file://src/components/editor/plate/ai-kit.tsx#L106-L112)
 - [copilot-kit.tsx:12-75](file://src/components/editor/plate/copilot-kit.tsx#L12-L75)
+- [markdown-kit.tsx:6-13](file://src/components/editor/plate/markdown-kit.tsx#L6-L13)
 - [route.ts:99-297](file://src/app/api/plate/ai/route.ts#L99-L297)
 - [collaborative-plate-editor.tsx:72-187](file://src/components/editor/plate/collaborative-plate-editor.tsx#L72-L187)
-- [editor-helpers.ts:227-355](file://src/app/(authenticated)/assinatura-digital/components/editor/editor-helpers.ts#L227-L355)
 
 **Section sources**
 - [editor-kit.tsx:1-96](file://src/components/editor/plate/editor-kit.tsx#L1-L96)
@@ -444,13 +493,13 @@ TH --> RPE["Responsive Editor"]
 ## Performance Considerations
 Enhanced performance optimizations include:
 
-- **Streaming Responses**: AIKit uses streamInsertChunk and applyAISuggestions to minimize DOM updates and maintain responsiveness during long generations.
-- **Debounced Predictions**: CopilotKit includes a debounce delay to reduce unnecessary API calls.
-- **Rate Limiting**: The API endpoint enforces tiered rate limits and records suspicious activity to protect backend resources.
-- **Bundle Optimization**: The editor is loaded lazily in the application route to avoid pulling heavy dependencies into barrel imports.
-- **Rendering**: AIChatEditor uses a static editor instance for previews to avoid full editor re-initialization.
-- **Variable Optimization**: VariablePlugin renders efficiently as non-editable inline elements with minimal DOM overhead.
-- **Migration Efficiency**: JSON converters operate during editor initialization, minimizing runtime conversion costs.
+- **Streaming Responses**: AIKit uses streamInsertChunk and applyAISuggestions for optimal responsiveness
+- **Debounced Predictions**: CopilotKit includes configurable debounce delays to reduce API calls
+- **Rate Limiting**: API endpoint enforces tiered rate limits with activity monitoring
+- **Bundle Optimization**: Lazy loading of editor components reduces initial bundle size
+- **Rendering Optimizations**: VariablePlugin renders efficiently as non-editable inline elements
+- **Collaboration Efficiency**: Yjs provides efficient conflict-free replication
+- **Markdown Processing**: Optimized injection and serialization for variable nodes
 
 **Section sources**
 - [ai-kit.tsx:42-104](file://src/components/editor/plate/ai-kit.tsx#L42-L104)
@@ -460,27 +509,27 @@ Enhanced performance optimizations include:
 - [variable-plugin.tsx:18-36](file://src/components/editor/plate/variable-plugin.tsx#L18-L36)
 
 ## Troubleshooting Guide
-Enhanced troubleshooting guidance for the migrated system:
+Enhanced troubleshooting guidance for the Plate.js architecture:
 
 **Common Issues and Resolutions:**
-- **AI Unavailable (401)**: The server requires a configured API key. The client displays a toast notification and continues editing.
-- **Rate Limit Exceeded (409)**: The endpoint throttles requests; clients should retry after the indicated interval.
-- **Forbidden Access (403)**: Authentication failure; verify credentials and permissions.
-- **Bad Request (400)**: Invalid request payload; check the structure of ctx and messages.
-- **Server Errors (500+)**: Temporary failures; the client shows a generic error and suggests retrying.
-- **Variable Rendering Issues**: Ensure VariablePlugin is included in EditorKit and variables are properly formatted as `{{key}}`.
-- **Migration Data Problems**: Verify JSON converters are functioning correctly and TipTap JSON structure is maintained.
+- **AI Unavailable (401)**: Server requires configured API key; client shows user-friendly notification
+- **Rate Limit Exceeded (409)**: Endpoint throttles requests; clients should retry after indicated interval
+- **Collaboration Failures**: Yjs provider handles connection errors gracefully with fallback modes
+- **Variable Rendering Issues**: Ensure VariablePlugin is included and variables use proper `{{key}}` format
+- **Markdown Serialization Errors**: Verify custom serializer is configured in MarkdownKit
+- **Toolbar Responsiveness**: Check responsive breakpoints and toolbar component configurations
 
 **Enhanced Error Handling:**
-- **useChatApi**: Wraps DefaultChatTransport to intercept HTTP errors and display user-friendly notifications.
-- **useChatStreaming**: Processes streaming events for toolName updates and comment creation.
-- **Migration Converters**: Include error handling for malformed JSON and missing variable keys.
+- **useChatApi**: Intercepts HTTP errors and displays user-friendly notifications
+- **useChatStreaming**: Processes streaming events with proper error recovery
+- **Collaborative Editor**: Handles provider lifecycle with cleanup and reconnection logic
+- **Variable Injection**: Robust parsing with fallback to plain text for malformed variables
 
 **Section sources**
 - [use-chat-api.ts:16-131](file://src/components/editor/hooks/use-chat-api.ts#L16-L131)
 - [use-chat-streaming.ts:22-55](file://src/components/editor/hooks/use-chat-streaming.ts#L22-L55)
 - [route.ts:154-162](file://src/app/api/plate/ai/route.ts#L154-L162)
-- [editor-helpers.ts:227-355](file://src/app/(authenticated)/assinatura-digital/components/editor/editor-helpers.ts#L227-L355)
+- [collaborative-plate-editor.tsx:135-151](file://src/components/editor/plate/collaborative-plate-editor.tsx#L135-L151)
 
 ## Conclusion
-The enhanced AI-assisted document editing system represents a significant architectural advancement with the migration from TipTap to Plate.js. The new VariablePlugin provides robust inline variable support, while bidirectional JSON converters ensure seamless data migration and backward compatibility. The system maintains all existing AI-assisted features while adding improved performance, extensibility, and developer experience. The modular design allows easy customization, while streaming, rate limiting, and responsive UI ensure performance and usability across devices and browsers.
+The enhanced AI-assisted document editing system represents a comprehensive migration to Plate.js architecture with significant improvements in plugin integration, variable management, and user experience. The new VariablePlugin provides robust inline variable support with markdown serialization, while the enhanced EditorKit delivers comprehensive functionality through modular plugin architecture. The responsive toolbar system ensures optimal user experience across devices, and the collaborative editing capabilities leverage Yjs for real-time synchronization. The system maintains all existing AI-assisted features while adding improved performance, extensibility, and developer experience through the advanced Plate.js ecosystem.

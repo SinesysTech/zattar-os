@@ -3,28 +3,30 @@
 <cite>
 **Referenced Files in This Document**
 - [collaborative-plate-editor.tsx](file://src/components/editor/plate/collaborative-plate-editor.tsx)
-- [copilot-kit.tsx](file://src/components/editor/plate/copilot-kit.tsx)
+- [responsive-plate-editor.tsx](file://src/components/editor/plate/responsive-plate-editor.tsx)
 - [editor-kit.tsx](file://src/components/editor/plate/editor-kit.tsx)
 - [responsive-editor-kit.tsx](file://src/components/editor/plate/responsive-editor-kit.tsx)
+- [ai-kit.tsx](file://src/components/editor/plate/ai-kit.tsx)
+- [copilot-kit.tsx](file://src/components/editor/plate/copilot-kit.tsx)
+- [variable-plugin.tsx](file://src/components/editor/plate/variable-plugin.tsx)
 - [document-editor.tsx](file://src/app/(authenticated)/documentos/components/document-editor.tsx)
 - [route.ts](file://src/app/api/plate/ai/route.ts)
 - [use-realtime-collaboration.ts](file://src/hooks/use-realtime-collaboration.ts)
 - [config.ts](file://src/lib/ai-editor/config.ts)
 - [system-prompt.ts](file://src/lib/copilotkit/system-prompt.ts)
-- [variable-plugin.tsx](file://src/components/editor/plate/variable-plugin.tsx)
-- [RichTextEditor.tsx](file://src/app/(authenticated)/assinatura-digital/components/editor/RichTextEditor.tsx)
-- [TemplateTextoEditor.tsx](file://src/app/(authenticated)/assinatura-digital/components/editor/template-texto/TemplateTextoEditor.tsx)
 - [editor-helpers.ts](file://src/app/(authenticated)/assinatura-digital/components/editor/editor-helpers.ts)
-- [types.ts](file://src/app/(authenticated)/assinatura-digital/components/editor/template-texto/types.ts)
+- [RichTextEditor.tsx](file://src/app/(authenticated)/assinatura-digital/components/editor/RichTextEditor.tsx)
+- [MarkdownRichTextEditor.tsx](file://src/app/(authenticated)/assinatura-digital/components/editor/MarkdownRichTextEditor.tsx)
 - [next.config.ts](file://next.config.ts)
 </cite>
 
 ## Update Summary
 **Changes Made**
-- Added comprehensive VariablePlugin integration for dynamic variable insertion in templates
-- Enhanced template generation logic with bidirectional conversion between TipTap storage format and Plate.js Value structures
-- Updated editor architecture to support advanced template processing with variable substitution
-- Improved document editor capabilities with variable-aware content generation and validation
+- Updated to reflect comprehensive migration from TipTap to Plate.js v52 editor system
+- Enhanced editor architecture with new VariablePlugin for dynamic content management
+- Improved markdown conversion capabilities with bidirectional storage format support
+- Updated editor components to use Plate.js v52 plugin system and APIs
+- Added responsive editor variants and enhanced collaborative editing features
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -42,32 +44,33 @@
 13. [Appendices](#appendices)
 
 ## Introduction
-This document describes the AI-assisted document editing system built with Plate.js and CopilotKit, now enhanced with advanced variable management and template generation capabilities. The system features a rich text editor architecture with AI-powered content generation, collaborative editing features, and sophisticated template processing with dynamic variable substitution. It covers the integration of real-time collaboration with legal document workflows, advanced editor plugins, AI suggestions integration, and comprehensive template systems with bidirectional storage format conversion.
+This document describes the AI-assisted document editing system built with Plate.js v52 and CopilotKit, featuring a comprehensive migration from TipTap to Plate.js for enhanced rich text editing capabilities. The system provides a robust editor architecture with AI-powered content generation, collaborative editing features, and sophisticated template processing with dynamic variable substitution. It covers the integration of real-time collaboration with legal document workflows, advanced editor plugins, AI suggestions integration, and comprehensive template systems with bidirectional storage format conversion.
 
 ## Project Structure
-The editor system is organized around Plate.js as the core rich text engine, extended with AI, collaboration, and variable management plugins. The main building blocks are:
-- Editor kits that aggregate Plate.js plugins for AI, CopilotKit, collaboration, formatting, parsing, and variable handling
-- A collaborative editor component that wires Plate.js with Yjs and Supabase Realtime for conflict-free synchronization and live cursors
-- An AI endpoint that orchestrates AI tools and streaming responses tailored for legal document editing
-- A document editor shell that integrates auto-save, export, sharing, and chat alongside the Plate editor
+The editor system is built around Plate.js v52 as the core rich text engine, enhanced with AI, collaboration, and variable management plugins. The main components include:
+- Editor kits that aggregate Plate.js v52 plugins for AI, CopilotKit, collaboration, formatting, parsing, and variable handling
+- Collaborative editor components that integrate Plate.js with Yjs and Supabase Realtime for conflict-free synchronization and live cursors
+- AI endpoint that orchestrates AI tools and streaming responses tailored for legal document editing
+- Document editor shell that integrates auto-save, export, sharing, and chat functionality
 - Advanced template editors with variable insertion and bidirectional storage format conversion
 - Variable plugin system for dynamic content substitution in legal documents
 
 ```mermaid
 graph TB
-subgraph "Editor Layer"
+subgraph "Plate.js v52 Editor Layer"
 DK["DocumentEditor<br/>(document-editor.tsx)"]
 PE["Plate Editor<br/>(collaborative-plate-editor.tsx)"]
+RE["Responsive Plate Editor<br/>(responsive-plate-editor.tsx)"]
 EK["EditorKit<br/>(editor-kit.tsx)"]
 R_EK["ResponsiveEditorKit<br/>(responsive-editor-kit.tsx)"]
+AIK["AIKit<br/>(ai-kit.tsx)"]
 CK["CopilotKit<br/>(copilot-kit.tsx)"]
 VP["VariablePlugin<br/>(variable-plugin.tsx)"]
 end
 subgraph "Template System"
-TE["Template Editors<br/>(TemplateTextoEditor.tsx)"]
-RE["Rich Text Editor<br/>(RichTextEditor.tsx)"]
+TE["Template Editors<br/>(RichTextEditor.tsx)"]
+ME["Markdown Editor<br/>(MarkdownRichTextEditor.tsx)"]
 EH["Editor Helpers<br/>(editor-helpers.ts)"]
-VT["Variable Types<br/>(types.ts)"]
 end
 subgraph "AI & Collaboration"
 AI_API["AI Endpoint<br/>(route.ts)"]
@@ -80,6 +83,8 @@ CFG["AI Editor Config<br/>(config.ts)"]
 end
 DK --> PE
 PE --> EK
+RE --> R_EK
+EK --> AIK
 EK --> CK
 EK --> VP
 PE --> YJS
@@ -88,45 +93,48 @@ DK --> AI_API
 AI_API --> CFG
 CK --> SYS
 TE --> EH
-RE --> EH
-EH --> VT
+ME --> EH
+EH --> VP
 ```
 
 **Diagram sources**
-- [document-editor.tsx:1-396](file://src/app/(authenticated)/documentos/components/document-editor.tsx#L1-L396)
+- [document-editor.tsx:1-397](file://src/app/(authenticated)/documentos/components/document-editor.tsx#L1-L397)
 - [collaborative-plate-editor.tsx:1-220](file://src/components/editor/plate/collaborative-plate-editor.tsx#L1-L220)
+- [responsive-plate-editor.tsx:1-80](file://src/components/editor/plate/responsive-plate-editor.tsx#L1-L80)
 - [editor-kit.tsx:1-96](file://src/components/editor/plate/editor-kit.tsx#L1-L96)
-- [responsive-editor-kit.tsx:1-101](file://src/components/editor/plate/responsive-editor-kit.tsx#L1-L101)
+- [responsive-editor-kit.tsx:1-102](file://src/components/editor/plate/responsive-editor-kit.tsx#L1-L102)
+- [ai-kit.tsx:1-112](file://src/components/editor/plate/ai-kit.tsx#L1-L112)
 - [copilot-kit.tsx:1-75](file://src/components/editor/plate/copilot-kit.tsx#L1-L75)
 - [variable-plugin.tsx:1-56](file://src/components/editor/plate/variable-plugin.tsx#L1-L56)
-- [TemplateTextoEditor.tsx:1-169](file://src/app/(authenticated)/assinatura-digital/components/editor/template-texto/TemplateTextoEditor.tsx#L1-L169)
-- [RichTextEditor.tsx:1-306](file://src/app/(authenticated)/assinatura-digital/components/editor/RichTextEditor.tsx#L1-L306)
+- [RichTextEditor.tsx:129-186](file://src/app/(authenticated)/assinatura-digital/components/editor/RichTextEditor.tsx#L129-L186)
+- [MarkdownRichTextEditor.tsx:155-196](file://src/app/(authenticated)/assinatura-digital/components/editor/MarkdownRichTextEditor.tsx#L155-L196)
 - [editor-helpers.ts:1-358](file://src/app/(authenticated)/assinatura-digital/components/editor/editor-helpers.ts#L1-L358)
-- [types.ts:1-119](file://src/app/(authenticated)/assinatura-digital/components/editor/template-texto/types.ts#L1-L119)
 - [route.ts:1-432](file://src/app/api/plate/ai/route.ts#L1-L432)
 - [use-realtime-collaboration.ts:1-244](file://src/hooks/use-realtime-collaboration.ts#L1-L244)
 - [system-prompt.ts:1-33](file://src/lib/copilotkit/system-prompt.ts#L1-L33)
 - [config.ts:1-78](file://src/lib/ai-editor/config.ts#L1-L78)
 
 **Section sources**
-- [document-editor.tsx:1-396](file://src/app/(authenticated)/documentos/components/document-editor.tsx#L1-L396)
+- [document-editor.tsx:1-397](file://src/app/(authenticated)/documentos/components/document-editor.tsx#L1-L397)
 - [collaborative-plate-editor.tsx:1-220](file://src/components/editor/plate/collaborative-plate-editor.tsx#L1-L220)
+- [responsive-plate-editor.tsx:1-80](file://src/components/editor/plate/responsive-plate-editor.tsx#L1-L80)
 - [editor-kit.tsx:1-96](file://src/components/editor/plate/editor-kit.tsx#L1-L96)
-- [responsive-editor-kit.tsx:1-101](file://src/components/editor/plate/responsive-editor-kit.tsx#L1-L101)
+- [responsive-editor-kit.tsx:1-102](file://src/components/editor/plate/responsive-editor-kit.tsx#L1-L102)
+- [ai-kit.tsx:1-112](file://src/components/editor/plate/ai-kit.tsx#L1-L112)
 - [copilot-kit.tsx:1-75](file://src/components/editor/plate/copilot-kit.tsx#L1-L75)
 - [variable-plugin.tsx:1-56](file://src/components/editor/plate/variable-plugin.tsx#L1-L56)
-- [TemplateTextoEditor.tsx:1-169](file://src/app/(authenticated)/assinatura-digital/components/editor/template-texto/TemplateTextoEditor.tsx#L1-L169)
-- [RichTextEditor.tsx:1-306](file://src/app/(authenticated)/assinatura-digital/components/editor/RichTextEditor.tsx#L1-L306)
+- [RichTextEditor.tsx:129-186](file://src/app/(authenticated)/assinatura-digital/components/editor/RichTextEditor.tsx#L129-L186)
+- [MarkdownRichTextEditor.tsx:155-196](file://src/app/(authenticated)/assinatura-digital/components/editor/MarkdownRichTextEditor.tsx#L155-L196)
 - [editor-helpers.ts:1-358](file://src/app/(authenticated)/assinatura-digital/components/editor/editor-helpers.ts#L1-L358)
-- [types.ts:1-119](file://src/app/(authenticated)/assinatura-digital/components/editor/template-texto/types.ts#L1-L119)
 - [route.ts:1-432](file://src/app/api/plate/ai/route.ts#L1-L432)
 - [use-realtime-collaboration.ts:1-244](file://src/hooks/use-realtime-collaboration.ts#L1-L244)
 - [system-prompt.ts:1-33](file://src/lib/copilotkit/system-prompt.ts#L1-L33)
 - [config.ts:1-78](file://src/lib/ai-editor/config.ts#L1-L78)
 
 ## Core Components
-- Collaborative Plate Editor: Integrates Plate.js with Yjs and Supabase Realtime for collaborative editing and live cursors.
-- Editor Kits: Centralized plugin configurations aggregating AI, CopilotKit, formatting, collaboration, parsers, and variable management.
+- Collaborative Plate Editor: Integrates Plate.js v52 with Yjs and Supabase Realtime for collaborative editing and live cursors.
+- Responsive Plate Editor: Provides adaptive editor interface for mobile, tablet, and desktop with responsive toolbar support.
+- Editor Kits: Centralized plugin configurations aggregating AI, CopilotKit, formatting, collaboration, parsers, and variable management for Plate.js v52.
 - AI Endpoint: Orchestrates AI tools and streaming responses for generation, editing, and commenting on legal content.
 - Document Editor Shell: Provides toolbar, auto-save, export, share, and chat integration around the Plate editor.
 - Realtime Collaboration Hook: Manages presence, cursors, and broadcast updates for collaborative sessions.
@@ -138,9 +146,11 @@ EH --> VT
 
 **Section sources**
 - [collaborative-plate-editor.tsx:42-220](file://src/components/editor/plate/collaborative-plate-editor.tsx#L42-L220)
+- [responsive-plate-editor.tsx:16-80](file://src/components/editor/plate/responsive-plate-editor.tsx#L16-L80)
 - [editor-kit.tsx:41-96](file://src/components/editor/plate/editor-kit.tsx#L41-L96)
+- [ai-kit.tsx:106-112](file://src/components/editor/plate/ai-kit.tsx#L106-L112)
 - [route.ts:99-297](file://src/app/api/plate/ai/route.ts#L99-L297)
-- [document-editor.tsx:80-396](file://src/app/(authenticated)/documentos/components/document-editor.tsx#L80-L396)
+- [document-editor.tsx:80-397](file://src/app/(authenticated)/documentos/components/document-editor.tsx#L80-L397)
 - [use-realtime-collaboration.ts:53-242](file://src/hooks/use-realtime-collaboration.ts#L53-L242)
 - [config.ts:21-78](file://src/lib/ai-editor/config.ts#L21-L78)
 - [system-prompt.ts:16-33](file://src/lib/copilotkit/system-prompt.ts#L16-L33)
@@ -148,8 +158,8 @@ EH --> VT
 - [editor-helpers.ts:227-355](file://src/app/(authenticated)/assinatura-digital/components/editor/editor-helpers.ts#L227-L355)
 
 ## Architecture Overview
-The system combines Plate.js with AI, collaboration, and variable management layers:
-- Editor rendering and plugins are configured via EditorKit and CopilotKit, now enhanced with VariablePlugin.
+The system combines Plate.js v52 with AI, collaboration, and variable management layers:
+- Editor rendering and plugins are configured via EditorKit and CopilotKit, now enhanced with VariablePlugin for Plate.js v52 compatibility.
 - Collaborative editing is powered by Yjs and Supabase Realtime, exposing remote cursors and selections.
 - AI features are exposed through an API route that selects tools and models based on context and selection.
 - The document editor shell coordinates UI actions (save, export, share) and integrates chat.
@@ -164,7 +174,7 @@ participant VP as "VariablePlugin"
 participant Y as "Yjs Provider"
 participant RT as "Supabase Realtime"
 participant AI as "AI Endpoint"
-UI->>PE : Initialize editor with plugins
+UI->>PE : Initialize editor with Plate.js v52 plugins
 PE->>VP : Register variable plugin
 VP->>PE : Enable variable insertion
 PE->>Y : Connect to Yjs document
@@ -176,7 +186,7 @@ PE-->>UI : Local editor updates (ghost text, suggestions)
 ```
 
 **Diagram sources**
-- [document-editor.tsx:80-396](file://src/app/(authenticated)/documentos/components/document-editor.tsx#L80-L396)
+- [document-editor.tsx:80-397](file://src/app/(authenticated)/documentos/components/document-editor.tsx#L80-L397)
 - [collaborative-plate-editor.tsx:87-151](file://src/components/editor/plate/collaborative-plate-editor.tsx#L87-L151)
 - [variable-plugin.tsx:38-56](file://src/components/editor/plate/variable-plugin.tsx#L38-L56)
 - [route.ts:99-297](file://src/app/api/plate/ai/route.ts#L99-L297)
@@ -185,7 +195,7 @@ PE-->>UI : Local editor updates (ghost text, suggestions)
 ## Detailed Component Analysis
 
 ### Collaborative Plate Editor
-- Purpose: Provide a Plate.js editor with real-time collaboration via Yjs and Supabase Realtime.
+- Purpose: Provide a Plate.js v52 editor with real-time collaboration via Yjs and Supabase Realtime.
 - Key behaviors:
   - Creates a Yjs provider with user data for cursors and colors.
   - Merges EditorKit with YjsPlugin to enable collaborative editing.
@@ -211,8 +221,19 @@ Cursors --> Ready["Editor Ready"]
 **Section sources**
 - [collaborative-plate-editor.tsx:42-220](file://src/components/editor/plate/collaborative-plate-editor.tsx#L42-L220)
 
+### Responsive Plate Editor
+- Purpose: Provide an adaptive Plate.js v52 editor interface that responds to different screen sizes.
+- Key behaviors:
+  - Uses ResponsiveEditorKit instead of standard EditorKit for mobile/tablet/desktop adaptation.
+  - Implements responsive toolbar that adapts to screen size.
+  - Maintains Plate.js v52 compatibility with proper type definitions.
+  - Provides default content when no initial value is supplied.
+
+**Section sources**
+- [responsive-plate-editor.tsx:16-80](file://src/components/editor/plate/responsive-plate-editor.tsx#L16-L80)
+
 ### Editor Kits (EditorKit and ResponsiveEditorKit)
-- Purpose: Aggregate Plate.js plugins into cohesive editor configurations.
+- Purpose: Aggregate Plate.js v52 plugins into cohesive editor configurations.
 - Features included:
   - AI and CopilotKit for AI-assisted writing and suggestions.
   - Formatting and block elements (lists, tables, media, math, links, mentions).
@@ -230,43 +251,33 @@ class EditorKit {
 class ResponsiveEditorKit {
 +plugins[]
 }
+class AIKit {
++configure(options)
+}
 class CopilotKit {
 +configure(options)
 }
-class AIKit {
-+features[]
-}
-class DiscussionKit
-class CommentKit
-class SuggestionKit
-class FixedToolbarKit
-class FloatingToolbarKit
-class ResponsiveFixedToolbarKit
 class VariablePlugin {
 +insertVariable()
 +VariableElementType
 }
-EditorKit --> CopilotKit : "includes"
 EditorKit --> AIKit : "includes"
-EditorKit --> DiscussionKit : "includes"
-EditorKit --> CommentKit : "includes"
-EditorKit --> SuggestionKit : "includes"
-EditorKit --> FixedToolbarKit : "includes"
-EditorKit --> FloatingToolbarKit : "includes"
+EditorKit --> CopilotKit : "includes"
 EditorKit --> VariablePlugin : "includes"
-ResponsiveEditorKit --> ResponsiveFixedToolbarKit : "uses"
 ResponsiveEditorKit --> VariablePlugin : "includes"
 ```
 
 **Diagram sources**
 - [editor-kit.tsx:41-96](file://src/components/editor/plate/editor-kit.tsx#L41-L96)
 - [responsive-editor-kit.tsx:47-97](file://src/components/editor/plate/responsive-editor-kit.tsx#L47-L97)
+- [ai-kit.tsx:106-112](file://src/components/editor/plate/ai-kit.tsx#L106-L112)
 - [copilot-kit.tsx:12-75](file://src/components/editor/plate/copilot-kit.tsx#L12-L75)
 - [variable-plugin.tsx:38-56](file://src/components/editor/plate/variable-plugin.tsx#L38-L56)
 
 **Section sources**
 - [editor-kit.tsx:1-96](file://src/components/editor/plate/editor-kit.tsx#L1-L96)
-- [responsive-editor-kit.tsx:1-101](file://src/components/editor/plate/responsive-editor-kit.tsx#L1-L101)
+- [responsive-editor-kit.tsx:1-102](file://src/components/editor/plate/responsive-editor-kit.tsx#L1-L102)
+- [ai-kit.tsx:1-112](file://src/components/editor/plate/ai-kit.tsx#L1-L112)
 - [copilot-kit.tsx:1-75](file://src/components/editor/plate/copilot-kit.tsx#L1-L75)
 - [variable-plugin.tsx:1-56](file://src/components/editor/plate/variable-plugin.tsx#L1-L56)
 
@@ -274,7 +285,7 @@ ResponsiveEditorKit --> VariablePlugin : "includes"
 - Purpose: Provide AI-driven editing features (generate, edit, comment) with streaming responses.
 - Key behaviors:
   - Authenticates requests and applies rate limiting.
-  - Builds editor context from the request payload.
+  - Builds editor context from the request payload using Plate.js v52.
   - Selects appropriate tool/model based on selection and context.
   - Streams markdown-compatible chunks and emits structured data events (comments, table updates).
   - Supports fallback configuration via environment variables.
@@ -289,7 +300,7 @@ participant Tools as "Tools (comment/table)"
 Client->>API : POST /api/plate/ai {ctx, messages, model}
 API->>Auth : Authenticate + Rate Limit
 Auth-->>API : Allowed/Denied
-API->>API : Build editor context
+API->>API : Build editor context with Plate.js v52
 API->>Prov : Choose model/tool
 Prov-->>API : Tool choice + prompt
 API->>Tools : Execute tool (comment/table)
@@ -327,10 +338,10 @@ Toolbar --> Chat["Toggle Chat Sidebar"]
 ```
 
 **Diagram sources**
-- [document-editor.tsx:80-396](file://src/app/(authenticated)/documentos/components/document-editor.tsx#L80-L396)
+- [document-editor.tsx:80-397](file://src/app/(authenticated)/documentos/components/document-editor.tsx#L80-L397)
 
 **Section sources**
-- [document-editor.tsx:80-396](file://src/app/(authenticated)/documentos/components/document-editor.tsx#L80-L396)
+- [document-editor.tsx:80-397](file://src/app/(authenticated)/documentos/components/document-editor.tsx#L80-L397)
 
 ### Realtime Collaboration Hook
 - Purpose: Manage presence, cursors, and broadcast updates for collaborative sessions.
@@ -373,7 +384,7 @@ RT-->>Hook : Presence sync
 - [system-prompt.ts:16-33](file://src/lib/copilotkit/system-prompt.ts#L16-L33)
 
 ## Variable Plugin System
-**Updated** Enhanced with comprehensive variable management capabilities for dynamic content substitution in legal documents.
+Enhanced with comprehensive variable management capabilities for dynamic content substitution in legal documents.
 
 The VariablePlugin system provides sophisticated variable insertion and management for legal document templates:
 
@@ -421,20 +432,20 @@ VariablePlugin --> VariableElementType : "defines"
   - Converts between TipTap storage format and Plate.js Value structures
   - Generates template strings with variable placeholders
 
-- TemplateTextoEditor features:
-  - Mention-based variable insertion with '@' trigger
+- MarkdownRichTextEditor features:
+  - Similar variable insertion capabilities with mention-based triggers
   - Predefined variable categories (cliente, segmento, sistema, formulario, contrato)
   - Visual variable insertion helper with keyboard shortcuts
   - Automatic variable grouping and categorization
 
 **Section sources**
 - [variable-plugin.tsx:1-56](file://src/components/editor/plate/variable-plugin.tsx#L1-L56)
-- [RichTextEditor.tsx:66-100](file://src/app/(authenticated)/assinatura-digital/components/editor/RichTextEditor.tsx#L66-L100)
-- [TemplateTextoEditor.tsx:46-68](file://src/app/(authenticated)/assinatura-digital/components/editor/template-texto/TemplateTextoEditor.tsx#L46-L68)
-- [types.ts:59-93](file://src/app/(authenticated)/assinatura-digital/components/editor/template-texto/types.ts#L59-L93)
+- [RichTextEditor.tsx:129-186](file://src/app/(authenticated)/assinatura-digital/components/editor/RichTextEditor.tsx#L129-L186)
+- [MarkdownRichTextEditor.tsx:155-196](file://src/app/(authenticated)/assinatura-digital/components/editor/MarkdownRichTextEditor.tsx#L155-L196)
+- [editor-helpers.ts:21-107](file://src/app/(authenticated)/assinatura-digital/components/editor/editor-helpers.ts#L21-L107)
 
 ## Template Generation Engine
-**Updated** Enhanced with bidirectional conversion between TipTap storage format and Plate.js Value structures for seamless template processing.
+Enhanced with bidirectional conversion between TipTap storage format and Plate.js Value structures for seamless template processing.
 
 The template generation engine provides comprehensive support for legal document templates with dynamic variable substitution:
 
@@ -472,7 +483,7 @@ I["Block Elements"] --> J["Structure Mapping"]
 
 ## Dependency Analysis
 - External libraries and plugins are declared in Next.js configuration for proper bundling and tree-shaking.
-- The editor relies on Plate.js ecosystem packages, CopilotKit for AI assistance, and VariablePlugin for dynamic content management.
+- The editor relies on Plate.js v52 ecosystem packages, CopilotKit for AI assistance, and VariablePlugin for dynamic content management.
 - Real-time collaboration depends on Supabase client and Yjs provider.
 - AI orchestration depends on the AI SDK and a configurable provider.
 - Template processing depends on bidirectional conversion utilities for storage format compatibility.
@@ -480,7 +491,7 @@ I["Block Elements"] --> J["Structure Mapping"]
 ```mermaid
 graph TB
 Next["next.config.ts"]
-Plate["@platejs/*"]
+Plate["@platejs/* v52"]
 Copilot["@platejs/ai"]
 Yjs["Yjs + Supabase Provider"]
 AI_SDK["AI SDK"]
@@ -530,6 +541,9 @@ EditorHelpers --> Storage
 - **New**: Template conversion errors:
   - Ensure storage format follows TipTap specification with proper node structure.
   - Verify variable nodes have required 'key' attributes in storage format.
+- **New**: Plate.js v52 compatibility issues:
+  - Verify all plugin imports use @platejs/* v52 compatible versions.
+  - Check that editor types and APIs match Plate.js v52 specifications.
 
 **Section sources**
 - [config.ts:21-78](file://src/lib/ai-editor/config.ts#L21-L78)
@@ -540,7 +554,7 @@ EditorHelpers --> Storage
 - [editor-helpers.ts:227-355](file://src/app/(authenticated)/assinatura-digital/components/editor/editor-helpers.ts#L227-L355)
 
 ## Conclusion
-The AI-assisted document editor leverages Plate.js for rich text editing, CopilotKit for AI suggestions, and Supabase Realtime with Yjs for collaborative editing. The enhanced system now includes sophisticated variable management through VariablePlugin, comprehensive template generation with bidirectional storage format conversion, and advanced legal document processing capabilities. The AI endpoint provides contextual generation, editing, and commenting capabilities tailored for legal documents. The document editor shell integrates autosave, export, sharing, and chat, while the realtime hook ensures smooth collaboration. With careful configuration, performance optimizations, and the new variable management system, the platform supports efficient legal document workflows with dynamic content generation and template processing.
+The AI-assisted document editor leverages Plate.js v52 for rich text editing, CopilotKit for AI suggestions, and Supabase Realtime with Yjs for collaborative editing. The enhanced system now includes sophisticated variable management through VariablePlugin, comprehensive template generation with bidirectional storage format conversion, and advanced legal document processing capabilities. The AI endpoint provides contextual generation, editing, and commenting capabilities tailored for legal documents. The document editor shell integrates autosave, export, sharing, and chat, while the realtime hook ensures smooth collaboration. With careful configuration, performance optimizations, and the new variable management system, the platform supports efficient legal document workflows with dynamic content generation and template processing.
 
 ## Appendices
 
@@ -556,3 +570,6 @@ The AI-assisted document editor leverages Plate.js for rich text editing, Copilo
   - Use VariablePlugin to insert dynamic placeholders in templates with visual representation.
   - Leverage bidirectional conversion for seamless template persistence and editing.
   - Utilize categorized variable insertion for systematic content generation in legal documents.
+- **New**: Responsive editing experience:
+  - Use ResponsivePlateEditor for optimal editing experience across mobile, tablet, and desktop devices.
+  - Benefit from adaptive toolbar and layout that responds to screen size changes.
