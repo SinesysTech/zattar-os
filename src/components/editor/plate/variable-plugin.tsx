@@ -5,8 +5,7 @@ import * as React from 'react';
 import type { TElement } from 'platejs';
 import type { PlateEditor, PlateElementProps } from 'platejs/react';
 
-import { PlateElement } from 'platejs/react';
-import { createPlatePlugin } from 'platejs/react';
+import { PlateElement, createPlatePlugin } from 'platejs/react';
 
 export const VARIABLE_ELEMENT = 'variable';
 
