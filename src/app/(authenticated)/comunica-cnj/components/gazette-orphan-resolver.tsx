@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useCallback, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import {
   ChevronLeft,
   ChevronRight,
@@ -13,15 +14,22 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { Heading, Text } from '@/components/ui/typography';
 import { useGazetteStore } from './hooks/use-gazette-store';
+import { usePesquisaStore } from './hooks/use-pesquisa-store';
 import type {
   ComunicacaoCNJEnriquecida,
   MatchCriterio,
 } from '@/app/(authenticated)/comunica-cnj/domain';
+
+const ExpedienteDialog = dynamic(
+  () => import('@/app/(authenticated)/expedientes/components/expediente-dialog').then((m) => ({ default: m.ExpedienteDialog })),
+  { ssr: false }
+);
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -208,6 +216,9 @@ function AllResolvedState() {
 
 export function GazetteOrphanResolver() {
   const { comunicacoes, setComunicacoes } = useGazetteStore();
+  const setTermo = usePesquisaStore((s) => s.setTermo);
+  const router = useRouter();
+  const [isExpedienteDialogOpen, setIsExpedienteDialogOpen] = useState(false);
 
   const orphans = useMemo(
     () => comunicacoes.filter((c) => c.statusVinculacao === 'orfao'),
@@ -259,6 +270,16 @@ export function GazetteOrphanResolver() {
       });
     },
     [comunicacoes, setComunicacoes],
+  );
+
+  const handleBuscarManualmente = useCallback(
+    (orphan?: ComunicacaoCNJEnriquecida) => {
+      if (orphan?.numeroProcesso) {
+        setTermo(orphan.numeroProcesso);
+      }
+      router.push('/comunica-cnj');
+    },
+    [setTermo, router],
   );
 
   const handleIgnorar = useCallback(
@@ -354,7 +375,8 @@ export function GazetteOrphanResolver() {
   const match = current.matchSugestao;
 
   return (
-    <GlassPanel depth={1} className="flex h-full flex-col overflow-hidden">
+    <>
+      <GlassPanel depth={1} className="flex h-full flex-col overflow-hidden">
       {/* ── Header ── */}
       <div className={cn(/* design-system-escape: space-y-3 sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "space-y-3 border-b border-border/40 p-4")}>
         {/* Title row */}
@@ -603,9 +625,7 @@ export function GazetteOrphanResolver() {
                     variant="outline"
                     size="sm"
                     className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "h-9 gap-1.5 text-xs")}
-                    onClick={() => {
-                      /* TODO: buscar outro */
-                    }}
+                    onClick={() => handleBuscarManualmente(current)}
                   >
                     <Search className="size-3" aria-hidden />
                     Buscar Outro
@@ -614,9 +634,7 @@ export function GazetteOrphanResolver() {
                     variant="outline"
                     size="sm"
                     className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "h-9 gap-1.5 text-xs")}
-                    onClick={() => {
-                      /* TODO: criar expediente */
-                    }}
+                    onClick={() => setIsExpedienteDialogOpen(true)}
                   >
                     <Plus className="size-3" aria-hidden />
                     Criar Expediente
@@ -634,17 +652,19 @@ export function GazetteOrphanResolver() {
             </>
           ) : (
             <NoMatchState
-              onBuscarManualmente={() => {
-                /* TODO */
-              }}
-              onCriarNovo={() => {
-                /* TODO */
-              }}
+              onBuscarManualmente={() => handleBuscarManualmente(current)}
+              onCriarNovo={() => setIsExpedienteDialogOpen(true)}
               onIgnorar={() => handleIgnorar(current)}
             />
           )}
         </div>
       </div>
     </GlassPanel>
+      <ExpedienteDialog
+        open={isExpedienteDialogOpen}
+        onOpenChange={setIsExpedienteDialogOpen}
+        onSuccess={() => setIsExpedienteDialogOpen(false)}
+      />
+    </>
   );
 }
