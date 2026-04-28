@@ -51,7 +51,7 @@ export type { AtividadeLog } from "./repository";
 // ============================================================================
 export {
   formatarCpf,
-  formatarTelefone,
+
   formatarOab,
   formatarNomeExibicao,
   formatarData,

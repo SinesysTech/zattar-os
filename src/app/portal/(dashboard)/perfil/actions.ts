@@ -1,3 +1,4 @@
+import { FORMAT } from '@/lib/design-system';
 "use server"
 
 import { cookies } from "next/headers"
@@ -9,10 +10,7 @@ import type { PerfilPortal } from "./domain"
 // Helpers
 // ---------------------------------------------------------------------------
 
-function formatarTelefone(ddd: string | null, numero: string | null): string | null {
-  if (!ddd || !numero) return null
-  return `(${ddd}) ${numero}`
-}
+
 
 // ---------------------------------------------------------------------------
 // Action
@@ -75,8 +73,8 @@ export async function actionObterPerfilPortal(): Promise<{
     nome: cliente.nome,
     cpf: cliente.cpf,
     email: cliente.emails?.[0] ?? null,
-    celular: formatarTelefone(cliente.ddd_celular, cliente.numero_celular),
-    telefoneResidencial: formatarTelefone(cliente.ddd_residencial, cliente.numero_residencial),
+    celular: FORMAT.phone(cliente.ddd_celular, cliente.numero_celular),
+    telefoneResidencial: FORMAT.phone(cliente.ddd_residencial, cliente.numero_residencial),
     dataNascimento: cliente.data_nascimento,
     estadoCivil: cliente.estado_civil,
     rg: cliente.rg,

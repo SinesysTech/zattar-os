@@ -1,3 +1,4 @@
+import { FORMAT } from '@/lib/design-system';
 'use client';
 
 /**
@@ -29,15 +30,7 @@ interface ContatoCellProps {
 /**
  * Formata telefone no padrão (XX) XXXXX-XXXX ou (XX) XXXX-XXXX
  */
-function formatarTelefone(ddd: string, numero: string): string {
-  const dddLimpo = ddd.replace(/\D/g, '');
-  const numeroLimpo = numero.replace(/\D/g, '');
 
-  if (numeroLimpo.length === 9) {
-    return `(${dddLimpo}) ${numeroLimpo.slice(0, 5)}-${numeroLimpo.slice(5)}`;
-  }
-  return `(${dddLimpo}) ${numeroLimpo.slice(0, 4)}-${numeroLimpo.slice(4)}`;
-}
 
 /**
  * Obtém o primeiro telefone válido da lista
@@ -48,7 +41,7 @@ function obterTelefone(telefones?: TelefoneData[]): { formatado: string; raw: st
   for (const tel of telefones) {
     if (tel.ddd && tel.numero) {
       return {
-        formatado: formatarTelefone(tel.ddd, tel.numero),
+        formatado: FORMAT.phone(tel.ddd, tel.numero),
         raw: `${tel.ddd}${tel.numero}`.replace(/\D/g, ''),
       };
     }

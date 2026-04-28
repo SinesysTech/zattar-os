@@ -1,3 +1,5 @@
+import { FORMAT } from '@/lib/design-system';
+
 /**
  * Utilitarios de formatacao para o modulo de partes
  * Inclui formatacao de CPF, CNPJ, telefone, endereco, etc.
@@ -30,36 +32,10 @@ export const formatarCnpj = (cnpj: string | null | undefined): string => {
 export function formatarTelefone(telefone: string | null | undefined): string;
 export function formatarTelefone(ddd: string | null | undefined, numero: string | null | undefined): string;
 export function formatarTelefone(dddOrTelefone: string | null | undefined, numero?: string | null | undefined): string {
-  // Se passado DDD e numero separados
   if (numero !== undefined) {
-    if (!dddOrTelefone || !numero) return '-';
-    const dddLimpo = dddOrTelefone.replace(/\D/g, '');
-    const numeroLimpo = numero.replace(/\D/g, '');
-
-    if (numeroLimpo.length === 9) {
-      // Celular: (XX) XXXXX-XXXX
-      return `(${dddLimpo}) ${numeroLimpo.replace(/(\d{5})(\d{4})/, '$1-$2')}`;
-    } else if (numeroLimpo.length === 8) {
-      // Fixo: (XX) XXXX-XXXX
-      return `(${dddLimpo}) ${numeroLimpo.replace(/(\d{4})(\d{4})/, '$1-$2')}`;
-    }
-
-    return `(${dddLimpo}) ${numeroLimpo}`;
+    return FORMAT.phone(dddOrTelefone, numero);
   }
-
-  // Se passado telefone completo
-  if (!dddOrTelefone) return '-';
-  const telefoneLimpo = dddOrTelefone.replace(/\D/g, '');
-
-  if (telefoneLimpo.length === 10) {
-    // Telefone fixo: (XX) XXXX-XXXX
-    return telefoneLimpo.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
-  } else if (telefoneLimpo.length === 11) {
-    // Celular: (XX) XXXXX-XXXX
-    return telefoneLimpo.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-  }
-
-  return dddOrTelefone;
+  return FORMAT.phone(dddOrTelefone);
 }
 
 /**

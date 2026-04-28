@@ -1,3 +1,4 @@
+import { FORMAT } from '@/lib/design-system';
 // pdf-lib é importado dinamicamente para evitar erro "Class extends value undefined"
 // em routes de API durante o build do Next.js com Turbopack.
 // NÃO usar import type de pdf-lib pois mesmo isso pode causar avaliação do módulo no Turbopack.
@@ -475,27 +476,11 @@ const GENERO_LABEL: Record<string, string> = {
   prefiro_nao_informar: "prefiro não informar",
 };
 
-function formatPhone(ddd?: string | null, numero?: string | null): string {
-  if (!ddd || !numero) return "";
-  return `(${ddd}) ${formatNumeroTelefone(numero)}`;
-}
 
-function formatFullPhone(phone?: string | null): string {
-  if (!phone) return "";
-  const digits = phone.replace(/\D/g, "");
-  if (digits.length >= 10) {
-    return `(${digits.slice(0, 2)}) ${formatNumeroTelefone(digits.slice(2))}`;
-  }
-  return phone;
-}
 
-/** Formata número de telefone com hífen: 99269-2951 ou 3269-2951 */
-function formatNumeroTelefone(numero: string): string {
-  const digits = numero.replace(/\D/g, "");
-  if (digits.length === 9) return `${digits.slice(0, 5)}-${digits.slice(5)}`;
-  if (digits.length === 8) return `${digits.slice(0, 4)}-${digits.slice(4)}`;
-  return numero;
-}
+
+
+
 
 /** Formata DDD com parênteses: (31) */
 function formatDDD(ddd?: string | null): string {
@@ -565,10 +550,10 @@ export function resolveVariable(
   const end = c.endereco;
   const clienteDados = extras.cliente_dados as Record<string, unknown> | undefined;
   const email = Array.isArray(c.emails) && c.emails.length > 0 ? c.emails[0] : "";
-  const celular = formatPhone(c.ddd_celular, c.numero_celular)
-    || formatFullPhone(clienteDados?.celular as string);
-  const telefone = formatPhone(c.ddd_residencial, c.numero_residencial)
-    || formatFullPhone(clienteDados?.telefone as string);
+  const celular = FORMAT.phone(c.ddd_celular, c.numero_celular)
+    || FORMAT.phone(clienteDados?.celular as string);
+  const telefone = FORMAT.phone(c.ddd_residencial, c.numero_residencial)
+    || FORMAT.phone(clienteDados?.telefone as string);
   const estadoCivil = c.estado_civil ? (ESTADO_CIVIL_LABEL[c.estado_civil] ?? c.estado_civil) : "";
   const genero = c.genero ? (GENERO_LABEL[c.genero] ?? c.genero) : "";
 
@@ -596,9 +581,9 @@ export function resolveVariable(
     "cliente.celular": celular,
     "cliente.telefone": telefone || celular,
     "cliente.ddd_celular": formatDDD(c.ddd_celular),
-    "cliente.numero_celular": formatNumeroTelefone(c.numero_celular || ""),
+    "cliente.numero_celular": FORMAT.phone(c.numero_celular || ""),
     "cliente.ddd_residencial": formatDDD(c.ddd_residencial),
-    "cliente.numero_residencial": formatNumeroTelefone(c.numero_residencial || ""),
+    "cliente.numero_residencial": FORMAT.phone(c.numero_residencial || ""),
 
     // Cliente - endereço (com prefixo endereco_)
     "cliente.endereco_logradouro": end?.logradouro,
@@ -732,9 +717,9 @@ export function resolveVariable(
     "celular": celular,
     "telefone": telefone || celular,
     "ddd_celular": formatDDD(c.ddd_celular),
-    "numero_celular": formatNumeroTelefone(c.numero_celular || ""),
+    "numero_celular": FORMAT.phone(c.numero_celular || ""),
     "ddd_residencial": formatDDD(c.ddd_residencial),
-    "numero_residencial": formatNumeroTelefone(c.numero_residencial || ""),
+    "numero_residencial": FORMAT.phone(c.numero_residencial || ""),
     "data_nascimento": formatDataNascimentoBR(c.data_nascimento),
     "estado_civil": estadoCivil,
     "genero": genero,

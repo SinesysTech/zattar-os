@@ -1,3 +1,4 @@
+import { FORMAT } from '@/lib/design-system';
 import { resolveAvatarUrl } from '@/lib/avatar-url';
 
 
@@ -20,20 +21,7 @@ export function normalizarCpf(cpf: string): string {
   return cpf.replace(/\D/g, '');
 }
 
-/**
- * Formata telefone ((00) 00000-0000 ou (00) 0000-0000)
- */
-export function formatarTelefone(telefone: string | null | undefined): string {
-  if (!telefone) return '-';
-  const telefoneLimpo = telefone.replace(/\D/g, '');
-  if (telefoneLimpo.length === 11) {
-    return telefoneLimpo.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-  }
-  if (telefoneLimpo.length === 10) {
-    return telefoneLimpo.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
-  }
-  return telefone;
-}
+
 
 /**
  * Formata OAB com UF (OAB/UF)

@@ -1,3 +1,4 @@
+import { FORMAT } from '@/lib/design-system';
 'use client';
 
 import { cn } from '@/lib/utils';
@@ -5,7 +6,7 @@ import { Mail, MapPin, PhoneCall, FolderOpen, Hash, ClipboardList } from 'lucide
 
 import { GlassPanel, WidgetContainer } from '@/components/shared/glass-panel';
 import { Text } from '@/components/ui/typography';
-import { formatPhone as formatPhoneLib } from '@/lib/formatters';
+
 import type {
   Contrato,
   ClienteDetalhado,
@@ -22,28 +23,7 @@ interface ContratoResumoCardProps {
  * Formata telefone considerando casos especiais de dados importados
  * onde o DDI (55) pode estar no campo DDD
  */
-function formatPhone(ddd: string | null, numero: string | null): string | null {
-  if (!numero) return null;
 
-  if (ddd === '55') {
-    const formatted = formatPhoneLib(numero);
-    return formatted || numero;
-  }
-
-  if (ddd && ddd.length === 2) {
-    const digits = numero.replace(/\D/g, '');
-    if (digits.length === 9) {
-      return `(${ddd}) ${digits.slice(0, 5)}-${digits.slice(5)}`;
-    }
-    if (digits.length === 8) {
-      return `(${ddd}) ${digits.slice(0, 4)}-${digits.slice(4)}`;
-    }
-    return `(${ddd}) ${numero}`;
-  }
-
-  const formatted = formatPhoneLib(numero);
-  return formatted || numero;
-}
 
 function formatEndereco(endereco: ClienteDetalhado['endereco']): string | null {
   if (!endereco) return null;
@@ -59,7 +39,7 @@ export function ContratoResumoCard({
   stats,
 }: ContratoResumoCardProps) {
   const email = cliente?.emails?.[0] ?? null;
-  const telefone = formatPhone(cliente?.dddCelular ?? null, cliente?.numeroCelular ?? null);
+  const telefone = FORMAT.phone(cliente?.dddCelular ?? null, cliente?.numeroCelular ?? null);
   const localizacao = formatEndereco(cliente?.endereco ?? null);
 
   const hasContactInfo = email || telefone || localizacao || cliente?.cpfCnpj;
