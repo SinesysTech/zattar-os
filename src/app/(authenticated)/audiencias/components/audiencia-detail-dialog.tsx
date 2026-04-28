@@ -571,7 +571,7 @@ export function AudienciaDetailDialog({
               <ExternalLink className="size-3" />
               Abrir no PJe
             </Button>
-          </div>
+          )}
         </div>
       </div>
     ) : undefined;
