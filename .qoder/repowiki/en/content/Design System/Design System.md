@@ -21,16 +21,24 @@
 - [audiencia-status-badge.tsx](file://src/app/(authenticated)/audiencias/components/audiencia-status-badge.tsx)
 - [audiencia-modalidade-badge.tsx](file://src/app/(authenticated)/audiencias/components/audiencia-modalidade-badge.tsx)
 - [audiencia-indicador-badges.tsx](file://src/app/(authenticated)/audiencias/components/audiencia-indicador-badges.tsx)
+- [use-breakpoint.ts](file://src/hooks/use-breakpoint.ts)
+- [use-mobile.ts](file://src/hooks/use-mobile.ts)
+- [responsive.ts](file://src/types/responsive.ts)
+- [use-responsive-layout.ts](file://src/app/(authenticated)/chat/hooks/use-responsive-layout.ts)
+- [radix-ui.js](file://src/__mocks__/radix-ui.js)
+- [base-vs-radix.md](file://.agents/skills/shadcn/rules/base-vs-radix.md)
+- [token-registry.ts](file://src/lib/design-system/token-registry.ts)
 </cite>
 
 ## Update Summary
 **Changes Made**
-- Enhanced typography system with comprehensive semantic text classes (kpi-value, meta-label, caption, micro-badge, etc.)
-- Added new CountBadge component for consistent count display across tabs and badges
-- Improved audiência component integration with semantic badge system
-- Enhanced accessibility compliance with proper heading semantics and WCAG AAA standards
-- Updated design system playground with new typography and badge testing capabilities
-- Strengthened migration guidance through design-system-escape comments
+- Updated to reflect major UI component refactoring and modernization effort
+- Documented migration from @radix-ui/react-* to radix-ui unified packages
+- Enhanced styling consistency with new CSS variables and design tokens
+- Improved accessibility features with WCAG AAA compliance
+- Streamlined component APIs with responsive utility hooks
+- Introduced new responsive utilities including useIsMobile hook
+- Updated design system governance with enhanced breakpoint management
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -43,22 +51,25 @@
 8. [Component Library Integration](#component-library-integration)
 9. [Enhanced Semantic Badge System](#enhanced-semantic-badge-system)
 10. [CountBadge Component](#countbadge-component)
-11. [Design System Playground](#design-system-playground)
-12. [Page-Specific Implementation Examples](#page-specific-implementation-examples)
-13. [Quality Assurance and Migration Tracking](#quality-assurance-and-migration-tracking)
-14. [Integration and Maintenance](#integration-and-maintenance)
-15. [Conclusion](#conclusion)
+11. [Responsive Utilities and Breakpoint Management](#responsive-utilities-and-breakpoint-management)
+12. [Radix UI Modernization and Component Refactoring](#radix-ui-modernization-and-component-refactoring)
+13. [Enhanced CSS Variables and Design Tokens](#enhanced-css-variables-and-design-tokens)
+14. [Design System Playground](#design-system-playground)
+15. [Page-Specific Implementation Examples](#page-specific-implementation-examples)
+16. [Quality Assurance and Migration Tracking](#quality-assurance-and-migration-tracking)
+17. [Integration and Maintenance](#integration-and-maintenance)
+18. [Conclusion](#conclusion)
 
 ## Introduction
-The ZattarOS Design System represents a comprehensive visual and interaction framework built on shadcn/ui components with semantic badge architecture. The system has evolved to operate on a hierarchical structure where the MASTER.md file serves as the central authority for design system rules, page-specific documentation files provide targeted overrides, and design-system-escape comments guide developers through systematic migration from raw Tailwind CSS classes to standardized components.
+The ZattarOS Design System represents a comprehensive visual and interaction framework built on shadcn/ui components with semantic badge architecture. The system has undergone a major modernization effort featuring migration from @radix-ui/react-* packages to the unified radix-ui package, enhanced styling consistency through new CSS variables, improved accessibility compliance with WCAG AAA standards, streamlined component APIs, and introduction of responsive utilities like the useIsMobile hook.
 
-**Updated** The system now features major typography improvements with new semantic text classes, enhanced accessibility compliance with WCAG AAA standards, comprehensive anti-pattern prevention measures, and a new CountBadge component for consistent count display across tabs and badges. The enhanced audiência components demonstrate superior integration with the semantic badge system and improved heading semantics for better accessibility.
+**Updated** The system now features comprehensive responsive utility management, modernized component architecture, and enhanced design token governance. The migration to unified radix-ui packages ensures better maintainability and consistency across the component library, while the new responsive utilities provide developers with powerful tools for adaptive UI development.
 
-This architecture ensures consistency across the legal management platform while allowing for module-specific adaptations through a well-defined override mechanism.
+This architecture ensures consistency across the legal management platform while allowing for module-specific adaptations through a well-defined override mechanism and modernized component development practices.
 
 ## Hierarchical Design System Architecture
 
-The ZattarOS Design System operates on a three-tier hierarchical architecture that balances standardization with flexibility.
+The ZattarOS Design System operates on a three-tier hierarchical architecture that balances standardization with flexibility, now enhanced with modern responsive utilities and component refactoring.
 
 ### Master Authority Layer
 The MASTER.md file serves as the central governing document containing 175 lines of essential design system rules. It establishes the foundational principles that all modules must follow unless overridden by specific page documentation.
@@ -68,6 +79,7 @@ The MASTER.md file serves as the central governing document containing 175 lines
 - **Standardization**: Ensures consistent design language across all application modules
 - **Foundation**: Establishes baseline guidelines for color palettes, typography, spacing, and component specifications
 - **Enforcement**: Contains anti-patterns and non-conformance rules that must be avoided
+- **Modernization**: Incorporates latest component patterns and responsive design practices
 
 **Master File Structure**
 The master file organizes rules into logical categories:
@@ -77,6 +89,7 @@ The master file organizes rules into logical categories:
 - Component specifications and layout patterns
 - Layout and spacing guidelines
 - **Enhanced** Anti-patterns and prohibited practices with accessibility compliance
+- **Enhanced** Responsive design guidelines and breakpoint management
 - Pre-delivery checklist for quality assurance
 
 ### Page-Specific Override Layer
@@ -87,6 +100,7 @@ Individual module documentation files in the `design-system/zattaros/pages/` dir
 - **Module Context**: Provides specialized guidance for specific business domains
 - **Comprehensive Coverage**: Documents layout patterns, component usage, and domain-specific requirements
 - **Audit Trail**: Maintains historical record of design decisions and rationale
+- **Responsive Guidance**: Includes modern responsive design considerations
 
 **Override Documentation Pattern**
 Each page-specific file follows a standardized structure:
@@ -94,6 +108,7 @@ Each page-specific file follows a standardized structure:
 - Important override warnings and authority declarations
 - Page-specific rules with clear deviations
 - Component specifications for the module
+- **Enhanced** Responsive design patterns and breakpoint considerations
 - Recommendations and best practices
 - Module-specific pre-delivery checklist
 
@@ -105,10 +120,11 @@ The actual implementation layer consists of React components, TypeScript files, 
 - **Migration Tracking**: Systematic approach to transitioning from legacy classes to design system components
 - **Quality Assurance**: Automated validation and manual review processes
 - **Developer Experience**: Comprehensive tooling and documentation support
+- **Responsive Utilities**: Integration of modern breakpoint management and responsive hooks
 
 ## Master Authority and Page-Specific Overrides
 
-The design system implements a sophisticated override mechanism that allows for centralized governance while enabling module-specific adaptations.
+The design system implements a sophisticated override mechanism that allows for centralized governance while enabling module-specific adaptations, now enhanced with responsive design considerations.
 
 ### Master File Authority
 The MASTER.md file establishes the foundational rules that govern the entire design system:
@@ -117,6 +133,7 @@ The MASTER.md file establishes the foundational rules that govern the entire des
 1. **Master Rules**: Primary guidelines established in MASTER.md
 2. **Page Overrides**: Specific deviations documented in page-specific files
 3. **Local Adaptations**: Module-specific implementations within individual components
+4. **Responsive Guidelines**: Modern breakpoint management and responsive design patterns
 
 **Authority Declaration**
 The master file explicitly states its governance role:
@@ -130,15 +147,17 @@ Each page-specific file follows a consistent pattern:
 - Important override warnings and authority declarations
 - Page-specific rules with clear deviations from master
 - Component specifications tailored to the module
+- **Enhanced** Responsive design patterns and breakpoint considerations
 - Recommendations and best practices
 - Module-specific pre-delivery checklist
 
 **Override Examples**
-The audiências module demonstrates comprehensive override documentation:
+The audiências module demonstrates comprehensive override documentation with modern responsive considerations:
 - **Shells and Composition**: Specific requirements for weekly view layout and component composition
 - **Badge Categories**: Domain-specific semantic badge mappings for audiência status and modalities
 - **Density and Layout**: Module-specific density requirements and layout patterns for weekly scheduling
 - **Typography Specifications**: Specialized typography rules for legal domain
+- **Responsive Patterns**: Modern breakpoint management and adaptive UI considerations
 - **Anti-Patterns**: Module-specific design violations to avoid
 
 **Override Validation**
@@ -146,6 +165,7 @@ The system includes mechanisms to validate override compliance:
 - **Audit Reports**: Automated scanning for compliance with master rules
 - **Override Tracking**: Documentation of all deviations from canonical rules
 - **Module Conformance**: Verification that page-specific implementations meet requirements
+- **Responsive Validation**: Ensuring modern breakpoint patterns are properly implemented
 
 ## Migration Strategy with Design System Escape Comments
 
@@ -172,6 +192,7 @@ The escape comments categorize migration needs:
 - **Layout Migration**: `px-6 padding direcional sem Inset equiv.` → Use container utilities
 - **Component Migration**: `cursor-pointer on all clickable elements` → Use Button component
 - **Spacing Migration**: `gap-3 gap sem token DS` → Use semantic spacing tokens
+- **Responsive Migration**: `hidden md:block` → Use responsive hooks and breakpoint utilities
 
 ### Migration Tracking and Validation
 
@@ -346,7 +367,7 @@ The system implements strict accessibility standards:
 
 ## Component Library Integration
 
-The ZattarOS Design System is built on shadcn/ui components, providing a comprehensive library of reusable UI elements with semantic badge architecture.
+The ZattarOS Design System is built on shadcn/ui components, providing a comprehensive library of reusable UI elements with semantic badge architecture. The system has been modernized with unified radix-ui packages and enhanced responsive utilities.
 
 ### Component Categories and Governance
 
@@ -356,12 +377,14 @@ The system provides canonical components through shadcn/ui integration:
 - **Navigation Components**: Menus, breadcrumbs, pagination, tabs, accordions
 - **Feedback Components**: Notifications, alerts, loading states, progress indicators
 - **Layout Components**: Cards, grids, modals, dialogs, split panes
+- **Interactive Components**: Tooltips, popovers, context menus with modernized APIs
 
 **Component Governance**
 - **Canonical Specifications**: All components follow master file specifications
 - **Variation Control**: Limited component variations to maintain consistency
 - **Accessibility Standards**: All components meet WCAG accessibility requirements
 - **Performance Optimization**: Components designed for optimal performance
+- **Modern API**: Unified radix-ui package integration with streamlined interfaces
 
 ### Component Usage Patterns and Migration
 
@@ -427,7 +450,7 @@ export function CountBadge({
       {...props}
     >
       {children}
-    </Badge>
+    </badge>
   );
 }
 ```
@@ -488,9 +511,272 @@ export function getSemanticBadgeVariant(
 - **Semantic Clarity**: Badge variants clearly communicate status and meaning
 - **Responsive Design**: Badges adapt to different screen sizes and contexts
 
+## Responsive Utilities and Breakpoint Management
+
+The design system now features comprehensive responsive utility management with modern breakpoint handling and adaptive UI patterns.
+
+### Modern Breakpoint Management
+
+**Unified Breakpoint System**
+The system provides a comprehensive breakpoint management system through the useBreakpoint hook family:
+- **Flexible Breakpoints**: Support for xs, sm, md, lg, xl, 2xl breakpoints
+- **Multiple Hook Variants**: Direct comparison, below, between, and convenience hooks
+- **Type Safety**: Strongly typed breakpoint definitions
+- **SSR Compatibility**: Server-side rendering safe implementations
+
+**Breakpoint Hook Architecture**
+```typescript
+// Direct breakpoint comparison
+const isDesktop = useBreakpoint('lg');
+
+// Below breakpoint checking
+const isMobile = useBreakpointBelow('md');
+
+// Range checking
+const isTablet = useBreakpointBetween('md', 'lg');
+
+// Convenience hooks
+const isSmallMobile = useBreakpointBelow('sm');
+const isLargeDesktop = useBreakpoint('xl');
+```
+
+**Responsive Utility Hooks**
+- **useIsMobile**: Simplified mobile detection (below md breakpoint)
+- **useBreakpoints**: Comprehensive breakpoint state object
+- **useViewport**: Advanced viewport state management
+- **Custom Breakpoint Logic**: Flexible breakpoint comparison functions
+
+### Modern Responsive Patterns
+
+**Adaptive Component Design**
+Components now support modern responsive patterns:
+- **Conditional Rendering**: Based on breakpoint detection
+- **Layout Adaptation**: Grid columns, spacing, and component sizing
+- **Feature Detection**: Capability-based feature availability
+- **Performance Optimization**: Efficient breakpoint change handling
+
+**Responsive Component Examples**
+```typescript
+// Adaptive grid layout
+const { columns, gridClasses } = useResponsiveLayout(participantCount);
+
+// Conditional component rendering
+{useIsMobile() ? <MobileView /> : <DesktopView />}
+
+// Adaptive spacing
+<div className={`p-${useIsMobile() ? '4' : '6'}`}>
+  Content
+</div>
+```
+
+**Breakpoint Governance**
+- **Consistent Breakpoints**: Unified breakpoint definitions across the system
+- **Responsive Patterns**: Standardized responsive design approaches
+- **Performance Monitoring**: Efficient breakpoint change handling
+- **Accessibility Considerations**: Responsive design with accessibility in mind
+
+### Responsive Layout Management
+
+**Advanced Layout Hooks**
+The system provides sophisticated layout management through specialized hooks:
+- **useResponsiveLayout**: Chat and video layout adaptation
+- **useViewport**: Comprehensive viewport state management
+- **Custom Responsive Logic**: Flexible layout adaptation patterns
+
+**Layout Adaptation Patterns**
+- **Column-Based Layouts**: Dynamic grid column adjustment
+- **Sidebar Management**: Collapsible and adaptive sidebars
+- **Control Sizing**: Adaptive component sizing based on screen size
+- **Participant-Based Layouts**: Dynamic layouts based on user counts
+
+**Layout Hook Implementation**
+```typescript
+export function useResponsiveLayout(participantCount: number) {
+  const { width } = useViewport();
+  const [layoutConfig, setLayoutConfig] = useState<LayoutConfig>({
+    columns: 1,
+    showSidebar: false,
+    controlSize: "sm",
+    gridClasses: "grid-cols-1",
+  });
+
+  useEffect(() => {
+    // Responsive layout logic based on width and participant count
+    // Returns optimized layout configuration
+  }, [width, participantCount]);
+
+  return layoutConfig;
+}
+```
+
+**Layout Governance**
+- **Performance Optimization**: Efficient layout calculations
+- **State Management**: Clean separation of layout concerns
+- **Extensibility**: Easy adaptation for new layout patterns
+- **Testing Support**: Comprehensive testing utilities for responsive layouts
+
+## Radix UI Modernization and Component Refactoring
+
+The design system has undergone a comprehensive modernization effort migrating from individual @radix-ui/react-* packages to the unified radix-ui package, streamlining component APIs and improving maintainability.
+
+### Unified Package Migration
+
+**Package Migration Strategy**
+The system has successfully migrated from individual radix packages to the unified radix-ui package:
+- **Package Consolidation**: Single radix-ui package replacing @radix-ui/react-* packages
+- **API Consistency**: Unified component APIs and patterns
+- **Bundle Size Optimization**: Reduced bundle size through package consolidation
+- **Maintenance Simplification**: Single package to track and update
+
+**Migration Benefits**
+- **Simplified Dependencies**: Fewer packages to manage and update
+- **API Standardization**: Consistent component patterns across the system
+- **Better Type Definitions**: Improved TypeScript support and IntelliSense
+- **Future-Proof Architecture**: Unified package reduces fragmentation risks
+
+### Component API Modernization
+
+**Streamlined Component Interfaces**
+Components now feature simplified and more intuitive APIs:
+- **asChild Pattern**: Consistent composition pattern using asChild prop
+- **Unified Trigger Components**: Standardized trigger and close component patterns
+- **Simplified Props**: Reduced prop complexity while maintaining functionality
+- **Better TypeScript Support**: Enhanced type safety and developer experience
+
+**Modern Component Patterns**
+```typescript
+// Modern trigger pattern with asChild
+<DialogTrigger asChild>
+  <Button>Open Dialog</Button>
+</DialogTrigger>
+
+// Unified menu components
+<DropdownMenuTrigger asChild>
+  <Button>Menu</Button>
+</DropdownMenuTrigger>
+```
+
+**API Governance**
+- **Pattern Consistency**: Standardized component patterns across the system
+- **Backward Compatibility**: Gradual migration approach preserving functionality
+- **Developer Experience**: Improved DX through simplified APIs
+- **Documentation Alignment**: Updated documentation reflecting modern APIs
+
+### Enhanced Component Architecture
+
+**Modern Component Design**
+Components now feature enhanced architecture supporting modern patterns:
+- **Composition Over Inheritance**: Better component composition patterns
+- **Render Props Alternative**: asChild pattern replacing complex render props
+- **Better Performance**: Optimized component rendering and updates
+- **Enhanced Accessibility**: Improved accessibility through modern patterns
+
+**Component Testing and Validation**
+- **Comprehensive Testing**: Modern testing patterns for refactored components
+- **Accessibility Validation**: Enhanced accessibility testing for modern components
+- **Performance Monitoring**: Performance testing for optimized component architecture
+- **Regression Prevention**: Automated testing to prevent component regressions
+
+**Component Governance**
+- **Modern Patterns**: Adoption of current best practices for component design
+- **API Stability**: Stable APIs that minimize breaking changes
+- **Developer Onboarding**: Easier onboarding with simplified component patterns
+- **Long-term Maintainability**: Future-proof architecture supporting ongoing evolution
+
+## Enhanced CSS Variables and Design Tokens
+
+The design system now features enhanced CSS variable management and comprehensive design token governance, providing better consistency and maintainability.
+
+### Comprehensive CSS Variable System
+
+**Enhanced Variable Registry**
+The system maintains a comprehensive registry of CSS variables supporting modern design patterns:
+- **Chart Variables**: Soft chart colors for data visualization consistency
+- **Glow Effects**: Consistent glow and highlight effects across components
+- **Video Call Tokens**: Specialized tokens for video conferencing interfaces
+- **Portal Tokens**: Dedicated tokens for client portal interfaces
+
+**Variable Categories**
+```typescript
+// Chart soft colors for consistent data visualization
+const CHART_SOFT_VARS = [
+  '--chart-primary-soft',
+  '--chart-destructive-soft',
+  '--chart-warning-soft',
+  '--chart-success-soft',
+  '--chart-muted-soft',
+];
+
+// Glow effects for interactive elements
+const GLOW_VARS = [
+  '--glow-primary',
+  '--glow-destructive',
+  '--glow-warning',
+];
+
+// Video call specific tokens
+const VIDEO_VARS = [
+  '--video-bg',
+  '--video-surface',
+  '--video-surface-hover',
+  '--video-border',
+  '--video-muted',
+  '--video-text',
+  '--video-skeleton',
+];
+```
+
+**Variable Governance**
+- **Centralized Management**: Single source of truth for all CSS variables
+- **Type Safety**: TypeScript support for CSS variable access
+- **Consistency Enforcement**: Automated validation of variable usage
+- **Performance Optimization**: Efficient variable resolution and caching
+
+### Advanced Design Token System
+
+**Token Registry and Management**
+The system provides comprehensive token registry management:
+- **Component-Level Tokens**: Tokens specific to individual components
+- **Layered Architecture**: Reference, semantic, and component token layers
+- **Theme Support**: Complete light and dark theme token management
+- **Dynamic Updates**: Runtime token modification support
+
+**Token Categories**
+- **Color Tokens**: Semantic color mappings for consistent theming
+- **Spacing Tokens**: Grid-based spacing system for consistent layouts
+- **Typography Tokens**: Semantic typography scales for accessible text
+- **Size Tokens**: Unified sizing system for consistent component dimensions
+
+**Token Governance**
+- **Hierarchical Structure**: DTCG v2025.10 compliant token architecture
+- **Type Safety**: Strong typing for all token access patterns
+- **Documentation**: Comprehensive token documentation and usage examples
+- **Validation**: Automated validation of token usage and consistency
+
+### Design Token Integration
+
+**Modern Token Usage Patterns**
+Tokens are now integrated throughout the system with modern patterns:
+- **TypeScript Integration**: Strongly typed token access throughout the application
+- **CSS Variable Resolution**: Efficient CSS variable resolution and caching
+- **Theme Switching**: Seamless theme switching with token updates
+- **Runtime Modification**: Dynamic token modification for advanced theming
+
+**Token Performance Optimization**
+- **Efficient Resolution**: Optimized token resolution for better performance
+- **Caching Strategies**: Intelligent caching of token values and computed styles
+- **Memory Management**: Efficient memory usage for large token registries
+- **Bundle Optimization**: Minimal impact on bundle size through token optimization
+
+**Token Governance**
+- **Consistency Enforcement**: Automated enforcement of token usage patterns
+- **Migration Support**: Tools and processes for migrating to new token systems
+- **Performance Monitoring**: Continuous monitoring of token system performance
+- **Future Planning**: Long-term planning for token system evolution
+
 ## Design System Playground
 
-The design system playground provides an interactive environment for testing and validating component implementations with comprehensive migration guidance.
+The design system playground provides an interactive environment for testing and validating component implementations with comprehensive migration guidance and modern responsive utilities.
 
 ### Playground Features and Migration Testing
 
@@ -498,7 +784,7 @@ The design system playground provides an interactive environment for testing and
 The playground includes comprehensive testing capabilities:
 - **Component State Testing**: Default, hover, disabled, loading states
 - **Theme Switching**: Light and dark mode testing
-- **Responsive Behavior**: Multi-breakpoint testing
+- **Responsive Behavior**: Multi-breakpoint testing with modern utilities
 - **Accessibility States**: Focus management and screen reader compatibility
 
 **Migration Validation and Guidance**
@@ -511,7 +797,7 @@ The playground includes comprehensive testing capabilities:
 - **Immediate Visual Feedback**: Component changes reflected instantly
 - **Automated Validation**: Design system adherence verification
 - **Migration Progress Tracking**: Quantifiable migration metrics
-- **Error Detection and Correction**: Intelligent suggestion of corrections
+- **Responsive Testing**: Modern breakpoint and responsive utility validation
 
 ### Playground Implementation and Governance
 
@@ -539,11 +825,17 @@ The playground includes comprehensive testing capabilities:
 - **Accessibility Compliance**: Ensuring CountBadge meets accessibility standards
 - **Performance Optimization**: Testing CountBadge rendering performance
 
+**Responsive Utilities Testing**
+- **Breakpoint Hook Testing**: Comprehensive testing of useBreakpoint utilities
+- **Mobile Detection**: Validation of useIsMobile and related responsive utilities
+- **Layout Adaptation**: Testing responsive layout management patterns
+- **Performance Monitoring**: Performance testing of responsive utility hooks
+
 ## Page-Specific Implementation Examples
 
 ### Audiências Module Deep Dive
 
-The audiências module showcases comprehensive integration with the enhanced design system, featuring improved typography, semantic badge system, and accessibility compliance.
+The audiências module showcases comprehensive integration with the enhanced design system, featuring improved typography, semantic badge system, accessibility compliance, and modern responsive utilities.
 
 **Weekly View Implementation and Governance**
 The audiências module demonstrates advanced design system implementation with clear governance:
@@ -551,6 +843,7 @@ The audiências module demonstrates advanced design system implementation with c
 - **Badge Category Governance**: Centralized badge category usage with domain-specific mappings
 - **Layout Pattern Governance**: Strict adherence to module-specific density and layout requirements
 - **Component Composition**: Clear guidelines for component hierarchy and relationships
+- **Responsive Pattern Governance**: Modern breakpoint management and adaptive UI patterns
 
 **Enhanced Typography Integration**
 - **KPI Values**: Migration from raw classes to `text-kpi-value` semantic class
@@ -586,6 +879,13 @@ The audiências module demonstrates comprehensive CountBadge integration with cl
 - **Size Standardization**: Appropriate size selection based on context
 - **Styling Guidelines**: Dynamic styling for different count states
 - **Accessibility Compliance**: Proper contrast and semantic meaning
+
+**Responsive Utility Integration**
+The module demonstrates modern responsive utility usage:
+- **Mobile Detection**: Using useIsMobile for mobile-specific layouts
+- **Breakpoint Management**: Implementing useBreakpoint for adaptive behavior
+- **Layout Adaptation**: Responsive grid layouts and component arrangements
+- **Performance Optimization**: Efficient responsive behavior without performance impact
 
 **Component Composition and Migration**
 - **Weekly View Layout**: Complex card component with migration guidance
@@ -626,15 +926,28 @@ The module shows practical migration from raw classes with comprehensive validat
 // After: text-micro-badge
 ```
 
+**Responsive Migration Examples**
+```typescript
+// Before: hidden md:block
+// After: {useIsMobile() ? null : <DesktopComponent />}
+
+// Before: grid-cols-1 md:grid-cols-2
+// After: {useIsMobile() ? 'grid-cols-1' : 'grid-cols-2'}
+
+// Before: p-4
+// After: {useIsMobile() ? 'p-4' : 'p-6'}
+```
+
 **Governance and Compliance**
 - **Audit Results**: Comprehensive compliance reporting with automated scanning
 - **Override Validation**: Verification that page-specific rules are properly implemented
 - **Migration Tracking**: Quantifiable progress in design system adoption
 - **Quality Assurance**: Multi-layered validation of implementation quality
+- **Responsive Validation**: Ensuring modern breakpoint patterns are properly implemented
 
 ### Captura Module Implementation
 
-The captura module demonstrates design system adoption with specialized documentation and clear governance patterns.
+The captura module demonstrates design system adoption with specialized documentation and clear governance patterns, now enhanced with modern responsive utilities.
 
 **Dashboard Layout Migration and Governance**
 The captura module shows systematic migration from raw Tailwind classes with clear governance:
@@ -642,12 +955,14 @@ The captura module shows systematic migration from raw Tailwind classes with cle
 - **Component Specification Governance**: Clear component usage guidelines
 - **Color Strategy Governance**: Centralized color strategy documentation
 - **Effect Recommendations**: Governed recommendations for visual effects
+- **Responsive Pattern Integration**: Modern breakpoint management and adaptive layouts
 
 **Typography Integration and Migration**
 - **Semantic Text Classes**: Integration with new typography system
 - **Component Composition**: Governance of component relationships and usage
 - **Migration Tracking**: Clear documentation of migration progress
 - **Quality Assurance**: Validation of design system compliance
+- **Responsive Typography**: Testing across different screen sizes and breakpoints
 
 ### Expedientes Module Implementation
 
@@ -663,6 +978,13 @@ The captura module shows systematic migration from raw Tailwind classes with cle
 - **DetailPanel Integration**: Component composition with migration tracking
 - **SectionHeader Usage**: Governance of header components with semantic clarity
 - **Inline Editing Capabilities**: Migration from raw components to standardized solutions
+
+**Responsive Utility Integration**
+The module demonstrates modern responsive utility usage:
+- **Mobile-First Design**: Using useIsMobile for mobile-specific optimizations
+- **Breakpoint-Based Layouts**: Implementing useBreakpointBetween for tablet layouts
+- **Adaptive Spacing**: Responsive spacing using modern breakpoint utilities
+- **Performance Considerations**: Efficient responsive behavior implementation
 
 **Migration Examples and Validation**
 The module shows practical migration from raw classes with comprehensive validation:
@@ -697,15 +1019,25 @@ The module shows practical migration from raw classes with comprehensive validat
 // After: text-micro-badge
 ```
 
+**Responsive Migration Examples**
+```typescript
+// Before: hidden lg:block
+// After: {useIsMobile() ? null : <DesktopFeature />}
+
+// Before: space-y-4
+// After: {useIsMobile() ? 'space-y-2' : 'space-y-4'}
+```
+
 **Governance and Compliance**
 - **Audit Results**: Comprehensive compliance reporting with automated scanning
 - **Override Validation**: Verification that page-specific rules are properly implemented
 - **Migration Tracking**: Quantifiable progress in design system adoption
 - **Quality Assurance**: Multi-layered validation of implementation quality
+- **Responsive Validation**: Ensuring modern breakpoint patterns are properly implemented
 
 ## Quality Assurance and Migration Tracking
 
-The design system includes comprehensive quality assurance processes to ensure consistent implementation and track migration progress.
+The design system includes comprehensive quality assurance processes to ensure consistent implementation and track migration progress, now enhanced with modern responsive utility validation.
 
 ### Audit and Validation Systems
 
@@ -714,12 +1046,14 @@ The design system includes comprehensive quality assurance processes to ensure c
 - **Component Usage Validation**: Verification of standardized component adoption
 - **Design Token Compliance Checking**: Validation of semantic token usage
 - **Accessibility Compliance Verification**: Automated accessibility validation
+- **Responsive Utility Validation**: Testing of modern breakpoint and responsive utilities
 
 **Manual Review Processes and Governance**
 - **Peer Code Review**: Structured review process for design system adherence
 - **User Experience Validation**: Human validation of design system implementations
 - **Performance Impact Assessment**: Evaluation of migration effects on application performance
 - **Cross-Platform Compatibility Testing**: Multi-environment validation
+- **Responsive Pattern Review**: Validation of modern breakpoint usage
 
 ### Migration Metrics and Governance
 
@@ -728,12 +1062,14 @@ The design system includes comprehensive quality assurance processes to ensure c
 - **Reduction in Legacy CSS Classes**: Measurable improvement in code quality
 - **Increase in Semantic Badge Usage**: Evidence of design system adoption
 - **Improvement in Accessibility Scores**: Quantified accessibility improvements
+- **Responsive Utility Adoption**: Tracking of modern breakpoint usage
 
 **Quality Indicators and Governance**
 - **Consistency in Component Usage**: Measurement of design system adherence
 - **Reduction in Design Debt**: Quantified improvement in codebase quality
 - **Improved Maintainability Scores**: Evidence of better code organization
 - **Enhanced User Experience Metrics**: Measurable UX improvements
+- **Responsive Pattern Consistency**: Validation of modern breakpoint usage
 
 **Typography Migration Metrics**
 - **Semantic Text Class Adoption**: Tracking of new text class usage
@@ -747,9 +1083,15 @@ The design system includes comprehensive quality assurance processes to ensure c
 - **Badge System Enhancement**: Improved semantic badge architecture
 - **Developer Productivity**: Measured improvement in count display implementation
 
+**Responsive Utility Metrics**
+- **useIsMobile Adoption**: Tracking of mobile detection usage
+- **useBreakpoint Usage**: Validation of modern breakpoint utilities
+- **Responsive Pattern Consistency**: Measuring adoption of modern responsive patterns
+- **Performance Impact**: Measuring performance effects of responsive utilities
+
 ## Integration and Maintenance
 
-The design system architecture supports scalable maintenance and evolution through centralized governance and clear documentation workflows.
+The design system architecture supports scalable maintenance and evolution through centralized governance, modern responsive utilities, and comprehensive component refactoring.
 
 ### Documentation Workflow and Governance
 
@@ -758,12 +1100,14 @@ The design system architecture supports scalable maintenance and evolution throu
 - **Version Control for Design Evolution**: Historical tracking of design system changes
 - **Backward Compatibility Considerations**: Governance of breaking change management
 - **Migration Guides for Breaking Changes**: Clear guidance for system evolution
+- **Responsive Pattern Documentation**: Updated documentation for modern breakpoint usage
 
 **Page-Specific Documentation and Governance**
 - **Specialized Knowledge Capture**: Module-specific documentation with clear governance
 - **Context-Specific Implementation Guidance**: Tailored guidance for different modules
 - **Quick Reference Material**: Governed documentation for developer onboarding
 - **Onboarding Material**: Structured training materials with quality assurance
+- **Responsive Pattern Integration**: Documentation of modern breakpoint usage
 
 ### Development Process Integration and Governance
 
@@ -772,30 +1116,42 @@ The design system architecture supports scalable maintenance and evolution throu
 - **Consistent Naming Conventions**: Standardized naming with quality control
 - **Standardized Implementation Patterns**: Governed development practices
 - **Automated Validation Checks**: Quality gates for code delivery
+- **Responsive Utility Integration**: Modern breakpoint management in development workflow
 
 **Quality Assurance Pipeline and Governance**
 - **Pre-Delivery Checklists**: Governed quality assurance processes
 - **Automated Accessibility Testing**: Quality gates for accessibility compliance
 - **Visual Regression Detection**: Automated visual quality assurance
 - **Performance Monitoring**: Continuous performance validation
+- **Responsive Utility Testing**: Automated testing of modern breakpoint utilities
 
 **Maintenance Strategies and Governance**
 - **Regular Design System Audits**: Systematic quality assessment
 - **Component Usage Analytics**: Data-driven maintenance decisions
 - **Developer Feedback Integration**: Governed feedback incorporation
 - **Continuous Improvement Processes**: Structured evolution of design system
+- **Responsive Utility Monitoring**: Ongoing validation of modern breakpoint patterns
 
 **Typography Maintenance and Governance**
 - **Semantic Text Class Updates**: Centralized typography token management
 - **Accessibility Compliance Monitoring**: Ongoing accessibility validation
 - **Migration Progress Tracking**: Quantified typography adoption metrics
 - **Developer Education**: Training on new typography system
+- **Responsive Typography Validation**: Testing across different screen sizes
 
 **CountBadge Maintenance and Governance**
 - **Component Usage Analytics**: Tracking CountBadge adoption across modules
 - **Performance Monitoring**: Ensuring efficient CountBadge rendering
 - **Accessibility Compliance**: Regular validation of CountBadge accessibility
 - **Developer Education**: Training on CountBadge usage patterns and best practices
+- **Responsive Integration**: Ensuring CountBadge works with modern breakpoint utilities
+
+**Responsive Utility Maintenance and Governance**
+- **Breakpoint Utility Usage Analytics**: Tracking modern breakpoint adoption
+- **Performance Monitoring**: Ensuring efficient responsive utility usage
+- **Accessibility Compliance**: Validating responsive utilities with accessibility standards
+- **Developer Education**: Training on modern breakpoint patterns and best practices
+- **Migration Support**: Assisting teams in adopting modern responsive utilities
 
 ## Conclusion
 
@@ -803,14 +1159,18 @@ The ZattarOS Design System represents a comprehensive approach to design system 
 
 **Updated** The system now features major typography improvements with new semantic text classes, enhanced accessibility compliance with WCAG AAA standards, comprehensive anti-pattern prevention measures, and a new CountBadge component for consistent count display across tabs and badges. The introduction of CountBadge provides specialized functionality for numeric count displays, enhancing the semantic badge system with dedicated component architecture.
 
+The comprehensive modernization effort has successfully migrated the component library to the unified radix-ui package, streamlining component APIs and improving maintainability. The enhanced responsive utility system provides developers with powerful tools for adaptive UI development, while the expanded CSS variable and design token system ensures better consistency and maintainability across the platform.
+
 The hierarchical architecture ensures that all modules follow consistent design principles while allowing for targeted adaptations through documented overrides. The comprehensive audit and validation processes guarantee high-quality implementations across all modules, while the playground environment facilitates testing and validation of design system implementations.
 
 The integration with shadcn/ui components ensures scalability and maintainability, while the centralized badge system and component governance provide consistent visual language across the platform. The systematic migration approach with design-system-escape comments guides developers through the transition from raw Tailwind classes to standardized components, creating a sustainable development workflow.
 
-Through this architecture, the design system supports both current development needs and future evolution, providing a solid foundation for the continued growth of the ZattarOS platform. The emphasis on trust, authority, and accessibility creates a professional foundation suitable for legal services, while the comprehensive anti-pattern prevention and quality assurance processes ensure high-quality implementations across all modules.
+Through this modernized architecture, the design system supports both current development needs and future evolution, providing a solid foundation for the continued growth of the ZattarOS platform. The emphasis on trust, authority, and accessibility creates a professional foundation suitable for legal services, while the comprehensive anti-pattern prevention and quality assurance processes ensure high-quality implementations across all modules.
 
 The governance model established through MASTER.md and page-specific overrides ensures that design decisions are well-documented, consistently applied, and easily maintained over time. This approach enables the design system to evolve with the platform's needs while maintaining the consistency and quality that developers and users expect.
 
 The enhanced typography system with semantic text classes, comprehensive accessibility compliance, systematic migration guidance, and the new CountBadge component position the ZattarOS Design System as a leader in accessible, maintainable, and scalable design systems for legal technology applications. The CountBadge component specifically addresses the need for consistent count display across tabs, badges, and quantity indicators, providing developers with a reliable, accessible solution for numeric count presentation.
 
-The audiências module integration demonstrates the practical benefits of these enhancements, with improved semantic badge usage, better heading semantics for accessibility, and streamlined count display patterns that enhance both developer productivity and user experience. This comprehensive approach to design system evolution ensures that the ZattarOS platform maintains its competitive edge in legal technology while providing a solid foundation for future innovations.
+The audiências module integration demonstrates the practical benefits of these enhancements, with improved semantic badge usage, better heading semantics for accessibility, streamlined count display patterns, and modern responsive utility integration that enhances both developer productivity and user experience. This comprehensive approach to design system evolution ensures that the ZattarOS platform maintains its competitive edge in legal technology while providing a solid foundation for future innovations.
+
+The modernized component architecture with unified radix-ui packages, enhanced responsive utilities, and comprehensive design token management positions the ZattarOS Design System for continued success in supporting the platform's growth and evolution. The systematic approach to component refactoring, responsive utility integration, and design token management ensures that the system remains maintainable, accessible, and aligned with current best practices in design system development.
