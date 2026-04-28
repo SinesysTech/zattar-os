@@ -83,7 +83,28 @@ export async function atualizarTarefa(usuarioId: number, input: UpdateTaskInput)
   const val = validate<UpdateTaskInput>(updateTaskSchema, input);
   if (!val.success) return err(val.error);
 
-  // TODO: Add source sync logic here if needed (port from todo/service.ts)
+  // Source sync logic
+  if (val.data.status) {
+    const taskResult = await repo.getTaskById(usuarioId, val.data.id);
+    if (taskResult.success && taskResult.data) {
+      const task = taskResult.data;
+      if (task.source && task.sourceEntityId && task.status !== val.data.status) {
+        const validSources = ["audiencias", "expedientes", "pericias", "obrigacoes"];
+        if (validSources.includes(task.source)) {
+          const syncResult = await atualizarStatusEntidadeOrigem({
+            source: task.source as any,
+            entityId: task.sourceEntityId,
+            novoStatus: val.data.status
+          }, usuarioId);
+
+          if (!syncResult.success) {
+            console.error(`Falha ao sincronizar status para ${task.source} ${task.sourceEntityId}:`, syncResult.error);
+            return err(appError("INTERNAL_ERROR", "Falha ao sincronizar status com a entidade de origem."));
+          }
+        }
+      }
+    }
+  }
 
   return repo.updateTask(usuarioId, val.data);
 }

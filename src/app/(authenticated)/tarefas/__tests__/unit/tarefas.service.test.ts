@@ -150,6 +150,8 @@ describe('Tarefas Service', () => {
     // =========================================================================
     describe('atualizarTarefa', () => {
         it('deve atualizar tarefa com sucesso', async () => {
+            (repository.getTaskById as jest.Mock).mockResolvedValue(ok({ ...mockTask }));
+
             (repository.updateTask as jest.Mock).mockResolvedValue(ok({ ...mockTask, title: 'Atualizada' }));
 
             const result = await service.atualizarTarefa(USUARIO_ID, { id: 'TASK-0001', title: 'Atualizada' });
@@ -159,6 +161,46 @@ describe('Tarefas Service', () => {
                 USUARIO_ID,
                 expect.objectContaining({ id: 'TASK-0001', title: 'Atualizada' })
             );
+        });
+
+        it('deve sincronizar status com entidade de origem se source e sourceEntityId estiverem presentes', async () => {
+            const taskComOrigem = {
+                ...mockTask,
+                source: 'audiencias',
+                sourceEntityId: '123'
+            };
+            (repository.getTaskById as jest.Mock).mockResolvedValue(ok(taskComOrigem));
+            (repository.updateTask as jest.Mock).mockResolvedValue(ok({ ...taskComOrigem, status: 'done' }));
+
+            const { atualizarStatusEntidadeOrigem } = require('@/lib/event-aggregation/service');
+
+            const result = await service.atualizarTarefa(USUARIO_ID, { id: 'TASK-0001', status: 'done' });
+
+            expect(result.success).toBe(true);
+            expect(atualizarStatusEntidadeOrigem).toHaveBeenCalledWith({
+                source: 'audiencias',
+                entityId: '123',
+                novoStatus: 'done'
+            }, USUARIO_ID);
+        });
+
+        it('deve falhar a atualização se a sincronização falhar', async () => {
+            const taskComOrigem = {
+                ...mockTask,
+                source: 'audiencias',
+                sourceEntityId: '123'
+            };
+            (repository.getTaskById as jest.Mock).mockResolvedValue(ok(taskComOrigem));
+
+            const { atualizarStatusEntidadeOrigem } = require('@/lib/event-aggregation/service');
+            (atualizarStatusEntidadeOrigem as jest.Mock).mockResolvedValueOnce(err(appError("INTERNAL_ERROR", "sync error")));
+
+            const result = await service.atualizarTarefa(USUARIO_ID, { id: 'TASK-0001', status: 'done' });
+
+            expect(result.success).toBe(false);
+            if (!result.success) {
+                expect(result.error.code).toBe('INTERNAL_ERROR');
+            }
         });
 
         it('deve retornar erro de validação para id vazio', async () => {
