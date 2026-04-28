@@ -23,6 +23,57 @@ const TABLE_EXPEDIENTES = "expedientes";
 const TABLE_ACERVO = "acervo";
 const TABLE_TIPOS_EXPEDIENTES = "tipos_expedientes";
 
+/**
+ * Colunas necessárias para listagem de expedientes (otimizado)
+ * Exclui campos grandes como dados_anteriores que não são necessários na listagem
+ */
+export const EXPEDIENTE_COLUMNS = `
+  id,
+  id_pje,
+  advogado_id,
+  processo_id,
+  trt,
+  grau,
+  numero_processo,
+  descricao_orgao_julgador,
+  classe_judicial,
+  numero,
+  segredo_justica,
+  codigo_status_processo,
+  prioridade_processual,
+  nome_parte_autora,
+  qtde_parte_autora,
+  nome_parte_re,
+  qtde_parte_re,
+  data_autuacao,
+  juizo_digital,
+  data_arquivamento,
+  id_documento,
+  data_ciencia_parte,
+  data_prazo_legal_parte,
+  data_criacao_expediente,
+  prazo_vencido,
+  sigla_orgao_julgador,
+  responsavel_id,
+  baixado_em,
+  protocolo_id,
+  justificativa_baixa,
+  tipo_expediente_id,
+  descricao_arquivos,
+  arquivo_nome,
+  arquivo_url,
+  arquivo_bucket,
+  arquivo_key,
+  observacoes,
+  origem,
+  created_at,
+  updated_at,
+  trt_origem,
+  nome_parte_autora_origem,
+  nome_parte_re_origem,
+  orgao_julgador_origem
+`.replace(/\s+/g, "");
+
 type ExpedienteRow = {
   id: number;
   id_pje: number | null;
@@ -118,7 +169,7 @@ function converterParaExpediente(data: ExpedienteRow | ExpedienteRowComOrigem): 
     dataCriacaoExpediente: data.data_criacao_expediente,
     prazoVencido: data.prazo_vencido,
     siglaOrgaoJulgador: data.sigla_orgao_julgador,
-    dadosAnteriores: data.dados_anteriores,
+    dadosAnteriores: (data as Partial<ExpedienteRow>).dados_anteriores ?? null,
     responsavelId: data.responsavel_id,
     baixadoEm: data.baixado_em,
     protocoloId: data.protocolo_id,
@@ -276,7 +327,8 @@ export async function findAllExpedientes(
     const offset = (pagina - 1) * limite;
 
     // Usar view com dados de origem (1º grau) para partes corretas
-    let query = db.from("expedientes_com_origem").select("*", { count: "exact" });
+    // Otimizado: seleciona apenas colunas necessárias para evitar sobrecarga (over-fetching)
+    let query = db.from("expedientes_com_origem").select(EXPEDIENTE_COLUMNS, { count: "exact" });
 
     if (params.busca) {
       query = query.or(
