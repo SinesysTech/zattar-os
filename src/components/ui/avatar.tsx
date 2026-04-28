@@ -102,6 +102,36 @@ function AvatarGroupCount({
   )
 }
 
+interface AvatarIndicatorProps extends React.ComponentProps<"span"> {
+  variant?: "online" | "away" | "offline" | "success";
+}
+
+function AvatarIndicator({
+  className,
+  variant = "offline",
+  ...props
+}: AvatarIndicatorProps) {
+  const variantStyles = {
+    online: "bg-green-500 border-green-600",
+    away: "bg-yellow-500 border-yellow-600",
+    offline: "bg-gray-400 border-gray-500",
+    success: "bg-blue-500 border-blue-600",
+  };
+
+  return (
+    <span
+      data-slot="avatar-indicator"
+      data-variant={variant}
+      className={cn(
+        "absolute bottom-0 right-0 z-10 flex items-center justify-center rounded-full border-2 size-3 group-data-[size=lg]/avatar:size-4 group-data-[size=sm]/avatar:size-2",
+        variantStyles[variant],
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
 export {
   Avatar,
   AvatarImage,
@@ -109,4 +139,5 @@ export {
   AvatarGroup,
   AvatarGroupCount,
   AvatarBadge,
+  AvatarIndicator,
 }

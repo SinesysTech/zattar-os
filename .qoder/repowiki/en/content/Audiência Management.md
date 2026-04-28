@@ -9,6 +9,10 @@
 - [audiencias-client.tsx](file://src/app/(authenticated)/audiencias/audiencias-client.tsx)
 - [audiencia-form.tsx](file://src/app/(authenticated)/audiencias/components/audiencia-form.tsx)
 - [audiencia-detail-dialog.tsx](file://src/app/(authenticated)/audiencias/components/audiencia-detail-dialog.tsx)
+- [nova-audiencia-dialog.tsx](file://src/app/(authenticated)/audiencias/components/nova-audiencia-dialog.tsx)
+- [editar-audiencia-dialog.tsx](file://src/app/(authenticated)/audiencias/components/editar-audiencia-dialog.tsx)
+- [audiencias-dia-dialog.tsx](file://src/app/(authenticated)/audiencias/components/audiencias-dia-dialog.tsx)
+- [audiencia-detail-dialog.tsx](file://src/app/(authenticated)/audiencias/components/audiencia-detail-dialog.tsx)
 - [audiencias-ultima-captura-card.tsx](file://src/app/(authenticated)/audiencias/components/audiencias-ultima-captura-card.tsx)
 - [mission-kpi-strip.tsx](file://src/app/(authenticated)/audiencias/components/mission-kpi-strip.tsx)
 - [audiencias-semana-view.tsx](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx)
@@ -33,15 +37,21 @@
 - [year-calendar-grid.tsx](file://src/components/shared/year-calendar-grid.tsx)
 - [tokens.ts](file://src/lib/design-system/tokens.ts)
 - [logs.txt](file://scripts/results/api-audiencias/logs.txt)
+- [dialog.tsx](file://src/components/ui/dialog.tsx)
+- [dialog-section.tsx](file://src/components/shared/dialog-shell/dialog-section.tsx)
+- [dialog-form-shell.test.tsx](file://src/components/shared/__tests__/dialog-form-shell.test.tsx)
+- [typography-fix.md](file://src/app/(authenticated)/audiencias/specs/typography-fix.md)
 </cite>
 
 ## Update Summary
 **Changes Made**
-- Enhanced Tabs component with new "week" variant for improved day-picker interfaces
-- Updated trigger styling for day navigation with enhanced visual feedback
-- Improved typography system compliance with new text-card-title and text-mono-num classes
-- Updated design system documentation for audiência components with enhanced trigger styling
-- Enhanced day picker interfaces with improved accessibility and visual hierarchy
+- Enhanced dialog components with proper semantic UI patterns (DialogHeader, DialogFooter, DialogDescription)
+- Added accessibility improvements with sr-only descriptions and proper ARIA attributes
+- Standardized dialog patterns across audiência management dialogs
+- Implemented consistent typography system with new variant classes (text-card-title, text-mono-num)
+- Improved dialog header structure with proper semantic markup and accessibility
+- Enhanced dialog footer patterns with standardized button layouts
+- Added comprehensive dialog section components for structured content organization
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -49,15 +59,16 @@
 3. [Core Components](#core-components)
 4. [Architecture Overview](#architecture-overview)
 5. [Detailed Component Analysis](#detailed-component-analysis)
-6. [Enhanced Typography System](#enhanced-typography-system)
-7. [Mission Control Interface Patterns](#mission-control-interface-patterns)
-8. [Enhanced Filtering System](#enhanced-filtering-system)
-9. [Enhanced Day Picker Interfaces](#enhanced-day-picker-interfaces)
-10. [Database Infrastructure Improvements](#database-infrastructure-improvements)
-11. [Dependency Analysis](#dependency-analysis)
-12. [Performance Considerations](#performance-considerations)
-13. [Troubleshooting Guide](#troubleshooting-guide)
-14. [Conclusion](#conclusion)
+6. [Enhanced Dialog Components](#enhanced-dialog-components)
+7. [Enhanced Typography System](#enhanced-typography-system)
+8. [Mission Control Interface Patterns](#mission-control-interface-patterns)
+9. [Enhanced Filtering System](#enhanced-filtering-system)
+10. [Enhanced Day Picker Interfaces](#enhanced-day-picker-interfaces)
+11. [Database Infrastructure Improvements](#database-infrastructure-improvements)
+12. [Dependency Analysis](#dependency-analysis)
+13. [Performance Considerations](#performance-considerations)
+14. [Troubleshooting Guide](#troubleshooting-guide)
+15. [Conclusion](#conclusion)
 
 ## Introduction
 
@@ -65,7 +76,7 @@ The Audiência Management system is a comprehensive court hearing scheduling pla
 
 The platform manages the complete lifecycle of court hearings, from initial scheduling through completion, while maintaining strict legal compliance requirements. It integrates advanced features including automated audiência data capture, intelligent resource allocation, and sophisticated participant management systems.
 
-**Updated** Enhanced with comprehensive design system compliance featuring new typography variant classes (text-card-title, text-mono-num), improved semantic structure with proper heading components, new badge systems for case flags, virtual room detection system, and observation system improvements. The audiências-glass-list.tsx, audiencias-missao-content.tsx, and audiencias-semana-view.tsx components now use the enhanced design system with consistent typography and semantic markup. Additionally, the Tabs component now includes a specialized "week" variant for enhanced day-picker interfaces with improved trigger styling and visual feedback.
+**Updated** Enhanced with comprehensive design system compliance featuring new typography variant classes (text-card-title, text-mono-num), improved semantic structure with proper heading components, new badge systems for case flags, virtual room detection system, and observation system improvements. The audiências-glass-list.tsx, audiencias-missao-content.tsx, audiencias-semana-view.tsx, audiencia-detail-dialog.tsx, nova-audiencia-dialog.tsx, and audiencias-dia-dialog.tsx components now use the enhanced design system with consistent typography and semantic markup. Additionally, the Tabs component now includes a specialized "week" variant for enhanced day-picker interfaces with improved trigger styling and visual feedback.
 
 ## Project Structure
 
@@ -92,6 +103,10 @@ ObservationSystem[Observation System]
 Tabs[Enhanced Tabs Component]
 WeekNavigator[Week Navigator]
 DayPicker[Day Picker Interfaces]
+DialogComponents[Enhanced Dialog Components]
+DialogHeaders[DialogHeader Components]
+DialogFooters[DialogFooter Components]
+DialogDescriptions[DialogDescription Components]
 end
 subgraph "Application Layer"
 Actions[Server Actions]
@@ -128,6 +143,10 @@ ObservationSystem --> Actions
 Tabs --> Actions
 WeekNavigator --> Actions
 DayPicker --> Actions
+DialogComponents --> Actions
+DialogHeaders --> Actions
+DialogFooters --> Actions
+DialogDescriptions --> Actions
 Actions --> Services
 Services --> Repository
 Repository --> Database
@@ -155,6 +174,9 @@ Calendar --> Outlook
 - [tabs.tsx:27-41](file://src/components/ui/tabs.tsx#L27-L41)
 - [week-navigator.tsx:181-221](file://src/components/shared/week-navigator.tsx#L181-L221)
 - [week-days-carousel.tsx:180-274](file://src/components/shared/week-days-carousel.tsx#L180-L274)
+- [audiencia-detail-dialog.tsx:626-648](file://src/app/(authenticated)/audiencias/components/audiencia-detail-dialog.tsx#L626-L648)
+- [nova-audiencia-dialog.tsx:435-455](file://src/app/(authenticated)/audiencias/components/nova-audiencia-dialog.tsx#L435-L455)
+- [audiencias-dia-dialog.tsx:260-327](file://src/app/(authenticated)/audiencias/components/audiencias-dia-dialog.tsx#L260-L327)
 
 **Section sources**
 - [audiencias-client.tsx:1-431](file://src/app/(authenticated)/audiencias/audiencias-client.tsx#L1-L431)
@@ -295,6 +317,28 @@ class AudienciaDetailDialog {
 +handleSaveUrl()
 +handleSaveEndereco()
 }
+class NovaAudienciaDialog {
++open : boolean
++onClose : function
++handleSubmit()
++validateForm()
+}
+class EditarAudienciaDialog {
++open : boolean
++audiencia : Audiencia
++onSuccess : function
++handleSubmit()
++validateForm()
+}
+class AudienciasDiaDialog {
++open : boolean
++data : Date
++audienciaAtual : Audiencia
++currentIndex : number
++total : number
++handlePrevious()
++handleNext()
+}
 class AudienciasUltimaCapturaCard {
 +resumo : ResumoUltimaCapturaAudiencias
 +isLoading : boolean
@@ -377,6 +421,9 @@ class Domain {
 }
 AudienciasClient --> AudienciaForm : "opens"
 AudienciasClient --> AudienciaDetailDialog : "opens"
+AudienciasClient --> NovaAudienciaDialog : "opens"
+AudienciasClient --> EditarAudienciaDialog : "opens"
+AudienciasClient --> AudienciasDiaDialog : "opens"
 AudienciasClient --> AudienciasUltimaCapturaCard : "renders"
 AudienciasClient --> AudienciasFilterBar : "renders"
 AudienciasClient --> CountBadge : "uses"
@@ -388,6 +435,9 @@ AudienciasClient --> WeekNavigator : "uses"
 AudienciasClient --> WeekDaysCarousel : "uses"
 AudienciaForm --> Domain : "uses"
 AudienciaDetailDialog --> Domain : "uses"
+NovaAudienciaDialog --> Domain : "uses"
+EditarAudienciaDialog --> Domain : "uses"
+AudienciasDiaDialog --> Domain : "uses"
 AudienciasFilterBar --> CountBadge : "uses"
 AudienciasGlassList --> TypographySystem : "uses"
 AudienciasGlassList --> BadgeSystems : "uses"
@@ -404,6 +454,9 @@ WeekDaysCarousel --> TypographySystem : "uses"
 - [audiencias-client.tsx:93-431](file://src/app/(authenticated)/audiencias/audiencias-client.tsx#L93-L431)
 - [audiencia-form.tsx:91-495](file://src/app/(authenticated)/audiencias/components/audiencia-form.tsx#L91-L495)
 - [audiencia-detail-dialog.tsx:114-800](file://src/app/(authenticated)/audiencias/components/audiencia-detail-dialog.tsx#L114-L800)
+- [nova-audiencia-dialog.tsx:91-495](file://src/app/(authenticated)/audiencias/components/nova-audiencia-dialog.tsx#L91-L495)
+- [editar-audiencia-dialog.tsx:91-495](file://src/app/(authenticated)/audiencias/components/editar-audiencia-dialog.tsx#L91-L495)
+- [audiencias-dia-dialog.tsx:91-495](file://src/app/(authenticated)/audiencias/components/audiencias-dia-dialog.tsx#L91-L495)
 - [audiencias-ultima-captura-card.tsx:75-168](file://src/app/(authenticated)/audiencias/components/audiencias-ultima-captura-card.tsx#L75-L168)
 - [audiencias-filter-bar.tsx:112-137](file://src/app/(authenticated)/audiencias/components/audiencias-filter-bar.tsx#L112-L137)
 - [semantic-badge.tsx:200-219](file://src/components/ui/semantic-badge.tsx#L200-L219)
@@ -423,6 +476,9 @@ WeekDaysCarousel --> TypographySystem : "uses"
 - [audiencias-actions.ts:1-498](file://src/app/(authenticated)/audiencias/actions/audiencias-actions.ts#L1-L498)
 - [audiencia-form.tsx:1-495](file://src/app/(authenticated)/audiencias/components/audiencia-form.tsx#L1-L495)
 - [audiencia-detail-dialog.tsx:1-800](file://src/app/(authenticated)/audiencias/components/audiencia-detail-dialog.tsx#L1-L800)
+- [nova-audiencia-dialog.tsx:1-495](file://src/app/(authenticated)/audiencias/components/nova-audiencia-dialog.tsx#L1-L495)
+- [editar-audiencia-dialog.tsx:1-873](file://src/app/(authenticated)/audiencias/components/editar-audiencia-dialog.tsx#L1-L873)
+- [audiencias-dia-dialog.tsx:1-327](file://src/app/(authenticated)/audiencias/components/audiencias-dia-dialog.tsx#L1-L327)
 - [audiencias-ultima-captura-card.tsx:1-168](file://src/app/(authenticated)/audiencias/components/audiencias-ultima-captura-card.tsx#L1-L168)
 - [audiencias-filter-bar.tsx:1-200](file://src/app/(authenticated)/audiencias/components/audiencias-filter-bar.tsx#L1-L200)
 - [semantic-badge.tsx:1-220](file://src/components/ui/semantic-badge.tsx#L1-L220)
@@ -455,6 +511,10 @@ A10[Observation System]
 A11[Enhanced Tabs Component]
 A12[Week Navigator]
 A13[Day Picker Interfaces]
+A14[Enhanced Dialog Components]
+A15[DialogHeader Components]
+A16[DialogFooter Components]
+A17[DialogDescription Components]
 end
 subgraph "Business Logic Layer"
 B1[Service Layer]
@@ -503,6 +563,9 @@ D1 --> D4
 - [tabs.tsx:27-41](file://src/components/ui/tabs.tsx#L27-L41)
 - [week-navigator.tsx:181-221](file://src/components/shared/week-navigator.tsx#L181-L221)
 - [week-days-carousel.tsx:180-274](file://src/components/shared/week-days-carousel.tsx#L180-L274)
+- [audiencia-detail-dialog.tsx:626-648](file://src/app/(authenticated)/audiencias/components/audiencia-detail-dialog.tsx#L626-L648)
+- [nova-audiencia-dialog.tsx:435-455](file://src/app/(authenticated)/audiencias/components/nova-audiencia-dialog.tsx#L435-L455)
+- [audiencias-dia-dialog.tsx:260-327](file://src/app/(authenticated)/audiencias/components/audiencias-dia-dialog.tsx#L260-L327)
 
 ### Calendar Integration Architecture
 
@@ -734,6 +797,199 @@ CL --> RL
 - [audiencias-ultima-captura-card.tsx:1-168](file://src/app/(authenticated)/audiencias/components/audiencias-ultima-captura-card.tsx#L1-L168)
 - [repository.ts:799-820](file://src/app/(authenticated)/audiencias/repository.ts#L799-L820)
 
+## Enhanced Dialog Components
+
+**Updated** The audiência management system now features enhanced dialog components with proper semantic UI patterns and comprehensive accessibility improvements.
+
+### Dialog Component Architecture
+
+The system implements a comprehensive dialog component architecture with standardized patterns across all audiência management interfaces:
+
+```mermaid
+graph TB
+subgraph "Dialog Component System"
+DC[Dialog Root]
+DH[DialogHeader]
+DT[DialogTitle]
+DD[DialogDescription]
+DF[DialogFooter]
+DContent[DialogContent]
+end
+subgraph "Audiência Dialogs"
+ADD[AudienciaDetailDialog]
+NAD[NovaAudienciaDialog]
+EAD[EditarAudienciaDialog]
+ADD2[AudienciasDiaDialog]
+end
+subgraph "Accessibility Features"
+SR[Screen Reader Support]
+ARIA[ARIA Attributes]
+TAB[Tab Navigation]
+end
+subgraph "Typography Integration"
+TC[Text Components]
+HC[Heading Components]
+TV[Typography Variants]
+end
+DC --> DH
+DH --> DT
+DH --> DD
+DC --> DF
+DContent --> SR
+SR --> ARIA
+ARIA --> TAB
+DContent --> TC
+TC --> HC
+HC --> TV
+ADD --> DC
+NAD --> DC
+EAD --> DC
+ADD2 --> DC
+```
+
+**Diagram sources**
+- [audiencia-detail-dialog.tsx:626-648](file://src/app/(authenticated)/audiencias/components/audiencia-detail-dialog.tsx#L626-L648)
+- [nova-audiencia-dialog.tsx:435-455](file://src/app/(authenticated)/audiencias/components/nova-audiencia-dialog.tsx#L435-L455)
+- [editar-audiencia-dialog.tsx:483-496](file://src/app/(authenticated)/audiencias/components/editar-audiencia-dialog.tsx#L483-L496)
+- [audiencias-dia-dialog.tsx:260-327](file://src/app/(authenticated)/audiencias/components/audiencias-dia-dialog.tsx#L260-L327)
+- [dialog.tsx:231-298](file://src/components/ui/dialog.tsx#L231-L298)
+- [typography.tsx:1-83](file://src/components/ui/typography.tsx#L1-L83)
+
+### DialogHeader Implementation
+
+The DialogHeader component provides standardized header structure with proper semantic markup and accessibility features:
+
+```mermaid
+flowchart TD
+subgraph "DialogHeader Structure"
+DH[DialogHeader]
+DT[DialogTitle]
+DD[DialogDescription]
+BTN[Close Button]
+END
+end
+subgraph "Accessibility Features"
+SR[Screen Reader Only]
+ARIA[ARIA Attributes]
+ROLE[Role Assignment]
+END
+DH --> DT
+DH --> DD
+DH --> BTN
+DD --> SR
+DT --> ARIA
+BTN --> ROLE
+```
+
+**Diagram sources**
+- [audiencia-detail-dialog.tsx:640-656](file://src/app/(authenticated)/audiencias/components/audiencia-detail-dialog.tsx#L640-L656)
+- [nova-audiencia-dialog.tsx:442-445](file://src/app/(authenticated)/audiencias/components/nova-audiencia-dialog.tsx#L442-L445)
+- [audiencias-dia-dialog.tsx:263-305](file://src/app/(authenticated)/audiencias/components/audiencias-dia-dialog.tsx#L263-L305)
+
+### DialogDescription Implementation
+
+The DialogDescription component provides screen reader accessibility with proper semantic structure:
+
+```mermaid
+flowchart TD
+subgraph "DialogDescription Usage"
+DD[DialogDescription]
+SR[Screen Reader Only]
+ACCESS[Accessibility Support]
+END
+subgraph "Implementation Examples"
+ADD[Detalhes da audiência]
+NAD[Nova audiência description]
+ADD2[Audiências do dia]
+END
+DD --> SR
+SR --> ACCESS
+ADD --> DD
+NAD --> DD
+ADD2 --> DD
+```
+
+**Diagram sources**
+- [audiencia-detail-dialog.tsx:638](file://src/app/(authenticated)/audiencias/components/audiencia-detail-dialog.tsx#L638)
+- [nova-audiencia-dialog.tsx:444](file://src/app/(authenticated)/audiencias/components/nova-audiencia-dialog.tsx#L444)
+- [audiencias-dia-dialog.tsx:263](file://src/app/(authenticated)/audiencias/components/audiencias-dia-dialog.tsx#L263)
+
+### DialogFooter Implementation
+
+The DialogFooter component provides standardized footer structure with proper button layouts:
+
+```mermaid
+flowchart TD
+subgraph "DialogFooter Structure"
+DF[DialogFooter]
+BTN[Action Buttons]
+CLOSE[Close Button]
+END
+subgraph "Button Patterns"
+SAVE[Save Button]
+CANCEL[Cancel Button]
+PREV[Previous Button]
+NEXT[Next Button]
+END
+DF --> BTN
+BTN --> CLOSE
+CLOSE --> SAVE
+SAVE --> PREV
+PREV --> NEXT
+```
+
+**Diagram sources**
+- [audiencias-dia-dialog.tsx:318-322](file://src/app/(authenticated)/audiencias/components/audiencias-dia-dialog.tsx#L318-L322)
+
+### Enhanced Dialog Components
+
+**Updated** All audiência dialog components now use the enhanced dialog patterns with proper semantic UI structure:
+
+| Component | DialogHeader | DialogDescription | DialogFooter | Accessibility Features |
+|-----------|--------------|-------------------|--------------|----------------------|
+| AudienciaDetailDialog | ✅ Proper Header | ✅ Screen Reader Only | ✅ Close Button | ✅ ARIA Labels, Keyboard Nav |
+| NovaAudienciaDialog | ✅ Proper Header | ✅ Form Description | ✅ Save Button | ✅ Form Validation, Focus Management |
+| EditarAudienciaDialog | ✅ Proper Header | ✅ Captured Status Description | ✅ Save Button | ✅ Captured Status, Focus Management |
+| AudienciasDiaDialog | ✅ Proper Header | ✅ Screen Reader Only | ✅ Close Button | ✅ Navigation Controls, Keyboard Nav |
+
+### Dialog Section Components
+
+**Updated** New dialog section components provide structured content organization with proper semantic markup:
+
+```mermaid
+flowchart TD
+subgraph "DialogSection Components"
+DS[DialogSection]
+TITLE[Section Title]
+DESC[Section Description]
+ICON[Section Icon]
+STEP[Step Badge]
+END
+subgraph "Usage Patterns"
+SECTION1[Form Sections]
+SECTION2[Detail Sections]
+SECTION3[Wizard Steps]
+END
+DS --> TITLE
+DS --> DESC
+DS --> ICON
+DS --> STEP
+SECTION1 --> DS
+SECTION2 --> DS
+SECTION3 --> DS
+```
+
+**Diagram sources**
+- [dialog-section.tsx:10-47](file://src/components/shared/dialog-shell/dialog-section.tsx#L10-L47)
+
+**Section sources**
+- [audiencia-detail-dialog.tsx:626-819](file://src/app/(authenticated)/audiencias/components/audiencia-detail-dialog.tsx#L626-L819)
+- [nova-audiencia-dialog.tsx:435-629](file://src/app/(authenticated)/audiencias/components/nova-audiencia-dialog.tsx#L435-L629)
+- [editar-audiencia-dialog.tsx:483-549](file://src/app/(authenticated)/audiencias/components/editar-audiencia-dialog.tsx#L483-L549)
+- [audiencias-dia-dialog.tsx:260-327](file://src/app/(authenticated)/audiencias/components/audiencias-dia-dialog.tsx#L260-L327)
+- [dialog.tsx:231-298](file://src/components/ui/dialog.tsx#L231-L298)
+- [dialog-section.tsx:1-134](file://src/components/shared/dialog-shell/dialog-section.tsx#L1-L134)
+
 ## Enhanced Typography System
 
 **Updated** The audiências components have been enhanced with comprehensive design system compliance, featuring new typography variant classes (text-card-title, text-mono-num), improved semantic structure with proper heading components, and enhanced badge systems for case flags.
@@ -750,7 +1006,7 @@ H[Heading Components]
 T[Text Components]
 TV[Text Variants]
 HL[Heading Levels]
-end
+END
 subgraph "Audiência Components"
 MK[MissionKpiStrip]
 ASV[AudienciasSemanaView]
@@ -759,7 +1015,7 @@ AGL[AudienciasGlassList]
 AC[AudienciasUltimaCapturaCard]
 AB[CountBadge]
 AK[Accessibility]
-end
+END
 TS --> H
 TS --> T
 T --> TV
@@ -807,7 +1063,7 @@ TV3[text-kpi-value]
 TV4[text-micro-badge]
 TV5[text-meta-label]
 TV6[text-micro-caption]
-end
+END
 subgraph "Component Implementation"
 MK1[MissionKpiStrip]
 ASV1[AudienciasSemanaView]
@@ -815,7 +1071,7 @@ AMC1[AudienciasMissaoContent]
 AGL1[AudienciasGlassList]
 AC1[AudienciasUltimaCapturaCard]
 CB1[CountBadge]
-end
+END
 TV1 --> MK1
 TV2 --> ASV1
 TV3 --> AMC1
@@ -845,6 +1101,7 @@ The components now implement proper semantic HTML structure with accessible head
 | AudienciasGlassList | `<h3>`, `<p>`, `<span>` elements | Proper heading levels, ARIA labels, focus management |
 | WeekDayCard | `<button>`, `<div>` with role attributes | Clickable semantics, keyboard activation, focus indicators |
 | CountBadge | `<span>` with proper semantic context | Numeric formatting, tabular numbers, consistent sizing |
+| Dialog Components | `<DialogHeader>`, `<DialogTitle>`, `<DialogDescription>` | Proper dialog structure, screen reader support |
 
 **Section sources**
 - [typography.tsx:1-205](file://src/components/ui/typography.tsx#L1-L205)
@@ -873,14 +1130,14 @@ LC[AudienciasUltimaCapturaCard]
 IB[InsightBanner]
 VC[View Controls]
 CT[Content Area]
-end
+END
 subgraph "View Modes"
 QD[AudienciasMissaoContent]
 SW[AudienciasSemanaView]
 MS[AudienciasMesView]
 YR[AudienciasAnoView]
 LS[AudienciasListaView]
-end
+END
 MC --> HD
 MC --> KPI
 MC --> LC
@@ -955,12 +1212,12 @@ GO[Grau Options]
 G1[Primeiro Grau]
 G2[Segundo Grau]
 G3[Tribunal Superior]
-end
+END
 subgraph "Filter Logic"
 FL[Filter Toggle]
 FC[Filter Change Handler]
 FR[Filter Result]
-end
+END
 GF --> GO
 GO --> G1
 GO --> G2
@@ -986,12 +1243,12 @@ TO[Tipo Options]
 T1[Virtual]
 T2[Presencial]
 T3[Híbrida]
-end
+END
 subgraph "Filter Logic"
 FT[Type Filter]
 FH[Type Handler]
 FR[Type Result]
-end
+END
 TF --> TO
 TO --> T1
 TO --> T2
@@ -1015,12 +1272,12 @@ CB[CountBadge Component]
 CT[Count Text]
 CS[Count Size]
 CE[Count Effect]
-end
+END
 subgraph "Filter Integration"
 FT[Filter Tabs]
 FC[Filter Counts]
 FE[Filter Effects]
-end
+END
 CB --> CT
 CB --> CS
 CB --> CE
@@ -1055,14 +1312,14 @@ TV[Variant System]
 WD[Week Variant]
 DW[Default Variant]
 LV[Line Variant]
-end
+END
 subgraph "Week Variant Features"
 WW[Full Width Container]
 WT[Compact Trigger Styling]
 WC[Tabular Number Display]
 WL[Low Preparation Indicators]
 WV[Visual Feedback States]
-end
+END
 TV --> WD
 TV --> DW
 TV --> LV
@@ -1102,7 +1359,7 @@ SS[State Styles]
 FS[Focus Styles]
 VS[Visual Feedback]
 AS[Accessibility]
-end
+END
 subgraph "State Styles"
 IS[Inactive State]
 HS[Hover State]
@@ -1110,20 +1367,20 @@ SS --> IS
 SS --> HS
 IS --> `hover:bg-muted text-muted-foreground`
 HS --> `hover:bg-primary/10 text-primary ring-1 ring-primary/20`
-end
+END
 subgraph "Focus Styles"
 FS --> `focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1`
-end
+END
 subgraph "Visual Feedback"
 VS --> `min-w-12 py-1.5 px-2 gap-0`
 VS --> `text-[10px] uppercase tracking-wide`
 VS --> `text-base font-semibold leading-tight`
-end
+END
 subgraph "Accessibility"
 AS --> `role="tab"`
 AS --> `aria-selected={day.isSelected}`
 AS --> `tabIndex={day.isSelected ? 0 : -1}`
-end
+END
 TS --> SS
 TS --> FS
 TS --> VS
@@ -1239,13 +1496,13 @@ AV[audiencias_com_origem View]
 AC[Select Columns]
 AD[With Clause]
 AE[Left Join]
-end
+END
 subgraph "Enhanced Columns"
 UC[ultima_captura_id]
 TR[trt_origem]
 PA[nome_parte_autora]
 PP[nome_parte_re]
-end
+END
 AV --> AC
 AC --> AD
 AC --> AE
@@ -1307,7 +1564,12 @@ U[Week Navigator]
 V[Day Picker Interfaces]
 W[Typography Tokens]
 X[Design System Tokens]
-end
+Y[Dialog Components]
+Z[DialogHeader Components]
+AA[DialogFooter Components]
+BB[DialogDescription Components]
+CC[DialogSection Components]
+END
 subgraph "UI Dependencies"
 F --> G
 H --> I
@@ -1321,19 +1583,23 @@ T --> U
 U --> V
 V --> W
 W --> X
-end
+Y --> Z
+Z --> AA
+AA --> BB
+BB --> CC
+END
 subgraph "Data Dependencies"
 Q --> O
 R --> P
 S --> N
-end
+END
 subgraph "External Dependencies"
 Y[PJE-TRT APIs]
 Z[Google Calendar API]
 AA[Outlook Calendar API]
 BB[Authentication Providers]
 CC[Capture System APIs]
-end
+END
 A --> B
 A --> C
 A --> D
@@ -1364,6 +1630,11 @@ E --> U
 E --> V
 E --> W
 E --> X
+E --> Y
+E --> Z
+E --> AA
+E --> BB
+E --> CC
 ```
 
 **Diagram sources**
@@ -1381,6 +1652,10 @@ E --> X
 - [week-navigator.tsx:181-221](file://src/components/shared/week-navigator.tsx#L181-L221)
 - [week-days-carousel.tsx:180-274](file://src/components/shared/week-days-carousel.tsx#L180-L274)
 - [tokens.ts:543-569](file://src/lib/design-system/tokens.ts#L543-L569)
+- [audiencia-detail-dialog.tsx:626-648](file://src/app/(authenticated)/audiencias/components/audiencia-detail-dialog.tsx#L626-L648)
+- [nova-audiencia-dialog.tsx:435-455](file://src/app/(authenticated)/audiencias/components/nova-audiencia-dialog.tsx#L435-L455)
+- [audiencias-dia-dialog.tsx:260-327](file://src/app/(authenticated)/audiencias/components/audiencias-dia-dialog.tsx#L260-L327)
+- [dialog-section.tsx:10-47](file://src/components/shared/dialog-shell/dialog-section.tsx#L10-L47)
 
 ### Authorization and Permission System
 
@@ -1459,17 +1734,32 @@ The system implements several performance optimization strategies:
 - **Accessibility Performance**: Proper ARIA attributes and keyboard navigation without performance impact
 - **Responsive Design**: Optimized responsive breakpoints for different screen sizes
 
+### Enhanced Dialog Components Performance
+
+**Updated** The enhanced dialog components include specific performance optimizations:
+
+- **DialogHeader Performance**: Efficient header rendering with proper semantic structure
+- **DialogDescription Performance**: Screen reader optimization with minimal DOM overhead
+- **DialogFooter Performance**: Button layout optimization with proper accessibility
+- **Typography Integration**: Efficient use of new text-card-title and text-mono-num classes
+- **Badge System Optimization**: Proper semantic badge usage reduces custom styling overhead
+- **Virtual Room Detection**: Optimized virtual room detection logic with early returns
+- **Observation System**: Efficient observation editing with controlled state updates
+- **Responsive Design**: Optimized responsive breakpoints for different screen sizes
+- **Accessibility Performance**: Proper ARIA implementation without performance degradation
+
 #### New Component Performance Considerations
 
-**Updated** The audiências-glass-list.tsx, audiencias-missao-content.tsx, audiencias-semana-view.tsx, tabs.tsx, week-navigator.tsx, and week-days-carousel.tsx components include specific performance optimizations:
+**Updated** The audiências-glass-list.tsx, audiencias-missao-content.tsx, audiencias-semana-view.tsx, tabs.tsx, week-navigator.tsx, week-days-carousel.tsx, audiencia-detail-dialog.tsx, nova-audiencia-dialog.tsx, and audiencias-dia-dialog.tsx components include specific performance optimizations:
 
-- **Typography System Integration**: Efficient use of new text-card-title and text-mono-num classes
+- **Typography System Integration**: Efficient use of new text-card-title, text-mono-num, and enhanced typography components
 - **Badge System Optimization**: Proper semantic badge usage reduces custom styling overhead
 - **Virtual Room Detection**: Optimized virtual room detection logic with early returns
 - **Observation System**: Efficient observation editing with controlled state updates
 - **Responsive Design**: Optimized responsive breakpoints for different screen sizes
 - **Tabs Component Optimization**: Efficient variant switching and trigger styling
 - **Day Picker Performance**: Optimized day selection with minimal re-renders
+- **Dialog Components Performance**: Efficient dialog rendering with proper semantic structure
 - **Accessibility Performance**: Proper ARIA implementation without performance degradation
 
 **Section sources**
@@ -1482,6 +1772,9 @@ The system implements several performance optimization strategies:
 - [tabs.tsx:27-41](file://src/components/ui/tabs.tsx#L27-L41)
 - [week-navigator.tsx:181-221](file://src/components/shared/week-navigator.tsx#L181-L221)
 - [week-days-carousel.tsx:180-274](file://src/components/shared/week-days-carousel.tsx#L180-L274)
+- [audiencia-detail-dialog.tsx:626-648](file://src/app/(authenticated)/audiencias/components/audiencia-detail-dialog.tsx#L626-L648)
+- [nova-audiencia-dialog.tsx:435-455](file://src/app/(authenticated)/audiencias/components/nova-audiencia-dialog.tsx#L435-L455)
+- [audiencias-dia-dialog.tsx:260-327](file://src/app/(authenticated)/audiencias/components/audiencias-dia-dialog.tsx#L260-L327)
 
 ## Troubleshooting Guide
 
@@ -1527,8 +1820,13 @@ The system implements several performance optimization strategies:
 - **Cause**: State management or action handler problems
 - **Solution**: Check observation state updates and action dispatching
 
+#### Enhanced Dialog Components Issues
+- **Issue**: Dialog components not rendering properly or lacking accessibility
+- **Cause**: Missing DialogHeader, DialogFooter, or DialogDescription components
+- **Solution**: Ensure proper dialog structure with semantic components and ARIA attributes
+
 #### Enhanced Component Issues
-- **Issue**: AudienciasGlassList, AudienciasMissaoContent, AudienciasSemanaView, tabs.tsx, week-navigator.tsx, or week-days-carousel.tsx not rendering correctly
+- **Issue**: AudienciasGlassList, AudienciasMissaoContent, AudienciasSemanaView, tabs.tsx, week-navigator.tsx, week-days-carousel.tsx, audiencia-detail-dialog.tsx, nova-audiencia-dialog.tsx, or audiencias-dia-dialog.tsx not rendering correctly
 - **Cause**: Missing typography classes or badge system integration
 - **Solution**: Ensure proper use of text-card-title, text-mono-num, and enhanced badge components
 
@@ -1567,6 +1865,11 @@ The system implements several performance optimization strategies:
 - **Cause**: Missing accessibility attributes or styling conflicts
 - **Solution**: Verify proper ARIA attributes, role assignments, and trigger styling
 
+#### Dialog Section Components Issues
+- **Issue**: DialogSection components not rendering properly
+- **Cause**: Missing title, description, or icon props
+- **Solution**: Ensure proper DialogSection usage with required props and tone variants
+
 **Section sources**
 - [audiencias-actions.ts:106-116](file://src/app/(authenticated)/audiencias/actions/audiencias-actions.ts#L106-L116)
 - [service.ts:53-62](file://src/app/(authenticated)/audiencias/service.ts#L53-L62)
@@ -1578,12 +1881,16 @@ The system implements several performance optimization strategies:
 - [tabs.tsx:27-41](file://src/components/ui/tabs.tsx#L27-L41)
 - [week-navigator.tsx:181-221](file://src/components/shared/week-navigator.tsx#L181-L221)
 - [week-days-carousel.tsx:180-274](file://src/components/shared/week-days-carousel.tsx#L180-L274)
+- [audiencia-detail-dialog.tsx:626-648](file://src/app/(authenticated)/audiencias/components/audiencia-detail-dialog.tsx#L626-L648)
+- [nova-audiencia-dialog.tsx:435-455](file://src/app/(authenticated)/audiencias/components/nova-audiencia-dialog.tsx#L435-L455)
+- [audiencias-dia-dialog.tsx:260-327](file://src/app/(authenticated)/audiencias/components/audiencias-dia-dialog.tsx#L260-L327)
+- [dialog-section.tsx:10-47](file://src/components/shared/dialog-shell/dialog-section.tsx#L10-L47)
 
 ## Conclusion
 
 The Audiência Management system represents a comprehensive solution for court hearing scheduling and management within the Brazilian judicial system. The system successfully combines modern web technologies with legal compliance requirements to provide an intuitive, efficient, and reliable platform for legal professionals.
 
-**Updated** Key enhancements include comprehensive design system compliance with new typography variant classes (text-card-title, text-mono-num), improved semantic structure with proper heading components, new badge systems for case flags, virtual room detection system, observation system improvements, and enhanced day picker interfaces with a specialized "week" variant for the Tabs component. The audiências-glass-list.tsx, audiencias-missao-content.tsx, audiencias-semana-view.tsx, tabs.tsx, week-navigator.tsx, and week-days-carousel.tsx components now use the enhanced design system with consistent typography, semantic markup, and improved trigger styling throughout.
+**Updated** Key enhancements include comprehensive design system compliance with new typography variant classes (text-card-title, text-mono-num), improved semantic structure with proper heading components, new badge systems for case flags, virtual room detection system, observation system improvements, enhanced day picker interfaces with a specialized "week" variant for the Tabs component, and comprehensive dialog component architecture with proper semantic UI patterns. The audiências-glass-list.tsx, audiencias-missao-content.tsx, audiencias-semana-view.tsx, tabs.tsx, week-navigator.tsx, week-days-carousel.tsx, audiencia-detail-dialog.tsx, nova-audiencia-dialog.tsx, audiencias-dia-dialog.tsx, and dialog-section.tsx components now use the enhanced design system with consistent typography, semantic markup, and improved trigger styling throughout.
 
 Key strengths of the system include:
 
@@ -1603,12 +1910,17 @@ Key strengths of the system include:
 - **Virtual Room Detection**: Intelligent virtual room detection system improves audiência management
 - **Observation System**: Structured observation editing with proper state management
 - **Enhanced Day Picker Interfaces**: Specialized "week" variant for Tabs component with improved trigger styling and accessibility
-- **Accessibility Improvements**: Comprehensive ARIA support and keyboard navigation for all day picker interfaces
+- **Comprehensive Dialog Architecture**: Proper semantic UI patterns with DialogHeader, DialogFooter, and DialogDescription components
+- **Accessibility Improvements**: Comprehensive ARIA support and keyboard navigation for all dialog components
+- **Dialog Section Components**: Structured content organization with proper semantic markup and accessibility
+- **Dialog Form Shell Integration**: Consistent dialog patterns across all audiência management interfaces
 
-The system provides a solid foundation for managing court hearings while maintaining the highest standards of legal accuracy, design system compliance, and user experience. Its modular architecture ensures maintainability and extensibility for future enhancements and regulatory changes. The addition of mission control patterns, enhanced filtering capabilities, comprehensive design system documentation, critical field mapping bug fixes, new typography variant classes, enhanced day picker interfaces, and improved accessibility establishes the audiências module as a model for other legal process management interfaces within the ZattarOS ecosystem.
+The system provides a solid foundation for managing court hearings while maintaining the highest standards of legal accuracy, design system compliance, and user experience. Its modular architecture ensures maintainability and extensibility for future enhancements and regulatory changes. The addition of mission control patterns, enhanced filtering capabilities, comprehensive design system documentation, critical field mapping bug fixes, new typography variant classes, enhanced day picker interfaces, comprehensive dialog architecture, and improved accessibility establishes the audiências module as a model for other legal process management interfaces within the ZattarOS ecosystem.
 
 The new CountBadge component ensures consistent numeric display across all audiência interfaces, while the enhanced filtering system with GrauTribunal and TipoAudiencia support provides more precise audiência discovery and management capabilities. The improved database infrastructure with ultima_captura_id tracking enables better auditability and capture operation traceability, making the system more robust and maintainable for long-term operation. The critical field mapping bug fixes ensure that legal party names are correctly represented throughout the system, maintaining data integrity and legal compliance standards.
 
 The enhanced typography system with new variant classes (text-card-title, text-mono-num) provides consistent visual hierarchy and improved readability across all audiência components. The improved badge systems with proper case flag management and virtual room detection system enhance the overall user experience and provide better visual cues for audiência status and location. The observation system improvements with structured editing capabilities ensure that audiência notes are properly managed and accessible to authorized users.
 
 The new "week" variant for the Tabs component provides specialized styling for day-picker interfaces, offering improved visual feedback and accessibility for audiência scheduling. The enhanced trigger styling ensures consistent user experience across different day picker components, while the comprehensive accessibility improvements make the system usable for all users. The improved day picker interfaces with proper ARIA support and keyboard navigation provide a professional-grade user experience for audiência management.
+
+The comprehensive dialog component architecture with proper semantic UI patterns ensures consistent user experience across all audiência management interfaces. The DialogHeader, DialogFooter, and DialogDescription components provide proper semantic structure and accessibility support, while the DialogSection components enable structured content organization with proper semantic markup. These enhancements establish the audiência management system as a comprehensive, accessible, and legally compliant platform for court hearing scheduling and management.

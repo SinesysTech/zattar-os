@@ -27,16 +27,21 @@
 - [errors.ts](file://src/shared/partes/errors.ts)
 - [partes-form-actions.ts](file://src/app/(authenticated)/partes/actions/partes-form-actions.ts)
 - [MASTER.md](file://design-system/zattaros/MASTER.md)
+- [obrigacao-detalhes-dialog.tsx](file://src/app/(authenticated)/obrigacoes/components/dialogs/obrigacao-detalhes-dialog.tsx)
+- [nova-obrigacao-dialog.tsx](file://src/app/(authenticated)/obrigacoes/components/dialogs/nova-obrigacao-dialog.tsx)
+- [promover-transitoria-dialog.tsx](file://src/app/(authenticated)/partes/components/partes-contrarias/promover-transitoria-dialog.tsx)
+- [cliente-form.tsx](file://src/app/(authenticated)/partes/components/clientes/cliente-form.tsx)
+- [dialog.tsx](file://src/components/ui/dialog.tsx)
 </cite>
 
 ## Update Summary
 **Changes Made**
-- Enhanced error handling capabilities in capture system with conflict detection for concurrent operations
-- Improved error categorization with structured error types and semantic codes
-- Added distributed locking mechanism for concurrent operation protection
-- Implemented comprehensive logging system for capture operations with conflict tracking
-- Enhanced UI error handling with automatic version mismatch detection and recovery
-- Improved visual hierarchy and professional UI standards in design system
+- Enhanced dialog components across legal process management modules with improved accessibility and semantic HTML structure
+- Updated obrigacoes module with proper dialog patterns including inline editing and status management
+- Updated partes module with comprehensive dialog patterns for partie management and promotion workflows
+- Implemented standardized dialog shell components with proper focus management and keyboard navigation
+- Added semantic labeling and screen reader support throughout dialog interfaces
+- Enhanced dialog density and spacing patterns for better visual hierarchy
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -44,15 +49,16 @@
 3. [Core Components](#core-components)
 4. [Architecture Overview](#architecture-overview)
 5. [Detailed Component Analysis](#detailed-component-analysis)
-6. [Enhanced Error Handling System](#enhanced-error-handling-system)
-7. [Dependency Analysis](#dependency-analysis)
-8. [Performance Considerations](#performance-considerations)
-9. [Troubleshooting Guide](#troubleshooting-guide)
-10. [Conclusion](#conclusion)
-11. [Appendices](#appendices)
+6. [Enhanced Dialog Patterns](#enhanced-dialog-patterns)
+7. [Enhanced Error Handling System](#enhanced-error-handling-system)
+8. [Dependency Analysis](#dependency-analysis)
+9. [Performance Considerations](#performance-considerations)
+10. [Troubleshooting Guide](#troubleshooting-guide)
+11. [Conclusion](#conclusion)
+12. [Appendices](#appendices)
 
 ## Introduction
-This document describes the Legal Process Management System with a focus on unified legal case tracking and management. It explains the Processo entity model, the ProcessoUnificado view for multi-instance tracking, and the timeline/movimentations system. It documents automated data capture from PJE-TRT systems, data synchronization workflows, and unified process aggregation. It also covers status management, workflow automation, and audit trails, along with practical examples of process creation, updates, filtering, and reporting. The system now features enhanced error handling capabilities with conflict detection for concurrent operations, improved error categorization, and better visual hierarchy in UI components.
+This document describes the Legal Process Management System with a focus on unified legal case tracking and management. It explains the Processo entity model, the ProcessoUnificado view for multi-instance tracking, and the timeline/movimentations system. It documents automated data capture from PJE-TRT systems, data synchronization workflows, and unified process aggregation. It also covers status management, workflow automation, and audit trails, along with practical examples of process creation, updates, filtering, and reporting. The system now features enhanced dialog components across legal process management modules with improved accessibility and semantic HTML structure, providing better user experience and compliance with accessibility standards.
 
 ## Project Structure
 The system is organized around:
@@ -65,6 +71,7 @@ The system is organized around:
 - API routes for tribunal configuration and data capture
 - Distributed locking mechanism for concurrent operation protection
 - Structured error handling with semantic categorization
+- **Enhanced Dialog Components**: Standardized dialog patterns across obrigacoes and partes modules with improved accessibility and semantic structure
 
 ```mermaid
 graph TB
@@ -78,6 +85,13 @@ DB1["Acervo Table<br/>04_acervo.sql"]
 DB2["Processo Partes<br/>17_processo_partes.sql"]
 DB3["Audit Logs<br/>14_logs_alteracao.sql"]
 DB4["Locks Table<br/>distributed-lock.ts"]
+end
+subgraph "Enhanced Dialog System"
+DI1["Obrigacao Detalhes Dialog<br/>obrigacao-detalhes-dialog.tsx"]
+DI2["Nova Obrigacao Dialog<br/>nova-obrigacao-dialog.tsx"]
+DI3["Promover Transitoria Dialog<br/>promover-transitoria-dialog.tsx"]
+DI4["Cliente Form Dialog<br/>cliente-form.tsx"]
+DI5["Dialog Shell Components<br/>dialog.tsx"]
 end
 subgraph "Enhanced Error Handling"
 EH1["Capture Log Service<br/>capture-log.service.ts"]
@@ -113,6 +127,10 @@ UI1 --> DB1
 UI2 --> DB1
 UI3 --> DB1
 UI4 --> UI1
+DI1 --> DI5
+DI2 --> DI5
+DI3 --> DI5
+DI4 --> DI5
 ```
 
 **Diagram sources**
@@ -129,6 +147,11 @@ UI4 --> UI1
 - [errors.ts](file://src/app/(authenticated)/captura/services/partes/errors.ts#L9-L109)
 - [distributed-lock.ts:25-147](file://src/lib/utils/locks/distributed-lock.ts#L25-L147)
 - [server-action-error-handler.ts:21-53](file://src/lib/server-action-error-handler.ts#L21-L53)
+- [obrigacao-detalhes-dialog.tsx](file://src/app/(authenticated)/obrigacoes/components/dialogs/obrigacao-detalhes-dialog.tsx#L360-L390)
+- [nova-obrigacao-dialog.tsx](file://src/app/(authenticated)/obrigacoes/components/dialogs/nova-obrigacao-dialog.tsx#L97-L106)
+- [promover-transitoria-dialog.tsx](file://src/app/(authenticated)/partes/components/partes-contrarias/promover-transitoria-dialog.tsx#L234-L243)
+- [cliente-form.tsx](file://src/app/(authenticated)/partes/components/clientes/cliente-form.tsx#L43-L48)
+- [dialog.tsx](file://src/components/ui/dialog.tsx)
 
 **Section sources**
 - [domain.ts](file://src/app/(authenticated)/processos/domain.ts#L1-L674)
@@ -147,6 +170,7 @@ UI4 --> UI1
 - Audit trail: Centralized logs for ownership changes and other business events.
 - Calendar integration: Unified calendar events for audiências and expedientes, including scheduling and reminders.
 - Data capture and sync: Scripts for capturing PJE-TRT data and synchronizing entities and relationships with enhanced error handling.
+- **Enhanced Dialog Components**: Standardized dialog patterns across obrigacoes and partes modules with improved accessibility, semantic HTML structure, and proper focus management.
 - **Enhanced Error Handling**: Structured error types with semantic categorization, conflict detection for concurrent operations, and comprehensive logging.
 - **Distributed Locking**: Mechanism to prevent concurrent operations on the same resources.
 - **Server Action Error Handling**: Automatic detection and recovery from version mismatch errors.
@@ -164,13 +188,18 @@ UI4 --> UI1
 - [errors.ts](file://src/app/(authenticated)/captura/services/partes/errors.ts#L9-L109)
 - [distributed-lock.ts:25-147](file://src/lib/utils/locks/distributed-lock.ts#L25-L147)
 - [server-action-error-handler.ts:21-53](file://src/lib/server-action-error-handler.ts#L21-L53)
+- [obrigacao-detalhes-dialog.tsx](file://src/app/(authenticated)/obrigacoes/components/dialogs/obrigacao-detalhes-dialog.tsx#L360-L390)
+- [nova-obrigacao-dialog.tsx](file://src/app/(authenticated)/obrigacoes/components/dialogs/nova-obrigacao-dialog.tsx#L97-L106)
+- [promover-transitoria-dialog.tsx](file://src/app/(authenticated)/partes/components/partes-contrarias/promover-transitoria-dialog.tsx#L234-L243)
+- [cliente-form.tsx](file://src/app/(authenticated)/partes/components/clientes/cliente-form.tsx#L43-L48)
 
 ## Architecture Overview
-The system follows a layered architecture with enhanced error handling:
+The system follows a layered architecture with enhanced dialog components and error handling:
 - Domain layer defines entities, enums, and validation rules for legal processes.
 - Database layer persists core entities and exposes a materialized view for unified process display.
 - Integration layer orchestrates automated capture and synchronization with PJE-TRT systems using distributed locks and structured error handling.
-- UI layer consumes unified views and calendar services to present audiências and expedientes with improved visual hierarchy.
+- UI layer consumes unified views and calendar services to present audiências and expedientes with improved visual hierarchy and accessibility.
+- Dialog layer provides standardized dialog patterns with semantic HTML structure and proper accessibility features.
 - Audit layer ensures compliance and traceability of ownership and process changes.
 - Error handling layer provides comprehensive error categorization, conflict detection, and recovery mechanisms.
 
@@ -187,7 +216,9 @@ DB --> MV["Materialized View<br/>Acervo Unificado"]
 FE --> MV
 FE --> LOGS
 FE --> ERR["Error Handling<br/>Structured Errors + Recovery"]
+FE --> DIALOG["Dialog System<br/>Accessibility + Patterns"]
 ERR --> HANDLER["Server Action Handler<br/>Version Mismatch Detection"]
+DIALOG --> UI["Enhanced Dialog Components<br/>Obrigacoes + Partes"]
 ```
 
 **Diagram sources**
@@ -201,6 +232,9 @@ ERR --> HANDLER["Server Action Handler<br/>Version Mismatch Detection"]
 - [errors.ts](file://src/app/(authenticated)/captura/services/partes/errors.ts#L9-L109)
 - [distributed-lock.ts:25-147](file://src/lib/utils/locks/distributed-lock.ts#L25-L147)
 - [server-action-error-handler.ts:21-53](file://src/lib/server-action-error-handler.ts#L21-L53)
+- [obrigacao-detalhes-dialog.tsx](file://src/app/(authenticated)/obrigacoes/components/dialogs/obrigacao-detalhes-dialog.tsx#L360-L390)
+- [nova-obrigacao-dialog.tsx](file://src/app/(authenticated)/obrigacoes/components/dialogs/nova-obrigacao-dialog.tsx#L97-L106)
+- [promover-transitoria-dialog.tsx](file://src/app/(authenticated)/partes/components/partes-contrarias/promover-transitoria-dialog.tsx#L234-L243)
 
 ## Detailed Component Analysis
 
@@ -479,6 +513,149 @@ timestamptz created_at
 - [audit-log.service.ts:1-50](file://src/lib/domain/audit/services/audit-log.service.ts#L1-L50)
 - [spec.md:1-28](file://openspec/specs/audit-atividades/spec.md#L1-L28)
 
+## Enhanced Dialog Patterns
+
+### Standardized Dialog Architecture
+The system now features enhanced dialog components across legal process management modules with improved accessibility and semantic HTML structure:
+
+```mermaid
+classDiagram
+class DialogShell {
++boolean open
++function onOpenChange
++string className
++boolean showCloseButton
++string dataDensity
++render()
+}
+class ObrigacaoDetalhesDialog {
++ObrigacaoComDetalhes obrigacao
++function onSincronizar
++function onVerLancamento
++editingValor : boolean
++editingVencimento : boolean
++efetivando : boolean
++render()
+}
+class NovaObrigacaoDialog {
++boolean open
++function onOpenChange
++function onSuccess
++object dadosIniciais
++trt : string
++grau : string
++processoId : string[]
++buscaProcesso : string
++render()
+}
+class PromoverTransitoriaDialog {
++boolean open
++function onOpenChange
++number transitoriaId
++function onSuccess
++ParteContrariaTransitoria transitoria
++Mode mode
++SugestaoMerge sugestaoSelecionada
++render()
+}
+class ClienteFormDialog {
++boolean open
++function onOpenChange
++function onSuccess
++Cliente cliente
++string mode
++number currentStep
++object formData
++render()
+}
+DialogShell <|-- ObrigacaoDetalhesDialog
+DialogShell <|-- NovaObrigacaoDialog
+DialogShell <|-- PromoverTransitoriaDialog
+DialogShell <|-- ClienteFormDialog
+```
+
+**Diagram sources**
+- [obrigacao-detalhes-dialog.tsx](file://src/app/(authenticated)/obrigacoes/components/dialogs/obrigacao-detalhes-dialog.tsx#L64-L70)
+- [nova-obrigacao-dialog.tsx](file://src/app/(authenticated)/obrigacoes/components/dialogs/nova-obrigacao-dialog.tsx#L23-L33)
+- [promover-transitoria-dialog.tsx](file://src/app/(authenticated)/partes/components/partes-contrarias/promover-transitoria-dialog.tsx#L49-L54)
+- [cliente-form.tsx](file://src/app/(authenticated)/partes/components/clientes/cliente-form.tsx#L55-L61)
+
+### Accessibility and Semantic HTML Improvements
+Enhanced dialog components now feature:
+- Proper semantic labeling with DialogTitle and DialogDescription components
+- Screen reader support with sr-only descriptions for complex dialogs
+- Keyboard navigation and focus management
+- Accessible form controls with proper labeling
+- Semantic section headers using Text variant="overline"
+- Proper ARIA attributes for enhanced accessibility
+
+```mermaid
+sequenceDiagram
+participant User as "User"
+participant Dialog as "Dialog Component"
+participant Focus as "Focus Manager"
+participant ScreenReader as "Screen Reader"
+User->>Dialog : "Open Dialog"
+Dialog->>Focus : "Set initial focus"
+Focus->>Dialog : "Focus trap active"
+Dialog->>ScreenReader : "Announce dialog title"
+ScreenReader->>User : "Title announced"
+User->>Dialog : "Keyboard navigation"
+Dialog->>Focus : "Manage focus movement"
+Focus->>Dialog : "Maintain focus within dialog"
+User->>Dialog : "Close dialog"
+Dialog->>Focus : "Restore focus to trigger"
+Dialog->>ScreenReader : "Announce close"
+```
+
+**Diagram sources**
+- [obrigacao-detalhes-dialog.tsx](file://src/app/(authenticated)/obrigacoes/components/dialogs/obrigacao-detalhes-dialog.tsx#L360-L390)
+- [nova-obrigacao-dialog.tsx](file://src/app/(authenticated)/obrigacoes/components/dialogs/nova-obrigacao-dialog.tsx#L97-L106)
+- [promover-transitoria-dialog.tsx](file://src/app/(authenticated)/partes/components/partes-contrarias/promover-transitoria-dialog.tsx#L234-L243)
+- [cliente-form.tsx](file://src/app/(authenticated)/partes/components/clientes/cliente-form.tsx#L43-L48)
+
+### Inline Editing Patterns
+The obrigacoes module implements sophisticated inline editing patterns:
+- Value editing with draft state management
+- Date editing with proper date formatting
+- Status management with visual indicators
+- Real-time validation and feedback
+- Undo/redo capabilities through draft state
+
+```mermaid
+stateDiagram-v2
+[*] --> Idle
+Idle --> EditingValor : Start edit
+EditingValor --> SavingValor : Save
+SavingValor --> Idle : Success
+SavingValor --> EditingValor : Error
+Idle --> EditingVencimento : Start edit
+EditingVencimento --> SavingVencimento : Save
+SavingVencimento --> Idle : Success
+SavingVencimento --> EditingVencimento : Error
+Idle --> Efetivando : Mark received
+Efetivando --> SavingEfetivacao : Confirm
+SavingEfetivacao --> Idle : Success
+SavingEfetivacao --> Efetivando : Error
+```
+
+**Diagram sources**
+- [obrigacao-detalhes-dialog.tsx](file://src/app/(authenticated)/obrigacoes/components/dialogs/obrigacao-detalhes-dialog.tsx#L204-L224)
+
+### Dialog Density and Spacing Patterns
+Standardized dialog density and spacing patterns ensure consistent user experience:
+- Comfortable density for complex forms
+- Appropriate spacing for different content types
+- Responsive design patterns
+- Scrollable content areas with proper overflow handling
+- Consistent header/footer layouts
+
+**Section sources**
+- [obrigacao-detalhes-dialog.tsx](file://src/app/(authenticated)/obrigacoes/components/dialogs/obrigacao-detalhes-dialog.tsx#L360-L390)
+- [nova-obrigacao-dialog.tsx](file://src/app/(authenticated)/obrigacoes/components/dialogs/nova-obrigacao-dialog.tsx#L97-L106)
+- [promover-transitoria-dialog.tsx](file://src/app/(authenticated)/partes/components/partes-contrarias/promover-transitoria-dialog.tsx#L234-L243)
+- [cliente-form.tsx](file://src/app/(authenticated)/partes/components/clientes/cliente-form.tsx#L43-L48)
+
 ## Enhanced Error Handling System
 
 ### Structured Error Types
@@ -643,6 +820,7 @@ Key dependencies and relationships:
 - ProcessoPartes depends on acervo and supports polymorphic party relationships.
 - Calendar service depends on audiências and expedientes entities.
 - Audit logs depend on users and are indexed for fast retrieval.
+- **Enhanced Dialog Components**: Dialog shell components provide standardized patterns across obrigacoes and partes modules.
 - **Enhanced Error Handling**: Capture log service depends on structured error types and distributed locks.
 - **Distributed Locking**: Used by capture services to prevent concurrent operations.
 - **Server Action Error Handling**: Provides automatic recovery from version mismatch errors.
@@ -658,6 +836,8 @@ H["Logs Alteração"] --> I["Audit Log Service"]
 J["Capture Log Service"] --> K["Structured Errors"]
 L["Distributed Locks"] --> J
 M["Server Action Handler"] --> N["Version Mismatch Detection"]
+O["Dialog Shell Components"] --> P["Obrigacoes Dialogs"]
+O --> Q["Partes Dialogs"]
 ```
 
 **Diagram sources**
@@ -670,6 +850,7 @@ M["Server Action Handler"] --> N["Version Mismatch Detection"]
 - [errors.ts](file://src/app/(authenticated)/captura/services/partes/errors.ts#L9-L109)
 - [distributed-lock.ts:25-147](file://src/lib/utils/locks/distributed-lock.ts#L25-L147)
 - [server-action-error-handler.ts:21-53](file://src/lib/server-action-error-handler.ts#L21-L53)
+- [dialog.tsx](file://src/components/ui/dialog.tsx)
 
 **Section sources**
 - [05_acervo_unificado_view.sql:44-151](file://supabase/schemas/05_acervo_unificado_view.sql#L44-L151)
@@ -681,6 +862,7 @@ M["Server Action Handler"] --> N["Version Mismatch Detection"]
 - [errors.ts](file://src/app/(authenticated)/captura/services/partes/errors.ts#L9-L109)
 - [distributed-lock.ts:25-147](file://src/lib/utils/locks/distributed-lock.ts#L25-L147)
 - [server-action-error-handler.ts:21-53](file://src/lib/server-action-error-handler.ts#L21-L53)
+- [dialog.tsx](file://src/components/ui/dialog.tsx)
 
 ## Performance Considerations
 - Materialized view refresh: Prefer concurrent refresh when possible; fall back to normal refresh if needed.
@@ -689,6 +871,7 @@ M["Server Action Handler"] --> N["Version Mismatch Detection"]
 - Parallelization: Capture and sync scripts leverage parallel tasks to improve throughput.
 - Rate limiting: Apply delays between document captures and handle rate limits gracefully.
 - Disk I/O optimization: Use column selection helpers and avoid unnecessary JSONB parsing.
+- **Enhanced Dialog Components**: Standardized dialog patterns reduce rendering overhead and improve user experience.
 - **Enhanced Error Handling**: Structured logging minimizes performance impact while providing comprehensive debugging information.
 - **Distributed Locking**: Prevents wasted CPU cycles from concurrent operations on the same resources.
 - **Server Action Error Handling**: Automatic recovery reduces user frustration and improves system reliability.
@@ -701,6 +884,7 @@ Common issues and resolutions:
 - Duplicate key violations: Use upsert semantics or deduplicate before insertion; verify constraints and foreign keys.
 - Foreign key constraint violations: Ensure referenced entities exist before linking; run dependency synchronization first.
 - Materialized view refresh failures: Ensure unique index exists; use concurrent refresh when possible.
+- **Enhanced Dialog Components**: Use proper dialog patterns and accessibility features for better user experience.
 - **Capture Conflicts**: Use distributed locks to prevent concurrent operations on the same resources.
 - **Structured Errors**: Leverage semantic error codes for precise error handling and user feedback.
 - **Version Mismatch**: Server action handler automatically detects and recovers from deployment version conflicts.
@@ -713,7 +897,7 @@ Common issues and resolutions:
 - [server-action-error-handler.ts:21-53](file://src/lib/server-action-error-handler.ts#L21-L53)
 
 ## Conclusion
-The Legal Process Management System provides a robust foundation for unified legal case tracking across multiple instances and degrees. Its domain models, materialized view, timeline unification, and calendar integration deliver a comprehensive solution for managing legal processes, audiências, and expedientes. The enhanced error handling system with conflict detection, structured error types, distributed locking, and comprehensive logging ensures reliable operation under concurrent loads. The improved visual hierarchy and professional UI standards in the design system provide an excellent user experience. Together, these features ensure data integrity, compliance, operational efficiency, and a superior user experience within the Brazilian legal system.
+The Legal Process Management System provides a robust foundation for unified legal case tracking across multiple instances and degrees. Its domain models, materialized view, timeline unification, and calendar integration deliver a comprehensive solution for managing legal processes, audiências, and expedientes. The enhanced dialog components across obrigacoes and partes modules significantly improve accessibility and user experience with standardized patterns, semantic HTML structure, and proper focus management. The enhanced error handling system with conflict detection, structured error types, distributed locking, and comprehensive logging ensures reliable operation under concurrent loads. The improved visual hierarchy and professional UI standards in the design system provide an excellent user experience. Together, these features ensure data integrity, compliance, operational efficiency, and a superior user experience within the Brazilian legal system.
 
 ## Appendices
 
@@ -740,6 +924,11 @@ The Legal Process Management System provides a robust foundation for unified leg
 - Audit Trail:
   - Retrieve activity logs for any entity to track ownership changes and other events.
 
+- **Enhanced Dialog Components**:
+  - Use standardized dialog patterns with proper accessibility features and semantic HTML structure.
+  - Implement inline editing patterns for real-time data modification.
+  - Apply consistent dialog density and spacing for optimal user experience.
+
 - **Enhanced Error Handling**:
   - Use structured error types with semantic codes for precise error handling.
   - Implement distributed locks to prevent concurrent operations on the same resources.
@@ -757,3 +946,7 @@ The Legal Process Management System provides a robust foundation for unified leg
 - [errors.ts](file://src/app/(authenticated)/captura/services/partes/errors.ts#L9-L109)
 - [distributed-lock.ts:25-147](file://src/lib/utils/locks/distributed-lock.ts#L25-L147)
 - [server-action-error-handler.ts:21-53](file://src/lib/server-action-error-handler.ts#L21-L53)
+- [obrigacao-detalhes-dialog.tsx](file://src/app/(authenticated)/obrigacoes/components/dialogs/obrigacao-detalhes-dialog.tsx#L360-L390)
+- [nova-obrigacao-dialog.tsx](file://src/app/(authenticated)/obrigacoes/components/dialogs/nova-obrigacao-dialog.tsx#L97-L106)
+- [promover-transitoria-dialog.tsx](file://src/app/(authenticated)/partes/components/partes-contrarias/promover-transitoria-dialog.tsx#L234-L243)
+- [cliente-form.tsx](file://src/app/(authenticated)/partes/components/clientes/cliente-form.tsx#L43-L48)
