@@ -16,6 +16,7 @@ import {
   buscarSalariosVigentesNoMes,
   criarFolhaPagamento,
   criarItemFolha,
+  criarItensFolha,
   atualizarValorTotalFolha,
   buscarFolhaPorId,
   atualizarStatusFolha,
@@ -99,6 +100,7 @@ describe('RH Integration - Geração de Folha', () => {
       anoReferencia: 2024,
       status: 'rascunho',
     });
+    (criarItensFolha as jest.Mock).mockResolvedValue([{}, {}]);
     (criarItemFolha as jest.Mock).mockResolvedValue({});
     (atualizarValorTotalFolha as jest.Mock).mockResolvedValue({});
     (buscarFolhaPorId as jest.Mock).mockResolvedValue(mockFolha);
@@ -114,9 +116,7 @@ describe('RH Integration - Geração de Folha', () => {
     expect(verificarFolhaExistente).toHaveBeenCalledWith(1, 2024);
     expect(buscarSalariosVigentesNoMes).toHaveBeenCalledWith(1, 2024);
     expect(criarFolhaPagamento).toHaveBeenCalled();
-    expect(criarItemFolha).toHaveBeenCalledTimes(2);
-    expect(criarItemFolha).toHaveBeenCalledWith(1, 10, 1, 5000, undefined);
-    expect(criarItemFolha).toHaveBeenCalledWith(1, 20, 2, 3000, undefined);
+    expect(criarItensFolha).toHaveBeenCalled();
     expect(atualizarValorTotalFolha).toHaveBeenCalledWith(1);
   });
 
@@ -191,6 +191,7 @@ describe('RH Integration - Geração de Folha', () => {
     (verificarFolhaExistente as jest.Mock).mockResolvedValue(false);
     (buscarSalariosVigentesNoMes as jest.Mock).mockResolvedValue(mockSalariosVigentes);
     (criarFolhaPagamento as jest.Mock).mockResolvedValue({ id: 1 });
+    (criarItensFolha as jest.Mock).mockRejectedValue(new Error('Erro no lote'));
     (criarItemFolha as jest.Mock)
       .mockResolvedValueOnce({}) // 1º salário OK
       .mockRejectedValueOnce(new Error('Erro ao criar item')); // 2º salário falha

@@ -7,6 +7,7 @@ import {
   buscarSalariosVigentesNoMes,
   criarFolhaPagamento,
   criarItemFolha,
+  criarItensFolha,
   atualizarValorTotalFolha,
   buscarFolhaPorId,
   atualizarStatusFolha,
@@ -46,7 +47,7 @@ describe('RH Service', () => {
         { usuarioId: 2, salarioBruto: 3000 },
       ]);
       (criarFolhaPagamento as jest.Mock).mockResolvedValue(mockFolha);
-      (criarItemFolha as jest.Mock).mockResolvedValue({ id: 10 });
+      (criarItensFolha as jest.Mock).mockResolvedValue([{ id: 10 }, { id: 11 }]);
       (atualizarValorTotalFolha as jest.Mock).mockResolvedValue(undefined);
       (buscarFolhaPorId as jest.Mock).mockResolvedValue({
         ...mockFolha,
@@ -61,7 +62,7 @@ describe('RH Service', () => {
       expect(result).toBeDefined();
       expect(result.valorTotal).toBe(8000);
       expect(criarFolhaPagamento).toHaveBeenCalled();
-      expect(criarItemFolha).toHaveBeenCalledTimes(2);
+      expect(criarItensFolha).toHaveBeenCalled();
     });
 
     it('deve falhar se folha ja existir', async () => {

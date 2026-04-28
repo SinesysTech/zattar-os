@@ -6,6 +6,7 @@ import {
   verificarFolhaExistente,
   criarFolhaPagamento,
   criarItemFolha,
+  criarItensFolha,
   deletarFolhaPagamento,
   atualizarValorTotalFolha,
   atualizarStatusFolha,
@@ -112,21 +113,36 @@ export const gerarFolhaPagamento = async (
   // 7. Criar itens para cada salário vigente
   const erros: Array<{ usuarioId: number; nome: string; erro: string }> = [];
 
-  for (const salario of salariosVigentes) {
-    try {
-      await criarItemFolha(
-        folha.id,
-        salario.usuarioId,
-        salario.id,
-        salario.salarioBruto,
-        undefined
-      );
-    } catch (error) {
-      erros.push({
+  try {
+    // Tenta criar todos os itens em lote (bulk insert) para melhor performance
+    await criarItensFolha(
+      salariosVigentes.map((salario) => ({
+        folhaPagamentoId: folha.id,
         usuarioId: salario.usuarioId,
-        nome: salario.usuario?.nomeExibicao || `Usuário ${salario.usuarioId}`,
-        erro: error instanceof Error ? error.message : 'Erro desconhecido',
-      });
+        salarioId: salario.id,
+        valorBruto: salario.salarioBruto,
+        observacoes: undefined,
+      }))
+    );
+  } catch (error) {
+    // Se falhar o lote (ex: duplicidade ou erro de banco), cai no fallback individual
+    // para identificar erros específicos e manter a funcionalidade original de permitir sucesso parcial
+    for (const salario of salariosVigentes) {
+      try {
+        await criarItemFolha(
+          folha.id,
+          salario.usuarioId,
+          salario.id,
+          salario.salarioBruto,
+          undefined
+        );
+      } catch (innerError) {
+        erros.push({
+          usuarioId: salario.usuarioId,
+          nome: salario.usuario?.nomeExibicao || `Usuário ${salario.usuarioId}`,
+          erro: innerError instanceof Error ? innerError.message : 'Erro desconhecido',
+        });
+      }
     }
   }
 

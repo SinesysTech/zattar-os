@@ -1004,6 +1004,44 @@ export const criarItemFolha = async (
   return mapearItemFolha(data);
 };
 
+/**
+ * Cria vários itens de folha de pagamento em lote (bulk insert)
+ */
+export const criarItensFolha = async (
+  itens: Array<{
+    folhaPagamentoId: number;
+    usuarioId: number;
+    salarioId: number;
+    valorBruto: number;
+    observacoes?: string;
+  }>
+): Promise<ItemFolhaPagamento[]> => {
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from('itens_folha_pagamento')
+    .insert(
+      itens.map((item) => ({
+        folha_pagamento_id: item.folhaPagamentoId,
+        usuario_id: item.usuarioId,
+        salario_id: item.salarioId,
+        valor_bruto: item.valorBruto,
+        lancamento_financeiro_id: null,
+        observacoes: item.observacoes?.trim() || null,
+      }))
+    )
+    .select();
+
+  if (error) {
+    if (error.code === '23505') {
+      throw new Error('Um ou mais funcionários já estão incluídos nesta folha de pagamento');
+    }
+    throw new Error(`Erro ao criar itens da folha: ${error.message}`);
+  }
+
+  return (data || []).map(mapearItemFolha);
+};
+
 export const atualizarValorTotalFolha = async (folhaId: number): Promise<void> => {
   const supabase = createServiceClient();
 
