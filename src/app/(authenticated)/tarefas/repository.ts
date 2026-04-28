@@ -28,10 +28,20 @@ import type {
 } from "./domain";
 
 const TABLE_ITEMS = "todo_items";
-const TABLE_ASSIGNEES = "todo_assignees";
 const TABLE_SUBTASKS = "todo_subtasks";
 const TABLE_COMMENTS = "todo_comments";
 const TABLE_FILES = "todo_files";
+
+
+const TASK_SELECT_WITH_RELATIONS = "id, usuario_id, title, description, status, priority, due_date, reminder_at, starred, position, created_at, updated_at, source, source_entity_id, label, todo_assignees(todo_id, usuario_id, usuarios(id, nome_exibicao, nome_completo, email_corporativo, email_pessoal, avatar_url, ativo)), todo_subtasks(id, todo_id, title, completed, position, created_at, updated_at), todo_comments(id, todo_id, body, created_at), todo_files(id, todo_id, file_name, mime_type, size_bytes, url, created_at)";
+
+
+type TodoItemRowWithRelations = TodoItemRow & {
+  todo_assignees?: { usuarios?: { id: number; nome_exibicao: string; nome_completo: string; email_corporativo: string; email_pessoal: string; avatar_url: string; ativo: boolean; } | { id: number; nome_exibicao: string; nome_completo: string; email_corporativo: string; email_pessoal: string; avatar_url: string; ativo: boolean; }[] }[];
+  todo_subtasks?: SubTaskRow[];
+  todo_comments?: CommentRow[];
+  todo_files?: FileRow[];
+};
 
 type TodoItemRow = {
   id: string;
@@ -165,7 +175,7 @@ export async function listTasks(usuarioId: number, params: ListTasksParams = {})
     const db = createDbClient();
     let query = db
       .from(TABLE_ITEMS)
-      .select("id, usuario_id, title, description, status, priority, due_date, reminder_at, starred, position, created_at, updated_at, source, source_entity_id, label")
+      .select(TASK_SELECT_WITH_RELATIONS)
       .eq("usuario_id", usuarioId);
 
     // Filters
@@ -199,70 +209,28 @@ export async function listTasks(usuarioId: number, params: ListTasksParams = {})
 
     const { data: itemsData, error: itemsError } = await query;
     if (itemsError) return err(appError("DATABASE_ERROR", itemsError.message, { code: itemsError.code }));
-    const items = (itemsData as TodoItemRow[]) ?? [];
+    const items = (itemsData as TodoItemRowWithRelations[]) ?? [];
     if (items.length === 0) return ok([]);
 
-    // For simplicity/performance in list view, should we fetch all relations?
-    // User wants "rich details" ported.
-    // Listing 50 tasks with all subtasks might be heavy but manageable.
-    // Let's fetch them to populate the "Task" object fully.
-
-    const todoIds = items.map((t) => t.id);
-
-    const [assigneesRes, subTasksRes, commentsRes, filesRes] = await Promise.all([
-      db.from(TABLE_ASSIGNEES)
-        .select("todo_id, usuario_id, usuarios(id, nome_exibicao, nome_completo, email_corporativo, email_pessoal, avatar_url, ativo)")
-        .in("todo_id", todoIds),
-      db.from(TABLE_SUBTASKS)
-        .select("id, todo_id, title, completed, position, created_at, updated_at")
-        .in("todo_id", todoIds),
-      db.from(TABLE_COMMENTS).select("id, todo_id, body, created_at").in("todo_id", todoIds),
-      db.from(TABLE_FILES)
-        .select("id, todo_id, file_name, mime_type, size_bytes, url, created_at")
-        .in("todo_id", todoIds),
-    ]);
-
-    const assigneesRows = (assigneesRes.data as AssigneeJoinRow[]) ?? [];
-    const subTaskRows = (subTasksRes.data as SubTaskRow[]) ?? [];
-    const commentRows = (commentsRes.data as CommentRow[]) ?? [];
-    const fileRows = (filesRes.data as FileRow[]) ?? [];
-
-    const assigneesByTodo: Record<string, TaskAssignee[]> = {};
-    for (const row of assigneesRows) {
-      const usuarioData = row.usuarios[0];
-      const a = rowToAssignee(usuarioData);
-      if (!a) continue;
-      if (!assigneesByTodo[row.todo_id]) assigneesByTodo[row.todo_id] = [];
-      assigneesByTodo[row.todo_id].push(a);
-    }
-
-    const subTasksByTodo: Record<string, SubTaskRow[]> = {};
-    for (const st of subTaskRows) {
-      if (!subTasksByTodo[st.todo_id]) subTasksByTodo[st.todo_id] = [];
-      subTasksByTodo[st.todo_id].push(st);
-    }
-
-    const commentsByTodo: Record<string, CommentRow[]> = {};
-    for (const c of commentRows) {
-      if (!commentsByTodo[c.todo_id]) commentsByTodo[c.todo_id] = [];
-      commentsByTodo[c.todo_id].push(c);
-    }
-
-    const filesByTodo: Record<string, FileRow[]> = {};
-    for (const f of fileRows) {
-      if (!filesByTodo[f.todo_id]) filesByTodo[f.todo_id] = [];
-      filesByTodo[f.todo_id].push(f);
-    }
-
-    const tasks = items.map((item) =>
-      assembleTask(
-        item,
-        assigneesByTodo[item.id] ?? [],
-        subTasksByTodo[item.id] ?? [],
-        commentsByTodo[item.id] ?? [],
-        filesByTodo[item.id] ?? []
-      )
-    );
+    const tasks = items.map((item) => {
+      const assignees: TaskAssignee[] = [];
+      if (item.todo_assignees && Array.isArray(item.todo_assignees)) {
+        for (const aRow of item.todo_assignees) {
+          if (aRow.usuarios) {
+            const uData = Array.isArray(aRow.usuarios) ? aRow.usuarios[0] : aRow.usuarios;
+            const a = rowToAssignee(uData);
+            if (a) assignees.push(a);
+          }
+        }
+      }
+      return assembleTask(
+        item as TodoItemRow,
+        assignees,
+        (item.todo_subtasks as SubTaskRow[]) ?? [],
+        (item.todo_comments as CommentRow[]) ?? [],
+        (item.todo_files as FileRow[]) ?? []
+      );
+    });
 
     return ok(tasks);
   } catch (error) {
@@ -273,36 +241,35 @@ export async function listTasks(usuarioId: number, params: ListTasksParams = {})
 export async function getTaskById(usuarioId: number, id: string): Promise<Result<Task | null>> {
   try {
     const db = createDbClient();
-    const { data: item, error } = await db
+    const { data: itemData, error } = await db
       .from(TABLE_ITEMS)
-      .select("id, usuario_id, title, description, status, priority, due_date, reminder_at, starred, position, created_at, updated_at, source, source_entity_id, label")
+      .select(TASK_SELECT_WITH_RELATIONS)
       .eq("usuario_id", usuarioId)
       .eq("id", id)
       .maybeSingle();
 
     if (error) return err(appError("DATABASE_ERROR", error.message, { code: error.code }));
-    if (!item) return ok(null);
+    if (!itemData) return ok(null);
 
-    const todoIds = [id];
-    const [assigneesRes, subTasksRes, commentsRes, filesRes] = await Promise.all([
-      db.from(TABLE_ASSIGNEES).select("todo_id, usuario_id, usuarios(id, nome_exibicao, nome_completo, email_corporativo, email_pessoal, avatar_url, ativo)").in("todo_id", todoIds),
-      db.from(TABLE_SUBTASKS).select("id, todo_id, title, completed, position, created_at, updated_at").in("todo_id", todoIds),
-      db.from(TABLE_COMMENTS).select("id, todo_id, body, created_at").in("todo_id", todoIds),
-      db.from(TABLE_FILES).select("id, todo_id, file_name, mime_type, size_bytes, url, created_at").in("todo_id", todoIds),
-    ]);
-
-    const assigneesRows = (assigneesRes.data as AssigneeJoinRow[]) ?? [];
-    const assignees: TaskAssignee[] = assigneesRows
-      .map((r) => rowToAssignee(r.usuarios[0]))
-      .filter((v): v is TaskAssignee => Boolean(v));
+    const item = itemData as TodoItemRowWithRelations;
+    const assignees: TaskAssignee[] = [];
+    if (item.todo_assignees && Array.isArray(item.todo_assignees)) {
+      for (const aRow of item.todo_assignees) {
+        if (aRow.usuarios) {
+          const uData = Array.isArray(aRow.usuarios) ? aRow.usuarios[0] : aRow.usuarios;
+          const a = rowToAssignee(uData as Parameters<typeof rowToAssignee>[0]);
+          if (a) assignees.push(a);
+        }
+      }
+    }
 
     return ok(
       assembleTask(
         item as TodoItemRow,
         assignees,
-        ((subTasksRes.data as SubTaskRow[]) ?? []).filter((s) => s.todo_id === id),
-        ((commentsRes.data as CommentRow[]) ?? []).filter((c) => c.todo_id === id),
-        ((filesRes.data as FileRow[]) ?? []).filter((f) => f.todo_id === id)
+        (item.todo_subtasks as SubTaskRow[]) ?? [],
+        (item.todo_comments as CommentRow[]) ?? [],
+        (item.todo_files as FileRow[]) ?? []
       )
     );
   } catch (error) {
@@ -722,7 +689,7 @@ export async function listTarefasByQuadro(usuarioId: number, quadroId: string): 
     const db = createDbClient();
     const { data: itemsData, error: itemsError } = await db
       .from(TABLE_ITEMS)
-      .select("id, usuario_id, title, description, status, priority, due_date, reminder_at, starred, position, created_at, updated_at, source, source_entity_id, label")
+      .select(TASK_SELECT_WITH_RELATIONS)
       .eq("usuario_id", usuarioId)
       .eq("quadro_id", quadroId)
       .order("position", { ascending: true })
@@ -735,66 +702,28 @@ export async function listTarefasByQuadro(usuarioId: number, quadroId: string): 
       return err(appError("DATABASE_ERROR", itemsError.message, { code: itemsError.code }));
     }
 
-    const items = (itemsData as TodoItemRow[]) ?? [];
+    const items = (itemsData as TodoItemRowWithRelations[]) ?? [];
     if (items.length === 0) return ok([]);
 
-    // Fetch relations (same as listTasks)
-    const todoIds = items.map((t) => t.id);
-
-    const [assigneesRes, subTasksRes, commentsRes, filesRes] = await Promise.all([
-      db.from(TABLE_ASSIGNEES)
-        .select("todo_id, usuario_id, usuarios(id, nome_exibicao, nome_completo, email_corporativo, email_pessoal, avatar_url, ativo)")
-        .in("todo_id", todoIds),
-      db.from(TABLE_SUBTASKS)
-        .select("id, todo_id, title, completed, position, created_at, updated_at")
-        .in("todo_id", todoIds),
-      db.from(TABLE_COMMENTS).select("id, todo_id, body, created_at").in("todo_id", todoIds),
-      db.from(TABLE_FILES)
-        .select("id, todo_id, file_name, mime_type, size_bytes, url, created_at")
-        .in("todo_id", todoIds),
-    ]);
-
-    const assigneesRows = (assigneesRes.data as AssigneeJoinRow[]) ?? [];
-    const subTaskRows = (subTasksRes.data as SubTaskRow[]) ?? [];
-    const commentRows = (commentsRes.data as CommentRow[]) ?? [];
-    const fileRows = (filesRes.data as FileRow[]) ?? [];
-
-    const assigneesByTodo: Record<string, TaskAssignee[]> = {};
-    for (const row of assigneesRows) {
-      const usuarioData = row.usuarios[0];
-      const a = rowToAssignee(usuarioData);
-      if (!a) continue;
-      if (!assigneesByTodo[row.todo_id]) assigneesByTodo[row.todo_id] = [];
-      assigneesByTodo[row.todo_id].push(a);
-    }
-
-    const subTasksByTodo: Record<string, SubTaskRow[]> = {};
-    for (const st of subTaskRows) {
-      if (!subTasksByTodo[st.todo_id]) subTasksByTodo[st.todo_id] = [];
-      subTasksByTodo[st.todo_id].push(st);
-    }
-
-    const commentsByTodo: Record<string, CommentRow[]> = {};
-    for (const c of commentRows) {
-      if (!commentsByTodo[c.todo_id]) commentsByTodo[c.todo_id] = [];
-      commentsByTodo[c.todo_id].push(c);
-    }
-
-    const filesByTodo: Record<string, FileRow[]> = {};
-    for (const f of fileRows) {
-      if (!filesByTodo[f.todo_id]) filesByTodo[f.todo_id] = [];
-      filesByTodo[f.todo_id].push(f);
-    }
-
-    const tasks = items.map((item) =>
-      assembleTask(
-        item,
-        assigneesByTodo[item.id] ?? [],
-        subTasksByTodo[item.id] ?? [],
-        commentsByTodo[item.id] ?? [],
-        filesByTodo[item.id] ?? []
-      )
-    );
+    const tasks = items.map((item) => {
+      const assignees: TaskAssignee[] = [];
+      if (item.todo_assignees && Array.isArray(item.todo_assignees)) {
+        for (const aRow of item.todo_assignees) {
+          if (aRow.usuarios) {
+            const uData = Array.isArray(aRow.usuarios) ? aRow.usuarios[0] : aRow.usuarios;
+            const a = rowToAssignee(uData);
+            if (a) assignees.push(a);
+          }
+        }
+      }
+      return assembleTask(
+        item as TodoItemRow,
+        assignees,
+        (item.todo_subtasks as SubTaskRow[]) ?? [],
+        (item.todo_comments as CommentRow[]) ?? [],
+        (item.todo_files as FileRow[]) ?? []
+      );
+    });
 
     return ok(tasks);
   } catch (error) {
