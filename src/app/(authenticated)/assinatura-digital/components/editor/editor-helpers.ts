@@ -1,3 +1,5 @@
+import type { Value, Descendant } from 'platejs';
+
 export type VariableOption = {
   value: string;
   label: string;
@@ -205,6 +207,150 @@ export function validateMarkdownForForm(markdown: string): { valid: boolean; err
   }
 
   return { valid: true };
+}
+
+// ─── Storage format types (TipTap-compatible JSON, stored in DB) ─────────────
+
+export type StorageNode = {
+  type: string;
+  attrs?: Record<string, unknown>;
+  content?: StorageNode[];
+  text?: string;
+  marks?: { type: string }[];
+};
+
+export type StorageDocument = {
+  type: 'doc';
+  content: StorageNode[];
+};
+
+// ─── Converters: TipTap Storage JSON ↔ Plate.js Value ────────────────────────
+
+function storageNodeToPlate(node: StorageNode): Descendant | null {
+  if (node.type === 'text') {
+    const marks: Record<string, boolean> = {};
+    for (const m of node.marks ?? []) {
+      if (m.type === 'bold') marks.bold = true;
+      if (m.type === 'italic') marks.italic = true;
+      if (m.type === 'underline') marks.underline = true;
+      if (m.type === 'strike') marks.strikethrough = true;
+    }
+    return { text: node.text ?? '', ...marks };
+  }
+
+  if (node.type === 'variable') {
+    return {
+      type: 'variable',
+      key: (node.attrs?.key as string) ?? '',
+      children: [{ text: '' }],
+    } as unknown as Descendant;
+  }
+
+  if (node.type === 'hardBreak') {
+    return { text: '\n' };
+  }
+
+  const TYPE_MAP: Record<string, string> = {
+    paragraph: 'p',
+    blockquote: 'blockquote',
+    bulletList: 'ul',
+    orderedList: 'ol',
+    listItem: 'li',
+    horizontalRule: 'hr',
+  };
+
+  let plateType = TYPE_MAP[node.type] ?? node.type;
+
+  if (node.type === 'heading' && node.attrs?.level) {
+    plateType = `h${node.attrs.level}`;
+  }
+
+  const children = (node.content ?? [])
+    .map(storageNodeToPlate)
+    .filter((n): n is Descendant => n !== null);
+
+  const element: Record<string, unknown> = {
+    type: plateType,
+    children: children.length > 0 ? children : [{ text: '' }],
+  };
+
+  if (node.attrs?.textAlign) {
+    element.align = node.attrs.textAlign;
+  }
+
+  return element as unknown as Descendant;
+}
+
+function plateNodeToStorage(node: Descendant): StorageNode | null {
+  if ('text' in node) {
+    const n = node as Record<string, unknown>;
+    const marks: { type: string }[] = [];
+    if (n.bold) marks.push({ type: 'bold' });
+    if (n.italic) marks.push({ type: 'italic' });
+    if (n.underline) marks.push({ type: 'underline' });
+    if (n.strikethrough) marks.push({ type: 'strike' });
+    return {
+      type: 'text',
+      text: n.text as string,
+      ...(marks.length > 0 && { marks }),
+    };
+  }
+
+  const n = node as Record<string, unknown>;
+  const plateType = n.type as string;
+
+  if (plateType === 'variable') {
+    return {
+      type: 'variable',
+      attrs: { key: (n.key as string) ?? '' },
+    };
+  }
+
+  const TYPE_MAP: Record<string, string> = {
+    p: 'paragraph',
+    blockquote: 'blockquote',
+    hr: 'horizontalRule',
+    ul: 'bulletList',
+    ol: 'orderedList',
+    li: 'listItem',
+  };
+
+  let storageType = TYPE_MAP[plateType] ?? plateType;
+  const attrs: Record<string, unknown> = {};
+
+  if (/^h[1-6]$/.test(plateType)) {
+    storageType = 'heading';
+    attrs.level = parseInt(plateType[1], 10);
+  }
+
+  const align = n.align;
+  if (align) attrs.textAlign = align;
+
+  const rawChildren = n.children as Descendant[] | undefined;
+  const content = (rawChildren ?? [])
+    .map(plateNodeToStorage)
+    .filter((c): c is StorageNode => c !== null);
+
+  return {
+    type: storageType,
+    ...(Object.keys(attrs).length > 0 && { attrs }),
+    content,
+  };
+}
+
+export function tiptapJsonToPlateValue(doc: StorageDocument): Value {
+  return (doc.content ?? [])
+    .map(storageNodeToPlate)
+    .filter((n): n is Descendant => n !== null) as Value;
+}
+
+export function plateValueToTiptapJson(value: Value): StorageDocument {
+  return {
+    type: 'doc',
+    content: value
+      .map(plateNodeToStorage)
+      .filter((n): n is StorageNode => n !== null),
+  };
 }
 
 
