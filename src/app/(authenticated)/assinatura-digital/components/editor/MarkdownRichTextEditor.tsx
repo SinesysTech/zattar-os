@@ -14,7 +14,7 @@ import { ListPlugin } from '@platejs/list/react';
 import { LinkPlugin } from '@platejs/link/react';
 import { TextAlignPlugin } from '@platejs/basic-styles/react';
 import { deserializeMd, MarkdownPlugin, serializeMd } from '@platejs/markdown';
-import { VARIABLE_ELEMENT } from '@/components/editor/plate/variable-plugin';
+import { VARIABLE_ELEMENT, type VariableElementType } from '@/components/editor/plate/variable-plugin';
 import {
   BoldIcon,
   ItalicIcon,
@@ -58,6 +58,49 @@ import {
 } from '@/components/ui/command';
 import { cn } from '@/lib/utils';
 import { getAvailableVariables, type VariableOption } from './editor-helpers';
+
+const VARIABLE_REGEX = /\{\{([^}]+)\}\}/g;
+
+// Pós-processa um Value deserializado substituindo textos {{key}} por nós variable inline
+function injectVariableNodes(value: Value): Value {
+  return value.map((block) => injectInNode(block as Record<string, unknown>)) as Value;
+}
+
+function injectInNode(node: Record<string, unknown>): Record<string, unknown> {
+  const children = node.children as Record<string, unknown>[] | undefined;
+  if (!children) return node;
+
+  const newChildren: unknown[] = [];
+  for (const child of children) {
+    const childText = child.text as string | undefined;
+    if (typeof childText === 'string' && VARIABLE_REGEX.test(childText)) {
+      VARIABLE_REGEX.lastIndex = 0;
+      const { text, ...marks } = child as Record<string, unknown>;
+      let lastIndex = 0;
+      let match: RegExpExecArray | null;
+      while ((match = VARIABLE_REGEX.exec(childText)) !== null) {
+        if (match.index > lastIndex) {
+          newChildren.push({ ...marks, text: childText.slice(lastIndex, match.index) });
+        }
+        const varNode: VariableElementType = {
+          type: VARIABLE_ELEMENT,
+          key: match[1],
+          children: [{ text: '' }],
+        };
+        newChildren.push(varNode);
+        lastIndex = VARIABLE_REGEX.lastIndex;
+      }
+      if (lastIndex < childText.length) {
+        newChildren.push({ ...marks, text: childText.slice(lastIndex) });
+      }
+    } else if (typeof (child as Record<string, unknown>).text === 'string') {
+      newChildren.push(child);
+    } else {
+      newChildren.push(injectInNode(child as Record<string, unknown>));
+    }
+  }
+  return { ...node, children: newChildren };
+}
 
 const MarkdownEditorKit = [
   ParagraphPlugin.withComponent(ParagraphElement),
@@ -168,7 +211,7 @@ export function MarkdownRichTextEditor({
     plugins: MarkdownEditorKit,
     value: (e) => {
       try {
-        return deserializeMd(e, value || '');
+        return injectVariableNodes(deserializeMd(e, value || ''));
       } catch {
         return [{ type: 'p', children: [{ text: value || '' }] }];
       }
@@ -183,7 +226,7 @@ export function MarkdownRichTextEditor({
       return;
     }
     try {
-      const newValue = deserializeMd(editor, value || '');
+      const newValue = injectVariableNodes(deserializeMd(editor, value || ''));
       editor.tf.setValue(newValue);
     } catch {
       // ignorar erros de parse
