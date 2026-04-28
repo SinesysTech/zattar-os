@@ -5,18 +5,22 @@
  * Permite buscar, filtrar e usar templates para criar novos documentos
  */
 
-import { cn } from '@/lib/utils';
+import {
+  cn } from '@/lib/utils';
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  Search, FileText, Globe, Lock, Star} from 'lucide-react';
+  Search,
+  FileText,
+  Globe,
+  Lock,
+  Star} from 'lucide-react';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle,
-  DialogBody,
+  DialogTitle
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -135,7 +139,7 @@ export function TemplateLibraryDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className={cn(/* design-system-escape: p-0 gap-0 → usar <Inset>; px-6 py-4 → usar <Inset> */ "sm:max-w-4xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col")}
+        className={cn(/* design-system-escape: p-0 gap-0 → usar <Inset>; px-6 py-4 → usar <Inset> */ "sm:max-w-4xl  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col")}
       >
         <DialogHeader className={cn(/* design-system-escape: px-6 py-4 → usar <Inset> */ "px-6 py-4 border-b border-border/20 shrink-0")}>
           <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
@@ -147,7 +151,7 @@ export function TemplateLibraryDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <DialogBody>
+        <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
           <Tabs value={tab} onValueChange={setTab} className="flex-1">
             <TabsList className="mb-4">
               <TabsTrigger value="todos">Todos</TabsTrigger>
@@ -284,7 +288,7 @@ export function TemplateLibraryDialog({
               </div>
             </div>
           )}
-        </DialogBody>
+        </div>
       </DialogContent>
     </Dialog>
   );

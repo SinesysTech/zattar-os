@@ -110,7 +110,7 @@ export function CallDetailSheet({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="glass-dialog max-w-3xl max-h-[90vh] flex flex-col">
+      <DialogContent className=" max-w-3xl max-h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             {Icon && <Icon className="h-5 w-5" />}

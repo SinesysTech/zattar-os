@@ -1,20 +1,24 @@
 'use client';
 
-import { cn } from '@/lib/utils';
+import {
+  cn } from '@/lib/utils';
 import * as React from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle,
-  DialogBody,
+  DialogTitle
 } from '@/components/ui/dialog';
 
 import type { TipoCaptura } from '@/app/(authenticated)/captura';
@@ -100,12 +104,12 @@ export function AgendamentoDialog({ open, onOpenChange, onSuccess }: Props) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="sm:max-w-2xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+        className="sm:max-w-2xl  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
       >
         <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
           <DialogTitle>Novo agendamento</DialogTitle>
         </DialogHeader>
-        <DialogBody>
+        <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
       <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; space-y-6 → migrar para <Stack gap="loose"> */ "p-6 space-y-6")}>
         <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2")}>
           <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
@@ -171,7 +175,7 @@ export function AgendamentoDialog({ open, onOpenChange, onSuccess }: Props) {
           <Switch checked={ativo} onCheckedChange={setAtivo} />
         </div>
       </div>
-        </DialogBody>
+        </div>
         <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isSaving}>
             Cancelar

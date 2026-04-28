@@ -15,12 +15,6 @@ const tiles = [
     token: ".glass-widget · blur 16",
     desc: "Padrão para containers",
   },
-  {
-    cls: "glass-dialog",
-    title: "glass-dialog",
-    token: ".glass-dialog · blur 24",
-    desc: "Modais, sheets, dialogs",
-  },
 ];
 
 export function GlassSection() {

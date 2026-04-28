@@ -639,7 +639,6 @@ export const GLASS_BASE = 'rounded-2xl border transition-all duration-300 flex f
 
 /**
  * Variantes de glass classes (além do depth system).
- * Use via className="glass-dialog" etc.
  */
 export const GLASS_VARIANTS = {
   kpi: 'glass-kpi',
@@ -647,8 +646,6 @@ export const GLASS_VARIANTS = {
   card: 'glass-card',
   panel: 'glass-panel',
   dropdown: 'glass-dropdown',
-  dialog: 'glass-dialog',
-  'dialog-overlay': 'glass-dialog-overlay',
 } as const;
 
 export type GlassVariant = keyof typeof GLASS_VARIANTS;

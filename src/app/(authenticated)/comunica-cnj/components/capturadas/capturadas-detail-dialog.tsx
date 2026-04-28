@@ -88,7 +88,7 @@ export function CapturadasDetailDialog({
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="glass-dialog max-h-[90vh] max-w-3xl overflow-y-auto">
+        <DialogContent className=" max-h-[90vh] max-w-3xl overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Detalhes da Comunicação</DialogTitle>
             <DialogDescription>

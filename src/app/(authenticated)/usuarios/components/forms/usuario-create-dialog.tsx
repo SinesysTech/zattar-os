@@ -2,7 +2,8 @@
 'use client';
 
 import * as React from 'react';
-import { Button } from '@/components/ui/button';
+import {
+  Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Label } from '@/components/ui/label';
@@ -14,19 +15,20 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+  } from '@/components/ui/select';
 import { Search} from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useCargos } from '@/app/(authenticated)/cargos';
 import { actionCriarUsuario } from '../../actions/usuarios-actions';
-import type { UsuarioDados, GeneroUsuario, Endereco } from '../../domain';
+import type { UsuarioDados,
+  GeneroUsuario,
+  Endereco } from '../../domain';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle,
-  DialogBody,
+  DialogTitle
 } from '@/components/ui/dialog';
 import { buscarEnderecoPorCep, limparCep } from '@/lib/utils/viacep';
 
@@ -213,12 +215,12 @@ export function UsuarioCreateDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="sm:max-w-2xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+        className="sm:max-w-2xl  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
       >
         <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
           <DialogTitle>Novo Usuário</DialogTitle>
         </DialogHeader>
-        <DialogBody>
+        <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
         <form ref={formRef} onSubmit={handleSubmit}>
           <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             {/* Step Indicator */}
@@ -582,7 +584,7 @@ export function UsuarioCreateDialog({
             )}
           </div>
         </form>
-        </DialogBody>
+        </div>
         <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>Cancelar</Button>
           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>

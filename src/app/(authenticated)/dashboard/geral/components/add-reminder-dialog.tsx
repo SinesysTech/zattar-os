@@ -1,27 +1,28 @@
 "use client";
 
-import { cn } from '@/lib/utils';
+import {
+  cn } from '@/lib/utils';
 import React from "react";
 import { PlusCircleIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { RadioGroup,
+  RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+  } from "@/components/ui/select";
 import { DateTimePicker } from "@/components/layout/pickers/date-time-picker";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
-  DialogBody,
+  DialogDescription
 } from "@/components/ui/dialog";
 import { useReminders } from "../../hooks";
 import { CATEGORIAS_LEMBRETE, type PrioridadeLembrete } from "../../domain";
@@ -80,13 +81,13 @@ export function AddReminderDialog() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent
           showCloseButton={false}
-          className="sm:max-w-md glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+          className="sm:max-w-md  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
         >
           <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
             <DialogTitle>Novo Lembrete</DialogTitle>
             <DialogDescription className="sr-only">Preencha os dados para adicionar um novo lembrete</DialogDescription>
           </DialogHeader>
-          <DialogBody>
+          <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
             <form
               id="add-reminder-form"
               onSubmit={handleSubmit}
@@ -172,7 +173,7 @@ export function AddReminderDialog() {
                 </Select>
               </div>
             </form>
-          </DialogBody>
+          </div>
           <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
             <Button variant="outline" onClick={() => setOpen(false)}>Cancelar</Button>
             <div className="flex items-center gap-2">

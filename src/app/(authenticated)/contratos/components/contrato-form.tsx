@@ -8,7 +8,8 @@
  */
 
 import * as React from 'react';
-import { useActionState } from 'react';
+import {
+  useActionState } from 'react';
 import { Button } from '@/components/ui/button';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Label } from '@/components/ui/label';
@@ -20,31 +21,39 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+  } from '@/components/ui/select';
 import type { ComboboxOption } from '@/components/ui/combobox';
 import { ServerCombobox } from '@/components/ui/server-combobox';
 import { cn } from '@/lib/utils';
-import { todayDateString, toDateString } from '@/lib/date-utils';
-import { Check, AlertCircle} from 'lucide-react';
+import { todayDateString,
+  toDateString } from '@/lib/date-utils';
+import { Check,
+  AlertCircle} from 'lucide-react';
 import { toast } from 'sonner';
-import { actionCriarContrato, actionAtualizarContrato, type ActionResult } from '../actions';
-import type { Contrato, TipoContrato, TipoCobranca, StatusContrato, PapelContratual } from '../domain';
+import { actionCriarContrato,
+  actionAtualizarContrato,
+  type ActionResult } from '../actions';
+import type { Contrato,
+  TipoContrato,
+  TipoCobranca,
+  StatusContrato,
+  PapelContratual } from '../domain';
 import type { ClienteInfo } from '../types';
 import {
   TIPO_CONTRATO_LABELS,
   TIPO_COBRANCA_LABELS,
   STATUS_CONTRATO_LABELS,
   PAPEL_CONTRATUAL_LABELS,
-} from '../domain';
-import { actionListarSegmentos, type Segmento } from '../actions';
+  } from '../domain';
+import { actionListarSegmentos,
+  type Segmento } from '../actions';
 import { actionBuscarPartesContrariasParaCombobox } from '@/app/(authenticated)/partes/actions/partes-contrarias-actions';
 import { actionBuscarClientesParaCombobox } from '@/app/(authenticated)/partes/actions/clientes-actions';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle,
-  DialogBody,
+  DialogTitle
 } from '@/components/ui/dialog';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
@@ -237,12 +246,12 @@ export function ContratoForm({
       <DialogContent
         showCloseButton={false}
         data-density="compact"
-        className="sm:max-w-lg glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+        className="sm:max-w-lg  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
       >
         <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
           <DialogTitle>{isEditMode ? 'Editar Contrato' : 'Novo Contrato'}</DialogTitle>
         </DialogHeader>
-        <DialogBody>
+        <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
       <form ref={formRef} action={formAction} className="space-y-(--density-field-gap)">
         {/* Linha 1: Tipo de Contrato + Tipo de Cobrança */}
         <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
@@ -508,7 +517,7 @@ export function ContratoForm({
           />
         </div>
       </form>
-        </DialogBody>
+        </div>
         <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <div className="flex items-center gap-2">

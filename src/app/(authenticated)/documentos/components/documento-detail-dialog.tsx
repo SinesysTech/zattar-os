@@ -19,7 +19,14 @@ import {
   User as UserIcon,
   HardDrive,
 } from 'lucide-react';
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { IconContainer } from '@/components/ui/icon-container';
@@ -181,8 +188,13 @@ export function DocumentoDetailDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn(/* design-system-escape: gap-0 gap sem token DS; p-0 → usar <Inset> */ "glass-dialog max-w-md max-h-[90vh] overflow-hidden flex flex-col gap-0 p-0")}>
-        <DialogTitle className="sr-only">{nome}</DialogTitle>
+      <DialogContent className={cn(/* design-system-escape: gap-0 gap sem token DS; p-0 → usar <Inset> */ " max-w-md max-h-[90vh] overflow-hidden flex flex-col gap-0 p-0")}>
+        <DialogHeader className="sr-only">
+          <DialogTitle>{nome}</DialogTitle>
+          <DialogDescription>
+            Detalhes do item selecionado, incluindo informações, datas, autoria e ações disponíveis.
+          </DialogDescription>
+        </DialogHeader>
 
         {/* ── Hero preview ───────────────────────────────────── */}
         <div
@@ -315,7 +327,7 @@ export function DocumentoDetailDialog({
         </div>
 
         {/* ── Actions ────────────────────────────────────────── */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "flex items-center justify-end gap-2 border-t border-border/30 px-6 py-4")}>
+        <DialogFooter className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "border-t border-border/30 px-6 py-4")}>
           {onShare && (
             <Button
               type="button"
@@ -351,7 +363,7 @@ export function DocumentoDetailDialog({
               Abrir arquivo
             </Button>
           )}
-        </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

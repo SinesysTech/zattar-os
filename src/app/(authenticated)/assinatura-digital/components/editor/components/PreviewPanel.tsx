@@ -1,9 +1,17 @@
 'use client';
 
-import { cn } from '@/lib/utils';
-import { Download, ExternalLink, FileX2 } from 'lucide-react';
+import {
+  cn } from '@/lib/utils';
+import { Download,
+  ExternalLink,
+  FileX2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody } from '@/components/ui/dialog';
+import { Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription
+} from '@/components/ui/dialog';
 
 interface PreviewPanelProps {
   open: boolean;
@@ -47,13 +55,13 @@ export default function PreviewPanel({
       <DialogContent
         showCloseButton={false}
         data-density="comfortable"
-        className="sm:max-w-5xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+        className="sm:max-w-5xl  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
       >
         <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
           <DialogTitle>PDF de Teste Gerado com Sucesso</DialogTitle>
           <DialogDescription>Visualize o PDF gerado com dados fictícios para validar o layout do template.</DialogDescription>
         </DialogHeader>
-        <DialogBody className={/* design-system-escape: p-0 → usar <Inset>; sm:p-0 sem equivalente DS */ "overflow-hidden flex flex-col p-0 sm:p-0"}>
+        <div className={/* design-system-escape: p-0 → usar <Inset>; sm:p-0 sem equivalente DS */ "flex flex-1 flex-col overflow-hidden p-0 sm:p-0"}>
           {/* Preview do PDF ou mensagem de erro */}
           {previewPdfUrl && !iframeLoadFailed ? (
             <iframe
@@ -89,7 +97,7 @@ export default function PreviewPanel({
               </div>
             </div>
           )}
-        </DialogBody>
+        </div>
         <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>Fechar</Button>
           <div className="flex items-center gap-2">

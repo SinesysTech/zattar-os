@@ -1,36 +1,47 @@
 
 'use client';
 
-import { cn } from '@/lib/utils';
-import { useState, useEffect, useRef } from 'react';
+import {
+  cn } from '@/lib/utils';
+import { useState,
+  useEffect,
+  useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert,
+  AlertDescription } from '@/components/ui/alert';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Save, Search, AlertCircle, Camera} from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+  } from '@/components/ui/select';
+import { Save,
+  Search,
+  AlertCircle,
+  Camera} from 'lucide-react';
+import { Avatar,
+  AvatarFallback,
+  AvatarImage } from '@/components/ui/avatar';
 import { toast } from 'sonner';
 import { useCargos } from '@/app/(authenticated)/cargos';
 import { actionAtualizarUsuario } from '../../actions/usuarios-actions';
-import type { Usuario, Endereco, GeneroUsuario } from '../../domain';
+import type { Usuario,
+  Endereco,
+  GeneroUsuario } from '../../domain';
 import { getAvatarUrl } from '../../utils';
 import { AvatarEditDialog } from '../avatar/avatar-edit-dialog';
-import { buscarEnderecoPorCep, limparCep } from '@/lib/utils/viacep';
+import { buscarEnderecoPorCep,
+  limparCep } from '@/lib/utils/viacep';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle,
-  DialogBody,
+  DialogTitle
 } from '@/components/ui/dialog';
 import { GlassPanel } from '@/components/shared/glass-panel';
 
@@ -243,12 +254,12 @@ export function UsuarioEditDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="sm:max-w-4xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+        className="sm:max-w-4xl  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
       >
         <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
           <DialogTitle>Editar Usuário</DialogTitle>
         </DialogHeader>
-        <DialogBody>
+        <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
       <form ref={formRef} onSubmit={handleSubmit}>
         <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "grid gap-6")}>
           {/* Avatar */}
@@ -642,7 +653,7 @@ export function UsuarioEditDialog({
         </div>
       </form>
 
-        </DialogBody>
+        </div>
         <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <div className="flex items-center gap-2">

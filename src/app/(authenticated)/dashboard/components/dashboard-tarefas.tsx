@@ -1,8 +1,10 @@
 'use client';
 
 import * as React from 'react';
-import { useRouter } from 'next/navigation';
-import { CheckSquare, PlusCircle } from 'lucide-react';
+import {
+  useRouter } from 'next/navigation';
+import { CheckSquare,
+  PlusCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
@@ -11,7 +13,7 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+  } from '@/components/ui/card';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -19,8 +21,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
-  DialogBody,
+  DialogDescription
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -193,13 +194,13 @@ export function TarefasWidget({ initialTasks }: TarefasWidgetProps) {
       >
         <DialogContent
           showCloseButton={false}
-          className="sm:max-w-lg glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+          className="sm:max-w-lg  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
         >
           <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
             <DialogTitle>Nova tarefa</DialogTitle>
             <DialogDescription className="sr-only">Preencha os dados para criar uma nova tarefa</DialogDescription>
           </DialogHeader>
-          <DialogBody>
+          <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
             <form id="dashboard-nova-tarefa-form" onSubmit={handleCreate} className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "px-6 py-4")}>
               <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 md:grid-cols-2")}>
                 <div className="md:col-span-2">
@@ -257,7 +258,7 @@ export function TarefasWidget({ initialTasks }: TarefasWidgetProps) {
                 <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-4 text-sm text-destructive")} role="alert">{errorMessage}</p>
               )}
             </form>
-          </DialogBody>
+          </div>
           <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
             <Button variant="outline" onClick={() => setOpen(false)}>Cancelar</Button>
             <div className="flex items-center gap-2">

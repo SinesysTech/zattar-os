@@ -151,7 +151,7 @@ export function GazetteSyncDialog({ trigger }: GazetteSyncDialogProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
 
-      <DialogContent className="glass-dialog max-w-md">
+      <DialogContent className=" max-w-md">
         <DialogHeader>
           <DialogTitle>Sincronização</DialogTitle>
         </DialogHeader>

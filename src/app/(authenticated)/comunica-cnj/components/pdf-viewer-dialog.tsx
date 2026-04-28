@@ -24,7 +24,7 @@ interface PdfViewerDialogProps {
 
 /**
  * Dialog para visualizar certidão PDF do CNJ.
- * Usa `glass-dialog` em todas as resoluções — padrão do design system.
+ * Usa `` em todas as resoluções — padrão do design system.
  */
 export function PdfViewerDialog({ hash, open, onOpenChange }: PdfViewerDialogProps) {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
@@ -116,7 +116,7 @@ export function PdfViewerDialog({ hash, open, onOpenChange }: PdfViewerDialogPro
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="glass-dialog flex h-[90vh] max-w-4xl flex-col">
+      <DialogContent className=" flex h-[90vh] max-w-4xl flex-col">
         <DialogHeader>
           <DialogTitle>Certidão da Comunicação</DialogTitle>
           <DialogDescription>Visualização da certidão em PDF</DialogDescription>

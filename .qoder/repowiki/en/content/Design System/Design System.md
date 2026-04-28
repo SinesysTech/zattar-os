@@ -27,8 +27,10 @@
 - [use-responsive-layout.ts](file://src/app/(authenticated)/chat/hooks/use-responsive-layout.ts)
 - [base-vs-radix.md](file://.agents/skills/shadcn/rules/base-vs-radix.md)
 - [token-registry.ts](file://src/lib/design-system/token-registry.ts)
+- [tokens.ts](file://src/lib/design-system/tokens.ts)
 - [eslint.config.mjs](file://eslint.config.mjs)
 - [no-raw-typography-spacing.js](file://eslint-rules/no-raw-typography-spacing.js)
+- [no-hsl-var-tokens.js](file://eslint-rules/no-hsl-var-tokens.js)
 - [heading-node-static.tsx](file://src/components/editor/plate-ui/heading-node-static.tsx)
 - [typography/page.tsx](file://src/app/(ajuda)/ajuda/design-system/typography/page.tsx)
 - [badge.test.tsx](file://src/components/ui/__tests__/badge.test.tsx)
@@ -36,11 +38,11 @@
 
 ## Update Summary
 **Changes Made**
-- Enhanced Badge component documentation to reflect 5 new semantic status variants (success, warning, info, neutral, accent)
-- Updated design system improvements documentation with new highlight foreground color variable and color consistency updates
-- Expanded semantic badge system coverage with comprehensive variant documentation
-- Added detailed color token registry information including new highlight foreground variable
-- Updated design system governance with enhanced color consistency standards
+- Enhanced comprehensive theming improvements with unified font families and systematic CSS custom property updates
+- Updated color token registry with refined color tokens and new highlight foreground variable
+- Documented major design system modernization with OKLCH color system implementation
+- Added detailed coverage of theme presets, radius variations, and scale adjustments
+- Updated design system governance with enhanced color consistency standards and typography improvements
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -55,16 +57,18 @@
 10. [Responsive Utilities and Breakpoint Management](#responsive-utilities-and-breakpoint-management)
 11. [Radix UI Modernization and Component Refactoring](#radix-ui-modernization-and-component-refactoring)
 12. [Enhanced CSS Variables and Design Tokens](#enhanced-css-variables-and-design-tokens)
-13. [Design System Playground](#design-system-playground)
-14. [Page-Specific Implementation Examples](#page-specific-implementation-examples)
-15. [Quality Assurance and Migration Tracking](#quality-assurance-and-migration-tracking)
-16. [Integration and Maintenance](#integration-and-maintenance)
-17. [Conclusion](#conclusion)
+13. [Unified Font Families and Typography System](#unified-font-families-and-typography-system)
+14. [Theme Presets and Customization System](#theme-presets-and-customization-system)
+15. [Design System Playground](#design-system-playground)
+16. [Page-Specific Implementation Examples](#page-specific-implementation-examples)
+17. [Quality Assurance and Migration Tracking](#quality-assurance-and-migration-tracking)
+18. [Integration and Maintenance](#integration-and-maintenance)
+19. [Conclusion](#conclusion)
 
 ## Introduction
-The ZattarOS Design System represents a comprehensive visual and interaction framework built on shadcn/ui components with semantic badge architecture. The system has undergone a major modernization effort featuring migration from @radix-ui/react-* packages to the unified radix-ui package, enhanced styling consistency through new CSS variables, improved accessibility compliance with WCAG AAA standards, streamlined component APIs, and introduction of responsive utilities like the useIsMobile hook.
+The ZattarOS Design System represents a comprehensive visual and interaction framework built on shadcn/ui components with semantic badge architecture and advanced theming capabilities. The system has undergone a major modernization effort featuring comprehensive theming improvements with unified font families, refined color tokens, systematic CSS custom property updates, and enhanced design token governance.
 
-**Updated** The system now features comprehensive responsive utility management, modernized component architecture, and enhanced design token governance. The migration to unified radix-ui packages ensures better maintainability and consistency across the component library, while the new responsive utilities provide developers with powerful tools for adaptive UI development.
+**Updated** The system now features comprehensive responsive utility management, modernized component architecture, enhanced design token governance, and a unified theming system with OKLCH color space implementation. The migration to unified radix-ui packages ensures better maintainability and consistency across the component library, while the new responsive utilities provide developers with powerful tools for adaptive UI development.
 
 This architecture ensures consistency across the legal management platform while allowing for module-specific adaptations through a well-defined override mechanism and modernized component development practices.
 
@@ -305,7 +309,6 @@ export function CountBadge({
       {children}
     </Badge
   );
-}
 ```
 
 ### CountBadge Usage Patterns
@@ -850,6 +853,175 @@ Tokens are now integrated throughout the system with modern patterns:
 - **Performance Monitoring**: Continuous monitoring of token system performance
 - **Future Planning**: Long-term planning for token system evolution
 
+## Unified Font Families and Typography System
+
+The design system now features comprehensive unified font families with systematic CSS custom property updates affecting over 50 lines, providing consistent typography across all components and modules.
+
+### Unified Font Family Architecture
+
+**Systematic Font Property Updates**
+The system implements a unified font family approach with comprehensive CSS custom property management:
+- **Inter Font**: Primary sans-serif font for headings and body text
+- **Manrope Font**: Display font for headlines and special typography
+- **Geist Mono Font**: Monospace font for code and technical text
+- **Montserrat Font**: Display font for KPIs and large metrics
+
+**Font Property System**
+```css
+/* Unified font family declarations */
+--font-sans: var(--font-inter);
+--font-heading: var(--font-inter);
+--font-headline: var(--font-manrope);
+--font-mono: var(--font-geist-mono);
+--font-display: var(--font-montserrat);
+--font-label: var(--font-inter);
+--font-body: var(--font-inter);
+```
+
+**Font Governance**
+- **Consistent Font Stack**: Unified font families across all components
+- **Typography Hierarchy**: Clear font weight and style hierarchy
+- **Performance Optimization**: Efficient font loading and caching
+- **Accessibility Compliance**: Web font accessibility and performance
+
+### Typography Token System
+
+**Comprehensive Typography Tokens**
+The system provides a complete typography token system with 18 font-related CSS variables:
+- **Base Fonts**: Inter, Manrope, Geist Mono, Montserrat
+- **Alias Fonts**: Body, headline, display, label, mono aliases
+- **Typography Scale**: Consistent font size progression
+- **Font Weight**: Semantic font weight assignments
+
+**Typography Token Categories**
+- **Heading Fonts**: Manrope for headlines, Inter for body headings
+- **Body Fonts**: Inter for general body text
+- **Monospace Fonts**: Geist Mono for code and technical content
+- **Display Fonts**: Montserrat for large metrics and KPIs
+- **Label Fonts**: Inter for form labels and small text
+
+**Typography Governance**
+- **Font Consistency**: All typography uses unified font families
+- **Token Management**: Centralized font token registry
+- **Performance Monitoring**: Font loading performance tracking
+- **Accessibility Validation**: Font accessibility compliance
+
+### Font Family Implementation Details
+
+**Font Loading Strategy**
+The system implements efficient font loading with strategic font property updates:
+- **Critical Font Loading**: Inter and Manrope loaded with high priority
+- **Fallback Fonts**: System fonts as fallback for performance
+- **Font Display**: Optimal font display strategy for user experience
+- **Web Font Optimization**: Minimized font loading impact
+
+**Font Property Updates**
+Over 50 lines of systematic CSS custom property updates ensure consistent font family usage:
+- **Global Font Properties**: Centralized font family declarations
+- **Component Font Properties**: Individual component font family overrides
+- **Theme Font Properties**: Theme-specific font family variations
+- **Responsive Font Properties**: Adaptive font family usage across breakpoints
+
+**Font Governance**
+- **Font Registry**: Complete font family registry and management
+- **Font Performance**: Monitoring and optimization of font loading
+- **Font Accessibility**: WCAG font accessibility compliance
+- **Font Migration**: Systematic font family migration process
+
+**Section sources**
+- [globals.css:109-122](file://src/app/globals.css#L109-L122)
+- [token-registry.ts:311-319](file://src/lib/design-system/token-registry.ts#L311-L319)
+- [tokens.ts:508-515](file://src/lib/design-system/tokens.ts#L508-L515)
+
+## Theme Presets and Customization System
+
+The design system now features comprehensive theme presets and customization capabilities with systematic CSS custom property updates for runtime theme switching and user customization.
+
+### Theme Preset Architecture
+
+**Systematic Theme Preset Implementation**
+The system provides comprehensive theme preset capabilities with systematic CSS custom property updates:
+- **Color Presets**: Blue, green, orange, red, violet, yellow, slate presets
+- **Border Radius Presets**: None, sm, md, lg, xl radius variations
+- **Scale Presets**: Smaller and larger font size adjustments
+- **Content Layout Presets**: Centered content layout variations
+
+**Theme Preset System**
+```css
+/* Theme Preset Declarations */
+body[data-theme-preset="blue"] { --primary: oklch(0.53 0.24 250); --primary-foreground: oklch(0.98 0 0); }
+body[data-theme-preset="green"] { --primary: oklch(0.52 0.19 150); --primary-foreground: oklch(0.98 0 0); }
+body[data-theme-preset="orange"] { --primary: oklch(0.65 0.21 45); --primary-foreground: oklch(0.98 0 0); }
+body[data-theme-preset="red"] { --primary: oklch(0.55 0.22 25); --primary-foreground: oklch(0.98 0 0); }
+body[data-theme-preset="violet"] { --primary: oklch(0.6 0.24 290); --primary-foreground: oklch(0.98 0 0); }
+body[data-theme-preset="yellow"] { --primary: oklch(0.75 0.18 90); --primary-foreground: oklch(0.2 0 0); }
+body[data-theme-preset="slate"] { --primary: oklch(0.4 0.03 240); --primary-foreground: oklch(0.98 0 0); }
+
+/* Border Radius Presets */
+body[data-theme-radius="none"] { --radius: 0rem; }
+body[data-theme-radius="sm"] { --radius: 0.25rem; }
+body[data-theme-radius="md"] { --radius: 0.5rem; }
+body[data-theme-radius="lg"] { --radius: 0.75rem; }
+body[data-theme-radius="xl"] { --radius: 1rem; }
+
+/* Scale Presets */
+body[data-theme-scale="sm"] { font-size: 90%; }
+body[data-theme-scale="lg"] { font-size: 110%; }
+```
+
+**Theme Preset Governance**
+- **Preset Registry**: Complete theme preset registry and management
+- **Runtime Switching**: Dynamic theme preset switching capabilities
+- **User Customization**: User-controlled theme customization options
+- **Performance Optimization**: Efficient theme preset switching performance
+
+### Theme Customization System
+
+**Comprehensive Theme Customization**
+The system provides extensive theme customization capabilities:
+- **Primary Color Customization**: User-selectable primary color themes
+- **Border Radius Customization**: Adjustable border radius presets
+- **Font Size Scaling**: Dynamic font size adjustment options
+- **Content Layout Customization**: Flexible content layout variations
+
+**Customization Token System**
+- **Theme Preset Tokens**: Runtime theme preset selection tokens
+- **Radius Tokens**: Border radius customization tokens
+- **Scale Tokens**: Font size scaling tokens
+- **Layout Tokens**: Content layout customization tokens
+
+**Customization Governance**
+- **Customization Registry**: Complete customization token registry
+- **User Preference Storage**: Persistent user preference management
+- **Theme Persistence**: Theme preference persistence across sessions
+- **Customization Validation**: Validation of user customization choices
+
+### Theme Preset Implementation Details
+
+**Systematic CSS Custom Property Updates**
+The theme preset system involves systematic CSS custom property updates affecting over 50 lines:
+- **Preset Declarations**: Comprehensive theme preset CSS property declarations
+- **Radius Presets**: Border radius variation CSS property definitions
+- **Scale Presets**: Font size scaling CSS property configurations
+- **Layout Presets**: Content layout variation CSS property settings
+
+**Theme Switching Performance**
+- **Efficient Switching**: Optimized theme switching performance
+- **State Management**: Theme state management and persistence
+- **Transition Effects**: Smooth theme transition animations
+- **Performance Monitoring**: Theme switching performance metrics
+
+**Theme Governance**
+- **Preset Management**: Centralized theme preset management system
+- **Customization Validation**: User customization validation and enforcement
+- **Performance Monitoring**: Theme preset performance impact monitoring
+- **Accessibility Compliance**: Theme preset accessibility compliance
+
+**Section sources**
+- [globals.css:2288-2352](file://src/app/globals.css#L2288-L2352)
+- [tokens.ts:769-803](file://src/lib/design-system/tokens.ts#L769-L803)
+- [token-registry.ts:324-326](file://src/lib/design-system/token-registry.ts#L324-L326)
+
 ## Design System Playground
 
 The design system playground provides an interactive environment for testing and validating component implementations with comprehensive migration guidance and modern responsive utilities.
@@ -913,6 +1085,13 @@ The playground includes comprehensive testing capabilities:
 - **Compound Variant Testing**: Validating soft tone variants for all status categories
 - **Color Consistency Validation**: Ensuring consistent color application across variants
 - **Accessibility Compliance**: Testing all badge variants for WCAG AAA compliance
+
+**Theme Preset Testing**
+**Updated** The playground includes comprehensive testing for the theme preset system:
+- **Preset Switching**: Testing all theme preset switching functionality
+- **Radius Preset Testing**: Validating border radius preset application
+- **Scale Preset Testing**: Testing font size scaling preset functionality
+- **Layout Preset Testing**: Validating content layout preset application
 
 **Section sources**
 - [badge.test.tsx:29-78](file://src/components/ui/__tests__/badge.test.tsx#L29-L78)
@@ -1144,6 +1323,13 @@ The design system includes comprehensive quality assurance processes to ensure c
 - **Color Consistency**: Measuring adherence to new color token standards
 - **Compound Variant Usage**: Tracking of enhanced soft tone variant adoption
 
+**Theme Preset Metrics**
+**Updated** The system now tracks metrics for the theme preset system:
+- **Preset Adoption**: Tracking of theme preset usage across users
+- **Radius Preset Usage**: Validation of border radius preset adoption
+- **Scale Preset Usage**: Measuring font size scaling preset adoption
+- **Layout Preset Usage**: Tracking of content layout preset adoption
+
 ## Integration and Maintenance
 
 The design system architecture supports scalable maintenance and evolution through centralized governance, modern responsive utilities, and comprehensive component refactoring.
@@ -1195,6 +1381,7 @@ The design system architecture supports scalable maintenance and evolution throu
 - **Responsive Typography Validation**: Testing across different screen sizes
 
 **CountBadge Maintenance and Governance**
+**Updated** The system now includes maintenance processes for the enhanced CountBadge component:
 - **Component Usage Analytics**: Tracking CountBadge adoption across modules
 - **Performance Monitoring**: Ensuring efficient CountBadge rendering
 - **Accessibility Compliance**: Regular validation of CountBadge accessibility
@@ -1215,6 +1402,14 @@ The design system architecture supports scalable maintenance and evolution throu
 - **Compound Variant Validation**: Regular validation of soft tone variant usage
 - **Performance Optimization**: Monitoring badge component rendering performance
 - **Developer Education**: Training on new badge variant usage and best practices
+
+**Theme Preset Maintenance and Governance**
+**Updated** The system now includes maintenance processes for the theme preset system:
+- **Preset Usage Analytics**: Tracking theme preset adoption across users
+- **Performance Monitoring**: Ensuring efficient theme preset switching
+- **Accessibility Compliance**: Validating theme presets with accessibility standards
+- **Developer Education**: Training on theme preset usage and customization
+- **Migration Support**: Assisting teams in adopting theme preset system
 
 ## Conclusion
 
@@ -1239,3 +1434,7 @@ The modernized component architecture with unified radix-ui packages, enhanced r
 The enhanced badge component with 5 new semantic status variants (success, warning, info, neutral, accent) and the new highlight foreground color variable demonstrate the system's commitment to continuous improvement and enhanced color consistency. These improvements provide developers with more granular control over status communication while maintaining accessibility and visual coherence across the platform.
 
 The comprehensive design system improvements ensure that the ZattarOS platform remains at the forefront of legal technology design, providing both developers and users with a consistent, accessible, and visually appealing interface that supports the complex needs of legal case management.
+
+The unified font families and comprehensive theme preset system position the ZattarOS Design System as a leader in customizable, accessible, and scalable design systems for legal technology applications. The systematic approach to font family management, theme preset implementation, and user customization ensures that the platform can adapt to diverse user preferences while maintaining design consistency and accessibility standards.
+
+The enhanced design system improvements ensure that the ZattarOS platform remains at the forefront of legal technology design, providing both developers and users with a consistent, accessible, and visually appealing interface that supports the complex needs of legal case management.

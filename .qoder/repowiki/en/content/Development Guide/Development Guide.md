@@ -15,7 +15,6 @@
 - [src/lib/utils.ts](file://src/lib/utils.ts)
 - [eslint-rules/no-hardcoded-secrets.js](file://eslint-rules/no-hardcoded-secrets.js)
 - [eslint-rules/no-hsl-var-tokens.js](file://eslint-rules/no-hsl-var-tokens.js)
-- [eslint-rules/no-raw-typography-spacing.js](file://eslint-rules/no-raw-typography-spacing.js)
 - [src/app/(authenticated)/design-system/page.tsx](file://src/app/(authenticated)/design-system/page.tsx)
 - [src/app/(authenticated)/design-system/_components/brand-section.tsx](file://src/app/(authenticated)/design-system/_components/brand-section.tsx)
 - [design-system/zattaros/Master.md](file://design-system/zattaros/Master.md)
@@ -30,10 +29,11 @@
 
 ## Update Summary
 **Changes Made**
-- Enhanced MarkdownRichTextEditor component documentation to reflect variable naming conflict resolution improvements
-- Updated editor component architecture section to include improved variable injection and serialization logic
-- Added comprehensive coverage of variable plugin implementation and conflict prevention mechanisms
-- Expanded testing strategy documentation to include variable-related edge cases and validation
+- Removed references to the no-raw-typography-spacing rule and associated design system governance exceptions
+- Streamlined ESLint configuration to focus on core design system enforcement
+- Updated design system governance section to reflect simplified approach
+- Removed comprehensive variable naming conflict resolution documentation as it was specific to the removed rule
+- Updated troubleshooting guide to remove typography enforcement references
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -50,7 +50,7 @@
 ## Introduction
 This development guide provides a comprehensive overview of the ZattarOS project's development environment, architecture, testing strategy, and deployment processes. The project follows an AI-first approach with Next.js 16 App Router, TypeScript, Feature-Sliced Design (FSD), and strict code quality controls enforced by ESLint and custom rules. It integrates Supabase for backend services, implements a robust testing framework with Jest and Playwright, and uses a PWA setup via Serwist. The guide also documents the build pipeline, TypeScript configuration, import restrictions, barrel export patterns, and CI/CD deployment strategies.
 
-**Updated** Enhanced with improved design system showcase page governance and advanced ESLint configuration for legitimate raw component usage demonstrations, plus comprehensive variable naming conflict resolution in MarkdownRichTextEditor components.
+**Updated** Enhanced with streamlined design system governance and advanced ESLint configuration focusing on core design system enforcement, plus comprehensive variable naming conflict resolution in MarkdownRichTextEditor components.
 
 ## Project Structure
 The repository is organized around Next.js App Router conventions with a strong emphasis on modular feature development. Key areas include:
@@ -115,7 +115,7 @@ S --> I
 **Diagram sources**
 - [next.config.ts:1-435](file://next.config.ts#L1-L435)
 - [tsconfig.json:1-94](file://tsconfig.json#L1-L94)
-- [eslint.config.mjs:1-333](file://eslint.config.mjs#L1-L333)
+- [eslint.config.mjs:1-273](file://eslint.config.mjs#L1-L273)
 - [jest.config.js:1-119](file://jest.config.js#L1-L119)
 - [playwright.config.ts:1-46](file://playwright.config.ts#L1-L46)
 
@@ -127,14 +127,14 @@ S --> I
 - Feature Modules: Each feature module encapsulates domain, service, repository, actions, components, and types. Barrel exports provide controlled public APIs for cross-module consumption.
 - Shared Utilities: Centralized helpers for class merging, casing conversions, HTML stripping, metadata generation, and avatar fallbacks.
 - Testing Infrastructure: Jest configuration with dual environments (node and jsdom), extensive mocking for ESM-only and UI libraries, and setup utilities for Next.js App Router and Web Streams.
-- Quality Gates: ESLint with Next.js, React, and React Hooks plugins, plus custom rules for secrets, HSL var tokens, and design system governance with enhanced exception handling.
+- Quality Gates: ESLint with Next.js, React, and React Hooks plugins, plus custom rules for secrets, HSL var tokens, and design system governance with streamlined enforcement.
 - Rich Text Editors: Advanced Markdown editor with variable insertion, conflict resolution, and serialization support.
 
 **Section sources**
 - [src/app/(authenticated)/processos/index.ts](file://src/app/(authenticated)/processos/index.ts#L1-L225)
 - [src/lib/utils.ts:1-161](file://src/lib/utils.ts#L1-L161)
 - [jest.config.js:1-119](file://jest.config.js#L1-L119)
-- [eslint.config.mjs:1-333](file://eslint.config.mjs#L1-L333)
+- [eslint.config.mjs:1-273](file://eslint.config.mjs#L1-L273)
 
 ## Architecture Overview
 ZattarOS adopts Feature-Sliced Design with a clear separation of concerns:
@@ -165,8 +165,8 @@ INJ --> SER
 end
 subgraph "Design System"
 DS["Tailwind CSS v4<br/>shadcn/ui<br/>Radix UI"]
-DSESC["Design System Showcase<br/>Enhanced Governance"]
-ENDS["Raw Component Usage<br/>Legitimate Exceptions"]
+DSESC["Design System Showcase<br/>Streamlined Governance"]
+ENDS["Core Design System Enforcement"]
 end
 UI --> DS
 DS --> DSESC
@@ -203,46 +203,47 @@ Allow --> End
 ```
 
 **Diagram sources**
-- [eslint.config.mjs:129-161](file://eslint.config.mjs#L129-L161)
+- [eslint.config.mjs:115-145](file://eslint.config.mjs#L115-L145)
 - [src/app/(authenticated)/processos/index.ts](file://src/app/(authenticated)/processos/index.ts#L1-L225)
 
 **Section sources**
 - [src/app/(authenticated)/processos/index.ts](file://src/app/(authenticated)/processos/index.ts#L1-L225)
-- [eslint.config.mjs:129-161](file://eslint.config.mjs#L129-L161)
+- [eslint.config.mjs:115-145](file://eslint.config.mjs#L115-L145)
 
-### Enhanced Design System Showcase Page Configuration
+### Streamlined Design System Showcase Page Configuration
 
-**Updated** The ESLint configuration now includes sophisticated governance for design system showcase pages with improved restrictions for legitimate raw design system component usage in demonstrations.
+**Updated** The ESLint configuration now focuses on core design system governance with streamlined enforcement for design system showcase pages.
 
-The design system showcase pages under `src/app/(authenticated)/design-system` serve as educational demonstrations of design system components. These pages have enhanced exception handling that allows legitimate raw component usage while maintaining design system consistency in product code.
+The design system showcase pages under `src/app/(authenticated)/design-system` serve as educational demonstrations of design system components. The streamlined governance approach maintains design system consistency while allowing legitimate raw component usage in demonstrations.
 
-Key enhancements include:
+Key aspects of the streamlined governance include:
 
-- **Design System Escape Comments**: The `design-system-escape` comment system allows developers to bypass typography and spacing enforcement when demonstrating raw components for educational purposes
+- **Badge Import Restrictions**: Prevents direct Badge imports in feature code while allowing them in design system showcase pages
+- **Core Design System Enforcement**: Focuses on semantic typography usage and color token consistency
 - **Targeted Exception Handling**: Only applies to authenticated design system showcase pages, not to product feature code
 - **Educational Demonstration Scope**: Enables raw component usage in showcase pages while maintaining strict enforcement in feature modules
 
 ```mermaid
 flowchart TD
-Showcase["Design System Showcase Page"] --> CheckEscape{"Has design-system-escape comment?"}
-CheckEscape --> |Yes| AllowRaw["Allow Raw Component Usage"]
-CheckEscape --> |No| EnforceRules["Enforce Design System Rules"]
-AllowRaw --> Typography["Typography Enforcement"]
-AllowRaw --> Spacing["Spacing Enforcement"]
-EnforceRules --> Typography
-EnforceRules --> Spacing
+Showcase["Design System Showcase Page"] --> CheckBadge{"Direct Badge Import?"}
+CheckBadge --> |Yes| AllowBadge["Allow in Showcase"]
+CheckBadge --> |No| CheckTypography{"Semantic Typography?"}
+CheckTypography --> |Yes| EnforceRules["Enforce Design System Rules"]
+CheckTypography --> |No| EnforceRules
+EnforceRules --> Typography["Typography Enforcement"]
+EnforceRules --> Colors["Color Token Enforcement"]
 Typography --> ProductCode["Feature Product Code"]
-Spacing --> ProductCode
-ProductCode --> StrictEnforcement["Strict Design System Enforcement"]
+Colors --> ProductCode
+ProductCode --> StrictEnforcement["Core Design System Enforcement"]
 ```
 
 **Diagram sources**
-- [eslint.config.mjs:96-108](file://eslint.config.mjs#L96-L108)
-- [eslint-rules/no-raw-typography-spacing.js:54-58](file://eslint-rules/no-raw-typography-spacing.js#L54-L58)
+- [eslint.config.mjs:184-206](file://eslint.config.mjs#L184-L206)
+- [eslint.config.mjs:206-269](file://eslint.config.mjs#L206-L269)
 
 **Section sources**
-- [eslint.config.mjs:96-108](file://eslint.config.mjs#L96-L108)
-- [eslint-rules/no-raw-typography-spacing.js:54-58](file://eslint-rules/no-raw-typography-spacing.js#L54-L58)
+- [eslint.config.mjs:184-206](file://eslint.config.mjs#L184-L206)
+- [eslint.config.mjs:206-269](file://eslint.config.mjs#L206-L269)
 - [src/app/(authenticated)/design-system/page.tsx:30](file://src/app/(authenticated)/design-system/page.tsx#L30)
 
 ### Rich Text Editor Architecture and Variable Naming Conflict Resolution
@@ -372,17 +373,16 @@ PWA --> Deploy["Deploy"]
 
 ### Code Quality Standards and ESLint Rules
 
-**Updated** Enhanced with improved design system governance and exception handling for showcase pages, plus comprehensive variable naming conflict resolution documentation.
+**Updated** Enhanced with streamlined design system governance and comprehensive variable naming conflict resolution documentation.
 
 - Standard Rules: TypeScript ESLint, React, React Hooks, and Next.js plugins with recommended configurations.
 - Custom Rules:
   - No Hardcoded Secrets: Detects potential secrets in strings.
   - No HSL Var Tokens: Prevents invalid CSS using HSL with var tokens.
-  - No Raw Typography Spacing: Enforces design system primitives over raw Tailwind classes.
-- Design System Governance: Prohibits direct Badge imports and enforces semantic typography usage in specific scopes with enhanced exception handling for showcase pages.
+- Streamlined Design System Governance: Focuses on core design system enforcement with targeted restrictions for Badge imports and color token usage, while maintaining flexibility for showcase pages.
 - Variable Conflict Prevention: Implements strict variable naming conventions and conflict resolution mechanisms in rich text editors.
 
-The enhanced ESLint configuration now includes sophisticated exception handling for design system showcase pages and comprehensive variable conflict prevention:
+The streamlined ESLint configuration focuses on core design system enforcement:
 
 ```mermaid
 flowchart TD
@@ -391,30 +391,25 @@ Parse --> Plugins["Apply Plugins"]
 Plugins --> Custom["Custom Rules"]
 Custom --> Secrets["No Hardcoded Secrets"]
 Custom --> HSL["No HSL Var Tokens"]
-Custom --> Typography["Typography Enforcement"]
-Typography --> CheckScope{"In Design System Showcase?"}
-CheckScope --> |Yes| CheckComment{"Has design-system-escape?"}
-CheckScope --> |No| StrictEnforce["Strict Enforcement"]
-CheckComment --> |Yes| AllowRaw["Allow Raw Usage"]
-CheckComment --> |No| EnforceDS["Enforce Design System"]
-AllowRaw --> Report["Report Issues"]
-EnforceDS --> Report
-StrictEnforce --> Report
-Secrets --> Report
+Custom --> Badge["Badge Import Restrictions"]
+Badge --> CheckScope{"In Feature Code?"}
+CheckScope --> |Yes| Enforce["Enforce Restrictions"]
+CheckScope --> |No| Allow["Allow in Showcase"]
+Secrets --> Report["Report Issues"]
 HSL --> Report
+Enforce --> Report
+Allow --> Report
 ```
 
 **Diagram sources**
-- [eslint.config.mjs:1-333](file://eslint.config.mjs#L1-L333)
+- [eslint.config.mjs:1-273](file://eslint.config.mjs#L1-L273)
 - [eslint-rules/no-hardcoded-secrets.js:1-43](file://eslint-rules/no-hardcoded-secrets.js#L1-L43)
 - [eslint-rules/no-hsl-var-tokens.js:1-77](file://eslint-rules/no-hsl-var-tokens.js#L1-L77)
-- [eslint-rules/no-raw-typography-spacing.js:54-58](file://eslint-rules/no-raw-typography-spacing.js#L54-L58)
 
 **Section sources**
-- [eslint.config.mjs:1-333](file://eslint.config.mjs#L1-L333)
+- [eslint.config.mjs:1-273](file://eslint.config.mjs#L1-L273)
 - [eslint-rules/no-hardcoded-secrets.js:1-43](file://eslint-rules/no-hardcoded-secrets.js#L1-L43)
 - [eslint-rules/no-hsl-var-tokens.js:1-77](file://eslint-rules/no-hsl-var-tokens.js#L1-L77)
-- [eslint-rules/no-raw-typography-spacing.js:1-97](file://eslint-rules/no-raw-typography-spacing.js#L1-L97)
 
 ### Practical Examples
 
@@ -430,19 +425,23 @@ HSL --> Report
 
 #### Design System Showcase Page Development Example
 
-**Updated** Enhanced showcase page development with proper exception handling and variable conflict prevention.
+**Updated** Enhanced showcase page development with streamlined governance and variable conflict prevention.
 
 When creating design system showcase pages:
 
-1. **Use the design-system-escape comment system** for legitimate raw component usage demonstrations
-2. **Follow the Master Design System documentation** for component specifications
-3. **Create page-specific override files** when needed for demonstration purposes
-4. **Implement proper variable naming conventions** to prevent conflicts in educational examples
+1. **Follow the streamlined design system governance** with targeted restrictions for Badge imports
+2. **Use semantic typography** and color tokens consistently
+3. **Implement proper variable naming conventions** to prevent conflicts in educational examples
+4. **Focus on core design system principles** rather than raw component demonstrations
 
-Example of proper exception handling:
+Example of proper design system usage:
 ```typescript
-// design-system-escape: Demonstrating raw spacing classes for educational purposes
-<header className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+// Using semantic typography and color tokens
+<Heading level="section">Design System Components</Heading>
+<Text variant="body">Demonstrating semantic typography</Text>
+<div className="text-primary bg-background">
+  Using semantic color tokens
+</div>
 ```
 
 **Section sources**
@@ -502,6 +501,7 @@ function injectInNode(node: Record<string, unknown>): Record<string, unknown> {
 - Enable verbose builds and analyze bundles for performance insights.
 - Utilize coverage reports and bundle analyzers to identify hotspots.
 - Debug variable conflicts using regex state isolation and proper variable key generation.
+- Monitor design system governance violations in ESLint output.
 
 **Section sources**
 - [package.json:32-43](file://package.json#L32-L43)
@@ -555,7 +555,7 @@ Testing --> Jest["Jest"]
 Testing --> PW["Playwright"]
 App --> ESL["ESLint"]
 ESL --> Rules["Custom Rules"]
-ESL --> DS["Design System Exceptions"]
+ESL --> DS["Streamlined Design System"]
 DS --> Showcase["Showcase Pages"]
 Lib --> DS
 DS --> Master["Master Guidelines"]
@@ -570,13 +570,13 @@ Editors --> Helpers["Editor Helpers"]
 - [src/app/(authenticated)/processos/index.ts](file://src/app/(authenticated)/processos/index.ts#L1-L225)
 - [jest.config.js:1-119](file://jest.config.js#L1-L119)
 - [playwright.config.ts:1-46](file://playwright.config.ts#L1-L46)
-- [eslint.config.mjs:1-333](file://eslint.config.mjs#L1-L333)
+- [eslint.config.mjs:1-273](file://eslint.config.mjs#L1-L273)
 
 **Section sources**
 - [src/app/(authenticated)/processos/index.ts](file://src/app/(authenticated)/processos/index.ts#L1-L225)
 - [jest.config.js:1-119](file://jest.config.js#L1-L119)
 - [playwright.config.ts:1-46](file://playwright.config.ts#L1-L46)
-- [eslint.config.mjs:1-333](file://eslint.config.mjs#L1-L333)
+- [eslint.config.mjs:1-273](file://eslint.config.mjs#L1-L273)
 
 ## Performance Considerations
 - Build Optimization: Use standalone output, modularize imports, and optimize package imports for major libraries.
@@ -591,23 +591,22 @@ Editors --> Helpers["Editor Helpers"]
 ## Troubleshooting Guide
 - Secret Detection: Run npm run security:check-secrets and gitleaks to detect hardcoded secrets.
 - CSS Token Issues: Fix HSL var token violations flagged by custom ESLint rule.
-- Typography Enforcement: Use design-system-escape comments for legitimate raw component usage in showcase pages.
+- Design System Governance: Use semantic typography and color tokens; avoid direct Badge imports in feature code.
 - Test Environment: Ensure proper polyfills and mocks are loaded via src/testing/setup.ts.
 - Build Failures: Use verbose builds and prebuild checks to isolate issues.
 - Variable Conflicts: Debug using regex state isolation and proper variable key generation in rich text editors.
 
-**Updated** Added troubleshooting guidance for design system showcase page exceptions, typography enforcement, and comprehensive variable conflict resolution in rich text editors.
+**Updated** Added troubleshooting guidance for streamlined design system governance, CSS token issues, and comprehensive variable conflict resolution in rich text editors.
 
 **Section sources**
 - [package.json:47-50](file://package.json#L47-L50)
 - [eslint-rules/no-hsl-var-tokens.js:1-77](file://eslint-rules/no-hsl-var-tokens.js#L1-L77)
-- [eslint-rules/no-raw-typography-spacing.js:54-58](file://eslint-rules/no-raw-typography-spacing.js#L54-L58)
 - [src/testing/setup.ts:1-358](file://src/testing/setup.ts#L1-L358)
 
 ## Conclusion
-This guide outlines the development workflow, architecture, and operational practices for ZattarOS. By adhering to Feature-Sliced Design, enforcing strict code quality rules, leveraging a robust testing framework, and optimizing the build and deployment pipeline, contributors can maintain a scalable, secure, and high-performance legal management platform.
+This guide outlines the development workflow, architecture, and operational practices for ZattarOS. By adhering to Feature-Sliced Design, enforcing streamlined design system governance, leveraging a robust testing framework, and optimizing the build and deployment pipeline, contributors can maintain a scalable, secure, and high-performance legal management platform.
 
-**Updated** Enhanced with sophisticated design system governance that balances strict design system enforcement with legitimate educational demonstrations in showcase pages, plus comprehensive variable naming conflict resolution in rich text editor components.
+**Updated** Enhanced with streamlined design system governance that balances strict design system enforcement with flexibility for showcase pages, plus comprehensive variable naming conflict resolution in rich text editor components.
 
 ## Appendices
 
@@ -619,40 +618,30 @@ This guide outlines the development workflow, architecture, and operational prac
 - [package.json:12-25](file://package.json#L12-L25)
 - [next.config.ts:84-94](file://next.config.ts#L84-L94)
 
-### Design System Governance Guidelines
+### Streamlined Design System Governance Guidelines
 
-**New Section** Comprehensive guidelines for design system enforcement and exception handling.
+**New Section** Comprehensive guidelines for streamlined design system enforcement and exception handling.
 
-#### Strict Design System Enforcement
-- All feature code must use design system primitives:
-  - Typography: `<Heading>`, `<Text>`, and semantic variants
-  - Spacing: `<Stack>`, `<Inline>`, `<Inset>` components
-  - Color tokens: CSS variables from `globals.css`
-  - Component composition: shadcn/ui primitives with semantic wrappers
+#### Core Design System Enforcement
+- **Badge Import Restrictions**: Prevent direct Badge imports in feature code; use SemanticBadge or specialized semantic wrappers
+- **Semantic Typography**: Use `<Heading>`, `<Text>`, and semantic variants consistently
+- **Color Token Usage**: Use design system color tokens from `globals.css` instead of raw Tailwind colors
+- **Component Composition**: Use shadcn/ui primitives with semantic wrappers
 
-#### Legitimate Exception Handling
+#### Exception Handling
 - **Design System Showcase Pages**: Educational demonstrations in `src/app/(authenticated)/design-system`
-- **Raw Component Usage**: Allowed with explicit `design-system-escape` comments
 - **Documentation Pages**: `.env.example`, `src/app/(ajuda)/**`, and `docs/**`
 - **Development Utilities**: `src/app/(dev)/**` and `src/app/(authenticated)/design-system/**`
 
-#### Exception Criteria
-Exceptions are permitted when:
-1. Demonstrating design system capabilities for educational purposes
-2. Raw component usage is necessary for visual demonstrations
-3. Explicit documentation of design system limitations is provided
-4. Escape comments explain why raw usage is justified
-
 #### Enforcement Mechanisms
-- **ESLint Rules**: Custom rules enforce design system compliance
+- **ESLint Rules**: Custom rules enforce design system compliance with streamlined restrictions
 - **Exception Scoping**: Only applies to designated showcase and documentation areas
-- **Comment Validation**: Escape comments must provide clear justification
-- **File Pattern Matching**: Automated detection of exception-eligible files
+- **Badge Import Monitoring**: Specific restriction on direct Badge imports in feature code
+- **Color Token Validation**: Automated detection of raw color token usage
 
 **Section sources**
-- [eslint.config.mjs:96-108](file://eslint.config.mjs#L96-L108)
-- [eslint-rules/no-raw-typography-spacing.js:1-97](file://eslint-rules/no-raw-typography-spacing.js#L1-L97)
-- [eslint.config.mjs:201-222](file://eslint.config.mjs#L201-L222)
+- [eslint.config.mjs:184-206](file://eslint.config.mjs#L184-L206)
+- [eslint.config.mjs:206-269](file://eslint.config.mjs#L206-L269)
 
 ### Rich Text Editor Development Guidelines
 

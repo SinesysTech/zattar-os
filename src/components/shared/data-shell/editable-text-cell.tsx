@@ -1,7 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { Loader2 } from 'lucide-react';
+import {
+  Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import {
@@ -9,8 +10,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
-  DialogBody,
+  DialogDescription
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 
@@ -81,13 +81,13 @@ export function EditableTextCell({
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogContent
                     showCloseButton={false}
-                    className="sm:max-w-md glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+                    className="sm:max-w-md  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
                 >
                     <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
                         <DialogTitle>{title}</DialogTitle>
                         <DialogDescription className="sr-only">Edite o texto e salve as alterações</DialogDescription>
                     </DialogHeader>
-                    <DialogBody>
+                    <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
                         <div className="px-6 py-4">
                             <Textarea
                                 value={text}
@@ -98,7 +98,7 @@ export function EditableTextCell({
                                 autoFocus
                             />
                         </div>
-                    </DialogBody>
+                    </div>
                     <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
                         <Button
                             variant="outline"

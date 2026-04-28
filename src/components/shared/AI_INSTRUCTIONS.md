@@ -14,6 +14,7 @@ Agentes de IA **DEVEM** seguir estes padrões exatamente.
 Você **SEMPRE** deve priorizar a injeção do pacote de primitivas avançadas (Glass Effects, Micro-tipografia) implementadas atualmente nos módulos mais densos.
 
 ### Regras do Neon Magistrate
+
 1. **Painéis Principais e Cards (Glass Effects):** Não utilize `<div className="bg-card">`. Utilize o componente central `<GlassPanel depth={1 | 2 | 3}>` de `@/components/shared/glass-panel`.
 2. **Ambiente Glow / Blur:** Para componentes Hero, injetar luzes de fundo atmosféricas atrás do conteúdo: `<div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl pointer-events-none" />`
 3. **Indicadores Numéricos Dinâmicos:** Ao exibir números chave ou estatísticas numéricas principais, **NÃO** exiba plain text estático. Encape-os dentro de `<AnimatedNumber value={value} />` (originário de `@/app/(authenticated)/dashboard/mock/widgets/primitives`).
@@ -27,26 +28,26 @@ Qualquer refatoração requer obrigatoriamente a atualização dos componentes p
 
 ## Referência Rápida: Qual Componente Usar
 
-| Caso de Uso | Componente | Import |
-|-------------|------------|--------|
-| Layout de página | `PageShell` | `@/components/shared/page-shell` |
-| Página com tabela | `DataShell` + `DataTable` | `@/components/shared/data-shell` |
-| Toolbar da tabela | `DataTableToolbar` | `@/components/shared/data-shell` |
-| Paginação da tabela | `DataPagination` | `@/components/shared/data-shell` |
-| Header de coluna ordenável | `DataTableColumnHeader` | `@/components/shared/data-shell` |
-| Modal de formulário | `DialogFormShell` | `@/components/shared/dialog-form-shell` |
-| Estado vazio | `EmptyState` | `@/components/shared/empty-state` |
+| Caso de Uso                | Componente                | Import                                  |
+| -------------------------- | ------------------------- | --------------------------------------- |
+| Layout de página           | `PageShell`               | `@/components/shared/page-shell`        |
+| Página com tabela          | `DataShell` + `DataTable` | `@/components/shared/data-shell`        |
+| Toolbar da tabela          | `DataTableToolbar`        | `@/components/shared/data-shell`        |
+| Paginação da tabela        | `DataPagination`          | `@/components/shared/data-shell`        |
+| Header de coluna ordenável | `DataTableColumnHeader`   | `@/components/shared/data-shell`        |
+| Modal de formulário        | `DialogFormShell`         | `@/components/shared/dialog-form-shell` |
+| Estado vazio               | `EmptyState`              | `@/components/shared/empty-state`       |
 
 ---
 
 ## COMPONENTES DEPRECADOS - NÃO USAR
 
-| Componente | Motivo | Substituição |
-|------------|--------|--------------|
-| `TableToolbar` | Legado | `DataTableToolbar` |
-| `TableWithToolbar` | Legado | `DataShell` + `DataTable` |
-| `ResponsiveTable` | Legado | `DataTable` |
-| `TablePagination` diretamente | Use wrapper | `DataPagination` |
+| Componente                    | Motivo      | Substituição              |
+| ----------------------------- | ----------- | ------------------------- |
+| `TableToolbar`                | Legado      | `DataTableToolbar`        |
+| `TableWithToolbar`            | Legado      | `DataShell` + `DataTable` |
+| `ResponsiveTable`             | Legado      | `DataTable`               |
+| `TablePagination` diretamente | Use wrapper | `DataPagination`          |
 
 ---
 
@@ -82,9 +83,9 @@ src/app/app/[modulo]/
 
 ```tsx
 // src/app/app/[modulo]/page.tsx
-import { PageShell } from '@/components/shared/page-shell';
-import { listarEntidades } from './service';
-import { EntidadeTableWrapper } from './components/entidade-table-wrapper';
+import { PageShell } from "@/components/shared/page-shell";
+import { listarEntidades } from "./service";
+import { EntidadeTableWrapper } from "./components/entidade-table-wrapper";
 
 export default async function EntidadesPage() {
   // Busca dados no servidor
@@ -110,27 +111,27 @@ export default async function EntidadesPage() {
 ### 2. Client Wrapper (entidade-table-wrapper.tsx)
 
 ```tsx
-'use client';
+"use client";
 
-import * as React from 'react';
-import { useRouter } from 'next/navigation';
-import { useDebounce } from '@/hooks/use-debounce';
+import * as React from "react";
+import { useRouter } from "next/navigation";
+import { useDebounce } from "@/hooks/use-debounce";
 import {
   DataShell,
   DataPagination,
   DataTable,
-  DataTableToolbar
-} from '@/components/shared/data-shell';
-import type { Table as TanstackTable } from '@tanstack/react-table';
-import { getEntidadeColumns } from './columns';
-import { actionListarEntidades } from '@/app/actions/[modulo]';
+  DataTableToolbar,
+} from "@/components/shared/data-shell";
+import type { Table as TanstackTable } from "@tanstack/react-table";
+import { getEntidadeColumns } from "./columns";
+import { actionListarEntidades } from "@/app/actions/[modulo]";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 
 // =============================================================================
 // TIPOS
@@ -161,21 +162,25 @@ export function EntidadeTableWrapper({
 
   // ---------- Estado dos Dados ----------
   const [entidades, setEntidades] = React.useState<Entidade[]>(initialData);
-  const [table, setTable] = React.useState<TanstackTable<Entidade> | null>(null);
-  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
+  const [table, setTable] = React.useState<TanstackTable<Entidade> | null>(
+    null,
+  );
+  const [density, setDensity] = React.useState<
+    "compact" | "standard" | "relaxed"
+  >("standard");
 
   // ---------- Estado de Paginação ----------
   const [pageIndex, setPageIndex] = React.useState(
-    initialPagination ? initialPagination.page - 1 : 0
+    initialPagination ? initialPagination.page - 1 : 0,
   );
   const [pageSize, setPageSize] = React.useState(
-    initialPagination ? initialPagination.limit : 50
+    initialPagination ? initialPagination.limit : 50,
   );
   const [total, setTotal] = React.useState(
-    initialPagination ? initialPagination.total : 0
+    initialPagination ? initialPagination.total : 0,
   );
   const [totalPages, setTotalPages] = React.useState(
-    initialPagination ? initialPagination.totalPages : 0
+    initialPagination ? initialPagination.totalPages : 0,
   );
 
   // ---------- Estado de Loading/Error ----------
@@ -183,13 +188,14 @@ export function EntidadeTableWrapper({
   const [error, setError] = React.useState<string | null>(null);
 
   // ---------- Estado de Filtros ----------
-  const [globalFilter, setGlobalFilter] = React.useState('');
-  const [status, setStatus] = React.useState<'ativo' | 'inativo' | ''>('ativo');
+  const [globalFilter, setGlobalFilter] = React.useState("");
+  const [status, setStatus] = React.useState<"ativo" | "inativo" | "">("ativo");
 
   // ---------- Estado de Dialogs ----------
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
-  const [entidadeParaEditar, setEntidadeParaEditar] = React.useState<Entidade | null>(null);
+  const [entidadeParaEditar, setEntidadeParaEditar] =
+    React.useState<Entidade | null>(null);
 
   // Debounce da busca (500ms)
   const buscaDebounced = useDebounce(globalFilter, 500);
@@ -201,14 +207,17 @@ export function EntidadeTableWrapper({
 
     try {
       const result = await actionListarEntidades({
-        pagina: pageIndex + 1,  // API usa 1-based
+        pagina: pageIndex + 1, // API usa 1-based
         limite: pageSize,
         busca: buscaDebounced || undefined,
-        ativo: status === '' ? undefined : status === 'ativo',
+        ativo: status === "" ? undefined : status === "ativo",
       });
 
       if (result.success) {
-        const data = result.data as { data: Entidade[]; pagination: PaginationInfo };
+        const data = result.data as {
+          data: Entidade[];
+          pagination: PaginationInfo;
+        };
         setEntidades(data.data);
         setTotal(data.pagination.total);
         setTotalPages(data.pagination.totalPages);
@@ -216,7 +225,7 @@ export function EntidadeTableWrapper({
         setError(result.error);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro ao carregar dados');
+      setError(err instanceof Error ? err.message : "Erro ao carregar dados");
     } finally {
       setIsLoading(false);
     }
@@ -251,12 +260,12 @@ export function EntidadeTableWrapper({
         await refetch();
         router.refresh();
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Erro ao deletar');
+        setError(err instanceof Error ? err.message : "Erro ao deletar");
       } finally {
         setIsLoading(false);
       }
     },
-    [refetch, router]
+    [refetch, router],
   );
 
   const handleCreateSuccess = React.useCallback(() => {
@@ -275,7 +284,7 @@ export function EntidadeTableWrapper({
   // ---------- Columns (Memoized) ----------
   const columns = React.useMemo(
     () => getEntidadeColumns(handleEdit, handleDelete),
-    [handleEdit, handleDelete]
+    [handleEdit, handleDelete],
   );
 
   // ---------- Render ----------
@@ -283,7 +292,7 @@ export function EntidadeTableWrapper({
     <>
       <DataShell
         actionButton={{
-          label: 'Nova Entidade',
+          label: "Nova Entidade",
           onClick: () => setCreateOpen(true),
         }}
         header={
@@ -295,15 +304,15 @@ export function EntidadeTableWrapper({
               searchValue={globalFilter}
               onSearchValueChange={(value) => {
                 setGlobalFilter(value);
-                setPageIndex(0);  // IMPORTANTE: Reset página ao buscar
+                setPageIndex(0); // IMPORTANTE: Reset página ao buscar
               }}
               filtersSlot={
                 <>
                   <Select
                     value={status}
                     onValueChange={(val) => {
-                      setStatus(val as 'ativo' | 'inativo' | '');
-                      setPageIndex(0);  // IMPORTANTE: Reset página ao filtrar
+                      setStatus(val as "ativo" | "inativo" | "");
+                      setPageIndex(0); // IMPORTANTE: Reset página ao filtrar
                     }}
                   >
                     <SelectTrigger className="h-10 w-37.5">
@@ -383,15 +392,15 @@ export function EntidadeTableWrapper({
 ### 3. Definição de Colunas (columns.tsx)
 
 ```tsx
-import type { ColumnDef } from '@tanstack/react-table';
-import { DataTableColumnHeader } from '@/components/shared/data-shell';
-import { Button } from '@/components/ui/button';
-import { ButtonGroup } from '@/components/ui/button-group';
+import type { ColumnDef } from "@tanstack/react-table";
+import { DataTableColumnHeader } from "@/components/shared/data-shell";
+import { Button } from "@/components/ui/button";
+import { ButtonGroup } from "@/components/ui/button-group";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
+} from "@/components/ui/tooltip";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -402,9 +411,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { Eye, Pencil, Trash2 } from 'lucide-react';
-import Link from 'next/link';
+} from "@/components/ui/alert-dialog";
+import { Eye, Pencil, Trash2 } from "lucide-react";
+import Link from "next/link";
 
 // =============================================================================
 // FACTORY FUNCTION - Recebe callbacks de ação
@@ -412,18 +421,18 @@ import Link from 'next/link';
 
 export function getEntidadeColumns(
   onEdit: (entidade: Entidade) => void,
-  onDelete: (entidade: Entidade) => void
+  onDelete: (entidade: Entidade) => void,
 ): ColumnDef<Entidade>[] {
   return [
     // Coluna: Nome (ordenável, alinhada à esquerda)
     {
-      accessorKey: 'nome',
+      accessorKey: "nome",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Nome" />
       ),
       meta: {
-        align: 'left',
-        headerLabel: 'Nome',  // Para dropdown de visibilidade
+        align: "left",
+        headerLabel: "Nome", // Para dropdown de visibilidade
       },
       size: 280,
       enableSorting: true,
@@ -431,18 +440,18 @@ export function getEntidadeColumns(
 
     // Coluna: Status (ordenável, centralizada)
     {
-      accessorKey: 'status',
+      accessorKey: "status",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Status" />
       ),
       meta: {
-        align: 'center',
-        headerLabel: 'Status',
+        align: "center",
+        headerLabel: "Status",
       },
       size: 120,
       cell: ({ row }) => (
-        <Badge variant={row.original.ativo ? 'success' : 'secondary'}>
-          {row.original.ativo ? 'Ativo' : 'Inativo'}
+        <Badge variant={row.original.ativo ? "success" : "secondary"}>
+          {row.original.ativo ? "Ativo" : "Inativo"}
         </Badge>
       ),
       enableSorting: true,
@@ -450,13 +459,13 @@ export function getEntidadeColumns(
 
     // Coluna: Valor (ordenável, alinhada à direita)
     {
-      accessorKey: 'valor',
+      accessorKey: "valor",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Valor" />
       ),
       meta: {
-        align: 'right',
-        headerLabel: 'Valor',
+        align: "right",
+        headerLabel: "Valor",
       },
       size: 120,
       cell: ({ row }) => formatCurrency(row.original.valor),
@@ -465,9 +474,9 @@ export function getEntidadeColumns(
 
     // Coluna: Ações (NÃO ordenável, NÃO ocultável)
     {
-      id: 'actions',
-      header: 'Ações',
-      meta: { align: 'center' },
+      id: "actions",
+      header: "Ações",
+      meta: { align: "center" },
       size: 120,
       cell: ({ row }) => (
         <EntidadeActions
@@ -564,15 +573,15 @@ function EntidadeActions({
 ### Uso do DialogFormShell
 
 ```tsx
-import { DialogFormShell } from '@/components/shared';
-import { Button } from '@/components/ui/button';
+import { DialogFormShell } from "@/components/shared";
+import { Button } from "@/components/ui/button";
 
 interface EntidadeFormDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSuccess?: () => void;
   entidade?: Entidade;
-  mode: 'create' | 'edit';
+  mode: "create" | "edit";
 }
 
 export function EntidadeFormDialog({
@@ -600,15 +609,19 @@ export function EntidadeFormDialog({
     <DialogFormShell
       open={open}
       onOpenChange={onOpenChange}
-      title={mode === 'create' ? 'Nova Entidade' : 'Editar Entidade'}
-      maxWidth="lg"  // sm | md | lg | xl | 2xl
+      title={mode === "create" ? "Nova Entidade" : "Editar Entidade"}
+      maxWidth="lg" // sm | md | lg | xl | 2xl
       footer={
         <Button type="submit" form="entidade-form" disabled={isPending}>
-          {isPending ? 'Salvando...' : 'Salvar'}
+          {isPending ? "Salvando..." : "Salvar"}
         </Button>
       }
     >
-      <form id="entidade-form" onSubmit={handleSubmit} className="space-y-4 p-6">
+      <form
+        id="entidade-form"
+        onSubmit={handleSubmit}
+        className="space-y-4 p-6"
+      >
         {/* Campos do formulário */}
       </form>
     </DialogFormShell>
@@ -652,10 +665,11 @@ export function EntidadeFormDialog({
 ## PADRÃO C: Painel de Detalhes
 
 Este projeto **não adota `Sheet`** (painel lateral). Detail panels devem usar
-`DialogFormShell` (glass-dialog centralizado), mesmo padrão dos formulários.
+`DialogFormShell` em dialog centralizado, mesmo padrão dos formulários.
 
 Para blocos visuais internos (Section, InfoRow, MetaGrid, MetaItem, Audit), use
 helpers locais no próprio arquivo — ver exemplos em:
+
 - `src/app/(authenticated)/expedientes/components/expediente-visualizar-dialog.tsx`
 - `src/app/(authenticated)/pericias/components/pericia-detalhes-dialog.tsx`
 
@@ -667,55 +681,55 @@ Se o padrão se repetir em ≥3 arquivos, promover a um shared dedicado (ainda n
 
 ### DataShell
 
-| Prop | Tipo | Descrição |
-|------|------|-----------|
-| `header` | `ReactNode` | Toolbar/filtros |
-| `footer` | `ReactNode` | Paginação |
-| `children` | `ReactNode` | DataTable |
-| `actionButton` | `{ label, onClick, icon?, tooltip? }` | Botão de ação primária |
-| `ariaLabel` | `string` | Label de acessibilidade |
+| Prop           | Tipo                                  | Descrição               |
+| -------------- | ------------------------------------- | ----------------------- |
+| `header`       | `ReactNode`                           | Toolbar/filtros         |
+| `footer`       | `ReactNode`                           | Paginação               |
+| `children`     | `ReactNode`                           | DataTable               |
+| `actionButton` | `{ label, onClick, icon?, tooltip? }` | Botão de ação primária  |
+| `ariaLabel`    | `string`                              | Label de acessibilidade |
 
 ### DataTableToolbar
 
-| Prop | Tipo | Descrição |
-|------|------|-----------|
-| `table` | `Table<TData>` | Instância TanStack Table |
-| `density` | `'compact' \| 'standard' \| 'relaxed'` | Densidade da tabela |
-| `onDensityChange` | `(density) => void` | Callback de mudança |
-| `searchValue` | `string` | Valor da busca (controlled) |
-| `onSearchValueChange` | `(value) => void` | Callback de busca |
-| `searchPlaceholder` | `string` | Placeholder do input |
-| `filtersSlot` | `ReactNode` | Filtros customizados |
-| `actionSlot` | `ReactNode` | Ações adicionais |
-| `onExport` | `(format) => void` | Callback de exportação |
+| Prop                  | Tipo                                   | Descrição                   |
+| --------------------- | -------------------------------------- | --------------------------- |
+| `table`               | `Table<TData>`                         | Instância TanStack Table    |
+| `density`             | `'compact' \| 'standard' \| 'relaxed'` | Densidade da tabela         |
+| `onDensityChange`     | `(density) => void`                    | Callback de mudança         |
+| `searchValue`         | `string`                               | Valor da busca (controlled) |
+| `onSearchValueChange` | `(value) => void`                      | Callback de busca           |
+| `searchPlaceholder`   | `string`                               | Placeholder do input        |
+| `filtersSlot`         | `ReactNode`                            | Filtros customizados        |
+| `actionSlot`          | `ReactNode`                            | Ações adicionais            |
+| `onExport`            | `(format) => void`                     | Callback de exportação      |
 
 ### DataTable
 
-| Prop | Tipo | Descrição |
-|------|------|-----------|
-| `data` | `TData[]` | Dados da tabela |
-| `columns` | `ColumnDef<TData>[]` | Definição de colunas |
-| `hideTableBorder` | `boolean` | Ocultar borda da tabela (default: false) |
-| `isLoading` | `boolean` | Estado de loading |
-| `error` | `string \| null` | Mensagem de erro |
-| `density` | `'compact' \| 'standard' \| 'relaxed'` | Densidade |
-| `emptyMessage` | `string` | Mensagem quando vazio |
-| `onTableReady` | `(table) => void` | Callback com instância da tabela |
-| `pagination` | `PaginationProps` | Config de paginação |
-| `rowSelection` | `RowSelectionProps` | Config de seleção |
+| Prop              | Tipo                                   | Descrição                                |
+| ----------------- | -------------------------------------- | ---------------------------------------- |
+| `data`            | `TData[]`                              | Dados da tabela                          |
+| `columns`         | `ColumnDef<TData>[]`                   | Definição de colunas                     |
+| `hideTableBorder` | `boolean`                              | Ocultar borda da tabela (default: false) |
+| `isLoading`       | `boolean`                              | Estado de loading                        |
+| `error`           | `string \| null`                       | Mensagem de erro                         |
+| `density`         | `'compact' \| 'standard' \| 'relaxed'` | Densidade                                |
+| `emptyMessage`    | `string`                               | Mensagem quando vazio                    |
+| `onTableReady`    | `(table) => void`                      | Callback com instância da tabela         |
+| `pagination`      | `PaginationProps`                      | Config de paginação                      |
+| `rowSelection`    | `RowSelectionProps`                    | Config de seleção                        |
 
 ### DialogFormShell
 
-| Prop | Tipo | Descrição |
-|------|------|-----------|
-| `open` | `boolean` | Controle de abertura |
-| `onOpenChange` | `(open) => void` | Callback de mudança |
-| `title` | `string` | Título do dialog |
-| `description` | `string?` | Descrição opcional |
-| `children` | `ReactNode` | Conteúdo do formulário |
-| `footer` | `ReactNode?` | Botões de ação |
-| `multiStep` | `{ current, total, stepTitle? }` | Config multi-step |
-| `maxWidth` | `'sm' \| 'md' \| 'lg' \| 'xl' \| '2xl'` | Largura máxima |
+| Prop           | Tipo                                    | Descrição              |
+| -------------- | --------------------------------------- | ---------------------- |
+| `open`         | `boolean`                               | Controle de abertura   |
+| `onOpenChange` | `(open) => void`                        | Callback de mudança    |
+| `title`        | `string`                                | Título do dialog       |
+| `description`  | `string?`                               | Descrição opcional     |
+| `children`     | `ReactNode`                             | Conteúdo do formulário |
+| `footer`       | `ReactNode?`                            | Botões de ação         |
+| `multiStep`    | `{ current, total, stepTitle? }`        | Config multi-step      |
+| `maxWidth`     | `'sm' \| 'md' \| 'lg' \| 'xl' \| '2xl'` | Largura máxima         |
 
 ---
 
@@ -747,6 +761,7 @@ Se o padrão se repetir em ≥3 arquivos, promover a um shared dedicado (ainda n
 ## Referência de Implementação
 
 **Arquivo gold standard:**
+
 ```
 src/app/app/partes/components/clientes/clientes-table-wrapper.tsx
 ```

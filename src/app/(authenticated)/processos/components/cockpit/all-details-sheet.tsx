@@ -4,7 +4,7 @@
  * AllDetailsSheet — Dialog de detalhes complementares do processo
  * ============================================================================
  * Exibe listas de expedientes, audiências e perícias vinculados ao processo,
- * em tabs dentro de um glass-dialog centralizado.
+ * em tabs dentro de um  centralizado.
  *
  * NOTA: Nome mantido por compatibilidade com consumidor (processo-visualizacao).
  * Estrutura interna foi migrada de DetailSheet para Dialog + GlassPanel.
@@ -82,7 +82,7 @@ export function AllDetailsSheet({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="glass-dialog max-w-3xl">
+      <DialogContent className=" max-w-3xl">
         <DialogHeader>
           <DialogTitle>Detalhes complementares</DialogTitle>
         </DialogHeader>

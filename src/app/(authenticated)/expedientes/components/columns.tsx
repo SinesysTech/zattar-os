@@ -10,22 +10,34 @@
  */
 
 import * as React from 'react';
-import { ColumnDef } from '@tanstack/react-table';
+import {
+  ColumnDef } from '@tanstack/react-table';
 import { AppBadge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
-import { FileText, CheckCircle2, RotateCcw, Eye } from 'lucide-react';
+import { FileText,
+  CheckCircle2,
+  RotateCcw,
+  Eye } from 'lucide-react';
 import { LoadingSpinner } from '@/components/ui/loading-state';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip,
+  TooltipContent,
+  TooltipTrigger } from '@/components/ui/tooltip';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { cn } from '@/lib/utils';
-import { Expediente, GrauTribunal, GRAU_TRIBUNAL_LABELS } from '../domain';
+import { Expediente,
+  GrauTribunal,
+  GRAU_TRIBUNAL_LABELS } from '../domain';
 import { actionAtualizarExpediente } from '../actions';
 import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
 import { ExpedientesBaixarDialog } from './expedientes-baixar-dialog';
 import { ExpedientesReverterBaixaDialog } from './expedientes-reverter-baixa-dialog';
 import { PdfViewerDialog } from './pdf-viewer-dialog';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody } from '@/components/ui/dialog';
+import { Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/dialog';
 import { EditableTextCell } from '@/components/shared/data-shell';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
@@ -251,12 +263,12 @@ export function TipoDescricaoCell({
         <DialogContent
           showCloseButton={false}
           data-density="comfortable"
-          className="sm:max-w-md glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+          className="sm:max-w-md  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
         >
           <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
             <DialogTitle>Editar Descrição</DialogTitle>
           </DialogHeader>
-          <DialogBody>
+          <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
             <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "py-2")}>
               <Textarea
                 value={descricao}
@@ -267,7 +279,7 @@ export function TipoDescricaoCell({
                 disabled={isLoadingDescricao}
               />
             </div>
-          </DialogBody>
+          </div>
           <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
             <Button variant="outline" onClick={() => setIsDescricaoDialogOpen(false)}>Cancelar</Button>
             <div className="flex items-center gap-2">

@@ -5,22 +5,32 @@
  * Usado na página de expedientes quando o usuário clica em um badge de parte
  */
 
-import { cn } from '@/lib/utils';
+import {
+  cn } from '@/lib/utils';
 import * as React from 'react';
 import Link from 'next/link';
 import { AppBadge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ExternalLink, User, Building2, Mail, Phone, AlertCircle } from 'lucide-react';
+import { ExternalLink,
+  User,
+  Building2,
+  Mail,
+  Phone,
+  AlertCircle } from 'lucide-react';
 import {
   formatarCpf,
   formatarCnpj,
   formatarTelefone,
   formatarTipoPessoa,
-} from '@/app/(authenticated)/partes';
+  } from '@/app/(authenticated)/partes';
 import { actionBuscarPartesPorProcessoEPolo } from '@/app/(authenticated)/partes/server-actions';
 import type { ParteComDadosCompletos } from '@/app/(authenticated)/partes';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody } from '@/components/ui/dialog';
+import { Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/dialog';
 
 interface ParteDetalheDialogProps {
   open: boolean;
@@ -183,7 +193,7 @@ export function ParteDetalheDialog({
       <DialogContent
         showCloseButton={false}
         data-density="comfortable"
-        className="sm:max-w-sm glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+        className="sm:max-w-sm  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
       >
         <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
           <DialogTitle asChild>
@@ -195,7 +205,7 @@ export function ParteDetalheDialog({
             </div>
           </DialogTitle>
         </DialogHeader>
-        <DialogBody>
+        <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
           <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-2 padding direcional sem Inset equiv. */ "space-y-4 py-2")}>
             {/* Loading state */}
             {isLoading && (
@@ -253,7 +263,7 @@ export function ParteDetalheDialog({
               </>
             )}
           </div>
-        </DialogBody>
+        </div>
         <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-end gap-2">
           {footerButton}
         </div>

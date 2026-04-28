@@ -4,17 +4,19 @@
  * Dialog para upload de arquivos em documentos
  */
 
-import { cn } from '@/lib/utils';
+import {
+  cn } from '@/lib/utils';
 import * as React from 'react';
-import { Upload, File, X} from 'lucide-react';
+import { Upload,
+  File,
+  X} from 'lucide-react';
 import { Text } from '@/components/ui/typography';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle,
-  DialogBody,
+  DialogTitle
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -128,7 +130,7 @@ export function UploadDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className={cn(/* design-system-escape: p-0 gap-0 → usar <Inset> */ "sm:max-w-lg glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col")}
+        className={cn(/* design-system-escape: p-0 gap-0 → usar <Inset> */ "sm:max-w-lg  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col")}
       >
         <DialogHeader className={cn(/* design-system-escape: px-6 py-4 → usar <Inset> */ "px-6 py-4 border-b border-border/20 shrink-0")}>
           <DialogTitle>Upload de arquivo</DialogTitle>
@@ -137,7 +139,7 @@ export function UploadDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <DialogBody>
+        <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
           <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             {!selectedFile ? (
               <div
@@ -206,7 +208,7 @@ export function UploadDialog({
               </div>
             )}
           </div>
-        </DialogBody>
+        </div>
 
         <div className={cn(/* design-system-escape: px-6 py-4 → usar <Inset> */ "px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2")}>
           <Button

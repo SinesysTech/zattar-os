@@ -3,7 +3,7 @@
 /**
  * ObrigacoesYearWrapper — View anual (Glass Briefing, padrão expedientes/audiências).
  * ============================================================================
- * Heatmap 12 meses com stats sidebar. Clique num dia abre glass-dialog com parcelas.
+ * Heatmap 12 meses com stats sidebar. Clique num dia abre  com parcelas.
  * Toolbar vive no ObrigacoesContent pai.
  * ============================================================================
  */
@@ -123,7 +123,7 @@ export function ObrigacoesYearWrapper({
 
       {/* Dialog de parcelas do dia */}
       <Dialog open={dayDialogOpen} onOpenChange={setDayDialogOpen}>
-        <DialogContent className="glass-dialog max-w-lg">
+        <DialogContent className=" max-w-lg">
           <DialogHeader>
             <DialogTitle className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>
               {selectedDayDate

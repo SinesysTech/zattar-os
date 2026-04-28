@@ -2,7 +2,8 @@
 
 // Componente de diálogo para editar audiência
 
-import { cn } from '@/lib/utils';
+import {
+  cn } from '@/lib/utils';
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,9 +17,15 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody } from '@/components/ui/dialog';
+  } from '@/components/ui/select';
+import { Combobox,
+  type ComboboxOption } from '@/components/ui/combobox';
+import { Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription
+} from '@/components/ui/dialog';
 import { actionBuscarProcessosParaSelector } from '@/app/(authenticated)/acervo';
 import { actionListarUsuarios } from '@/app/(authenticated)/usuarios';
 import {
@@ -476,7 +483,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
       <DialogContent
         showCloseButton={false}
         data-density="compact"
-        className="sm:max-w-2xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+        className="sm:max-w-2xl  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
       >
         <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
           <DialogTitle>Editar Audiência</DialogTitle>
@@ -486,7 +493,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
               : 'Altere os dados da audiência.'}
           </DialogDescription>
         </DialogHeader>
-        <DialogBody className="overflow-y-auto px-6 py-5">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-5 [scrollbar-width:thin]">
       <form id="editar-audiencia-form" onSubmit={handleSubmit} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         {error && (
           <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-3.5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-start gap-2.5 rounded-lg border border-destructive/30 bg-destructive/8 px-3.5 py-3 text-destructive")}>
@@ -848,7 +855,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
           />
         </div>
       </form>
-        </DialogBody>
+        </div>
         <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
           <Button variant="outline" onClick={handleClose}>Cancelar</Button>
           <div className="flex items-center gap-2">

@@ -5,7 +5,8 @@
  */
 
 import * as React from 'react';
-import { useForm } from 'react-hook-form';
+import {
+  useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
@@ -19,7 +20,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+  } from '@/components/ui/select';
 import { toast } from 'sonner';
 import { CalendarIcon} from 'lucide-react';
 import { format } from 'date-fns';
@@ -29,24 +30,23 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
+  } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import {
   actionCriarLancamento,
   actionAtualizarLancamento,
-} from '../../actions/lancamentos';
+  } from '../../actions/lancamentos';
 import type {
   FormaPagamentoContaPagar,
   FrequenciaRecorrencia,
   ContaPagarComDetalhes,
   Lancamento,
-} from '../../types/lancamentos';
+  } from '../../types/lancamentos';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle,
-  DialogBody,
+  DialogTitle
 } from '@/components/ui/dialog';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
@@ -318,12 +318,12 @@ export function ContaPagarFormDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="sm:max-w-2xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+        className="sm:max-w-2xl  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
       >
         <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
           <DialogTitle>{isEditMode ? 'Editar Conta a Pagar' : 'Nova Conta a Pagar'}</DialogTitle>
         </DialogHeader>
-        <DialogBody>
+        <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
       <form ref={formRef} onSubmit={handleSubmit((data) => onSubmit(data as unknown as ContaPagarFormData))} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         {Object.keys(errors).length > 0 && (
           <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-3 text-sm text-destructive")}>
@@ -639,7 +639,7 @@ export function ContaPagarFormDialog({
           )}
         </div>
       </form>
-        </DialogBody>
+        </div>
         <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <div className="flex items-center gap-2">

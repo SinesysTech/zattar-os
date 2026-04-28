@@ -52,7 +52,7 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
 
 /**
  * Dialog para exibir detalhes completos de uma comunicação.
- * Usa Dialog com `glass-dialog` — sem variação mobile separada
+ * Usa Dialog com `` — sem variação mobile separada
  * (padrão do design system Glass Briefing).
  */
 export function ComunicacaoDetalhesDialog({
@@ -65,7 +65,7 @@ export function ComunicacaoDetalhesDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="glass-dialog max-h-[90vh] max-w-3xl overflow-y-auto">
+      <DialogContent className=" max-h-[90vh] max-w-3xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Detalhes da Comunicação</DialogTitle>
           <DialogDescription>

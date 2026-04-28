@@ -114,18 +114,18 @@ describe('Dialog - Property-Based Tests', () => {
      * Feature: dialog-close-icon, Property 22: Close icon toggle
      * Validates: Requirements 5.3
      *
-     * Para qualquer Dialog com showCloseIcon={false},
+    * Para qualquer Dialog com showCloseButton={false},
      * não deve renderizar botão X
      */
-    test('Property 22: Dialog respects showCloseIcon prop', async () => {
+    test('Property 22: Dialog respects showCloseButton prop', async () => {
         fc.assert(
             await fc.asyncProperty(
                 fc.boolean(),
-                async (showCloseIcon) => {
+                async (showCloseButton) => {
                     const { container } = render(
                         <Dialog defaultOpen={true}>
                             <DialogTrigger>Open</DialogTrigger>
-                            <DialogContent showCloseIcon={showCloseIcon}>
+                            <DialogContent showCloseButton={showCloseButton}>
                                 <DialogHeader>
                                     <DialogTitle>Title</DialogTitle>
                                 </DialogHeader>
@@ -139,7 +139,7 @@ describe('Dialog - Property-Based Tests', () => {
 
                         const closeButton = content?.querySelector('button[class*="absolute"]');
 
-                        if (showCloseIcon) {
+                        if (showCloseButton) {
                             expect(closeButton).toBeInTheDocument();
                             const xIcon = closeButton?.querySelector('svg');
                             expect(xIcon).toBeInTheDocument();

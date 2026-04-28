@@ -12,6 +12,12 @@
 - [persistence.service.ts](file://src/shared/assinatura-digital/services/signature/persistence.service.ts)
 - [integrity.service.ts](file://src/shared/assinatura-digital/services/integrity.service.ts)
 - [storage.service.ts](file://src/shared/assinatura-digital/services/storage.service.ts)
+- [preview.service.ts](file://src/shared/assinatura-digital/services/signature/preview.service.ts)
+- [template-pdf.service.ts](file://src/shared/assinatura-digital/services/template-pdf.service.ts)
+- [api.ts](file://src/shared/assinatura-digital/types/api.ts)
+- [route.ts](file://src/app/api/assinatura-digital/signature/finalizar/route.ts)
+- [route.ts](file://src/app/api/assinatura-digital/signature/preview/route.ts)
+- [visualizacao-pdf-step.tsx](file://src/app/(assinatura-digital)/_wizard/form/visualizacao-pdf-step.tsx)
 - [25_assinatura_digital.sql](file://supabase/schemas/25_assinatura_digital.sql)
 - [20260105160000_add_assinatura_digital_documentos_tables.sql](file://supabase/migrations/20260105160000_add_assinatura_digital_documentos_tables.sql)
 - [20251203120000_rename_formsign_to_assinatura_digital.sql](file://supabase/migrations/20251203120000_rename_formsign_to_assinatura_digital.sql)
@@ -34,11 +40,11 @@
 
 ## Update Summary
 **Changes Made**
-- Updated editor architecture section to reflect Plate.js migration from TipTap
-- Added new section on Plate.js editor components and variable plugin system
-- Updated template processing services to use Plate.js value format
-- Enhanced technical implementation details with Plate.js-specific APIs
-- Updated dependency management to reflect Plate.js architecture
+- Updated API endpoints section to reflect enhanced signature digital API with parte_contraria_dados and acao_dados schemas
+- Added new section on enhanced document processing capabilities
+- Updated template variable resolution to support partie contraria and dynamic action data
+- Enhanced security and compliance documentation with new payload validation requirements
+- Updated integration examples to demonstrate new partie contraria and action data processing
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -46,19 +52,19 @@
 3. [Core Components](#core-components)
 4. [Architecture Overview](#architecture-overview)
 5. [Detailed Component Analysis](#detailed-component-analysis)
-6. [Editor Architecture Migration](#editor-architecture-migration)
-7. [Dependency Analysis](#dependency-analysis)
-8. [Performance Considerations](#performance-considerations)
-9. [Security and Compliance](#security-and-compliance)
+6. [Enhanced API Endpoints](#enhanced-api-endpoints)
+7. [Advanced Document Processing](#advanced-document-processing)
+8. [Editor Architecture Migration](#editor-architecture-migration)
+9. [Enhanced Security and Compliance](#enhanced-security-and-compliance)
 10. [Integration Examples](#integration-examples)
 11. [Troubleshooting Guide](#troubleshooting-guide)
 12. [Conclusion](#conclusion)
 
 ## Introduction
 
-The Digital Signature Workflows module implements a comprehensive electronic signature system compliant with Brazil's MP 2.200-2/2001 (ICP-Brasil framework). This system supports two distinct workflows: document-based signing via PDF upload with multiple signers, and template-based signing through dynamic forms. The implementation ensures legal validity, document integrity verification, and comprehensive audit trails while maintaining high security standards.
+The Digital Signature Workflows module implements a comprehensive electronic signature system compliant with Brazil's MP 2.200-2/2001 (ICP-Brasil framework). This system supports two distinct workflows: document-based signing via PDF upload with multiple signers, and template-based signing through dynamic forms. The recent enhancement introduces advanced partie contraria and action data processing capabilities, enabling sophisticated multi-party contract workflows with comprehensive party relationship management.
 
-**Updated** The system now utilizes Plate.js-based editors replacing the previous TipTap implementations, providing improved performance, reduced dependency conflicts, and better long-term maintainability through the Plate.js architecture.
+**Updated** The system now features enhanced API endpoints with parte_contraria_dados and acao_dados schemas, providing improved document processing capabilities for complex multi-party workflows. The implementation ensures legal validity, document integrity verification, and comprehensive audit trails while maintaining high security standards.
 
 The system provides a complete solution for digital document signing with features including multi-party workflows, custom branding capabilities, automated notifications, and compliance with Brazilian electronic signature regulations. It leverages modern technologies including PDF manipulation, cryptographic hashing, and secure storage infrastructure.
 
@@ -73,12 +79,14 @@ UI[React Components]
 Workflow[Signature Workflow]
 Canvas[Signature Canvas]
 Editor[Plate.js Editors]
+Preview[Enhanced Preview System]
 end
 subgraph "Business Logic Layer"
 Service[Signature Service]
 Validation[Validation Services]
 Audit[Audit Services]
 Persistence[Persistence Services]
+TemplateProcessing[Template Processing]
 end
 subgraph "Data Access Layer"
 Repository[Repository Layer]
@@ -88,19 +96,23 @@ subgraph "Infrastructure"
 Storage[Backblaze B2 Storage]
 Database[Supabase PostgreSQL]
 Crypto[Crypto Services]
+API[Enhanced API Endpoints]
 end
 UI --> Service
 Workflow --> Service
 Canvas --> Service
 Editor --> Service
+Preview --> Service
 Service --> Validation
 Service --> Audit
 Service --> Persistence
+Service --> TemplateProcessing
 Service --> Repository
 Repository --> Domain
 Service --> Storage
 Service --> Database
 Service --> Crypto
+Service --> API
 ```
 
 **Diagram sources**
@@ -140,17 +152,16 @@ The template-based workflow provides dynamic form generation with:
 - **Form validation**: Comprehensive input validation
 - **Preview functionality**: Real-time document preview
 
-**Updated** The template system now uses Plate.js editors with enhanced variable handling and conversion utilities between Plate.js and TipTap JSON formats.
+**Updated** The template system now uses Plate.js editors with enhanced variable handling and conversion utilities between Plate.js and TipTap JSON formats. The enhanced template processing supports partie contraria data resolution and dynamic action data injection.
 
-### Security and Compliance Services
+### Enhanced Multi-Party Processing
 
-The system implements comprehensive security measures:
+**New** The system now supports sophisticated multi-party contract workflows with comprehensive partie contraria data management:
 
-- **Dual hashing**: SHA-256 hashing for document integrity verification
-- **Device fingerprinting**: Multi-factor device identification
-- **Biometric verification**: Selfie capture and validation
-- **Audit trails**: Complete transaction logging
-- **Legal compliance**: MP 2.200-2/2001 adherence
+- **Parte Contrária Data Processing**: Structured handling of opposing party information including personal and corporate details
+- **Action Data Integration**: Dynamic form data injection with comprehensive validation
+- **Contract Relationship Management**: Sophisticated party relationship mapping and validation
+- **Multi-Party Validation**: Advanced validation for complex contract scenarios
 
 **Section sources**
 - [domain.ts:303-362](file://src/shared/assinatura-digital/domain.ts#L303-L362)
@@ -164,7 +175,7 @@ The digital signature system implements a microservices-like architecture within
 sequenceDiagram
 participant Admin as Administrator
 participant UI as Frontend Interface
-participant API as API Layer
+participant API as Enhanced API Layer
 participant Service as Business Service
 participant Storage as Storage Layer
 participant DB as Database
@@ -175,16 +186,17 @@ Service->>DB : Store Document Metadata
 Service->>Storage : Upload PDF File
 Service->>Service : Generate Signer Links
 Service->>DB : Store Signer Information
-Note over Admin,DB : Signer Workflow
+Note over Admin,DB : Enhanced Signer Workflow
 Signer->>UI : Access Public Link
-UI->>API : Sign Document Request
-API->>Service : Validate Signer
+UI->>API : Sign Document Request with Parte Contraria Data
+API->>Service : Validate Enhanced Payload
+Service->>Service : Process Parte Contraria and Action Data
 Service->>Service : Capture Evidence
 Service->>Storage : Store Images
-Service->>Service : Generate Final PDF
+Service->>Service : Generate Final PDF with Enhanced Data
 Service->>Storage : Upload Final Document
 Service->>DB : Update Document Status
-Service-->>UI : Return Signed Document
+Service-->>UI : Return Enhanced Signed Document
 ```
 
 **Diagram sources**
@@ -197,6 +209,7 @@ The architecture ensures scalability, maintainability, and compliance through:
 - **Asynchronous processing**: Background tasks for heavy operations
 - **Transaction management**: Atomic operations for data consistency
 - **Error handling**: Comprehensive failure recovery mechanisms
+- **Enhanced Payload Processing**: Advanced validation and processing of partie contraria and action data
 
 ## Detailed Component Analysis
 
@@ -262,28 +275,30 @@ AssinaturaDigitalDocumentoAssinante "1" --> "many" AssinaturaDigitalDocumentoAnc
 - [domain.ts:303-362](file://src/shared/assinatura-digital/domain.ts#L303-L362)
 - [domain.ts:318-356](file://src/shared/assinatura-digital/domain.ts#L318-L356)
 
-### Signature Processing Pipeline
+### Enhanced Signature Processing Pipeline
 
-The signature processing pipeline implements a multi-stage validation and processing workflow:
+**Updated** The signature processing pipeline now implements advanced validation and processing for partie contraria and action data:
 
 ```mermaid
 flowchart TD
-A[Signature Request Received] --> B[Validate Input Parameters]
-B --> C{Input Valid?}
-C --> |No| D[Return Validation Error]
-C --> |Yes| E[Fetch Required Data]
-E --> F[Store Image Assets]
-F --> G[Generate Pre-sign PDF]
-G --> H[Calculate Original Hash]
-H --> I[Generate Final PDF with Manifest]
-I --> J[Calculate Final Hash]
-J --> K[Validate Photo Embedding]
-K --> L[Store Final Document]
-L --> M[Update Database Records]
-M --> N[Generate Access URLs]
-N --> O[Return Success Response]
-D --> P[End]
-O --> P
+A[Enhanced Signature Request Received] --> B[Validate Enhanced Input Parameters]
+B --> C{Enhanced Input Valid?}
+C --> |No| D[Return Enhanced Validation Error]
+C --> |Yes| E[Fetch Required Data with Parte Contraria]
+E --> F[Process Parte Contraria Data]
+F --> G[Extract Action Data]
+G --> H[Store Image Assets]
+H --> I[Generate Pre-sign PDF with Enhanced Data]
+I --> J[Calculate Original Hash]
+J --> K[Generate Final PDF with Manifest and Enhanced Data]
+K --> L[Calculate Final Hash]
+L --> M[Validate Photo Embedding]
+M --> N[Store Final Document]
+N --> O[Update Database Records with Enhanced Metadata]
+O --> P[Generate Access URLs]
+P --> Q[Return Enhanced Success Response]
+D --> R[End]
+Q --> R
 ```
 
 **Diagram sources**
@@ -305,10 +320,13 @@ class IntegrityService {
 class ValidationService {
 +validateDeviceFingerprintEntropy(fingerprint, required) boolean
 +validatePhotoEmbedding(pdfBuffer, fotoBase64) Promise~boolean~
++validateParteContrariaData(payload) Promise~boolean~
++validateAcaoDados(payload) Promise~boolean~
 }
 class AuditService {
 +auditSignatureIntegrity(assinaturaId) Promise~AuditResult~
 +auditDocumentSignerIntegrity(assinanteId) Promise~DocumentSignerAuditResult~
++auditEnhancedPayloadIntegrity(payload) Promise~EnhancedAuditResult~
 }
 IntegrityService <|-- ValidationService
 IntegrityService <|-- AuditService
@@ -415,6 +433,173 @@ ASSINATURA_DIGITAL_DOCUMENTOS ||--o{ ASSINATURA_DIGITAL_DOCUMENTO_ASSINANTES : c
 **Section sources**
 - [25_assinatura_digital.sql:1-321](file://supabase/schemas/25_assinatura_digital.sql#L1-L321)
 - [20260105160000_add_assinatura_digital_documentos_tables.sql:1-164](file://supabase/migrations/20260105160000_add_assinatura_digital_documentos_tables.sql#L1-L164)
+
+## Enhanced API Endpoints
+
+**New** The system now features enhanced API endpoints with advanced payload processing capabilities for partie contraria and action data.
+
+### Finalizar Endpoint Enhancement
+
+The finalizar endpoint now supports comprehensive partie contraria and action data processing:
+
+```mermaid
+sequenceDiagram
+participant Client as Client Application
+participant API as Finalizar API
+participant Validator as Enhanced Validator
+participant Processor as Processing Engine
+participant Storage as Storage Service
+Client->>API : POST /assinatura-digital/signature/finalizar
+API->>Validator : Validate Enhanced Payload
+Validator->>Validator : Validate Parte Contraria Data
+Validator->>Validator : Validate Action Data
+Validator->>Processor : Process Enhanced Payload
+Processor->>Processor : Extract Parte Contraria Dados
+Processor->>Processor : Process Action Dados
+Processor->>Storage : Store Enhanced Document
+Storage-->>API : Return Enhanced Document URL
+API-->>Client : Return Enhanced Response
+```
+
+**Diagram sources**
+- [route.ts:155-345](file://src/app/api/assinatura-digital/signature/finalizar/route.ts#L155-L345)
+
+### Preview Endpoint Enhancement
+
+The preview endpoint now supports partie contraria and action data for enhanced document preview:
+
+```mermaid
+sequenceDiagram
+participant Client as Client Application
+participant API as Preview API
+participant PreviewService as Preview Service
+participant TemplateEngine as Template Engine
+participant Storage as Storage Service
+Client->>API : POST /assinatura-digital/signature/preview
+API->>PreviewService : Process Enhanced Preview Request
+PreviewService->>PreviewService : Extract Parte Contraria Data
+PreviewService->>PreviewService : Process Action Data
+PreviewService->>TemplateEngine : Generate Enhanced PDF
+TemplateEngine->>Storage : Store Preview Document
+Storage-->>PreviewService : Return Preview URL
+PreviewService-->>API : Return Enhanced Preview Result
+API-->>Client : Return Enhanced Preview Response
+```
+
+**Diagram sources**
+- [route.ts:45-64](file://src/app/api/assinatura-digital/signature/preview/route.ts#L45-L64)
+
+### Enhanced Payload Validation
+
+The system now implements comprehensive payload validation for partie contraria and action data:
+
+```mermaid
+flowchart TD
+A[Enhanced Payload Received] --> B[Validate Base Payload]
+B --> C[Validate Parte Contraria Data]
+C --> D{Parte Contraria Valid?}
+D --> |No| E[Return Parte Contraria Error]
+D --> |Yes| F[Validate Action Data]
+F --> G{Action Data Valid?}
+G --> |No| H[Return Action Data Error]
+G --> |Yes| I[Validate Additional Fields]
+I --> J[Return Enhanced Success Response]
+E --> K[End]
+H --> K
+J --> K
+```
+
+**Diagram sources**
+- [api.ts:118-175](file://src/shared/assinatura-digital/types/api.ts#L118-L175)
+
+**Section sources**
+- [route.ts:1-345](file://src/app/api/assinatura-digital/signature/finalizar/route.ts#L1-L345)
+- [route.ts:1-64](file://src/app/api/assinatura-digital/signature/preview/route.ts#L1-L64)
+- [api.ts:83-175](file://src/shared/assinatura-digital/types/api.ts#L83-L175)
+
+## Advanced Document Processing
+
+**New** The system now features advanced document processing capabilities with partie contraria and action data integration.
+
+### Enhanced Template Variable Resolution
+
+The template processing system now supports sophisticated partie contraria and action data resolution:
+
+```mermaid
+flowchart TD
+A[Template Processing Request] --> B[Load Template Data]
+B --> C[Extract Parte Contraria Data]
+C --> D[Process Action Data]
+D --> E[Build Enhanced Context]
+E --> F[Resolve Variables]
+F --> G[Generate Enhanced PDF]
+G --> H[Store Enhanced Document]
+H --> I[Return Enhanced Result]
+```
+
+**Diagram sources**
+- [template-pdf.service.ts:557-756](file://src/shared/assinatura-digital/services/template-pdf.service.ts#L557-L756)
+
+### Parte Contraria Data Processing
+
+The system implements comprehensive partie contraria data processing with validation and formatting:
+
+```mermaid
+classDiagram
+class ParteContrariaDataProcessor {
++processParteContrariaData(data) ProcessedParteContrariaData
++validateParteContrariaSchema(data) boolean
++formatParteContrariaFields(data) FormattedParteContrariaData
++extractParteContrariaFromPayload(payload) ParteContrariaData
+}
+class ParteContrariaData {
++number id
++string nome
++string cpf
++string cnpj
++string tipo_pessoa
++string telefone
++string email
++ParteContrariaEndereco endereco
+}
+class ParteContrariaEndereco {
++string cep
++string logradouro
++string numero
++string complemento
++string bairro
++string municipio
++string estado_sigla
+}
+ParteContrariaDataProcessor --> ParteContrariaData
+ParteContrariaData --> ParteContrariaEndereco
+```
+
+**Diagram sources**
+- [api.ts:40-49](file://src/shared/assinatura-digital/types/api.ts#L40-L49)
+- [api.ts:140-157](file://src/shared/assinatura-digital/types/api.ts#L140-L157)
+
+### Action Data Integration
+
+The system provides comprehensive action data integration with dynamic form processing:
+
+```mermaid
+flowchart LR
+A[Action Data Payload] --> B[Extract Dynamic Fields]
+B --> C[Validate Against Form Schema]
+C --> D[Format Data Types]
+D --> E[Map to Template Variables]
+E --> F[Integrate with Parte Contraria Data]
+F --> G[Generate Enhanced Document Context]
+```
+
+**Diagram sources**
+- [api.ts:158](file://src/shared/assinatura-digital/types/api.ts#L158)
+- [template-pdf.service.ts:701-705](file://src/shared/assinatura-digital/services/template-pdf.service.ts#L701-L705)
+
+**Section sources**
+- [template-pdf.service.ts:557-756](file://src/shared/assinatura-digital/services/template-pdf.service.ts#L557-L756)
+- [api.ts:40-157](file://src/shared/assinatura-digital/types/api.ts#L40-L157)
 
 ## Editor Architecture Migration
 
@@ -547,102 +732,11 @@ PDFService->>Template : Final PDF Document
 - [variable-plugin.tsx:1-56](file://src/components/editor/plate/variable-plugin.tsx#L1-L56)
 - [template-texto-pdf.service.ts:1-332](file://src/shared/assinatura-digital/services/template-texto-pdf.service.ts#L1-L332)
 
-## Dependency Analysis
-
-**Updated** The system now uses Plate.js instead of TipTap, providing better performance and reduced dependency conflicts.
-
-The dependency structure ensures:
-
-- **Low coupling**: Services depend on abstractions, not concrete implementations
-- **High cohesion**: Related functionality is grouped within service boundaries
-- **Clear interfaces**: Well-defined contracts between layers
-- **Testability**: Easy mocking and testing of dependencies
-
-### Plate.js Architecture Dependencies
-
-```mermaid
-graph TB
-subgraph "Plate.js Core"
-PlateJS[platejs v52]
-BasicNodes[@platejs/basic-nodes]
-BasicStyles[@platejs/basic-styles]
-ListPlugin[@platejs/list]
-TextAlignPlugin[@platejs/basic-styles]
-IndentKit[@platejs/indent]
-MarkdownPlugin[@platejs/markdown]
-YjsPlugin[@platejs/yjs]
-end
-subgraph "System Integration"
-TemplatePDF[Template PDF Service]
-EditorHelpers[Editor Helpers]
-VariablePlugin[Variable Plugin]
-EditorUI[Editor UI Components]
-end
-PlateJS --> TemplatePDF
-PlateJS --> EditorHelpers
-PlateJS --> VariablePlugin
-PlateJS --> EditorUI
-BasicNodes --> TemplatePDF
-BasicStyles --> TemplatePDF
-ListPlugin --> TemplatePDF
-TextAlignPlugin --> TemplatePDF
-IndentKit --> TemplatePDF
-MarkdownPlugin --> TemplatePDF
-YjsPlugin --> TemplatePDF
-```
-
-**Diagram sources**
-- [package.json:160-191](file://package.json#L160-L191)
-- [next.config.ts:221-242](file://next.config.ts#L221-L242)
-
-### Legacy TipTap Dependencies
-
-The system maintains compatibility with existing TipTap-based storage formats:
-
-- **TipTap JSON Storage**: Existing database format preserved
-- **Conversion Utilities**: Bidirectional conversion between formats
-- **Migration Strategy**: Gradual transition without data loss
-
-**Section sources**
-- [package.json:135-325](file://package.json#L135-L325)
-- [next.config.ts:197-242](file://next.config.ts#L197-L242)
-- [setup.ts:178-319](file://src/testing/setup.ts#L178-L319)
-
-## Performance Considerations
-
-**Updated** The Plate.js migration provides significant performance improvements:
-
-### Enhanced Editor Performance
-- **Reduced Bundle Size**: Plate.js provides better tree-shaking and smaller bundle sizes
-- **Improved Rendering**: Plate.js offers more efficient rendering for rich text content
-- **Better Memory Management**: Optimized memory usage for large documents
-- **Faster Initialization**: Reduced startup time for editor components
-
-### Asynchronous Processing
-- PDF generation and manipulation operations are performed asynchronously
-- Large file uploads utilize streaming to minimize memory usage
-- Background jobs handle time-consuming operations
-
-### Caching Strategies
-- Frequently accessed templates and configurations are cached
-- Database query results are cached for read-heavy operations
-- CDN caching for static assets and generated documents
-
-### Scalability Features
-- Horizontal scaling support through stateless service design
-- Database connection pooling for efficient resource utilization
-- Load balancing for high-traffic scenarios
-
-### Memory Management
-- Proper disposal of PDF buffers and image data
-- Streaming operations for large file processing
-- Garbage collection optimization for Node.js runtime
-
-## Security and Compliance
+## Enhanced Security and Compliance
 
 ### Legal Compliance Framework
 
-The system adheres to MP 2.200-2/2001 requirements for Advanced Electronic Signatures:
+The system adheres to MP 2.200-2/2001 requirements for Advanced Electronic Signatures with enhanced partie contraria and action data processing:
 
 #### Four Essential Requirements Implementation
 
@@ -651,6 +745,11 @@ The system adheres to MP 2.200-2/2001 requirements for Advanced Electronic Signa
 3. **Exclusive Control (Alínea c)**: Real-time capture via webcam/canvas, no file uploads allowed
 4. **Document Linkage (Alínea d)**: SHA-256 hashing with immutable document structure
 
+**Updated** Enhanced compliance with partie contraria data processing:
+- **Parte Contraria Verification**: Comprehensive validation of opposing party identity
+- **Action Data Integrity**: Secure processing and validation of dynamic form data
+- **Multi-Party Compliance**: Extended compliance requirements for complex contract scenarios
+
 ### Security Measures
 
 #### Cryptographic Implementation
@@ -658,18 +757,21 @@ The system adheres to MP 2.200-2/2001 requirements for Advanced Electronic Signa
 - Timing-safe hash comparison to prevent timing attacks
 - Secure random token generation for public links
 - Encrypted storage of sensitive biometric data
+- **Enhanced Payload Encryption**: Secure processing of partie contraria and action data
 
 #### Access Control
 - Row-level security policies for data isolation
 - Role-based access control for administrative functions
 - Token-based authentication for public signing links
 - Session management with expiration controls
+- **Enhanced Data Validation**: Comprehensive validation of partie contraria and action data
 
 #### Audit and Monitoring
 - Comprehensive logging of all signature operations
 - Real-time monitoring of security events
 - Automated compliance reporting
 - Forensic audit trail maintenance
+- **Enhanced Payload Auditing**: Detailed tracking of partie contraria and action data processing
 
 ### Data Protection
 
@@ -678,12 +780,14 @@ The system adheres to MP 2.200-2/2001 requirements for Advanced Electronic Signa
 - Data retention policies with automatic cleanup
 - Right to erasure implementation
 - Consent management for biometric data
+- **Enhanced Data Minimization**: Strict validation and processing of partie contraria data
 
 #### Data Integrity
 - Immutable document structure through PDF flattening
 - Cryptographic verification of document modifications
 - Chain of custody documentation
 - Tamper-evident storage mechanisms
+- **Enhanced Data Validation**: Comprehensive validation of all processed data
 
 **Section sources**
 - [conformidade-legal.md](file://src/app/(authenticated)/assinatura-digital/docs/conformidade-legal.md#L1-L233)
@@ -702,11 +806,11 @@ participant DS as Document System
 participant SS as Signature System
 participant Storage as Storage Service
 CM->>DS : Select Document Template
-DS->>SS : Prepare Document for Signing
-SS->>SS : Validate Document Structure
+DS->>SS : Prepare Document for Signing with Parte Contraria Data
+SS->>SS : Validate Parte Contraria and Action Data
 SS->>Storage : Upload Document to Storage
 SS->>SS : Generate Signature Links
-SS->>CM : Provide Signing Links
+SS->>CM : Provide Enhanced Signing Links
 CM->>DS : Track Signing Status
 DS->>SS : Retrieve Signed Documents
 SS->>Storage : Download Final Documents
@@ -715,9 +819,9 @@ SS->>Storage : Download Final Documents
 **Diagram sources**
 - [FEATURE-README.md](file://src/app/(authenticated)/assinatura-digital/docs/FEATURE-README.md#L38-L110)
 
-### Multi-Party Signing Configuration
+### Enhanced Multi-Party Signing Configuration
 
-The system supports complex multi-signer scenarios:
+**New** The system now supports complex multi-signer scenarios with partie contraria and action data:
 
 #### Basic Multi-Signer Setup
 - Define signer roles and permissions
@@ -730,6 +834,8 @@ The system supports complex multi-signer scenarios:
 - Hierarchical approval chains
 - Proxy signing authorization
 - Batch processing capabilities
+- **Parte Contraria Data Management**: Sophisticated handling of opposing party information
+- **Action Data Integration**: Dynamic form data processing and validation
 
 ### Custom Branding Implementation
 
@@ -747,21 +853,23 @@ The system provides extensive branding customization:
 - Custom notification templates
 - White-label distribution options
 
-### Notification System Configuration
+### Enhanced Notification System Configuration
 
-The notification system supports multiple communication channels:
+**Updated** The notification system now supports partie contraria and action data:
 
 #### Automated Notifications
 - Email notifications for signing requests
 - SMS alerts for reminder functionality
 - In-app notifications for status updates
 - Webhook integration for external systems
+- **Enhanced Party Notifications**: Notifications specific to partie contraria and action data
 
 #### Custom Notification Templates
 - Brand-specific email templates
 - Custom SMS message formats
 - Dynamic content based on document type
 - Multi-language support
+- **Action Data Notifications**: Dynamic notifications based on processed action data
 
 **Section sources**
 - [FEATURE-README.md](file://src/app/(authenticated)/assinatura-digital/docs/FEATURE-README.md#L348-L517)
@@ -779,14 +887,18 @@ The notification system supports multiple communication channels:
 - Ensure stable network connection
 - Retry upload during off-peak hours
 
-#### Signature Processing Errors
-**Symptoms**: Failed signature validation, hash mismatches
-**Causes**: Corrupted PDF files, missing evidence, processing timeouts
+#### Enhanced Signature Processing Errors
+**Updated** New troubleshooting considerations for enhanced partie contraria and action data processing:
+
+**Symptoms**: Failed signature validation, hash mismatches, partie contraria data errors
+**Causes**: Corrupted PDF files, missing evidence, processing timeouts, invalid partie contraria data
 **Solutions**:
 - Verify PDF integrity before processing
 - Check that all required evidence is captured
 - Monitor system resources during processing
 - Review audit logs for specific error details
+- Validate partie contraria data format and completeness
+- Ensure action data matches form schema requirements
 
 #### Storage Access Issues
 **Symptoms**: Unable to download signed documents, storage quota exceeded
@@ -797,25 +909,29 @@ The notification system supports multiple communication channels:
 - Monitor storage usage and cleanup old files
 - Implement storage tiering for large volumes
 
-#### Plate.js Editor Issues
+#### Enhanced Editor Issues
 **Updated** New troubleshooting considerations for Plate.js migration:
 
-**Symptoms**: Editor not rendering, plugin conflicts, conversion errors
-**Causes**: Plugin configuration issues, value format mismatches, memory leaks
+**Symptoms**: Editor not rendering, plugin conflicts, conversion errors, partie contraria data processing failures
+**Causes**: Plugin configuration issues, value format mismatches, memory leaks, invalid payload data
 **Solutions**:
 - Verify Plate.js plugin initialization order
 - Check value format compatibility between Plate.js and TipTap
 - Monitor memory usage for large documents
-- Validate plugin dependencies and versions
+- Validate partie contraria and action data payload structure
+- Review enhanced API endpoint validation logs
 
 ### Diagnostic Tools
 
-#### Audit Trail Analysis
+#### Enhanced Audit Trail Analysis
+**Updated** The system now provides comprehensive audit capabilities for enhanced data processing:
+
 The system provides comprehensive audit capabilities:
 - Transaction logging with timestamps
 - Evidence chain verification
 - Compliance report generation
 - Forensic analysis tools
+- **Enhanced Payload Auditing**: Detailed tracking of partie contraria and action data processing
 
 #### Performance Monitoring
 Key metrics to monitor:
@@ -823,12 +939,14 @@ Key metrics to monitor:
 - Storage utilization trends
 - Error rate statistics
 - User engagement analytics
+- **Enhanced Data Processing Metrics**: Performance tracking for partie contraria and action data
 
 #### Debug Mode Operations
 - Enable verbose logging for development
 - Simulate various error scenarios
 - Test edge cases and boundary conditions
 - Validate compliance requirements
+- **Enhanced Payload Testing**: Comprehensive testing of partie contraria and action data processing
 
 **Section sources**
 - [audit.service.ts:73-314](file://src/shared/assinatura-digital/services/signature/audit.service.ts#L73-L314)
@@ -838,22 +956,24 @@ Key metrics to monitor:
 
 The Digital Signature Workflows module provides a comprehensive, legally compliant solution for electronic document signing within the ZattarOS ecosystem. The system successfully balances functionality, security, and compliance while maintaining high performance and scalability.
 
-**Updated** The recent migration to Plate.js architecture represents a significant advancement in system performance and maintainability. The migration maintains all existing functionality while providing:
+**Updated** The recent enhancement introduces advanced partie contraria and action data processing capabilities, representing a significant advancement in system functionality and complexity. The enhancement maintains all existing functionality while providing:
 
 ### Key Achievements
 
-**Legal Compliance**: Full adherence to MP 2.200-2/2001 requirements with comprehensive evidence collection and audit capabilities.
+**Legal Compliance**: Full adherence to MP 2.200-2/2001 requirements with comprehensive evidence collection and audit capabilities, now extended to support complex multi-party workflows.
 
-**Technical Excellence**: Robust architecture supporting both document-based and template-based signing workflows with multi-party capabilities. The Plate.js migration enhances performance and reduces dependency conflicts.
+**Enhanced Technical Excellence**: Robust architecture supporting both document-based and template-based signing workflows with multi-party capabilities. The Plate.js migration enhances performance and reduces dependency conflicts, while the new partie contraria and action data processing capabilities enable sophisticated contract management scenarios.
 
-**Security Implementation**: Advanced cryptographic measures, secure storage, and comprehensive access controls ensuring data protection and privacy.
+**Advanced Security Implementation**: Enhanced cryptographic measures, secure storage, and comprehensive access controls ensuring data protection and privacy, with specialized validation for partie contraria and action data.
 
-**Integration Capabilities**: Seamless integration with document management systems, notification platforms, and external compliance frameworks.
+**Seamless Integration Capabilities**: Seamless integration with document management systems, notification platforms, and external compliance frameworks, now supporting complex multi-party contract workflows.
 
-**Enhanced Editor Architecture**: Modern Plate.js-based editors with improved performance, better maintainability, and comprehensive plugin ecosystem.
+**Enhanced Editor Architecture**: Modern Plate.js-based editors with improved performance, better maintainability, and comprehensive plugin ecosystem, supporting advanced template processing with partie contraria data.
+
+**Sophisticated Multi-Party Processing**: Advanced partie contraria data management and action data integration enabling complex contract scenarios with comprehensive party relationship management.
 
 ### Future Enhancements
 
-The system is designed for continuous improvement with planned enhancements including enhanced notification systems, bulk processing capabilities, and expanded integration options. The modular architecture ensures smooth evolution while maintaining backward compatibility and system stability.
+The system is designed for continuous improvement with planned enhancements including enhanced notification systems, bulk processing capabilities, expanded integration options, and advanced partie contraria data analytics. The modular architecture ensures smooth evolution while maintaining backward compatibility and system stability.
 
-The Plate.js migration demonstrates best practices in modernizing legacy systems while preserving functionality and compliance requirements. The implementation showcases how strategic technology upgrades can significantly improve system performance and developer experience while maintaining the highest standards for legal validity and document integrity.
+The partie contraria and action data processing enhancements demonstrate best practices in extending legacy systems with advanced functionality while preserving legal validity and document integrity. The implementation showcases how strategic technology upgrades can significantly improve system capabilities and developer experience while maintaining the highest standards for legal compliance and multi-party contract management.

@@ -1,10 +1,15 @@
 'use client';
 
-import { cn } from '@/lib/utils';
+import {
+  cn } from '@/lib/utils';
 import * as React from 'react';
 import { FileText} from 'lucide-react';
 import { actionGerarUrlDownload } from '@/app/(authenticated)/documentos';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody } from '@/components/ui/dialog';
+import { Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
@@ -76,17 +81,17 @@ export function PdfViewerDialog({
                 <DialogContent
                     showCloseButton={false}
                     data-density="comfortable"
-                    className="sm:max-w-4xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+                    className="sm:max-w-4xl  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
                 >
                     <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
                         <DialogTitle>{documentTitle}</DialogTitle>
                     </DialogHeader>
-                    <DialogBody>
+                    <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
                         <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center justify-center flex-1 gap-4 h-[60vh] min-h-100")}>
                             <FileText className="h-16 w-16 text-muted-foreground" />
                             <p className="text-muted-foreground">Documento não disponível</p>
                         </div>
-                    </DialogBody>
+                    </div>
                     <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-end gap-2">
                         {footerButton}
                     </div>
@@ -100,12 +105,12 @@ export function PdfViewerDialog({
             <DialogContent
                 showCloseButton={false}
                 data-density="comfortable"
-                className="sm:max-w-4xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+                className="sm:max-w-4xl  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
             >
                 <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
                     <DialogTitle>{documentTitle}</DialogTitle>
                 </DialogHeader>
-                <DialogBody>
+                <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
                     <div className="relative w-full h-[75vh] min-h-125 border rounded-md overflow-hidden bg-muted/10">
                         {isLoading && (
                             <div className="absolute inset-0 flex items-center justify-center bg-background/80 z-10">
@@ -130,7 +135,7 @@ export function PdfViewerDialog({
                             )
                         )}
                     </div>
-                </DialogBody>
+                </div>
                 <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-end gap-2">
                     {footerButton}
                 </div>

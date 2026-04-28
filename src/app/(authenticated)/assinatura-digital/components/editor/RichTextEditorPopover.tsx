@@ -1,11 +1,21 @@
 'use client';
 
-import { cn } from '@/lib/utils';
-import React, { useState } from 'react';
+import {
+  cn } from '@/lib/utils';
+import React,
+  { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertTriangle, Check, ArrowUpDown } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody } from '@/components/ui/dialog';
+import { Alert,
+  AlertDescription } from '@/components/ui/alert';
+import { AlertTriangle,
+  Check,
+  ArrowUpDown } from 'lucide-react';
+import { Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription
+} from '@/components/ui/dialog';
 import { RichTextEditor } from './RichTextEditor';
 import type { ConteudoComposto } from '@/shared/assinatura-digital/types/template.types';
 
@@ -78,13 +88,13 @@ function RichTextEditorPopoverContent(props: RichTextEditorPopoverProps) {
       <DialogContent
         showCloseButton={false}
         data-density="comfortable"
-        className="sm:max-w-5xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+        className="sm:max-w-5xl  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
       >
         <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
           <DialogTitle>{`Editar ${fieldName}`}</DialogTitle>
           <DialogDescription>{`Largura: ${fieldWidth}px · Altura: ${fieldHeight}px · Fonte: ${fontSize}pt`}</DialogDescription>
         </DialogHeader>
-        <DialogBody className="overflow-hidden flex flex-col">
+        <div className="flex flex-1 flex-col overflow-hidden">
           {/* Alerta de overflow — fica fixo acima do editor */}
           {localValue?.template && (
             <div className="shrink-0 mb-3">
@@ -126,7 +136,7 @@ function RichTextEditorPopoverContent(props: RichTextEditorPopoverProps) {
             formularios={formularios}
             toolbarExtra={toolbarHeightAction}
           />
-        </DialogBody>
+        </div>
         <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <div className="flex items-center gap-2">

@@ -1,30 +1,37 @@
 'use client';
 
-import { cn } from '@/lib/utils';
+import {
+  cn } from '@/lib/utils';
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/providers/user-provider';
 import {
     Calendar as CalendarIcon,
-    RefreshCw,
-    Settings,
-    AlertTriangle,
-} from 'lucide-react';
+  RefreshCw,
+  Settings,
+  AlertTriangle,
+  } from 'lucide-react';
 import {
     startOfWeek,
-    format,
-    addWeeks,
-    subWeeks,
-} from 'date-fns';
+  format,
+  addWeeks,
+  subWeeks,
+  } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 import { Button } from '@/components/ui/button';
-import { DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
+import { DataShell,
+  DataTable,
+  DataTableToolbar } from '@/components/shared/data-shell';
 import { ResponsiveFilterPanel } from '@/components/ui/responsive-filter-panel';
 import { AppBadge } from '@/components/ui/app-badge';
 import { Heading } from '@/components/ui/typography';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody } from '@/components/ui/dialog';
+import { Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/dialog';
 import { FilterPopover, type FilterOption } from '@/app/(authenticated)/partes';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { WeekDaysCarousel } from '@/components/shared';
@@ -383,16 +390,16 @@ export function ExpedientesCalendar() {
                 <DialogContent
                     showCloseButton={false}
                     data-density="comfortable"
-                    className="sm:max-w-4xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+                    className="sm:max-w-4xl  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
                 >
                     <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
                         <DialogTitle>Tipos de Expedientes</DialogTitle>
                     </DialogHeader>
-                    <DialogBody>
+                    <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
                         <div className="flex-1 overflow-auto h-[60vh]">
                             <TiposExpedientesList />
                         </div>
-                    </DialogBody>
+                    </div>
                     <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-end gap-2">
                         <Button variant="outline" onClick={() => setIsSettingsOpen(false)}>
                             Fechar

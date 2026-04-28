@@ -1,7 +1,8 @@
 
 'use client';
 
-import { useState } from 'react';
+import {
+  useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,17 +13,25 @@ import { cn } from '@/lib/utils';
 import { getRoleBannerGradient } from '../shared/role-banner';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
-  Plus, Pencil, Trash2, Save, FileX} from 'lucide-react';
+  Plus,
+  Pencil,
+  Trash2,
+  Save,
+  FileX} from 'lucide-react';
 import { toast } from 'sonner';
 import { useCargos } from '@/app/(authenticated)/cargos';
-import { actionCriarCargo, actionAtualizarCargo, actionDeletarCargo } from '@/app/(authenticated)/cargos';
-import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import { actionCriarCargo,
+  actionAtualizarCargo,
+  actionDeletarCargo } from '@/app/(authenticated)/cargos';
+import { Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle } from '@/components/ui/empty';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle,
-  DialogBody,
+  DialogTitle
 } from '@/components/ui/dialog';
 import {
   AlertDialog,
@@ -174,12 +183,12 @@ export function CargosManagementDialog({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent
           showCloseButton={false}
-          className="sm:max-w-3xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+          className="sm:max-w-3xl  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
         >
           <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
             <DialogTitle>Gerenciar cargos</DialogTitle>
           </DialogHeader>
-          <DialogBody>
+          <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
         <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; space-y-4 → migrar para <Stack gap="default"> */ "p-6 space-y-4")}>
           <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "grid gap-6 lg:grid-cols-2")}>
             {/* Lista */}
@@ -379,7 +388,7 @@ export function CargosManagementDialog({
             </div>
           </div>
         </div>
-          </DialogBody>
+          </div>
         </DialogContent>
       </Dialog>
 

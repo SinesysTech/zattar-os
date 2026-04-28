@@ -1,14 +1,16 @@
 "use client";
 
-import { cn } from '@/lib/utils';
-import { useState, useEffect, useTransition } from "react";
+import {
+  cn } from '@/lib/utils';
+import { useState,
+  useEffect,
+  useTransition } from "react";
 import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle,
-  DialogBody,
+  DialogTitle
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import {
@@ -139,12 +141,12 @@ export function NovoChatDialog({ open, onOpenChange, onChatCreated }: NovoChatDi
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="sm:max-w-sm glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+        className="sm:max-w-sm  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
       >
         <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
           <DialogTitle>Nova Conversa</DialogTitle>
         </DialogHeader>
-        <DialogBody>
+        <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
       <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "space-y-2 px-6 py-4")}>
         <Label>Com quem você quer conversar?</Label>
         <Select
@@ -163,7 +165,7 @@ export function NovoChatDialog({ open, onOpenChange, onChatCreated }: NovoChatDi
           </SelectContent>
         </Select>
       </div>
-        </DialogBody>
+        </div>
         <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
           <Button variant="outline" onClick={() => handleOpenChange(false)}>Cancelar</Button>
           <div className="flex items-center gap-2">

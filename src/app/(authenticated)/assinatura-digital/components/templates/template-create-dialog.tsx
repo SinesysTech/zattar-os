@@ -1,15 +1,22 @@
 'use client';
 
-import { cn } from '@/lib/utils';
+import {
+  cn } from '@/lib/utils';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { ArrowRight, ArrowLeft} from 'lucide-react';
+import { ArrowRight,
+  ArrowLeft} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody } from '@/components/ui/dialog';
+import { Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription
+} from '@/components/ui/dialog';
 import { TemplateFormFields } from './template-form-fields';
 import { MarkdownRichTextEditor } from '../editor/MarkdownRichTextEditor';
 import { PdfUploadField, type PdfUploadValue } from '../editor/pdf-upload-field';
@@ -220,7 +227,7 @@ export function TemplateCreateDialog({
         showCloseButton={false}
         data-density="comfortable"
         className={cn(
-          "glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col",
+          " overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col",
           maxWidthClass
         )}
       >
@@ -237,7 +244,7 @@ export function TemplateCreateDialog({
             <Progress value={progressValue} className="h-1.5" />
           </div>
         </DialogHeader>
-        <DialogBody>
+        <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
           {isLoadingSegmentos ? (
             <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex items-center justify-center py-8")}>
               <LoadingSpinner className="size-8 text-muted-foreground" />
@@ -297,7 +304,7 @@ export function TemplateCreateDialog({
               )}
             </form>
           )}
-        </DialogBody>
+        </div>
         <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <div className="flex items-center gap-2">

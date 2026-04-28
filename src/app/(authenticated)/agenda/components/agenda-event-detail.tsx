@@ -93,7 +93,7 @@ export function AgendaEventDetail({
     <Dialog open={open} onOpenChange={(next) => { if (!next) onClose(); }}>
       <DialogContent
         showCloseButton={false}
-        className="glass-dialog flex max-h-[92vh] w-[95vw] flex-col overflow-hidden p-0 gap-0 [scrollbar-width:thin] sm:max-w-3xl"
+        className=" flex max-h-[92vh] w-[95vw] flex-col overflow-hidden p-0 gap-0 [scrollbar-width:thin] sm:max-w-3xl"
       >
         <DialogDescription className="sr-only">Detalhes do evento de agenda</DialogDescription>
         <div className="flex min-w-0 flex-1 flex-col overflow-hidden">

@@ -17,6 +17,8 @@ import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -78,11 +80,14 @@ export function EventDetailDrawer({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "glass-dialog max-w-xl max-h-[90vh] p-0 flex flex-col")}>
+      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ " max-w-xl max-h-[90vh] p-0 flex flex-col")}>
         <DialogHeader className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "px-6 py-5 border-b border-border/30 shrink-0")}>
           <DialogTitle className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-lg font-semibold tracking-tight")}>
             Detalhes do Evento
           </DialogTitle>
+          <DialogDescription className="sr-only">
+            Metadados, informacoes de assinatura, anexos e download do pacote do evento.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto">
@@ -106,7 +111,7 @@ export function EventDetailDrawer({
         </div>
 
         {item?.backblaze && (
-          <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 border-t border-border/30 bg-muted/30 mt-auto shrink-0")}>
+          <DialogFooter className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "border-t border-border/30 bg-muted/30 p-6 mt-auto shrink-0")}>
             <Button
               className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "w-full gap-2")}
               onClick={handleDownloadAll}
@@ -115,7 +120,7 @@ export function EventDetailDrawer({
               <Download className="size-4" />
               {isDownloading ? 'Baixando...' : 'Baixar Pacote Completo'}
             </Button>
-          </div>
+          </DialogFooter>
         )}
       </DialogContent>
     </Dialog>

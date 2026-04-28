@@ -13,8 +13,11 @@ import Image from 'next/image';
 import { FileText } from 'lucide-react';
 
 import {
+  DialogClose,
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -49,9 +52,12 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
 
   return (
     <Dialog open={showProfileSheet} onOpenChange={toggleProfileSheet}>
-      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "glass-dialog max-w-lg max-h-[90vh] p-0 flex flex-col")}>
+      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ " max-w-lg max-h-[90vh] p-0 flex flex-col")}>
         <DialogHeader className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; pt-6 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "px-6 pt-6 pb-2 shrink-0")}>
           <DialogTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "text-2xl")}>Perfil</DialogTitle>
+          <DialogDescription className="sr-only">
+            Informacoes de perfil, presenca e midias compartilhadas do usuario.
+          </DialogDescription>
         </DialogHeader>
 
         <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; pb-6 padding direcional sem Inset equiv. */ "flex-1 overflow-y-auto px-6 pb-6")}>
@@ -174,6 +180,12 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
             )}
           </div>
         </div>
+
+        <DialogFooter className="shrink-0 border-t border-border/20 px-6 py-4">
+          <DialogClose asChild>
+            <Button variant="outline">Fechar</Button>
+          </DialogClose>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

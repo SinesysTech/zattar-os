@@ -27,7 +27,7 @@ export function VisualizarDeclaracaoDialog({
 }: Props) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "glass-dialog max-w-4xl max-h-[90vh] flex flex-col p-0 overflow-hidden")}>
+      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ " max-w-4xl max-h-[90vh] flex flex-col p-0 overflow-hidden")}>
         <DialogHeader className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; pb-3 padding direcional sem Inset equiv. */ "p-6 pb-3 shrink-0")}>
           <DialogTitle>Declaração de prestação de contas assinada</DialogTitle>
           <DialogDescription>

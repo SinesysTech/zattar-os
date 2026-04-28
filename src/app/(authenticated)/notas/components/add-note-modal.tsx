@@ -2,14 +2,23 @@
 
 import React from "react";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
-import { Check, ImageIcon, PenSquare, Tag } from "lucide-react";
+import {
+  cn } from "@/lib/utils";
+import { Check,
+  ImageIcon,
+  PenSquare,
+  Tag } from "lucide-react";
 import { NoteEditor } from "@/components/editor/plate/note-editor";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger } from "@/components/ui/tooltip";
+import { Popover,
+  PopoverContent,
+  PopoverTrigger } from "@/components/ui/popover";
 import {
   Command,
   CommandEmpty,
@@ -17,17 +26,17 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
+  } from "@/components/ui/command";
 import { AppBadge as Badge } from "@/components/ui/app-badge";
-import type { Note, NoteLabel } from "../domain";
+import type { Note,
+  NoteLabel } from "../domain";
 import { useNotes } from "../notes-context";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
-  DialogBody,
+  DialogDescription
 } from "@/components/ui/dialog";
 
 type NoteModalBaseProps = {
@@ -109,13 +118,13 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent
           showCloseButton={false}
-          className="sm:max-w-xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+          className="sm:max-w-xl  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
         >
           <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
             <DialogTitle>{dialogTitle}</DialogTitle>
             <DialogDescription className="sr-only">Preencha os dados para salvar a nota</DialogDescription>
           </DialogHeader>
-          <DialogBody>
+          <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
             <form
               id="note-form"
               className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6 px-6 py-4")}
@@ -286,7 +295,7 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
             </div>
           ) : null}
             </form>
-          </DialogBody>
+          </div>
           <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
             <Button variant="outline" onClick={() => setOpen(false)}>Cancelar</Button>
             <div className="flex items-center gap-2">

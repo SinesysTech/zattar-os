@@ -268,7 +268,7 @@ export function TaskDetailSheet() {
 
     return (
         <Dialog open={isTarefaSheetOpen} onOpenChange={handleClose}>
-            <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "glass-dialog max-w-2xl max-h-[90vh] w-full p-0 flex flex-col")}>
+            <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ " max-w-2xl max-h-[90vh] w-full p-0 flex flex-col")}>
                 {tarefa && (
                     <div className="flex flex-1 min-h-0 flex-col">
                         <DialogHeader className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "border-b border-border/30 p-6 shrink-0")}>

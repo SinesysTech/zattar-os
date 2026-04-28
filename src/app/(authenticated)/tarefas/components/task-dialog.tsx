@@ -1,6 +1,7 @@
 "use client";
 
-import { cn } from '@/lib/utils';
+import {
+  cn } from '@/lib/utils';
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -8,17 +9,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
     Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  } from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle,
-  DialogBody,
+  DialogTitle
 } from "@/components/ui/dialog";
 import { actionCriarTarefa } from "../actions/tarefas-actions";
 import { priorities, statuses } from "../constants";
@@ -80,12 +80,12 @@ export function TaskDialog({ open, onOpenChange }: TaskDialogProps) {
         <Dialog open={open} onOpenChange={handleOpenChange}>
           <DialogContent
             showCloseButton={false}
-            className="sm:max-w-lg glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+            className="sm:max-w-lg  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
           >
             <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
               <DialogTitle>Nova tarefa</DialogTitle>
             </DialogHeader>
-            <DialogBody>
+            <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
             <form id="nova-tarefa-form" onSubmit={handleCreate}>
                 <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 md:grid-cols-2")}>
                     <div className="md:col-span-2">
@@ -167,7 +167,7 @@ export function TaskDialog({ open, onOpenChange }: TaskDialogProps) {
                     </p>
                 )}
             </form>
-            </DialogBody>
+            </div>
             <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
               <Button variant="outline" onClick={() => handleOpenChange(false)}>Cancelar</Button>
               <div className="flex items-center gap-2">

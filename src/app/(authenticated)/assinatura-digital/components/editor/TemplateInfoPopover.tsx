@@ -463,7 +463,7 @@ export default function TemplateInfoPopover({
           setDesativacaoCheck((prev) => ({ ...prev, open }))
         }
       >
-        <DialogContent className="glass-dialog max-w-lg">
+        <DialogContent className=" max-w-lg">
           <DialogHeader>
             <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <AlertTriangle className="size-5 text-warning" />

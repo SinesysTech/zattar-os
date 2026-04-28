@@ -15,6 +15,11 @@
 - [documentos.service.ts](file://src/shared/assinatura-digital/services/documentos.service.ts)
 - [documentos-do-contrato.service.ts](file://src/shared/assinatura-digital/services/documentos-do-contrato.service.ts)
 - [mapeamento-contrato-input-data.ts](file://src/shared/assinatura-digital/services/mapeamento-contrato-input-data.ts)
+- [visualizacao-markdown-step.tsx](file://src/app/(assinatura-digital)/_wizard/form/visualizacao-markdown-step.tsx)
+- [markdown-renderer.ts](file://src/shared/assinatura-digital/utils/markdown-renderer.ts)
+- [store.ts](file://src/shared/assinatura-digital/types/store.ts)
+- [api.ts](file://src/shared/assinatura-digital/types/api.ts)
+- [formulario-store.ts](file://src/shared/assinatura-digital/store/formulario-store.ts)
 - [20251210020000_add_template_columns.sql](file://supabase/migrations/20251210020000_add_template_columns.sql)
 - [20260422120300_add_templates_slug_sistema_cols.sql](file://supabase/migrations/20260422120300_add_templates_slug_sistema_cols.sql)
 - [contrato-documentos-card.tsx](file://src/app/(authenticated)/contratos/[id]/components/contrato-documentos-card.tsx)
@@ -25,20 +30,31 @@
 - [PdfPreviewDynamic.tsx](file://src/shared/assinatura-digital/components/pdf/PdfPreviewDynamic.tsx)
 </cite>
 
+## Update Summary
+**Changes Made**
+- Enhanced VisualizacaoMarkdownStep component documentation with improved action data extraction and parte_contraria processing
+- Added comprehensive coverage of template placeholder support and variable substitution system
+- Updated field mapping documentation to include advanced template variable handling
+- Expanded dynamic content generation section with enhanced placeholder processing capabilities
+- Added new section on template variable substitution and caching mechanisms
+
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
 3. [Core Components](#core-components)
 4. [Architecture Overview](#architecture-overview)
 5. [Detailed Component Analysis](#detailed-component-analysis)
-6. [Dependency Analysis](#dependency-analysis)
-7. [Performance Considerations](#performance-considerations)
-8. [Troubleshooting Guide](#troubleshooting-guide)
-9. [Conclusion](#conclusion)
-10. [Appendices](#appendices)
+6. [Enhanced Template Processing System](#enhanced-template-processing-system)
+7. [Dependency Analysis](#dependency-analysis)
+8. [Performance Considerations](#performance-considerations)
+9. [Troubleshooting Guide](#troubleshooting-guide)
+10. [Conclusion](#conclusion)
+11. [Appendices](#appendices)
 
 ## Introduction
 This document explains the Contract Templates and Document Generation system. It covers how templates are modeled, how fields are mapped and dynamically populated, how documents are generated and integrated with the document management system, and how template versioning and sharing are handled. It also documents the relationship between templates and contract types, validation rules, and approval workflows, along with compliance and reuse mechanisms.
+
+**Updated** Enhanced with advanced template processing capabilities including improved action data extraction, parte_contraria processing, and comprehensive template placeholder support.
 
 ## Project Structure
 The system spans two main domains:
@@ -69,6 +85,9 @@ SPDFText["template-texto-pdf.service.ts"]
 SDocs["documentos.service.ts"]
 SContratoDocs["documentos-do-contrato.service.ts"]
 SMap["mapeamento-contrato-input-data.ts"]
+SMarkdown["visualizacao-markdown-step.tsx"]
+SRenderer["markdown-renderer.ts"]
+SStore["formulario-store.ts"]
 end
 subgraph "Database"
 M1["20251210020000_add_template_columns.sql"]
@@ -79,6 +98,7 @@ UICard["contrato-documentos-card.tsx"]
 UIUpload["contrato-documento-upload-dialog.tsx"]
 UIPreview["PdfPreview.tsx"]
 UIDynamic["PdfPreviewDynamic.tsx"]
+UIWizard["VisualizacaoMarkdownStep"]
 end
 CService --> CRepo
 SService --> SRepo
@@ -89,12 +109,15 @@ SContratoDocs --> SMap
 SDomain --> STemplates
 SDomain --> SDocs
 SDomain --> SContratoDocs
+SMarkdown --> SRenderer
+SMarkdown --> SStore
 M1 --> SDomain
 M2 --> SDomain
 UICard --> SDocs
 UIUpload --> SDocs
 UIPreview --> SPDFGen
 UIDynamic --> SPDFText
+UIWizard --> SMarkdown
 ```
 
 **Diagram sources**
@@ -110,6 +133,9 @@ UIDynamic --> SPDFText
 - [documentos.service.ts](file://src/shared/assinatura-digital/services/documentos.service.ts)
 - [documentos-do-contrato.service.ts](file://src/shared/assinatura-digital/services/documentos-do-contrato.service.ts)
 - [mapeamento-contrato-input-data.ts](file://src/shared/assinatura-digital/services/mapeamento-contrato-input-data.ts)
+- [visualizacao-markdown-step.tsx](file://src/app/(assinatura-digital)/_wizard/form/visualizacao-markdown-step.tsx)
+- [markdown-renderer.ts](file://src/shared/assinatura-digital/utils/markdown-renderer.ts)
+- [formulario-store.ts](file://src/shared/assinatura-digital/store/formulario-store.ts)
 - [20251210020000_add_template_columns.sql:1-42](file://supabase/migrations/20251210020000_add_template_columns.sql#L1-L42)
 - [20260422120300_add_templates_slug_sistema_cols.sql:1-16](file://supabase/migrations/20260422120300_add_templates_slug_sistema_cols.sql#L1-L16)
 - [contrato-documentos-card.tsx](file://src/app/(authenticated)/contratos/[id]/components/contrato-documentos-card.tsx)
@@ -130,6 +156,9 @@ UIDynamic --> SPDFText
 - [documentos.service.ts](file://src/shared/assinatura-digital/services/documentos.service.ts)
 - [documentos-do-contrato.service.ts](file://src/shared/assinatura-digital/services/documentos-do-contrato.service.ts)
 - [mapeamento-contrato-input-data.ts](file://src/shared/assinatura-digital/services/mapeamento-contrato-input-data.ts)
+- [visualizacao-markdown-step.tsx](file://src/app/(assinatura-digital)/_wizard/form/visualizacao-markdown-step.tsx)
+- [markdown-renderer.ts](file://src/shared/assinatura-digital/utils/markdown-renderer.ts)
+- [formulario-store.ts](file://src/shared/assinatura-digital/store/formulario-store.ts)
 - [20251210020000_add_template_columns.sql:1-42](file://supabase/migrations/20251210020000_add_template_columns.sql#L1-L42)
 - [20260422120300_add_templates_slug_sistema_cols.sql:1-16](file://supabase/migrations/20260422120300_add_templates_slug_sistema_cols.sql#L1-L16)
 - [contrato-documentos-card.tsx](file://src/app/(authenticated)/contratos/[id]/components/contrato-documentos-card.tsx)
@@ -145,6 +174,7 @@ UIDynamic --> SPDFText
 - Templates services: Template management, PDF generation (binary PDF vs. text-based), and document assembly for contracts.
 - Document services: Document indexing, storage integration, and contract-specific document assembly.
 - Database migrations: Add template columns (type, segment association, PDF URL), and slug/system flags for template governance.
+- **Enhanced** VisualizacaoMarkdownStep: Advanced markdown template processing with action data extraction, parte_contraria handling, and comprehensive placeholder support.
 
 **Section sources**
 - [domain.ts:105-143](file://src/shared/contratos/domain.ts#L105-L143)
@@ -156,6 +186,7 @@ UIDynamic --> SPDFText
 - [template-texto-pdf.service.ts](file://src/shared/assinatura-digital/services/template-texto-pdf.service.ts)
 - [documentos.service.ts](file://src/shared/assinatura-digital/services/documentos.service.ts)
 - [documentos-do-contrato.service.ts](file://src/shared/assinatura-digital/services/documentos-do-contrato.service.ts)
+- [visualizacao-markdown-step.tsx](file://src/app/(assinatura-digital)/_wizard/form/visualizacao-markdown-step.tsx)
 - [20251210020000_add_template_columns.sql:1-42](file://supabase/migrations/20251210020000_add_template_columns.sql#L1-L42)
 - [20260422120300_add_templates_slug_sistema_cols.sql:1-16](file://supabase/migrations/20260422120300_add_templates_slug_sistema_cols.sql#L1-L16)
 
@@ -407,10 +438,75 @@ ASSINATURA_DIGITAL_TEMPLATES }o--|| SEGMENTOS : "references"
 **Section sources**
 - [20260422120300_add_templates_slug_sistema_cols.sql:14-16](file://supabase/migrations/20260422120300_add_templates_slug_sistema_cols.sql#L14-L16)
 
+## Enhanced Template Processing System
+
+### Advanced Markdown Template Processing
+The VisualizacaoMarkdownStep component now provides sophisticated template processing capabilities with enhanced action data extraction and parte_contraria handling.
+
+**Updated** The component implements comprehensive template placeholder support with intelligent variable substitution and caching mechanisms.
+
+```mermaid
+flowchart TD
+Start(["Template Processing"]) --> ExtractData["Extract Action Data"]
+ExtractData --> FilterReserved["Filter Reserved Fields"]
+FilterReserved --> BuildPC["Build Parte Contraria Object"]
+BuildPC --> PrepareVars["Prepare Generation Variables"]
+PrepareVars --> RenderMD["Render Markdown with Variables"]
+RenderMD --> CacheResult["Cache Processed Content"]
+CacheResult --> Display["Display Preview"]
+```
+
+**Diagram sources**
+- [visualizacao-markdown-step.tsx](file://src/app/(assinatura-digital)/_wizard/form/visualizacao-markdown-step.tsx)
+- [markdown-renderer.ts](file://src/shared/assinatura-digital/utils/markdown-renderer.ts)
+
+### Action Data Extraction and Processing
+The system now intelligently extracts and processes action data from contract information, filtering out reserved fields and preparing them for template substitution.
+
+**Updated** Enhanced action data processing includes:
+- Automatic exclusion of reserved fields (contrato_id, cliente_dados, parte_contraria_dados)
+- Support for complex nested data structures
+- Intelligent fallback mechanisms for parte_contraria processing
+
+### Parte Contraria Processing Enhancement
+Advanced parte_contraria handling with priority-based data sources and comprehensive object construction.
+
+**Updated** The system now supports:
+- Priority processing: parte_contraria_dados array (if available) over individual fields
+- Fallback to normalized fields (parte_contraria_nome, parte_contraria_cpf, etc.)
+- Structured object creation with proper field mapping
+- Support for both individual and bulk parte_contraria entries
+
+### Template Variable Substitution System
+Comprehensive variable substitution supporting dot notation and nested object access.
+
+**Updated** The markdown renderer provides:
+- Dot notation support for nested variables (e.g., {{cliente.nome}})
+- Recursive object traversal for complex data structures
+- Safe fallback handling for missing or undefined values
+- Performance optimization through caching mechanisms
+
+### Caching and Performance Optimization
+Intelligent caching system with TTL management and automatic invalidation.
+
+**Updated** Key caching features:
+- 5-minute TTL for processed markdown content
+- Template metadata caching to avoid duplicate API calls
+- Automatic cache invalidation on data changes
+- Session-based storage with persistence controls
+
+**Section sources**
+- [visualizacao-markdown-step.tsx](file://src/app/(assinatura-digital)/_wizard/form/visualizacao-markdown-step.tsx)
+- [markdown-renderer.ts](file://src/shared/assinatura-digital/utils/markdown-renderer.ts)
+- [store.ts](file://src/shared/assinatura-digital/types/store.ts)
+- [formulario-store.ts](file://src/shared/assinatura-digital/store/formulario-store.ts)
+- [api.ts](file://src/shared/assinatura-digital/types/api.ts)
+
 ## Dependency Analysis
 - Contracts services depend on repository for persistence and on domain schemas for validation.
 - Templates services depend on document services for storage and on PDF generation services for rendering.
 - UI components depend on document services for displaying previews and on templates services for document assembly.
+- **Enhanced** VisualizacaoMarkdownStep depends on markdown-renderer utilities and form store for state management.
 
 ```mermaid
 graph LR
@@ -421,10 +517,14 @@ STemplates --> SPDFText["template-texto-pdf.service.ts"]
 STemplates --> SDocs["documentos.service.ts"]
 SContratoDocs["documentos-do-contrato.service.ts"] --> STemplates
 SContratoDocs --> SMap["mapeamento-contrato-input-data.ts"]
+SMarkdown["visualizacao-markdown-step.tsx"] --> SRenderer["markdown-renderer.ts"]
+SMarkdown --> SStore["formulario-store.ts"]
+SContratoDocs --> SMap
 UICard["contrato-documentos-card.tsx"] --> SDocs
 UIUpload["contrato-documento-upload-dialog.tsx"] --> SDocs
 UIPreview["PdfPreview.tsx"] --> SPDFGen
 UIDynamic["PdfPreviewDynamic.tsx"] --> SPDFText
+UIWizard["VisualizacaoMarkdownStep"] --> SMarkdown
 ```
 
 **Diagram sources**
@@ -437,6 +537,9 @@ UIDynamic["PdfPreviewDynamic.tsx"] --> SPDFText
 - [documentos.service.ts](file://src/shared/assinatura-digital/services/documentos.service.ts)
 - [documentos-do-contrato.service.ts](file://src/shared/assinatura-digital/services/documentos-do-contrato.service.ts)
 - [mapeamento-contrato-input-data.ts](file://src/shared/assinatura-digital/services/mapeamento-contrato-input-data.ts)
+- [visualizacao-markdown-step.tsx](file://src/app/(assinatura-digital)/_wizard/form/visualizacao-markdown-step.tsx)
+- [markdown-renderer.ts](file://src/shared/assinatura-digital/utils/markdown-renderer.ts)
+- [formulario-store.ts](file://src/shared/assinatura-digital/store/formulario-store.ts)
 - [contrato-documentos-card.tsx](file://src/app/(authenticated)/contratos/[id]/components/contrato-documentos-card.tsx)
 - [contrato-documento-upload-dialog.tsx](file://src/app/(authenticated)/contratos/[id]/components/contrato-documento-upload-dialog.tsx)
 - [PdfPreview.tsx](file://src/shared/assinatura-digital/components/pdf/PdfPreview.tsx)
@@ -452,6 +555,9 @@ UIDynamic["PdfPreviewDynamic.tsx"] --> SPDFText
 - [documentos.service.ts](file://src/shared/assinatura-digital/services/documentos.service.ts)
 - [documentos-do-contrato.service.ts](file://src/shared/assinatura-digital/services/documentos-do-contrato.service.ts)
 - [mapeamento-contrato-input-data.ts](file://src/shared/assinatura-digital/services/mapeamento-contrato-input-data.ts)
+- [visualizacao-markdown-step.tsx](file://src/app/(assinatura-digital)/_wizard/form/visualizacao-markdown-step.tsx)
+- [markdown-renderer.ts](file://src/shared/assinatura-digital/utils/markdown-renderer.ts)
+- [formulario-store.ts](file://src/shared/assinatura-digital/store/formulario-store.ts)
 - [contrato-documentos-card.tsx](file://src/app/(authenticated)/contratos/[id]/components/contrato-documentos-card.tsx)
 - [contrato-documento-upload-dialog.tsx](file://src/app/(authenticated)/contratos/[id]/components/contrato-documento-upload-dialog.tsx)
 - [PdfPreview.tsx](file://src/shared/assinatura-digital/components/pdf/PdfPreview.tsx)
@@ -461,26 +567,33 @@ UIDynamic["PdfPreviewDynamic.tsx"] --> SPDFText
 - Use indexes on template segment and type to accelerate template resolution.
 - Prefer binary PDF generation for large documents to reduce rendering overhead.
 - Cache signed URLs for frequently accessed documents to minimize storage round trips.
-
-[No sources needed since this section provides general guidance]
+- **Enhanced** Implement intelligent caching for processed markdown content with TTL management.
+- **Enhanced** Use template metadata caching to avoid duplicate API calls during wizard navigation.
+- **Enhanced** Leverage dot notation variable substitution for efficient template rendering.
 
 ## Troubleshooting Guide
 - Contract creation failures: Validate input against schemas and ensure referenced entities exist before saving.
 - Template resolution failures: Verify template type, segment association, and slug uniqueness.
 - PDF generation errors: Confirm template content and storage connectivity; check signed URL generation.
+- **Enhanced** Markdown processing errors: Verify template variable syntax and ensure all required fields are populated.
+- **Enhanced** Parte contraria processing issues: Check data structure format and ensure proper fallback mechanisms.
+- **Enhanced** Template caching problems: Monitor TTL expiration and cache invalidation triggers.
 
 **Section sources**
 - [errors.ts:25-68](file://src/shared/contratos/errors.ts#L25-L68)
 - [service.ts:80-136](file://src/shared/contratos/service.ts#L80-L136)
 - [templates.service.ts](file://src/shared/assinatura-digital/services/templates.service.ts)
 - [documentos.service.ts](file://src/shared/assinatura-digital/services/documentos.service.ts)
+- [visualizacao-markdown-step.tsx](file://src/app/(assinatura-digital)/_wizard/form/visualizacao-markdown-step.tsx)
 
 ## Conclusion
 The Contract Templates and Document Generation system integrates contract data with flexible templates, robust validation, and efficient PDF generation. Templates are governed by segment associations, slugs, and system flags to ensure compliance and reuse. The architecture cleanly separates concerns across contracts, templates, and document services, with UI components providing seamless document previews and assembly.
+
+**Updated** The enhanced template processing system now provides sophisticated markdown rendering with advanced variable substitution, intelligent caching, and comprehensive parte_contraria handling, significantly improving the flexibility and reliability of document generation workflows.
 
 ## Appendices
 - Example template creation: Define template metadata (type, segment, slug), ensure system flag for core templates, and upload PDF via document services.
 - Example field configuration: Map contract parties and attributes to template placeholders using the mapping service.
 - Example document assembly: Resolve template by contract type/segment, generate PDF, upload to storage, and display preview in UI.
-
-[No sources needed since this section provides general guidance]
+- **Enhanced** Example advanced template processing: Configure action data extraction, parte_contraria handling, and variable substitution for complex document layouts.
+- **Enhanced** Example caching strategy: Implement TTL-based caching for processed content and template metadata to optimize performance.

@@ -47,7 +47,7 @@ export function ModalLinkAssinaturaDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="glass-dialog">
+      <DialogContent className="">
         <DialogHeader>
           <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <CheckCircle2 className="size-5 text-success" />

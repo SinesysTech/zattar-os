@@ -336,7 +336,7 @@ export function PericiaDetalhesDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="glass-dialog max-w-3xl max-h-[90vh] flex flex-col">
+      <DialogContent className=" max-w-3xl max-h-[90vh] flex flex-col">
         <DialogHeader>
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3")}>
             <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">

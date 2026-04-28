@@ -61,7 +61,7 @@ export function CancelarLinkButton({
           {label}
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="glass-dialog">
+      <AlertDialogContent className="">
         <AlertDialogHeader>
           <AlertDialogTitle>Cancelar link ativo?</AlertDialogTitle>
           <AlertDialogDescription>

@@ -1,13 +1,25 @@
 'use client';
 
-import { cn } from '@/lib/utils';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  cn } from '@/lib/utils';
+import { useCallback,
+  useEffect,
+  useRef,
+  useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { AlertCircle, Check, Upload, X} from 'lucide-react';
+import { AlertCircle,
+  Check,
+  Upload,
+  X} from 'lucide-react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody } from '@/components/ui/dialog';
+import { Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription
+} from '@/components/ui/dialog';
 import PdfPreviewDynamic from "@/shared/assinatura-digital/components/pdf/PdfPreviewDynamic";
 import { LoadingSpinner } from "@/components/ui/loading-state"
 const PdfPreview = PdfPreviewDynamic;
@@ -184,13 +196,13 @@ export default function ReplacePdfDialog({
       <DialogContent
         showCloseButton={false}
         data-density="comfortable"
-        className="sm:max-w-2xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+        className="sm:max-w-2xl  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
       >
         <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
           <DialogTitle>Substituir PDF do Template</DialogTitle>
           <DialogDescription className="sr-only">Faça upload de um novo arquivo PDF para substituir o atual.</DialogDescription>
         </DialogHeader>
-        <DialogBody>
+        <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
             <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
               Faça upload de um novo arquivo PDF. O arquivo atual será substituído permanentemente.
@@ -273,7 +285,7 @@ export default function ReplacePdfDialog({
               </>
             )}
           </div>
-        </DialogBody>
+        </div>
         <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <div className="flex items-center gap-2">

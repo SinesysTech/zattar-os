@@ -446,7 +446,7 @@ export function ObrigacoesGlassMonth({
               </PopoverTrigger>
               {isSelected && popoverItems.length > 0 && (
                 <PopoverContent
-                  className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-96 p-0 glass-dialog")}
+                  className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-96 p-0 ")}
                   align="center"
                   sideOffset={8}
                 >

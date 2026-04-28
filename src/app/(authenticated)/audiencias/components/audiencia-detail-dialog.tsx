@@ -6,7 +6,7 @@ import {
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { toast } from 'sonner';
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogHeader, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -629,7 +629,7 @@ export function AudienciaDetailDialog({
         showCloseButton={false}
         data-density="comfortable"
         className={cn(
-          "glass-dialog flex max-h-[90vh] w-[95vw] flex-col overflow-hidden p-0 gap-0",
+          " flex max-h-[90vh] w-[95vw] flex-col overflow-hidden p-0 gap-0",
           "[scrollbar-width:thin] transition-[max-width] duration-300 ease-out",
           isSplitOpen && "md:flex-row",
           isSplitOpen ? "sm:max-w-5xl md:max-w-6xl" : "sm:max-w-lg md:max-w-xl"
@@ -637,7 +637,7 @@ export function AudienciaDetailDialog({
       >
         <DialogDescription className="sr-only">Detalhes da audiência</DialogDescription>
         <div className={cn("flex min-w-0 flex-1 flex-col", isSplitOpen && "border-border/50 md:border-r")}>
-          <header className="shrink-0 border-b border-border/40 px-5 pt-5 pb-3">
+          <DialogHeader className="shrink-0 gap-0 border-b border-border/40 px-5 pt-5 pb-3">
             <div className="mb-1 flex items-center justify-between gap-3">
               <DialogTitle className="min-w-0 flex-1 truncate -tracking-[0.01em] text-foreground">
                 {titleNode}
@@ -653,7 +653,7 @@ export function AudienciaDetailDialog({
               </button>
             </div>
             {metaNode && <div>{metaNode}</div>}
-          </header>
+          </DialogHeader>
           {heroNode && <div data-slot="dialog-hero" className="shrink-0">{heroNode}</div>}
           <div data-slot="dialog-body" className="flex-1 overflow-y-auto px-5 py-3.5 [scrollbar-width:thin]">
             {isLoading && (
@@ -1046,7 +1046,7 @@ export function AudienciaDetailDialog({
                         </div>
                       </div>
                     ) : audiencia.observacoes ? (
-                      <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-body-sm leading-relaxed whitespace-pre-wrap")}>
+                      <p className="text-caption text-foreground leading-relaxed whitespace-pre-wrap">
                         {audiencia.observacoes}
                       </p>
                     ) : (
@@ -1065,11 +1065,11 @@ export function AudienciaDetailDialog({
               </div>
             )}
           </div>
-          <footer className="flex shrink-0 items-center justify-end border-t border-border/40 bg-card/40 px-5 py-2.5">
+          <DialogFooter className="shrink-0 border-t border-border/40 bg-card/40 px-5 py-2.5">
             <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
               Fechar
             </Button>
-          </footer>
+          </DialogFooter>
         </div>
         {isSplitOpen && splitAta && (
           <aside className={cn(

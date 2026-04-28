@@ -20,7 +20,7 @@ Este diretório contém componentes de UI reutilizáveis e agnósticos de negóc
 
 - **`DialogFormShell`**: Container para formulários em modal/dialog com suporte a multi-step.
   - **Quando usar:** Para criar/editar entidades em dialogs modais.
-  - **Para painel de detalhes:** Use `DialogFormShell` também — este projeto **não adota `Sheet`** como padrão. Detail panels vivem em dialog centralizado com classes `glass-dialog`.
+  - **Para painel de detalhes:** Use `DialogFormShell` também — este projeto **não adota `Sheet`** como padrão. Detail panels vivem em dialog centralizado.
 
 ### Exemplo de Composição para Agentes
 
@@ -28,22 +28,20 @@ Siga este padrão ao construir uma nova página de listagem em um módulo. Isso 
 
 ```tsx
 // ✅ CORRETO: Usar DataShell com DataTableToolbar
-import { PageShell } from '@/components/shared/page-shell';
+import { PageShell } from "@/components/shared/page-shell";
 import {
   DataShell,
   DataTable,
   DataTableToolbar,
-  DataPagination
-} from '@/components/shared/data-shell';
+  DataPagination,
+} from "@/components/shared/data-shell";
 
 export default function MinhaPaginaDeListagem() {
   return (
-    <PageShell
-      title="Lançamentos Financeiros"
-    >
+    <PageShell title="Lançamentos Financeiros">
       <DataShell
         actionButton={{
-          label: 'Novo Lançamento',
+          label: "Novo Lançamento",
           onClick: () => setDialogOpen(true),
         }}
         header={
@@ -68,12 +66,12 @@ export default function MinhaPaginaDeListagem() {
 
 // ❌ ERRADO: Recriar layout manualmente na página
 export function PaginaIncorreta() {
-    return (
-        <div className="p-6">
-            <h1 className="text-2xl">Lançamentos</h1>
-            {/* ... recriar toolbar e tabela manualmente ... */}
-        </div>
-    );
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl">Lançamentos</h1>
+      {/* ... recriar toolbar e tabela manualmente ... */}
+    </div>
+  );
 }
 
 // ❌ ERRADO: Usar TableToolbar de @/components/ui

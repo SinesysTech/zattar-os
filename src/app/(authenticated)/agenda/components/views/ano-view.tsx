@@ -239,7 +239,7 @@ function DayDetailDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="glass-dialog sm:max-w-lg">
+      <DialogContent className=" sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="capitalize">{dateLabel}</DialogTitle>
           <DialogDescription>

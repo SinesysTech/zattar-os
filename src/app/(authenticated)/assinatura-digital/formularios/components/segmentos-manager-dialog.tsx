@@ -1,10 +1,19 @@
 "use client";
 
-import { cn } from '@/lib/utils';
+import {
+  cn } from '@/lib/utils';
 import * as React from "react";
-import { Pencil, Copy, Trash2, Plus} from "lucide-react";
+import { Pencil,
+  Copy,
+  Trash2,
+  Plus} from "lucide-react";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody } from "@/components/ui/dialog";
+import { Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { AppBadge as Badge } from "@/components/ui/app-badge";
@@ -77,13 +86,13 @@ export function SegmentosManagerDialog({
         <DialogContent
           showCloseButton={false}
           data-density="comfortable"
-          className="sm:max-w-3xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+          className="sm:max-w-3xl  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
         >
           <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
             <DialogTitle>Segmentos</DialogTitle>
             <DialogDescription className="sr-only">Gerencie os segmentos de assinatura digital.</DialogDescription>
           </DialogHeader>
-          <DialogBody>
+          <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
             <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
               {state.error && (
                 <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-3 text-sm text-destructive")}>
@@ -176,7 +185,7 @@ export function SegmentosManagerDialog({
                 </div>
               )}
             </div>
-          </DialogBody>
+          </div>
           <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
             <Button variant="outline" onClick={() => onOpenChange(false)}>Fechar</Button>
             <div className="flex items-center gap-2">

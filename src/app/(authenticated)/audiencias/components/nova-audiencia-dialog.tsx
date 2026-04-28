@@ -3,7 +3,8 @@
 // Componente de diálogo para criar nova audiência
 
 import * as React from 'react';
-import { Button } from '@/components/ui/button';
+import {
+  Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Label } from '@/components/ui/label';
@@ -15,13 +16,26 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
+  } from '@/components/ui/select';
+import { Combobox,
+  type ComboboxOption } from '@/components/ui/combobox';
 import {
-  Landmark, CalendarDays, MapPin, Video, UserRound, MessageSquare, AlertCircle} from 'lucide-react';
+  Landmark,
+  CalendarDays,
+  MapPin,
+  Video,
+  UserRound,
+  MessageSquare,
+  AlertCircle} from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Stack, Inline } from '@/components/ui/stack';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody } from '@/components/ui/dialog';
+import { Stack,
+  Inline } from '@/components/ui/stack';
+import { Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription
+} from '@/components/ui/dialog';
 import { actionBuscarProcessosParaSelector } from '@/app/(authenticated)/acervo';
 import { actionListarUsuarios } from '@/app/(authenticated)/usuarios';
 import {
@@ -422,13 +436,13 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
       <DialogContent
         showCloseButton={false}
         data-density="compact"
-        className="sm:max-w-2xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+        className="sm:max-w-2xl  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
       >
         <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
           <DialogTitle>Nova Audiência</DialogTitle>
           <DialogDescription>Preencha os dados para registrar uma nova audiência no sistema.</DialogDescription>
         </DialogHeader>
-        <DialogBody className="overflow-y-auto px-6 py-5">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-5 [scrollbar-width:thin]">
       <form id="nova-audiencia-form" onSubmit={handleSubmit}>
         <Stack gap="default">
           {/* ── Erro ─────────────────────────────────────────────────────── */}
@@ -740,7 +754,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
 
         </Stack>
         </form>
-        </DialogBody>
+        </div>
         <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
           <Button variant="outline" onClick={handleClose}>Cancelar</Button>
           <div className="flex items-center gap-2">

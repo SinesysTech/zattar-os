@@ -5,7 +5,13 @@
  */
 
 import * as React from "react";
-import { Plus, Pencil, Trash2, AlertTriangle, Power, PowerOff } from "lucide-react";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  AlertTriangle,
+  Power,
+  PowerOff } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import {
@@ -13,8 +19,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
-  DialogBody,
+  DialogDescription
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { SemanticBadge } from "@/components/ui/semantic-badge";
@@ -159,7 +164,7 @@ export function ConfigAtribuicaoDialog({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent
           showCloseButton={false}
-          className={cn(/* design-system-escape: p-0 gap-0 → usar <Inset> */ "sm:max-w-2xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col")}
+          className={cn(/* design-system-escape: p-0 gap-0 → usar <Inset> */ "sm:max-w-2xl  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col")}
         >
           <DialogHeader className={cn(/* design-system-escape: px-6 pt-6 pb-4 → usar <Inset>; space-y-2 → usar <Stack> */ "px-6 pt-6 pb-4 border-b border-border/20 shrink-0 space-y-2")}>
             <DialogTitle className="text-xl">
@@ -170,7 +175,7 @@ export function ConfigAtribuicaoDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <DialogBody className="bg-background max-h-[60vh] overflow-y-auto">
+          <div className="flex-1 overflow-x-hidden bg-background max-h-[60vh] overflow-y-auto px-6 py-4 [scrollbar-width:thin]">
             {/* Botão Nova Região */}
             <div className="p-4 border-b">
               <Button onClick={handleNovaRegiao} className="w-full sm:w-auto">
@@ -217,7 +222,7 @@ export function ConfigAtribuicaoDialog({
                 ))}
               </div>
             )}
-          </DialogBody>
+          </div>
 
           <div className={cn(/* design-system-escape: px-6 py-4 → usar <Inset> */ "px-6 py-4 border-t border-border/20 shrink-0 bg-muted/50 flex items-center justify-between gap-2")}>
             <Button variant="outline" onClick={() => onOpenChange(false)}>

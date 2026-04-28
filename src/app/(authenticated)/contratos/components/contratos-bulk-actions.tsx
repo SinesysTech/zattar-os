@@ -9,7 +9,8 @@
  */
 
 import * as React from 'react';
-import { Button } from '@/components/ui/button';
+import {
+  Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Text } from '@/components/ui/typography';
 import {
@@ -18,7 +19,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+  } from '@/components/ui/select';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,14 +29,13 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+  } from '@/components/ui/alert-dialog';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
-  DialogBody,
+  DialogDescription
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { X, Trash2, UserRound, ArrowRightLeft, FolderKanban, CheckSquare} from 'lucide-react';
@@ -170,13 +170,13 @@ export function AlterarStatusMassaDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="sm:max-w-sm glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+        className="sm:max-w-sm  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
       >
         <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
           <DialogTitle>Alterar Status</DialogTitle>
           <DialogDescription>{`Alterar status de ${selectedIds.length} contrato(s) selecionado(s).`}</DialogDescription>
         </DialogHeader>
-        <DialogBody>
+        <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
           <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label>Novo Status</Label>
             <Select value={novoStatus} onValueChange={setNovoStatus} disabled={isPending}>
@@ -192,7 +192,7 @@ export function AlterarStatusMassaDialog({
               </SelectContent>
             </Select>
           </div>
-        </DialogBody>
+        </div>
         <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <div className="flex items-center gap-2">
@@ -257,13 +257,13 @@ export function AtribuirResponsavelMassaDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="sm:max-w-sm glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+        className="sm:max-w-sm  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
       >
         <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
           <DialogTitle>Atribuir Responsável</DialogTitle>
           <DialogDescription>{`Atribuir responsável a ${selectedIds.length} contrato(s) selecionado(s).`}</DialogDescription>
         </DialogHeader>
-        <DialogBody>
+        <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
           <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label>Responsável</Label>
             <Select value={responsavelId} onValueChange={setResponsavelId} disabled={isPending}>
@@ -280,7 +280,7 @@ export function AtribuirResponsavelMassaDialog({
               </SelectContent>
             </Select>
           </div>
-        </DialogBody>
+        </div>
         <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <div className="flex items-center gap-2">
@@ -345,13 +345,13 @@ export function AlterarSegmentoMassaDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="sm:max-w-sm glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+        className="sm:max-w-sm  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
       >
         <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
           <DialogTitle>Alterar Segmento</DialogTitle>
           <DialogDescription>{`Alterar segmento de ${selectedIds.length} contrato(s) selecionado(s).`}</DialogDescription>
         </DialogHeader>
-        <DialogBody>
+        <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
           <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <Label>Segmento</Label>
             <Select value={segmentoId} onValueChange={setSegmentoId} disabled={isPending}>
@@ -368,7 +368,7 @@ export function AlterarSegmentoMassaDialog({
               </SelectContent>
             </Select>
           </div>
-        </DialogBody>
+        </div>
         <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <div className="flex items-center gap-2">

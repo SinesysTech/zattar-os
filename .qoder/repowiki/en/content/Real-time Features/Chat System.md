@@ -11,7 +11,23 @@
 - [use-chat-subscription.ts](file://src/app/(authenticated)/chat/hooks/use-chat-subscription.ts)
 - [realtime-chat.tsx](file://src/components/realtime/realtime-chat.tsx)
 - [utils.ts](file://src/app/(authenticated)/chat/utils.ts)
+- [avatar-url.ts](file://src/lib/avatar-url.ts)
+- [case-transform.ts](file://src/lib/case-transform.ts)
+- [chat-list-item.tsx](file://src/app/(authenticated)/chat/components/chat-list-item.tsx)
+- [message-group.tsx](file://src/app/(authenticated)/chat/components/message-group.tsx)
+- [chat-detail-panel.tsx](file://src/app/(authenticated)/chat/components/chat-detail-panel.tsx)
+- [chat-bubbles.tsx](file://src/app/(authenticated)/chat/components/chat-bubbles.tsx)
+- [chat-sidebar.tsx](file://src/app/(authenticated)/chat/components/chat-sidebar.tsx)
+- [chat-content.tsx](file://src/app/(authenticated)/chat/components/chat-content.tsx)
 </cite>
+
+## Update Summary
+**Changes Made**
+- Added documentation for new avatar-url utility functions and their usage in chat components
+- Added documentation for new case-transform utility functions and their usage patterns
+- Updated component analysis to reflect avatar generation improvements
+- Enhanced avatar fallback generation and URL resolution capabilities
+- Documented case conversion utilities for data transformation
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -19,13 +35,16 @@
 3. [Core Components](#core-components)
 4. [Architecture Overview](#architecture-overview)
 5. [Detailed Component Analysis](#detailed-component-analysis)
-6. [Dependency Analysis](#dependency-analysis)
-7. [Performance Considerations](#performance-considerations)
-8. [Troubleshooting Guide](#troubleshooting-guide)
-9. [Conclusion](#conclusion)
+6. [Utility Functions](#utility-functions)
+7. [Dependency Analysis](#dependency-analysis)
+8. [Performance Considerations](#performance-considerations)
+9. [Troubleshooting Guide](#troubleshooting-guide)
+10. [Conclusion](#conclusion)
 
 ## Introduction
 This document describes the Chat System component, focusing on room management, message handling, and user interactions. It explains the implementation of chat rooms, message persistence, and real-time message delivery. It also documents the component structure, server actions, message validation schemas, pagination handling, practical examples, security and permissions, and integration with Supabase real-time subscriptions and WebSocket connections.
+
+**Updated** The chat system now includes enhanced avatar management through dedicated utility functions and improved data transformation capabilities via case-conversion utilities.
 
 ## Project Structure
 The chat feature is organized under the authenticated route group with a clear separation of concerns:
@@ -34,6 +53,7 @@ The chat feature is organized under the authenticated route group with a clear s
 - Repository: Data access and persistence
 - Hooks: Real-time subscriptions and client-side utilities
 - Components: UI building blocks (exported via public API)
+- Utilities: Avatar generation and case transformation helpers
 - Pages: Server-side rendering and initial hydration
 
 ```mermaid
@@ -48,6 +68,8 @@ end
 subgraph "Client"
 Hook["use-chat-subscription.ts<br/>Realtime Hook"]
 RTComp["realtime-chat.tsx<br/>Realtime Chat UI"]
+Components["Chat Components<br/>Avatar & UI"]
+Utils["Utility Functions<br/>Avatar & Case Transform"]
 end
 Page --> Service
 Service --> Repo
@@ -55,6 +77,7 @@ Service --> Domain
 Page --> Layout
 Hook --> Domain
 RTComp --> Hook
+Components --> Utils
 ```
 
 **Diagram sources**
@@ -65,6 +88,8 @@ RTComp --> Hook
 - [domain.ts:1-519](file://src/app/(authenticated)/chat/domain.ts#L1-L519)
 - [use-chat-subscription.ts:1-252](file://src/app/(authenticated)/chat/hooks/use-chat-subscription.ts#L1-L252)
 - [realtime-chat.tsx:1-70](file://src/components/realtime/realtime-chat.tsx#L1-L70)
+- [avatar-url.ts:1-24](file://src/lib/avatar-url.ts#L1-L24)
+- [case-transform.ts:1-33](file://src/lib/case-transform.ts#L1-L33)
 
 **Section sources**
 - [page.tsx:1-83](file://src/app/(authenticated)/chat/page.tsx#L1-L83)
@@ -77,18 +102,24 @@ RTComp --> Hook
 - useChatSubscription: Real-time subscription hook using Supabase Realtime
 - Domain types and Zod schemas: Strongly typed models and validation for inputs
 - Server Actions: Exposed via public API for client invocation
+- Avatar utilities: generateAvatarFallback and resolveAvatarUrl for consistent user representation
+- Case transformation utilities: camelToSnakeKey, fromSnakeToCamel, fromCamelToSnake for data format conversion
 
 Key responsibilities:
 - Room management: create, archive, unarchive, soft-delete, and list rooms
 - Message handling: send, paginate, and mark status
 - Real-time delivery: subscribe to inserts and broadcasts
 - Call management: initiate, respond, enter/exit, finalize, and summarize calls
+- Avatar management: generate consistent fallback avatars and resolve avatar URLs
+- Data transformation: convert between camelCase and snake_case formats
 
 **Section sources**
 - [service.ts:45-749](file://src/app/(authenticated)/chat/service.ts#L45-L749)
 - [repository.ts:143-800](file://src/app/(authenticated)/chat/repository.ts#L143-L800)
 - [domain.ts:165-210](file://src/app/(authenticated)/chat/domain.ts#L165-L210)
 - [index.ts:68-104](file://src/app/(authenticated)/chat/index.ts#L68-L104)
+- [avatar-url.ts:1-24](file://src/lib/avatar-url.ts#L1-L24)
+- [case-transform.ts:1-33](file://src/lib/case-transform.ts#L1-L33)
 
 ## Architecture Overview
 The system follows a layered architecture:
@@ -96,6 +127,7 @@ The system follows a layered architecture:
 - Application: ChatService encapsulates business rules and orchestrates repositories
 - Persistence: Supabase ORM queries with RLS policies
 - Real-time: Supabase Realtime channels for live updates
+- Utilities: Dedicated helper functions for avatar generation and data transformation
 
 ```mermaid
 sequenceDiagram
@@ -104,10 +136,13 @@ participant Hook as "useChatSubscription"
 participant Supabase as "Supabase Realtime"
 participant Service as "ChatService"
 participant Repo as "MessagesRepository"
+participant AvatarUtil as "Avatar Utilities"
 Client->>Hook : Subscribe to channel for salaId
 Hook->>Supabase : channel("sala_<id>_messages").on("postgres_changes","INSERT")
 Supabase-->>Hook : INSERT payload (new message)
 Hook->>Client : onNewMessage(MensagemComUsuario)
+Client->>AvatarUtil : generateAvatarFallback(displayName)
+AvatarUtil-->>Client : Initials for avatar fallback
 Client->>Service : actionEnviarMensagem(input, userId)
 Service->>Repo : saveMensagem(input)
 Repo-->>Service : MensagemChat persisted
@@ -119,6 +154,7 @@ Repo->>Supabase : Postgres Changes INSERT triggers channel
 - [use-chat-subscription.ts:181-221](file://src/app/(authenticated)/chat/hooks/use-chat-subscription.ts#L181-L221)
 - [service.ts:632-667](file://src/app/(authenticated)/chat/service.ts#L632-L667)
 - [repository.ts:631-662](file://src/app/(authenticated)/chat/repository.ts#L631-L662)
+- [avatar-url.ts:1-11](file://src/lib/avatar-url.ts#L1-L11)
 
 ## Detailed Component Analysis
 
@@ -336,12 +372,89 @@ These actions are intended to be imported directly in server components/actions.
 **Section sources**
 - [use-chat-subscription.ts:181-252](file://src/app/(authenticated)/chat/hooks/use-chat-subscription.ts#L181-L252)
 
+## Utility Functions
+
+### Avatar Management Utilities
+The chat system now includes dedicated utilities for consistent avatar management:
+
+#### generateAvatarFallback
+Generates initials-based fallback avatars from user names:
+- Handles null/undefined/empty names gracefully
+- Splits names by whitespace and filters empty parts
+- Returns single character for single names, first two characters for multiple names
+- Converts to uppercase for consistent appearance
+
+#### resolveAvatarUrl
+Resolves avatar URLs for consistent image serving:
+- Accepts absolute URLs (http/https) without modification
+- Resolves relative URLs using NEXT_PUBLIC_SUPABASE_URL environment variable
+- Returns null for invalid inputs or missing environment configuration
+
+**Section sources**
+- [avatar-url.ts:1-24](file://src/lib/avatar-url.ts#L1-L24)
+
+### Case Transformation Utilities
+Provides bidirectional conversion between camelCase and snake_case formats:
+
+#### camelToSnakeKey
+Converts individual keys from camelCase to snake_case:
+- Handles consecutive uppercase letters specially
+- Inserts underscores before uppercase letters (except at the beginning)
+- Maintains numeric suffixes correctly
+
+#### fromSnakeToCamel / fromCamelToSnake
+Deep conversion utilities for objects and arrays:
+- Recursively processes nested objects and arrays
+- Preserves primitive values (null, undefined, numbers, strings, booleans)
+- Handles complex nested structures with proper type preservation
+
+**Section sources**
+- [case-transform.ts:1-33](file://src/lib/case-transform.ts#L1-L33)
+
+## Component Analysis with Utility Integration
+
+### Enhanced Avatar Implementation
+Multiple chat components now utilize the new avatar utilities:
+
+#### ChatListItem Component
+- Uses generateAvatarFallback for consistent avatar initials
+- Handles both absolute and relative avatar URLs
+- Provides online status indicators with proper positioning
+
+#### MessageGroup Component  
+- Integrates avatar fallback generation for sender identification
+- Manages avatar visibility in group chat contexts
+- Supports dynamic avatar image loading with fallback initials
+
+#### ChatDetailPanel Component
+- Implements avatar fallback generation for user profile displays
+- Handles online status color coding based on user presence
+- Provides consistent avatar presentation across different chat contexts
+
+**Section sources**
+- [chat-list-item.tsx:1-92](file://src/app/(authenticated)/chat/components/chat-list-item.tsx#L1-L92)
+- [message-group.tsx:1-67](file://src/app/(authenticated)/chat/components/message-group.tsx#L1-L67)
+- [chat-detail-panel.tsx:1-33](file://src/app/(authenticated)/chat/components/chat-detail-panel.tsx#L1-L33)
+
+### Data Transformation Patterns
+The case transformation utilities enable consistent data format handling:
+- API response normalization from snake_case backend data to camelCase frontend consumption
+- Database query parameter conversion for consistent SQL generation
+- Seamless integration with Supabase ORM and custom repository patterns
+
+**Section sources**
+- [chat-bubbles.tsx:1-200](file://src/app/(authenticated)/chat/components/chat-bubbles.tsx#L1-L200)
+- [chat-sidebar.tsx:1-122](file://src/app/(authenticated)/chat/components/chat-sidebar.tsx#L1-L122)
+- [chat-content.tsx:1-158](file://src/app/(authenticated)/chat/components/chat-content.tsx#L1-L158)
+
 ## Dependency Analysis
 High-level dependencies:
 - ChatService depends on all repositories and domain schemas
 - Repositories depend on Supabase client and convert rows to domain types
 - Hooks depend on Supabase client and domain types
 - Page depends on ChatService and exports ChatLayout
+- Components depend on utility functions for consistent avatar management
+- Utilities provide shared functionality across the entire chat system
 
 ```mermaid
 graph LR
@@ -350,6 +463,10 @@ Service --> Repo["repository.ts"]
 Page["page.tsx"] --> Service
 Hook["use-chat-subscription.ts"] --> Domain
 RTComp["realtime-chat.tsx"] --> Hook
+Components["Chat Components"] --> AvatarUtils["avatar-url.ts"]
+Components --> CaseUtils["case-transform.ts"]
+AvatarUtils --> Utils["lib/utils.ts"]
+CaseUtils --> Utils
 ```
 
 **Diagram sources**
@@ -359,6 +476,8 @@ RTComp["realtime-chat.tsx"] --> Hook
 - [page.tsx:1-83](file://src/app/(authenticated)/chat/page.tsx#L1-L83)
 - [use-chat-subscription.ts:1-252](file://src/app/(authenticated)/chat/hooks/use-chat-subscription.ts#L1-L252)
 - [realtime-chat.tsx:1-70](file://src/components/realtime/realtime-chat.tsx#L1-L70)
+- [avatar-url.ts:1-24](file://src/lib/avatar-url.ts#L1-L24)
+- [case-transform.ts:1-33](file://src/lib/case-transform.ts#L1-L33)
 
 **Section sources**
 - [service.ts:738-748](file://src/app/(authenticated)/chat/service.ts#L738-L748)
@@ -369,15 +488,23 @@ RTComp["realtime-chat.tsx"] --> Hook
 - Indexes and queries: Ensure appropriate indexes on sala_id, created_at, and membership tables for efficient filtering and sorting
 - Real-time efficiency: Use channel filters (e.g., sala_id=eq.<id>) to minimize event volume
 - Batch operations: Consider batching message sends and reducing redundant queries in UI components
+- Avatar optimization: Cache avatar fallback generation results to avoid repeated computations
+- Case conversion performance: Memoize case transformation operations for frequently accessed data
 
 ## Troubleshooting Guide
 Common issues and resolutions:
 - Realtime subscription errors: Check RLS policies, ensure the table is part of the realtime publication, and confirm Realtime is enabled
 - Channel timeouts or closures: Verify network connectivity and consider client-side reconnection logic
 - Permission denials: Confirm user membership and ownership for protected operations (e.g., deleting rooms, updating names)
+- Avatar display issues: Verify NEXT_PUBLIC_SUPABASE_URL environment variable is set correctly for avatar URL resolution
+- Case conversion errors: Ensure proper handling of null/undefined values in data transformation pipelines
 
 **Section sources**
 - [use-chat-subscription.ts:209-219](file://src/app/(authenticated)/chat/hooks/use-chat-subscription.ts#L209-L219)
+- [avatar-url.ts:13-24](file://src/lib/avatar-url.ts#L13-L24)
+- [case-transform.ts:9-32](file://src/lib/case-transform.ts#L9-L32)
 
 ## Conclusion
-The Chat System implements a robust, layered architecture with strong typing, validation, and real-time capabilities powered by Supabase. Room and message lifecycles are well-defined, with pagination and membership-aware queries. Real-time delivery leverages Postgres Changes and broadcast fallbacks. Security is enforced through RLS and service-level checks. Extending moderation features would require adding repository methods and UI components aligned with existing patterns.
+The Chat System implements a robust, layered architecture with strong typing, validation, and real-time capabilities powered by Supabase. Room and message lifecycles are well-defined, with pagination and membership-aware queries. Real-time delivery leverages Postgres Changes and broadcast fallbacks. Security is enforced through RLS and service-level checks. 
+
+**Updated** The system now includes enhanced avatar management through dedicated utility functions that provide consistent fallback avatar generation and URL resolution. Additionally, comprehensive case transformation utilities enable seamless data format conversion between backend snake_case and frontend camelCase conventions. These improvements enhance user experience through consistent avatar presentation and improve data handling reliability across the entire chat ecosystem. Extending moderation features would require adding repository methods and UI components aligned with existing patterns.
