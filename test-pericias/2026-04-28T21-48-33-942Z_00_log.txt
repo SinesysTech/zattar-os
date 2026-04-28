@@ -1,0 +1,79 @@
+[2026-04-28T21:48:33.948Z] ═══════════════════════════════════════════════════════════
+[2026-04-28T21:48:33.948Z]   DEBUG: Captura direta de perícias TRT3 (1º grau)
+[2026-04-28T21:48:33.948Z]   Iniciado: 2026-04-28T21:48:33.948Z
+[2026-04-28T21:48:33.948Z]   Situações: S, L, C, F, P, R | Sem persistência
+[2026-04-28T21:48:33.948Z] ═══════════════════════════════════════════════════════════
+[2026-04-28T21:48:33.948Z] 📋 Buscando config TRT3 (primeiro_grau) no banco...
+[2026-04-28T21:48:34.214Z] ✅ Config TRT3 encontrada (estratégia JOIN)
+[2026-04-28T21:48:34.214Z] 💾 Salvo: /Users/jordanmedeiros/Projetos/zattar-os/test-pericias/2026-04-28T21-48-33-942Z_01_config_trt3.json
+[2026-04-28T21:48:34.214Z] 🔑 Buscando credencial TRT3 ativa no banco...
+[2026-04-28T21:48:34.282Z] ✅ Credencial carregada | CPF: ***4610
+[2026-04-28T21:48:34.981Z] 
+🌐 Lançando Chromium local (headless)...
+[2026-04-28T21:48:38.809Z] 
+🔐 Fase 1: Autenticando no PJE TRT3...
+[2026-04-28T21:48:38.823Z] 🌐 Navegando para https://pje.trt3.jus.br/primeirograu/login.seam
+[2026-04-28T21:48:42.191Z] 🔑 Clicando em SSO PDPJ...
+[2026-04-28T21:48:43.012Z] 📝 Preenchendo CPF e senha...
+[2026-04-28T21:48:47.135Z] 🚀 Submetendo login...
+[2026-04-28T21:48:50.696Z] ⏳ Aguardando campo OTP...
+[2026-04-28T21:48:50.718Z] ✅ Campo OTP encontrado: #otp
+[2026-04-28T21:48:50.718Z] 📱 Buscando OTP do 2FAuth...
+[2026-04-28T21:48:51.043Z] ✅ OTP obtido com sucesso
+[2026-04-28T21:48:57.056Z] ✅ Saiu do SSO: pje.trt3.jus.br
+[2026-04-28T21:49:00.069Z] ✅ Autenticado | idAdvogado=29203 | nome=N/A
+[2026-04-28T21:49:00.069Z] 
+📡 Fase 2: Buscando perícias...
+[2026-04-28T21:49:00.069Z] 
+📡 Buscando perícias (situações: S, L, C, F, P, R)...
+[2026-04-28T21:49:01.612Z]    Página 1: 100 registros | qtdPaginas=7 | totalRegistros=669
+[2026-04-28T21:49:02.588Z]    Página 2: 100 registros
+[2026-04-28T21:49:03.614Z]    Página 3: 100 registros
+[2026-04-28T21:49:04.494Z]    Página 4: 100 registros
+[2026-04-28T21:49:05.420Z]    Página 5: 100 registros
+[2026-04-28T21:49:06.374Z]    Página 6: 100 registros
+[2026-04-28T21:49:07.302Z]    Página 7: 69 registros
+[2026-04-28T21:49:07.302Z] ✅ Total: 669 perícias
+[2026-04-28T21:49:07.307Z] 💾 Salvo: /Users/jordanmedeiros/Projetos/zattar-os/test-pericias/2026-04-28T21-48-33-942Z_02_pericias_raw.json
+[2026-04-28T21:49:07.309Z] 💾 Salvo: /Users/jordanmedeiros/Projetos/zattar-os/test-pericias/2026-04-28T21-48-33-942Z_02_paginas_raw.json
+[2026-04-28T21:49:07.309Z] 
+🔎 Fase 3: Analisando perícias capturadas...
+[2026-04-28T21:49:07.321Z] 💾 Salvo: /Users/jordanmedeiros/Projetos/zattar-os/test-pericias/2026-04-28T21-48-33-942Z_03_analise_pericias.json
+[2026-04-28T21:49:07.321Z]    Total: 669
+[2026-04-28T21:49:07.321Z]    IDs únicos: 669
+[2026-04-28T21:49:07.321Z]    IDs duplicados: 0
+[2026-04-28T21:49:07.321Z]    Perícias com ID repetido: 0
+[2026-04-28T21:49:07.321Z]    IDs duplicados com processos diferentes: 0
+[2026-04-28T21:49:07.321Z]    Processos com múltiplas perícias: 103
+[2026-04-28T21:49:07.321Z]    nrProcesso vazio: 0
+[2026-04-28T21:49:07.321Z]    Distribuição por situação: {"F":492,"C":56,"R":84,"L":5,"P":28,"S":4}
+[2026-04-28T21:49:07.321Z] 
+   ℹ️ TOP 5 processos com múltiplas perícias:
+[2026-04-28T21:49:07.321Z]       idProcesso=2728850 nr="0010650-15.2024.5.03.0113" count=11 situacoes=[R,R,R,R,R,F,R,R,R,R,F]
+[2026-04-28T21:49:07.321Z]       idProcesso=2308650 nr="0010781-61.2022.5.03.0015" count=9 situacoes=[R,R,R,R,R,R,R,R,F]
+[2026-04-28T21:49:07.324Z]       idProcesso=2691325 nr="0010442-31.2024.5.03.0113" count=6 situacoes=[R,R,F,R,R,F]
+[2026-04-28T21:49:07.324Z]       idProcesso=2326381 nr="0010522-28.2022.5.03.0060" count=6 situacoes=[F,R,R,R,F,F]
+[2026-04-28T21:49:07.327Z]       idProcesso=2557489 nr="0011577-75.2023.5.03.0093" count=6 situacoes=[R,R,R,R,C,F]
+[2026-04-28T21:49:07.327Z] 
+🔐 Fase 4: Verificando violações potenciais da constraint UNIQUE...
+[2026-04-28T21:49:07.330Z] 💾 Salvo: /Users/jordanmedeiros/Projetos/zattar-os/test-pericias/2026-04-28T21-48-33-942Z_04_constraint_check.json
+[2026-04-28T21:49:07.330Z]    ✅ Nenhum conflito de constraint encontrado na resposta da API
+[2026-04-28T21:49:07.330Z] 
+🗄️  Fase 5: Comparando com banco de dados...
+[2026-04-28T21:49:07.330Z] 
+🔍 Comparando com banco de dados...
+[2026-04-28T21:49:07.571Z]    Capturadas agora: 669 IDs únicos | No banco: 664 | Novas: 5 | Sumidas: 0
+[2026-04-28T21:49:07.571Z] 💾 Salvo: /Users/jordanmedeiros/Projetos/zattar-os/test-pericias/2026-04-28T21-48-33-942Z_05_comparacao_banco.json
+[2026-04-28T21:49:07.571Z] 💾 Salvo: /Users/jordanmedeiros/Projetos/zattar-os/test-pericias/2026-04-28T21-48-33-942Z_06_relatorio_final.json
+[2026-04-28T21:49:07.571Z] 
+═══════════════════════════════════════════════════════════
+[2026-04-28T21:49:07.571Z] ✅ Diagnóstico concluído!
+[2026-04-28T21:49:07.571Z]    Total capturado:         669 perícias
+[2026-04-28T21:49:07.571Z]    IDs duplicados:          0
+[2026-04-28T21:49:07.571Z]    Reuso de IDs (ID≠proc):  0
+[2026-04-28T21:49:07.571Z]    Conflitos constraint:    0
+[2026-04-28T21:49:07.571Z]    Novas (não no BD):       5
+[2026-04-28T21:49:07.571Z]    Pasta de saída:          /Users/jordanmedeiros/Projetos/zattar-os/test-pericias
+[2026-04-28T21:49:07.571Z] ═══════════════════════════════════════════════════════════
+
+[2026-04-28T21:49:07.612Z] 🔒 Browser fechado

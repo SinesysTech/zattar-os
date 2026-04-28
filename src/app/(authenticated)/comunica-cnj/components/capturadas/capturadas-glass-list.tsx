@@ -225,7 +225,7 @@ function GlassRow({
             {classeJudicial && (
               <>
                 <span className="w-0.75 h-0.75 rounded-full bg-muted-foreground/30 shrink-0" />
-                <span className="text-[11px] text-muted-foreground/45 truncate max-w-55">
+                <span className="text-[11px] text-muted-foreground/65 truncate max-w-55">
                   {classeJudicial}
                 </span>
               </>

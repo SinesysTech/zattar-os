@@ -68,7 +68,7 @@ function buildTimelineItems(logs: SyncLogEntry[]): TimelineItem[] {
 
     const badge = (
       <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
-        <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "text-[9px] px-1.5 py-0.5 rounded bg-muted/40 text-muted-foreground border border-border/30 font-medium")}>
+        <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "text-[9px] px-1.5 py-0.5 rounded bg-muted/40 text-muted-foreground border border-border/50 font-medium")}>
           {tipoLabel}
         </span>
         <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'text-[9px] px-1.5 py-0.5 rounded font-medium', statusColor)}>

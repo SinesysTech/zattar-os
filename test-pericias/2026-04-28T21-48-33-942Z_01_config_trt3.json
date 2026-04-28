@@ -1,0 +1,5 @@
+{
+  "loginUrl": "https://pje.trt3.jus.br/primeirograu/login.seam",
+  "baseUrl": "https://pje.trt3.jus.br",
+  "apiUrl": "https://pje.trt3.jus.br/pje-comum-api/api"
+}

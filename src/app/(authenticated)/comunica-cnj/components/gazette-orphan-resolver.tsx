@@ -125,7 +125,7 @@ function MatchCriteriaList({ criterios }: { criterios: MatchCriterio[] }) {
           {c.match ? (
             <Check className="mt-0.5 size-3.5 shrink-0 text-success" />
           ) : (
-            <Circle className="mt-0.5 size-3.5 shrink-0 text-muted-foreground/40" />
+            <Circle className="mt-0.5 size-3.5 shrink-0 text-muted-foreground/65" />
           )}
           <div className={cn(!c.match && 'opacity-50')}>
             <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium")}>{c.campo}</span>

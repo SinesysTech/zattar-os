@@ -11,6 +11,7 @@ export interface CapturaResultData {
     total: number;
     atualizados: number;
     erros: number;
+    conflitos?: number;
     orgaosJulgadoresCriados?: number;
   };
   dataInicio?: string;
@@ -79,7 +80,7 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
 
   if (!success) {
     return (
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/[0.06] p-4")}>
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/6 p-4")}>
         <XCircle className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
         <div>
           <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold text-destructive")}>Erro na Captura</p>
@@ -113,8 +114,8 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
       {/* Banner de status */}
       <div className={`flex items-start gap-3 rounded-lg border p-4 ${
         isAsync
-          ? 'border-info/30 bg-info/[0.06]'
-          : 'border-success/30 bg-success/[0.06]'
+          ? 'border-info/30 bg-info/6'
+          : 'border-success/30 bg-success/6'
       }`}>
         <CheckCircle2 className={`h-4 w-4 shrink-0 mt-0.5 ${isAsync ? 'text-info' : 'text-success'}`} />
         <div>
@@ -276,7 +277,7 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
           </p>
           <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
             {data.erros.slice(0, 5).map((e, i) => (
-              <div key={i} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2.5 → usar <Inset>; text-xs → migrar para <Text variant="caption"> */ "flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/[0.06] p-2.5 text-xs")}>
+              <div key={i} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2.5 → usar <Inset>; text-xs → migrar para <Text variant="caption"> */ "flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/6 p-2.5 text-xs")}>
                 <XCircle className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />
                 <div>
                   <span className="font-mono text-foreground/80">{e.numero_processo}</span>

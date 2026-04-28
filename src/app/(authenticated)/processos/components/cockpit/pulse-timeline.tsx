@@ -132,7 +132,7 @@ export function PulseTimeline({
         {futureItems.length > 0 && (
           <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "opacity-70 pt-2")}>
             <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "px-4 py-1")}>
-              <Text variant="overline" as="span" className="text-muted-foreground/30">
+              <Text variant="overline" as="span" className="text-muted-foreground/55">
                 Próximos eventos
               </Text>
             </div>
@@ -155,18 +155,18 @@ export function PulseTimeline({
                     </div>
                     <div className={cn(/* design-system-escape: pb-1 padding direcional sem Inset equiv. */ "flex flex-col justify-center pb-1")}>
                       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-0.5")}>
-                        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] font-medium uppercase px-1.5 py-0.5 rounded bg-primary/8 text-primary/50 border border-primary/10")}>
+                        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] font-medium uppercase px-1.5 py-0.5 rounded bg-primary/8 text-primary/70 border border-primary/10")}>
                           {fi.tipo === 'audiencia' ? 'Audiência' : fi.tipo === 'expediente' ? 'Prazo' : 'Perícia'}
                         </span>
-                        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/50 font-mono shrink-0")}>
+                        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/70 font-mono shrink-0")}>
                           {format(new Date(fi.data), 'dd/MM/yy', { locale: ptBR })}
                         </span>
                       </div>
-                      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-sm font-medium leading-tight line-clamp-2 text-foreground/60 text-left")}>
+                      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-sm font-medium leading-tight line-clamp-2 text-foreground/75 text-left")}>
                         {fi.titulo}
                       </p>
                       {fi.subtitulo && (
-                        <p className="text-[10px] text-muted-foreground/40 mt-0.5 text-left">{fi.subtitulo}</p>
+                        <p className="text-[10px] text-muted-foreground/65 mt-0.5 text-left">{fi.subtitulo}</p>
                       )}
                     </div>
                   </div>

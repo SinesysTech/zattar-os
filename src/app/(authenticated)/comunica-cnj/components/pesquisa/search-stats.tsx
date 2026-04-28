@@ -49,14 +49,14 @@ export function SearchStats() {
       value: metricas?.totalCapturadas ?? '—',
       icon: Database,
       iconBg: 'bg-primary/8',
-      iconColor: 'text-primary/50',
+      iconColor: 'text-primary/70',
     },
     {
       label: 'Vinculadas a expediente',
       value: metricas?.vinculados ?? '—',
       icon: Link2,
       iconBg: 'bg-success/8',
-      iconColor: 'text-success/50',
+      iconColor: 'text-success/70',
     },
     {
       label: 'Prazos críticos',

@@ -222,7 +222,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
                 {data.tipo === 'pf' ? 'Pessoa Física' : 'Pessoa Jurídica'}
               </span>
               {!data.ativo && (
-                <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] px-1.5 py-0.5 rounded bg-muted-foreground/10 text-muted-foreground/50")}>
+                <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] px-1.5 py-0.5 rounded bg-muted-foreground/10 text-muted-foreground/70")}>
                   Inativo
                 </span>
               )}
@@ -261,7 +261,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
         </div>
         <div className="w-px bg-border/10" />
         <div className="flex-1 text-center">
-          <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "font-display text-xl font-bold text-muted-foreground/50")}>
+          <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "font-display text-xl font-bold text-muted-foreground/70")}>
             {Math.max(0, data.metricas.total - data.metricas.ativos)}
           </p>
           <p className="text-[9px] text-muted-foreground/60">Encerrados</p>

@@ -81,8 +81,8 @@ export function AttentionStrip({
           return (
             <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex-1 min-w-50 px-4 py-3")}>
               <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-1.5")}>
-                <Calendar className="size-3.5 text-primary/40" />
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider")}>
+                <Calendar className="size-3.5 text-primary/65" />
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>
                   Próxima Audiência
                 </span>
                 <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ 'text-[10px] font-bold tabular-nums ml-auto', URGENCY_STYLES[countdown.urgency])}>
@@ -92,7 +92,7 @@ export function AttentionStrip({
               <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium truncate")}>
                 {proximaAudiencia.tipoDescricao || 'Audiência'}
               </p>
-              <p className="text-[10px] text-muted-foreground/50 mt-0.5">
+              <p className="text-[10px] text-muted-foreground/70 mt-0.5">
                 {format(new Date(proximaAudiencia.dataInicio), "dd/MM 'às' HH:mm", { locale: ptBR })}
               </p>
               {onOpenAudiencia && (
@@ -116,8 +116,8 @@ export function AttentionStrip({
         {expedientesUrgentes.total > 0 && (
           <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex-1 min-w-45 px-4 py-3")}>
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-1.5")}>
-              <FileText className="size-3.5 text-warning/40" />
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider")}>
+              <FileText className="size-3.5 text-warning/65" />
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>
                 Prazos
               </span>
             </div>
@@ -147,8 +147,8 @@ export function AttentionStrip({
         {periciasPendentes.length > 0 && (
           <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex-1 min-w-40 px-4 py-3")}>
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-1.5")}>
-              <Microscope className="size-3.5 text-info/40" />
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider")}>
+              <Microscope className="size-3.5 text-info/65" />
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>
                 Perícias
               </span>
             </div>
@@ -162,7 +162,7 @@ export function AttentionStrip({
           <Button
             variant="ghost"
             size="sm"
-            className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv. */ "h-7 px-2.5 text-[10px] text-muted-foreground/50")}
+            className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv. */ "h-7 px-2.5 text-[10px] text-muted-foreground/70")}
             onClick={onOpenAllDetails}
           >
             Ver todos <ChevronRight className="size-3 ml-0.5" />

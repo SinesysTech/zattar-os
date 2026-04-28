@@ -1,0 +1,602 @@
+{
+  "resumo": {
+    "total": 669,
+    "idsUnicos": 669,
+    "idsDuplicados": 0,
+    "periciasComIdRepetido": 0,
+    "idsDuplicadosComProcessosDiferentes": 0,
+    "processosComMultiplasPericias": 103,
+    "periciasComNrProcessoVazio": 0
+  },
+  "duplicatas": [],
+  "processosComMultiplasPericias": [
+    {
+      "idProcesso": 2728850,
+      "numeroProcesso": "0010650-15.2024.5.03.0113",
+      "pericias": [
+        {
+          "id": 675233,
+          "situacao": "R",
+          "prazoEntrega": "2024-11-05T23:59:59.999999"
+        },
+        {
+          "id": 675234,
+          "situacao": "R",
+          "prazoEntrega": "2024-11-05T23:59:59.999999"
+        },
+        {
+          "id": 687016,
+          "situacao": "R",
+          "prazoEntrega": "2024-12-06T23:59:59.999999"
+        },
+        {
+          "id": 687019,
+          "situacao": "R",
+          "prazoEntrega": "2024-12-10T23:59:59.999999"
+        },
+        {
+          "id": 695935,
+          "situacao": "R",
+          "prazoEntrega": "2024-12-10T23:59:59.999999"
+        },
+        {
+          "id": 696419,
+          "situacao": "F",
+          "prazoEntrega": "2025-01-23T23:59:59.999999"
+        },
+        {
+          "id": 696417,
+          "situacao": "R",
+          "prazoEntrega": "2025-01-30T23:59:59.999999"
+        },
+        {
+          "id": 704062,
+          "situacao": "R",
+          "prazoEntrega": "2025-02-04T23:59:59.999999"
+        },
+        {
+          "id": 705365,
+          "situacao": "R",
+          "prazoEntrega": "2025-02-19T23:59:59.999999"
+        },
+        {
+          "id": 710693,
+          "situacao": "R",
+          "prazoEntrega": "2025-02-27T23:59:59.999999"
+        },
+        {
+          "id": 713742,
+          "situacao": "F",
+          "prazoEntrega": "2025-03-12T23:59:59.999999"
+        }
+      ]
+    },
+    {
+      "idProcesso": 2308650,
+      "numeroProcesso": "0010781-61.2022.5.03.0015",
+      "pericias": [
+        {
+          "id": 518281,
+          "situacao": "R",
+          "prazoEntrega": "2022-11-09T23:59:59.999999"
+        },
+        {
+          "id": 521454,
+          "situacao": "R",
+          "prazoEntrega": "2022-11-18T23:59:59.999999"
+        },
+        {
+          "id": 523040,
+          "situacao": "R",
+          "prazoEntrega": "2022-11-24T23:59:59.999999"
+        },
+        {
+          "id": 524452,
+          "situacao": "R",
+          "prazoEntrega": "2022-11-29T23:59:59.999999"
+        },
+        {
+          "id": 524321,
+          "situacao": "R",
+          "prazoEntrega": "2022-11-30T23:59:59.999999"
+        },
+        {
+          "id": 525482,
+          "situacao": "R",
+          "prazoEntrega": "2022-12-09T23:59:59.999999"
+        },
+        {
+          "id": 525480,
+          "situacao": "R",
+          "prazoEntrega": "2022-12-19T23:59:59.999999"
+        },
+        {
+          "id": 528799,
+          "situacao": "R",
+          "prazoEntrega": "2023-01-30T23:59:59.999999"
+        },
+        {
+          "id": 532416,
+          "situacao": "F",
+          "prazoEntrega": "2023-03-13T23:59:59.999999"
+        }
+      ]
+    },
+    {
+      "idProcesso": 2691325,
+      "numeroProcesso": "0010442-31.2024.5.03.0113",
+      "pericias": [
+        {
+          "id": 656469,
+          "situacao": "R",
+          "prazoEntrega": "2024-07-23T23:59:59.999999"
+        },
+        {
+          "id": 653331,
+          "situacao": "R",
+          "prazoEntrega": "2024-08-05T23:59:59.999999"
+        },
+        {
+          "id": 659332,
+          "situacao": "F",
+          "prazoEntrega": "2024-08-12T23:59:59.999999"
+        },
+        {
+          "id": 729470,
+          "situacao": "R",
+          "prazoEntrega": "2025-06-09T23:59:59.999999"
+        },
+        {
+          "id": 730037,
+          "situacao": "R",
+          "prazoEntrega": "2025-06-09T23:59:59.999999"
+        },
+        {
+          "id": 735180,
+          "situacao": "F",
+          "prazoEntrega": "2025-06-26T23:59:59.999999"
+        }
+      ]
+    },
+    {
+      "idProcesso": 2326381,
+      "numeroProcesso": "0010522-28.2022.5.03.0060",
+      "pericias": [
+        {
+          "id": 525291,
+          "situacao": "F",
+          "prazoEntrega": "2023-02-27T23:59:59.999999"
+        },
+        {
+          "id": 529664,
+          "situacao": "R",
+          "prazoEntrega": "2023-06-07T23:59:59.999999"
+        },
+        {
+          "id": 534927,
+          "situacao": "R",
+          "prazoEntrega": "2023-06-07T23:59:59.999999"
+        },
+        {
+          "id": 560792,
+          "situacao": "R",
+          "prazoEntrega": "2023-06-20T23:59:59.999999"
+        },
+        {
+          "id": 563370,
+          "situacao": "F",
+          "prazoEntrega": "2023-07-18T23:59:59.999999"
+        },
+        {
+          "id": 679727,
+          "situacao": "F",
+          "prazoEntrega": "2025-01-21T23:59:59.999999"
+        }
+      ]
+    },
+    {
+      "idProcesso": 2557489,
+      "numeroProcesso": "0011577-75.2023.5.03.0093",
+      "pericias": [
+        {
+          "id": 597427,
+          "situacao": "R",
+          "prazoEntrega": "2024-02-16T23:59:59.999999"
+        },
+        {
+          "id": 613419,
+          "situacao": "R",
+          "prazoEntrega": "2024-03-01T23:59:59.999999"
+        },
+        {
+          "id": 617831,
+          "situacao": "R",
+          "prazoEntrega": "2024-03-22T23:59:59.999999"
+        },
+        {
+          "id": 624151,
+          "situacao": "R",
+          "prazoEntrega": "2024-04-12T23:59:59.999999"
+        },
+        {
+          "id": 629338,
+          "situacao": "C",
+          "prazoEntrega": "2024-04-29T23:59:59.999999"
+        },
+        {
+          "id": 633974,
+          "situacao": "F",
+          "prazoEntrega": "2024-09-16T23:59:59.999999"
+        }
+      ]
+    },
+    {
+      "idProcesso": 2784516,
+      "numeroProcesso": "0011065-08.2024.5.03.0142",
+      "pericias": [
+        {
+          "id": 682126,
+          "situacao": "F",
+          "prazoEntrega": "2025-01-31T23:59:59.999999"
+        },
+        {
+          "id": 682137,
+          "situacao": "R",
+          "prazoEntrega": "2025-01-31T23:59:59.999999"
+        },
+        {
+          "id": 704311,
+          "situacao": "R",
+          "prazoEntrega": "2025-02-14T23:59:59.999999"
+        },
+        {
+          "id": 711660,
+          "situacao": "F",
+          "prazoEntrega": "2025-03-10T23:59:59.999999"
+        },
+        {
+          "id": 794657,
+          "situacao": "P",
+          "prazoEntrega": "2025-12-15T23:59:59.999999"
+        }
+      ]
+    },
+    {
+      "idProcesso": 2609010,
+      "numeroProcesso": "0010017-97.2024.5.03.0179",
+      "pericias": [
+        {
+          "id": 614534,
+          "situacao": "R",
+          "prazoEntrega": "2024-04-02T23:59:59.999999"
+        },
+        {
+          "id": 614533,
+          "situacao": "F",
+          "prazoEntrega": "2024-06-07T23:59:59.999999"
+        },
+        {
+          "id": 661270,
+          "situacao": "F",
+          "prazoEntrega": "2024-08-09T23:59:59.999999"
+        },
+        {
+          "id": 821590,
+          "situacao": "L",
+          "prazoEntrega": "2026-04-13T23:59:59.999999"
+        }
+      ]
+    },
+    {
+      "idProcesso": 2617311,
+      "numeroProcesso": "0010048-42.2024.5.03.0107",
+      "pericias": [
+        {
+          "id": 615969,
+          "situacao": "C",
+          "prazoEntrega": "2024-03-26T23:59:59.999999"
+        },
+        {
+          "id": 619887,
+          "situacao": "R",
+          "prazoEntrega": "2024-04-15T23:59:59.999999"
+        },
+        {
+          "id": 615329,
+          "situacao": "F",
+          "prazoEntrega": "2024-04-29T23:59:59.999999"
+        },
+        {
+          "id": 631364,
+          "situacao": "F",
+          "prazoEntrega": "2024-08-23T23:59:59.999999"
+        }
+      ]
+    },
+    {
+      "idProcesso": 2109788,
+      "numeroProcesso": "0010862-47.2021.5.03.0014",
+      "pericias": [
+        {
+          "id": 467855,
+          "situacao": "C",
+          "prazoEntrega": "2022-02-18T23:59:59.999999"
+        },
+        {
+          "id": 466392,
+          "situacao": "C",
+          "prazoEntrega": "2022-03-18T23:59:59.999999"
+        },
+        {
+          "id": 467857,
+          "situacao": "F",
+          "prazoEntrega": "2022-03-18T23:59:59.999999"
+        },
+        {
+          "id": 628024,
+          "situacao": "F",
+          "prazoEntrega": "2024-05-23T23:59:59.999999"
+        }
+      ]
+    },
+    {
+      "idProcesso": 2259377,
+      "numeroProcesso": "0010570-18.2022.5.03.0179",
+      "pericias": [
+        {
+          "id": 506629,
+          "situacao": "R",
+          "prazoEntrega": "2022-10-10T23:59:59.999999"
+        },
+        {
+          "id": 516197,
+          "situacao": "R",
+          "prazoEntrega": "2022-10-24T23:59:59.999999"
+        },
+        {
+          "id": 516201,
+          "situacao": "F",
+          "prazoEntrega": "2022-11-21T23:59:59.999999"
+        },
+        {
+          "id": 606676,
+          "situacao": "F",
+          "prazoEntrega": "2024-02-22T23:59:59.999999"
+        }
+      ]
+    },
+    {
+      "idProcesso": 2459285,
+      "numeroProcesso": "0010592-27.2023.5.03.0087",
+      "pericias": [
+        {
+          "id": 564922,
+          "situacao": "F",
+          "prazoEntrega": "2023-08-09T23:59:59.999999"
+        },
+        {
+          "id": 564923,
+          "situacao": "C",
+          "prazoEntrega": "2023-08-09T23:59:59.999999"
+        },
+        {
+          "id": 578545,
+          "situacao": "R",
+          "prazoEntrega": "2023-10-06T23:59:59.999999"
+        },
+        {
+          "id": 605669,
+          "situacao": "F",
+          "prazoEntrega": "2024-01-08T23:59:59.999999"
+        }
+      ]
+    },
+    {
+      "idProcesso": 2214973,
+      "numeroProcesso": "0010381-37.2022.5.03.0180",
+      "pericias": [
+        {
+          "id": 491739,
+          "situacao": "F",
+          "prazoEntrega": "2022-07-14T23:59:59.999999"
+        },
+        {
+          "id": 510171,
+          "situacao": "F",
+          "prazoEntrega": "2022-10-26T23:59:59.999999"
+        },
+        {
+          "id": 516755,
+          "situacao": "C",
+          "prazoEntrega": "2022-11-17T23:59:59.999999"
+        },
+        {
+          "id": 522160,
+          "situacao": "F",
+          "prazoEntrega": "2023-01-31T23:59:59.999999"
+        }
+      ]
+    },
+    {
+      "idProcesso": 2032620,
+      "numeroProcesso": "0010543-49.2021.5.03.0024",
+      "pericias": [
+        {
+          "id": 446438,
+          "situacao": "C",
+          "prazoEntrega": "2021-10-20T23:59:59.999999"
+        },
+        {
+          "id": 447407,
+          "situacao": "R",
+          "prazoEntrega": "2021-10-20T23:59:59.999999"
+        },
+        {
+          "id": 445526,
+          "situacao": "C",
+          "prazoEntrega": "2021-10-22T23:59:59.999999"
+        },
+        {
+          "id": 454381,
+          "situacao": "F",
+          "prazoEntrega": "2021-11-25T23:59:59.999999"
+        }
+      ]
+    },
+    {
+      "idProcesso": 3103792,
+      "numeroProcesso": "0010914-13.2025.5.03.0108",
+      "pericias": [
+        {
+          "id": 790598,
+          "situacao": "C",
+          "prazoEntrega": "2025-12-03T23:59:59.999999"
+        },
+        {
+          "id": 791597,
+          "situacao": "F",
+          "prazoEntrega": "2025-12-04T23:59:59.999999"
+        },
+        {
+          "id": 791599,
+          "situacao": "C",
+          "prazoEntrega": "2025-12-04T23:59:59.999999"
+        }
+      ]
+    },
+    {
+      "idProcesso": 2983116,
+      "numeroProcesso": "0010439-64.2025.5.03.0041",
+      "pericias": [
+        {
+          "id": 756249,
+          "situacao": "R",
+          "prazoEntrega": "2025-09-02T23:59:59.999999"
+        },
+        {
+          "id": 772681,
+          "situacao": "F",
+          "prazoEntrega": "2025-10-20T23:59:59.999999"
+        },
+        {
+          "id": 788053,
+          "situacao": "L",
+          "prazoEntrega": "2025-11-04T23:59:59.999999"
+        }
+      ]
+    },
+    {
+      "idProcesso": 2481682,
+      "numeroProcesso": "0010568-11.2023.5.03.0180",
+      "pericias": [
+        {
+          "id": 570747,
+          "situacao": "R",
+          "prazoEntrega": "2023-08-16T23:59:59.999999"
+        },
+        {
+          "id": 578553,
+          "situacao": "F",
+          "prazoEntrega": "2023-09-18T23:59:59.999999"
+        },
+        {
+          "id": 758753,
+          "situacao": "F",
+          "prazoEntrega": "2025-08-26T23:59:59.999999"
+        }
+      ]
+    },
+    {
+      "idProcesso": 2430881,
+      "numeroProcesso": "0010437-09.2023.5.03.0092",
+      "pericias": [
+        {
+          "id": 553640,
+          "situacao": "C",
+          "prazoEntrega": "2023-06-23T23:59:59.999999"
+        },
+        {
+          "id": 584750,
+          "situacao": "F",
+          "prazoEntrega": "2023-11-13T23:59:59.999999"
+        },
+        {
+          "id": 740052,
+          "situacao": "F",
+          "prazoEntrega": "2025-08-19T23:59:59.999999"
+        }
+      ]
+    },
+    {
+      "idProcesso": 2739306,
+      "numeroProcesso": "0010773-23.2024.5.03.0142",
+      "pericias": [
+        {
+          "id": 670820,
+          "situacao": "R",
+          "prazoEntrega": "2024-11-22T23:59:59.999999"
+        },
+        {
+          "id": 693190,
+          "situacao": "C",
+          "prazoEntrega": "2024-12-13T23:59:59.999999"
+        },
+        {
+          "id": 700431,
+          "situacao": "F",
+          "prazoEntrega": "2025-04-14T23:59:59.999999"
+        }
+      ]
+    },
+    {
+      "idProcesso": 2748441,
+      "numeroProcesso": "0011062-86.2024.5.03.0131",
+      "pericias": [
+        {
+          "id": 689305,
+          "situacao": "C",
+          "prazoEntrega": "2025-01-30T23:59:59.999999"
+        },
+        {
+          "id": 689796,
+          "situacao": "C",
+          "prazoEntrega": "2025-01-30T23:59:59.999999"
+        },
+        {
+          "id": 708642,
+          "situacao": "F",
+          "prazoEntrega": "2025-03-21T23:59:59.999999"
+        }
+      ]
+    },
+    {
+      "idProcesso": 2776251,
+      "numeroProcesso": "0010760-36.2024.5.03.0138",
+      "pericias": [
+        {
+          "id": 701038,
+          "situacao": "C",
+          "prazoEntrega": "2025-02-11T23:59:59.999999"
+        },
+        {
+          "id": 701265,
+          "situacao": "F",
+          "prazoEntrega": "2025-02-27T23:59:59.999999"
+        },
+        {
+          "id": 701040,
+          "situacao": "F",
+          "prazoEntrega": "2025-03-12T23:59:59.999999"
+        }
+      ]
+    }
+  ],
+  "distribuicaoPorSituacao": {
+    "F": 492,
+    "C": 56,
+    "R": 84,
+    "L": 5,
+    "P": 28,
+    "S": 4
+  }
+}

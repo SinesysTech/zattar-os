@@ -330,7 +330,7 @@ function ListSkeleton() {
       {Array.from({ length: 5 }, (_, i) => (
         <div
           key={i}
-          className="h-[72px] rounded-2xl border border-border/30 bg-card/40 animate-pulse"
+          className="h-18 rounded-2xl border border-border/30 bg-card/40 animate-pulse"
         />
       ))}
     </div>
@@ -353,11 +353,11 @@ function CardsSkeleton() {
 function EmptyState() {
   return (
     <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 text-center")}>
-      <FileSignature className="size-10 text-muted-foreground/35 mb-4" />
+      <FileSignature className="size-10 text-muted-foreground/55 mb-4" />
       <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/60")}>
         Nenhum documento encontrado
       </p>
-      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/50 mt-1")}>
+      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/70 mt-1")}>
         Tente ajustar os filtros ou a busca
       </p>
     </div>

@@ -106,13 +106,13 @@ export function GazetteMissionKpiStrip({
               <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
                 <AnimatedNumber value={stats.publicacoesHoje} />
               </p>
-              <span className="text-[10px] text-muted-foreground/40">
+              <span className="text-[10px] text-muted-foreground/65">
                 / {stats.total.toLocaleString('pt-BR')} total
               </span>
             </div>
           </div>
           <IconContainer size="md" className="bg-primary/8">
-            <CalendarClock className="size-4 text-primary/50" />
+            <CalendarClock className="size-4 text-primary/70" />
           </IconContainer>
         </div>
         {/* Sparkline 7 dias */}
@@ -154,11 +154,11 @@ export function GazetteMissionKpiStrip({
             </div>
           </div>
           <IconContainer size="md" className="bg-warning/8">
-            <Clock className="size-4 text-warning/50" />
+            <Clock className="size-4 text-warning/70" />
           </IconContainer>
         </div>
         <div className="mt-2.5">
-          <span className="text-[9px] text-muted-foreground/50 truncate block">
+          <span className="text-[9px] text-muted-foreground/70 truncate block">
             {stats.proximoDetail}
           </span>
         </div>
@@ -175,13 +175,13 @@ export function GazetteMissionKpiStrip({
               <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
                 <AnimatedNumber value={stats.vinculados} />
               </p>
-              <span className="text-[10px] text-muted-foreground/40">
+              <span className="text-[10px] text-muted-foreground/65">
                 / {stats.total.toLocaleString('pt-BR')}
               </span>
             </div>
           </div>
           <IconContainer size="md" className="bg-success/8">
-            <Link2 className="size-4 text-success/50" />
+            <Link2 className="size-4 text-success/70" />
           </IconContainer>
         </div>
         {/* Barra de taxa de vinculação */}
@@ -192,7 +192,7 @@ export function GazetteMissionKpiStrip({
               style={{ width: `${stats.taxaVinculacao}%` }}
             />
           </div>
-          <span className="text-[9px] tabular-nums text-muted-foreground/50 shrink-0">
+          <span className="text-[9px] tabular-nums text-muted-foreground/70 shrink-0">
             {stats.taxaVinculacao}%
           </span>
         </div>
@@ -209,7 +209,7 @@ export function GazetteMissionKpiStrip({
               <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
                 <AnimatedNumber value={stats.prazosCriticos} />
               </p>
-              <span className="text-[10px] text-muted-foreground/40">
+              <span className="text-[10px] text-muted-foreground/65">
                 {stats.orfaos} órfã{stats.orfaos === 1 ? '' : 's'}
               </span>
             </div>
@@ -232,7 +232,7 @@ export function GazetteMissionKpiStrip({
               }}
             />
           </div>
-          <span className="text-[9px] tabular-nums text-muted-foreground/50 shrink-0">
+          <span className="text-[9px] tabular-nums text-muted-foreground/70 shrink-0">
             {stats.orfaos > 0
               ? Math.round((stats.prazosCriticos / stats.orfaos) * 100)
               : 0}
