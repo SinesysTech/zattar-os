@@ -12,7 +12,6 @@ import {
 } from '@platejs/basic-nodes/react';
 import { ListPlugin } from '@platejs/list/react';
 import { LinkPlugin } from '@platejs/link/react';
-import { TextAlignPlugin } from '@platejs/basic-styles/react';
 import { deserializeMd, MarkdownPlugin, serializeMd } from '@platejs/markdown';
 import { Bold, Italic, Underline, Strikethrough } from 'lucide-react';
 import { Plate, ParagraphPlugin, usePlateEditor } from 'platejs/react';
@@ -55,17 +54,6 @@ const NoteEditorKit = [
     inject: { targetPlugins: [KEYS.p] },
     render: { belowNodes: BlockList },
   }),
-  TextAlignPlugin.configure({
-    inject: {
-      nodeProps: {
-        defaultNodeValue: 'start',
-        nodeKey: 'align',
-        styleKey: 'textAlign',
-        validNodeValues: ['start', 'left', 'center', 'right'],
-      },
-      targetPlugins: [KEYS.p],
-    },
-  }),
 ];
 
 export interface NoteEditorProps {
@@ -89,6 +77,8 @@ export function NoteEditor({
   autofocus = false,
   editable = true,
 }: NoteEditorProps) {
+  const isInternalUpdate = React.useRef(false);
+
   const editor = usePlateEditor({
     plugins: NoteEditorKit,
     value: (e) => {
@@ -100,9 +90,24 @@ export function NoteEditor({
     },
   });
 
+  // Sincroniza value externo (ex: reset do modal) quando não originou do próprio editor.
+  // editor de usePlateEditor é referência estável — não precisa ser dep.
+  React.useEffect(() => {
+    if (isInternalUpdate.current) {
+      isInternalUpdate.current = false;
+      return;
+    }
+    try {
+      editor.tf.setValue(deserializeMd(editor, value));
+    } catch {
+      // ignorar
+    }
+  }, [value]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const handleChange = React.useCallback(
     ({ value: newValue }: { value: Value }) => {
       if (!onChange) return;
+      isInternalUpdate.current = true;
       try {
         const markdown = serializeMd(editor, { value: newValue });
         onChange(markdown);
