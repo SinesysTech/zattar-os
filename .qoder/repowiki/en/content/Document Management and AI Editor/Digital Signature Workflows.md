@@ -20,7 +20,25 @@
 - [workflow/README.md](file://src/app/(authenticated)/assinatura-digital/components/workflow/README.md)
 - [canvas-assinatura.tsx](file://src/shared/assinatura-digital/components/signature/canvas-assinatura.tsx)
 - [preview-assinatura.tsx](file://src/shared/assinatura-digital/components/signature/preview-assinatura.tsx)
+- [editor-helpers.ts](file://src/app/(authenticated)/assinatura-digital/components/editor/editor-helpers.ts)
+- [RichTextEditor.tsx](file://src/app/(authenticated)/assinatura-digital/components/editor/RichTextEditor.tsx)
+- [MarkdownRichTextEditor.tsx](file://src/app/(authenticated)/assinatura-digital/components/editor/MarkdownRichTextEditor.tsx)
+- [variable-plugin.tsx](file://src/components/editor/plate/variable-plugin.tsx)
+- [editor.tsx](file://src/components/editor/plate-ui/editor.tsx)
+- [template-texto-pdf.service.ts](file://src/shared/assinatura-digital/services/template-texto-pdf.service.ts)
+- [package.json](file://package.json)
+- [next.config.ts](file://next.config.ts)
+- [setup.ts](file://src/testing/setup.ts)
+- [2026-04-28-remover-tiptap-migrar-plate.md](file://docs/superpowers/plans/2026-04-28-remover-tiptap-migrar-plate.md)
 </cite>
+
+## Update Summary
+**Changes Made**
+- Updated editor architecture section to reflect Plate.js migration from TipTap
+- Added new section on Plate.js editor components and variable plugin system
+- Updated template processing services to use Plate.js value format
+- Enhanced technical implementation details with Plate.js-specific APIs
+- Updated dependency management to reflect Plate.js architecture
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -28,16 +46,19 @@
 3. [Core Components](#core-components)
 4. [Architecture Overview](#architecture-overview)
 5. [Detailed Component Analysis](#detailed-component-analysis)
-6. [Dependency Analysis](#dependency-analysis)
-7. [Performance Considerations](#performance-considerations)
-8. [Security and Compliance](#security-and-compliance)
-9. [Integration Examples](#integration-examples)
-10. [Troubleshooting Guide](#troubleshooting-guide)
-11. [Conclusion](#conclusion)
+6. [Editor Architecture Migration](#editor-architecture-migration)
+7. [Dependency Analysis](#dependency-analysis)
+8. [Performance Considerations](#performance-considerations)
+9. [Security and Compliance](#security-and-compliance)
+10. [Integration Examples](#integration-examples)
+11. [Troubleshooting Guide](#troubleshooting-guide)
+12. [Conclusion](#conclusion)
 
 ## Introduction
 
 The Digital Signature Workflows module implements a comprehensive electronic signature system compliant with Brazil's MP 2.200-2/2001 (ICP-Brasil framework). This system supports two distinct workflows: document-based signing via PDF upload with multiple signers, and template-based signing through dynamic forms. The implementation ensures legal validity, document integrity verification, and comprehensive audit trails while maintaining high security standards.
+
+**Updated** The system now utilizes Plate.js-based editors replacing the previous TipTap implementations, providing improved performance, reduced dependency conflicts, and better long-term maintainability through the Plate.js architecture.
 
 The system provides a complete solution for digital document signing with features including multi-party workflows, custom branding capabilities, automated notifications, and compliance with Brazilian electronic signature regulations. It leverages modern technologies including PDF manipulation, cryptographic hashing, and secure storage infrastructure.
 
@@ -51,6 +72,7 @@ subgraph "Presentation Layer"
 UI[React Components]
 Workflow[Signature Workflow]
 Canvas[Signature Canvas]
+Editor[Plate.js Editors]
 end
 subgraph "Business Logic Layer"
 Service[Signature Service]
@@ -70,6 +92,7 @@ end
 UI --> Service
 Workflow --> Service
 Canvas --> Service
+Editor --> Service
 Service --> Validation
 Service --> Audit
 Service --> Persistence
@@ -116,6 +139,8 @@ The template-based workflow provides dynamic form generation with:
 - **Variable interpolation**: Mustache-based content generation
 - **Form validation**: Comprehensive input validation
 - **Preview functionality**: Real-time document preview
+
+**Updated** The template system now uses Plate.js editors with enhanced variable handling and conversion utilities between Plate.js and TipTap JSON formats.
 
 ### Security and Compliance Services
 
@@ -391,46 +416,140 @@ ASSINATURA_DIGITAL_DOCUMENTOS ||--o{ ASSINATURA_DIGITAL_DOCUMENTO_ASSINANTES : c
 - [25_assinatura_digital.sql:1-321](file://supabase/schemas/25_assinatura_digital.sql#L1-L321)
 - [20260105160000_add_assinatura_digital_documentos_tables.sql:1-164](file://supabase/migrations/20260105160000_add_assinatura_digital_documentos_tables.sql#L1-L164)
 
-## Dependency Analysis
+## Editor Architecture Migration
 
-The digital signature system exhibits strong internal cohesion with clear external dependencies:
+**Updated** The digital signature system has undergone a significant architectural migration from TipTap to Plate.js for enhanced performance and maintainability.
+
+### Plate.js Editor Components
+
+The system now utilizes Plate.js v52 with a comprehensive plugin architecture:
 
 ```mermaid
 graph TB
-subgraph "Internal Dependencies"
-Domain[Domain Models]
-Service[Business Services]
-Repo[Repository Layer]
-Utils[Utility Services]
+subgraph "Plate.js Editor Architecture"
+SignatureEditorKit[SignatureEditorKit]
+VariablePlugin[VariablePlugin]
+EditorComponents[Editor Components]
+Toolbar[Custom Toolbar]
 end
-subgraph "External Dependencies"
-PDFLib[pdf-lib]
-Crypto[node:crypto]
-Storage[Backblaze B2 SDK]
-Supabase[Supabase Client]
-Zod[Zod Validation]
+subgraph "Core Plugins"
+ParagraphPlugin[ParagraphPlugin]
+BoldPlugin[Font Styles]
+ItalicPlugin[Font Styles]
+UnderlinePlugin[Font Styles]
+StrikethroughPlugin[Font Styles]
+BlockquotePlugin[BlockquotePlugin]
+ListPlugin[ListPlugin]
+TextAlignPlugin[TextAlignPlugin]
+IndentKit[IndentKit]
 end
-subgraph "Infrastructure"
-Database[PostgreSQL]
-ObjectStorage[Backblaze B2]
-CDN[CloudFront]
+subgraph "Custom Extensions"
+VariableElement[VariableElement Component]
+EditorContainer[EditorContainer]
+Editor[Editor]
+ToolbarGroup[ToolbarGroup]
+ToolbarButton[ToolbarButton]
 end
-Domain --> Service
-Service --> Repo
-Service --> Utils
-Service --> PDFLib
-Service --> Crypto
-Service --> Storage
-Service --> Supabase
-Domain --> Zod
-Repo --> Database
-Storage --> ObjectStorage
-Service --> CDN
+SignatureEditorKit --> ParagraphPlugin
+SignatureEditorKit --> BoldPlugin
+SignatureEditorKit --> ItalicPlugin
+SignatureEditorKit --> UnderlinePlugin
+SignatureEditorKit --> StrikethroughPlugin
+SignatureEditorKit --> BlockquotePlugin
+SignatureEditorKit --> VariablePlugin
+SignatureEditorKit --> ListPlugin
+SignatureEditorKit --> TextAlignPlugin
+SignatureEditorKit --> IndentKit
+VariablePlugin --> VariableElement
+EditorComponents --> EditorContainer
+EditorComponents --> Editor
+EditorComponents --> ToolbarGroup
+EditorComponents --> ToolbarButton
 ```
 
 **Diagram sources**
-- [service.ts:1-189](file://src/shared/assinatura-digital/service.ts#L1-L189)
-- [repository.ts:1-352](file://src/shared/assinatura-digital/repository.ts#L1-L352)
+- [RichTextEditor.tsx:66-100](file://src/app/(authenticated)/assinatura-digital/components/editor/RichTextEditor.tsx#L66-L100)
+- [variable-plugin.tsx:38-46](file://src/components/editor/plate/variable-plugin.tsx#L38-L46)
+- [editor.tsx:13-92](file://src/components/editor/plate-ui/editor.tsx#L13-L92)
+
+### Variable Plugin System
+
+The VariablePlugin provides inline variable insertion with visual representation:
+
+```mermaid
+classDiagram
+class VariablePlugin {
++key : string
++node : VariableElementType
++component : VariableElementComponent
++isElement : true
++isInline : true
++isVoid : true
+}
+class VariableElementType {
++type : "variable"
++key : string
++children : [{ text : string }]
+}
+class VariableElementComponent {
++element : VariableElementType
++render() JSX.Element
++className : "inline-flex items-center rounded px-1.5 py-0.5 font-mono text-xs bg-violet-100 text-violet-700"
+}
+VariablePlugin --> VariableElementType
+VariablePlugin --> VariableElementComponent
+```
+
+**Diagram sources**
+- [variable-plugin.tsx:10-16](file://src/components/editor/plate/variable-plugin.tsx#L10-L16)
+- [variable-plugin.tsx:18-35](file://src/components/editor/plate/variable-plugin.tsx#L18-L35)
+
+### Conversion Utilities
+
+The system maintains compatibility between Plate.js and TipTap JSON formats:
+
+```mermaid
+flowchart LR
+A[TipTap JSON Storage] --> B[tiptapJsonToPlateValue]
+B --> C[Plate.js Value]
+C --> D[plateValueToTiptapJson]
+D --> E[Template Processing]
+E --> F[PDF Generation]
+F --> G[Final Document]
+```
+
+**Diagram sources**
+- [editor-helpers.ts:342-355](file://src/app/(authenticated)/assinatura-digital/components/editor/editor-helpers.ts#L342-L355)
+
+### Template Processing with Plate.js
+
+The template processing system now works with Plate.js value structures:
+
+```mermaid
+sequenceDiagram
+participant Template as Template Content
+participant Converter as Plate Converter
+participant PDFService as PDF Service
+participant Puppeteer as Puppeteer Engine
+Template->>Converter : Plate Value Structure
+Converter->>PDFService : HTML Generation
+PDFService->>Puppeteer : Render HTML to PDF
+Puppeteer->>PDFService : PDF Buffer
+PDFService->>Template : Final PDF Document
+```
+
+**Diagram sources**
+- [template-texto-pdf.service.ts:103-233](file://src/shared/assinatura-digital/services/template-texto-pdf.service.ts#L103-L233)
+
+**Section sources**
+- [RichTextEditor.tsx:1-306](file://src/app/(authenticated)/assinatura-digital/components/editor/RichTextEditor.tsx#L1-L306)
+- [editor-helpers.ts:227-355](file://src/app/(authenticated)/assinatura-digital/components/editor/editor-helpers.ts#L227-L355)
+- [variable-plugin.tsx:1-56](file://src/components/editor/plate/variable-plugin.tsx#L1-L56)
+- [template-texto-pdf.service.ts:1-332](file://src/shared/assinatura-digital/services/template-texto-pdf.service.ts#L1-L332)
+
+## Dependency Analysis
+
+**Updated** The system now uses Plate.js instead of TipTap, providing better performance and reduced dependency conflicts.
 
 The dependency structure ensures:
 
@@ -439,13 +558,65 @@ The dependency structure ensures:
 - **Clear interfaces**: Well-defined contracts between layers
 - **Testability**: Easy mocking and testing of dependencies
 
+### Plate.js Architecture Dependencies
+
+```mermaid
+graph TB
+subgraph "Plate.js Core"
+PlateJS[platejs v52]
+BasicNodes[@platejs/basic-nodes]
+BasicStyles[@platejs/basic-styles]
+ListPlugin[@platejs/list]
+TextAlignPlugin[@platejs/basic-styles]
+IndentKit[@platejs/indent]
+MarkdownPlugin[@platejs/markdown]
+YjsPlugin[@platejs/yjs]
+end
+subgraph "System Integration"
+TemplatePDF[Template PDF Service]
+EditorHelpers[Editor Helpers]
+VariablePlugin[Variable Plugin]
+EditorUI[Editor UI Components]
+end
+PlateJS --> TemplatePDF
+PlateJS --> EditorHelpers
+PlateJS --> VariablePlugin
+PlateJS --> EditorUI
+BasicNodes --> TemplatePDF
+BasicStyles --> TemplatePDF
+ListPlugin --> TemplatePDF
+TextAlignPlugin --> TemplatePDF
+IndentKit --> TemplatePDF
+MarkdownPlugin --> TemplatePDF
+YjsPlugin --> TemplatePDF
+```
+
+**Diagram sources**
+- [package.json:160-191](file://package.json#L160-L191)
+- [next.config.ts:221-242](file://next.config.ts#L221-L242)
+
+### Legacy TipTap Dependencies
+
+The system maintains compatibility with existing TipTap-based storage formats:
+
+- **TipTap JSON Storage**: Existing database format preserved
+- **Conversion Utilities**: Bidirectional conversion between formats
+- **Migration Strategy**: Gradual transition without data loss
+
 **Section sources**
-- [service.ts:1-189](file://src/shared/assinatura-digital/service.ts#L1-L189)
-- [repository.ts:1-352](file://src/shared/assinatura-digital/repository.ts#L1-L352)
+- [package.json:135-325](file://package.json#L135-L325)
+- [next.config.ts:197-242](file://next.config.ts#L197-L242)
+- [setup.ts:178-319](file://src/testing/setup.ts#L178-L319)
 
 ## Performance Considerations
 
-The system implements several performance optimization strategies:
+**Updated** The Plate.js migration provides significant performance improvements:
+
+### Enhanced Editor Performance
+- **Reduced Bundle Size**: Plate.js provides better tree-shaking and smaller bundle sizes
+- **Improved Rendering**: Plate.js offers more efficient rendering for rich text content
+- **Better Memory Management**: Optimized memory usage for large documents
+- **Faster Initialization**: Reduced startup time for editor components
 
 ### Asynchronous Processing
 - PDF generation and manipulation operations are performed asynchronously
@@ -626,6 +797,17 @@ The notification system supports multiple communication channels:
 - Monitor storage usage and cleanup old files
 - Implement storage tiering for large volumes
 
+#### Plate.js Editor Issues
+**Updated** New troubleshooting considerations for Plate.js migration:
+
+**Symptoms**: Editor not rendering, plugin conflicts, conversion errors
+**Causes**: Plugin configuration issues, value format mismatches, memory leaks
+**Solutions**:
+- Verify Plate.js plugin initialization order
+- Check value format compatibility between Plate.js and TipTap
+- Monitor memory usage for large documents
+- Validate plugin dependencies and versions
+
 ### Diagnostic Tools
 
 #### Audit Trail Analysis
@@ -656,18 +838,22 @@ Key metrics to monitor:
 
 The Digital Signature Workflows module provides a comprehensive, legally compliant solution for electronic document signing within the ZattarOS ecosystem. The system successfully balances functionality, security, and compliance while maintaining high performance and scalability.
 
+**Updated** The recent migration to Plate.js architecture represents a significant advancement in system performance and maintainability. The migration maintains all existing functionality while providing:
+
 ### Key Achievements
 
 **Legal Compliance**: Full adherence to MP 2.200-2/2001 requirements with comprehensive evidence collection and audit capabilities.
 
-**Technical Excellence**: Robust architecture supporting both document-based and template-based signing workflows with multi-party capabilities.
+**Technical Excellence**: Robust architecture supporting both document-based and template-based signing workflows with multi-party capabilities. The Plate.js migration enhances performance and reduces dependency conflicts.
 
 **Security Implementation**: Advanced cryptographic measures, secure storage, and comprehensive access controls ensuring data protection and privacy.
 
 **Integration Capabilities**: Seamless integration with document management systems, notification platforms, and external compliance frameworks.
 
+**Enhanced Editor Architecture**: Modern Plate.js-based editors with improved performance, better maintainability, and comprehensive plugin ecosystem.
+
 ### Future Enhancements
 
 The system is designed for continuous improvement with planned enhancements including enhanced notification systems, bulk processing capabilities, and expanded integration options. The modular architecture ensures smooth evolution while maintaining backward compatibility and system stability.
 
-The implementation demonstrates best practices in electronic signature technology, providing organizations with a reliable foundation for digital transformation while meeting all regulatory requirements for legal validity and document integrity.
+The Plate.js migration demonstrates best practices in modernizing legacy systems while preserving functionality and compliance requirements. The implementation showcases how strategic technology upgrades can significantly improve system performance and developer experience while maintaining the highest standards for legal validity and document integrity.

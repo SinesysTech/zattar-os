@@ -82,6 +82,7 @@ export const COLOR_TOKENS = {
   ring: 'ring',
   brand: 'brand',
   highlight: 'highlight',
+  'highlight-foreground': 'highlight-foreground',
 
   // Status
   success: 'success',

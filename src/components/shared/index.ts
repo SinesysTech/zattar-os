@@ -49,8 +49,6 @@ export type { DataTableToolbarProps } from './data-shell/data-table-toolbar';
 // FORMULÁRIOS E DETALHES
 // =============================================================================
 
-export { DialogFormShell } from './dialog-shell';
-
 // Detail page section pattern (extraído do audiencia-detail-dialog)
 export {
   DetailSection,

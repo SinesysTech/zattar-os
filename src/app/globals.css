@@ -75,6 +75,7 @@
   --color-brand: var(--brand);
   /* O Roxo Zattar Puro */
   --color-highlight: var(--highlight);
+  --color-highlight-foreground: var(--highlight-foreground);
   /* O Laranja de Ação */
 
   /* --- 5. Semantic Status Colors --- */
@@ -391,6 +392,7 @@
   --brand: oklch(0.48 0.26 281);
   /* pure Zattar Purple */
   --highlight: oklch(0.60 0.22 45);
+  --highlight-foreground: var(--surface-white);
   /* Action Orange */
 
   /* ========================================================================
@@ -615,6 +617,7 @@
    * ======================================================================== */
   --brand: oklch(0.70 0.20 281);
   --highlight: oklch(0.70 0.20 45);
+  --highlight-foreground: oklch(0.15 0 0);
 
   /* ========================================================================
    * CHARTS — mesma paleta Zattar, ajustada para dark background

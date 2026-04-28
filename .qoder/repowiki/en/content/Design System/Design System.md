@@ -27,16 +27,19 @@
 - [use-responsive-layout.ts](file://src/app/(authenticated)/chat/hooks/use-responsive-layout.ts)
 - [base-vs-radix.md](file://.agents/skills/shadcn/rules/base-vs-radix.md)
 - [token-registry.ts](file://src/lib/design-system/token-registry.ts)
+- [eslint.config.mjs](file://eslint.config.mjs)
+- [no-raw-typography-spacing.js](file://eslint-rules/no-raw-typography-spacing.js)
+- [heading-node-static.tsx](file://src/components/editor/plate-ui/heading-node-static.tsx)
+- [typography/page.tsx](file://src/app/(ajuda)/ajuda/design-system/typography/page.tsx)
 </cite>
 
 ## Update Summary
 **Changes Made**
-- Updated typography system documentation to reflect comprehensive refactoring from legacy polymorphic approach to type-safe Heading and Text components
-- Added new CountBadge component documentation as part of enhanced semantic badge system
-- Updated OKLCH color token documentation with enhanced color system architecture
-- Enhanced Tabs component styling documentation with new variant system
-- Integrated comprehensive shadcn/ui documentation and component guidelines
-- Updated design system governance with modern responsive utilities and component patterns
+- Updated typography system documentation to reflect the current state of typed Typography components with Heading and Text components
+- Added comprehensive ESLint rules documentation for typography enforcement
+- Updated design system governance with current typography standards and migration guidance
+- Enhanced documentation with current typography component architecture and usage patterns
+- Integrated design system playground documentation with typography examples
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -104,7 +107,7 @@ Each page-specific file follows a standardized structure:
 - Project metadata and generation timestamps
 - Important override warnings and authority declarations
 - Page-specific rules with clear deviations
-- Component specifications for the module
+- component specifications for the module
 - **Enhanced** Responsive design patterns and breakpoint considerations
 - Recommendations and best practices
 - Module-specific pre-delivery checklist
@@ -207,20 +210,21 @@ The escape comments categorize migration needs:
 
 ## Enhanced Typography System
 
-The ZattarOS Design System features a comprehensive typography system with semantic text classes that provide precise control over typographic elements across the platform.
+The ZattarOS Design System features a comprehensive typography system with typed Typography components that provide precise control over typographic elements across the platform.
 
 ### Typography Architecture and Governance
 
-**Semantic Typography Framework**
-The system provides a structured approach to typography through semantic variants:
-- **Typed Typography Components**: `<Heading>` and `<Text>` components with semantic variants
+**Typed Typography Framework**
+The system provides a structured approach to typography through typed components:
+- **Heading Component**: Semantic heading levels with proper HTML tag mapping
+- **Text Component**: Semantic text variants with appropriate HTML elements
 - **Design System Tokens**: Canonical CSS classes for typography (`text-kpi-value`, `text-meta-label`, etc.)
 - **Responsive Typography**: Clamp-based scaling for optimal readability across devices
 - **Accessibility-First**: WCAG AAA compliance with proper contrast ratios and readable sizes
 
 **Typography Governance**
 - **Canonical Specifications**: All typography follows master file specifications
-- **Variant Control**: Limited typography variants to maintain consistency
+- **Component Control**: Typed components limit available variants to maintain consistency
 - **Accessibility Standards**: All typography meets WCAG AAA requirements
 - **Performance Optimization**: Efficient rendering through semantic class usage
 
@@ -234,6 +238,7 @@ import { Heading } from '@/components/ui/typography';
 <Heading level="page">Main Page Title</Heading>
 <Heading level="section">Section Title</Heading>
 <Heading level="card">Card Title</Heading>
+<Heading level="subsection" as="h3">Custom Heading Level</Heading>
 ```
 
 **Text Component**
@@ -245,17 +250,23 @@ import { Text } from '@/components/ui/typography';
 <Text variant="meta-label">11px uppercase label</Text>
 <Text variant="caption">13px auxiliary text</Text>
 <Text variant="micro-badge">9px badge text</Text>
+<Text variant="body" as="p">Body text with paragraph</Text>
 ```
 
-**Migration Path**
-- **Legacy Typography**: Raw Tailwind classes and custom typography
-- **Transition Typography**: Hybrid approaches during migration
-- **Final Typography**: Fully standardized design system typography
+**Typography Enforcement**
+The system enforces typography standards through ESLint rules:
+- **Heading Enforcement**: Prevents direct use of h1-h6 elements outside of specific contexts
+- **Typography Component Usage**: Requires use of Heading and Text components for semantic text
+- **Raw Class Prohibition**: Blocks direct Tailwind typography classes in product modules
 
 **Section sources**
-- [typography.tsx:211-219](file://src/components/ui/typography.tsx#L211-L219)
-- [typography.tsx:247-255](file://src/components/ui/typography.tsx#L247-L255)
+- [typography.tsx:9-22](file://src/components/ui/typography.tsx#L9-L22)
+- [typography.tsx:26-40](file://src/components/ui/typography.tsx#L26-L40)
+- [typography.tsx:43-59](file://src/components/ui/typography.tsx#L43-L59)
+- [typography.tsx:63-77](file://src/components/ui/typography.tsx#L63-L77)
 - [MASTER.md:77-78](file://design-system/zattaros/MASTER.md#L77-L78)
+- [eslint.config.mjs:298-326](file://eslint.config.mjs#L298-L326)
+- [no-raw-typography-spacing.js:15-28](file://eslint-rules/no-raw-typography-spacing.js#L15-L28)
 
 ## New CountBadge Component
 
@@ -291,7 +302,7 @@ export function CountBadge({
       {...props}
     >
       {children}
-    </badge>
+    </Badge>
   );
 }
 ```
@@ -841,7 +852,7 @@ The playground includes comprehensive testing capabilities:
 - **Cross-Browser Compatibility**: Multi-browser and multi-device testing
 
 **Typography Testing and Validation**
-- **Semantic Text Classes**: Testing of new text classes (kpi-value, meta-label, etc.)
+- **Typed Typography Components**: Testing of Heading and Text components
 - **Accessibility Compliance**: Validation of WCAG AAA typography standards
 - **Responsive Typography**: Testing across different screen sizes and breakpoints
 - **Migration Guidance**: Real-time suggestions for typography migration
@@ -873,11 +884,10 @@ The audiências module demonstrates advanced design system implementation with c
 - **Responsive Pattern Governance**: Modern breakpoint management and adaptive UI patterns
 
 **Enhanced Typography Integration**
-- **KPI Values**: Migration from raw classes to `text-kpi-value` semantic class
-- **Meta Labels**: Implementation of `text-meta-label` for uppercase field labels
-- **Overline Labels**: Usage of `text-overline` for section headers within cards
-- **Caption Text**: Migration to `text-caption` for auxiliary information
-- **Micro Badge Text**: Implementation of `text-micro-badge` for small status indicators
+- **Typed Typography Components**: Migration from raw classes to Heading and Text components
+- **Semantic Text Classes**: Implementation of `text-kpi-value`, `text-meta-label`, etc.
+- **Accessibility Compliance**: Proper heading hierarchy and semantic markup
+- **Migration Tracking**: Quantified progress in typography system adoption
 
 **CountBadge Integration and Usage**
 The audiências module demonstrates comprehensive CountBadge integration with clear usage patterns and governance:
@@ -920,37 +930,19 @@ The module demonstrates modern responsive utility usage:
 - **Section Header Usage**: Governance of header components with semantic clarity
 - **Inline Editing Capabilities**: Migration from raw components to standardized solutions
 
-**Migration Examples and Validation**
-The module shows practical migration from raw classes with comprehensive validation:
-```typescript
-// Before migration - raw Tailwind classes
-<div className="flex items-center gap-3">
-  <Badge variant="outline">23 Processos</Badge>
-  <Badge variant="default">Urgente</Badge>
-</div>
-
-// After migration - semantic badge system
-<div className="flex items-center gap-3">
-  <Badge variant="outline">23 Processos</Badge>
-  <Badge variant={getSemanticBadgeVariant('priority', 'urgent')}>
-    Urgente
-  </Badge>
-</div>
-```
-
 **Typography Migration Examples**
 ```typescript
-// Number formatting in cards
-// Before: text-[10px] font-mono text-muted-foreground tabular-nums
-// After: text-mono-num
+// Heading migration
+// Before: <h1 className="text-2xl font-bold">Processos</h1>
+// After: <Heading level="page">Processos</Heading>
 
-// Section headers within cards
-// Before: text-[11px] uppercase tracking-[0.14em] font-semibold
-// After: text-meta-label
+// Text migration
+// Before: <p className="text-sm uppercase">Esta semana</p>
+// After: <Text variant="meta-label">Esta semana</Text>
 
-// Counter badges
-// Before: text-[9px] font-medium
-// After: text-micro-badge
+// Caption migration
+// Before: <p className="text-xs text-muted-foreground">Detalhes</p>
+// After: <Text variant="caption" as="p">Detalhes</Text>
 ```
 
 **Responsive Migration Examples**
@@ -985,7 +977,7 @@ The captura module shows systematic migration from raw Tailwind classes with cle
 - **Responsive Pattern Integration**: Modern breakpoint management and adaptive layouts
 
 **Typography Integration and Migration**
-- **Semantic Text Classes**: Integration with new typography system
+- **Typed Typography Components**: Integration with Heading and Text components
 - **Component Composition**: Governance of component relationships and usage
 - **Migration Tracking**: Clear documentation of migration progress
 - **Quality Assurance**: Validation of design system compliance
@@ -994,11 +986,10 @@ The captura module shows systematic migration from raw Tailwind classes with cle
 ### Expedientes Module Implementation
 
 **Typography Implementation and Migration**
-- **KPI Values**: Migration from raw classes to `text-kpi-value` semantic class
-- **Meta Labels**: Implementation of `text-meta-label` for uppercase field labels
-- **Overline Labels**: Usage of `text-overline` for section headers within cards
-- **Caption Text**: Migration to `text-caption` for auxiliary information
-- **Micro Badge Text**: Implementation of `text-micro-badge` for small status indicators
+- **Typed Typography Components**: Migration from raw classes to Heading and Text components
+- **Semantic Text Classes**: Implementation of `text-kpi-value`, `text-meta-label`, etc.
+- **Accessibility Compliance**: Proper heading hierarchy and semantic markup
+- **Migration Progress**: Quantified adoption of typography system
 
 **Component Composition and Migration**
 - **QueueCard Implementation**: Complex card component with migration guidance
@@ -1013,37 +1004,19 @@ The module demonstrates modern responsive utility usage:
 - **Adaptive Spacing**: Responsive spacing using modern breakpoint utilities
 - **Performance Considerations**: Efficient responsive behavior implementation
 
-**Migration Examples and Validation**
-The module shows practical migration from raw classes with comprehensive validation:
-```typescript
-// Before migration - raw Tailwind classes
-<div className="flex items-center gap-3">
-  <Badge variant="outline">23 Processos</Badge>
-  <Badge variant="default">Urgente</Badge>
-</div>
-
-// After migration - semantic badge system
-<div className="flex items-center gap-3">
-  <Badge variant="outline">23 Processos</Badge>
-  <Badge variant={getSemanticBadgeVariant('priority', 'urgent')}>
-    Urgente
-  </Badge>
-</div>
-```
-
 **Typography Migration Examples**
 ```typescript
-// Number formatting in cards
-// Before: text-[10px] font-mono text-muted-foreground tabular-nums
-// After: text-mono-num
+// Heading migration examples
+// Before: <h1 className="text-2xl font-bold">KPIs</h1>
+// After: <Heading level="widget">KPIs</Heading>
 
-// Section headers within cards
-// Before: text-[11px] uppercase tracking-[0.14em] font-semibold
-// After: text-meta-label
+// Text migration examples
+// Before: <p className="text-xs uppercase">Status</p>
+// After: <Text variant="meta-label">Status</Text>
 
-// Counter badges
-// Before: text-[9px] font-medium
-// After: text-micro-badge
+// Caption migration examples
+// Before: <p className="text-sm text-muted-foreground">Detalhes</p>
+// After: <Text variant="caption" as="p">Detalhes</Text>
 ```
 
 **Responsive Migration Examples**
@@ -1099,7 +1072,7 @@ The design system includes comprehensive quality assurance processes to ensure c
 - **Responsive Pattern Consistency**: Validation of modern breakpoint usage
 
 **Typography Migration Metrics**
-- **Semantic Text Class Adoption**: Tracking of new text class usage
+- **Typed Component Adoption**: Tracking of Heading and Text component usage
 - **Typography Anti-Pattern Elimination**: Reduction in raw typography classes
 - **Accessibility Compliance Improvement**: Measured accessibility enhancements
 - **Migration Progress Visualization**: Clear metrics for typography migration
@@ -1160,7 +1133,7 @@ The design system architecture supports scalable maintenance and evolution throu
 - **Responsive Utility Monitoring**: Ongoing validation of modern breakpoint patterns
 
 **Typography Maintenance and Governance**
-- **Semantic Text Class Updates**: Centralized typography token management
+- **Typed Component Updates**: Centralized typography component management
 - **Accessibility Compliance Monitoring**: Ongoing accessibility validation
 - **Migration Progress Tracking**: Quantified typography adoption metrics
 - **Developer Education**: Training on new typography system
@@ -1184,7 +1157,7 @@ The design system architecture supports scalable maintenance and evolution throu
 
 The ZattarOS Design System represents a comprehensive approach to design system governance that balances centralized authority with module-specific flexibility. Through the implementation of MASTER.md as the central authority, systematic page-specific override mechanisms, and design-system-escape comments, the system provides a robust foundation for maintaining design integrity while accommodating the unique requirements of different application modules.
 
-**Updated** The system now features major typography improvements with new semantic text classes, enhanced accessibility compliance with WCAG AAA standards, comprehensive anti-pattern prevention measures, and a new CountBadge component for consistent count display across tabs and badges. The introduction of CountBadge provides specialized functionality for numeric count displays, enhancing the semantic badge system with dedicated component architecture.
+**Updated** The system now features major typography improvements with typed Typography components (Heading and Text) replacing deprecated custom components, enhanced accessibility compliance with WCAG AAA standards, comprehensive anti-pattern prevention measures, and a new CountBadge component for consistent count display across tabs and badges. The introduction of typed Typography components provides semantic HTML elements with proper heading hierarchy, improving accessibility and reducing unnecessary abstraction layers across the application.
 
 The comprehensive modernization effort has successfully migrated the component library to the unified radix-ui package, streamlining component APIs and improving maintainability. The enhanced responsive utility system provides developers with powerful tools for adaptive UI development, while the expanded CSS variable and design token system ensures better consistency and maintainability across the platform.
 
@@ -1196,8 +1169,6 @@ Through this modernized architecture, the design system supports both current de
 
 The governance model established through MASTER.md and page-specific overrides ensures that design decisions are well-documented, consistently applied, and easily maintained over time. This approach enables the design system to evolve with the platform's needs while maintaining the consistency and quality that developers and users expect.
 
-The enhanced typography system with semantic text classes, comprehensive accessibility compliance, systematic migration guidance, and the new CountBadge component position the ZattarOS Design System as a leader in accessible, maintainable, and scalable design systems for legal technology applications. The CountBadge component specifically addresses the need for consistent count display across tabs, badges, and quantity indicators, providing developers with a reliable, accessible solution for numeric count presentation.
-
-The audiências module integration demonstrates the practical benefits of these enhancements, with improved semantic badge usage, better heading semantics for accessibility, streamlined count display patterns, and modern responsive utility integration that enhances both developer productivity and user experience. This comprehensive approach to design system evolution ensures that the ZattarOS platform maintains its competitive edge in legal technology while providing a solid foundation for future innovations.
+The enhanced typography system with typed components, comprehensive accessibility compliance, systematic migration guidance, and the new CountBadge component position the ZattarOS Design System as a leader in accessible, maintainable, and scalable design systems for legal technology applications. The typed Typography components specifically address the need for semantic HTML elements and proper heading hierarchy, providing developers with a reliable, accessible solution for text presentation that improves both developer productivity and user experience. This comprehensive approach to design system evolution ensures that the ZattarOS platform maintains its competitive edge in legal technology while providing a solid foundation for future innovations.
 
 The modernized component architecture with unified radix-ui packages, enhanced responsive utilities, and comprehensive design token management positions the ZattarOS Design System for continued success in supporting the platform's growth and evolution. The systematic approach to component refactoring, responsive utility integration, and design token management ensures that the system remains maintainable, accessible, and aligned with current best practices in design system development.
