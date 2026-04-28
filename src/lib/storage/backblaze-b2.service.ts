@@ -7,6 +7,9 @@
 
 import { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import getLogger from '@/lib/logger';
+
+const logger = getLogger({ service: 'BackblazeStorage' });
 
 /**
  * Parâmetros para upload de arquivo no Backblaze B2
@@ -82,9 +85,10 @@ export async function uploadToBackblaze(
 ): Promise<BackblazeUploadResult> {
     const { buffer, key, contentType } = params;
 
-    console.log(`📤 [Backblaze] Iniciando upload: ${key}`);
-    console.log(`   Tamanho: ${(buffer.length / 1024).toFixed(2)} KB`);
-    console.log(`   Content-Type: ${contentType}`);
+    logger.info(`📤 [Backblaze] Iniciando upload: ${key}`, {
+        size: `${(buffer.length / 1024).toFixed(2)} KB`,
+        contentType,
+    });
 
     const bucket = process.env.BACKBLAZE_BUCKET_NAME || process.env.B2_BUCKET;
     if (!bucket) {
@@ -119,7 +123,7 @@ export async function uploadToBackblaze(
              url = `https://${endpoint}/${bucket}/${key}`;
         }
 
-        console.log(`✅ [Backblaze] Upload concluído: ${url}`);
+        logger.info(`✅ [Backblaze] Upload concluído: ${url}`);
 
         return {
             url,
@@ -128,7 +132,7 @@ export async function uploadToBackblaze(
             uploadedAt: new Date(),
         };
     } catch (error) {
-        console.error(`❌ [Backblaze] Erro ao fazer upload: ${key}`, error);
+        logger.error(`❌ [Backblaze] Erro ao fazer upload: ${key}`, error);
         throw new Error(
             `Falha ao fazer upload para Backblaze B2: ${error instanceof Error ? error.message : String(error)}`
         );
@@ -141,7 +145,7 @@ export async function uploadToBackblaze(
  * @param key - Chave (path) do arquivo no bucket
  */
 export async function deleteFromBackblaze(key: string): Promise<void> {
-    console.log(`🗑️ [Backblaze] Deletando arquivo: ${key}`);
+    logger.info(`🗑️ [Backblaze] Deletando arquivo: ${key}`);
 
     const bucket = process.env.BACKBLAZE_BUCKET_NAME || process.env.B2_BUCKET;
     if (!bucket) {
@@ -157,9 +161,9 @@ export async function deleteFromBackblaze(key: string): Promise<void> {
 
     try {
         await client.send(command);
-        console.log(`✅ [Backblaze] Arquivo deletado: ${key}`);
+        logger.info(`✅ [Backblaze] Arquivo deletado: ${key}`);
     } catch (error) {
-        console.error(`❌ [Backblaze] Erro ao deletar: ${key}`, error);
+        logger.error(`❌ [Backblaze] Erro ao deletar: ${key}`, error);
         throw new Error(
             `Falha ao deletar arquivo do Backblaze B2: ${error instanceof Error ? error.message : String(error)}`
         );
@@ -243,8 +247,10 @@ export async function generatePresignedUrl(
     key: string,
     expiresIn: number = 3600
 ): Promise<string> {
-    console.log(`🔐 [Backblaze] Gerando URL assinada: ${key}`);
-    console.log(`   Expira em: ${expiresIn} segundos (${Math.floor(expiresIn / 60)} minutos)`);
+    logger.info(`🔐 [Backblaze] Gerando URL assinada: ${key}`, {
+        expiresIn,
+        expiresInMinutes: Math.floor(expiresIn / 60),
+    });
 
     const bucket = process.env.BACKBLAZE_BUCKET_NAME || process.env.B2_BUCKET;
     if (!bucket) {
@@ -260,10 +266,10 @@ export async function generatePresignedUrl(
 
     try {
         const signedUrl = await getSignedUrl(client, command, { expiresIn });
-        console.log(`✅ [Backblaze] URL assinada gerada com sucesso`);
+        logger.info(`✅ [Backblaze] URL assinada gerada com sucesso`);
         return signedUrl;
     } catch (error) {
-        console.error(`❌ [Backblaze] Erro ao gerar URL assinada: ${key}`, error);
+        logger.error(`❌ [Backblaze] Erro ao gerar URL assinada: ${key}`, error);
         throw new Error(
             `Falha ao gerar URL assinada: ${error instanceof Error ? error.message : String(error)}`
         );
