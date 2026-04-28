@@ -1,5 +1,6 @@
 // Utilitário de autenticação dual: Supabase Auth (front-end) + Bearer Token (API externa) + Service API Key (jobs do sistema)
 
+import { timingSafeEqual } from "crypto";
 import { NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
@@ -28,6 +29,20 @@ const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutos
  * Busca o ID do usuário na tabela usuarios pelo auth_user_id (UUID do Supabase Auth)
  * Usa cache em memória para evitar hits excessivos no banco
  */
+/**
+ * Compara duas strings de forma segura contra timing attacks.
+ */
+function safeEqual(a: string, b: string): boolean {
+  const aBuf = Buffer.from(a);
+  const bBuf = Buffer.from(b);
+
+  if (aBuf.length !== bBuf.length) {
+    return false;
+  }
+
+  return timingSafeEqual(aBuf, bBuf);
+}
+
 async function buscarUsuarioIdPorAuthUserId(
   authUserId: string,
 ): Promise<number | null> {
@@ -101,7 +116,7 @@ export async function authenticateRequest(
 
   if (serviceApiKey && expectedServiceKey) {
     // Comparação segura usando timing-safe comparison
-    if (serviceApiKey === expectedServiceKey) {
+    if (safeEqual(serviceApiKey, expectedServiceKey)) {
       return {
         authenticated: true,
         userId: "system",
