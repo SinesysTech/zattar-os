@@ -40,7 +40,5 @@ export {
 // Linking service
 export {
   criarVinculoProcessoParte,
-  vinculoExiste,
   removerVinculoProcessoParte,
-  atualizarOrdemParte,
 } from "./linking.service";

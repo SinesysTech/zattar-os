@@ -59,12 +59,12 @@ export function ChatListItem({ chat, active, onClick }: ChatListItemProps) {
           <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[0.8rem] font-semibold text-foreground truncate")}>
             {chat.name || chat.nome}
           </span>
-          <span className="text-[0.6rem] text-muted-foreground/40 tabular-nums shrink-0">
+          <span className="text-[0.6rem] text-muted-foreground/65 tabular-nums shrink-0">
             {chat.date ? new Date(chat.date).toLocaleDateString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : ''}
           </span>
         </div>
         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2 mt-1")}>
-          <span className="text-[0.7rem] text-muted-foreground/50 truncate flex-1">
+          <span className="text-[0.7rem] text-muted-foreground/70 truncate flex-1">
             {chat.lastMessage}
           </span>
           {unreadCount > 0 && (

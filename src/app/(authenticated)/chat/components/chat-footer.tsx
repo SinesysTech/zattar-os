@@ -220,7 +220,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
     <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv. */ "px-5 pb-4 pt-3 bg-chat-thread")}>
       {/* Typing Indicator */}
       {typingIndicatorText && !isRecording && (
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv. */ "flex items-center gap-1.5 text-[0.65rem] text-muted-foreground/50 px-2 mb-1.5")}>
+        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv. */ "flex items-center gap-1.5 text-[0.65rem] text-muted-foreground/70 px-2 mb-1.5")}>
           <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex gap-0.5")}>
             {[0, 1, 2].map((i) => (
               <span
@@ -283,7 +283,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
                 disabled={isUploading}
                 placeholder={isUploading ? "Enviando arquivo..." : "Digite uma mensagem..."}
                 rows={1}
-                className={cn(/* design-system-escape: leading-relaxed sem token DS; py-1 padding direcional sem Inset equiv.; px-0 padding direcional sem Inset equiv. */ "flex-1 bg-transparent border-none shadow-none ring-0 focus-visible:ring-0 resize-none min-h-8 max-h-30 overflow-y-auto text-[0.825rem] leading-relaxed py-1 px-0 placeholder:text-muted-foreground/40")}
+                className={cn(/* design-system-escape: leading-relaxed sem token DS; py-1 padding direcional sem Inset equiv.; px-0 padding direcional sem Inset equiv. */ "flex-1 bg-transparent border-none shadow-none ring-0 focus-visible:ring-0 resize-none min-h-8 max-h-30 overflow-y-auto text-[0.825rem] leading-relaxed py-1 px-0 placeholder:text-muted-foreground/65")}
               />
 
               {/* Hidden File Input */}

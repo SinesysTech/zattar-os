@@ -58,7 +58,7 @@ function TimestampRow({ message, shouldShow }: { message: MensagemComUsuario; sh
         message.ownMessage && "justify-end"
       )}
     >
-      <time className="text-[0.625rem] text-muted-foreground/35 tabular-nums font-mono">
+      <time className="text-[0.625rem] text-muted-foreground/55 tabular-nums font-mono">
         {formatTime(message.createdAt)}
       </time>
       {message.ownMessage && (
@@ -175,7 +175,7 @@ function FileChatBubble({
             {fileName}
           </span>
           {fileSizeLabel && (
-            <span className="text-[0.625rem] text-muted-foreground/40 mt-0.5">
+            <span className="text-[0.625rem] text-muted-foreground/65 mt-0.5">
               {fileSizeLabel}
             </span>
           )}
@@ -191,7 +191,7 @@ function FileChatBubble({
             aria-label={`Baixar ${fileName}`}
             className={cn(
               "size-7 rounded-md flex items-center justify-center shrink-0 transition-colors",
-              "bg-foreground/[0.04] text-muted-foreground/50",
+              "bg-foreground/[0.04] text-muted-foreground/70",
               "hover:bg-foreground/[0.08] hover:text-foreground",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
             )}
@@ -364,7 +364,7 @@ function ImageChatBubble({
             />
           ) : (
             <div className="w-[280px] h-32 bg-foreground/10 rounded-xl flex items-center justify-center">
-              <span className="text-[0.625rem] text-muted-foreground/40">Imagem anexada</span>
+              <span className="text-[0.625rem] text-muted-foreground/65">Imagem anexada</span>
             </div>
           )}
         </div>
@@ -460,7 +460,7 @@ export function ChatBubble({
       );
     case "sistema":
       return (
-        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "text-[0.625rem] text-muted-foreground/40 text-center py-2")}>
+        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "text-[0.625rem] text-muted-foreground/65 text-center py-2")}>
           {message.conteudo}
         </div>
       );
