@@ -66,7 +66,7 @@ function segmentWidth(fonts: FontSet, seg: RichSegment, size: number): number {
  * Cada parágrafo carrega o alinhamento definido no editor.
  * As variáveis {{key}} são resolvidas inline.
  */
-function tiptapJsonToRichParagraphs(
+function richTextJsonToParagraphs(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   json: Record<string, any>,
   resolver: (variable: string) => string
@@ -335,7 +335,7 @@ function embedRichText(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   color: any
 ) {
-  const paragraphs = tiptapJsonToRichParagraphs(json, resolver);
+  const paragraphs = richTextJsonToParagraphs(json, resolver);
   const lineHeight = fontSize + 2;
   let currentY = y;
 
