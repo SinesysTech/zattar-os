@@ -1,0 +1,24 @@
+1. We need to implement direct PDF and DOCX export in the `ContratoDocumentosList` component.
+2. The UI code for the list has dropdown items for "Exportar PDF" and "Exportar DOCX".
+3. When clicked, it passes `documentoId` to `handleExportPDF` and `handleExportDOCX`.
+4. Currently these handlers are stubbed with a TODO to implement direct export, and they navigate to the document viewer appending a query param (e.g. `?export=pdf`).
+5. We want to implement direct export, meaning we need to fetch the document content, generate the PDF/DOCX using existing utility functions from the `documentos` feature, and probably show a loading state on the UI.
+6. The utility functions `exportTextToPdf` and `exportToDocx` exist in `src/app/(authenticated)/documentos/utils.ts` and require the document's content (of type `Value` from Plate.js).
+7. We can fetch the document using `actionBuscarDocumento(documentoId)`.
+8. To handle loading state correctly across multiple rows, we can store the currently exporting document ID and type in the state: `const [exportingDoc, setExportingDoc] = React.useState<{id: number, type: 'pdf' | 'docx'} | null>(null);`
+9. In `handleExportPDF`:
+   - Set exporting state
+   - Fetch document: `const result = await actionBuscarDocumento(documentoId)`
+   - Check if success and data exists
+   - Await `exportTextToPdf(result.data.conteudo, result.data.titulo || 'Documento')`
+   - Show success toast
+   - Reset exporting state
+10. In `handleExportDOCX`:
+   - Set exporting state
+   - Fetch document
+   - Check if success and data exists
+   - Await `exportToDocx(result.data.conteudo, result.data.titulo || 'Documento')`
+   - Show success toast
+   - Reset exporting state
+11. Update the UI to show `LoadingSpinner` instead of icons when exporting.
+12. Verify imports (`actionBuscarDocumento`, `exportTextToPdf`, `exportToDocx`, `LoadingSpinner`).
