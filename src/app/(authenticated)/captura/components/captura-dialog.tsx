@@ -1,9 +1,6 @@
 'use client';
 
-import {
-  cn } from '@/lib/utils';
-import { useRef,
-  useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -40,17 +37,7 @@ type TipoCapturaDialog =
   | 'partes'
   | 'combinada';
 
-/** Mapa de labels para o botão de submit baseado no tipo de captura */
-const SUBMIT_LABELS: Record<TipoCapturaDialog, string> = {
-  acervo_geral: 'Iniciar Captura de Acervo Geral',
-  arquivados: 'Iniciar Captura de Arquivados',
-  audiencias: 'Iniciar Captura de Audiências',
-  pendentes: 'Iniciar Captura de Expedientes',
-  pericias: 'Iniciar Captura de Perícias',
-  timeline: 'Iniciar Captura de Timeline',
-  partes: 'Iniciar Captura de Partes',
-  combinada: 'Iniciar Captura Unificada',
-};
+const SUBMIT_LABEL = 'Iniciar';
 
 export function CapturaDialog({ open, onOpenChange, onSuccess }: CapturaDialogProps) {
   const [tipoCaptura, setTipoCaptura] = useState<TipoCapturaDialog>('acervo_geral');
@@ -105,37 +92,31 @@ export function CapturaDialog({ open, onOpenChange, onSuccess }: CapturaDialogPr
     }
   };
 
-  // Obter label dinâmico do tipo selecionado
-  const submitLabel = SUBMIT_LABELS[tipoCaptura];
-
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="sm:max-w-3xl  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+        className="sm:max-w-2xl overflow-hidden p-0 gap-0 max-h-[85vh] flex flex-col"
       >
         <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
           <DialogTitle>Nova Captura</DialogTitle>
         </DialogHeader>
-        <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
-        <TipoCapturaSelect
-          value={tipoCaptura}
-          onValueChange={(value) => setTipoCaptura(value as TipoCapturaDialog)}
-          disabled={isLoading}
-        />
-
-        {renderForm()}
-      </div>
-        </div>
-        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
-          <Button variant="outline" onClick={() => handleOpenChange(false)}>Cancelar</Button>
-          <div className="flex items-center gap-2">
-            <Button onClick={handleSubmit} disabled={isLoading}>
-              {isLoading && <LoadingSpinner className="mr-2" />}
-              {submitLabel}
-            </Button>
+        <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-5 [scrollbar-width:thin]">
+          <div className="space-y-5">
+            <TipoCapturaSelect
+              value={tipoCaptura}
+              onValueChange={(value) => setTipoCaptura(value as TipoCapturaDialog)}
+              disabled={isLoading}
+            />
+            {renderForm()}
           </div>
+        </div>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-end gap-2">
+          <Button variant="outline" onClick={() => handleOpenChange(false)}>Cancelar</Button>
+          <Button onClick={handleSubmit} disabled={isLoading}>
+            {isLoading && <LoadingSpinner className="mr-2" />}
+            {SUBMIT_LABEL}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

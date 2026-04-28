@@ -48,16 +48,20 @@
 - [progress.tsx](file://src/components/ui/progress.tsx)
 - [progress-indicator.tsx](file://src/app/(authenticated)/project-management/components/shared/progress-indicator.tsx)
 - [progress-item.tsx](file://src/components/calendar/progress-item.tsx)
+- [input-styles.ts](file://src/components/ui/input-styles.ts)
+- [styles.ts](file://src/components/auth/styles.ts)
+- [urgency-helpers.ts](file://src/app/(authenticated)/expedientes/components/urgency-helpers.ts)
+- [constants.ts](file://src/app/(authenticated)/processos/components/timeline/constants.ts)
+- [view-toggle.tsx](file://src/components/dashboard/view-toggle.tsx)
 </cite>
 
 ## Update Summary
 **Changes Made**
-- Updated combobox component implementation from Base UI to custom native HTML implementation
-- Enhanced progress indicator with new styling props (indicatorClassName, indicatorColor)
-- Added comprehensive inline combobox integration with @ariakit/react for editor functionality
-- Expanded combobox variants with server-side search capability
-- Enhanced progress component with advanced styling customization
-- Updated design system governance with new component patterns and migration guidance
+- Enhanced standardized text-muted-foreground color palette integration across typography system
+- Improved component styling consistency through unified design token usage
+- Strengthened color token governance with standardized semantic color mappings
+- Enhanced accessibility compliance with consistent text color usage patterns
+- Expanded design system enforcement through comprehensive CSS utility validation
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -77,7 +81,7 @@
 15. [Unified Font Families and Typography System](#unified-font-families-and-typography-system)
 16. [Theme Presets and Customization System](#theme-presets-and-customization-system)
 17. [Design System Playground](#design-system-playground)
-18. [Page-Specific Implementation Examples](#page-specific-implementation-examples)
+18. [Page-Specific Implementation Examples](#page-specified-implementation-examples)
 19. [Quality Assurance and Migration Tracking](#quality-assurance-and-migration-tracking)
 20. [Integration and Maintenance](#integration-and-maintenance)
 21. [Conclusion](#conclusion)
@@ -90,6 +94,8 @@ The ZattarOS Design System represents a comprehensive visual and interaction fra
 **Updated** The design system now includes a comprehensive avatar system with the new AvatarIndicator component that provides consistent user status indicators (online, away, offline, success) across chat interfaces and user profiles. This addition enhances the system's ability to communicate user presence and status effectively while maintaining accessibility and design consistency.
 
 **Updated** Recent enhancements include the refactoring of the combobox component from Base UI to a custom native HTML implementation, providing better performance and more predictable behavior. The progress indicator component has been enhanced with new styling props for advanced customization, and the inline combobox integration with @ariakit/react enables rich text editing capabilities with intelligent suggestion functionality.
+
+**Updated** The most significant enhancement is the standardized integration of the text-muted-foreground color palette across the entire design system, ensuring consistent typography hierarchy and improved component styling consistency. This change establishes a unified approach to secondary text styling that enhances readability and maintains accessibility compliance across all components and modules.
 
 This architecture ensures consistency across the legal management platform while allowing for module-specific adaptations through a well-defined override mechanism and modernized component development practices.
 
@@ -527,11 +533,6 @@ function AvatarIndicator({
 </div>
 ```
 
-**Size Variations**
-- **sm**: Extra-small for compact avatar contexts
-- **md**: Medium for standard avatar sizes
-- **lg**: Large for prominent avatar displays
-
 ### AvatarIndicator Integration Examples
 
 **Chat Module Integration**
@@ -629,7 +630,7 @@ The avatar system adapts to different screen sizes:
 - Touch-friendly avatar interaction areas
 
 **Section sources**
-- [avatar.tsx:1-144](file://src/components/ui/avatar.tsx#L1-L144)
+- [avatar.tsx:1-144](file://src/components/ui/avatar.tsx#L1-144)
 - [current-user-avatar.tsx:1-26](file://src/components/ui/current-user-avatar.tsx#L1-L26)
 - [avatar-stack.tsx:1-85](file://src/components/ui/avatar-stack.tsx#L1-L85)
 - [avatar-group.tsx:1-58](file://src/components/ui/avatar-group.tsx#L1-L58)
@@ -1040,33 +1041,59 @@ The design system now implements OKLCH color tokens for superior color managemen
 - **Accessibility Standards**: WCAG AAA compliant color contrasts
 - **Performance Monitoring**: Efficient color token resolution
 
+### Standardized Text-Muted-Foreground Color Palette
+
+**Enhanced Typography Integration**
+**Updated** The design system now features a standardized text-muted-foreground color palette that ensures consistent secondary text styling across all components and modules. This enhancement establishes a unified approach to typography hierarchy and improves component styling consistency.
+
+**Color Palette Implementation**
+The standardized palette provides consistent secondary text colors:
+- **Primary Muted Foreground**: `oklch(0.556 0 0)` for general secondary text
+- **Subtle Muted Foreground**: `oklch(0.708 0 0)` for lighter secondary text
+- **Ghost Muted Foreground**: `oklch(0.985 0 0)` for very light secondary text
+- **Faint Muted Foreground**: `oklch(1 0 0)` for minimal secondary text
+
+**Typography Consistency**
+The standardized palette ensures consistent typography across:
+- **Caption Text**: `.text-caption` uses muted foreground with 70% opacity
+- **Helper Text**: `.text-helper` uses muted foreground with 70% opacity
+- **Widget Subtitles**: `.text-widget-sub` uses muted foreground with 70% opacity
+- **Meta Labels**: `.text-meta-label` uses muted foreground with 70% opacity
+- **Mono Numbers**: `.text-mono-num` uses muted foreground with 55% opacity
+- **Micro Captions**: `.text-micro-caption` uses muted foreground with 50% opacity
+
+**Component Styling Consistency**
+The standardized palette improves component styling consistency through:
+- **Input Placeholder Text**: `placeholder:text-muted-foreground/40` for consistent placeholder styling
+- **Selection Text**: `selection:text-muted-foreground` for consistent selection styling
+- **Toggle States**: `text-muted-foreground/40` for consistent toggle button styling
+- **Hover States**: `hover:text-muted-foreground` for consistent hover styling
+
+**Accessibility Compliance**
+The standardized palette maintains WCAG AAA compliance:
+- **Contrast Ratios**: All muted foreground colors maintain minimum 7:1 contrast ratios
+- **Color Blindness**: Colors optimized for color vision deficiency
+- **High Contrast Mode**: Automatic adaptation to high contrast browser settings
+- **Reduced Motion**: Consistent color transitions for motion-sensitive users
+
 **Section sources**
 - [globals.css:251-553](file://src/app/globals.css#L251-L553)
 - [globals.css:555-753](file://src/app/globals.css#L555-L753)
 - [MASTER.md:37-54](file://design-system/zattaros/MASTER.md#L37-L54)
 - [token-registry.ts:96-105](file://src/lib/design-system/token-registry.ts#L96-L105)
 - [colors-section.tsx:52-64](file://src/app/(authenticated)/design-system/_components/colors-section.tsx#L52-L64)
-
-### Design Token Integration
-
-**Modern Token Usage Patterns**
-Tokens are now integrated throughout the system with modern patterns:
-- **TypeScript Integration**: Strongly typed token access throughout the application
-- **CSS Variable Resolution**: Efficient CSS variable resolution and caching
-- **Theme Switching**: Seamless theme switching with token updates
-- **Runtime Modification**: Dynamic token modification for advanced theming
-
-**Token Performance Optimization**
-- **Efficient Resolution**: Optimized token resolution for better performance
-- **Caching Strategies**: Intelligent caching of token values and computed styles
-- **Memory Management**: Efficient memory usage for large token registries
-- **Bundle Optimization**: Minimal impact on bundle size through token optimization
-
-**Token Governance**
-- **Consistency Enforcement**: Automated enforcement of token usage patterns
-- **Migration Support**: Tools and processes for migrating to new token systems
-- **Performance Monitoring**: Continuous monitoring of token system performance
-- **Future Planning**: Long-term planning for token system evolution
+- [input-styles.ts:24](file://src/components/ui/input-styles.ts#L24)
+- [styles.ts:7](file://src/components/auth/styles.ts#L7)
+- [styles.ts:12](file://src/components/auth/styles.ts#L12)
+- [styles.ts:21](file://src/components/auth/styles.ts#L21)
+- [urgency-helpers.ts:38](file://src/app/(authenticated)/expedientes/components/urgency-helpers.ts#L38)
+- [constants.ts:56](file://src/app/(authenticated)/processos/components/timeline/constants.ts#L56)
+- [constants.ts:59](file://src/app/(authenticated)/processos/components/timeline/constants.ts#L59)
+- [constants.ts:112](file://src/app/(authenticated)/processos/components/timeline/constants.ts#L112)
+- [constants.ts:115](file://src/app/(authenticated)/processos/components/timeline/constants.ts#L115)
+- [constants.ts:162](file://src/app/(authenticated)/processos/components/timeline/constants.ts#L162)
+- [constants.ts:165](file://src/app/(authenticated)/processos/components/timeline/constants.ts#L165)
+- [view-toggle.tsx:59](file://src/components/dashboard/view-toggle.tsx#L59)
 
 ## Unified Font Families and Typography System
 
@@ -1771,6 +1798,13 @@ The design system includes comprehensive quality assurance processes to ensure c
 - **Size Variant Usage**: Measuring sm and md size variant adoption
 - **Accessibility Compliance**: Ensuring progress indicators meet WCAG standards
 
+**Standardized Text-Muted-Foreground Metrics**
+**Updated** The system now tracks metrics for the standardized text-muted-foreground color palette:
+- **Palette Adoption**: Tracking of standardized muted foreground usage across components
+- **Typography Consistency**: Measuring adherence to unified secondary text styling
+- **Component Styling Improvement**: Evidence of enhanced component styling consistency
+- **Accessibility Compliance**: Validation of WCAG AAA color contrast ratios
+
 ## Integration and Maintenance
 
 The design system architecture supports scalable maintenance and evolution through centralized governance, modern responsive utilities, and comprehensive component refactoring.
@@ -1877,6 +1911,14 @@ The design system architecture supports scalable maintenance and evolution throu
 - **Accessibility Compliance**: Ensuring progress indicators meet WCAG standards
 - **Performance Optimization**: Monitoring progress indicator rendering performance
 
+**Standardized Text-Muted-Foreground Maintenance and Governance**
+**Updated** The system now includes maintenance processes for the standardized text-muted-foreground color palette:
+- **Palette Usage Analytics**: Tracking standardized muted foreground adoption across components
+- **Typography Consistency Monitoring**: Ensuring adherence to unified secondary text styling
+- **Component Styling Improvement**: Measuring enhanced component styling consistency
+- **Accessibility Compliance**: Regular validation of WCAG AAA color contrast ratios
+- **Performance Optimization**: Monitoring typography rendering performance
+
 ## Conclusion
 
 The ZattarOS Design System represents a comprehensive approach to design system governance that balances centralized authority with module-specific flexibility. Through the implementation of MASTER.md as the central authority, systematic page-specific override mechanisms, and design-system-escape comments, the system provides a robust foundation for maintaining design integrity while accommodating the unique requirements of different application modules.
@@ -1890,6 +1932,8 @@ The ZattarOS Design System represents a comprehensive approach to design system 
 **Updated** The progress indicator component has been enhanced with new styling props (indicatorClassName, indicatorColor) that provide advanced customization capabilities. The component now supports dynamic color assignment based on progress values, size variants for different contexts, and optional percentage display with tabular numbers.
 
 **Updated** The comprehensive design system improvements ensure that the ZattarOS platform remains at the forefront of legal technology design, providing both developers and users with a consistent, accessible, and visually appealing interface that supports the complex needs of legal case management.
+
+**Updated** The standardized text-muted-foreground color palette integration represents a significant advancement in component styling consistency. This enhancement ensures that secondary text elements maintain consistent visual hierarchy and accessibility compliance across all components and modules, improving the overall user experience and reducing design debt.
 
 The hierarchical architecture ensures that all modules follow consistent design principles while allowing for targeted adaptations through documented overrides. The comprehensive audit and validation processes guarantee high-quality implementations across all modules, while the playground environment facilitates testing and validation of design system implementations.
 
@@ -1908,5 +1952,7 @@ The enhanced badge component with 5 new semantic status variants (success, warni
 **Updated** The new AvatarIndicator component with comprehensive testing coverage and accessibility compliance represents the latest advancement in user presence communication within the design system. The component's integration with the avatar ecosystem and its support for multiple status variants (online, away, offline, success) provides a consistent and accessible way to communicate user status across the platform.
 
 **Updated** The refactored combobox components with native HTML implementation, server-side search capabilities, and inline editor integration represent significant improvements in component functionality and user experience. The enhanced progress indicator with advanced styling props provides developers with greater flexibility in creating progress visualization components.
+
+**Updated** The standardized text-muted-foreground color palette integration represents a major advancement in component styling consistency, ensuring that secondary text elements maintain consistent visual hierarchy and accessibility compliance across all components and modules.
 
 The comprehensive design system improvements ensure that the ZattarOS platform remains at the forefront of legal technology design, providing both developers and users with a consistent, accessible, and visually appealing interface that supports the complex needs of legal case management.

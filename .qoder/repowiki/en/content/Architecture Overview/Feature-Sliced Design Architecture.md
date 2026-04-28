@@ -14,7 +14,19 @@
 - [processos/service.ts](file://src/app/(authenticated)/processos/service.ts)
 - [partes/service.ts](file://src/app/(authenticated)/partes/service.ts)
 - [documentos/service.ts](file://src/app/(authenticated)/documentos/service.ts)
+- [partes/services/index.ts](file://src/app/(authenticated)/captura/services/partes/services/index.ts)
+- [partes/services/persistence.service.ts](file://src/app/(authenticated)/captura/services/partes/services/persistence.service.ts)
+- [partes/services/representatives.service.ts](file://src/app/(authenticated)/captura/services/partes/services/representatives.service.ts)
+- [captura/advogados/page-client.tsx](file://src/app/(authenticated)/captura/advogados/page-client.tsx)
+- [captura/agendamentos/page-client.tsx](file://src/app/(authenticated)/captura/agendamentos/page-client.tsx)
 </cite>
+
+## Update Summary
+**Changes Made**
+- Updated partes service architecture section to reflect consolidation of service layers
+- Removed references to mock page components and Storybook stories that were dropped
+- Updated client-side component cleanup section to reflect removal of unused functionality
+- Enhanced service layer documentation to show unified partes processing architecture
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -32,6 +44,8 @@
 ZattarOS implements Feature-Sliced Design (FSD) architecture to organize its Next.js application codebase. This approach groups related functionality into cohesive feature modules, each containing all necessary files (components, domain logic, services, repositories, actions) within a single directory structure under `src/app/(authenticated)`.
 
 The FSD implementation follows strict import rules, using barrel export patterns through index.ts files as public APIs, and maintains clear boundaries between features while enabling cross-module communication through well-defined interfaces.
+
+**Updated** Removed references to dropped mock components and consolidated partes service architecture documentation to reflect current implementation.
 
 ## Project Structure
 
@@ -252,7 +266,7 @@ Key characteristics:
 
 ### Partes Feature Module
 
-The partes feature module demonstrates unified entity management with shared domain types:
+**Updated** The partes feature module now implements a consolidated service architecture that unifies entity processing logic:
 
 ```mermaid
 classDiagram
@@ -265,11 +279,20 @@ class PartesDomain {
 +ValidationSchemas
 +TypeGuards
 }
-class PartesService {
-<<re-export>>
-+BusinessLogic
-+EntityOperations
-+Validation
+class PartesUnifiedService {
+<<consolidated>>
++processarParte()
++processarRepresentantes()
++processarEndereco()
++registrarCadastroPJE()
++buscarRepresentante()
++representanteExiste()
+}
+class PartesPersistenceLayer {
++processarCliente()
++processarParteContraria()
++processarTerceiro()
++registrarRepresentante()
 }
 class SharedDomain {
 +TipoPessoa
@@ -278,23 +301,35 @@ class SharedDomain {
 +ValidationUtils
 }
 PartesDomain --> SharedDomain : "imports"
-PartesService --> SharedDomain : "uses"
+PartesUnifiedService --> PartesPersistenceLayer : "orchestrates"
+PartesUnifiedService --> SharedDomain : "uses"
 ```
 
 **Diagram sources**
-- [partes/domain.ts](file://src/app/(authenticated)/partes/domain.ts#L1-L7)
-- [partes/service.ts](file://src/app/(authenticated)/partes/service.ts#L1-L5)
+- [partes/services/index.ts](file://src/app/(authenticated)/captura/services/partes/services/index.ts#L1-L45)
+- [partes/services/persistence.service.ts](file://src/app/(authenticated)/captura/services/partes/services/persistence.service.ts#L63-L144)
+- [partes/services/representatives.service.ts](file://src/app/(authenticated)/captura/services/partes/services/representatives.service.ts#L38-L97)
 
 The module implements:
-- **Entity Unification**: Single module managing multiple related entities
-- **Shared Domain Types**: Re-exports shared types for cross-feature usage
-- **Comprehensive Validation**: Extensive validation schemas for all entity types
-- **Business Logic Centralization**: Unified service layer for all partes operations
+- **Consolidated Entity Processing**: Unified service layer that orchestrates all partes operations
+- **Entity Classification Logic**: Intelligent routing of different entity types (cliente, parte_contraria, terceiro)
+- **Document Validation**: Comprehensive validation and normalization for CPF/CNPJ processing
+- **Representative Management**: Integrated processing of legal representatives with address handling
+- **Registration Tracking**: Complete audit trail through cadastros_pje mapping system
+
+Key unified processing flows:
+- **Document Normalization**: Automatic CPF/CNPJ validation and formatting
+- **Entity Upsert Operations**: Atomic create/update operations with conflict resolution
+- **Address Integration**: Automatic address processing and entity linking
+- **Representative Coordination**: End-to-end processing of legal representatives
 
 **Section sources**
 - [partes/index.ts](file://src/app/(authenticated)/partes/index.ts#L1-L317)
 - [partes/domain.ts](file://src/app/(authenticated)/partes/domain.ts#L1-L7)
 - [partes/service.ts](file://src/app/(authenticated)/partes/service.ts#L1-L5)
+- [partes/services/index.ts](file://src/app/(authenticated)/captura/services/partes/services/index.ts#L1-L45)
+- [partes/services/persistence.service.ts](file://src/app/(authenticated)/captura/services/partes/services/persistence.service.ts#L1-L621)
+- [partes/services/representatives.service.ts](file://src/app/(authenticated)/captura/services/partes/services/representatives.service.ts#L1-L165)
 
 ### Documentos Feature Module
 
@@ -444,6 +479,8 @@ Each feature module includes comprehensive business rule documentation that serv
 
 The Feature-Sliced Design implementation in ZattarOS provides a robust, scalable architecture that enhances maintainability, team collaboration, and feature isolation. The colocated module pattern, combined with strict import rules and comprehensive business logic documentation, creates a clear separation of concerns while maintaining efficient development workflows.
 
+**Updated** Recent improvements include the consolidation of the partes service architecture into a unified processing layer, removal of unused mock components and Storybook stories, and cleanup of client-side functionality that was no longer needed.
+
 Key benefits achieved through this implementation:
 
 - **Enhanced Maintainability**: Clear feature boundaries and comprehensive documentation
@@ -451,5 +488,6 @@ Key benefits achieved through this implementation:
 - **Better Performance**: Optimized imports and tree shaking support
 - **Scalable Architecture**: Easy addition of new features following established patterns
 - **Cognitive Agent Integration**: Structured business rules enable automation and AI assistance
+- **Cleaner Codebase**: Removal of unused components and consolidated service layers
 
-The architecture successfully balances developer productivity with system performance, providing a solid foundation for continued growth and feature development.
+The architecture successfully balances developer productivity with system performance, providing a solid foundation for continued growth and feature development while maintaining code quality through disciplined architectural practices.

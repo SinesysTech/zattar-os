@@ -58,8 +58,8 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
   return (
     <>
       {/* Atmospheric glow */}
-      <div className="fixed -top-8 right-16 w-64 h-48 bg-primary/[0.04] rounded-full blur-3xl pointer-events-none" />
-      <div className="fixed top-16 right-48 w-32 h-32 bg-info/[0.03] rounded-full blur-3xl pointer-events-none" />
+      <div className="fixed -top-8 right-16 w-64 h-48 bg-primary/4 rounded-full blur-3xl pointer-events-none" />
+      <div className="fixed top-16 right-48 w-32 h-32 bg-info/3 rounded-full blur-3xl pointer-events-none" />
 
       {/* Header da página */}
       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between relative")}>
@@ -151,8 +151,8 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
       {(isCompleted || isFailed) && (
         <div className={`flex items-center gap-2.5 rounded-lg border px-4 py-2.5 ${
           isCompleted
-            ? 'border-success/20 bg-success/[0.04]'
-            : 'border-destructive/20 bg-destructive/[0.04]'
+            ? 'border-success/20 bg-success/4'
+            : 'border-destructive/20 bg-destructive/4'
         }`}>
           {isCompleted ? (
             <CheckCircle2 className="h-4 w-4 text-success shrink-0" />
@@ -220,7 +220,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
             </div>
             <DetailSectionCard className={cn(/* design-system-escape: p-0 → usar <Inset> */ "p-0 overflow-hidden")}>
               {captura.resultado ? (
-                <pre className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; text-xs → migrar para <Text variant="caption">; leading-relaxed sem token DS */ "p-4 overflow-auto max-h-[500px] text-xs font-mono leading-relaxed")}>
+                <pre className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; text-xs → migrar para <Text variant="caption">; leading-relaxed sem token DS */ "p-4 overflow-auto max-h-125 text-xs font-mono leading-relaxed")}>
                   {JSON.stringify(captura.resultado, null, 2)}
                 </pre>
               ) : (

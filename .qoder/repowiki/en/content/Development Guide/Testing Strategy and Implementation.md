@@ -17,6 +17,8 @@
 - [src/app/(authenticated)/expedientes/service.ts](file://src/app/(authenticated)/expedientes/service.ts)
 - [src/app/(authenticated)/expedientes/domain.ts](file://src/app/(authenticated)/expedientes/domain.ts)
 - [scripts/captura/pendentes/debug-expedientes-trt3-direto.ts](file://scripts/captura/pendentes/debug-expedientes-trt3-direto.ts)
+- [scripts/captura/audiencias/debug-audiencias-trt3-direto.ts](file://scripts/captura/audiencias/debug-audiencias-trt3-direto.ts)
+- [scripts/captura/pericias/debug-pericias-trt3-direto.ts](file://scripts/captura/pericias/debug-pericias-trt3-direto.ts)
 - [test-expedientes/2026-04-28T20-00-06-091Z_00_log.txt](file://test-expedientes/2026-04-28T20-00-06-091Z_00_log.txt)
 - [test-expedientes/2026-04-28T20-00-06-091Z_01_config_trt3.json](file://test-expedientes/2026-04-28T20-00-06-091Z_01_config_trt3.json)
 - [test-expedientes/2026-04-28T20-00-06-091Z_02_totalizadores.json](file://test-expedientes/2026-04-28T20-00-06-091Z_02_totalizadores.json)
@@ -25,6 +27,20 @@
 - [test-expedientes/2026-04-28T20-00-06-091Z_05_analise_duplicatas.json](file://test-expedientes/2026-04-28T20-00-06-091Z_05_analise_duplicatas.json)
 - [test-expedientes/2026-04-28T20-00-06-091Z_06_comparacao_banco.json](file://test-expedientes/2026-04-28T20-00-06-091Z_06_comparacao_banco.json)
 - [test-expedientes/2026-04-28T20-00-06-091Z_07_relatorio_final.json](file://test-expedientes/2026-04-28T20-00-06-091Z_07_relatorio_final.json)
+- [test-audiencias/2026-04-28T21-34-53-129Z_00_log.txt](file://test-audiencias/2026-04-28T21-34-53-129Z_00_log.txt)
+- [test-audiencias/2026-04-28T21-34-53-129Z_01_config_trt3.json](file://test-audiencias/2026-04-28T21-34-53-129Z_01_config_trt3.json)
+- [test-audiencias/2026-04-28T21-34-53-129Z_02_designadas_audiencias.json](file://test-audiencias/2026-04-28T21-34-53-129Z_02_designadas_audiencias.json)
+- [test-audiencias/2026-04-28T21-34-53-129Z_03_analise_audiencias.json](file://test-audiencias/2026-04-28T21-34-53-129Z_03_analise_audiencias.json)
+- [test-audiencias/2026-04-28T21-34-53-129Z_04_constraint_check.json](file://test-audiencias/2026-04-28T21-34-53-129Z_04_constraint_check.json)
+- [test-audiencias/2026-04-28T21-34-53-129Z_05_comparacao_banco.json](file://test-audiencias/2026-04-28T21-34-53-129Z_05_comparacao_banco.json)
+- [test-audiencias/2026-04-28T21-34-53-129Z_06_relatorio_final.json](file://test-audiencias/2026-04-28T21-34-53-129Z_06_relatorio_final.json)
+- [test-pericias/2026-04-28T21-48-33-942Z_00_log.txt](file://test-pericias/2026-04-28T21-48-33-942Z_00_log.txt)
+- [test-pericias/2026-04-28T21-48-33-942Z_01_config_trt3.json](file://test-pericias/2026-04-28T21-48-33-942Z_01_config_trt3.json)
+- [test-pericias/2026-04-28T21-48-33-942Z_02_pericias_raw.json](file://test-pericias/2026-04-28T21-48-33-942Z_02_pericias_raw.json)
+- [test-pericias/2026-04-28T21-48-33-942Z_03_analise_pericias.json](file://test-pericias/2026-04-28T21-48-33-942Z_03_analise_pericias.json)
+- [test-pericias/2026-04-28T21-48-33-942Z_04_constraint_check.json](file://test-pericias/2026-04-28T21-48-33-942Z_04_constraint_check.json)
+- [test-pericias/2026-04-28T21-48-33-942Z_05_comparacao_banco.json](file://test-pericias/2026-04-28T21-48-33-942Z_05_comparacao_banco.json)
+- [test-pericias/2026-04-28T21-48-33-942Z_06_relatorio_final.json](file://test-pericias/2026-04-28T21-48-33-942Z_06_relatorio_final.json)
 - [supabase/migrations/20260427090510_add_ultima_captura_id_to_expedientes.sql](file://supabase/migrations/20260427090510_add_ultima_captura_id_to_expedientes.sql)
 - [src/app/(authenticated)/expedientes/__tests__/integration/expedientes-flow.test.ts](file://src/app/(authenticated)/expedientes/__tests__/integration/expedientes-flow.test.ts)
 - [src/app/(authenticated)/expedientes/__tests__/unit/expedientes.service.test.ts](file://src/app/(authenticated)/expedientes/__tests__/unit/expedientes.service.test.ts)
@@ -35,11 +51,11 @@
 
 ## Update Summary
 **Changes Made**
-- Added comprehensive debugging and testing framework documentation for expediente capture
-- Integrated Playwright-based end-to-end testing with detailed artifact generation
-- Enhanced database testing with migration-based tracking and audit capabilities
-- Expanded unit testing patterns with sequential mock factories and edge case coverage
-- Added comprehensive component, server action, and integration test coverage
+- Added comprehensive JSON reporting system documentation with automatic report generation during capture processes
+- Integrated analysis summaries, constraint checks, and final reports for expediente, audiencia, and pericia capture processes
+- Enhanced debugging framework with standardized artifact generation and comparison capabilities
+- Updated test artifact structure with standardized naming conventions and metadata
+- Added constraint validation and diagnostic reporting for capture integrity
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -49,28 +65,29 @@
 5. [Detailed Component Analysis](#detailed-component-analysis)
 6. [Advanced Testing Patterns](#advanced-testing-patterns)
 7. [Debugging and Artifact Generation Framework](#debugging-and-artifact-generation-framework)
-8. [Database Testing and Migration Integration](#database-testing-and-migration-integration)
-9. [Component Testing with React Testing Library](#component-testing-with-react-testing-library)
-10. [Server Action Testing](#server-action-testing)
-11. [Integration Testing Patterns](#integration-testing-patterns)
-12. [Playwright E2E Testing Framework](#playwright-e2e-testing-framework)
-13. [Test Data Management and Mocking Strategies](#test-data-management-and-mocking-strategies)
-14. [Performance Considerations](#performance-considerations)
-15. [Troubleshooting Guide](#troubleshooting-guide)
-16. [Conclusion](#conclusion)
-17. [Appendices](#appendices)
+8. [JSON Reporting System](#json-reporting-system)
+9. [Database Testing and Migration Integration](#database-testing-and-migration-integration)
+10. [Component Testing with React Testing Library](#component-testing-with-react-testing-library)
+11. [Server Action Testing](#server-action-testing)
+12. [Integration Testing Patterns](#integration-testing-patterns)
+13. [Playwright E2E Testing Framework](#playwright-e2e-testing-framework)
+14. [Test Data Management and Mocking Strategies](#test-data-management-and-mocking-strategies)
+15. [Performance Considerations](#performance-considerations)
+16. [Troubleshooting Guide](#troubleshooting-guide)
+17. [Conclusion](#conclusion)
+18. [Appendices](#appendices)
 
 ## Introduction
-This document defines the comprehensive testing strategy and implementation for ZattarOS across unit, integration, and end-to-end (E2E) testing. The framework has been significantly enhanced with a new debugging and testing framework for expediente capture, featuring Playwright integration, extensive artifact generation, and sophisticated mocking strategies. It explains the Jest configuration, test file organization, and testing patterns used in the codebase, along with detailed coverage of the new debugging infrastructure that generates comprehensive test artifacts for expediente capture validation.
+This document defines the comprehensive testing strategy and implementation for ZattarOS across unit, integration, and end-to-end (E2E) testing. The framework has been significantly enhanced with a new comprehensive JSON reporting system featuring automatic report generation during capture processes, including analysis summaries, constraint checks, and final reports. The system provides standardized artifact generation for expediente, audiencia, and pericia capture processes, enabling detailed analysis and validation of capture operations.
 
-**Updated** Enhanced with comprehensive debugging framework documentation and Playwright integration for expediente capture testing.
+**Updated** Enhanced with comprehensive JSON reporting system documentation and standardized artifact generation capabilities.
 
 ## Project Structure
-Testing in ZattarOS is organized around four comprehensive layers:
+Testing in ZattarOS is organized around four comprehensive layers with enhanced artifact generation:
 - Unit and component tests: Jest with dual environments (Node and jsdom) for server-side and client-side logic
 - Integration tests: Feature-focused flows with mocked external services and Supabase client
 - E2E tests: Playwright-driven browser automation with comprehensive artifact generation
-- Debugging framework: Direct TRT3 expediente capture testing with detailed logging and comparison
+- Debugging framework: Direct TRT3 capture testing with standardized JSON reporting system
 
 ```mermaid
 graph TB
@@ -93,6 +110,13 @@ PCFG["Playwright Config<br/>playwright.config.ts"]
 DEBUG["Debug Framework<br/>debug-expedientes-trt3-direto.ts"]
 ARTIFACTS["Test Artifacts<br/>test-expedientes/*.json"]
 end
+subgraph "JSON Reporting System"
+REPORTING["Standardized Reports<br/>relatorio_final.json"]
+ANALYSIS["Analysis Summaries<br/>analise_*.json"]
+CONSTRAINT["Constraint Checks<br/>constraint_check.json"]
+COMPARISON["Database Comparison<br/>comparacao_banco.json"]
+LOGS["Execution Logs<br/>*_log.txt"]
+end
 subgraph "Database Layer"
 MIG["Migration Tracking<br/>20260427090510_add_ultima_captura_id_to_expedientes.sql"]
 end
@@ -105,6 +129,11 @@ IG --> FAC
 PCFG --> JCFG
 RESUMO --> ENDTOEND
 DEBUG --> ARTIFACTS
+DEBUG --> REPORTING
+REPORTING --> ANALYSIS
+REPORTING --> CONSTRAINT
+REPORTING --> COMPARISON
+REPORTING --> LOGS
 DEBUG --> MIG
 ```
 
@@ -121,6 +150,9 @@ DEBUG --> MIG
 - [src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts:1-140](file://src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts#L1-L140)
 - [scripts/captura/pendentes/debug-expedientes-trt3-direto.ts:1-836](file://scripts/captura/pendentes/debug-expedientes-trt3-direto.ts#L1-L836)
 - [test-expedientes/2026-04-28T20-00-06-091Z_00_log.txt:1-76](file://test-expedientes/2026-04-28T20-00-06-091Z_00_log.txt#L1-L76)
+- [test-expedientes/2026-04-28T20-00-06-091Z_07_relatorio_final.json:1-26](file://test-expedientes/2026-04-28T20-00-06-091Z_07_relatorio_final.json#L1-L26)
+- [test-audiencias/2026-04-28T21-34-53-129Z_06_relatorio_final.json:1-39](file://test-audiencias/2026-04-28T21-34-53-129Z_06_relatorio_final.json#L1-L39)
+- [test-pericias/2026-04-28T21-48-33-942Z_06_relatorio_final.json:1-47](file://test-pericias/2026-04-28T21-48-33-942Z_06_relatorio_final.json#L1-L47)
 - [supabase/migrations/20260427090510_add_ultima_captura_id_to_expedientes.sql:1-14](file://supabase/migrations/20260427090510_add_ultima_captura_id_to_expedientes.sql#L1-L14)
 
 **Section sources**
@@ -136,6 +168,9 @@ DEBUG --> MIG
 - [src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts:1-140](file://src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts#L1-L140)
 - [scripts/captura/pendentes/debug-expedientes-trt3-direto.ts:1-836](file://scripts/captura/pendentes/debug-expedientes-trt3-direto.ts#L1-L836)
 - [test-expedientes/2026-04-28T20-00-06-091Z_00_log.txt:1-76](file://test-expedientes/2026-04-28T20-00-06-091Z_00_log.txt#L1-L76)
+- [test-expedientes/2026-04-28T20-00-06-091Z_07_relatorio_final.json:1-26](file://test-expedientes/2026-04-28T20-00-06-091Z_07_relatorio_final.json#L1-L26)
+- [test-audiencias/2026-04-28T21-34-53-129Z_06_relatorio_final.json:1-39](file://test-audiencias/2026-04-28T21-34-53-129Z_06_relatorio_final.json#L1-L39)
+- [test-pericias/2026-04-28T21-48-33-942Z_06_relatorio_final.json:1-47](file://test-pericias/2026-04-28T21-48-33-942Z_06_relatorio_final.json#L1-L47)
 - [supabase/migrations/20260427090510_add_ultima_captura_id_to_expedientes.sql:1-14](file://supabase/migrations/20260427090510_add_ultima_captura_id_to_expedientes.sql#L1-L14)
 
 ## Core Components
@@ -143,7 +178,8 @@ DEBUG --> MIG
 - Global setup initializes Web APIs, Next.js navigation mocks, and polyfills for streams and encoders
 - Integration testing guide and helpers provide AAA-style flows, factory builders, assertion helpers, and Supabase mock factories
 - Playwright configuration orchestrates local development server startup, cross-browser/device testing, and tracing on failure
-- **New**: Debugging framework for expediente capture with comprehensive artifact generation and comparison capabilities
+- **New**: Comprehensive JSON reporting system with automatic report generation during capture processes
+- **New**: Standardized artifact generation with analysis summaries, constraint checks, and final reports
 - **New**: Database migration integration with tracking of last capture ID for audit and validation purposes
 
 **Section sources**
@@ -153,10 +189,12 @@ DEBUG --> MIG
 - [src/testing/integration-helpers.ts:102-133](file://src/testing/integration-helpers.ts#L102-L133)
 - [playwright.config.ts:3-46](file://playwright.config.ts#L3-L46)
 - [scripts/captura/pendentes/debug-expedientes-trt3-direto.ts:1-836](file://scripts/captura/pendentes/debug-expedientes-trt3-direto.ts#L1-L836)
+- [scripts/captura/audiencias/debug-audiencias-trt3-direto.ts:898-960](file://scripts/captura/audiencias/debug-audiencias-trt3-direto.ts#L898-L960)
+- [scripts/captura/pericias/debug-pericias-trt3-direto.ts:630-682](file://scripts/captura/pericias/debug-pericias-trt3-direto.ts#L630-L682)
 - [supabase/migrations/20260427090510_add_ultima_captura_id_to_expedientes.sql:1-14](file://supabase/migrations/20260427090510_add_ultima_captura_id_to_expedientes.sql#L1-L14)
 
 ## Architecture Overview
-The testing architecture separates concerns across layers and environments, enabling comprehensive validation of expediente capture workflows with detailed artifact generation and comparison capabilities.
+The testing architecture separates concerns across layers and environments, enabling comprehensive validation of capture workflows with detailed artifact generation and standardized reporting capabilities.
 
 ```mermaid
 graph TB
@@ -180,8 +218,9 @@ E2["Multi-Browser Devices"]
 end
 subgraph "Debug Framework"
 DF1["Direct TRT3 Capture"]
-DF2["Artifact Generation"]
-DF3["Comparison Engine"]
+DF2["Standardized Artifacts"]
+DF3["JSON Reporting System"]
+DF4["Constraint Validation"]
 end
 B --> B1
 B --> B2
@@ -194,6 +233,7 @@ D --> E2
 E --> DF1
 DF1 --> DF2
 DF2 --> DF3
+DF3 --> DF4
 ```
 
 **Diagram sources**
@@ -203,6 +243,8 @@ DF2 --> DF3
 - [playwright.config.ts:17-44](file://playwright.config.ts#L17-L44)
 - [src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts:4-22](file://src/app/(authenticated)/expedientes/__tests__/unit/resumo-ultima-captura.test.ts#L4-L22)
 - [scripts/captura/pendentes/debug-expedientes-trt3-direto.ts:669-836](file://scripts/captura/pendentes/debug-expedientes-trt3-direto.ts#L669-L836)
+- [scripts/captura/audiencias/debug-audiencias-trt3-direto.ts:898-960](file://scripts/captura/audiencias/debug-audiencias-trt3-direto.ts#L898-L960)
+- [scripts/captura/pericias/debug-pericias-trt3-direto.ts:630-682](file://scripts/captura/pericias/debug-pericias-trt3-direto.ts#L630-L682)
 
 ## Detailed Component Analysis
 
@@ -400,36 +442,36 @@ Service-->>Test : Return validated result
 
 ## Debugging and Artifact Generation Framework
 
-### Direct TRT3 Expediente Capture Debugging
-The debugging framework provides comprehensive testing capabilities for TRT3 expediente capture without persisting data to the database:
+### Direct TRT3 Capture Debugging with JSON Reporting System
+The debugging framework provides comprehensive testing capabilities for TRT3 capture processes with standardized JSON reporting:
 
 - **Direct Playwright Integration**: Operates directly via Playwright + Supabase without passing through Next.js HTTP API
-- **Comprehensive Logging**: Generates detailed execution logs with timestamps and step-by-step progress
-- **Artifact Generation**: Creates structured JSON files for each phase of the capture process
-- **Comparison Engine**: Compares captured data with existing database records to identify discrepancies
+- **Standardized Artifact Generation**: Creates structured JSON files with standardized naming conventions and metadata
+- **Comprehensive Analysis**: Generates analysis summaries, constraint checks, and final reports automatically
+- **Execution Logging**: Produces detailed execution logs with timestamps and step-by-step progress
+- **Database Comparison**: Compares captured data with existing database records to identify discrepancies
 
-### Test Artifact Generation System
-The framework generates multiple artifact types for comprehensive analysis:
+### Standardized JSON Reporting System
+The framework generates multiple standardized artifact types for comprehensive analysis:
 
 ```mermaid
 flowchart TD
 A["Debug Script Execution"] --> B["Configuration Retrieval"]
 B --> C["Authentication Phase"]
 C --> D["Data Collection Phases"]
-D --> E["Artifact Generation"]
-E --> F["Comparison Analysis"]
-F --> G["Final Report"]
-subgraph "Artifacts Generated"
-E1["00_log.txt<br/>Execution Log"]
-E2["01_config_trt3.json<br/>Tribunal Config"]
-E3["02_totalizadores.json<br/>Dashboard Totals"]
-E4["03_no_prazo_processos.json<br/>On-time Expedients"]
-E5["03_no_prazo_paginas_raw.json<br/>Raw Pages Data"]
-E6["04_sem_prazo_processos.json<br/>Overdue Expedients"]
-E7["04_sem_prazo_paginas_raw.json<br/>Raw Pages Data"]
-E8["05_analise_duplicatas.json<br/>Duplicate Analysis"]
-E9["06_comparacao_banco.json<br/>Database Comparison"]
-E10["07_relatorio_final.json<br/>Final Report"]
+D --> E["Standardized Artifact Generation"]
+E --> F["Analysis and Validation"]
+F --> G["Final JSON Report"]
+subgraph "Standardized Artifacts"
+E1["*_config_trt3.json<br/>Tribunal Configuration"]
+E2["*_totalizadores.json<br/>Dashboard Totals"]
+E3["*_processos.json<br/>Captured Process Data"]
+E4["*_paginas_raw.json<br/>Raw Page Data"]
+E5["*_analise_*.json<br/>Analysis Summaries"]
+E6["*_constraint_check.json<br/>Constraint Validation"]
+E7["*_comparacao_banco.json<br/>Database Comparison"]
+E8["*_relatorio_final.json<br/>Final Report"]
+E9["*_log.txt<br/>Execution Log"]
 end
 E --> E1
 E --> E2
@@ -440,30 +482,195 @@ E --> E6
 E --> E7
 E --> E8
 E --> E9
-E --> E10
 ```
 
 **Diagram sources**
 - [scripts/captura/pendentes/debug-expedientes-trt3-direto.ts:669-836](file://scripts/captura/pendentes/debug-expedientes-trt3-direto.ts#L669-L836)
+- [scripts/captura/audiencias/debug-audiencias-trt3-direto.ts:898-960](file://scripts/captura/audiencias/debug-audiencias-trt3-direto.ts#L898-L960)
+- [scripts/captura/pericias/debug-pericias-trt3-direto.ts:630-682](file://scripts/captura/pericias/debug-pericias-trt3-direto.ts#L630-L682)
 - [test-expedientes/2026-04-28T20-00-06-091Z_00_log.txt:1-76](file://test-expedientes/2026-04-28T20-00-06-091Z_00_log.txt#L1-L76)
+- [test-expedientes/2026-04-28T20-00-06-091Z_07_relatorio_final.json:1-26](file://test-expedientes/2026-04-28T20-00-06-091Z_07_relatorio_final.json#L1-L26)
 
-### Key Features of the Debugging Framework
-- **Real-time Authentication**: Handles SSO authentication, OTP verification, and cookie extraction
-- **API Endpoint Testing**: Direct PJE API calls with comprehensive error handling
-- **Data Validation**: Identifies duplicate IDs and compares with database records
-- **Progress Tracking**: Detailed logging with timestamps for each processing phase
-- **Error Recovery**: Automatic retry mechanisms and fallback strategies
+### Key Features of the JSON Reporting System
+- **Automatic Report Generation**: Final reports generated automatically at the end of each capture process
+- **Analysis Summaries**: Comprehensive analysis of captured data including duplicates, constraints, and distributions
+- **Constraint Validation**: Automated constraint checking to ensure data integrity
+- **Database Comparison**: Detailed comparison between captured data and existing database records
+- **Standardized Metadata**: Consistent timestamping, process identification, and execution metrics
+- **Diagnostic Information**: Built-in diagnostic capabilities for detecting data quality issues
 
 **Section sources**
 - [scripts/captura/pendentes/debug-expedientes-trt3-direto.ts:1-836](file://scripts/captura/pendentes/debug-expedientes-trt3-direto.ts#L1-L836)
+- [scripts/captura/audiencias/debug-audiencias-trt3-direto.ts:898-960](file://scripts/captura/audiencias/debug-audiencias-trt3-direto.ts#L898-L960)
+- [scripts/captura/pericias/debug-pericias-trt3-direto.ts:630-682](file://scripts/captura/pericias/debug-pericias-trt3-direto.ts#L630-L682)
 - [test-expedientes/2026-04-28T20-00-06-091Z_00_log.txt:1-76](file://test-expedientes/2026-04-28T20-00-06-091Z_00_log.txt#L1-L76)
-- [test-expedientes/2026-04-28T20-00-06-091Z_01_config_trt3.json:1-5](file://test-expedientes/2026-04-28T20-00-06-091Z_01_config_trt3.json#L1-L5)
-- [test-expedientes/2026-04-28T20-00-06-091Z_02_totalizadores.json:1-23](file://test-expedientes/2026-04-28T20-00-06-091Z_02_totalizadores.json#L1-L23)
-- [test-expedientes/2026-04-28T20-00-06-091Z_03_no_prazo_processos.json:1-881](file://test-expedientes/2026-04-28T20-00-06-091Z_03_no_prazo_processos.json#L1-L881)
-- [test-expedientes/2026-04-28T20-00-06-091Z_04_sem_prazo_processos.json:1-881](file://test-expedientes/2026-04-28T20-00-06-091Z_04_sem_prazo_processos.json#L1-L881)
-- [test-expedientes/2026-04-28T20-00-06-091Z_05_analise_duplicatas.json:1-100](file://test-expedientes/2026-04-28T20-00-06-091Z_05_analise_duplicatas.json#L1-L100)
-- [test-expedientes/2026-04-28T20-00-06-091Z_06_comparacao_banco.json:1-100](file://test-expedientes/2026-04-28T20-00-06-091Z_06_comparacao_banco.json#L1-L100)
-- [test-expedientes/2026-04-28T20-00-06-091Z_07_relatorio_final.json:1-100](file://test-expedientes/2026-04-28T20-00-06-091Z_07_relatorio_final.json#L1-L100)
+- [test-expedientes/2026-04-28T20-00-06-091Z_07_relatorio_final.json:1-26](file://test-expedientes/2026-04-28T20-00-06-091Z_07_relatorio_final.json#L1-L26)
+- [test-audiencias/2026-04-28T21-34-53-129Z_06_relatorio_final.json:1-39](file://test-audiencias/2026-04-28T21-34-53-129Z_06_relatorio_final.json#L1-L39)
+- [test-pericias/2026-04-28T21-48-33-942Z_06_relatorio_final.json:1-47](file://test-pericias/2026-04-28T21-48-33-942Z_06_relatorio_final.json#L1-L47)
+
+## JSON Reporting System
+
+### Standardized Report Structure
+The JSON reporting system provides standardized structure across all capture processes:
+
+#### Common Report Fields
+- **Metadata**: Timestamps, tribunal identification, process duration
+- **Totals**: Process counts, unique identifiers, totals by category
+- **Analysis**: Duplicate detection, distribution analysis, constraint validation
+- **Comparison**: Database comparison results and metrics
+- **Diagnostics**: Quality indicators and issue detection
+
+#### Expediente Report Structure
+```json
+{
+  "iniciado": "2026-04-28T20:00:06.105Z",
+  "finalizado": "2026-04-28T20:00:38.284Z",
+  "duracao_segundos": 32.18,
+  "trt": "TRT3",
+  "grau": "primeiro_grau",
+  "idAdvogado": "29203",
+  "totais": {
+    "no_prazo": 37,
+    "sem_prazo": 9,
+    "total": 46
+  },
+  "analise_ids": {
+    "total": 46,
+    "idsUnicos": 43,
+    "idsDuplicados": 1,
+    "processosComIdRepetido": 4,
+    "processosIdDuplicadoComNumerosDiferentes": 0
+  },
+  "comparacao_banco": {
+    "capturado_agora": 43,
+    "ja_no_banco": 40,
+    "novos_nao_no_banco": 3,
+    "sumidos_apenas_no_banco": 0
+  }
+}
+```
+
+#### Audiência Report Structure
+```json
+{
+  "iniciado": "2026-04-28T21:34:53.137Z",
+  "finalizado": "2026-04-28T21:35:20.240Z",
+  "duracao_segundos": 27.103,
+  "trt": "TRT3",
+  "grau": "primeiro_grau",
+  "idAdvogado": "29203",
+  "periodo": {
+    "dataInicio": "2026-04-28",
+    "dataFim": "2027-04-28"
+  },
+  "totais": {
+    "designadas": 31
+  },
+  "analise_ids": {
+    "total": 31,
+    "idsUnicos": 31,
+    "idsDuplicados": 0,
+    "audienciasComIdRepetido": 0,
+    "idsDuplicadosComProcessosDiferentes": 0,
+    "processosComMultiplasAudiencias": 0,
+    "audienciasComNrProcessoVazio": 0
+  },
+  "constraint_check": {
+    "conflitos": 0,
+    "status": "OK"
+  },
+  "comparacao_banco": {
+    "capturado_agora": 31,
+    "ja_no_banco": 28,
+    "novas_nao_no_banco": 3,
+    "sumidas_apenas_no_banco": 0,
+    "conflitos_constraint_no_banco": 0
+  },
+  "diagnostico": {
+    "reuso_de_ids_detectado": false,
+    "ids_duplicados_sem_diferenca": 0
+  }
+}
+```
+
+#### Perícia Report Structure
+```json
+{
+  "iniciado": "2026-04-28T21:48:33.948Z",
+  "finalizado": "2026-04-28T21:49:07.571Z",
+  "duracao_segundos": 33.623,
+  "trt": "TRT3",
+  "grau": "primeiro_grau",
+  "idAdvogado": "29203",
+  "analise_ids": {
+    "total": 669,
+    "idsUnicos": 669,
+    "idsDuplicados": 0,
+    "periciasComIdRepetido": 0,
+    "idsDuplicadosComProcessosDiferentes": 0,
+    "processosComMultiplasPericias": 103,
+    "periciasComNrProcessoVazio": 0
+  },
+  "distribuicao_situacoes": {
+    "F": 492,
+    "C": 56,
+    "R": 84,
+    "L": 5,
+    "P": 28,
+    "S": 4
+  },
+  "constraint_check": {
+    "conflitos": 0,
+    "status": "OK"
+  },
+  "comparacao_banco": {
+    "capturado_agora": 669,
+    "ja_no_banco": 664,
+    "novas_nao_no_banco": 5,
+    "sumidas_apenas_no_banco": 0,
+    "distribuicao_banco": {
+      "F": 487,
+      "C": 54,
+      "R": 83,
+      "P": 31,
+      "L": 5,
+      "S": 4
+    }
+  },
+  "diagnostico": {
+    "reuso_de_ids_detectado": false,
+    "ids_duplicados_sem_diferenca": 0
+  }
+}
+```
+
+### Analysis and Constraint Systems
+The reporting system includes sophisticated analysis and validation capabilities:
+
+#### Duplicate Detection Analysis
+- **ID Duplication**: Identifies duplicated process IDs across capture sessions
+- **Process Number Validation**: Detects cases where the same ID has different process numbers
+- **Distribution Analysis**: Analyzes frequency and distribution of duplicates
+- **Impact Assessment**: Quantifies the impact of duplicates on data integrity
+
+#### Constraint Validation
+- **Database Constraints**: Validates adherence to database constraints
+- **Business Rules**: Checks compliance with business logic rules
+- **Data Integrity**: Ensures data meets quality standards
+- **Conflict Detection**: Identifies potential conflicts before data insertion
+
+#### Diagnostic Capabilities
+- **Quality Indicators**: Built-in metrics for data quality assessment
+- **Issue Detection**: Automated detection of potential problems
+- **Recommendations**: Suggestions for data quality improvements
+- **Alert Systems**: Warning systems for critical issues
+
+**Section sources**
+- [test-expedientes/2026-04-28T20-00-06-091Z_07_relatorio_final.json:1-26](file://test-expedientes/2026-04-28T20-00-06-091Z_07_relatorio_final.json#L1-L26)
+- [test-audiencias/2026-04-28T21-34-53-129Z_06_relatorio_final.json:1-39](file://test-audiencias/2026-04-28T21-34-53-129Z_06_relatorio_final.json#L1-L39)
+- [test-pericias/2026-04-28T21-48-33-942Z_06_relatorio_final.json:1-47](file://test-pericias/2026-04-28T21-48-33-942Z_06_relatorio_final.json#L1-L47)
+- [test-expedientes/2026-04-28T20-00-06-091Z_05_analise_duplicatas.json:1-24](file://test-expedientes/2026-04-28T20-00-06-091Z_05_analise_duplicatas.json#L1-L24)
+- [test-audiencias/2026-04-28T21-34-53-129Z_04_constraint_check.json:1-4](file://test-audiencias/2026-04-28T21-34-53-129Z_04_constraint_check.json#L1-L4)
 
 ## Database Testing and Migration Integration
 
@@ -581,6 +788,7 @@ The Playwright testing framework provides comprehensive end-to-end testing capab
 - Supabase mock factory centralizes query/mutation/RPC stubbing
 - Global setup and module mappers ensure consistent mocking across tests
 - **New**: Debugging framework uses real database credentials for authentic testing scenarios
+- **New**: JSON reporting system standardizes artifact generation across all capture processes
 
 **Section sources**
 - [src/testing/factories.ts:1-17](file://src/testing/factories.ts#L1-L17)
@@ -596,8 +804,9 @@ The Playwright testing framework provides comprehensive end-to-end testing capab
 - Leverage parallelism in Playwright projects judiciously while controlling timeouts
 - Implement efficient sequential mock patterns to avoid excessive test setup complexity
 - **New**: Debugging framework optimizes resource usage by avoiding database persistence during testing
+- **New**: JSON reporting system minimizes I/O overhead through efficient artifact generation
 
-**Updated** Added performance considerations for the new debugging framework.
+**Updated** Added performance considerations for the new JSON reporting system and debugging framework.
 
 ## Troubleshooting Guide
 - Missing Web APIs in jsdom: Ensure global setup polyfills TextEncoder/TextDecoder and streams
@@ -607,9 +816,11 @@ The Playwright testing framework provides comprehensive end-to-end testing capab
 - Conditional Supabase tests: Use helpers to skip tests when credentials are not available
 - Advanced mocking issues: Verify sequential mock patterns match expected database query sequences
 - **New**: Debugging framework issues: Check 2FAuth API connectivity and tribunal configuration retrieval
-- **New**: Artifact generation problems: Verify test-expedientes directory permissions and disk space availability
+- **New**: Artifact generation problems: Verify test-* directories have sufficient permissions and disk space
+- **New**: JSON reporting errors: Check artifact naming conventions and metadata consistency
+- **New**: Analysis validation failures: Review constraint check configurations and database connection
 
-**Updated** Added troubleshooting guidance for the new debugging framework and artifact generation.
+**Updated** Added troubleshooting guidance for the new JSON reporting system and artifact generation.
 
 **Section sources**
 - [src/testing/setup.ts:39-86](file://src/testing/setup.ts#L39-L86)
@@ -620,9 +831,9 @@ The Playwright testing framework provides comprehensive end-to-end testing capab
 - [scripts/captura/pendentes/debug-expedientes-trt3-direto.ts:36-40](file://scripts/captura/pendentes/debug-expedientes-trt3-direto.ts#L36-L40)
 
 ## Conclusion
-ZattarOS employs a comprehensive layered testing strategy with Jest for unit and integration tests, Playwright for E2E validation, and a sophisticated debugging framework for expediente capture testing. The new debugging framework provides direct TRT3 expediente capture testing with comprehensive artifact generation, enabling detailed analysis of capture processes and comparison with database records. The configuration supports dual environments, robust global setup, and reusable integration helpers. The addition of comprehensive unit testing for business logic functions like `obterResumoUltimaCaptura`, along with the new debugging framework and migration-based tracking, demonstrates advanced testing patterns including sequential mocking, edge case coverage, and business logic validation. By following the AAA pattern, leveraging factories and builders, implementing sophisticated mocking strategies, and integrating comprehensive artifact generation, teams can write reliable, maintainable tests across components, server actions, complex business logic scenarios, and expediente capture validation processes. Coverage targets and CI workflows should emphasize critical business flows, user journeys, and the new debugging framework capabilities while maintaining high-quality unit test coverage for core business functions.
+ZattarOS employs a comprehensive layered testing strategy with Jest for unit and integration tests, Playwright for E2E validation, and a sophisticated debugging framework for expediente capture testing. The new comprehensive JSON reporting system provides automatic report generation during capture processes, including analysis summaries, constraint checks, and final reports. The system features standardized artifact generation with consistent naming conventions, metadata, and validation capabilities across expediente, audiencia, and pericia capture processes. The debugging framework operates directly via Playwright + Supabase without persisting data to the database, generating comprehensive test artifacts for detailed analysis and comparison. The configuration supports dual environments, robust global setup, and reusable integration helpers. The addition of comprehensive unit testing for business logic functions like `obterResumoUltimaCaptura`, along with the new debugging framework, migration-based tracking, and standardized JSON reporting system, demonstrates advanced testing patterns including sequential mocking, edge case coverage, and business logic validation. By following the AAA pattern, leveraging factories and builders, implementing sophisticated mocking strategies, and integrating comprehensive artifact generation with standardized reporting, teams can write reliable, maintainable tests across components, server actions, complex business logic scenarios, and capture validation processes. Coverage targets and CI workflows should emphasize critical business flows, user journeys, and the new debugging framework capabilities while maintaining high-quality unit test coverage for core business functions.
 
-**Updated** Enhanced conclusion to reflect the comprehensive debugging framework and artifact generation capabilities.
+**Updated** Enhanced conclusion to reflect the comprehensive JSON reporting system and standardized artifact generation capabilities.
 
 ## Appendices
 - Example test files:
@@ -635,7 +846,11 @@ ZattarOS employs a comprehensive layered testing strategy with Jest for unit and
   - Integration test: [alterar-responsavel-flow.test.ts](file://src/app/(authenticated)/expedientes/__tests__/integration/alterar-responsavel-flow.test.ts)
 - Debugging framework files:
   - Debug script: [debug-expedientes-trt3-direto.ts](file://scripts/captura/pendentes/debug-expedientes-trt3-direto.ts)
+  - Debug script: [debug-audiencias-trt3-direto.ts](file://scripts/captura/audiencias/debug-audiencias-trt3-direto.ts)
+  - Debug script: [debug-pericias-trt3-direto.ts](file://scripts/captura/pericias/debug-pericias-trt3-direto.ts)
   - Test artifacts: [test-expedientes/](file://test-expedientes/)
+  - Test artifacts: [test-audiencias/](file://test-audiencias/)
+  - Test artifacts: [test-pericias/](file://test-pericias/)
 - Integration testing guide and helpers:
   - [INTEGRATION_TESTING_GUIDE.md](file://src/testing/INTEGRATION_TESTING_GUIDE.md)
   - [integration-helpers.ts](file://src/testing/integration-helpers.ts)
@@ -653,4 +868,4 @@ ZattarOS employs a comprehensive layered testing strategy with Jest for unit and
 - Database migration:
   - [20260427090510_add_ultima_captura_id_to_expedientes.sql](file://supabase/migrations/20260427090510_add_ultima_captura_id_to_expedientes.sql)
 
-**Updated** Added references to the comprehensive debugging framework and related business logic components.
+**Updated** Added references to the comprehensive JSON reporting system and related business logic components.
