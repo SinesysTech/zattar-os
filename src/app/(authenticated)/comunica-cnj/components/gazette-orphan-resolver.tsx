@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { Heading, Text } from '@/components/ui/typography';
 import { useGazetteStore } from './hooks/use-gazette-store';
+import { ExpedienteDialog } from '@/app/(authenticated)/expedientes';
 import type {
   ComunicacaoCNJEnriquecida,
   MatchCriterio,
@@ -207,6 +208,20 @@ function AllResolvedState() {
 // ─── Main Component ─────────────────────────────────────────────────────────
 
 export function GazetteOrphanResolver() {
+  const [isExpedienteDialogOpen, setIsExpedienteDialogOpen] = useState(false);
+
+  const handleExpedienteCriado = useCallback(() => {
+    setIsExpedienteDialogOpen(false);
+    if (!current) return;
+
+    const updated = comunicacoes.map((c) =>
+      c.id === current.id ? { ...c, statusVinculacao: 'vinculado' as const } : c,
+    );
+    setComunicacoes(updated);
+    setResolvedCount((prev) => prev + 1);
+    toast.success('Expediente criado e comunicação vinculada com sucesso!');
+  }, [current, comunicacoes, setComunicacoes]);
+
   const { comunicacoes, setComunicacoes } = useGazetteStore();
 
   const orphans = useMemo(
@@ -614,9 +629,7 @@ export function GazetteOrphanResolver() {
                     variant="outline"
                     size="sm"
                     className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "h-9 gap-1.5 text-xs")}
-                    onClick={() => {
-                      /* TODO: criar expediente */
-                    }}
+                    onClick={() => setIsExpedienteDialogOpen(true)}
                   >
                     <Plus className="size-3" aria-hidden />
                     Criar Expediente
@@ -637,14 +650,17 @@ export function GazetteOrphanResolver() {
               onBuscarManualmente={() => {
                 /* TODO */
               }}
-              onCriarNovo={() => {
-                /* TODO */
-              }}
+              onCriarNovo={() => setIsExpedienteDialogOpen(true)}
               onIgnorar={() => handleIgnorar(current)}
             />
           )}
         </div>
       </div>
+      <ExpedienteDialog
+        open={isExpedienteDialogOpen}
+        onOpenChange={setIsExpedienteDialogOpen}
+        onSuccess={handleExpedienteCriado}
+      />
     </GlassPanel>
   );
 }
