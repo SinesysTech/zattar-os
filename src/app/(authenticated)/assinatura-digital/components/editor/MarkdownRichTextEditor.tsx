@@ -76,7 +76,7 @@ function injectInNode(node: Record<string, unknown>): Record<string, unknown> {
     if (typeof childText === 'string' && VARIABLE_TEST_REGEX.test(childText)) {
       // Regex local com /g para evitar estado compartilhado entre chamadas
       const varRegex = /\{\{([^}]+)\}\}/g;
-      const { text, ...marks } = child as Record<string, unknown>;
+      const { text: _text, ...marks } = child as Record<string, unknown>;
       let lastIndex = 0;
       let match: RegExpExecArray | null;
       while ((match = varRegex.exec(childText)) !== null) {
