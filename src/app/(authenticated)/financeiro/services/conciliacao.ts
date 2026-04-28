@@ -3,6 +3,7 @@
  * Casos de uso e orquestração de regras de negócio
  */
 
+import { authenticateRequest } from '@/lib/auth/session';
 import { ConciliacaoRepository } from '../repository/conciliacao';
 import {
     filtrarCandidatos,
@@ -93,13 +94,16 @@ export class ConciliacaoService {
             throw new Error(validacao.erros.join('; '));
         }
 
+        const user = await authenticateRequest();
+        const usuarioId = user ? user.id.toString() : 'system';
+
         // Se é para ignorar (sem lançamento vinculado)
         if (!dto.lancamentoFinanceiroId && !dto.criarNovoLancamento) {
             return ConciliacaoRepository.criarConciliacao({
                 transacaoImportadaId: dto.transacaoImportadaId,
                 lancamentoFinanceiroId: null,
                 status: 'ignorado',
-                usuarioId: 'system' // TODO: Obter do contexto de autenticação
+                usuarioId
             });
         }
 
@@ -110,7 +114,7 @@ export class ConciliacaoService {
             lancamentoFinanceiroId: dto.lancamentoFinanceiroId,
             status: 'conciliado',
             diferencaValor: 0, // TODO: Calcular diferença
-            usuarioId: 'system'
+            usuarioId
         });
     }
 
