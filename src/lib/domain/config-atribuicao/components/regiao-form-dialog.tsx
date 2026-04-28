@@ -6,7 +6,14 @@
 
 import * as React from "react";
 
-import { DialogFormShell } from "@/components/shared/dialog-shell";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogBody,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -150,18 +157,17 @@ export function RegiaoFormDialog({
     nome.trim().length > 0 && trts.length > 0 && responsaveisIds.length > 0;
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title={isEditing ? "Editar Região" : "Nova Região"}
-      maxWidth="2xl"
-      footer={
-        <Button onClick={handleSave} disabled={isSaving || !isFormValid}>
-          {isSaving ? "Salvando..." : isEditing ? "Salvar Alterações" : "Criar região"}
-        </Button>
-      }
-    >
-      <div className="space-y-6">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="sm:max-w-2xl glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>{isEditing ? "Editar Região" : "Nova Região"}</DialogTitle>
+          <DialogDescription className="sr-only">Preencha os dados para {isEditing ? "editar a" : "criar uma nova"} região de atribuição</DialogDescription>
+        </DialogHeader>
+        <DialogBody>
+      <div className="space-y-6 px-6 py-4">
         {/* Nome */}
         <div className="grid gap-2">
           <Label htmlFor="nome">
@@ -343,6 +349,16 @@ export function RegiaoFormDialog({
           </div>
         )}
       </div>
-    </DialogFormShell>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSaving}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            <Button onClick={handleSave} disabled={isSaving || !isFormValid}>
+              {isSaving ? "Salvando..." : isEditing ? "Salvar Alterações" : "Criar região"}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

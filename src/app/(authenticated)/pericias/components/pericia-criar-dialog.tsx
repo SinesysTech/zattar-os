@@ -12,7 +12,14 @@ import * as React from 'react';
 import { Check, ChevronsUpDown, AlertCircle } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogBody,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -269,27 +276,16 @@ export function PericiaCriarDialog({
   const isFormValid = numeroProcesso.length >= 20 && trt && grau;
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title="Nova Perícia"
-      description="Cadastre uma perícia manual — complemente os campos obrigatórios para registrar."
-      maxWidth="lg"
-      footer={
-        <>
-          <Button
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-            disabled={isSaving}
-          >
-            Cancelar
-          </Button>
-          <Button onClick={handleSave} disabled={isSaving || !isFormValid}>
-            {isSaving ? 'Criando...' : 'Criar perícia'}
-          </Button>
-        </>
-      }
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="sm:max-w-lg glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>Nova Perícia</DialogTitle>
+          <DialogDescription>Cadastre uma perícia manual — complemente os campos obrigatórios para registrar.</DialogDescription>
+        </DialogHeader>
+        <DialogBody>
       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
         {/* Número do Processo (col span 2) */}
         <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "md:col-span-2 grid gap-1.5")}>
@@ -427,6 +423,16 @@ export function PericiaCriarDialog({
           </div>
         )}
       </div>
-    </DialogFormShell>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSaving}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            <Button onClick={handleSave} disabled={isSaving || !isFormValid}>
+              {isSaving ? 'Criando...' : 'Criar perícia'}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

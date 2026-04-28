@@ -227,52 +227,16 @@ export function PromoverTransitoriaDialog({
   const canSaveOnly = !isBusy && mode === 'criar' && nome.trim().length >= 2;
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title="Completar cadastro da parte contrária"
-      maxWidth="lg"
-      footer={
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
-          {mode === 'merge' && (
-            <Button variant="ghost" onClick={handleSwitchToCriar} disabled={isBusy}>
-              Criar nova em vez disso
-            </Button>
-          )}
-          {mode === 'criar' && (
-            <Button
-              onClick={handleSaveOnly}
-              disabled={!canSaveOnly}
-              size="sm"
-              variant="outline"
-              className="rounded-xl"
-            >
-              {isSaving ? (
-                <LoadingSpinner className="mr-2 size-3.5" />
-              ) : (
-                <Save className="mr-2 size-3.5" strokeWidth={2.25} />
-              )}
-              Salvar sem promover
-            </Button>
-          )}
-          <Button
-            onClick={handleSubmit}
-            disabled={!canSubmit}
-            size="sm"
-            className="rounded-xl"
-          >
-            {isPending ? (
-              <LoadingSpinner className="mr-2 size-3.5" />
-            ) : mode === 'merge' ? (
-              <Link2 className="mr-2 size-3.5" strokeWidth={2.25} />
-            ) : (
-              <UserPlus className="mr-2 size-3.5" strokeWidth={2.25} />
-            )}
-            {mode === 'merge' ? 'Vincular e promover' : 'Criar e promover'}
-          </Button>
-        </div>
-      }
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        data-density="comfortable"
+        className="sm:max-w-lg glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>Completar cadastro da parte contrária</DialogTitle>
+        </DialogHeader>
+        <DialogBody>
       {isLoading ? (
         <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv. */ "flex items-center justify-center py-10")}>
           <LoadingSpinner />
@@ -444,6 +408,49 @@ export function PromoverTransitoriaDialog({
           )}
         </div>
       )}
-    </DialogFormShell>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            {mode === 'merge' && (
+              <Button variant="ghost" onClick={handleSwitchToCriar} disabled={isBusy}>
+                Criar nova em vez disso
+              </Button>
+            )}
+            {mode === 'criar' && (
+              <Button
+                onClick={handleSaveOnly}
+                disabled={!canSaveOnly}
+                size="sm"
+                variant="outline"
+                className="rounded-xl"
+              >
+                {isSaving ? (
+                  <LoadingSpinner className="mr-2 size-3.5" />
+                ) : (
+                  <Save className="mr-2 size-3.5" strokeWidth={2.25} />
+                )}
+                Salvar sem promover
+              </Button>
+            )}
+            <Button
+              onClick={handleSubmit}
+              disabled={!canSubmit}
+              size="sm"
+              className="rounded-xl"
+            >
+              {isPending ? (
+                <LoadingSpinner className="mr-2 size-3.5" />
+              ) : mode === 'merge' ? (
+                <Link2 className="mr-2 size-3.5" strokeWidth={2.25} />
+              ) : (
+                <UserPlus className="mr-2 size-3.5" strokeWidth={2.25} />
+              )}
+              {mode === 'merge' ? 'Vincular e promover' : 'Criar e promover'}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

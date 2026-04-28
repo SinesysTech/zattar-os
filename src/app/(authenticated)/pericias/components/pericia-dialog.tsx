@@ -9,7 +9,13 @@
 import { cn } from '@/lib/utils';
 import * as React from 'react';
 
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import {
@@ -95,49 +101,57 @@ export function PericiaDialog({
   };
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title="Editar perícia"
-      maxWidth="lg"
-      footer={
-        <Button onClick={handleSave} disabled={isSaving || !pericia}>
-          {isSaving ? 'Salvando...' : 'Salvar'}
-        </Button>
-      }
-    >
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Responsável</div>
-          <Select value={responsavelId || '_none'} onValueChange={setResponsavelId}>
-            <SelectTrigger className="w-full bg-card">
-              <SelectValue placeholder="Selecione..." />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="_none">Sem responsável</SelectItem>
-              {usuarios.map((u) => (
-                <SelectItem key={u.id} value={String(u.id)}>
-                  {getUsuarioNome(u)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="sm:max-w-lg glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>Editar perícia</DialogTitle>
+        </DialogHeader>
+        <DialogBody>
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+              <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Responsável</div>
+              <Select value={responsavelId || '_none'} onValueChange={setResponsavelId}>
+                <SelectTrigger className="w-full bg-card">
+                  <SelectValue placeholder="Selecione..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="_none">Sem responsável</SelectItem>
+                  {usuarios.map((u) => (
+                    <SelectItem key={u.id} value={String(u.id)}>
+                      {getUsuarioNome(u)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "md:col-span-2 grid gap-2")}>
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Observações</div>
-          <Textarea
-            value={observacoes}
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setObservacoes(e.target.value)}
-            placeholder="Adicione observações sobre a perícia..."
-            className="min-h-30 resize-none"
-            disabled={isSaving}
-          />
-        </div>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "md:col-span-2 grid gap-2")}>
+              <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Observações</div>
+              <Textarea
+                value={observacoes}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setObservacoes(e.target.value)}
+                placeholder="Adicione observações sobre a perícia..."
+                className="min-h-30 resize-none"
+                disabled={isSaving}
+              />
+            </div>
 
-        {error && <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "md:col-span-2 text-sm text-destructive")}>{error}</div>}
-      </div>
-    </DialogFormShell>
+            {error && <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "md:col-span-2 text-sm text-destructive")}>{error}</div>}
+          </div>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            <Button onClick={handleSave} disabled={isSaving || !pericia}>
+              {isSaving ? 'Salvando...' : 'Salvar'}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 

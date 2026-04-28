@@ -31,7 +31,9 @@ import type { Endereco } from '@/app/(authenticated)/enderecos/types';
 import { InputTelefone } from '@/components/ui/input-telefone';
 import { actionCriarRepresentante, actionAtualizarRepresentante } from '../../actions/representantes-actions';
 import type { Representante, InscricaoOAB, TipoRepresentante, SituacaoOAB } from '../../types/representantes';
-import { DialogFormShell, DialogNavPrevious, DialogNavNext } from '@/components/shared/dialog-shell';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody } from '@/components/ui/dialog';
+import { DialogNavPrevious, DialogNavNext } from '@/components/shared/dialog-shell';
+import { Progress } from '@/components/ui/progress';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
 // =============================================================================
@@ -827,25 +829,57 @@ export function RepresentanteFormDialog({
   const isFirstStep = currentStep === 1;
   const isLastStep = currentStep === TOTAL_STEPS;
 
+  const progressValue = TOTAL_STEPS <= 1 ? 100 : ((currentStep - 1) / (TOTAL_STEPS - 1)) * 100;
+
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title={isEditMode ? 'Editar Representante' : stepInfo.title}
-      density="compact"
-      multiStep={{
-        current: currentStep,
-        total: TOTAL_STEPS,
-        stepTitle: stepInfo.title,
-      }}
-      footer={
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex justify-end w-full gap-2")}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        data-density="compact"
+        className="sm:max-w-lg glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle className="text-card-title">
+            {isEditMode ? 'Editar Representante' : stepInfo.title}
+          </DialogTitle>
+          <DialogDescription className="sr-only">{stepInfo.description}</DialogDescription>
+          <div className="mt-3 space-y-1.5">
+            <div className="flex items-center justify-between gap-4">
+              <span className="text-overline text-foreground/80 truncate">{stepInfo.title}</span>
+              <span className="text-micro-caption text-muted-foreground shrink-0">
+                Etapa {currentStep} de {TOTAL_STEPS}
+              </span>
+            </div>
+            <Progress value={progressValue} className="h-1.5" />
+          </div>
+        </DialogHeader>
+        <DialogBody>
+          <form ref={formRef} action={formAction}>
+            {/* Hidden fields para todos os dados do form */}
+            <input type="hidden" name="cpf" value={formData.cpf.replace(/\D/g, '')} />
+            <input type="hidden" name="nome" value={formData.nome} />
+            <input type="hidden" name="emails" value={JSON.stringify(formData.emails)} />
+            <input type="hidden" name="oabs" value={JSON.stringify(formData.oabs)} />
+            <input type="hidden" name="ddd_celular" value={formData.ddd_celular} />
+            <input type="hidden" name="numero_celular" value={formData.numero_celular} />
+            <input type="hidden" name="ddd_residencial" value={formData.ddd_residencial} />
+            <input type="hidden" name="numero_residencial" value={formData.numero_residencial} />
+            <input type="hidden" name="ddd_comercial" value={formData.ddd_comercial} />
+            <input type="hidden" name="numero_comercial" value={formData.numero_comercial} />
+
+            <div>
+              {renderCurrentStep()}
+            </div>
+          </form>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <DialogNavPrevious
               onClick={handlePrevious}
               disabled={isFirstStep || isPending}
               hidden={isFirstStep}
             />
-
             {isLastStep ? (
               <Button
                 type="button"
@@ -871,26 +905,9 @@ export function RepresentanteFormDialog({
               />
             )}
           </div>
-      }
-    >
-        <form ref={formRef} action={formAction}>
-          {/* Hidden fields para todos os dados do form */}
-          <input type="hidden" name="cpf" value={formData.cpf.replace(/\D/g, '')} />
-          <input type="hidden" name="nome" value={formData.nome} />
-          <input type="hidden" name="emails" value={JSON.stringify(formData.emails)} />
-          <input type="hidden" name="oabs" value={JSON.stringify(formData.oabs)} />
-          <input type="hidden" name="ddd_celular" value={formData.ddd_celular} />
-          <input type="hidden" name="numero_celular" value={formData.numero_celular} />
-          <input type="hidden" name="ddd_residencial" value={formData.ddd_residencial} />
-          <input type="hidden" name="numero_residencial" value={formData.numero_residencial} />
-          <input type="hidden" name="ddd_comercial" value={formData.ddd_comercial} />
-          <input type="hidden" name="numero_comercial" value={formData.numero_comercial} />
-
-          <div>
-            {renderCurrentStep()}
-          </div>
-        </form>
-    </DialogFormShell>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 

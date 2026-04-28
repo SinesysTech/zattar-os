@@ -13,7 +13,13 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { DialogFormShell } from "@/components/shared";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+} from "@/components/ui/dialog";
 import { actionCriarTarefa } from "../actions/tarefas-actions";
 import { priorities, statuses } from "../constants";
 import type { TaskStatus, TaskLabel, TaskPriority } from "../domain";
@@ -71,16 +77,15 @@ export function TaskDialog({ open, onOpenChange }: TaskDialogProps) {
     };
 
     return (
-        <DialogFormShell
-            open={open}
-            onOpenChange={handleOpenChange}
-            title="Nova tarefa"
-            footer={
-                <Button type="submit" form="nova-tarefa-form" disabled={isPending}>
-                    {isPending ? "Salvando..." : "Salvar"}
-                </Button>
-            }
-        >
+        <Dialog open={open} onOpenChange={handleOpenChange}>
+          <DialogContent
+            showCloseButton={false}
+            className="sm:max-w-lg glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+          >
+            <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+              <DialogTitle>Nova tarefa</DialogTitle>
+            </DialogHeader>
+            <DialogBody>
             <form id="nova-tarefa-form" onSubmit={handleCreate}>
                 <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 md:grid-cols-2")}>
                     <div className="md:col-span-2">
@@ -162,6 +167,16 @@ export function TaskDialog({ open, onOpenChange }: TaskDialogProps) {
                     </p>
                 )}
             </form>
-        </DialogFormShell>
+            </DialogBody>
+            <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+              <Button variant="outline" onClick={() => handleOpenChange(false)}>Cancelar</Button>
+              <div className="flex items-center gap-2">
+                <Button type="submit" form="nova-tarefa-form" disabled={isPending}>
+                  {isPending ? "Salvando..." : "Salvar"}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
     );
 }

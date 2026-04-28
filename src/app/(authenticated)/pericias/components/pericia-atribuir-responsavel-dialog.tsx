@@ -88,49 +88,48 @@ export function PericiaAtribuirResponsavelDialog({
   };
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title="Atribuir responsável"
-      maxWidth="md"
-      footer={
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex w-full justify-end gap-2")}>
-          <Button
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-            disabled={isSaving}
-          >
-            Cancelar
-          </Button>
-          <Button onClick={handleSave} disabled={isSaving || !pericia}>
-            {isSaving ? 'Salvando...' : 'Salvar'}
-          </Button>
-        </div>
-      }
-    >
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Responsável</div>
-          <Select value={responsavelId || '_none'} onValueChange={setResponsavelId}>
-            <SelectTrigger className="w-full bg-card">
-              <SelectValue placeholder="Selecione..." />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="_none" disabled>
-                Selecione...
-              </SelectItem>
-              {usuarios.map((u) => (
-                <SelectItem key={u.id} value={String(u.id)}>
-                  {getUsuarioNome(u)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="sm:max-w-md glass-dialog overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+      >
+        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+          <DialogTitle>Atribuir responsável</DialogTitle>
+        </DialogHeader>
+        <DialogBody>
+          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+              <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Responsável</div>
+              <Select value={responsavelId || '_none'} onValueChange={setResponsavelId}>
+                <SelectTrigger className="w-full bg-card">
+                  <SelectValue placeholder="Selecione..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="_none" disabled>
+                    Selecione...
+                  </SelectItem>
+                  {usuarios.map((u) => (
+                    <SelectItem key={u.id} value={String(u.id)}>
+                      {getUsuarioNome(u)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-        {error && <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{error}</div>}
-      </div>
-    </DialogFormShell>
+            {error && <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{error}</div>}
+          </div>
+        </DialogBody>
+        <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSaving}>Cancelar</Button>
+          <div className="flex items-center gap-2">
+            <Button onClick={handleSave} disabled={isSaving || !pericia}>
+              {isSaving ? 'Salvando...' : 'Salvar'}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 

@@ -9,7 +9,7 @@
  * - Checklist de preparo
  * - Observações
  *
- * Usa DialogFormShell para overlay e glass dialog styling.
+ * Usa Dialog de @/components/ui/dialog para overlay e glass dialog styling.
  * ============================================================================
  */
 
@@ -32,7 +32,7 @@ import {
   Check,
   CircleDot,
 } from "lucide-react";
-import { Heading, Text } from "@/components/ui/typography";
+import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import type { MockEvent, ChecklistItem } from "./mock-data";
