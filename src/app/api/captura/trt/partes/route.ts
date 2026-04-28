@@ -285,12 +285,15 @@ export async function POST(request: NextRequest) {
       }
 
       // 4. Buscar credenciais completas por IDs
+      const credenciais_promises = credencial_ids.map(id => getCredentialComplete(id));
+      const credenciais_results = await Promise.all(credenciais_promises);
+
       const credenciais = [];
-      for (const id of credencial_ids) {
-        const credencial = await getCredentialComplete(id);
+      for (let i = 0; i < credenciais_results.length; i++) {
+        const credencial = credenciais_results[i];
         if (!credencial) {
           return NextResponse.json(
-            { error: `Credencial ${id} não encontrada` },
+            { error: `Credencial ${credencial_ids[i]} não encontrada` },
             { status: 404 }
           );
         }
