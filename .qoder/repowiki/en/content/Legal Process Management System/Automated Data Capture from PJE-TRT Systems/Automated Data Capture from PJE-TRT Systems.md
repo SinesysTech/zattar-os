@@ -12,7 +12,19 @@
 - [pje-documento-types.ts](file://src/app/(authenticated)/captura/types/pje-documento-types.ts)
 - [cadastros-pje-repository.ts](file://src/shared/partes/repositories/cadastros-pje-repository.ts)
 - [cadastros-pje-repository.ts](file://src/app/(authenticated)/partes/repositories/cadastros-pje-repository.ts)
+- [captura-dialog.tsx](file://src/app/(authenticated)/captura/components/captura-dialog.tsx)
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx)
+- [acervo-geral-form.tsx](file://src/app/(authenticated)/captura/components/acervo-geral-form.tsx)
+- [audiencias-form.tsx](file://src/app/(authenticated)/captura/components/audiencias-form.tsx)
+- [constants.ts](file://src/app/(authenticated)/captura/constants.ts)
 </cite>
+
+## Update Summary
+**Changes Made**
+- Updated UI component documentation to reflect CapturaDialog simplification with static 'Iniciar' label
+- Enhanced CapturaFormBase documentation to cover improved credential selection interface and automatic sorting algorithm
+- Added documentation for streamlined validation logic with `validarCamposCaptura` function
+- Updated form component examples to show new validation approach
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -20,11 +32,12 @@
 3. [Core Components](#core-components)
 4. [Architecture Overview](#architecture-overview)
 5. [Detailed Component Analysis](#detailed-component-analysis)
-6. [Dependency Analysis](#dependency-analysis)
-7. [Performance Considerations](#performance-considerations)
-8. [Troubleshooting Guide](#troubleshooting-guide)
-9. [Conclusion](#conclusion)
-10. [Appendices](#appendices)
+6. [UI Component Enhancements](#ui-component-enhancements)
+7. [Dependency Analysis](#dependency-analysis)
+8. [Performance Considerations](#performance-considerations)
+9. [Troubleshooting Guide](#troubleshooting-guide)
+10. [Conclusion](#conclusion)
+11. [Appendices](#appendices)
 
 ## Introduction
 This document describes the automated data capture system that integrates with PJE-TRT legal databases. It covers the authentication architecture, session lifecycle, and end-to-end capture workflows for process movements, audiência schedules, and party information. It also documents error handling, retry mechanisms, data validation, mapping between PJE-TRT data structures and internal Processo entities, and operational guidance for configuration, monitoring, and troubleshooting.
@@ -36,6 +49,7 @@ The capture system is organized around:
 - Persistence services for timelines, audiências, expedientes, and parties
 - Document capture pipeline for pending manifestação documents
 - Shared type definitions and repositories for cross-cutting concerns
+- Enhanced UI components with simplified credential management and streamlined validation
 
 ```mermaid
 graph TB
@@ -48,10 +62,16 @@ COMB["captura-combinada.service.ts"]
 CAPTURE_TYPES["trt-capture.service.ts"]
 PJE_TYPES["pje-trt.ts"]
 end
+subgraph "UI Components"
+DIALOG["captura-dialog.tsx"]
+FORMBASE["captura-form-base.tsx"]
+ACERVO["acervo-geral-form.tsx"]
+AUDIENCIAS["audiencias-form.tsx"]
+end
 subgraph "Persistence"
 TIMELINE["timeline persistence"]
 PARTES["partes capture"]
-AUDIENCIAS["audiencias persistence"]
+AUDIENCIAS_PERSIST["audiencias persistence"]
 EXPEDIENTES["pendentes persistence"]
 end
 subgraph "Documents"
@@ -67,8 +87,11 @@ CAPTURE_TYPES --> COMB
 PJE_TYPES --> COMB
 COMB --> TIMELINE
 COMB --> PARTES
-COMB --> AUDIENCIAS
+COMB --> AUDIENCIAS_PERSIST
 COMB --> EXPEDIENTES
+DIALOG --> FORMBASE
+FORMBASE --> ACERVO
+FORMBASE --> AUDIENCIAS
 PARTES --> CAD_PJE
 DOC_SERVICE --> EXPEDIENTES
 DOC_TYPES --> DOC_SERVICE
@@ -83,6 +106,8 @@ DOC_TYPES --> DOC_SERVICE
 - [pje-expediente-documento.service.ts](file://src/app/(authenticated)/captura/services/pje/pje-expediente-documento.service.ts#L218-L297)
 - [pje-documento-types.ts](file://src/app/(authenticated)/captura/types/pje-documento-types.ts#L5-L14)
 - [cadastros-pje-repository.ts:45-73](file://src/shared/partes/repositories/cadastros-pje-repository.ts#L45-L73)
+- [captura-dialog.tsx](file://src/app/(authenticated)/captura/components/captura-dialog.tsx#L40-L41)
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L44-L51)
 
 **Section sources**
 - [trt-driver.ts](file://src/app/(authenticated)/captura/drivers/pje/trt-driver.ts#L1-L81)
@@ -94,6 +119,8 @@ DOC_TYPES --> DOC_SERVICE
 - [pje-documento-types.ts](file://src/app/(authenticated)/captura/types/pje-documento-types.ts#L1-L16)
 - [cadastros-pje-repository.ts:1-117](file://src/shared/partes/repositories/cadastros-pje-repository.ts#L1-L117)
 - [cadastros-pje-repository.ts](file://src/app/(authenticated)/partes/repositories/cadastros-pje-repository.ts#L1-L5)
+- [captura-dialog.tsx](file://src/app/(authenticated)/captura/components/captura-dialog.tsx#L1-L125)
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L1-L186)
 
 ## Core Components
 - Authentication and session management:
@@ -106,6 +133,9 @@ DOC_TYPES --> DOC_SERVICE
   - End-to-end pipeline for fetching pending manifestação documents, validating content, uploading to storage, and updating database records.
 - Repositories:
   - Upsert and lookup of PJE entity mappings for clients, parties, third parties, and representatives.
+- UI Components:
+  - Simplified dialog interface with static submit button label
+  - Enhanced credential selection with automatic sorting and streamlined validation
 
 **Section sources**
 - [trt-auth.service.ts](file://src/app/(authenticated)/captura/services/trt/trt-auth.service.ts#L65-L84)
@@ -116,6 +146,8 @@ DOC_TYPES --> DOC_SERVICE
 - [pje-expediente-documento.service.ts](file://src/app/(authenticated)/captura/services/pje/pje-expediente-documento.service.ts#L68-L168)
 - [pje-expediente-documento.service.ts](file://src/app/(authenticated)/captura/services/pje/pje-expediente-documento.service.ts#L218-L297)
 - [cadastros-pje-repository.ts:45-73](file://src/shared/partes/repositories/cadastros-pje-repository.ts#L45-L73)
+- [captura-dialog.tsx](file://src/app/(authenticated)/captura/components/captura-dialog.tsx#L40-L41)
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L44-L51)
 
 ## Architecture Overview
 The system authenticates via SSO gov.br with OTP, maintains a browser session, and executes targeted captures. It consolidates unique process identifiers, enriches with timeline and parties, and persists results to PostgreSQL and storage systems.
@@ -353,16 +385,88 @@ D --> E["Lookup/Map Entities to PJE IDs"]
 - [cadastros-pje-repository.ts:78-115](file://src/shared/partes/repositories/cadastros-pje-repository.ts#L78-L115)
 
 ### Driver Abstraction and Migration Notes
-- The PJE TRT driver currently throws “not implemented” due to backend service migrations and is marked for reimplementation using new architecture paths.
+- The PJE TRT driver currently throws "not implemented" due to backend service migrations and is marked for reimplementation using new architecture paths.
 
 **Section sources**
 - [trt-driver.ts](file://src/app/(authenticated)/captura/drivers/pje/trt-driver.ts#L33-L81)
+
+## UI Component Enhancements
+
+### Simplified Dialog Interface
+The CapturaDialog component has been simplified with a static submit button label, replacing the previous complex dynamic `SUBMIT_LABELS` mapping system. This change improves code maintainability and reduces complexity in the dialog component.
+
+**Updated** CapturaDialog now uses a simple static constant `SUBMIT_LABEL = 'Iniciar'` instead of dynamic label mapping
+
+```mermaid
+flowchart TD
+A["CapturaDialog"] --> B["Static SUBMIT_LABEL = 'Iniciar'"]
+B --> C["Simplified Button Rendering"]
+C --> D["Consistent User Experience"]
+```
+
+**Diagram sources**
+- [captura-dialog.tsx](file://src/app/(authenticated)/captura/components/captura-dialog.tsx#L40-L41)
+- [captura-dialog.tsx](file://src/app/(authenticated)/captura/components/captura-dialog.tsx#L116-L119)
+
+**Section sources**
+- [captura-dialog.tsx](file://src/app/(authenticated)/captura/components/captura-dialog.tsx#L40-L41)
+- [captura-dialog.tsx](file://src/app/(authenticated)/captura/components/captura-dialog.tsx#L116-L119)
+
+### Enhanced Credential Selection Interface
+The CapturaFormBase component has been significantly enhanced with improved credential selection interface, automatic sorting algorithm, and streamlined validation logic.
+
+#### Automatic Credential Sorting Algorithm
+The system now automatically sorts credentials by tribunal number and degree priority using the `ordenarCredenciais` function:
+
+**Updated** Automatic sorting algorithm with tribunal number extraction and degree weighting
+
+```mermaid
+flowchart TD
+A["Credential List"] --> B["extractNumeroTribunal()"]
+B --> C["pesoGrau()"]
+C --> D["Sort Algorithm"]
+D --> E["TRT1 → TRT2 → ... → TRT24 → TST"]
+E --> F["First Degree → Second Degree → Higher Courts"]
+```
+
+**Diagram sources**
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L31-L51)
+- [constants.ts](file://src/app/(authenticated)/captura/constants.ts#L15-L19)
+
+#### Streamlined Validation Logic
+The validation system has been simplified with the `validarCamposCaptura` function that provides consistent validation across all form components.
+
+**Updated** Streamlined validation with centralized `validarCamposCaptura` function
+
+```mermaid
+flowchart TD
+A["Form Submission"] --> B["validarCamposCaptura()"]
+B --> C{"Advogado Selected?"}
+C --> |No| D["Return False"]
+C --> |Yes| E{"Credentials Selected?"}
+E --> |No| F["Return False"]
+E --> |Yes| G["Return True"]
+```
+
+**Diagram sources**
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L178-L185)
+- [acervo-geral-form.tsx](file://src/app/(authenticated)/captura/components/acervo-geral-form.tsx#L32-L39)
+
+#### Improved Credential Selection Interface
+The credential selection interface now provides better user experience with automatic sorting and validation feedback.
+
+**Section sources**
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L44-L51)
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L178-L185)
+- [acervo-geral-form.tsx](file://src/app/(authenticated)/captura/components/acervo-geral-form.tsx#L32-L39)
+- [constants.ts](file://src/app/(authenticated)/captura/constants.ts#L15-L19)
 
 ## Dependency Analysis
 - Authentication depends on browser connection utilities and OTP retrieval.
 - Combined capture orchestrator depends on PJE API fetchers, persistence services, and logging.
 - Document capture depends on storage upload utilities and persistence updates.
 - Repositories depend on Supabase client for upsert and lookup operations.
+- UI components depend on shared form base with enhanced credential management.
 
 ```mermaid
 graph LR
@@ -374,6 +478,9 @@ COMB --> PERSIST["Persistence Services"]
 DOC["pje-expediente-documento.service.ts"] --> STORAGE["Backblaze B2"]
 DOC --> PERSIST
 CAD["cadastros-pje-repository.ts"] --> SUPABASE["Supabase Client"]
+UI["UI Components"] --> FORMBASE["Enhanced CapturaFormBase"]
+FORMBASE --> VALIDATION["Streamlined Validation"]
+FORMBASE --> SORTING["Automatic Credential Sorting"]
 ```
 
 **Diagram sources**
@@ -382,20 +489,24 @@ CAD["cadastros-pje-repository.ts"] --> SUPABASE["Supabase Client"]
 - [captura-combinada.service.ts](file://src/app/(authenticated)/captura/services/trt/captura-combinada.service.ts#L58-L87)
 - [pje-expediente-documento.service.ts](file://src/app/(authenticated)/captura/services/pje/pje-expediente-documento.service.ts#L37-L39)
 - [cadastros-pje-repository.ts](file://src/shared/partes/repositories/cadastros-pje-repository.ts#L6)
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L44-L51)
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L178-L185)
 
 **Section sources**
 - [trt-auth.service.ts](file://src/app/(authenticated)/captura/services/trt/trt-auth.service.ts#L8-L10)
 - [captura-combinada.service.ts](file://src/app/(authenticated)/captura/services/trt/captura-combinada.service.ts#L58-L87)
 - [pje-expediente-documento.service.ts](file://src/app/(authenticated)/captura/services/pje/pje-expediente-documento.service.ts#L37-L39)
 - [cadastros-pje-repository.ts](file://src/shared/partes/repositories/cadastros-pje-repository.ts#L6)
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L44-L51)
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L178-L185)
 
 ## Performance Considerations
 - Session reuse across multiple capture domains reduces authentication overhead.
 - Batch operations for acervo insertion and timeline persistence minimize round trips.
 - Configurable delays between requests and recapture thresholds prevent API saturation.
 - Anti-detection measures reduce timeouts and retries caused by automation detection.
-
-[No sources needed since this section provides general guidance]
+- Enhanced credential sorting reduces user interaction time for credential selection.
+- Simplified dialog interface reduces component complexity and improves rendering performance.
 
 ## Troubleshooting Guide
 Common issues and remedies:
@@ -409,6 +520,11 @@ Common issues and remedies:
   - Validate PDF type, handle base64 conversion errors, and confirm storage upload success.
 - Party capture errors:
   - Check process-to-acervo mapping and tribunal/grau configuration before persisting parties.
+- Credential selection issues:
+  - Verify that the `validarCamposCaptura` function returns true before attempting capture.
+  - Check that credentials are properly sorted and displayed in the interface.
+- Dialog submission problems:
+  - Ensure the static 'Iniciar' label is properly rendered and accessible.
 
 **Section sources**
 - [trt-auth.service.ts](file://src/app/(authenticated)/captura/services/trt/trt-auth.service.ts#L164-L178)
@@ -416,11 +532,11 @@ Common issues and remedies:
 - [trt-auth.service.ts](file://src/app/(authenticated)/captura/services/trt/trt-auth.service.ts#L439-L450)
 - [pje-expediente-documento.service.ts](file://src/app/(authenticated)/captura/services/pje/pje-expediente-documento.service.ts#L231-L235)
 - [captura-combinada.service.ts](file://src/app/(authenticated)/captura/services/trt/captura-combinada.service.ts#L693-L697)
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L178-L185)
+- [captura-dialog.tsx](file://src/app/(authenticated)/captura/components/captura-dialog.tsx#L116-L119)
 
 ## Conclusion
-The system provides a robust, session-reuse-based capture pipeline for PJE-TRT with strong typing, anti-detection, and resilient retry logic. It supports combined capture across audiências, expedientes, and enriched timeline+partes, with dedicated document capture for pending manifestação and entity-to-PJE ID mapping via repositories.
-
-[No sources needed since this section summarizes without analyzing specific files]
+The system provides a robust, session-reuse-based capture pipeline for PJE-TRT with strong typing, anti-detection, and resilient retry logic. It supports combined capture across audiências, expedientes, and enriched timeline+partes, with dedicated document capture for pending manifestação and entity-to-PJE ID mapping via repositories. Recent UI enhancements simplify the user interface while improving credential management and validation processes.
 
 ## Appendices
 
@@ -434,5 +550,10 @@ The system provides a robust, session-reuse-based capture pipeline for PJE-TRT w
 
 - Troubleshooting integration issues:
   - Review OTP handling, SSO exit timing, and cookie presence; validate document type and storage upload; confirm tribunal/grau and mapping IDs before persisting parties.
+  - Verify credential validation using the `validarCamposCaptura` function.
+  - Check that credentials are properly sorted and displayed in the enhanced interface.
 
-[No sources needed since this section provides general guidance]
+- UI Component Usage:
+  - The simplified dialog interface provides consistent 'Iniciar' button labeling across all capture types.
+  - Enhanced credential selection interface automatically sorts credentials by tribunal and degree.
+  - Streamlined validation ensures consistent form validation across all capture components.

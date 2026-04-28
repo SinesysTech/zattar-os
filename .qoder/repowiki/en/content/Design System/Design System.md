@@ -53,15 +53,19 @@
 - [urgency-helpers.ts](file://src/app/(authenticated)/expedientes/components/urgency-helpers.ts)
 - [constants.ts](file://src/app/(authenticated)/processos/components/timeline/constants.ts)
 - [view-toggle.tsx](file://src/components/dashboard/view-toggle.tsx)
+- [captura-raw-logs.tsx](file://src/app/(authenticated)/captura/components/captura-raw-logs.tsx)
+- [page.tsx](file://src/app/(authenticated)/captura/historico/[id]/page.tsx)
+- [glass-panel.tsx](file://src/components/shared/glass-panel.tsx)
+- [ambient-backdrop.tsx](file://src/components/shared/ambient-backdrop.tsx)
 </cite>
 
 ## Update Summary
 **Changes Made**
-- Enhanced standardized text-muted-foreground color palette integration across typography system
-- Improved component styling consistency through unified design token usage
-- Strengthened color token governance with standardized semantic color mappings
-- Enhanced accessibility compliance with consistent text color usage patterns
-- Expanded design system enforcement through comprehensive CSS utility validation
+- Enhanced atmospheric glow effects with reduced opacity values for improved visual subtlety
+- Refined completion indicator styling with more subtle background colors for better visual hierarchy
+- Improved mobile responsiveness with adjusted max-height values for better content display
+- Enhanced glass panel system with optimized blur effects and transparency levels
+- Refined ambient backdrop system with improved opacity calculations and blur intensity controls
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -81,7 +85,7 @@
 15. [Unified Font Families and Typography System](#unified-font-families-and-typography-system)
 16. [Theme Presets and Customization System](#theme-presets-and-customization-system)
 17. [Design System Playground](#design-system-playground)
-18. [Page-Specific Implementation Examples](#page-specified-implementation-examples)
+18. [Page-Specific Implementation Examples](#page-specific-implementation-examples)
 19. [Quality Assurance and Migration Tracking](#quality-assurance-and-migration-tracking)
 20. [Integration and Maintenance](#integration-and-maintenance)
 21. [Conclusion](#conclusion)
@@ -96,6 +100,8 @@ The ZattarOS Design System represents a comprehensive visual and interaction fra
 **Updated** Recent enhancements include the refactoring of the combobox component from Base UI to a custom native HTML implementation, providing better performance and more predictable behavior. The progress indicator component has been enhanced with new styling props for advanced customization, and the inline combobox integration with @ariakit/react enables rich text editing capabilities with intelligent suggestion functionality.
 
 **Updated** The most significant enhancement is the standardized integration of the text-muted-foreground color palette across the entire design system, ensuring consistent typography hierarchy and improved component styling consistency. This change establishes a unified approach to secondary text styling that enhances readability and maintains accessibility compliance across all components and modules.
+
+**Updated** The Captura module components have received styling refinements with reduced opacity values for atmospheric glow effects, more subtle background colors for completion indicators, and improved mobile responsiveness with adjusted max-height values. These refinements enhance the visual hierarchy and user experience while maintaining design system consistency.
 
 This architecture ensures consistency across the legal management platform while allowing for module-specific adaptations through a well-defined override mechanism and modernized component development practices.
 
@@ -1457,7 +1463,28 @@ The module demonstrates modern responsive utility usage:
 
 ### Captura Module Implementation
 
-The captura module demonstrates design system adoption with specialized documentation and clear governance patterns, now enhanced with modern responsive utilities.
+**Updated** The captura module demonstrates design system adoption with specialized documentation and clear governance patterns, now enhanced with refined styling for atmospheric glow effects, completion indicators, and mobile responsiveness.
+
+**Atmospheric Glow Effects**
+The CapturaDetalhesPage component features enhanced atmospheric glow effects with reduced opacity values:
+- **Primary Glow**: `bg-primary/4` with `blur-3xl` for subtle primary color ambiance
+- **Secondary Glow**: `bg-info/3` with `blur-3xl` for complementary information highlighting
+- **Opacity Balance**: Carefully tuned opacity levels (4% and 3%) for visual subtlety
+- **Performance Optimization**: Efficient blur effects without impacting rendering performance
+
+**Completion Indicator Styling**
+The completion indicator now uses more subtle background colors:
+- **Success State**: `border-success/20 bg-success/4` for gentle success indication
+- **Failure State**: `border-destructive/20 bg-destructive/4` for mild failure indication
+- **Visual Hierarchy**: Reduced visual intensity compared to previous implementations
+- **Accessibility Compliance**: Maintained contrast ratios for color-coded states
+
+**Mobile Responsiveness Enhancements**
+The CapturaRawLogs component features improved mobile responsiveness:
+- **Max-Height Optimization**: `max-h-125` for optimal content display on mobile devices
+- **Overflow Management**: `overflow-auto` for scrollable content in constrained spaces
+- **Responsive Typography**: `text-xs` for compact mobile text rendering
+- **Performance Considerations**: Efficient scrolling with virtualization for large datasets
 
 **Dashboard Layout Migration and Governance**
 The captura module shows systematic migration from raw Tailwind classes with clear governance:
@@ -1473,6 +1500,51 @@ The captura module shows systematic migration from raw Tailwind classes with cle
 - **Migration Tracking**: Clear documentation of migration progress
 - **Quality Assurance**: Validation of design system compliance
 - **Responsive Typography**: Testing across different screen sizes and breakpoints
+
+**Enhanced Glass Panel System**
+**Updated** The glass panel system has been optimized for better visual performance:
+- **Blur Intensity**: Reduced blur intensity for improved performance
+- **Transparency Levels**: Carefully balanced transparency for visual appeal
+- **Depth Variations**: Consistent depth levels across different components
+- **Performance Monitoring**: Efficient rendering without impacting user experience
+
+**Ambient Backdrop System**
+**Updated** The ambient backdrop system features improved opacity calculations:
+- **Blob Opacity**: `opacity: opacity * 0.2` and `opacity: opacity * 0.1` for layered effects
+- **Blur Intensity Controls**: Configurable blur intensity with mathematical opacity calculations
+- **Grid Overlay**: Optional grid overlay with configurable opacity (0.03)
+- **Gradient Base**: Smooth gradient base with configurable tint variations
+
+**Typography Migration Examples**
+```typescript
+// Heading migration examples
+// Before: <h1 className="text-2xl font-bold">KPIs</h1>
+// After: <Heading level="widget">KPIs</Heading>
+
+// Text migration examples
+// Before: <p className="text-xs uppercase">Status</p>
+// After: <Text variant="meta-label">Status</Text>
+
+// Caption migration examples
+// Before: <p className="text-sm text-muted-foreground">Detalhes</p>
+// After: <Text variant="caption" as="p">Detalhes</Text>
+```
+
+**Responsive Migration Examples**
+```typescript
+// Before: hidden lg:block
+// After: {useIsMobile() ? null : <DesktopFeature />}
+
+// Before: space-y-4
+// After: {useIsMobile() ? 'space-y-2' : 'space-y-4'}
+```
+
+**Governance and Compliance**
+- **Audit Results**: Comprehensive compliance reporting with automated scanning
+- **Override Validation**: Verification that page-specific rules are properly implemented
+- **Migration Tracking**: Quantifiable progress in design system adoption
+- **Quality Assurance**: Multi-layered validation of implementation quality
+- **Responsive Validation**: Ensuring modern breakpoint patterns are properly implemented
 
 ### Expedientes Module Implementation
 
@@ -1805,6 +1877,20 @@ The design system includes comprehensive quality assurance processes to ensure c
 - **Component Styling Improvement**: Evidence of enhanced component styling consistency
 - **Accessibility Compliance**: Validation of WCAG AAA color contrast ratios
 
+**Enhanced Glass Panel Metrics**
+**Updated** The system now tracks metrics for the enhanced glass panel system:
+- **Glass Effect Adoption**: Tracking of reduced opacity and blur intensity usage
+- **Performance Metrics**: Monitoring glass panel rendering performance
+- **Visual Hierarchy**: Measuring improved visual depth and clarity
+- **Accessibility Compliance**: Ensuring glass panels meet contrast requirements
+
+**Ambient Backdrop Metrics**
+**Updated** The system now tracks metrics for the enhanced ambient backdrop system:
+- **Opacity Calculation Adoption**: Tracking of mathematical opacity calculation usage
+- **Blur Intensity Control**: Measuring configurable blur intensity implementation
+- **Performance Optimization**: Monitoring ambient backdrop rendering performance
+- **Visual Consistency**: Ensuring consistent atmospheric effects across components
+
 ## Integration and Maintenance
 
 The design system architecture supports scalable maintenance and evolution through centralized governance, modern responsive utilities, and comprehensive component refactoring.
@@ -1919,6 +2005,22 @@ The design system architecture supports scalable maintenance and evolution throu
 - **Accessibility Compliance**: Regular validation of WCAG AAA color contrast ratios
 - **Performance Optimization**: Monitoring typography rendering performance
 
+**Enhanced Glass Panel Maintenance and Governance**
+**Updated** The system now includes maintenance processes for the enhanced glass panel system:
+- **Glass Effect Analytics**: Tracking reduced opacity and blur intensity usage
+- **Performance Monitoring**: Monitoring glass panel rendering performance
+- **Visual Hierarchy Validation**: Ensuring improved visual depth and clarity
+- **Accessibility Compliance**: Regular validation of glass panel contrast requirements
+- **Developer Education**: Training on enhanced glass panel usage and best practices
+
+**Ambient Backdrop Maintenance and Governance**
+**Updated** The system now includes maintenance processes for the enhanced ambient backdrop system:
+- **Opacity Calculation Analytics**: Tracking mathematical opacity calculation usage
+- **Blur Intensity Control**: Monitoring configurable blur intensity implementation
+- **Performance Optimization**: Ensuring efficient ambient backdrop rendering
+- **Visual Consistency Validation**: Ensuring consistent atmospheric effects across components
+- **Developer Education**: Training on enhanced ambient backdrop usage and best practices
+
 ## Conclusion
 
 The ZattarOS Design System represents a comprehensive approach to design system governance that balances centralized authority with module-specific flexibility. Through the implementation of MASTER.md as the central authority, systematic page-specific override mechanisms, and design-system-escape comments, the system provides a robust foundation for maintaining design integrity while accommodating the unique requirements of different application modules.
@@ -1934,6 +2036,8 @@ The ZattarOS Design System represents a comprehensive approach to design system 
 **Updated** The comprehensive design system improvements ensure that the ZattarOS platform remains at the forefront of legal technology design, providing both developers and users with a consistent, accessible, and visually appealing interface that supports the complex needs of legal case management.
 
 **Updated** The standardized text-muted-foreground color palette integration represents a significant advancement in component styling consistency. This enhancement ensures that secondary text elements maintain consistent visual hierarchy and accessibility compliance across all components and modules, improving the overall user experience and reducing design debt.
+
+**Updated** The Captura module components have received styling refinements with reduced opacity values for atmospheric glow effects, more subtle background colors for completion indicators, and improved mobile responsiveness with adjusted max-height values. These refinements enhance the visual hierarchy and user experience while maintaining design system consistency.
 
 The hierarchical architecture ensures that all modules follow consistent design principles while allowing for targeted adaptations through documented overrides. The comprehensive audit and validation processes guarantee high-quality implementations across all modules, while the playground environment facilitates testing and validation of design system implementations.
 
@@ -1954,5 +2058,9 @@ The enhanced badge component with 5 new semantic status variants (success, warni
 **Updated** The refactored combobox components with native HTML implementation, server-side search capabilities, and inline editor integration represent significant improvements in component functionality and user experience. The enhanced progress indicator with advanced styling props provides developers with greater flexibility in creating progress visualization components.
 
 **Updated** The standardized text-muted-foreground color palette integration represents a major advancement in component styling consistency, ensuring that secondary text elements maintain consistent visual hierarchy and accessibility compliance across all components and modules.
+
+**Updated** The enhanced glass panel system with optimized blur effects and reduced opacity values provides improved visual performance while maintaining the atmospheric depth that enhances the user experience.
+
+**Updated** The ambient backdrop system with mathematical opacity calculations and configurable blur intensity offers developers precise control over visual effects while maintaining performance standards.
 
 The comprehensive design system improvements ensure that the ZattarOS platform remains at the forefront of legal technology design, providing both developers and users with a consistent, accessible, and visually appealing interface that supports the complex needs of legal case management.
