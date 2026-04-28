@@ -182,6 +182,14 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
                 value={data.persistencia.atualizados}
                 variant="info"
               />
+              {data.persistencia.conflitos !== undefined && data.persistencia.conflitos > 0 && (
+                <StatCard
+                  icon={<XCircle className="h-4 w-4" />}
+                  label="Conflitos OCC"
+                  value={data.persistencia.conflitos}
+                  variant="warning"
+                />
+              )}
               {data.persistencia.erros > 0 && (
                 <StatCard
                   icon={<XCircle className="h-4 w-4" />}

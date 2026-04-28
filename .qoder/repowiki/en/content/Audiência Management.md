@@ -45,13 +45,11 @@
 
 ## Update Summary
 **Changes Made**
-- Enhanced dialog components with proper semantic UI patterns (DialogHeader, DialogFooter, DialogDescription)
-- Added accessibility improvements with sr-only descriptions and proper ARIA attributes
-- Standardized dialog patterns across audiência management dialogs
-- Implemented consistent typography system with new variant classes (text-card-title, text-mono-num)
-- Improved dialog header structure with proper semantic markup and accessibility
-- Enhanced dialog footer patterns with standardized button layouts
-- Added comprehensive dialog section components for structured content organization
+- Removed documentation references to mock/testing infrastructure components (audiencias-mission-view.tsx, audiencias-mock-client.tsx, audiencias-mock-page.tsx)
+- Clarified that production implementation uses current components: audiencias-glass-list.tsx, audiencias-missao-content.tsx, audiencias-semana-view.tsx
+- Updated project structure diagrams to reflect removal of mock/testing components
+- Removed mock component references from component analysis sections
+- Updated troubleshooting guide to exclude mock component scenarios
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -76,21 +74,21 @@ The Audiência Management system is a comprehensive court hearing scheduling pla
 
 The platform manages the complete lifecycle of court hearings, from initial scheduling through completion, while maintaining strict legal compliance requirements. It integrates advanced features including automated audiência data capture, intelligent resource allocation, and sophisticated participant management systems.
 
-**Updated** Enhanced with comprehensive design system compliance featuring new typography variant classes (text-card-title, text-mono-num), improved semantic structure with proper heading components, new badge systems for case flags, virtual room detection system, and observation system improvements. The audiências-glass-list.tsx, audiencias-missao-content.tsx, audiencias-semana-view.tsx, audiencia-detail-dialog.tsx, nova-audiencia-dialog.tsx, and audiencias-dia-dialog.tsx components now use the enhanced design system with consistent typography and semantic markup. Additionally, the Tabs component now includes a specialized "week" variant for enhanced day-picker interfaces with improved trigger styling and visual feedback.
+**Updated** The system has been streamlined to remove mock/testing infrastructure components that were part of the development workflow. The production implementation continues to use the proven components: audiencias-glass-list.tsx, audiencias-missao-content.tsx, and audiencias-semana-view.tsx, which have been enhanced with comprehensive design system compliance, improved typography, and enhanced accessibility features.
 
 ## Project Structure
 
-The Audiência Management system follows a modular Next.js architecture with clear separation of concerns across multiple layers:
+The Audiência Management system follows a modular Next.js architecture with clear separation of concerns across multiple layers. Mock/testing infrastructure components have been removed, leaving only production-ready components:
 
 ```mermaid
 graph TB
-subgraph "Frontend Layer"
+subgraph "Production Frontend Layer"
 UI[User Interface Components]
 Forms[Audiência Forms]
 Dialogs[Detail Dialogs]
 Calendar[Calendar Integration]
 KPI[KPI Components]
-Views[View Components]
+Views[Production View Components]
 FilterBar[AudienciasFilterBar]
 ListFilters[AudienciasListFilters]
 ToolbarFilters[AudienciasToolbarFilters]
@@ -493,11 +491,11 @@ WeekDaysCarousel --> TypographySystem : "uses"
 
 ## Architecture Overview
 
-The Audiência Management system implements a layered architecture with clear separation between presentation, business logic, and data access layers:
+The Audiência Management system implements a layered architecture with clear separation between presentation, business logic, and data access layers. Mock/testing infrastructure has been removed, leaving only production components:
 
 ```mermaid
 graph TD
-subgraph "Presentation Layer"
+subgraph "Production Presentation Layer"
 A1[Next.js App Router]
 A2[Client Components]
 A3[Server Actions]
@@ -1890,7 +1888,9 @@ The system implements several performance optimization strategies:
 
 The Audiência Management system represents a comprehensive solution for court hearing scheduling and management within the Brazilian judicial system. The system successfully combines modern web technologies with legal compliance requirements to provide an intuitive, efficient, and reliable platform for legal professionals.
 
-**Updated** Key enhancements include comprehensive design system compliance with new typography variant classes (text-card-title, text-mono-num), improved semantic structure with proper heading components, new badge systems for case flags, virtual room detection system, observation system improvements, enhanced day picker interfaces with a specialized "week" variant for the Tabs component, and comprehensive dialog component architecture with proper semantic UI patterns. The audiências-glass-list.tsx, audiencias-missao-content.tsx, audiencias-semana-view.tsx, tabs.tsx, week-navigator.tsx, week-days-carousel.tsx, audiencia-detail-dialog.tsx, nova-audiencia-dialog.tsx, audiencias-dia-dialog.tsx, and dialog-section.tsx components now use the enhanced design system with consistent typography, semantic markup, and improved trigger styling throughout.
+**Updated** Key enhancements include comprehensive design system compliance with new typography variant classes (text-card-title, text-mono-num), improved semantic structure with proper heading components, new badge systems for case flags, virtual room detection system, observation system improvements, enhanced day picker interfaces with a specialized "week" variant for the Tabs component, and comprehensive dialog component architecture with proper semantic UI patterns. The production components audiências-glass-list.tsx, audiencias-missao-content.tsx, audiencias-semana-view.tsx, tabs.tsx, week-navigator.tsx, week-days-carousel.tsx, audiencia-detail-dialog.tsx, nova-audiencia-dialog.tsx, audiencias-dia-dialog.tsx, and dialog-section.tsx now use the enhanced design system with consistent typography, semantic markup, and improved trigger styling throughout.
+
+The system has been streamlined to remove mock/testing infrastructure components that were part of the development workflow. The production implementation continues to use proven components that have been enhanced with comprehensive design system compliance, improved typography, and enhanced accessibility features. This ensures maintainability and reliability for long-term operation.
 
 Key strengths of the system include:
 
@@ -1902,7 +1902,6 @@ Key strengths of the system include:
 - **Mission Control Patterns**: Specialized interface patterns treating audiências as missions with real-time tracking
 - **Advanced Filtering System**: Enhanced filtering capabilities with GrauTribunal and TipoAudiencia support
 - **Performance Optimization**: Carefully designed architecture supporting scalability and efficient data access
-- **New Component Integration**: Streamlined navigation from capture operations to audiência management with consistent count display
 - **Database Infrastructure Improvements**: Enhanced tracking capabilities with ultima_captura_id column for improved data lineage
 - **Critical Bug Fixes**: Field mapping corrections ensure accurate legal party representation and data integrity
 - **Enhanced Typography System**: New variant classes (text-card-title, text-mono-num) provide consistent typography across components
@@ -1916,8 +1915,6 @@ Key strengths of the system include:
 - **Dialog Form Shell Integration**: Consistent dialog patterns across all audiência management interfaces
 
 The system provides a solid foundation for managing court hearings while maintaining the highest standards of legal accuracy, design system compliance, and user experience. Its modular architecture ensures maintainability and extensibility for future enhancements and regulatory changes. The addition of mission control patterns, enhanced filtering capabilities, comprehensive design system documentation, critical field mapping bug fixes, new typography variant classes, enhanced day picker interfaces, comprehensive dialog architecture, and improved accessibility establishes the audiências module as a model for other legal process management interfaces within the ZattarOS ecosystem.
-
-The new CountBadge component ensures consistent numeric display across all audiência interfaces, while the enhanced filtering system with GrauTribunal and TipoAudiencia support provides more precise audiência discovery and management capabilities. The improved database infrastructure with ultima_captura_id tracking enables better auditability and capture operation traceability, making the system more robust and maintainable for long-term operation. The critical field mapping bug fixes ensure that legal party names are correctly represented throughout the system, maintaining data integrity and legal compliance standards.
 
 The enhanced typography system with new variant classes (text-card-title, text-mono-num) provides consistent visual hierarchy and improved readability across all audiência components. The improved badge systems with proper case flag management and virtual room detection system enhance the overall user experience and provide better visual cues for audiência status and location. The observation system improvements with structured editing capabilities ensure that audiência notes are properly managed and accessible to authorized users.
 

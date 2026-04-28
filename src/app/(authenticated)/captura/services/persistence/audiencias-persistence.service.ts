@@ -415,13 +415,13 @@ export async function salvarAudiencias(
         url_ata_audiencia: atas?.[audiencia.id]?.url ?? null,
       };
 
-      // Buscar registro existente
-      const registroExistente = await buscarAudienciaExistente(
-        audiencia.id,
-        trt,
-        grau,
-        numeroProcesso
-      );
+      // Lookup no cache batch; fallback para query individual se cache vazio
+      const cacheKey = `${audiencia.id}::${numeroProcesso}`;
+      const registroExistente = existentesMap.has(cacheKey)
+        ? existentesMap.get(cacheKey)!
+        : existentesMap.size === 0
+          ? await buscarAudienciaExistente(audiencia.id, trt, grau, numeroProcesso)
+          : null;
 
       if (!registroExistente) {
         // Se processo_id é null, não podemos inserir (violaria constraint NOT NULL)
@@ -511,7 +511,12 @@ export async function salvarAudiencias(
             registroExistente as Record<string, unknown>
           );
 
-          const { error } = await supabase
+          // OCC: ancorar o UPDATE no updated_at do SELECT. Se outro scraper
+          // atualizou a linha entre nosso SELECT e este UPDATE, o filtro não
+          // casará, data virá vazio e tratamos como conflito (sem persistir).
+          const updatedAtEsperado = registroExistente.updated_at as string | null;
+
+          const { data: linhasAtualizadas, error } = await supabase
             .from("audiencias")
             .update({
               ...dadosParaAtualizar,
@@ -521,10 +526,24 @@ export async function salvarAudiencias(
             .eq("id_pje", audiencia.id)
             .eq("trt", trt)
             .eq("grau", grau)
-            .eq("numero_processo", numeroProcesso);
+            .eq("numero_processo", numeroProcesso)
+            .eq("updated_at", updatedAtEsperado)
+            .select("id");
 
           if (error) {
             throw error;
+          }
+
+          if (!linhasAtualizadas || linhasAtualizadas.length === 0) {
+            conflitos++;
+            captureLogService.logConflito(
+              entidade,
+              audiencia.id,
+              trt,
+              grau,
+              numeroProcesso,
+            );
+            continue;
           }
 
           atualizados++;
@@ -557,6 +576,7 @@ export async function salvarAudiencias(
     atualizados,
     naoAtualizados,
     pulados,
+    conflitos,
     erros,
     total: audiencias.length,
     orgaosJulgadoresCriados,
