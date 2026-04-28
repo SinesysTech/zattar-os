@@ -15,7 +15,8 @@ import {
   DataTable,
   DataTableToolbar,
 } from "@/components/shared/data-shell";
-import { generateAvatarFallback, cn } from '@/lib/utils';
+import { cn } from '@/lib/utils';
+import { generateAvatarFallback } from '@/lib/avatar-url';
 import { TaskStatusBadge } from "../shared/project-status-badge";
 import { PriorityIndicator } from "../shared/priority-indicator";
 import type { Tarefa } from "../../domain";

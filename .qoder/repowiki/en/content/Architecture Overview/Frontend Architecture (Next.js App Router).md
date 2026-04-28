@@ -26,15 +26,20 @@
 - [src/app/(authenticated)/audiencias/service.ts](file://src/app/(authenticated)/audiencias/service.ts)
 - [src/app/(authenticated)/audiencias/repository.ts](file://src/app/(authenticated)/audiencias/repository.ts)
 - [src/app/(authenticated)/audiencias/components/audiencias-filter-bar.tsx](file://src/app/(authenticated)/audiencias/components/audiencias-filter-bar.tsx)
+- [src/components/ui/dialog.tsx](file://src/components/ui/dialog.tsx)
+- [src/components/ui/drawer.tsx](file://src/components/ui/drawer.tsx)
+- [src/components/shared/dialog-shell/dialog-nav-buttons.tsx](file://src/components/shared/dialog-shell/dialog-nav-buttons.tsx)
+- [src/components/shared/dialog-shell/dialog-section.tsx](file://src/components/shared/dialog-shell/dialog-section.tsx)
+- [src/components/shared/dialog-shell/index.ts](file://src/components/shared/dialog-shell/index.ts)
+- [src/app/globals.css](file://src/app/globals.css)
 </cite>
 
 ## Update Summary
 **Changes Made**
-- Enhanced audiências client component documentation to reflect improved server-side filtering and hybrid filtering approach
-- Updated data fetching architecture to show server-side filtering for JOIN fields and client-side filtering for status
-- Added detailed explanation of debounced search implementation and parameter normalization
-- Updated performance considerations to include disk I/O optimization and column selection strategies
-- Enhanced troubleshooting guidance for filtering performance issues
+- Removed documentation for specialized dialog shell components (DialogFormShell, DialogDetailShell) and ResponsiveDialog component
+- Updated dialog system documentation to reflect architectural simplification toward native Dialog and Drawer components
+- Revised component composition patterns to emphasize DialogSection and DialogNavButtons as consolidated dialog utilities
+- Updated troubleshooting guidance to reflect simplified dialog architecture
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -360,12 +365,77 @@ PctCalc --> KpiData
 - [src/app/(authenticated)/dashboard/widgets/primitives.tsx:365-402](file://src/app/(authenticated)/dashboard/widgets/primitives.tsx#L365-L402)
 - [src/app/(authenticated)/captura/captura-client.tsx:93-100](file://src/app/(authenticated)/captura/captura-client.tsx#L93-L100)
 
+### Simplified Dialog System Architecture
+
+**Updated** The dialog system has undergone architectural simplification, consolidating specialized components into a streamlined approach using native Dialog and Drawer components with focused utility components.
+
+#### Native Dialog and Drawer Components
+The system now relies on two primary components:
+- **Dialog**: Desktop-first modal dialog with overlay, content area, and structured sections
+- **Drawer**: Mobile-first bottom sheet drawer with backdrop and directional positioning
+
+#### Consolidated Dialog Utilities
+Utility components provide focused functionality:
+- **DialogSection**: Structured content blocks with tone variants and step badges
+- **DialogNavButtons**: Navigation controls for multi-step workflows
+- **ResponsiveDialog**: Automatic desktop/mobile adaptation (deprecated - replaced by native components)
+
+#### Component Composition Pattern
+```mermaid
+graph TB
+subgraph "Dialog System"
+Dialog["Dialog (Desktop)"]
+Drawer["Drawer (Mobile)"]
+DialogSection["DialogSection"]
+DialogNavButtons["DialogNavButtons"]
+end
+subgraph "Usage Patterns"
+FormDialog["Form Dialogs"]
+DetailDialog["Detail Panels"]
+WizardDialog["Multi-step Wizards"]
+end
+Dialog --> DialogSection
+Dialog --> DialogNavButtons
+Drawer --> DialogSection
+FormDialog --> Dialog
+DetailDialog --> Dialog
+WizardDialog --> Dialog
+```
+
+**Diagram sources**
+- [src/components/ui/dialog.tsx:10-168](file://src/components/ui/dialog.tsx#L10-L168)
+- [src/components/ui/drawer.tsx:8-135](file://src/components/ui/drawer.tsx#L8-L135)
+- [src/components/shared/dialog-shell/dialog-section.tsx:67-135](file://src/components/shared/dialog-shell/dialog-section.tsx#L67-L135)
+- [src/components/shared/dialog-shell/dialog-nav-buttons.tsx:43-93](file://src/components/shared/dialog-shell/dialog-nav-buttons.tsx#L43-L93)
+
+#### Key Benefits of Simplification
+- **Reduced Complexity**: Fewer specialized components to maintain
+- **Better Performance**: Direct use of Radix UI primitives eliminates abstraction overhead
+- **Improved Accessibility**: Native components provide better screen reader support
+- **Enhanced Customization**: Direct access to underlying primitives for edge cases
+- **Streamlined Testing**: Fewer components mean simpler test coverage
+
+#### Implementation Guidelines
+- **Desktop**: Use Dialog for centered modals with structured sections
+- **Mobile**: Use Drawer for bottom sheets with appropriate sizing
+- **Multi-step**: Combine DialogSection with DialogNavButtons for wizard flows
+- **Detail Panels**: Use Dialog for comprehensive detail views (no Sheet usage)
+- **Forms**: Structure content with DialogSection for consistent spacing and typography
+
+**Section sources**
+- [src/components/ui/dialog.tsx:10-168](file://src/components/ui/dialog.tsx#L10-L168)
+- [src/components/ui/drawer.tsx:8-135](file://src/components/ui/drawer.tsx#L8-L135)
+- [src/components/shared/dialog-shell/dialog-section.tsx:67-135](file://src/components/shared/dialog-shell/dialog-section.tsx#L67-L135)
+- [src/components/shared/dialog-shell/dialog-nav-buttons.tsx:43-93](file://src/components/shared/dialog-shell/dialog-nav-buttons.tsx#L43-L93)
+- [src/app/globals.css:1134-1156](file://src/app/globals.css#L1134-L1156)
+
 ### Shared Components and Consistency
 - Theme provider and toasts are initialized in the client wrapper for consistent UX
 - Command menu and active theme provider enable quick actions and theme switching
 - Server action version guard helps maintain compatibility across deployments
 - Auth layout provides a consistent branded experience for login pages
 - **Updated** GlassPanel component provides consistent glass effect across all dashboard components
+- **Updated** Dialog utilities offer focused functionality without specialized shell components
 
 **Section sources**
 - [src/app/layout-client.tsx:24-42](file://src/app/layout-client.tsx#L24-L42)
@@ -420,6 +490,7 @@ Fallback --> UpdateMsg["Listen for CLEAR_CACHE / SKIP_WAITING"]
 - PWA relies on manifest and service worker for offline and installability
 - **Updated** Audiências components depend on unified hook, domain types, and repository layer
 - **Updated** Capture dashboard components depend on GlassPanel and AnimatedNumber primitives
+- **Updated** Dialog system depends on native Dialog/Drawer components and consolidated utilities
 
 ```mermaid
 graph TB
@@ -436,6 +507,10 @@ UnifiedHook --> Service["Service Layer"]
 Service --> Repository["Repository"]
 CapturaKpi["CapturaKpiStrip"] --> GlassPanel["GlassPanel"]
 CapturaKpi --> AnimatedNumber["AnimatedNumber"]
+DialogSystem["Dialog System"] --> Dialog["Dialog (Desktop)"]
+DialogSystem --> Drawer["Drawer (Mobile)"]
+DialogSystem --> DialogSection["DialogSection"]
+DialogSystem --> DialogNavButtons["DialogNavButtons"]
 ```
 
 **Diagram sources**
@@ -453,6 +528,10 @@ CapturaKpi --> AnimatedNumber["AnimatedNumber"]
 - [src/app/(authenticated)/captura/components/captura-kpi-strip.tsx:6-8](file://src/app/(authenticated)/captura/components/captura-kpi-strip.tsx#L6-L8)
 - [src/components/shared/glass-panel.tsx:19](file://src/components/shared/glass-panel.tsx#L19)
 - [src/app/(authenticated)/dashboard/widgets/primitives.tsx:365](file://src/app/(authenticated)/dashboard/widgets/primitives.tsx#L365)
+- [src/components/ui/dialog.tsx:10](file://src/components/ui/dialog.tsx#L10)
+- [src/components/ui/drawer.tsx:8](file://src/components/ui/drawer.tsx#L8)
+- [src/components/shared/dialog-shell/dialog-section.tsx:67](file://src/components/shared/dialog-shell/dialog-section.tsx#L67)
+- [src/components/shared/dialog-shell/dialog-nav-buttons.tsx:43](file://src/components/shared/dialog-shell/dialog-nav-buttons.tsx#L43)
 
 **Section sources**
 - [next.config.ts:79-434](file://next.config.ts#L79-L434)
@@ -469,6 +548,10 @@ CapturaKpi --> AnimatedNumber["AnimatedNumber"]
 - [src/app/(authenticated)/captura/components/captura-kpi-strip.tsx:6-8](file://src/app/(authenticated)/captura/components/captura-kpi-strip.tsx#L6-L8)
 - [src/components/shared/glass-panel.tsx:19](file://src/components/shared/glass-panel.tsx#L19)
 - [src/app/(authenticated)/dashboard/widgets/primitives.tsx:365](file://src/app/(authenticated)/dashboard/widgets/primitives.tsx#L365)
+- [src/components/ui/dialog.tsx:10](file://src/components/ui/dialog.tsx#L10)
+- [src/components/ui/drawer.tsx:8](file://src/components/ui/drawer.tsx#L8)
+- [src/components/shared/dialog-shell/dialog-section.tsx:67](file://src/components/shared/dialog-shell/dialog-section.tsx#L67)
+- [src/components/shared/dialog-shell/dialog-nav-buttons.tsx:43](file://src/components/shared/dialog-shell/dialog-nav-buttons.tsx#L43)
 
 ## Performance Considerations
 - Image optimization: AVIF and WebP formats with remote patterns for Unsplash and Strapi
@@ -479,6 +562,7 @@ CapturaKpi --> AnimatedNumber["AnimatedNumber"]
 - **Updated** Audiências performance: Hybrid filtering reduces data transfer by up to 70%, debounced search prevents API spam, and Redis caching improves response times
 - **Updated** Component performance: GlassPanel and AnimatedNumber components are optimized for smooth animations and efficient rendering
 - **Updated** Database optimization: Column selection reduces disk I/O by 35%, and optimized queries prevent N+1 problems
+- **Updated** Dialog system performance: Native components eliminate abstraction overhead and improve accessibility
 
 **Section sources**
 - [next.config.ts:294-313](file://next.config.ts#L294-L313)
@@ -499,6 +583,8 @@ CapturaKpi --> AnimatedNumber["AnimatedNumber"]
 - **Updated** Search performance problems: check debounced search timing and parameter normalization
 - **Updated** KPI component issues: verify GlassPanel depth values and AnimatedNumber props are correctly configured
 - **Updated** Responsive layout problems: check grid column classes and media query breakpoints
+- **Updated** Dialog system issues: verify Dialog and Drawer components are used appropriately for desktop/mobile contexts
+- **Updated** Dialog utility conflicts: ensure DialogSection and DialogNavButtons are used consistently without specialized shell components
 
 **Section sources**
 - [src/middleware/security-headers.ts:285-302](file://src/middleware/security-headers.ts#L285-L302)
@@ -508,6 +594,10 @@ CapturaKpi --> AnimatedNumber["AnimatedNumber"]
 - [src/app/(authenticated)/audiencias/audiencias-client.tsx:158-204](file://src/app/(authenticated)/audiencias/audiencias-client.tsx#L158-L204)
 - [src/app/(authenticated)/audiencias/hooks/use-audiencias-unified.ts:106-126](file://src/app/(authenticated)/audiencias/hooks/use-audiencias-unified.ts#L106-L126)
 - [src/app/(authenticated)/captura/components/captura-kpi-strip.tsx:34](file://src/app/(authenticated)/captura/components/captura-kpi-strip.tsx#L34)
+- [src/components/ui/dialog.tsx:10](file://src/components/ui/dialog.tsx#L10)
+- [src/components/ui/drawer.tsx:8](file://src/components/ui/drawer.tsx#L8)
+- [src/components/shared/dialog-shell/dialog-section.tsx:67](file://src/components/shared/dialog-shell/dialog-section.tsx#L67)
+- [src/components/shared/dialog-shell/dialog-nav-buttons.tsx:43](file://src/components/shared/dialog-shell/dialog-nav-buttons.tsx#L43)
 
 ## Conclusion
 The frontend leverages Next.js 16's App Router to organize routes into logical groups, enforce security via middleware, and provide a consistent user experience through shared components and global styling. Supabase Auth is integrated centrally with deduplication and robust error handling. Performance is optimized through image formats, code splitting, and PWA caching strategies, while the manifest and service worker enable progressive enhancement and offline readiness.
@@ -515,3 +605,5 @@ The frontend leverages Next.js 16's App Router to organize routes into logical g
 **Updated** The audiências module demonstrates advanced performance optimization techniques through its hybrid filtering architecture, combining server-side filtering for JOIN fields with client-side filtering for status indicators. This approach significantly improves response times and reduces data transfer while maintaining real-time updates and accurate tab counts. The implementation showcases best practices for balancing performance with user experience in complex data visualization applications.
 
 **Updated** The capture dashboard components demonstrate the evolution toward modern design system patterns, with the new CapturaKpiStrip replacing the legacy PulseStrip approach through the integration of GlassPanel and AnimatedNumber components, providing enhanced visual hierarchy, smooth animations, and responsive layouts that improve both user experience and maintainability.
+
+**Updated** The dialog system architecture reflects a successful simplification effort, consolidating specialized components into a streamlined approach using native Dialog and Drawer components with focused utility functions. This architectural simplification reduces complexity, improves performance, and enhances maintainability while preserving all essential functionality through DialogSection and DialogNavButtons components.

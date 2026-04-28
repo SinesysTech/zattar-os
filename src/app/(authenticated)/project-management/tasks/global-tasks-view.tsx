@@ -10,7 +10,8 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar";
-import { generateAvatarFallback, cn } from '@/lib/utils';
+import { cn } from '@/lib/utils';
+import { generateAvatarFallback } from '@/lib/avatar-url';
 import {
   DataShell,
   DataTable,

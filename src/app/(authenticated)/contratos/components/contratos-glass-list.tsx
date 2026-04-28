@@ -15,7 +15,8 @@ import { useRouter } from 'next/navigation';
 import { FileText, Scale, Eye, Pencil, Trash2, FileSignature, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { cn, generateAvatarFallback } from '@/lib/utils';
+import { cn } from '@/lib/utils';
+import { generateAvatarFallback } from '@/lib/avatar-url';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';

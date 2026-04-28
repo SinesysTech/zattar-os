@@ -5,7 +5,7 @@
 
 import { createServiceClient } from "@/lib/supabase/service-client";
 import { createDbClient } from "@/lib/supabase";
-import { fromCamelToSnake, fromSnakeToCamel } from "@/lib/utils";
+import { fromCamelToSnake, fromSnakeToCamel } from "@/lib/case-transform";
 import type {
   TipoParteProcesso,
   PoloProcessoParte,

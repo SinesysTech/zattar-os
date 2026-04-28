@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { generateAvatarFallback } from "@/lib/utils";
+import { generateAvatarFallback } from "@/lib/avatar-url";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MensagemComUsuario } from "../domain";
 import { ChatBubble } from "./chat-bubbles";

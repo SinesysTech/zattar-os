@@ -10,7 +10,8 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar";
-import { cn, generateAvatarFallback } from "@/lib/utils";
+import { cn } from "@/lib/utils";
+import { generateAvatarFallback } from "@/lib/avatar-url";
 import { PriorityIndicator } from "../shared/priority-indicator";
 import type { Tarefa } from "../../domain";
 

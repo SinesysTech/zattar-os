@@ -1,4 +1,5 @@
-import { cn, generateAvatarFallback } from "@/lib/utils";
+import { cn } from "@/lib/utils";
+import { generateAvatarFallback } from "@/lib/avatar-url";
 import { ChatItem } from "../domain";
 import { Ellipsis } from "lucide-react";
 

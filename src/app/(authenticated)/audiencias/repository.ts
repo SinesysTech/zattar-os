@@ -1,6 +1,6 @@
 import { createDbClient } from '@/lib/supabase';
 import { Result, ok, err, appError, PaginatedResponse } from '@/types';
-import { fromSnakeToCamel, fromCamelToSnake, camelToSnakeKey } from '@/lib/utils';
+import { fromSnakeToCamel, fromCamelToSnake, camelToSnakeKey } from '@/lib/case-transform';
 import {
   Audiencia,
   EnderecoPresencial,

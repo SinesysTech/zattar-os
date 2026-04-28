@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { Check, XIcon } from "lucide-react"; 
+import { Check } from "lucide-react";
 
 
 import { clsx } from "clsx";
@@ -199,8 +199,8 @@ export default function Dialog01() {
 
       <DialogContent className="sm:max-w-sm flex flex-col items-center">
         <div className="flex justify-center">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-            <Check className="h-6 w-6 text-green-600" />
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-success/10">
+            <Check className="h-6 w-6 text-success" />
           </div>
         </div>
 

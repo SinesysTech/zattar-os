@@ -637,7 +637,7 @@ export function AudienciaDetailDialog({
       >
         <DialogDescription className="sr-only">Detalhes da audiência</DialogDescription>
         <div className={cn("flex min-w-0 flex-1 flex-col", isSplitOpen && "border-border/50 md:border-r")}>
-          <header className="shrink-0 border-b border-border/40 px-5 pt-4 pb-3">
+          <header className="shrink-0 border-b border-border/40 px-5 pt-5 pb-3">
             <div className="mb-1 flex items-center justify-between gap-3">
               <DialogTitle className="min-w-0 flex-1 truncate -tracking-[0.01em] text-foreground">
                 {titleNode}

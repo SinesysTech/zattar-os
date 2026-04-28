@@ -151,11 +151,45 @@ export default function VisualizacaoMarkdownStep() {
         estado: dadosPessoais?.endereco_uf || '',
         cep: formatCEP(dadosPessoais?.endereco_cep || ''),
       };
+      // Extrair dados da ação do contrato (excluindo reservados e metadados internos)
+      const ACAO_RESERVED = new Set([
+        'contrato_id', 'cliente_dados', 'parte_contraria_dados',
+        '_trt_id', '_trt_nome', '_segmento_nome', '_formulario_nome',
+      ]);
+      const acaoDados: Record<string, unknown> = {};
+      if (dadosContrato) {
+        for (const [key, value] of Object.entries(dadosContrato)) {
+          if (!ACAO_RESERVED.has(key) && value !== undefined && value !== null) {
+            acaoDados[key] = value;
+          }
+        }
+      }
+
+      // Montar parte_contraria para placeholders {{parte_contraria.*}}
+      // Prioriza parte_contraria_dados (se salvar-acao já rodou), senão usa os campos
+      // normalizados pelo enrichFormData (parte_contraria_nome, parte_contraria_cpf, etc.)
+      const pcDados = Array.isArray(dadosContrato?.parte_contraria_dados) && dadosContrato.parte_contraria_dados.length > 0
+        ? (dadosContrato.parte_contraria_dados as Array<Record<string, unknown>>)[0]
+        : null;
+      const parteContrariaObj = pcDados
+        ? pcDados
+        : dadosContrato
+          ? {
+              nome: dadosContrato.parte_contraria_nome,
+              cpf: dadosContrato.parte_contraria_cpf,
+              cnpj: dadosContrato.parte_contraria_cnpj,
+              tipo_pessoa: dadosContrato.parte_contraria_tipo_pessoa,
+              telefone: dadosContrato.parte_contraria_telefone,
+              email: dadosContrato.parte_contraria_email,
+            }
+          : undefined;
+
       const dadosGeracao: DadosGeracao = {
         template_id: effectiveTemplateId,
         cliente,
         contrato: dadosContrato || {},
-        acao: {}, // Inicializar como objeto vazio para preview
+        acao: acaoDados,
+        parte_contraria: parteContrariaObj,
         assinatura: {
           foto_base64: fotoBase64 || "",
           assinatura_base64: "", // Vazio para preview

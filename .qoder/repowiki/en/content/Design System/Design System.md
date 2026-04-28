@@ -31,15 +31,16 @@
 - [no-raw-typography-spacing.js](file://eslint-rules/no-raw-typography-spacing.js)
 - [heading-node-static.tsx](file://src/components/editor/plate-ui/heading-node-static.tsx)
 - [typography/page.tsx](file://src/app/(ajuda)/ajuda/design-system/typography/page.tsx)
+- [badge.test.tsx](file://src/components/ui/__tests__/badge.test.tsx)
 </cite>
 
 ## Update Summary
 **Changes Made**
-- Updated typography system documentation to reflect the current state of typed Typography components with Heading and Text components
-- Added comprehensive ESLint rules documentation for typography enforcement
-- Updated design system governance with current typography standards and migration guidance
-- Enhanced documentation with current typography component architecture and usage patterns
-- Integrated design system playground documentation with typography examples
+- Enhanced Badge component documentation to reflect 5 new semantic status variants (success, warning, info, neutral, accent)
+- Updated design system improvements documentation with new highlight foreground color variable and color consistency updates
+- Expanded semantic badge system coverage with comprehensive variant documentation
+- Added detailed color token registry information including new highlight foreground variable
+- Updated design system governance with enhanced color consistency standards
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -302,7 +303,7 @@ export function CountBadge({
       {...props}
     >
       {children}
-    </Badge>
+    </Badge
   );
 }
 ```
@@ -346,9 +347,35 @@ The component seamlessly integrates with modern responsive utilities, adapting i
 
 ## Enhanced Semantic Badge System
 
-The semantic badge system provides consistent status communication across the platform through categorized variants with centralized governance. The system has been enhanced with a new CountBadge component for specialized count display functionality.
+The semantic badge system provides consistent status communication across the platform through categorized variants with centralized governance. The system has been enhanced with a new CountBadge component for specialized count display functionality and now includes 5 new semantic status variants.
 
-### Badge Category System and Governance
+### Enhanced Badge Component Architecture
+
+**Updated** The Badge component now supports 9 distinct visual variants:
+- **Base Variants**: default, secondary, destructive, outline, ghost, link
+- **Enhanced Status Variants**: success, warning, info, neutral, accent (new)
+- **Compound Variants**: Enhanced soft tone variants for all status categories
+
+**New Semantic Status Variants**
+The system now includes 5 new semantic status variants that provide enhanced color consistency:
+- **success**: Green color for completion and positive outcomes
+- **warning**: Yellow/orange color for caution and attention states
+- **info**: Blue/purple color for informational and neutral states
+- **neutral**: Gray color for balanced, non-emphasized states
+- **accent**: Action orange color for highlighted or emphasized states
+
+**Enhanced Compound Variants**
+The soft tone variants now include comprehensive coverage:
+```typescript
+// Enhanced soft variants for all status categories
+{ variant: "success", tone: "soft", className: "bg-success/10 text-success dark:bg-success/15 [a]:hover:bg-success/15" },
+{ variant: "warning", tone: "soft", className: "bg-warning/15 text-warning dark:bg-warning/15 [a]:hover:bg-warning/20" },
+{ variant: "info", tone: "soft", className: "bg-info/10 text-info dark:bg-info/15 [a]:hover:bg-info/15" },
+{ variant: "neutral", tone: "soft", className: "bg-muted text-muted-foreground [a]:hover:bg-muted/80" },
+{ variant: "accent", tone: "soft", className: "bg-highlight/10 text-highlight dark:bg-highlight/15 [a]:hover:bg-highlight/15" },
+```
+
+**Badge Category System and Governance**
 
 **Centralized Management**
 The semantic badge system is governed centrally in the variants.ts file:
@@ -385,6 +412,9 @@ The system provides specialized badge components for common use cases:
 The CountBadge component complements the semantic badge system by providing specialized count display functionality with neutral semantics and consistent styling.
 
 **Section sources**
+- [badge.tsx:19-28](file://src/components/ui/badge.tsx#L19-L28)
+- [badge.tsx:36-47](file://src/components/ui/badge.tsx#L36-L47)
+- [variants.ts:19-28](file://src/lib/design-system/variants.ts#L19-L28)
 - [semantic-badge.tsx:75-110](file://src/components/ui/semantic-badge.tsx#L75-L110)
 - [semantic-badge.tsx:124-189](file://src/components/ui/semantic-badge.tsx#L124-L189)
 - [semantic-badge.tsx:200-219](file://src/components/ui/semantic-badge.tsx#L200-L219)
@@ -774,6 +804,12 @@ The design system now implements OKLCH color tokens for superior color managemen
 - **Surface Tokens**: Micro-tinted surface hierarchy
 - **Status Tokens**: Success, warning, and info color mappings
 
+**New Highlight Foreground Color Variable**
+**Updated** The design system now includes a new highlight foreground color variable for enhanced color consistency:
+- **--highlight**: Action orange color (#E67E40) for emphasis and highlights
+- **--highlight-foreground**: White text color for contrast on highlight backgrounds
+- **Purpose**: Provides consistent accent color for important UI elements and notifications
+
 **Color Token Benefits**
 - **Consistent Hue**: All brand colors maintain hue 281° for visual coherence
 - **Improved Contrast**: Better accessibility with OKLCH color space
@@ -790,6 +826,8 @@ The design system now implements OKLCH color tokens for superior color managemen
 - [globals.css:251-553](file://src/app/globals.css#L251-L553)
 - [globals.css:555-753](file://src/app/globals.css#L555-L753)
 - [MASTER.md:37-54](file://design-system/zattaros/MASTER.md#L37-L54)
+- [token-registry.ts:96-105](file://src/lib/design-system/token-registry.ts#L96-L105)
+- [colors-section.tsx:52-64](file://src/app/(authenticated)/design-system/_components/colors-section.tsx#L52-L64)
 
 ### Design Token Integration
 
@@ -868,6 +906,16 @@ The playground includes comprehensive testing capabilities:
 - **Mobile Detection**: Validation of useIsMobile and related responsive utilities
 - **Layout Adaptation**: Testing responsive layout management patterns
 - **Performance Monitoring**: Performance testing of responsive utility hooks
+
+**Enhanced Badge Component Testing**
+**Updated** The playground now includes comprehensive testing for the enhanced badge component with new semantic variants:
+- **Variant Coverage Testing**: Testing all 9 badge variants (including new success, warning, info, neutral, accent)
+- **Compound Variant Testing**: Validating soft tone variants for all status categories
+- **Color Consistency Validation**: Ensuring consistent color application across variants
+- **Accessibility Compliance**: Testing all badge variants for WCAG AAA compliance
+
+**Section sources**
+- [badge.test.tsx:29-78](file://src/components/ui/__tests__/badge.test.tsx#L29-L78)
 
 ## Page-Specific Implementation Examples
 
@@ -1089,6 +1137,13 @@ The design system includes comprehensive quality assurance processes to ensure c
 - **Responsive Pattern Consistency**: Measuring adoption of modern responsive patterns
 - **Performance Impact**: Measuring performance effects of responsive utilities
 
+**Enhanced Badge Component Metrics**
+**Updated** The system now tracks metrics for the enhanced badge component:
+- **New Variant Adoption**: Tracking of success, warning, info, neutral, accent variants
+- **Soft Tone Consistency**: Validation of soft tone variant usage across status categories
+- **Color Consistency**: Measuring adherence to new color token standards
+- **Compound Variant Usage**: Tracking of enhanced soft tone variant adoption
+
 ## Integration and Maintenance
 
 The design system architecture supports scalable maintenance and evolution through centralized governance, modern responsive utilities, and comprehensive component refactoring.
@@ -1153,6 +1208,14 @@ The design system architecture supports scalable maintenance and evolution throu
 - **Developer Education**: Training on modern breakpoint patterns and best practices
 - **Migration Support**: Assisting teams in adopting modern responsive utilities
 
+**Enhanced Badge Component Maintenance and Governance**
+**Updated** The system now includes maintenance processes for the enhanced badge component:
+- **Variant Usage Analytics**: Tracking adoption of new semantic variants
+- **Color Consistency Monitoring**: Ensuring adherence to new color token standards
+- **Compound Variant Validation**: Regular validation of soft tone variant usage
+- **Performance Optimization**: Monitoring badge component rendering performance
+- **Developer Education**: Training on new badge variant usage and best practices
+
 ## Conclusion
 
 The ZattarOS Design System represents a comprehensive approach to design system governance that balances centralized authority with module-specific flexibility. Through the implementation of MASTER.md as the central authority, systematic page-specific override mechanisms, and design-system-escape comments, the system provides a robust foundation for maintaining design integrity while accommodating the unique requirements of different application modules.
@@ -1172,3 +1235,7 @@ The governance model established through MASTER.md and page-specific overrides e
 The enhanced typography system with typed components, comprehensive accessibility compliance, systematic migration guidance, and the new CountBadge component position the ZattarOS Design System as a leader in accessible, maintainable, and scalable design systems for legal technology applications. The typed Typography components specifically address the need for semantic HTML elements and proper heading hierarchy, providing developers with a reliable, accessible solution for text presentation that improves both developer productivity and user experience. This comprehensive approach to design system evolution ensures that the ZattarOS platform maintains its competitive edge in legal technology while providing a solid foundation for future innovations.
 
 The modernized component architecture with unified radix-ui packages, enhanced responsive utilities, and comprehensive design token management positions the ZattarOS Design System for continued success in supporting the platform's growth and evolution. The systematic approach to component refactoring, responsive utility integration, and design token management ensures that the system remains maintainable, accessible, and aligned with current best practices in design system development.
+
+The enhanced badge component with 5 new semantic status variants (success, warning, info, neutral, accent) and the new highlight foreground color variable demonstrate the system's commitment to continuous improvement and enhanced color consistency. These improvements provide developers with more granular control over status communication while maintaining accessibility and visual coherence across the platform.
+
+The comprehensive design system improvements ensure that the ZattarOS platform remains at the forefront of legal technology design, providing both developers and users with a consistent, accessible, and visually appealing interface that supports the complex needs of legal case management.

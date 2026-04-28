@@ -30,6 +30,16 @@ const schema = z.object({
       .optional()
       .nullable(),
   })).optional(),
+  cliente_dados: z.object({
+    id: z.number(),
+    nome: z.string(),
+    cpf: z.string().optional().nullable(),
+    cnpj: z.string().optional().nullable(),
+    email: z.string().optional().nullable(),
+    celular: z.string().optional().nullable(),
+    telefone: z.string().optional().nullable(),
+  }).optional(),
+  acao_dados: z.record(z.unknown()).optional(),
 });
 
 export async function POST(request: NextRequest) {

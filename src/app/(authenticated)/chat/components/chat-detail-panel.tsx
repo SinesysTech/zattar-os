@@ -4,7 +4,7 @@ import React from "react";
 import { X, Mail, Phone, Calendar } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { generateAvatarFallback } from "@/lib/utils";
+import { generateAvatarFallback } from "@/lib/avatar-url";
 import useChatStore from "../hooks/use-chat-store";
 import { UsuarioChat } from "../domain";
 import { Button } from "@/components/ui/button";

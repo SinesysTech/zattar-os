@@ -84,6 +84,27 @@ const schema = z.object({
     required_error: 'Versão dos termos é obrigatória',
   }).min(1, 'Versão dos termos não pode estar vazia'),
   dispositivo_fingerprint_raw: z.record(z.unknown()).optional().nullable(),
+
+  // Parte contrária e dados da ação — necessários para resolver {{parte_contraria.*}} no PDF
+  parte_contraria_dados: z.array(z.object({
+    id: z.number(),
+    nome: z.string(),
+    cpf: z.string().optional().nullable(),
+    cnpj: z.string().optional().nullable(),
+    tipo_pessoa: z.string().optional().nullable(),
+    telefone: z.string().optional().nullable(),
+    email: z.string().optional().nullable(),
+    endereco: z.object({
+      cep: z.string().optional().nullable(),
+      logradouro: z.string().optional().nullable(),
+      numero: z.string().optional().nullable(),
+      complemento: z.string().optional().nullable(),
+      bairro: z.string().optional().nullable(),
+      municipio: z.string().optional().nullable(),
+      estado_sigla: z.string().optional().nullable(),
+    }).optional().nullable(),
+  })).optional(),
+  acao_dados: z.record(z.unknown()).optional(),
 });
 
 /**

@@ -26,7 +26,8 @@ import {
   AvatarImage,
   AvatarIndicator,
 } from '@/components/ui/avatar';
-import { generateAvatarFallback, cn } from '@/lib/utils';
+import { cn } from '@/lib/utils';
+import { generateAvatarFallback } from '@/lib/avatar-url';
 import { Heading, Text } from '@/components/ui/typography';
 import useChatStore from '../hooks/use-chat-store';
 import { UsuarioChat } from '../domain';

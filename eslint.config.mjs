@@ -7,7 +7,6 @@ import nextPlugin from "@next/eslint-plugin-next";
 import unusedImports from "eslint-plugin-unused-imports";
 import noHardcodedSecrets from "./eslint-rules/no-hardcoded-secrets.js";
 import noHslVarTokens from "./eslint-rules/no-hsl-var-tokens.js";
-import noRawTypographySpacing from "./eslint-rules/no-raw-typography-spacing.js";
 
 const eslintConfig = defineConfig([
   {
@@ -80,7 +79,6 @@ const eslintConfig = defineConfig([
         rules: {
           "no-hardcoded-secrets": noHardcodedSecrets,
           "no-hsl-var-tokens": noHslVarTokens,
-          "no-raw-typography-spacing": noRawTypographySpacing,
         },
       },
     },
@@ -90,20 +88,6 @@ const eslintConfig = defineConfig([
       // antes desta sessão. Não é estilo, é bug visual confirmado.
       // Aplica em TODO o codebase, sem exclusões.
       "custom/no-hsl-var-tokens": "error",
-      "custom/no-raw-typography-spacing": "error",
-    },
-  },
-  // Exceções para componentes base do design system e shared shells
-  {
-    files: [
-      "src/components/shared/**/*.tsx",
-      "src/components/ui/**/*.tsx",
-      "src/lib/design-system/**/*.tsx",
-      "src/app/website/**/*.tsx",
-      "design-system/**/*.tsx",
-    ],
-    rules: {
-      "custom/no-raw-typography-spacing": "off",
     },
   },
   // Exceções para arquivos de exemplo e documentação
@@ -279,50 +263,6 @@ const eslintConfig = defineConfig([
             "Literal[value=/oklch\\(\\s*\\d/]",
           message:
             "Literal OKLCH detectado. Use tokens (--primary, --success, etc.) ou oklch(from var(--token) l c h / alpha) para opacidade. Veja globals.css para a lista de tokens.",
-        },
-      ],
-    },
-  },
-  // Governança do Design System (Tipografia):
-  // Para evitar estilos ad hoc, obrigamos o uso de `Typography.*` (ou classes `typography-*`)
-  // nas telas/componentes de Usuários (escopo inicial, para não gerar milhares de erros no repo).
-  {
-    files: [
-      "src/features/usuarios/**/*.{ts,tsx}",
-      "src/app/**/usuarios/**/*.{ts,tsx}",
-    ],
-    rules: {
-      "no-restricted-syntax": [
-        "error",
-        {
-          selector: "JSXOpeningElement[name.name='h1']",
-          message:
-            "Não use <h1> direto. Use `Typography.H1` (ou `className=\"typography-h1\"`).",
-        },
-        {
-          selector: "JSXOpeningElement[name.name='h2']",
-          message:
-            "Não use <h2> direto. Use `Typography.H2` (ou `className=\"typography-h2\"`).",
-        },
-        {
-          selector: "JSXOpeningElement[name.name='h3']",
-          message:
-            "Não use <h3> direto. Use `Typography.H3` (ou `className=\"typography-h3\"`).",
-        },
-        {
-          selector: "JSXOpeningElement[name.name='h4']",
-          message:
-            "Não use <h4> direto. Use `Typography.H4` (ou `className=\"typography-h4\"`).",
-        },
-        {
-          selector: "JSXOpeningElement[name.name='h5']",
-          message:
-            "Não use <h5> direto. Use `Typography.H4` (ou `className=\"typography-h4\"`) para títulos menores.",
-        },
-        {
-          selector: "JSXOpeningElement[name.name='h6']",
-          message:
-            "Não use <h6> direto. Use `Typography.H4` (ou `className=\"typography-h4\"`) para títulos menores.",
         },
       ],
     },

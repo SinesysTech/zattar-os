@@ -12,7 +12,7 @@
 
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Result, ok, err } from "neverthrow";
-import { fromCamelToSnake, fromSnakeToCamel } from "@/lib/utils";
+import { fromCamelToSnake, fromSnakeToCamel } from "@/lib/case-transform";
 import { resolveAvatarUrl } from "@/lib/avatar-url";
 import type {
   SalaChat,

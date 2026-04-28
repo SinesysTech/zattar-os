@@ -6,13 +6,9 @@
  */
 
 import * as fc from 'fast-check';
-import {
-  cn,
-  fromSnakeToCamel,
-  fromCamelToSnake,
-  camelToSnakeKey,
-  generateAvatarFallback,
-} from '@/lib/utils';
+import { cn } from '@/lib/utils';
+import { fromSnakeToCamel, fromCamelToSnake, camelToSnakeKey } from '@/lib/case-transform';
+import { generateAvatarFallback } from '@/lib/avatar-url';
 
 describe('Utils - Property-Based Tests', () => {
   describe('cn (Class Names)', () => {

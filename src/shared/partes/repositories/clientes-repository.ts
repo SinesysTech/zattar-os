@@ -6,7 +6,7 @@
  */
 
 import { createDbClient } from '@/lib/supabase';
-import { fromCamelToSnake } from '@/lib/utils';
+import { fromCamelToSnake } from '@/lib/case-transform';
 import { Result, ok, err, appError, PaginatedResponse } from '@/types';
 import type {
   Cliente,

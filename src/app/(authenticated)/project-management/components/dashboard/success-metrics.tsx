@@ -1,5 +1,6 @@
 import { ArrowUpRight, ArrowDownRight } from "lucide-react";
-import { cn, generateAvatarFallback } from "@/lib/utils";
+import { cn } from "@/lib/utils";
+import { generateAvatarFallback } from "@/lib/avatar-url";
 import { Text } from "@/components/ui/typography";
 import {
   Card,
