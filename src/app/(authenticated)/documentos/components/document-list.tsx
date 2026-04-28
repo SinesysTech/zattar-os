@@ -31,7 +31,7 @@ import {
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
-import { Typography } from '@/components/ui/typography';
+import { Heading } from '@/components/ui/typography';
 import { FolderTree } from './folder-tree';
 import { DocumentCard } from './document-card';
 import { DocumentTable } from './document-table';
@@ -149,7 +149,7 @@ export function DocumentList() {
       <div className="w-80 border-r bg-muted/10">
         <div className="flex h-full flex-col">
           <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "border-b p-4")}>
-            <Typography.H2 className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Documentos</Typography.H2>
+            <h2 className="text-sm font-semibold">Documentos</h2>
           </div>
           <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex-1 overflow-auto p-2")}>
             <FolderTree
@@ -287,9 +287,9 @@ export function DocumentList() {
             <div className="flex h-full items-center justify-center">
               <div className="text-center">
                 <FileText className="mx-auto h-12 w-12 text-muted-foreground" />
-                <Typography.H3 className="mt-4">
+                <Heading level="card" className="mt-4">
                   Nenhum documento encontrado
-                </Typography.H3>
+                </Heading>
                 <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-2 text-sm text-muted-foreground")}>
                   {busca
                     ? 'Tente buscar com outros termos'

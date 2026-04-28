@@ -8,7 +8,6 @@ import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Input } from '@/components/ui/input';
-import { Typography } from '@/components/ui/typography';
 import type { ListarUsuariosParams } from '../../domain';
 
 interface UsuariosFiltrosAvancadosProps {
@@ -63,7 +62,7 @@ export function UsuariosFiltrosAvancados({
       <PopoverContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "w-80 p-4")} align="start">
         <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-            <Typography.Small className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Status</Typography.Small>
+            <small className="text-sm font-semibold leading-none">Status</small>
             <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <label className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 cursor-pointer")}>
                 <input
@@ -73,7 +72,7 @@ export function UsuariosFiltrosAvancados({
                   onChange={() => handleAtivoChange(true)}
                   className="h-4 w-4"
                 />
-                <Typography.Muted as="span">Ativo</Typography.Muted>
+                <span className="text-sm text-muted-foreground">Ativo</span>
               </label>
               <label className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 cursor-pointer")}>
                 <input
@@ -83,7 +82,7 @@ export function UsuariosFiltrosAvancados({
                   onChange={() => handleAtivoChange(false)}
                   className="h-4 w-4"
                 />
-                <Typography.Muted as="span">Inativo</Typography.Muted>
+                <span className="text-sm text-muted-foreground">Inativo</span>
               </label>
               <label className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 cursor-pointer")}>
                 <input
@@ -93,15 +92,15 @@ export function UsuariosFiltrosAvancados({
                   onChange={() => handleAtivoChange(null)}
                   className="h-4 w-4"
                 />
-                <Typography.Muted as="span">Todos</Typography.Muted>
+                <span className="text-sm text-muted-foreground">Todos</span>
               </label>
             </div>
           </div>
 
           <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-            <Typography.Small as="label" htmlFor="oab" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>
+            <label htmlFor="oab" className="text-sm font-semibold leading-none">
               Número da OAB
-            </Typography.Small>
+            </label>
             <Input
               id="oab"
               placeholder="Ex: 123456"
@@ -111,9 +110,9 @@ export function UsuariosFiltrosAvancados({
           </div>
 
           <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-            <Typography.Small as="label" htmlFor="ufOab" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>
+            <label htmlFor="ufOab" className="text-sm font-semibold leading-none">
               UF da OAB
-            </Typography.Small>
+            </label>
             <Input
               id="ufOab"
               placeholder="Ex: SP"

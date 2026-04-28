@@ -3,10 +3,10 @@
 import * as React from 'react';
 import { Mail, Phone, Building, Calendar, RefreshCw, Pencil, KeyRound, Power, Camera } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
+import { Heading } from '@/components/ui/typography';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
-import { Typography } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import { getAvatarUrl, formatarOab, formatarData } from '../../utils';
 import { RoleBanner } from '../shared/role-banner';
@@ -119,7 +119,7 @@ export function ProfileSidebar({
         </div>
 
         {/* 3. Name + Role */}
-        <Typography.H2 className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold mt-3 text-center")}>{usuario.nomeCompleto}</Typography.H2>
+        <Heading level="section" className="text-lg font-bold mt-3 text-center">{usuario.nomeCompleto}</Heading>
         {usuario.cargo?.nome && (
           <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/40 mt-0.5 text-center")}>{usuario.cargo.nome}</p>
         )}

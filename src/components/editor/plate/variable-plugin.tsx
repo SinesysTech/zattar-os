@@ -2,18 +2,18 @@
 
 import * as React from 'react';
 
-import type { PlateElementProps } from 'platejs/react';
-import type { PlateEditor } from 'platejs/react';
+import type { TElement } from 'platejs';
+import type { PlateEditor, PlateElementProps } from 'platejs/react';
 
 import { PlateElement } from 'platejs/react';
 import { createPlatePlugin } from 'platejs/react';
 
 export const VARIABLE_ELEMENT = 'variable';
 
-export interface VariableElementType {
+export interface VariableElementType extends TElement {
   type: typeof VARIABLE_ELEMENT;
   key: string;
-  children: [{ text: '' }];
+  children: [{ text: string }];
 }
 
 function VariableElementComponent(props: PlateElementProps<VariableElementType>) {
@@ -30,8 +30,8 @@ function VariableElementComponent(props: PlateElementProps<VariableElementType>)
       }}
       className="inline-flex items-center rounded px-1.5 py-0.5 font-mono text-xs bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400 select-none"
     >
-      {`{{${variableKey}}}`}
       {props.children}
+      {`{{${variableKey}}}`}
     </PlateElement>
   );
 }
@@ -47,9 +47,9 @@ export const VariablePlugin = createPlatePlugin({
 });
 
 export function insertVariable(editor: PlateEditor, key: string) {
-  editor.tf.insertNodes({
+  editor.tf.insertNodes<VariableElementType>({
     type: VARIABLE_ELEMENT,
     key,
     children: [{ text: '' }],
-  } as unknown as Parameters<typeof editor.tf.insertNodes>[0]);
+  });
 }

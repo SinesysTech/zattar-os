@@ -3,7 +3,7 @@
 import { cn, stripHtmlTags } from "@/lib/utils";
 import Image from "next/image";
 import { Archive, Edit3, Inbox } from "lucide-react";
-import { Typography } from "@/components/ui/typography";
+import { Heading } from "@/components/ui/typography";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { AppBadge as Badge } from "@/components/ui/app-badge";
@@ -62,7 +62,7 @@ export default function NoteListItem({ note }: { note: Note }) {
       )}
       <CardContent className={cn(/* design-system-escape: pt-6 padding direcional sem Inset equiv.; group-data-[view-mode=list]:pb-6 sem equivalente DS */ "pt-6 group-data-[view-mode=list]:pb-6")}>
         <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-          <Typography.H3 className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; lg:text-2xl sem equivalente DS */ "font-display text-xl lg:text-2xl")}>{note.title}</Typography.H3>
+          <Heading level="card" className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; lg:text-2xl sem equivalente DS */ "font-display text-xl lg:text-2xl")}>{note.title}</Heading>
           <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>{stripHtmlTags(note.content)}</p>
           {note.type === "checklist" && note.items && (
             <ul className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "peer space-y-4")}>

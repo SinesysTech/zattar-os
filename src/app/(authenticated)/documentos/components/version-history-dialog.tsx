@@ -29,7 +29,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Typography } from '@/components/ui/typography';
+import { Heading } from '@/components/ui/typography';
 import { toast } from 'sonner';
 import { formatDistanceToNow, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -110,7 +110,7 @@ export function VersionHistoryDialog({
             ) : versions.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-64 text-center">
                 <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-                <Typography.H3>Sem histórico de versões</Typography.H3>
+                <Heading level="card">Sem histórico de versões</Heading>
                 <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground mt-1")}>
                   As versões serão salvas automaticamente conforme você edita
                 </p>
@@ -138,9 +138,9 @@ export function VersionHistoryDialog({
                     <div className="flex-1 min-w-0">
                       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start justify-between gap-4")}>
                         <div>
-                          <Typography.H4 className="truncate">
+                          <Heading level="subsection" className="truncate">
                             {version.titulo || 'Sem título'}
-                          </Typography.H4>
+                          </Heading>
                           <div className={cn(/* design-system-escape: gap-3 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-3 mt-1 text-sm text-muted-foreground")}>
                             <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
                               <Clock className="h-3.5 w-3.5" />

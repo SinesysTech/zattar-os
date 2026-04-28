@@ -28,7 +28,6 @@ import {
   obterTotalPermissoes,
 } from '../../permissions-utils';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
-import { Typography } from '@/components/ui/typography';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
 interface PermissoesMatrizProps {
@@ -108,9 +107,9 @@ export function PermissoesMatriz({
               <Heading level="card">Permissões do Usuário</Heading>
             </div>
             {!isSuperAdmin && (
-              <Typography.Muted>
+              <p className="text-sm text-muted-foreground">
                 {totalPermissoesAtivas} de {totalPermissoes} permissões ativas
-              </Typography.Muted>
+              </p>
             )}
           </div>
 
@@ -290,9 +289,9 @@ export function PermissoesMatriz({
             </DialogDescription>
           </DialogHeader>
           <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "py-4")}>
-            <Typography.Muted>
+            <p className="text-sm text-muted-foreground">
               <strong>Total de permissões ativas:</strong> {totalPermissoesAtivas} de {totalPermissoes}
-            </Typography.Muted>
+            </p>
           </div>
           <DialogFooter>
             <Button

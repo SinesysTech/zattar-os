@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
-import { Typography } from '@/components/ui/typography';
+import { Heading } from '@/components/ui/typography';
 import type { ListarAcervoParams } from '../../domain';
 
 interface AcervoFiltersProps {
@@ -37,7 +37,7 @@ export function AcervoFilters({
   return (
     <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; p-4 → migrar para <Inset variant="card-compact"> */ "space-y-4 rounded-lg border p-4")}>
       <div className="flex items-center justify-between">
-        <Typography.H3>Filtros</Typography.H3>
+        <Heading level="card">Filtros</Heading>
         <Button variant="ghost" size="sm" onClick={onReset}>
           <X className="mr-2 h-4 w-4" />
           Limpar Filtros

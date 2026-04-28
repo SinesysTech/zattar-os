@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Separator } from '@/components/ui/separator';
-import { Typography } from '@/components/ui/typography';
+import { Heading } from '@/components/ui/typography';
 import {
   formatarCpf,
   formatarTelefone,
@@ -54,41 +54,41 @@ export function UsuarioViewSheet({
 
         <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
           <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-            <Typography.H4>Informações Básicas</Typography.H4>
+            <Heading level="subsection">Informações Básicas</Heading>
             <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
               <div>
-                <Typography.Muted className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mb-1")}>
+                <p className="text-sm text-muted-foreground font-medium mb-1">
                   Nome Completo
-                </Typography.Muted>
+                </p>
                 <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.nomeCompleto}</div>
               </div>
               <div>
-                <Typography.Muted className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mb-1")}>
+                <p className="text-sm text-muted-foreground font-medium mb-1">
                   Nome de Exibição
-                </Typography.Muted>
+                </p>
                 <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.nomeExibicao}</div>
               </div>
               {usuario.cpf && (
                 <div>
-                  <Typography.Muted className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mb-1")}>
+                  <p className="text-sm text-muted-foreground font-medium mb-1">
                     CPF
-                  </Typography.Muted>
+                  </p>
                   <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{formatarCpf(usuario.cpf)}</div>
                 </div>
               )}
               {usuario.rg && (
                 <div>
-                  <Typography.Muted className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mb-1")}>
+                  <p className="text-sm text-muted-foreground font-medium mb-1">
                     RG
-                  </Typography.Muted>
+                  </p>
                   <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.rg}</div>
                 </div>
               )}
               {usuario.dataNascimento && (
                 <div>
-                  <Typography.Muted className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mb-1")}>
+                  <p className="text-sm text-muted-foreground font-medium mb-1">
                     Data de Nascimento
-                  </Typography.Muted>
+                  </p>
                   <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
                     {formatarData(usuario.dataNascimento)}
                   </div>
@@ -96,9 +96,9 @@ export function UsuarioViewSheet({
               )}
               {usuario.genero && (
                 <div>
-                  <Typography.Muted className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mb-1")}>
+                  <p className="text-sm text-muted-foreground font-medium mb-1">
                     Gênero
-                  </Typography.Muted>
+                  </p>
                   <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
                     {formatarGenero(usuario.genero)}
                   </div>
@@ -112,13 +112,13 @@ export function UsuarioViewSheet({
           {(usuario.oab || usuario.ufOab) && (
             <>
               <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-                <Typography.H4>Informações Profissionais</Typography.H4>
+                <Heading level="subsection">Informações Profissionais</Heading>
                 <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
                   {usuario.oab && (
                     <div>
-                      <Typography.Muted className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mb-1")}>
+                      <p className="text-sm text-muted-foreground font-medium mb-1">
                         OAB
-                      </Typography.Muted>
+                      </p>
                       <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
                         {formatarOab(usuario.oab, usuario.ufOab)}
                       </div>
@@ -131,29 +131,29 @@ export function UsuarioViewSheet({
           )}
 
           <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-            <Typography.H4>Contato</Typography.H4>
+            <Heading level="subsection">Contato</Heading>
             <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
               {usuario.emailCorporativo && (
                 <div>
-                  <Typography.Muted className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mb-1")}>
+                  <p className="text-sm text-muted-foreground font-medium mb-1">
                     E-mail Corporativo
-                  </Typography.Muted>
+                  </p>
                   <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.emailCorporativo}</div>
                 </div>
               )}
               {usuario.emailPessoal && (
                 <div>
-                  <Typography.Muted className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mb-1")}>
+                  <p className="text-sm text-muted-foreground font-medium mb-1">
                     E-mail Pessoal
-                  </Typography.Muted>
+                  </p>
                   <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.emailPessoal}</div>
                 </div>
               )}
               {usuario.telefone && (
                 <div>
-                  <Typography.Muted className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mb-1")}>
+                  <p className="text-sm text-muted-foreground font-medium mb-1">
                     Telefone
-                  </Typography.Muted>
+                  </p>
                   <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
                     {formatarTelefone(usuario.telefone)}
                     {usuario.ramal && ` (Ramal: ${usuario.ramal})`}
@@ -167,7 +167,7 @@ export function UsuarioViewSheet({
             <>
               <Separator />
               <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-                <Typography.H4>Endereço</Typography.H4>
+                <Heading level="subsection">Endereço</Heading>
                 <div>
                   <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
                     {formatarEnderecoCompleto(usuario.endereco)}
@@ -179,20 +179,20 @@ export function UsuarioViewSheet({
 
           <Separator />
           <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-            <Typography.H4>Informações do Sistema</Typography.H4>
+            <Heading level="subsection">Informações do Sistema</Heading>
             <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
               <div>
-                <Typography.Muted className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mb-1")}>
+                <p className="text-sm text-muted-foreground font-medium mb-1">
                   Data de Criação
-                </Typography.Muted>
+                </p>
                 <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
                   {formatarData(usuario.createdAt)}
                 </div>
               </div>
               <div>
-                <Typography.Muted className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mb-1")}>
+                <p className="text-sm text-muted-foreground font-medium mb-1">
                   Última Atualização
-                </Typography.Muted>
+                </p>
                 <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
                   {formatarData(usuario.updatedAt)}
                 </div>

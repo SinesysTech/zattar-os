@@ -33,7 +33,7 @@ import {
 } from '@/components/ui/command';
 import { cn } from '@/lib/utils';
 import { Search, ChevronDown, Check, Info} from 'lucide-react';
-import { Typography } from '@/components/ui/typography';
+import { Heading } from '@/components/ui/typography';
 import {
   Collapsible,
   CollapsibleContent,
@@ -254,17 +254,17 @@ export function PangeaPageContent() {
 
   if (permsError) {
     return (
-      <Typography.Muted>Erro ao carregar permissões: {permsError}</Typography.Muted>
+      <p className="text-sm text-muted-foreground">Erro ao carregar permissões: {permsError}</p>
     );
   }
 
   if (!canList) {
     return (
       <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "rounded-lg border bg-card p-6")}>
-        <Typography.H3>Acesso negado</Typography.H3>
-        <Typography.Muted className="mt-2">
+        <Heading level="card">Acesso negado</Heading>
+        <p className="text-sm text-muted-foreground mt-2">
           Você não tem permissão para acessar o módulo Pangea.
-        </Typography.Muted>
+        </p>
       </div>
     );
   }
@@ -348,7 +348,7 @@ export function PangeaPageContent() {
           <CollapsibleContent id="pangea-advanced-filters" className="mt-2">
             <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; md:p-6 sem equivalente DS; space-y-6 → migrar para <Stack gap="loose"> */ "rounded-xl border bg-card p-4 md:p-6 space-y-6")}>
               <div className="flex items-center justify-between">
-                <Typography.Muted className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Ajuste os filtros para refinar a busca</Typography.Muted>
+                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Ajuste os filtros para refinar a busca</p>
                 <button
                   type="button"
                   onClick={handleReset}
@@ -539,9 +539,9 @@ export function PangeaPageContent() {
               </div>
 
               {error && (
-                <Typography.Muted className="text-destructive">
+                <p className="text-sm text-muted-foreground text-destructive">
                   {error}
-                </Typography.Muted>
+                </p>
               )}
             </div>
           </CollapsibleContent>

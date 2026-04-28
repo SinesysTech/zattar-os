@@ -36,7 +36,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { Typography } from "@/components/ui/typography";
+import { Heading } from "@/components/ui/typography";
 
 import type { Task, TarefaDisplayItem } from "../domain";
 import { useTarefaStore } from "../store";
@@ -361,7 +361,7 @@ export function TaskDetailSheet() {
                                     <div className="flex items-center justify-between">
                                         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                                             <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
-                                            <Typography.H3 className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold")}>Subtarefas</Typography.H3>
+                                            <Heading level="card" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold")}>Subtarefas</Heading>
                                         </div>
                                         {tarefa.subTasks && tarefa.subTasks.length > 0 && (
                                             <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
@@ -414,7 +414,7 @@ export function TaskDetailSheet() {
                                     <div className="flex items-center justify-between">
                                         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                                             <Paperclip className="h-4 w-4 text-muted-foreground" />
-                                            <Typography.H3 className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold")}>Anexos</Typography.H3>
+                                            <Heading level="card" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold")}>Anexos</Heading>
                                         </div>
                                         <Button
                                             variant="ghost"
@@ -478,7 +478,7 @@ export function TaskDetailSheet() {
                                 <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
                                     <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                                         <MessageSquare className="h-4 w-4 text-muted-foreground" />
-                                        <Typography.H3 className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold")}>Comentários</Typography.H3>
+                                        <Heading level="card" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold")}>Comentários</Heading>
                                     </div>
 
                                     <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; pb-4 padding direcional sem Inset equiv. */ "space-y-4 pb-4")}>

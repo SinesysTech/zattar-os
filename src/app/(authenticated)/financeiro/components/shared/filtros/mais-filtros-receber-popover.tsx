@@ -12,7 +12,7 @@ import * as React from 'react';
 import { Filter, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';
-import { Typography } from '@/components/ui/typography';
+import { Heading } from '@/components/ui/typography';
 import {
   Popover,
   PopoverContent,
@@ -113,7 +113,7 @@ export function MaisFiltrosReceberPopover({
       <PopoverContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "w-80 p-4")} align="start">
         <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           <div className="flex items-center justify-between">
-            <Typography.H4>Filtros Avançados</Typography.H4>
+            <Heading level="subsection">Filtros Avançados</Heading>
             {hasActiveFilters && (
               <Button
                 variant="ghost"

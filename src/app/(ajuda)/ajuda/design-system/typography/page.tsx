@@ -1,6 +1,6 @@
 'use client';
 
-import { Typography } from '@/components/ui/typography';
+import { Heading } from '@/components/ui/typography';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ClientOnlyTabs } from '@/components/ui/client-only-tabs';
 import { TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -9,14 +9,15 @@ import { Type } from 'lucide-react';
 export default function TypographyDocsPage() {
   return (
     <div className="space-y-8">
-      {/* Header */}
       <div className="space-y-4">
         <div className="flex items-center gap-3">
           <Type className="h-8 w-8 text-primary" />
           <h1 className="text-3xl font-bold tracking-tight">Tipografia</h1>
         </div>
         <p className="text-muted-foreground text-lg">
-          Estilos tipográficos baseados no shadcn/ui com classes Tailwind inline — sem abstração CSS intermediária.
+          Classes Tailwind inline aplicadas diretamente ao HTML — padrão shadcn/ui. Para módulos
+          admin, use os componentes <code className="rounded bg-muted px-1 py-0.5 text-sm font-mono">Heading</code> e{' '}
+          <code className="rounded bg-muted px-1 py-0.5 text-sm font-mono">Text</code> do design system.
         </p>
       </div>
 
@@ -32,81 +33,85 @@ export default function TypographyDocsPage() {
         <TabsContent value="headings" className="space-y-6 mt-6">
           <Card>
             <CardHeader>
-              <CardTitle>H1 - Título Principal</CardTitle>
-              <CardDescription>
-                Use para o título principal da página. Apenas um por página recomendado.
-              </CardDescription>
+              <CardTitle>H1 — Título Principal</CardTitle>
+              <CardDescription>Apenas um por página. Padrão shadcn/ui.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="border rounded-lg p-6 bg-muted/20">
-                <Typography.H1>Taxing Laughter: The Joke Tax Chronicles</Typography.H1>
+                <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+                  Taxing Laughter: The Joke Tax Chronicles
+                </h1>
               </div>
-              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-                {`<Typography.H1>Taxing Laughter: The Joke Tax Chronicles</Typography.H1>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">{`// shadcn/ui — inline Tailwind
+<h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+  Taxing Laughter
+</h1>
 
-// Classes aplicadas:
-// scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl`}
-              </pre>
+// Design system admin (PageShell)
+<Heading level="page">Processos</Heading>`}</pre>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>H2 - Título de Seção</CardTitle>
-              <CardDescription>
-                Use para seções principais dentro da página.
-              </CardDescription>
+              <CardTitle>H2 — Título de Seção</CardTitle>
+              <CardDescription>Seções principais dentro da página.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="border rounded-lg p-6 bg-muted/20">
-                <Typography.H2>The People of the Kingdom</Typography.H2>
+                <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+                  The People of the Kingdom
+                </h2>
               </div>
-              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-                {`<Typography.H2>The People of the Kingdom</Typography.H2>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">{`// shadcn/ui — inline Tailwind
+<h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+  The People of the Kingdom
+</h2>
 
-// Classes aplicadas:
-// scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0`}
-              </pre>
+// Design system admin
+<Heading level="section">Audiências desta semana</Heading>`}</pre>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>H3 - Título de Subseção</CardTitle>
-              <CardDescription>
-                Use para subdivisões dentro de seções.
-              </CardDescription>
+              <CardTitle>H3 — Título de Subseção</CardTitle>
+              <CardDescription>Subdivisões dentro de seções.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="border rounded-lg p-6 bg-muted/20">
-                <Typography.H3>The Joke Tax</Typography.H3>
+                <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
+                  The Joke Tax
+                </h3>
               </div>
-              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-                {`<Typography.H3>The Joke Tax</Typography.H3>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">{`// shadcn/ui — inline Tailwind
+<h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
+  The Joke Tax
+</h3>
 
-// Classes aplicadas:
-// scroll-m-20 text-2xl font-semibold tracking-tight`}
-              </pre>
+// Design system admin
+<Heading level="card">Detalhes do processo</Heading>`}</pre>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>H4 - Título Menor</CardTitle>
-              <CardDescription>
-                Use para títulos de menor importância ou em componentes.
-              </CardDescription>
+              <CardTitle>H4 — Título Menor</CardTitle>
+              <CardDescription>Títulos de componentes, seções de formulário.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="border rounded-lg p-6 bg-muted/20">
-                <Typography.H4>People stopped telling jokes</Typography.H4>
+                <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+                  People stopped telling jokes
+                </h4>
               </div>
-              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-                {`<Typography.H4>People stopped telling jokes</Typography.H4>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">{`// shadcn/ui — inline Tailwind
+<h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+  People stopped telling jokes
+</h4>
 
-// Classes aplicadas:
-// scroll-m-20 text-xl font-semibold tracking-tight`}
-              </pre>
+// Design system admin
+<Heading level="subsection">Informações Básicas</Heading>`}</pre>
             </CardContent>
           </Card>
         </TabsContent>
@@ -116,108 +121,74 @@ export default function TypographyDocsPage() {
           <Card>
             <CardHeader>
               <CardTitle>Parágrafo</CardTitle>
-              <CardDescription>
-                Texto de corpo padrão com margem superior automática entre parágrafos consecutivos.
-              </CardDescription>
+              <CardDescription>Corpo de texto com margem automática entre parágrafos consecutivos.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="border rounded-lg p-6 bg-muted/20">
-                <Typography.P>
-                  The king, seeing how much happier his subjects were, realized the error of his ways and repealed the joke tax.
-                </Typography.P>
+                <p className="leading-7 not-first:mt-6">
+                  The king, seeing how much happier his subjects were, realized the error of his ways
+                  and repealed the joke tax.
+                </p>
               </div>
-              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-                {`<Typography.P>
-  The king, seeing how much happier his subjects were...
-</Typography.P>
-
-// Classes aplicadas:
-// leading-7 not-first:mt-6`}
-              </pre>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">{`<p className="leading-7 not-first:mt-6">
+  Texto do parágrafo
+</p>`}</pre>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
               <CardTitle>Lead</CardTitle>
-              <CardDescription>
-                Parágrafo introdutório destacado, maior que o texto normal.
-              </CardDescription>
+              <CardDescription>Parágrafo introdutório destacado.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="border rounded-lg p-6 bg-muted/20">
-                <Typography.Lead>
+                <p className="text-xl text-muted-foreground">
                   A modal dialog that interrupts the user with important content and expects a response.
-                </Typography.Lead>
+                </p>
               </div>
-              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-                {`<Typography.Lead>
-  A modal dialog that interrupts the user...
-</Typography.Lead>
-
-// Classes aplicadas:
-// text-xl text-muted-foreground`}
-              </pre>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">{`<p className="text-xl text-muted-foreground">
+  Parágrafo introdutório
+</p>`}</pre>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
               <CardTitle>Large</CardTitle>
-              <CardDescription>
-                Texto grande para ênfase.
-              </CardDescription>
+              <CardDescription>Texto grande para ênfase sem ser heading.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="border rounded-lg p-6 bg-muted/20">
-                <Typography.Large>Are you absolutely sure?</Typography.Large>
+                <div className="text-lg font-semibold">Are you absolutely sure?</div>
               </div>
-              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-                {`<Typography.Large>Are you absolutely sure?</Typography.Large>
-
-// Classes aplicadas:
-// text-lg font-semibold`}
-              </pre>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">{`<div className="text-lg font-semibold">Are you absolutely sure?</div>`}</pre>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
               <CardTitle>Small</CardTitle>
-              <CardDescription>
-                Texto pequeno para notas de rodapé ou informações secundárias.
-              </CardDescription>
+              <CardDescription>Labels de formulário, legendas, notas de rodapé.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="border rounded-lg p-6 bg-muted/20">
-                <Typography.Small>Email address</Typography.Small>
+                <small className="text-sm font-medium leading-none">Email address</small>
               </div>
-              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-                {`<Typography.Small>Email address</Typography.Small>
-
-// Classes aplicadas:
-// text-sm font-medium leading-none`}
-              </pre>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">{`<small className="text-sm font-medium leading-none">Email address</small>`}</pre>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
               <CardTitle>Muted</CardTitle>
-              <CardDescription>
-                Texto com cor atenuada para informações menos importantes.
-              </CardDescription>
+              <CardDescription>Texto atenuado para informações secundárias.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="border rounded-lg p-6 bg-muted/20">
-                <Typography.Muted>Enter your email address.</Typography.Muted>
+                <p className="text-sm text-muted-foreground">Enter your email address.</p>
               </div>
-              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-                {`<Typography.Muted>Enter your email address.</Typography.Muted>
-
-// Classes aplicadas:
-// text-sm text-muted-foreground`}
-              </pre>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">{`<p className="text-sm text-muted-foreground">Enter your email address.</p>`}</pre>
             </CardContent>
           </Card>
         </TabsContent>
@@ -227,130 +198,103 @@ export default function TypographyDocsPage() {
           <Card>
             <CardHeader>
               <CardTitle>Blockquote</CardTitle>
-              <CardDescription>
-                Use para citações ou destacar trechos importantes.
-              </CardDescription>
+              <CardDescription>Citações ou trechos destacados.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="border rounded-lg p-6 bg-muted/20">
-                <Typography.Blockquote>
-                  &quot;After all,&quot; he said, &quot;everyone enjoys a good joke, so it&apos;s only fair that they should pay for the privilege.&quot;
-                </Typography.Blockquote>
+                <blockquote className="mt-6 border-l-2 pl-6 italic">
+                  &quot;After all,&quot; he said, &quot;everyone enjoys a good joke, so it&apos;s
+                  only fair that they should pay for the privilege.&quot;
+                </blockquote>
               </div>
-              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-                {`<Typography.Blockquote>
-  "After all," he said, "everyone enjoys a good joke..."
-</Typography.Blockquote>
-
-// Classes aplicadas:
-// mt-6 border-l-2 pl-6 italic`}
-              </pre>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">{`<blockquote className="mt-6 border-l-2 pl-6 italic">
+  "After all," he said...
+</blockquote>`}</pre>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
               <CardTitle>Lista</CardTitle>
-              <CardDescription>
-                Listas com marcadores e espaçamento adequado.
-              </CardDescription>
+              <CardDescription>Listas com marcadores e espaçamento adequado.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="border rounded-lg p-6 bg-muted/20">
-                <Typography.List>
+                <ul className="my-6 ml-6 list-disc [&>li]:mt-2">
                   <li>1st level of puns: 5 gold coins</li>
                   <li>2nd level of jokes: 10 gold coins</li>
                   <li>3rd level of one-liners: 20 gold coins</li>
-                </Typography.List>
+                </ul>
               </div>
-              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-                {`<Typography.List>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">{`<ul className="my-6 ml-6 list-disc [&>li]:mt-2">
   <li>1st level of puns: 5 gold coins</li>
-  <li>2nd level of jokes: 10 gold coins</li>
-  <li>3rd level of one-liners: 20 gold coins</li>
-</Typography.List>
-
-// Classes aplicadas:
-// my-6 ml-6 list-disc [&>li]:mt-2`}
-              </pre>
+</ul>`}</pre>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
               <CardTitle>Código Inline</CardTitle>
-              <CardDescription>
-                Código ou termos técnicos dentro de texto.
-              </CardDescription>
+              <CardDescription>Código ou termos técnicos dentro de texto.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="border rounded-lg p-6 bg-muted/20">
-                <Typography.P>
-                  Install dependencies with <Typography.InlineCode>npm install</Typography.InlineCode> command.
-                </Typography.P>
+                <p className="leading-7">
+                  Install dependencies with{' '}
+                  <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
+                    npm install
+                  </code>{' '}
+                  command.
+                </p>
               </div>
-              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-                {`<Typography.P>
-  Install dependencies with{' '}
-  <Typography.InlineCode>npm install</Typography.InlineCode> command.
-</Typography.P>
-
-// Classes aplicadas ao code:
-// relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold`}
-              </pre>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">{`<code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
+  npm install
+</code>`}</pre>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
               <CardTitle>Tabela</CardTitle>
-              <CardDescription>
-                Wrapper responsivo com overflow horizontal automático.
-              </CardDescription>
+              <CardDescription>Wrapper responsivo com overflow horizontal automático.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="border rounded-lg p-6 bg-muted/20">
-                <Typography.Table>
-                  <thead>
-                    <tr>
-                      <th className="border-b bg-muted/40 px-3 py-2 text-left font-medium text-sm">King&apos;s Treasury</th>
-                      <th className="border-b bg-muted/40 px-3 py-2 text-left font-medium text-sm">People&apos;s happiness</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td className="border-b px-3 py-2 text-sm align-top">Empty</td>
-                      <td className="border-b px-3 py-2 text-sm align-top">Overflowing</td>
-                    </tr>
-                    <tr>
-                      <td className="border-b px-3 py-2 text-sm align-top">Modest</td>
-                      <td className="border-b px-3 py-2 text-sm align-top">Satisfied</td>
-                    </tr>
-                    <tr>
-                      <td className="px-3 py-2 text-sm align-top">Full</td>
-                      <td className="px-3 py-2 text-sm align-top">Ecstatic</td>
-                    </tr>
-                  </tbody>
-                </Typography.Table>
+                <div className="my-6 w-full overflow-y-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="m-0 border-t p-0 even:bg-muted">
+                        <th className="border px-4 py-2 text-left font-bold">King&apos;s Treasury</th>
+                        <th className="border px-4 py-2 text-left font-bold">People&apos;s happiness</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="m-0 border-t p-0 even:bg-muted">
+                        <td className="border px-4 py-2 text-left">Empty</td>
+                        <td className="border px-4 py-2 text-left">Overflowing</td>
+                      </tr>
+                      <tr className="m-0 border-t p-0 even:bg-muted">
+                        <td className="border px-4 py-2 text-left">Full</td>
+                        <td className="border px-4 py-2 text-left">Ecstatic</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
-              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-                {`<Typography.Table>
-  <thead>
-    <tr>
-      <th className="border-b bg-muted/40 px-3 py-2 text-left font-medium text-sm">
-        King's Treasury
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td className="border-b px-3 py-2 text-sm align-top">Empty</td>
-    </tr>
-  </tbody>
-</Typography.Table>
-
-// Wrapper: my-6 w-full overflow-y-auto`}
-              </pre>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">{`<div className="my-6 w-full overflow-y-auto">
+  <table className="w-full">
+    <thead>
+      <tr className="m-0 border-t p-0 even:bg-muted">
+        <th className="border px-4 py-2 text-left font-bold">King's Treasury</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr className="m-0 border-t p-0 even:bg-muted">
+        <td className="border px-4 py-2 text-left">Empty</td>
+      </tr>
+    </tbody>
+  </table>
+</div>`}</pre>
             </CardContent>
           </Card>
         </TabsContent>
@@ -375,33 +319,30 @@ export default function TypographyDocsPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Quando Usar Cada Variante</CardTitle>
+              <CardTitle>Design System — Heading e Text</CardTitle>
+              <CardDescription>
+                API canônica para módulos admin. Aplica tokens do design system (escala visual precisa) em vez das classes shadcn genéricas.
+              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div>
-                <h4 className="font-semibold">Lead</h4>
-                <p className="text-sm text-muted-foreground">
-                  Use para parágrafos introdutórios de artigos, páginas de destino, ou para destacar a primeira frase de uma seção importante.
-                </p>
-              </div>
-              <div>
-                <h4 className="font-semibold">Large</h4>
-                <p className="text-sm text-muted-foreground">
-                  Use para perguntas importantes, chamadas para ação (CTA), ou texto que precisa de ênfase visual sem ser um título.
-                </p>
-              </div>
-              <div>
-                <h4 className="font-semibold">Muted</h4>
-                <p className="text-sm text-muted-foreground">
-                  Use para metadados (datas, autores), instruções secundárias, ou informações complementares que não são o foco principal.
-                </p>
-              </div>
-              <div>
-                <h4 className="font-semibold">Small</h4>
-                <p className="text-sm text-muted-foreground">
-                  Use para labels de formulário, legendas de imagens, ou notas de rodapé.
-                </p>
-              </div>
+            <CardContent>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">{`import { Heading, Text } from '@/components/ui/typography';
+
+// Headings — nível semântico
+<Heading level="page">Processos</Heading>          // h1, 24px
+<Heading level="section">Esta semana</Heading>     // h2, 20px
+<Heading level="card">Detalhes</Heading>           // h3, 18px
+<Heading level="subsection">Contato</Heading>      // h4, 16px
+<Heading level="widget">KPIs</Heading>             // h3, 14px
+
+// Heading com tag diferente (SEO sem mudar visual)
+<Heading level="subsection" as="h3">Seção</Heading>
+
+// Text — variantes de corpo
+<Text variant="body">Texto padrão</Text>
+<Text variant="caption">Texto auxiliar / metadata</Text>
+<Text variant="label">Label de campo</Text>
+<Text variant="overline">SEÇÃO UPPERCASE</Text>
+<Text variant="helper">Dica de preenchimento</Text>`}</pre>
             </CardContent>
           </Card>
 
@@ -412,37 +353,11 @@ export default function TypographyDocsPage() {
             <CardContent>
               <ul className="list-disc list-inside space-y-2 text-muted-foreground">
                 <li>Sempre use tags HTML semânticas corretas (h1, h2, p, etc.)</li>
-                <li>Mantenha hierarquia lógica de headings (não pule níveis)</li>
+                <li>Mantenha hierarquia lógica de headings — não pule níveis</li>
                 <li>Contraste mínimo de 4.5:1 para texto normal, 3:1 para texto grande</li>
                 <li>Line-height mínimo de 1.5 para legibilidade</li>
                 <li>Tamanho mínimo de fonte: 14px para corpo de texto</li>
               </ul>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Design System — Heading e Text</CardTitle>
-              <CardDescription>
-                Para módulos admin, prefira os componentes tipados do design system em vez dos legados acima.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-                {`import { Heading, Text } from '@/components/ui/typography';
-
-// Títulos de página, seção, card, widget...
-<Heading level="page">Processos</Heading>
-<Heading level="section">Audiências desta semana</Heading>
-<Heading level="card">Detalhes do processo</Heading>
-<Heading level="widget">KPIs</Heading>
-
-// Variantes de texto
-<Text variant="body">Texto padrão do sistema</Text>
-<Text variant="caption">Texto auxiliar / metadata</Text>
-<Text variant="label">Label de campo</Text>
-<Text variant="overline">SEÇÃO UPPERCASE</Text>`}
-              </pre>
             </CardContent>
           </Card>
         </TabsContent>

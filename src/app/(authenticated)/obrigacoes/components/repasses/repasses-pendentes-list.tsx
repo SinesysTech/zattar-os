@@ -17,7 +17,7 @@ import { Upload, FileCheck} from 'lucide-react';
 import { formatCurrency, formatDate } from '../../utils'; // Using local utils
 import { getSemanticBadgeVariant } from '@/lib/design-system';
 import { EmptyHeader, EmptyTitle } from '@/components/ui/empty';
-import { Typography } from '@/components/ui/typography';
+import { Heading } from '@/components/ui/typography';
 import { useRepassesPendentes } from '../../hooks/use-repasses-pendentes';
 import { GerarLinkButton } from '../prestacao-contas';
 
@@ -54,7 +54,7 @@ export function RepassesPendentesList({ onAnexarDeclaracao, onRealizarRepasse, r
       <div className={cn(/* design-system-escape: space-y-8 → migrar para <Stack gap="section"> */ "space-y-8")}>
          {repassesPendentesDecl.length > 0 && (
             <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-               <Typography.H4>Aguardando Declaração</Typography.H4>
+               <Heading level="subsection">Aguardando Declaração</Heading>
                <div className="rounded-md border">
                   <Table>
                      <TableHeader>
@@ -99,7 +99,7 @@ export function RepassesPendentesList({ onAnexarDeclaracao, onRealizarRepasse, r
 
          {repassesPendentesTransf.length > 0 && (
             <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-               <Typography.H4>Prontos para Transferência</Typography.H4>
+               <Heading level="subsection">Prontos para Transferência</Heading>
                <div className="rounded-md border">
                   <Table>
                      <TableHeader>

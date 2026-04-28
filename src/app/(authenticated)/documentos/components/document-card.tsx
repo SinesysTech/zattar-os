@@ -19,7 +19,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
-import { Typography } from '@/components/ui/typography';
+import { Heading } from '@/components/ui/typography';
 import type { DocumentoComUsuario } from '@/app/(authenticated)/documentos/domain';
 
 interface DocumentCardProps {
@@ -44,7 +44,7 @@ export function DocumentCard({ documento, onClick }: DocumentCardProps) {
               <FileText className="h-5 w-5 text-primary" />
             </div>
             <div className="flex-1 min-w-0">
-              <Typography.H3 className="truncate">{documento.titulo}</Typography.H3>
+              <Heading level="card" className="truncate">{documento.titulo}</Heading>
               <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mt-1")}>
                 {documento.descricao || 'Sem descrição'}
               </p>

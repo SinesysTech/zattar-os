@@ -29,7 +29,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Typography } from '@/components/ui/typography';
+import { Heading } from '@/components/ui/typography';
 import { toast } from 'sonner';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
@@ -200,7 +200,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
       <div className="flex h-full items-center justify-center">
         <div className="text-center">
           <FileText className="mx-auto h-12 w-12 text-muted-foreground" />
-          <Typography.H2 className="mt-4">Documento não encontrado</Typography.H2>
+          <Heading level="section" className="mt-4">Documento não encontrado</Heading>
           <p className="text-muted-foreground mt-2">
             O documento que você está procurando não existe ou foi removido.
           </p>

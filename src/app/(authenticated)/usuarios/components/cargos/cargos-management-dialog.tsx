@@ -17,7 +17,6 @@ import { toast } from 'sonner';
 import { useCargos } from '@/app/(authenticated)/cargos';
 import { actionCriarCargo, actionAtualizarCargo, actionDeletarCargo } from '@/app/(authenticated)/cargos';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
-import { Typography } from '@/components/ui/typography';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import {
   AlertDialog,
@@ -169,7 +168,7 @@ export function CargosManagementDialog({
       <DialogFormShell
         open={open}
         onOpenChange={onOpenChange}
-        title={<Typography.H3 as="span">Gerenciar cargos</Typography.H3>}
+        title={<span className="scroll-m-20 text-2xl font-semibold tracking-tight">Gerenciar cargos</span>}
         maxWidth="3xl"
       >
         <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; space-y-4 → migrar para <Stack gap="default"> */ "p-6 space-y-4")}>
@@ -177,7 +176,7 @@ export function CargosManagementDialog({
             {/* Lista */}
             <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
               <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
-                <Typography.H4 as="h3">Cargos</Typography.H4>
+                <h3 className="scroll-m-20 text-sm font-semibold tracking-tight">Cargos</h3>
                 <Button
                   type="button"
                   variant="outline"
@@ -232,9 +231,9 @@ export function CargosManagementDialog({
                           </Badge>
                         )}
                         {cargo.descricao && (
-                          <Typography.Muted as="span" className="truncate">
+                          <span className="text-sm text-muted-foreground truncate">
                             - {cargo.descricao}
-                          </Typography.Muted>
+                          </span>
                         )}
                       </div>
 
@@ -276,9 +275,9 @@ export function CargosManagementDialog({
             {/* Form */}
             <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
               <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
-                <Typography.H4 as="h3">
+                <h3 className="scroll-m-20 text-sm font-semibold tracking-tight">
                   {editingId ? 'Editar cargo' : isCreating ? 'Novo cargo' : 'Detalhes'}
-                </Typography.H4>
+                </h3>
                 {(isCreating || editingId) && (
                   <Button
                     type="button"
@@ -294,9 +293,9 @@ export function CargosManagementDialog({
 
               {!isCreating && !editingId ? (
                 <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-lg border bg-card p-4")}>
-                  <Typography.Muted>
+                  <p className="text-sm text-muted-foreground">
                     Selecione um cargo para editar ou clique em <strong>Novo cargo</strong>.
-                  </Typography.Muted>
+                  </p>
                 </div>
               ) : (
                 <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-4 → migrar para <Stack gap="default"> */ "rounded-lg border bg-card p-4 space-y-4")}>

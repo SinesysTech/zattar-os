@@ -13,14 +13,19 @@
 - [typography.tsx](file://src/components/ui/typography.tsx)
 - [tokens.ts](file://src/lib/design-system/tokens.ts)
 - [globals.css](file://src/app/globals.css)
+- [audiencias-semana-view.tsx](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx)
+- [tabs.tsx](file://src/components/ui/tabs.tsx)
+- [audiencias-client.tsx](file://src/app/(authenticated)/audiencias/audiencias-client.tsx)
+- [mission-kpi-strip.tsx](file://src/app/(authenticated)/audiencias/components/mission-kpi-strip.tsx)
 </cite>
 
 ## Update Summary
 **Changes Made**
-- Enhanced typography system integration with new typed components
-- Improved semantic badge architecture for better accessibility compliance
-- Added WCAG AAA accessibility compliance features
-- Updated component styling with enhanced design system integration
+- Enhanced typography system integration with new Heading and Text components using OKLCH color values
+- Improved color token system with OKLCH specification alignment for better color consistency
+- Added new Tabs week variant for audiência management interfaces
+- Integrated MissionKpiStrip component for enhanced audiência KPI visualization
+- Updated component styling with enhanced design system integration and WCAG AAA compliance
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -28,20 +33,22 @@
 3. [Core Components](#core-components)
 4. [Component Implementation Details](#component-implementation-details)
 5. [Enhanced Typography System](#enhanced-typography-system)
-6. [Improved Semantic Badge Architecture](#improved-semantic-badge-architecture)
-7. [WCAG AAA Accessibility Compliance](#wcag-aaa-accessibility-compliance)
-8. [Usage Patterns](#usage-patterns)
-9. [Design System Integration](#design-system-integration)
-10. [Performance Considerations](#performance-considerations)
-11. [Extension Guidelines](#extension-guidelines)
-12. [Troubleshooting Guide](#troubleshooting-guide)
-13. [Conclusion](#conclusion)
+6. [Improved Color Token System](#improved-color-token-system)
+7. [New Tabs Week Variant](#new-tabs-week-variant)
+8. [Integrated MissionKpiStrip Component](#integrated-missionkpistrip-component)
+9. [Enhanced Accessibility Compliance](#enhanced-accessibility-compliance)
+10. [Usage Patterns](#usage-patterns)
+11. [Design System Integration](#design-system-integration)
+12. [Performance Considerations](#performance-considerations)
+13. [Extension Guidelines](#extension-guidelines)
+14. [Troubleshooting Guide](#troubleshooting-guide)
+15. [Conclusion](#conclusion)
 
 ## Introduction
 
 The PulseKpiCard component system is a reusable design system component designed for displaying operational KPI metrics in a consistent, visually appealing format. Built specifically for the Neon Magistrate design system, this system provides a standardized approach to presenting key performance indicators with animated values, contextual icons, and progress visualization.
 
-**Updated** Enhanced with new typography system integration, improved semantic badge architecture, and comprehensive WCAG AAA accessibility compliance.
+**Updated** Enhanced with new typography system integration using OKLCH color values, improved color token system with semantic consistency, new Tabs week variant for audiência management, and integrated MissionKpiStrip component for comprehensive KPI visualization.
 
 The system consists of three primary components working together: the main PulseKpiCard container, the PulseKpiBar for percentage visualization, and the PulseKpiGrid for responsive layout management. These components integrate seamlessly with the broader design system to create cohesive dashboard experiences across different functional areas of the application, now with enhanced accessibility and typography consistency.
 
@@ -55,14 +62,24 @@ subgraph "PulseKpiCard System"
 PKC[PulseKpiCard]
 PKB[PulseKpiBar]
 PKG[PulseKpiGrid]
+MKI[MissionKpiStrip]
 end
 subgraph "Enhanced Typography System"
 TK[Tokens System]
 TY[Typed Typography]
+HD[Heading Components]
+TX[Text Components]
 end
-subgraph "Improved Badge Architecture"
-SB[SemanticBadge]
-SBS[Specialized Badges]
+subgraph "Improved Color Token System"
+OKLCH[OKLCH Values]
+CT[Color Tokens]
+ET[Event Tokens]
+end
+subgraph "New Tabs System"
+TW[Tabs Week Variant]
+TL[TabsList]
+TT[TabsTrigger]
+TC[TabsContent]
 end
 subgraph "Supporting Components"
 GP[GlassPanel]
@@ -78,6 +95,7 @@ end
 subgraph "Application Integration"
 EPS[ExpedientesPulseStrip]
 CPS[ContratosPulseStrip]
+AVW[AudienciasSemanaView]
 end
 PKC --> GP
 PKC --> IC
@@ -87,13 +105,20 @@ PKC --> SP
 PKC --> WC
 PKC --> ARIA
 PKG --> PKC
-SB --> SBS
+MKI --> PKC
+MKI --> SP
 TY --> PKC
+TY --> MKI
 TK --> TY
+TK --> CT
+TK --> ET
+TW --> TL
+TW --> TT
+TW --> TC
+AVW --> TW
 EPS --> PKC
 CPS --> PKC
 CPS --> SP
-CPS --> SB
 ```
 
 **Diagram sources**
@@ -101,8 +126,11 @@ CPS --> SB
 - [glass-panel.tsx:1-103](file://src/components/shared/glass-panel.tsx#L1-L103)
 - [icon-container.tsx:1-60](file://src/components/ui/icon-container.tsx#L1-L60)
 - [semantic-badge.tsx:1-220](file://src/components/ui/semantic-badge.tsx#L1-L220)
-- [typography.tsx:1-205](file://src/components/ui/typography.tsx#L1-L205)
+- [typography.tsx:1-261](file://src/components/ui/typography.tsx#L1-L261)
 - [tokens.ts:543-742](file://src/lib/design-system/tokens.ts#L543-L742)
+- [audiencias-semana-view.tsx:207-236](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx#L207-L236)
+- [tabs.tsx:1-57](file://src/components/ui/tabs.tsx#L1-L57)
+- [mission-kpi-strip.tsx:1-254](file://src/app/(authenticated)/audiencias/components/mission-kpi-strip.tsx#L1-L254)
 
 The architecture demonstrates a hierarchical relationship where PulseKpiCard serves as the primary container, delegating specific functionalities to specialized components while maintaining design system consistency and enhanced accessibility compliance.
 
@@ -208,12 +236,24 @@ class TypographySystem {
 +Text component
 +TextVariant variants
 }
+class MissionKpiStrip {
++Audiencia[] audiencias
++string className
+}
+class TabsSystem {
++TabsList variant="week"
++TabsTrigger
++TabsContent
+}
 PulseKpiCard --> GlassPanel : "uses"
 PulseKpiCard --> IconContainer : "uses"
 PulseKpiCard --> PulseKpiBar : "optional footer"
 PulseKpiCard --> TypographySystem : "uses"
 PulseKpiGrid --> PulseKpiCard : "contains"
 SemanticBadge --> Badge : "extends"
+MissionKpiStrip --> PulseKpiCard : "uses"
+MissionKpiStrip --> Sparkline : "uses"
+TabsSystem --> MissionKpiStrip : "integrates with"
 ```
 
 **Diagram sources**
@@ -222,6 +262,8 @@ SemanticBadge --> Badge : "extends"
 - [icon-container.tsx:24-58](file://src/components/ui/icon-container.tsx#L24-L58)
 - [semantic-badge.tsx:75-110](file://src/components/ui/semantic-badge.tsx#L75-L110)
 - [typography.tsx:152-199](file://src/components/ui/typography.tsx#L152-L199)
+- [mission-kpi-strip.tsx:54-254](file://src/app/(authenticated)/audiencias/components/mission-kpi-strip.tsx#L54-L254)
+- [audiencias-semana-view.tsx:207-236](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx#L207-L236)
 
 ### Design System Integration
 
@@ -278,35 +320,111 @@ The PulseKpiCard system now utilizes the enhanced typed typography system for co
 - [globals.css:1660-1664](file://src/app/globals.css#L1660-L1664)
 - [tokens.ts:553-565](file://src/lib/design-system/tokens.ts#L553-L565)
 
-## Improved Semantic Badge Architecture
+## Improved Color Token System
 
-### Enhanced Badge System
+### OKLCH Color Specification
 
-The PulseKpiCard system now integrates with the improved semantic badge architecture for better accessibility and consistency:
+The color token system has been enhanced with OKLCH (Lightness-Chroma-Hue) color specification for improved color consistency and accessibility:
 
-**Semantic Badge Features:**
-- **Category-based Mapping**: Automatic variant selection based on domain context
-- **Tone Control**: Soft vs solid intensity levels for visual hierarchy
-- **Auto-label Generation**: Friendly labels for specific categories (e.g., party types)
-- **Override Support**: Manual variant and tone overrides for exceptional cases
+**OKLCH Implementation:**
+- **Reference Tokens**: All color values now use OKLCH format for perceptually uniform color spaces
+- **Hue Alignment**: Consistent hue values (281°) across all semantic tokens for brand alignment
+- **Chroma Optimization**: Strategic chroma values (0.01-0.26) for WCAG AAA contrast compliance
+- **Lightness Scaling**: Perceptual lightness progression from 0.15 (foreground) to 0.96 (background)
 
-**Specialized Badge Components:**
-- **StatusSemanticBadge**: For process and entity statuses
-- **GrauSemanticBadge**: For jurisdiction levels (first/second degree)
-- **TribunalSemanticBadge**: For court identifiers
-- **CountBadge**: For numeric counts with neutral tones
+**Color Token Categories:**
+- **Core Tokens**: background, foreground, primary, secondary, muted, accent
+- **Status Tokens**: success, warning, info, destructive with proper contrast ratios
+- **Surface Tokens**: surface hierarchy with micro-tinted variations
+- **Event Tokens**: audiência, expediente, obrigacao with semantic mapping
 
-**Accessibility Improvements:**
-- **Semantic Meaning**: Proper ARIA roles and labels
-- **Contrast Ratios**: Enhanced color contrast for accessibility
-- **Keyboard Navigation**: Full keyboard support for interactive badges
-- **Screen Reader Support**: Descriptive labels for assistive technologies
+**Benefits:**
+- **Perceptual Uniformity**: Consistent color appearance across different devices
+- **Accessibility Compliance**: WCAG AAA compliant contrast ratios
+- **Brand Consistency**: Aligned hue values across all components
+- **Color Blind Friendly**: Optimized for color vision deficiency
 
 **Section sources**
-- [semantic-badge.tsx:75-110](file://src/components/ui/semantic-badge.tsx#L75-L110)
-- [semantic-badge.tsx:124-189](file://src/components/ui/semantic-badge.tsx#L124-L189)
+- [globals.css:289-479](file://src/app/globals.css#L289-L479)
+- [tokens.ts:30-120](file://src/lib/design-system/tokens.ts#L30-L120)
 
-## WCAG AAA Accessibility Compliance
+## New Tabs Week Variant
+
+### Enhanced Tabs System for Audiência Management
+
+The PulseKpiCard system now integrates with the new Tabs week variant specifically designed for audiência management interfaces:
+
+**Tabs Week Variant Features:**
+- **Full-width Layout**: `variant="week"` for comprehensive weekly schedule display
+- **Day Navigation**: Individual tab triggers for each weekday with date indicators
+- **Visual Indicators**: Badge counters for audiência counts with color-coded status
+- **Responsive Design**: Flexible day selection with today highlighting
+
+**Implementation Details:**
+- **TabsList**: Full-width container with `variant="week"` styling
+- **TabsTrigger**: Individual day buttons with date formatting and status badges
+- **TabsContent**: Content panels for each day's audiência schedule
+- **Integration**: Seamless integration with audiência data and filtering
+
+**Usage Pattern:**
+```typescript
+<Tabs value={selectedDay} onValueChange={setSelectedDay} className="space-y-4">
+  <TabsList variant="week">
+    {weekDays.map((day) => (
+      <TabsTrigger key={key} value={key} className="flex-1 gap-1.5">
+        <span className="capitalize">{format(day, 'EEE', { locale: ptBR })}</span>
+        <span className="font-semibold tabular-nums">{format(day, 'd')}</span>
+        {dayAudiencias.length > 0 && (
+          <span className={cn(
+            'inline-flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-semibold tabular-nums',
+            lowPrepCount > 0 ? 'bg-warning/15 text-warning' : 'bg-primary/15 text-primary',
+          )}>
+            {dayAudiencias.length}
+          </span>
+        )}
+      </TabsTrigger>
+    ))}
+  </TabsList>
+  {weekDays.map((day) => (
+    <TabsContent key={key} value={key}>
+      {/* Day-specific audiência content */}
+    </TabsContent>
+  ))}
+</Tabs>
+```
+
+**Section sources**
+- [tabs.tsx:27-41](file://src/components/ui/tabs.tsx#L27-L41)
+- [audiencias-semana-view.tsx:207-236](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx#L207-L236)
+
+## Integrated MissionKpiStrip Component
+
+### Comprehensive Audiência KPI Visualization
+
+The MissionKpiStrip component provides integrated KPI visualization specifically for audiência management with enhanced typography and accessibility:
+
+**MissionKpiStrip Features:**
+- **Four KPI Cards**: Semana (Weekly), Próxima (Upcoming), Realizadas (Completed), Preparo (Preparation)
+- **Enhanced Typography**: Uses `<Text>` components for consistent styling
+- **Dynamic Data Processing**: Calculates statistics from audiência data with proper error handling
+- **Visual Progression**: Sparklines and progress bars for trend visualization
+
+**KPI Card Types:**
+- **Semana Card**: Weekly audiência count with 6-month trend sparkline
+- **Próxima Card**: Next audiência time with tribunal and modalidade details
+- **Realizadas Card**: Monthly completion rate with dynamic progress bar
+- **Preparo Card**: Average preparation score with color-coded progress indicator
+
+**Accessibility Enhancements:**
+- **Semantic Structure**: Proper heading hierarchy and ARIA labels
+- **Color Contrast**: WCAG AAA compliant color schemes
+- **Keyboard Navigation**: Full tab navigation support
+- **Screen Reader**: Descriptive labels and status announcements
+
+**Section sources**
+- [mission-kpi-strip.tsx:54-254](file://src/app/(authenticated)/audiencias/components/mission-kpi-strip.tsx#L54-L254)
+
+## Enhanced Accessibility Compliance
 
 ### Comprehensive Accessibility Features
 
@@ -381,6 +499,13 @@ The highlight feature provides visual emphasis for critical metrics with enhance
 - [expedientes-pulse-strip.tsx:89-93](file://src/app/(authenticated)/expedientes/components/expedientes-pulse-strip.tsx#L89-L93)
 - [contratos-pulse-strip.tsx:78-86](file://src/app/(authenticated)/contratos/components/contratos-pulse-strip.tsx#L78-L86)
 
+### Audiência Management Integration
+
+The new Tabs week variant integrates seamlessly with audiência management workflows:
+
+**Section sources**
+- [audiencias-semana-view.tsx:207-236](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx#L207-L236)
+
 ## Design System Integration
 
 ### Component Export System
@@ -442,6 +567,15 @@ The footer slot supports various visualization types with enhanced accessibility
 **Section sources**
 - [pulse-kpi-card.tsx:44](file://src/components/shared/pulse-kpi-card.tsx#L44)
 
+### New Tabs Variants
+
+For creating new tab variants like the week variant:
+
+1. **Define Variant**: Add new variant to tabsListVariants configuration
+2. **Styling**: Implement appropriate CSS classes for the variant
+3. **Accessibility**: Ensure proper ARIA attributes and keyboard navigation
+4. **Integration**: Test with existing tab components and data structures
+
 ## Troubleshooting Guide
 
 ### Common Issues and Solutions
@@ -461,6 +595,12 @@ The footer slot supports various visualization types with enhanced accessibility
 **Problem**: Semantic meaning lost in enhanced badge system
 - **Solution**: Ensure proper category assignment and value mapping for semantic badge components
 
+**Problem**: OKLCH color values not rendering correctly
+- **Solution**: Verify CSS variables are properly defined in globals.css and accessible via design system tokens
+
+**Problem**: Tabs week variant not displaying properly
+- **Solution**: Ensure variant prop is set to "week" and verify proper integration with audiência data
+
 ### Debugging Tips
 
 - **Console Logging**: Add temporary console.log statements in component render functions
@@ -476,8 +616,8 @@ The footer slot supports various visualization types with enhanced accessibility
 
 The PulseKpiCard component system represents a mature, production-ready solution for displaying operational KPI metrics in the Neon Magistrate design system with enhanced accessibility compliance. Its modular architecture, comprehensive feature set, and deep integration with the broader design system make it an ideal choice for building consistent, visually appealing, and accessible dashboard experiences.
 
-**Updated** The system now provides enhanced typography consistency, improved semantic badge architecture, and comprehensive WCAG AAA accessibility compliance, making it suitable for enterprise applications with strict accessibility requirements.
+**Updated** The system now provides enhanced typography consistency with OKLCH color values, improved semantic badge architecture, comprehensive WCAG AAA accessibility compliance, new Tabs week variant for audiência management, and integrated MissionKpiStrip component for comprehensive KPI visualization.
 
 The system's strength lies in its balance between flexibility and consistency—providing enough customization options to handle diverse use cases while maintaining design system coherence and accessibility standards. The implementation demonstrates excellent separation of concerns, with clear component boundaries and well-defined interfaces that prioritize user experience and accessibility.
 
-Future enhancements could include additional visualization types with enhanced accessibility features, expanded theming capabilities with WCAG AAA compliance, and advanced accessibility testing integration, but the current implementation provides a solid foundation for KPI display needs across the application with comprehensive accessibility support.
+Future enhancements could include additional visualization types with enhanced accessibility features, expanded theming capabilities with WCAG AAA compliance, advanced accessibility testing integration, and integration with the new OKLCH color system across all components, but the current implementation provides a solid foundation for KPI display needs across the application with comprehensive accessibility support and modern color specification standards.

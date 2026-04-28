@@ -27,7 +27,6 @@ import {
   Plus, Pencil, Trash2, Save, X, FileX} from 'lucide-react';
 import { toast } from 'sonner';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
-import { Typography } from '@/components/ui/typography';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -263,9 +262,9 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
             {(isCreating || editingId) && (
               <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-4 → migrar para <Stack gap="default"> */ "border rounded-lg p-4 space-y-4")}>
                 <div className="flex items-center justify-between">
-                  <Typography.Small className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
+                  <small className="text-sm font-medium leading-none">
                     {editingId ? 'Editar Segmento' : 'Novo Segmento'}
-                  </Typography.Small>
+                  </small>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -397,9 +396,9 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
                         </AppBadge>
                       )}
                       {segmento.descricao && (
-                        <Typography.Muted as="span" className="truncate">
+                        <span className="text-sm text-muted-foreground truncate">
                           - {segmento.descricao}
-                        </Typography.Muted>
+                        </span>
                       )}
                     </div>
 

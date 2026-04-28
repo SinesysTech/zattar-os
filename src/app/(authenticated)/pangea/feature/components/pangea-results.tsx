@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AppBadge } from '@/components/ui/app-badge';
 import { TribunalBadge } from '@/components/ui/tribunal-badge';
-import { Typography } from '@/components/ui/typography';
+import { Heading } from '@/components/ui/typography';
 import {
   Accordion,
   AccordionContent,
@@ -116,11 +116,11 @@ export function PangeaResults({ data }: { data: PangeaBuscaResponse }) {
         </CardHeader>
         <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           <div>
-            <Typography.Muted>Total</Typography.Muted>
-            <Typography.H3>{total}</Typography.H3>
+            <p className="text-sm text-muted-foreground">Total</p>
+            <Heading level="card">{total}</Heading>
           </div>
           <div>
-            <Typography.Muted>Por tribunal</Typography.Muted>
+            <p className="text-sm text-muted-foreground">Por tribunal</p>
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2 flex flex-wrap gap-2")}>
               {grouped.slice(0, 16).map((g) => {
                 const badgeCode = toBadgeTribunalCode(g.orgao);
@@ -145,7 +145,7 @@ export function PangeaResults({ data }: { data: PangeaBuscaResponse }) {
         </CardHeader>
         <CardContent>
           {grouped.length === 0 ? (
-            <Typography.Muted>Nenhum precedente encontrado.</Typography.Muted>
+            <p className="text-sm text-muted-foreground">Nenhum precedente encontrado.</p>
           ) : (
             <Accordion type="multiple" className="w-full">
               {grouped.map((g) => {
@@ -155,7 +155,7 @@ export function PangeaResults({ data }: { data: PangeaBuscaResponse }) {
                     <AccordionTrigger className="hover:no-underline">
                       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 w-full")}>
                         <TribunalBadge codigo={badgeCode} />
-                        <Typography.Muted className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{g.orgao}</Typography.Muted>
+                        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{g.orgao}</span>
                         <AppBadge variant="neutral" className="ml-auto">
                           {g.total}
                         </AppBadge>
@@ -180,16 +180,16 @@ export function PangeaResults({ data }: { data: PangeaBuscaResponse }) {
                                   {r.alertaSituacao && <AppBadge variant="warning">{r.alertaSituacao}</AppBadge>}
                                 </div>
                                 <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-                                  <Typography.H3 className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; leading-6 sem token DS */ "text-base leading-6")}>{titulo}</Typography.H3>
+                                  <Heading level="card" className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; leading-6 sem token DS */ "text-base leading-6")}>{titulo}</Heading>
                                   {subtitulo && (
-                                    <Typography.Muted className={cn(/* design-system-escape: leading-6 sem token DS */ "leading-6")}>{subtitulo}</Typography.Muted>
+                                    <p className={cn(/* design-system-escape: leading-6 sem token DS */ "text-sm text-muted-foreground leading-6")}>{subtitulo}</p>
                                   )}
                                 </div>
                               </CardHeader>
 
                               {r.processosParadigma?.length ? (
                                 <CardContent className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv. */ "pt-0")}>
-                                  <Typography.Muted className="mb-2">Processos paradigma</Typography.Muted>
+                                  <p className="text-sm text-muted-foreground mb-2">Processos paradigma</p>
                                   <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
                                     {r.processosParadigma.map((p) => (
                                       p.link ? (

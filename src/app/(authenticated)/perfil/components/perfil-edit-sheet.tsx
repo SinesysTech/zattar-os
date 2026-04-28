@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Label } from '@/components/ui/label';
-import { Typography } from '@/components/ui/typography';
+import { Heading } from '@/components/ui/typography';
 import { actionAtualizarPerfil } from '../actions/perfil-actions';
 import type { Usuario, UsuarioDados, GeneroUsuario, Endereco } from '@/app/(authenticated)/usuarios';
 
@@ -118,7 +118,7 @@ export function PerfilEditSheet({
 
             {/* Informações Básicas */}
             <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-              <Typography.H4>Informações Básicas</Typography.H4>
+              <Heading level="subsection">Informações Básicas</Heading>
               <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
                 <div>
                   <Label htmlFor="nomeCompleto">Nome Completo *</Label>
@@ -195,7 +195,7 @@ export function PerfilEditSheet({
 
             {/* Informações Profissionais */}
             <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-              <Typography.H4>Informações Profissionais</Typography.H4>
+              <Heading level="subsection">Informações Profissionais</Heading>
               <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
                 <div>
                   <Label htmlFor="oab">OAB</Label>
@@ -225,7 +225,7 @@ export function PerfilEditSheet({
 
             {/* Contato */}
             <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-              <Typography.H4>Contato</Typography.H4>
+              <Heading level="subsection">Contato</Heading>
               <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
                 <div>
                   <Label htmlFor="emailCorporativo">E-mail Corporativo *</Label>
@@ -276,7 +276,7 @@ export function PerfilEditSheet({
 
             {/* Endereço */}
             <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-              <Typography.H4>Endereço</Typography.H4>
+              <Heading level="subsection">Endereço</Heading>
               <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
                 <div className="md:col-span-2">
                   <Label htmlFor="logradouro">Logradouro</Label>

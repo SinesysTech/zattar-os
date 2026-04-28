@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { FileSearchIcon, LayoutGridIcon, ListIcon, MenuIcon, PenSquare, Search } from "lucide-react";
-import { Typography } from "@/components/ui/typography";
+import { Heading } from "@/components/ui/typography";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -92,7 +92,7 @@ export default function NoteContent() {
           <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "bg-muted/30 mb-4 rounded-full p-6")}>
             <FileSearchIcon className="text-muted-foreground h-12 w-12" />
           </div>
-          <Typography.H3 className="mb-2">Nenhuma nota encontrada</Typography.H3>
+          <Heading level="card" className="mb-2">Nenhuma nota encontrada</Heading>
           <p className="text-muted-foreground max-w-md">
             {`Não encontramos nenhuma nota que corresponda a "${searchQuery}".`}
           </p>

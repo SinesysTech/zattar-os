@@ -390,26 +390,26 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "ml-auto flex items-center gap-1.5 shrink-0")}>
               {modalidade && (
                 <span className={cn(
-                  /* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-micro-caption font-semibold',
+                  'inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-medium',
                   modalidade === 'virtual'
                     ? 'bg-info/10 border border-info/25 text-info'
                     : modalidade === 'presencial'
                       ? 'bg-warning/10 border border-warning/25 text-warning'
                       : 'bg-primary/10 border border-primary/25 text-primary',
                 )}>
-                  {ModalidadeIcon && <ModalidadeIcon className="w-2.5 h-2.5" />}
+                  {ModalidadeIcon && <ModalidadeIcon className="w-2 h-2" />}
                   {MODALIDADE_LABEL[modalidade]}
                 </span>
               )}
               {hasVirtualRoom && (
-                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-info/10 border border-info/25 text-info rounded-md px-1.5 py-0.5 text-micro-caption font-semibold")}>
-                  <ExternalLink className="w-2.5 h-2.5" />
+                <span className="inline-flex items-center gap-1 bg-info/10 border border-info/25 text-info rounded-md px-1.5 py-0.5 text-[10px] font-medium">
+                  <ExternalLink className="w-2 h-2" />
                   Sala
                 </span>
               )}
               {audiencia.segredoJustica && (
-                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-warning/10 border border-warning/25 text-warning rounded-md px-1.5 py-0.5 text-micro-caption font-semibold")}>
-                  <Lock className="w-2.5 h-2.5" />
+                <span className="inline-flex items-center gap-1 bg-warning/10 border border-warning/25 text-warning rounded-md px-1.5 py-0.5 text-[10px] font-medium">
+                  <Lock className="w-2 h-2" />
                   Segredo
                 </span>
               )}
@@ -425,15 +425,15 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
           {(audiencia.poloAtivoNome || audiencia.poloPassivoNome || audiencia.trt || audiencia.numeroProcesso) && (
             <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; space-y-1 sem token DS */ "mt-3 border-t border-border/40 pt-3 space-y-1")}>
               {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
-                <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
-                  <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; text-xs → migrar para <Text variant="caption"> */ "truncate text-xs font-semibold text-foreground")}>
-                    {audiencia.poloAtivoNome || '—'}
-                  </p>
-                  <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; text-xs → migrar para <Text variant="caption"> */ "truncate text-xs font-semibold text-foreground")}>
-                    <span className="mr-1 text-[9px] font-normal text-muted-foreground/50">vs</span>
-                    {audiencia.poloPassivoNome || '—'}
-                  </p>
-                </div>
+                <p className="text-sm font-semibold text-foreground leading-snug">
+                  {audiencia.poloAtivoNome || '—'}
+                  {audiencia.poloAtivoNome && audiencia.poloPassivoNome && (
+                    <span className="mx-1.5 text-[10px] font-normal text-muted-foreground/40">vs</span>
+                  )}
+                  {audiencia.poloPassivoNome && (
+                    <span className="font-medium text-muted-foreground/80">{audiencia.poloPassivoNome}</span>
+                  )}
+                </p>
               )}
               {(audiencia.trt || grauLabel || audiencia.numeroProcesso) && (
                 <p className="truncate text-mono-num">

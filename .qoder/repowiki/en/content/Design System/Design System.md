@@ -3,19 +3,19 @@
 <cite>
 **Referenced Files in This Document**
 - [MASTER.md](file://design-system/zattaros/MASTER.md)
+- [shadcn-ui.md](file://design-system/shadcn-ui.md)
 - [audiencias.md](file://design-system/zattaros/pages/audiencias.md)
 - [captura.md](file://design-system/zattaros/pages/captura.md)
-- [expedientes.md](file://design-system/zattaros/pages/expedientes.md)
+- [typography.tsx](file://src/components/ui/typography.tsx)
+- [semantic-badge.tsx](file://src/components/ui/semantic-badge.tsx)
+- [badge.tsx](file://src/components/ui/badge.tsx)
+- [tabs.tsx](file://src/components/ui/tabs.tsx)
+- [globals.css](file://src/app/globals.css)
 - [variants.ts](file://src/lib/design-system/variants.ts)
 - [colors-section.tsx](file://src/app/(authenticated)/design-system/_components/colors-section.tsx)
 - [spacing-section.tsx](file://src/app/(authenticated)/design-system/_components/spacing-section.tsx)
 - [page-client.tsx](file://src/app/(authenticated)/ajuda/design-system/playground/page-client.tsx)
 - [page.tsx](file://src/app/(authenticated)/design-system/page.tsx)
-- [typography.tsx](file://src/components/ui/typography.tsx)
-- [globals.css](file://src/app/globals.css)
-- [tokens.ts](file://src/lib/design-system/tokens.ts)
-- [semantic-badge.tsx](file://src/components/ui/semantic-badge.tsx)
-- [badge.tsx](file://src/components/ui/badge.tsx)
 - [audiencias-filter-bar.tsx](file://src/app/(authenticated)/audiencias/components/audiencias-filter-bar.tsx)
 - [audiencias-semana-view.tsx](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx)
 - [audiencia-status-badge.tsx](file://src/app/(authenticated)/audiencias/components/audiencia-status-badge.tsx)
@@ -25,20 +25,18 @@
 - [use-mobile.ts](file://src/hooks/use-mobile.ts)
 - [responsive.ts](file://src/types/responsive.ts)
 - [use-responsive-layout.ts](file://src/app/(authenticated)/chat/hooks/use-responsive-layout.ts)
-- [radix-ui.js](file://src/__mocks__/radix-ui.js)
 - [base-vs-radix.md](file://.agents/skills/shadcn/rules/base-vs-radix.md)
 - [token-registry.ts](file://src/lib/design-system/token-registry.ts)
 </cite>
 
 ## Update Summary
 **Changes Made**
-- Updated to reflect major UI component refactoring and modernization effort
-- Documented migration from @radix-ui/react-* to radix-ui unified packages
-- Enhanced styling consistency with new CSS variables and design tokens
-- Improved accessibility features with WCAG AAA compliance
-- Streamlined component APIs with responsive utility hooks
-- Introduced new responsive utilities including useIsMobile hook
-- Updated design system governance with enhanced breakpoint management
+- Updated typography system documentation to reflect comprehensive refactoring from legacy polymorphic approach to type-safe Heading and Text components
+- Added new CountBadge component documentation as part of enhanced semantic badge system
+- Updated OKLCH color token documentation with enhanced color system architecture
+- Enhanced Tabs component styling documentation with new variant system
+- Integrated comprehensive shadcn/ui documentation and component guidelines
+- Updated design system governance with modern responsive utilities and component patterns
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -46,19 +44,18 @@
 3. [Master Authority and Page-Specific Overrides](#master-authority-and-page-specific-overrides)
 4. [Migration Strategy with Design System Escape Comments](#migration-strategy-with-design-system-escape-comments)
 5. [Enhanced Typography System](#enhanced-typography-system)
-6. [New Semantic Text Classes](#new-semantic-text-classes)
-7. [Accessibility Compliance Improvements](#accessibility-compliance-improvements)
-8. [Component Library Integration](#component-library-integration)
-9. [Enhanced Semantic Badge System](#enhanced-semantic-badge-system)
-10. [CountBadge Component](#countbadge-component)
-11. [Responsive Utilities and Breakpoint Management](#responsive-utilities-and-breakpoint-management)
-12. [Radix UI Modernization and Component Refactoring](#radix-ui-modernization-and-component-refactoring)
-13. [Enhanced CSS Variables and Design Tokens](#enhanced-css-variables-and-design-tokens)
-14. [Design System Playground](#design-system-playground)
-15. [Page-Specific Implementation Examples](#page-specific-implementation-examples)
-16. [Quality Assurance and Migration Tracking](#quality-assurance-and-migration-tracking)
-17. [Integration and Maintenance](#integration-and-maintenance)
-18. [Conclusion](#conclusion)
+6. [New CountBadge Component](#new-countbadge-component)
+7. [Enhanced Semantic Badge System](#enhanced-semantic-badge-system)
+8. [Accessibility Compliance Improvements](#accessibility-compliance-improvements)
+9. [Component Library Integration](#component-library-integration)
+10. [Responsive Utilities and Breakpoint Management](#responsive-utilities-and-breakpoint-management)
+11. [Radix UI Modernization and Component Refactoring](#radix-ui-modernization-and-component-refactoring)
+12. [Enhanced CSS Variables and Design Tokens](#enhanced-css-variables-and-design-tokens)
+13. [Design System Playground](#design-system-playground)
+14. [Page-Specific Implementation Examples](#page-specific-implementation-examples)
+15. [Quality Assurance and Migration Tracking](#quality-assurance-and-migration-tracking)
+16. [Integration and Maintenance](#integration-and-maintenance)
+17. [Conclusion](#conclusion)
 
 ## Introduction
 The ZattarOS Design System represents a comprehensive visual and interaction framework built on shadcn/ui components with semantic badge architecture. The system has undergone a major modernization effort featuring migration from @radix-ui/react-* packages to the unified radix-ui package, enhanced styling consistency through new CSS variables, improved accessibility compliance with WCAG AAA standards, streamlined component APIs, and introduction of responsive utilities like the useIsMobile hook.
@@ -72,7 +69,7 @@ This architecture ensures consistency across the legal management platform while
 The ZattarOS Design System operates on a three-tier hierarchical architecture that balances standardization with flexibility, now enhanced with modern responsive utilities and component refactoring.
 
 ### Master Authority Layer
-The MASTER.md file serves as the central governing document containing 175 lines of essential design system rules. It establishes the foundational principles that all modules must follow unless overridden by specific page documentation.
+The MASTER.md file serves as the central governing document containing 240 lines of essential design system rules. It establishes the foundational principles that all modules must follow unless overridden by specific page documentation.
 
 **Core Governance Principles**
 - **Central Authority**: MASTER.md provides canonical rules for all design system implementations
@@ -84,7 +81,7 @@ The MASTER.md file serves as the central governing document containing 175 lines
 **Master File Structure**
 The master file organizes rules into logical categories:
 - Identity and visual foundation
-- Color palette and semantic tokens
+- Color palette and semantic tokens with OKLCH color system
 - **Enhanced** Typography standards and font usage with comprehensive semantic text classes
 - Component specifications and layout patterns
 - Layout and spacing guidelines
@@ -137,7 +134,7 @@ The MASTER.md file establishes the foundational rules that govern the entire des
 
 **Authority Declaration**
 The master file explicitly states its governance role:
-> "Quando estiver construindo uma página específica, verifique primeiro `design-system/zattaros/pages/[page].md`. Se existir, suas regras **sobrescrevem** este Master."
+> "When building a specific page, check `design-system/zattaros/pages/[page].md` first. If it exists, its rules **override** this Master."
 
 ### Page-Specific Override Process
 
@@ -188,7 +185,7 @@ Design-system-escape comments serve as migration guidance throughout the codebas
 
 **Migration Categories**
 The escape comments categorize migration needs:
-- **Typography Migration**: `text-2xl → migrar para <Heading level="...">`
+- **Typography Migration**: `text-2xl → migrate to <Heading level="...">`
 - **Layout Migration**: `px-6 padding direcional sem Inset equiv.` → Use container utilities
 - **Component Migration**: `cursor-pointer on all clickable elements` → Use Button component
 - **Spacing Migration**: `gap-3 gap sem token DS` → Use semantic spacing tokens
@@ -255,54 +252,131 @@ import { Text } from '@/components/ui/typography';
 - **Transition Typography**: Hybrid approaches during migration
 - **Final Typography**: Fully standardized design system typography
 
-## New Semantic Text Classes
+**Section sources**
+- [typography.tsx:211-219](file://src/components/ui/typography.tsx#L211-L219)
+- [typography.tsx:247-255](file://src/components/ui/typography.tsx#L247-L255)
+- [MASTER.md:77-78](file://design-system/zattaros/MASTER.md#L77-L78)
 
-The design system introduces comprehensive semantic text classes that replace raw Tailwind typography classes, providing better maintainability and accessibility.
+## New CountBadge Component
 
-### Text Class Hierarchy and Governance
+The design system introduces a specialized CountBadge component as part of the enhanced semantic badge system, providing consistent count display functionality across tabs, pills, and quantity indicators.
 
-**Canonical Typography Classes**
-The system defines precise semantic classes for different text purposes:
-- **KPI Values**: `text-kpi-value` (24px, bold, tabular-nums)
-- **Meta Labels**: `text-meta-label` (11px, semibold, uppercase, tracking 0.14em)
-- **Overline Labels**: `text-overline` (11px, semibold, uppercase, tracking 0.08em)
-- **Caption Text**: `text-caption` (13px, muted-foreground)
-- **Micro Badge Text**: `text-micro-badge` (9px, font-medium)
-- **Mono Numbers**: `text-mono-num` (10px, font-mono, tabular-nums)
-- **Micro Captions**: `text-micro-caption` (10px, tertiary timestamps)
+### CountBadge Architecture and Design Philosophy
 
-**Class Governance**
-- **Centralized Definition**: All classes defined in `src/app/globals.css`
-- **Semantic Clarity**: Each class serves a specific design purpose
-- **Accessibility Compliance**: All classes meet WCAG AAA standards
-- **Responsive Behavior**: Proper scaling across device sizes
+**Component Design**
+The CountBadge component is a specialized badge designed specifically for displaying numeric counts in tabs, pills, and quantity indicators. It provides a consistent visual pattern for count displays across the application.
 
-### Text Class Usage and Migration
+**Design Philosophy**
+- **Neutral Semantics**: Uses secondary soft tone to avoid domain-specific associations
+- **Tabular Numbers**: Ensures consistent width for numeric displays
+- **Size Flexibility**: Supports xs, sm, and md sizes for different contexts
+- **Consistent Styling**: Provides uniform appearance across all count displays
 
-**Migration Examples**
+**Component Implementation**
 ```typescript
-// Before migration - raw Tailwind classes
-<h1 className="text-2xl font-bold">Main Title</h1>
-<p className="text-sm text-gray-500">Subtitle</p>
-<span className="text-xs uppercase tracking-wider">Label</span>
-
-// After migration - semantic text classes
-<Heading level="page">Main Title</Heading>
-<Text variant="caption">Subtitle</Text>
-<Text variant="meta-label">Label</Text>
+export function CountBadge({
+  children,
+  className,
+  size = 'xs',
+  ...props
+}: Omit<React.ComponentProps<typeof Badge>, 'variant' | 'tone'> & {
+  size?: 'xs' | 'sm' | 'md';
+}) {
+  return (
+    <Badge
+      variant="secondary"
+      tone="soft"
+      size={size}
+      className={cn('tabular-nums', className)}
+      {...props}
+    >
+      {children}
+    </badge>
+  );
+}
 ```
 
-**Governance Benefits**
-- **Consistency**: All text elements follow standardized visual patterns
-- **Maintainability**: Centralized updates affect all text usage
-- **Accessibility**: Consistent color contrast and semantic meaning
-- **Performance**: Optimized rendering through semantic class usage
+### CountBadge Usage Patterns
 
-**Text Usage Patterns**
-- **Domain-Specific**: Each module uses appropriate text classes
-- **Consistent Styling**: All elements within a category share visual treatment
-- **Semantic Clarity**: Text classes clearly communicate purpose and meaning
-- **Responsive Design**: Text classes adapt to different screen sizes and contexts
+**Tab Integration**
+```typescript
+// Tab trigger with count badge
+<TabsTrigger value="marcadas">
+  Marcadas <CountBadge>{counts.marcadas}</CountBadge>
+</TabsTrigger>
+```
+
+**Dynamic Styling**
+```typescript
+<CountBadge className={lowPrepCount > 0 ? 'bg-warning/15 text-warning' : undefined}>
+  {dayAudiencias.length}
+</CountBadge>
+```
+
+**Size Variations**
+- **xs**: Extra-small for tight spaces
+- **sm**: Small for moderate contexts
+- **md**: Medium for prominent displays
+
+### CountBadge Integration Examples
+
+**Audiências Module Integration**
+The CountBadge component is extensively used in the audiências module for displaying counts in various contexts:
+- Tab counts for different audiência statuses
+- Day counts in weekly view navigation
+- Dynamic count styling based on conditions
+
+**Responsive Integration**
+The component seamlessly integrates with modern responsive utilities, adapting its size and styling based on screen context and user interactions.
+
+**Section sources**
+- [semantic-badge.tsx:200-219](file://src/components/ui/semantic-badge.tsx#L200-L219)
+- [audiencias.md:153-156](file://design-system/zattaros/pages/audiencias.md#L153-L156)
+
+## Enhanced Semantic Badge System
+
+The semantic badge system provides consistent status communication across the platform through categorized variants with centralized governance. The system has been enhanced with a new CountBadge component for specialized count display functionality.
+
+### Badge Category System and Governance
+
+**Centralized Management**
+The semantic badge system is governed centrally in the variants.ts file:
+- **BadgeCategory Types**: Comprehensive enumeration of all badge categories
+- **BadgeVisualVariant Types**: Standardized visual variants (default, secondary, success, etc.)
+- **BadgeTone Control**: Tone selection (soft vs solid) based on category semantics
+- **Centralized Mapping**: Single source of truth for all badge variant mappings
+
+**Category Governance**
+Badge categories are organized by domain and purpose:
+- **Institutional Categories**: `tribunal`, `grau`, `status` (solid tone)
+- **Status Categories**: `expediente_status`, `audiencia_status`, `captura_status` (soft tone)
+- **Domain Categories**: `expediente_tipo`, `parte`, `polo` (category-specific)
+- **Project Categories**: `project_status`, `task_status`, `priority` (soft tone)
+
+### Enhanced Badge Component Architecture
+
+**SemanticBadge Component**
+The SemanticBadge component encapsulates the logic for mapping domain values to visual variants, eliminating the need for scattered color mapping functions throughout the codebase.
+
+**Specialized Badge Components**
+The system provides specialized badge components for common use cases:
+- TribunalSemanticBadge for court identifiers
+- StatusSemanticBadge for process status
+- GrauSemanticBadge for jurisdiction levels
+- PoloSemanticBadge for case parties
+- ParteTipoSemanticBadge for party types
+- AudienciaStatusSemanticBadge for hearing status
+- AudienciaModalidadeSemanticBadge for hearing modalities
+- ExpedienteTipoSemanticBadge for case types
+- CapturaStatusSemanticBadge for capture status
+
+**CountBadge Integration**
+The CountBadge component complements the semantic badge system by providing specialized count display functionality with neutral semantics and consistent styling.
+
+**Section sources**
+- [semantic-badge.tsx:75-110](file://src/components/ui/semantic-badge.tsx#L75-L110)
+- [semantic-badge.tsx:124-189](file://src/components/ui/semantic-badge.tsx#L124-L189)
+- [semantic-badge.tsx:200-219](file://src/components/ui/semantic-badge.tsx#L200-L219)
 
 ## Accessibility Compliance Improvements
 
@@ -386,6 +460,34 @@ The system provides canonical components through shadcn/ui integration:
 - **Performance Optimization**: Components designed for optimal performance
 - **Modern API**: Unified radix-ui package integration with streamlined interfaces
 
+### Enhanced Tabs Component System
+
+**New Variant System**
+The Tabs component now features an enhanced variant system supporting multiple display modes:
+- **default**: Pill-style tabs with background
+- **line**: Underline-style tabs with transparent backgrounds
+- **week**: Full-width day-picker tabs with custom styling
+
+**Week View Styling**
+The week variant provides specialized styling for day navigation:
+```tsx
+<TabsList variant="week">
+  <TabsTrigger value={key} className="flex h-auto! flex-1 flex-col items-center gap-0.5 px-3 py-2">
+    <span className={cn('text-overline capitalize', today && 'text-primary')}>
+      {format(day, 'EEE', { locale: ptBR })}
+    </span>
+    <span className={cn('text-caption font-semibold tabular-nums', today && 'text-primary')}>
+      {format(day, 'd')}
+    </span>
+  </TabsTrigger>
+</TabsList>
+```
+
+**Section sources**
+- [tabs.tsx:27-41](file://src/components/ui/tabs.tsx#L27-L41)
+- [tabs.tsx:18-25](file://src/components/ui/tabs.tsx#L18-L25)
+- [MASTER.md:143-181](file://design-system/zattaros/MASTER.md#L143-L181)
+
 ### Component Usage Patterns and Migration
 
 **Import Structure**
@@ -406,110 +508,8 @@ Components support multiple variants for different contexts:
 - **Transition Components**: Hybrid approaches during migration
 - **Final Components**: Fully standardized design system components
 
-## Enhanced Semantic Badge System
-
-The semantic badge system provides consistent status communication across the platform through categorized variants with centralized governance. The system has been enhanced with a new CountBadge component for specialized count display functionality.
-
-### Badge Category System and Governance
-
-**Centralized Management**
-The semantic badge system is governed centrally in the variants.ts file:
-- **BadgeCategory Types**: Comprehensive enumeration of all badge categories
-- **BadgeVisualVariant Types**: Standardized visual variants (default, secondary, success, etc.)
-- **BadgeTone Control**: Tone selection (soft vs solid) based on category semantics
-- **Centralized Mapping**: Single source of truth for all badge variant mappings
-
-**Category Governance**
-Badge categories are organized by domain and purpose:
-- **Institutional Categories**: `tribunal`, `grau`, `status` (solid tone)
-- **Status Categories**: `expediente_status`, `audiencia_status`, `captura_status` (soft tone)
-- **Domain Categories**: `expediente_tipo`, `parte`, `polo` (category-specific)
-- **Project Categories**: `project_status`, `task_status`, `priority` (soft tone)
-
-### CountBadge Component
-
-**New CountBadge Component**
-The CountBadge component is a specialized badge designed specifically for displaying numeric counts in tabs, pills, and quantity indicators. It provides a consistent visual pattern for count displays across the application.
-
-**Component Architecture**
-```typescript
-export function CountBadge({
-  children,
-  className,
-  size = 'xs',
-  ...props
-}: Omit<React.ComponentProps<typeof Badge>, 'variant' | 'tone'> & {
-  size?: 'xs' | 'sm' | 'md';
-}) {
-  return (
-    <Badge
-      variant="secondary"
-      tone="soft"
-      size={size}
-      className={cn('tabular-nums', className)}
-      {...props}
-    >
-      {children}
-    </badge>
-  );
-}
-```
-
-**Design Philosophy**
-- **Neutral Semantics**: Uses secondary soft tone to avoid domain-specific associations
-- **Tabular Numbers**: Ensures consistent width for numeric displays
-- **Size Flexibility**: Supports xs, sm, and md sizes for different contexts
-- **Consistent Styling**: Provides uniform appearance across all count displays
-
-**Usage Patterns**
-- **Tab Counts**: Displaying item counts in navigation tabs
-- **Pill Counts**: Showing quantities in pill-shaped indicators
-- **Quantity Indicators**: Presenting numerical values in compact badges
-- **Status Counts**: Displaying counts for filtered results
-
-**Integration Examples**
-```typescript
-// Tab trigger with count badge
-<TabsTrigger value="marcadas">
-  Marcadas <CountBadge>{counts.marcadas}</CountBadge>
-</TabsTrigger>
-
-// Day tab with count badge
-<CountBadge className={lowPrepCount > 0 ? 'bg-warning/15 text-warning' : undefined}>
-  {dayAudiencias.length}
-</CountBadge>
-```
-
-**Migration Benefits**
-- **Consistency**: All count displays follow standardized visual patterns
-- **Maintainability**: Centralized count display logic across the application
-- **Accessibility**: Consistent color contrast and semantic meaning for counts
-- **Performance**: Optimized rendering through specialized component design
-
-### Badge Variant Mapping and Migration
-
-**Centralized Mapping Functions**
-The system provides centralized mapping functions:
-```typescript
-export function getSemanticBadgeVariant(
-  category: BadgeCategory,
-  key: string | number | null | undefined
-): BadgeVisualVariant {
-  // Implementation handles category-specific mapping
-}
-```
-
-**Migration Benefits**
-- **Consistency**: All badges follow standardized visual patterns
-- **Maintainability**: Centralized updates affect all badge usage
-- **Accessibility**: Consistent color contrast and semantic meaning
-- **Performance**: Optimized rendering through centralized logic
-
-**Badge Usage Patterns**
-- **Domain-Specific**: Each module uses appropriate badge categories
-- **Consistent Styling**: All badges within a category share visual treatment
-- **Semantic Clarity**: Badge variants clearly communicate status and meaning
-- **Responsive Design**: Badges adapt to different screen sizes and contexts
+**Section sources**
+- [shadcn-ui.md:1-160](file://design-system/shadcn-ui.md#L1-L160)
 
 ## Responsive Utilities and Breakpoint Management
 
@@ -752,6 +752,33 @@ The system provides comprehensive token registry management:
 - **Type Safety**: Strong typing for all token access patterns
 - **Documentation**: Comprehensive token documentation and usage examples
 - **Validation**: Automated validation of token usage and consistency
+
+### OKLCH Color Token Implementation
+
+**Enhanced Color System**
+The design system now implements OKLCH color tokens for superior color management:
+- **Reference Tokens**: Zattar Purple scale with consistent hue (281°)
+- **Semantic Tokens**: Shadcn standard color mappings
+- **Brand Tokens**: Pure Zattar Purple and action orange combinations
+- **Surface Tokens**: Micro-tinted surface hierarchy
+- **Status Tokens**: Success, warning, and info color mappings
+
+**Color Token Benefits**
+- **Consistent Hue**: All brand colors maintain hue 281° for visual coherence
+- **Improved Contrast**: Better accessibility with OKLCH color space
+- **Theme Flexibility**: Enhanced light and dark theme support
+- **Performance**: Optimized color calculations and caching
+
+**Color Governance**
+- **OKLCH Compliance**: All color tokens use OKLCH color space
+- **Brand Alignment**: Colors align with Zattar brand identity
+- **Accessibility Standards**: WCAG AAA compliant color contrasts
+- **Performance Monitoring**: Efficient color token resolution
+
+**Section sources**
+- [globals.css:251-553](file://src/app/globals.css#L251-L553)
+- [globals.css:555-753](file://src/app/globals.css#L555-L753)
+- [MASTER.md:37-54](file://design-system/zattaros/MASTER.md#L37-L54)
 
 ### Design Token Integration
 

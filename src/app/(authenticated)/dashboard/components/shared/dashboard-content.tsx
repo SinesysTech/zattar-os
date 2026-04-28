@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Typography } from '@/components/ui/typography';
+import { Heading } from '@/components/ui/typography';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { getSemanticBadgeVariant } from '@/lib/design-system';
 import { useDashboard, useWidgetPermissions } from '../../hooks';
@@ -106,8 +106,8 @@ function DashboardError({ error, onRetry }: { error: string; onRetry: () => void
       <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-full bg-destructive/10 p-4 mb-4")}>
         <RefreshCw className="h-8 w-8 text-destructive" />
       </div>
-      <Typography.H4 className="mb-2">Erro ao carregar dashboard</Typography.H4>
-      <Typography.Muted className="mb-4 max-w-md">{error}</Typography.Muted>
+      <Heading level="subsection" className="mb-2">Erro ao carregar dashboard</Heading>
+      <p className="text-sm text-muted-foreground mb-4 max-w-md">{error}</p>
       <Button onClick={onRetry} variant="outline">
         <RefreshCw className="h-4 w-4 mr-2" />
         Tentar novamente
@@ -145,17 +145,17 @@ function UserDashboard({ data, onRefetch }: UserDashboardProps) {
     return (
       <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
         <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4")}>
-          <Typography.H1>Olá, {data.usuario.nome}!</Typography.H1>
+          <Heading level="page">Olá, {data.usuario.nome}!</Heading>
         </div>
         <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-12 text-center")}>
           <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-full bg-muted p-4 mb-4")}>
             <FileWarning className="h-8 w-8 text-muted-foreground" />
           </div>
-          <Typography.H4 className="mb-2">Sem permissões de visualização</Typography.H4>
-          <Typography.Muted className="max-w-md">
+          <Heading level="subsection" className="mb-2">Sem permissões de visualização</Heading>
+          <p className="text-sm text-muted-foreground max-w-md">
             Você não possui permissões para visualizar dados do dashboard.
             Entre em contato com o administrador do sistema.
-          </Typography.Muted>
+          </p>
         </div>
       </div>
     );
@@ -165,7 +165,7 @@ function UserDashboard({ data, onRefetch }: UserDashboardProps) {
     <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       {/* Saudação */}
       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4")}>
-        <Typography.H1>Olá, {data.usuario.nome}!</Typography.H1>
+        <Heading level="page">Olá, {data.usuario.nome}!</Heading>
         <Button variant="ghost" size="sm" onClick={onRefetch} className="w-full sm:w-auto">
           <RefreshCw className="h-4 w-4 mr-2" />
           Atualizar
@@ -259,13 +259,13 @@ function UserDashboard({ data, onRefetch }: UserDashboardProps) {
 
       {/* Última atualização */}
       <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "text-center pt-4 border-t")}>
-        <Typography.Muted className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
           Última atualização:{' '}
           {new Date(data.ultimaAtualizacao).toLocaleString('pt-BR', {
             dateStyle: 'short',
             timeStyle: 'short',
           })}
-        </Typography.Muted>
+        </p>
       </div>
     </div>
   );
@@ -285,7 +285,7 @@ function AdminDashboard({ data, onRefetch }: AdminDashboardProps) {
     <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       {/* Saudação */}
       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4")}>
-        <Typography.H1>Olá, {data.usuario.nome}!</Typography.H1>
+        <Heading level="page">Olá, {data.usuario.nome}!</Heading>
         <Button variant="ghost" size="sm" onClick={onRefetch} className="w-full sm:w-auto">
           <RefreshCw className="h-4 w-4 mr-2" />
           Atualizar
@@ -364,20 +364,20 @@ function AdminDashboard({ data, onRefetch }: AdminDashboardProps) {
             value={data.metricas.totalUsuarios.toLocaleString('pt-BR')}
           />
           <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 rounded-lg border bg-card")}>
-            <Typography.H4 className="mb-4">Performance de Advogados</Typography.H4>
+            <Heading level="subsection" className="mb-4">Performance de Advogados</Heading>
             {data.performanceAdvogados.length > 0 ? (
               <ul className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                 {data.performanceAdvogados.slice(0, 5).map((adv) => (
                   <li key={adv.usuario_id} className="flex justify-between">
                     <span className="truncate">{adv.usuario_nome}</span>
-                    <Typography.Muted className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
+                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                       {adv.baixasMes} baixas/mês ({adv.taxaCumprimentoPrazo}%)
-                    </Typography.Muted>
+                    </p>
                   </li>
                 ))}
               </ul>
             ) : (
-              <Typography.Muted>Nenhum dado disponível</Typography.Muted>
+              <p className="text-sm text-muted-foreground">Nenhum dado disponível</p>
             )}
           </div>
         </div>
@@ -403,14 +403,14 @@ function AdminDashboard({ data, onRefetch }: AdminDashboardProps) {
                   className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 rounded-lg border bg-card")}
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <Typography.H4>
+                    <Heading level="subsection">
                       {captura.trt} - {captura.grau === 'primeiro_grau' ? '1º Grau' : '2º Grau'}
-                    </Typography.H4>
+                    </Heading>
                     <Badge variant={getSemanticBadgeVariant('captura_status', capturaStatus)}>
                       {captura.status}
                     </Badge>
                   </div>
-                  <Typography.Muted className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
                     Última execução:{' '}
                     {captura.ultimaExecucao
                       ? new Date(captura.ultimaExecucao).toLocaleString('pt-BR', {
@@ -418,7 +418,7 @@ function AdminDashboard({ data, onRefetch }: AdminDashboardProps) {
                           timeStyle: 'short',
                         })
                       : 'Nunca'}
-                  </Typography.Muted>
+                  </p>
                 </div>
               );
             })}
@@ -428,13 +428,13 @@ function AdminDashboard({ data, onRefetch }: AdminDashboardProps) {
 
       {/* Última atualização */}
       <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "text-center pt-4 border-t")}>
-        <Typography.Muted className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
           Última atualização:{' '}
           {new Date(data.ultimaAtualizacao).toLocaleString('pt-BR', {
             dateStyle: 'short',
             timeStyle: 'short',
           })}
-        </Typography.Muted>
+        </p>
       </div>
     </div>
   );

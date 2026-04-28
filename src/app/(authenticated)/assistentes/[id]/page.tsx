@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Typography } from '@/components/ui/typography';
+import { Heading } from '@/components/ui/typography';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import { Metadata } from 'next';
@@ -35,7 +35,7 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
   if (!result.success || !result.data) {
     return (
       <div className={cn(/* design-system-escape: p-8 → usar <Inset>; space-y-4 → migrar para <Stack gap="default"> */ "flex flex-col items-center justify-center p-8 space-y-4")}>
-        <Typography.H2 className="text-destructive">Assistente não encontrado</Typography.H2>
+        <Heading level="section" className="text-destructive">Assistente não encontrado</Heading>
         <Button asChild variant="outline">
           <Link href="/assistentes">Voltar</Link>
         </Button>
@@ -52,7 +52,7 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
     if (!difyApp) {
       return (
         <div className={cn(/* design-system-escape: p-8 → usar <Inset>; space-y-4 → migrar para <Stack gap="default"> */ "flex flex-col items-center justify-center p-8 space-y-4")}>
-          <Typography.H2 className="text-destructive">App Dify não encontrado</Typography.H2>
+          <Heading level="section" className="text-destructive">App Dify não encontrado</Heading>
           <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
             O app Dify vinculado a este assistente foi removido.
           </p>
@@ -72,7 +72,7 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
                 <ChevronLeft className="h-4 w-4" />
               </Link>
             </Button>
-            <Typography.Small className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{assistente.nome}</Typography.Small>
+            <small className="text-sm font-medium leading-none">{assistente.nome}</small>
           </div>
           <div className="flex-1 min-h-0">
             <AssistenteNativoView appId={difyApp.id} appType={difyApp.app_type} metadata={difyApp.metadata ?? null} />
@@ -92,7 +92,7 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
               <ChevronLeft className="h-4 w-4" />
             </Link>
           </Button>
-          <Typography.Small className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{assistente.nome}</Typography.Small>
+          <small className="text-sm font-medium leading-none">{assistente.nome}</small>
         </div>
         <div className="flex-1 min-h-0">
           <div

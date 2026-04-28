@@ -262,8 +262,8 @@ function GlassRow({
             </h3>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "ml-auto flex items-center gap-1.5 shrink-0")}>
               {audiencia.modalidade && (
-                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 rounded-md bg-primary/10 border border-primary/20 px-1.5 py-0.5 text-micro-caption font-semibold tracking-[0.02em] text-primary")}>
-                  <ModalidadeIcon className="w-2.5 h-2.5" />
+                <span className="inline-flex items-center gap-1 rounded-md bg-primary/10 border border-primary/20 px-1.5 py-0.5 text-[10px] font-medium text-primary">
+                  <ModalidadeIcon className="w-2 h-2" />
                   {MODALIDADE_AUDIENCIA_LABELS[audiencia.modalidade]}
                 </span>
               )}
@@ -285,26 +285,26 @@ function GlassRow({
                 </SemanticBadge>
               )}
               {audiencia.segredoJustica && (
-                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-warning/10 border border-warning/25 text-warning rounded-md px-1.5 py-0.5 text-micro-caption font-semibold")}>
-                  <Lock className="w-2.5 h-2.5" />
+                <span className="inline-flex items-center gap-1 bg-warning/10 border border-warning/25 text-warning rounded-md px-1.5 py-0.5 text-[10px] font-medium">
+                  <Lock className="w-2 h-2" />
                   Segredo
                 </span>
               )}
               {audiencia.juizoDigital && (
-                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-info/10 border border-info/25 text-info rounded-md px-1.5 py-0.5 text-micro-caption font-semibold")}>
-                  <Monitor className="w-2.5 h-2.5" />
+                <span className="inline-flex items-center gap-1 bg-info/10 border border-info/25 text-info rounded-md px-1.5 py-0.5 text-[10px] font-medium">
+                  <Monitor className="w-2 h-2" />
                   Digital
                 </span>
               )}
               {audiencia.designada && (
-                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-success/10 border border-success/25 text-success rounded-md px-1.5 py-0.5 text-micro-caption font-semibold")}>
-                  <CheckCircle2 className="w-2.5 h-2.5" />
+                <span className="inline-flex items-center gap-1 bg-success/10 border border-success/25 text-success rounded-md px-1.5 py-0.5 text-[10px] font-medium">
+                  <CheckCircle2 className="w-2 h-2" />
                   Designada
                 </span>
               )}
               {(audiencia.poloAtivoRepresentaVarios || audiencia.poloPassivoRepresentaVarios) && (
-                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-muted border border-border/70 text-muted-foreground rounded-md px-1.5 py-0.5 text-micro-caption font-semibold")}>
-                  <Users className="w-2.5 h-2.5" />
+                <span className="inline-flex items-center gap-1 bg-muted border border-border/70 text-muted-foreground rounded-md px-1.5 py-0.5 text-[10px] font-medium">
+                  <Users className="w-2 h-2" />
                   Litisconsórcio
                 </span>
               )}
@@ -313,13 +313,15 @@ function GlassRow({
 
           {/* Identidade Processual */}
           <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; space-y-1 sem token DS */ "mt-3 border-t border-border/40 pt-3 space-y-1")}>
-            <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
-              <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; text-xs → migrar para <Text variant="caption"> */ "truncate text-xs font-semibold text-foreground")}>{poloAtivo}</p>
-              <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; text-xs → migrar para <Text variant="caption"> */ "truncate text-xs font-semibold text-foreground")}>
-                <span className="mr-1 text-[9px] font-normal text-muted-foreground/50">vs</span>
-                {poloPassivo}
-              </p>
-            </div>
+            <p className="text-sm font-semibold text-foreground leading-snug">
+              {poloAtivo}
+              {poloAtivo !== '—' && poloPassivo !== '—' && (
+                <span className="mx-1.5 text-[10px] font-normal text-muted-foreground/40">vs</span>
+              )}
+              {poloPassivo !== '—' && (
+                <span className="font-medium text-muted-foreground/80">{poloPassivo}</span>
+              )}
+            </p>
             <p className="truncate text-mono-num">
               {[audiencia.trt, grauLabel, audiencia.salaAudienciaNome, audiencia.numeroProcesso].filter(Boolean).join(' · ')}
             </p>

@@ -7,7 +7,7 @@
 
 import * as React from 'react';
 import { useParams } from 'next/navigation';
-import { Typography } from '@/components/ui/typography';
+import { Heading } from '@/components/ui/typography';
 import { PecaModeloEditor } from '@/app/(authenticated)/pecas-juridicas/components';
 
 export function EditarPecaModeloClient() {
@@ -18,10 +18,10 @@ export function EditarPecaModeloClient() {
     return (
       <div className="flex h-full items-center justify-center">
         <div className="text-center">
-          <Typography.H2>ID inválido</Typography.H2>
-          <Typography.Muted className="mt-2">
+          <Heading level="section">ID inválido</Heading>
+          <p className="text-sm text-muted-foreground mt-2">
             O ID do modelo fornecido não é válido.
-          </Typography.Muted>
+          </p>
         </div>
       </div>
     );

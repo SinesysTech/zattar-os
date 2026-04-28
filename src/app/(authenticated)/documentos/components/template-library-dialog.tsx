@@ -30,7 +30,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Typography } from '@/components/ui/typography';
+import { Heading } from '@/components/ui/typography';
 import { toast } from 'sonner';
 import { TemplateCard } from './template-card';
 import { useTemplates } from '../hooks/use-templates';
@@ -226,7 +226,7 @@ export function TemplateLibraryDialog({
                 ) : templates.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-64 text-center">
                     <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-                    <Typography.H3>Nenhum template encontrado</Typography.H3>
+                    <Heading level="card">Nenhum template encontrado</Heading>
                     <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground mt-1")}>
                       {hasFilters
                         ? 'Tente ajustar os filtros de busca'
@@ -252,7 +252,7 @@ export function TemplateLibraryDialog({
                 {maisUsados.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-64 text-center">
                     <Star className="h-12 w-12 text-muted-foreground mb-4" />
-                    <Typography.H3>Nenhum template popular ainda</Typography.H3>
+                    <Heading level="card">Nenhum template popular ainda</Heading>
                     <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground mt-1")}>
                       Templates mais usados aparecerão aqui
                     </p>

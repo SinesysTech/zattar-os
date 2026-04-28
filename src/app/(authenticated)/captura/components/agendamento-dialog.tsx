@@ -10,7 +10,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
-import { Typography } from '@/components/ui/typography';
 
 import type { TipoCaptura } from '@/app/(authenticated)/captura';
 import { CapturaFormBase, TipoCapturaSelect, validarCamposCaptura } from '@/app/(authenticated)/captura';
@@ -95,7 +94,7 @@ export function AgendamentoDialog({ open, onOpenChange, onSuccess }: Props) {
     <DialogFormShell
       open={open}
       onOpenChange={onOpenChange}
-      title={<Typography.H3 as="span">Novo agendamento</Typography.H3>}
+      title={<span className="scroll-m-20 text-2xl font-semibold tracking-tight">Novo agendamento</span>}
       maxWidth="2xl"
       footer={
         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex w-full justify-end gap-2")}>
@@ -165,10 +164,10 @@ export function AgendamentoDialog({ open, onOpenChange, onSuccess }: Props) {
 
         <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between rounded-md border p-3 bg-background")}>
           <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
-            <Typography.Small className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Ativo</Typography.Small>
-            <Typography.Muted className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+            <small className="text-sm font-semibold leading-none">Ativo</small>
+            <p className="text-sm text-muted-foreground text-xs">
               Agendamentos inativos não executam automaticamente.
-            </Typography.Muted>
+            </p>
           </div>
           <Switch checked={ativo} onCheckedChange={setAtivo} />
         </div>

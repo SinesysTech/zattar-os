@@ -27,17 +27,21 @@
 - [typography.tsx](file://src/components/ui/typography.tsx)
 - [globals.css](file://src/app/globals.css)
 - [audiencias.md](file://design-system/zattaros/pages/audiencias.md)
+- [tabs.tsx](file://src/components/ui/tabs.tsx)
+- [week-navigator.tsx](file://src/components/shared/week-navigator.tsx)
+- [week-days-carousel.tsx](file://src/components/shared/week-days-carousel.tsx)
+- [year-calendar-grid.tsx](file://src/components/shared/year-calendar-grid.tsx)
+- [tokens.ts](file://src/lib/design-system/tokens.ts)
 - [logs.txt](file://scripts/results/api-audiencias/logs.txt)
 </cite>
 
 ## Update Summary
 **Changes Made**
-- Enhanced typography system implementation with new variant classes (text-card-title, text-mono-num)
-- Improved semantic structure with proper heading components throughout audiência components
-- Integrated new badge systems for case flags and audiência status
-- Implemented virtual room detection system for enhanced audiência management
-- Added observation system improvements with structured editing capabilities
-- Updated audiências-glass-list.tsx, audiencias-missao-content.tsx, and audiencias-semana-view.tsx to use enhanced design system
+- Enhanced Tabs component with new "week" variant for improved day-picker interfaces
+- Updated trigger styling for day navigation with enhanced visual feedback
+- Improved typography system compliance with new text-card-title and text-mono-num classes
+- Updated design system documentation for audiência components with enhanced trigger styling
+- Enhanced day picker interfaces with improved accessibility and visual hierarchy
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -48,11 +52,12 @@
 6. [Enhanced Typography System](#enhanced-typography-system)
 7. [Mission Control Interface Patterns](#mission-control-interface-patterns)
 8. [Enhanced Filtering System](#enhanced-filtering-system)
-9. [Database Infrastructure Improvements](#database-infrastructure-improvements)
-10. [Dependency Analysis](#dependency-analysis)
-11. [Performance Considerations](#performance-considerations)
-12. [Troubleshooting Guide](#troubleshooting-guide)
-13. [Conclusion](#conclusion)
+9. [Enhanced Day Picker Interfaces](#enhanced-day-picker-interfaces)
+10. [Database Infrastructure Improvements](#database-infrastructure-improvements)
+11. [Dependency Analysis](#dependency-analysis)
+12. [Performance Considerations](#performance-considerations)
+13. [Troubleshooting Guide](#troubleshooting-guide)
+14. [Conclusion](#conclusion)
 
 ## Introduction
 
@@ -60,7 +65,7 @@ The Audiência Management system is a comprehensive court hearing scheduling pla
 
 The platform manages the complete lifecycle of court hearings, from initial scheduling through completion, while maintaining strict legal compliance requirements. It integrates advanced features including automated audiência data capture, intelligent resource allocation, and sophisticated participant management systems.
 
-**Updated** Enhanced with comprehensive design system compliance featuring new typography variant classes (text-card-title, text-mono-num), improved semantic structure with proper heading components, new badge systems for case flags, virtual room detection system, and observation system improvements. The audiências-glass-list.tsx, audiencias-missao-content.tsx, and audiencias-semana-view.tsx components now use the enhanced design system with consistent typography and semantic markup.
+**Updated** Enhanced with comprehensive design system compliance featuring new typography variant classes (text-card-title, text-mono-num), improved semantic structure with proper heading components, new badge systems for case flags, virtual room detection system, and observation system improvements. The audiências-glass-list.tsx, audiencias-missao-content.tsx, and audiencias-semana-view.tsx components now use the enhanced design system with consistent typography and semantic markup. Additionally, the Tabs component now includes a specialized "week" variant for enhanced day-picker interfaces with improved trigger styling and visual feedback.
 
 ## Project Structure
 
@@ -84,6 +89,9 @@ BadgeSystems[Enhanced Badge Systems]
 TypographySystem[Typography System]
 VirtualRoomDetection[Virtual Room Detection]
 ObservationSystem[Observation System]
+Tabs[Enhanced Tabs Component]
+WeekNavigator[Week Navigator]
+DayPicker[Day Picker Interfaces]
 end
 subgraph "Application Layer"
 Actions[Server Actions]
@@ -117,6 +125,9 @@ BadgeSystems --> Actions
 TypographySystem --> Actions
 VirtualRoomDetection --> Actions
 ObservationSystem --> Actions
+Tabs --> Actions
+WeekNavigator --> Actions
+DayPicker --> Actions
 Actions --> Services
 Services --> Repository
 Repository --> Database
@@ -141,6 +152,9 @@ Calendar --> Outlook
 - [audiencias-glass-list.tsx:259-328](file://src/app/(authenticated)/audiencias/components/audiencias-glass-list.tsx#L259-L328)
 - [audiencias-semana-view.tsx:396-455](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx#L396-L455)
 - [audiencias-missao-content.tsx:317-328](file://src/app/(authenticated)/audiencias/components/views/audiencias-missao-content.tsx#L317-L328)
+- [tabs.tsx:27-41](file://src/components/ui/tabs.tsx#L27-L41)
+- [week-navigator.tsx:181-221](file://src/components/shared/week-navigator.tsx#L181-L221)
+- [week-days-carousel.tsx:180-274](file://src/components/shared/week-days-carousel.tsx#L180-L274)
 
 **Section sources**
 - [audiencias-client.tsx:1-431](file://src/app/(authenticated)/audiencias/audiencias-client.tsx#L1-L431)
@@ -252,7 +266,7 @@ Action-->>Client : Success Message
 
 ### Frontend Components and User Interface
 
-The user interface follows a modern glass-morphism design pattern with comprehensive view modes and filtering capabilities, now enhanced with proper design system typography, new capture card functionality, improved count display, and enhanced badge systems:
+The user interface follows a modern glass-morphism design pattern with comprehensive view modes and filtering capabilities, now enhanced with proper design system typography, new capture card functionality, improved count display, enhanced badge systems, and specialized day-picker interfaces:
 
 ```mermaid
 classDiagram
@@ -332,6 +346,26 @@ class BadgeSystems {
 +caseFlags : array
 +statusBadges : array
 }
+class Tabs {
++variant : "default" | "line" | "week"
++TabsList : component
++TabsTrigger : component
++TabsContent : component
+}
+class WeekNavigator {
++weekDays : WeekDay[]
++selectedDate : Date
++onDateSelect : function
++onPreviousWeek : function
++onNextWeek : function
++onToday : function
+}
+class WeekDaysCarousel {
++variant : "default" | "compact" | "minimal"
++daysInfo : DayInfo[]
++onDateSelect : function
++renderBadge : function
+}
 class Domain {
 +StatusAudiencia : enum
 +ModalidadeAudiencia : enum
@@ -349,6 +383,9 @@ AudienciasClient --> CountBadge : "uses"
 AudienciasClient --> MissionKpiStrip : "renders"
 AudienciasClient --> AudienciasSemanaView : "renders"
 AudienciasClient --> AudienciasGlassList : "renders"
+AudienciasClient --> Tabs : "uses"
+AudienciasClient --> WeekNavigator : "uses"
+AudienciasClient --> WeekDaysCarousel : "uses"
 AudienciaForm --> Domain : "uses"
 AudienciaDetailDialog --> Domain : "uses"
 AudienciasFilterBar --> CountBadge : "uses"
@@ -358,6 +395,9 @@ AudienciasSemanaView --> TypographySystem : "uses"
 AudienciasSemanaView --> BadgeSystems : "uses"
 AudienciasMissaoContent --> TypographySystem : "uses"
 AudienciasMissaoContent --> BadgeSystems : "uses"
+Tabs --> TypographySystem : "uses"
+WeekNavigator --> TypographySystem : "uses"
+WeekDaysCarousel --> TypographySystem : "uses"
 ```
 
 **Diagram sources**
@@ -372,6 +412,9 @@ AudienciasMissaoContent --> BadgeSystems : "uses"
 - [audiencias-glass-list.tsx:259-328](file://src/app/(authenticated)/audiencias/components/audiencias-glass-list.tsx#L259-L328)
 - [audiencias-missao-content.tsx:317-328](file://src/app/(authenticated)/audiencias/components/views/audiencias-missao-content.tsx#L317-L328)
 - [domain.ts:28-32](file://src/app/(authenticated)/audiencias/domain.ts#L28-L32)
+- [tabs.tsx:27-41](file://src/components/ui/tabs.tsx#L27-L41)
+- [week-navigator.tsx:181-221](file://src/components/shared/week-navigator.tsx#L181-L221)
+- [week-days-carousel.tsx:180-274](file://src/components/shared/week-days-carousel.tsx#L180-L274)
 
 **Section sources**
 - [07_audiencias.sql:1-159](file://supabase/schemas/07_audiencias.sql#L1-L159)
@@ -388,6 +431,9 @@ AudienciasMissaoContent --> BadgeSystems : "uses"
 - [audiencias-glass-list.tsx:1-505](file://src/app/(authenticated)/audiencias/components/audiencias-glass-list.tsx#L1-L505)
 - [audiencias-missao-content.tsx:1-364](file://src/app/(authenticated)/audiencias/components/views/audiencias-missao-content.tsx#L1-L364)
 - [domain.ts:1-712](file://src/app/(authenticated)/audiencias/domain.ts#L1-L712)
+- [tabs.tsx:1-92](file://src/components/ui/tabs.tsx#L1-L92)
+- [week-navigator.tsx:1-353](file://src/components/shared/week-navigator.tsx#L1-L353)
+- [week-days-carousel.tsx:1-901](file://src/components/shared/week-days-carousel.tsx#L1-L901)
 
 ## Architecture Overview
 
@@ -406,6 +452,9 @@ A7[CountBadge Component]
 A8[Enhanced Badge Systems]
 A9[Virtual Room Detection]
 A10[Observation System]
+A11[Enhanced Tabs Component]
+A12[Week Navigator]
+A13[Day Picker Interfaces]
 end
 subgraph "Business Logic Layer"
 B1[Service Layer]
@@ -451,6 +500,9 @@ D1 --> D4
 - [audiencias-glass-list.tsx:259-328](file://src/app/(authenticated)/audiencias/components/audiencias-glass-list.tsx#L259-L328)
 - [audiencias-semana-view.tsx:396-455](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx#L396-L455)
 - [audiencias-missao-content.tsx:317-328](file://src/app/(authenticated)/audiencias/components/views/audiencias-missao-content.tsx#L317-L328)
+- [tabs.tsx:27-41](file://src/components/ui/tabs.tsx#L27-L41)
+- [week-navigator.tsx:181-221](file://src/components/shared/week-navigator.tsx#L181-L221)
+- [week-days-carousel.tsx:180-274](file://src/components/shared/week-days-carousel.tsx#L180-L274)
 
 ### Calendar Integration Architecture
 
@@ -988,6 +1040,128 @@ FE --> CB
 - [semantic-badge.tsx:1-220](file://src/components/ui/semantic-badge.tsx#L1-L220)
 - [domain.ts:28-32](file://src/app/(authenticated)/audiencias/domain.ts#L28-L32)
 
+## Enhanced Day Picker Interfaces
+
+**Updated** The system now features enhanced day picker interfaces with a specialized "week" variant for the Tabs component and improved trigger styling for better visual feedback and accessibility.
+
+### Enhanced Tabs Component with Week Variant
+
+The Tabs component has been enhanced with a new "week" variant specifically designed for day-picker interfaces:
+
+```mermaid
+flowchart TD
+subgraph "Tabs Component Variants"
+TV[Variant System]
+WD[Week Variant]
+DW[Default Variant]
+LV[Line Variant]
+end
+subgraph "Week Variant Features"
+WW[Full Width Container]
+WT[Compact Trigger Styling]
+WC[Tabular Number Display]
+WL[Low Preparation Indicators]
+WV[Visual Feedback States]
+end
+TV --> WD
+TV --> DW
+TV --> LV
+WD --> WW
+WD --> WT
+WD --> WC
+WD --> WL
+WD --> WV
+```
+
+**Diagram sources**
+- [tabs.tsx:27-41](file://src/components/ui/tabs.tsx#L27-L41)
+- [audiencias-semana-view.tsx:207-236](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx#L207-L236)
+
+### Week Variant Implementation Details
+
+The new "week" variant provides specialized styling for day-picker interfaces:
+
+| Feature | Implementation | Visual Effect |
+|---------|----------------|---------------|
+| Full Width Container | `w-full bg-muted` | Expands to fill available space |
+| Compact Trigger Styling | `flex-1 gap-1.5` | Responsive trigger sizing |
+| Tabular Number Display | `text-caption font-semibold tabular-nums` | Monospace digits for alignment |
+| Low Preparation Indicators | `bg-warning/15 text-warning` | Visual warning for preparation issues |
+| Visual Feedback States | `bg-primary/12 text-primary` | Today highlighting and selection states |
+| Accessibility Support | `role="tab"` + `aria-selected` | Screen reader compatibility |
+
+### Enhanced Trigger Styling
+
+The TabsTrigger component has been enhanced with improved styling for day navigation:
+
+```mermaid
+flowchart TD
+subgraph "Trigger Styling Enhancements"
+TS[Trigger Styling]
+SS[State Styles]
+FS[Focus Styles]
+VS[Visual Feedback]
+AS[Accessibility]
+end
+subgraph "State Styles"
+IS[Inactive State]
+HS[Hover State]
+SS --> IS
+SS --> HS
+IS --> `hover:bg-muted text-muted-foreground`
+HS --> `hover:bg-primary/10 text-primary ring-1 ring-primary/20`
+end
+subgraph "Focus Styles"
+FS --> `focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1`
+end
+subgraph "Visual Feedback"
+VS --> `min-w-12 py-1.5 px-2 gap-0`
+VS --> `text-[10px] uppercase tracking-wide`
+VS --> `text-base font-semibold leading-tight`
+end
+subgraph "Accessibility"
+AS --> `role="tab"`
+AS --> `aria-selected={day.isSelected}`
+AS --> `tabIndex={day.isSelected ? 0 : -1}`
+end
+TS --> SS
+TS --> FS
+TS --> VS
+TS --> AS
+```
+
+**Diagram sources**
+- [week-navigator.tsx:188-217](file://src/components/shared/week-navigator.tsx#L188-L217)
+- [week-days-carousel.tsx:233-250](file://src/components/shared/week-days-carousel.tsx#L233-L250)
+
+### Day Picker Interface Components
+
+The enhanced day picker interfaces include several specialized components:
+
+| Component | Purpose | Enhanced Features |
+|-----------|---------|-------------------|
+| WeekNavigator | Weekly navigation with integrated day selection | Enhanced trigger styling, improved accessibility |
+| WeekDaysCarousel | Responsive day carousel with multiple variants | Compact/minimal variants, badge rendering |
+| YearCalendarGrid | Monthly calendar with day selection | Enhanced trigger styling, weekend handling |
+| AudienciasSemanaView | Weekly audiência view with day tabs | Specialized week variant, preparation indicators |
+
+### Accessibility Improvements
+
+The enhanced day picker interfaces include comprehensive accessibility improvements:
+
+- **ARIA Support**: Proper `role="tab"` and `aria-selected` attributes
+- **Keyboard Navigation**: Full keyboard support with tab focus management
+- **Screen Reader Compatibility**: Proper labeling and state announcements
+- **Focus Management**: Visible focus indicators and proper tab order
+- **Color Contrast**: Enhanced contrast ratios for visual accessibility
+
+**Section sources**
+- [tabs.tsx:1-92](file://src/components/ui/tabs.tsx#L1-L92)
+- [audiencias-semana-view.tsx:207-236](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx#L207-L236)
+- [week-navigator.tsx:181-221](file://src/components/shared/week-navigator.tsx#L181-L221)
+- [week-days-carousel.tsx:180-274](file://src/components/shared/week-days-carousel.tsx#L180-L274)
+- [year-calendar-grid.tsx:122-157](file://src/components/shared/year-calendar-grid.tsx#L122-L157)
+
 ## Database Infrastructure Improvements
 
 **Updated** The database infrastructure has been enhanced with improved tracking capabilities through the addition of the ultima_captura_id column and corrected field mapping.
@@ -1128,6 +1302,11 @@ P[TipoAudiencia Filter]
 Q[Enhanced Badge Systems]
 R[Virtual Room Detection]
 S[Observation System]
+T[Enhanced Tabs Component]
+U[Week Navigator]
+V[Day Picker Interfaces]
+W[Typography Tokens]
+X[Design System Tokens]
 end
 subgraph "UI Dependencies"
 F --> G
@@ -1138,6 +1317,10 @@ N --> O
 P --> O
 Q --> R
 S --> R
+T --> U
+U --> V
+V --> W
+W --> X
 end
 subgraph "Data Dependencies"
 Q --> O
@@ -1145,11 +1328,11 @@ R --> P
 S --> N
 end
 subgraph "External Dependencies"
-V[PJE-TRT APIs]
-W[Google Calendar API]
-X[Outlook Calendar API]
-Y[Authentication Providers]
-Z[Capture System APIs]
+Y[PJE-TRT APIs]
+Z[Google Calendar API]
+AA[Outlook Calendar API]
+BB[Authentication Providers]
+CC[Capture System APIs]
 end
 A --> B
 A --> C
@@ -1158,11 +1341,11 @@ A --> E
 D --> Q
 Q --> R
 R --> S
-A --> V
-A --> W
-A --> X
 A --> Y
 A --> Z
+A --> AA
+A --> BB
+A --> CC
 E --> F
 E --> G
 E --> H
@@ -1176,6 +1359,11 @@ E --> P
 E --> Q
 E --> R
 E --> S
+E --> T
+E --> U
+E --> V
+E --> W
+E --> X
 ```
 
 **Diagram sources**
@@ -1189,6 +1377,10 @@ E --> S
 - [audiencias-glass-list.tsx:259-328](file://src/app/(authenticated)/audiencias/components/audiencias-glass-list.tsx#L259-L328)
 - [audiencias-semana-view.tsx:396-455](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx#L396-L455)
 - [audiencias-missao-content.tsx:317-328](file://src/app/(authenticated)/audiencias/components/views/audiencias-missao-content.tsx#L317-L328)
+- [tabs.tsx:27-41](file://src/components/ui/tabs.tsx#L27-L41)
+- [week-navigator.tsx:181-221](file://src/components/shared/week-navigator.tsx#L181-L221)
+- [week-days-carousel.tsx:180-274](file://src/components/shared/week-days-carousel.tsx#L180-L274)
+- [tokens.ts:543-569](file://src/lib/design-system/tokens.ts#L543-L569)
 
 ### Authorization and Permission System
 
@@ -1218,7 +1410,7 @@ The system implements several performance optimization strategies:
 - **Partitioning**: Consider implementing time-based partitioning for historical audiência data
 - **Query Optimization**: Column selection optimization reducing I/O by 35% through targeted column retrieval
 - **View Optimization**: Enhanced audiencias_com_origem view with consistent column access patterns
-- **Field Mapping Optimization**: Corrected field mapping reduces data transformation overhead
+- **Field Mapping Optimization**: Corrected field mapping eliminates data transformation overhead
 
 ### Caching Strategy
 - **Client-Side Caching**: React Query integration for efficient data caching
@@ -1258,15 +1450,27 @@ The system implements several performance optimization strategies:
 - **Variant Class Reuse**: Shared variant classes across components minimize CSS duplication
 - **Font Loading Optimization**: Proper font loading strategy prevents layout shifts
 
+### Enhanced Tabs Component Performance
+
+**Updated** The new "week" variant includes specific performance optimizations:
+
+- **Variant Class Optimization**: Efficient variant class application with minimal CSS overhead
+- **Trigger Styling Optimization**: Optimized trigger styling reduces unnecessary reflows
+- **Accessibility Performance**: Proper ARIA attributes and keyboard navigation without performance impact
+- **Responsive Design**: Optimized responsive breakpoints for different screen sizes
+
 #### New Component Performance Considerations
 
-**Updated** The audiências-glass-list.tsx, audiencias-missao-content.tsx, and audiencias-semana-view.tsx components include specific performance optimizations:
+**Updated** The audiências-glass-list.tsx, audiencias-missao-content.tsx, audiencias-semana-view.tsx, tabs.tsx, week-navigator.tsx, and week-days-carousel.tsx components include specific performance optimizations:
 
 - **Typography System Integration**: Efficient use of new text-card-title and text-mono-num classes
 - **Badge System Optimization**: Proper semantic badge usage reduces custom styling overhead
 - **Virtual Room Detection**: Optimized virtual room detection logic with early returns
 - **Observation System**: Efficient observation editing with controlled state updates
 - **Responsive Design**: Optimized responsive breakpoints for different screen sizes
+- **Tabs Component Optimization**: Efficient variant switching and trigger styling
+- **Day Picker Performance**: Optimized day selection with minimal re-renders
+- **Accessibility Performance**: Proper ARIA implementation without performance degradation
 
 **Section sources**
 - [audiencias-ultima-captura-card.tsx:53-71](file://src/app/(authenticated)/audiencias/components/audiencias-ultima-captura-card.tsx#L53-L71)
@@ -1275,6 +1479,9 @@ The system implements several performance optimization strategies:
 - [audiencias-glass-list.tsx:259-328](file://src/app/(authenticated)/audiencias/components/audiencias-glass-list.tsx#L259-L328)
 - [audiencias-semana-view.tsx:396-455](file://src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx#L396-L455)
 - [audiencias-missao-content.tsx:317-328](file://src/app/(authenticated)/audiencias/components/views/audiencias-missao-content.tsx#L317-L328)
+- [tabs.tsx:27-41](file://src/components/ui/tabs.tsx#L27-L41)
+- [week-navigator.tsx:181-221](file://src/components/shared/week-navigator.tsx#L181-L221)
+- [week-days-carousel.tsx:180-274](file://src/components/shared/week-days-carousel.tsx#L180-L274)
 
 ## Troubleshooting Guide
 
@@ -1321,7 +1528,7 @@ The system implements several performance optimization strategies:
 - **Solution**: Check observation state updates and action dispatching
 
 #### Enhanced Component Issues
-- **Issue**: AudienciasGlassList, AudienciasMissaoContent, or AudienciasSemanaView not rendering correctly
+- **Issue**: AudienciasGlassList, AudienciasMissaoContent, AudienciasSemanaView, tabs.tsx, week-navigator.tsx, or week-days-carousel.tsx not rendering correctly
 - **Cause**: Missing typography classes or badge system integration
 - **Solution**: Ensure proper use of text-card-title, text-mono-num, and enhanced badge components
 
@@ -1350,6 +1557,16 @@ The system implements several performance optimization strategies:
 - **Cause**: CSS class conflicts or missing variant definitions
 - **Solution**: Verify typography variant classes in globals.css and proper component usage
 
+#### Enhanced Tabs Component Issues
+- **Issue**: Tabs component not rendering week variant correctly
+- **Cause**: Missing variant prop or styling conflicts
+- **Solution**: Ensure proper TabsList usage with variant="week" and verify trigger styling
+
+#### Day Picker Interface Issues
+- **Issue**: Day picker interfaces not working or displaying incorrectly
+- **Cause**: Missing accessibility attributes or styling conflicts
+- **Solution**: Verify proper ARIA attributes, role assignments, and trigger styling
+
 **Section sources**
 - [audiencias-actions.ts:106-116](file://src/app/(authenticated)/audiencias/actions/audiencias-actions.ts#L106-L116)
 - [service.ts:53-62](file://src/app/(authenticated)/audiencias/service.ts#L53-L62)
@@ -1358,12 +1575,15 @@ The system implements several performance optimization strategies:
 - [repository.ts:412-431](file://src/app/(authenticated)/audiencias/repository.ts#L412-L431)
 - [typography.tsx:163-180](file://src/components/ui/typography.tsx#L163-L180)
 - [globals.css:1450-1650](file://src/app/globals.css#L1450-L1650)
+- [tabs.tsx:27-41](file://src/components/ui/tabs.tsx#L27-L41)
+- [week-navigator.tsx:181-221](file://src/components/shared/week-navigator.tsx#L181-L221)
+- [week-days-carousel.tsx:180-274](file://src/components/shared/week-days-carousel.tsx#L180-L274)
 
 ## Conclusion
 
 The Audiência Management system represents a comprehensive solution for court hearing scheduling and management within the Brazilian judicial system. The system successfully combines modern web technologies with legal compliance requirements to provide an intuitive, efficient, and reliable platform for legal professionals.
 
-**Updated** Key enhancements include comprehensive design system compliance with new typography variant classes (text-card-title, text-mono-num), improved semantic structure with proper heading components, new badge systems for case flags, virtual room detection system, and observation system improvements. The audiências-glass-list.tsx, audiencias-missao-content.tsx, and audiencias-semana-view.tsx components now use the enhanced design system with consistent typography and semantic markup throughout.
+**Updated** Key enhancements include comprehensive design system compliance with new typography variant classes (text-card-title, text-mono-num), improved semantic structure with proper heading components, new badge systems for case flags, virtual room detection system, observation system improvements, and enhanced day picker interfaces with a specialized "week" variant for the Tabs component. The audiências-glass-list.tsx, audiencias-missao-content.tsx, audiencias-semana-view.tsx, tabs.tsx, week-navigator.tsx, and week-days-carousel.tsx components now use the enhanced design system with consistent typography, semantic markup, and improved trigger styling throughout.
 
 Key strengths of the system include:
 
@@ -1382,9 +1602,13 @@ Key strengths of the system include:
 - **Improved Badge Systems**: Enhanced semantic badge components with proper case flag management
 - **Virtual Room Detection**: Intelligent virtual room detection system improves audiência management
 - **Observation System**: Structured observation editing with proper state management
+- **Enhanced Day Picker Interfaces**: Specialized "week" variant for Tabs component with improved trigger styling and accessibility
+- **Accessibility Improvements**: Comprehensive ARIA support and keyboard navigation for all day picker interfaces
 
-The system provides a solid foundation for managing court hearings while maintaining the highest standards of legal accuracy, design system compliance, and user experience. Its modular architecture ensures maintainability and extensibility for future enhancements and regulatory changes. The addition of mission control patterns, enhanced filtering capabilities, comprehensive design system documentation, critical field mapping bug fixes, and new typography variant classes establishes the audiências module as a model for other legal process management interfaces within the ZattarOS ecosystem.
+The system provides a solid foundation for managing court hearings while maintaining the highest standards of legal accuracy, design system compliance, and user experience. Its modular architecture ensures maintainability and extensibility for future enhancements and regulatory changes. The addition of mission control patterns, enhanced filtering capabilities, comprehensive design system documentation, critical field mapping bug fixes, new typography variant classes, enhanced day picker interfaces, and improved accessibility establishes the audiências module as a model for other legal process management interfaces within the ZattarOS ecosystem.
 
 The new CountBadge component ensures consistent numeric display across all audiência interfaces, while the enhanced filtering system with GrauTribunal and TipoAudiencia support provides more precise audiência discovery and management capabilities. The improved database infrastructure with ultima_captura_id tracking enables better auditability and capture operation traceability, making the system more robust and maintainable for long-term operation. The critical field mapping bug fixes ensure that legal party names are correctly represented throughout the system, maintaining data integrity and legal compliance standards.
 
 The enhanced typography system with new variant classes (text-card-title, text-mono-num) provides consistent visual hierarchy and improved readability across all audiência components. The improved badge systems with proper case flag management and virtual room detection system enhance the overall user experience and provide better visual cues for audiência status and location. The observation system improvements with structured editing capabilities ensure that audiência notes are properly managed and accessible to authorized users.
+
+The new "week" variant for the Tabs component provides specialized styling for day-picker interfaces, offering improved visual feedback and accessibility for audiência scheduling. The enhanced trigger styling ensures consistent user experience across different day picker components, while the comprehensive accessibility improvements make the system usable for all users. The improved day picker interfaces with proper ARIA support and keyboard navigation provide a professional-grade user experience for audiência management.
