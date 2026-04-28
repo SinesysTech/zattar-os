@@ -4,8 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Check, ImageIcon, PenSquare, Tag } from "lucide-react";
-import { MinimalTiptapEditor } from "@/components/ui/custom/minimal-tiptap";
-import { Content } from "@tiptap/react";
+import { NoteEditor } from "@/components/editor/plate/note-editor";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -42,7 +41,7 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
   const [open, setOpen] = React.useState(false);
   const [title, setTitle] = React.useState("");
   const [imagePreview, setImagePreview] = React.useState<string | null>(null);
-  const [value, setValue] = React.useState<Content>("");
+  const [value, setValue] = React.useState<string>("");
   const [selectedTags, setSelectedTags] = React.useState<NoteLabel[]>([]);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
@@ -133,8 +132,7 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
             setIsSubmitting(true);
 
             try {
-              // O MinimalTiptapEditor com output="html" retorna uma string HTML
-              const content = typeof value === "string" ? value : "";
+              const content = value;
               const noteType = imagePreview ? "image" : mode === "edit" && note ? note.type : "text";
 
               if (mode === "edit" && note) {
@@ -191,13 +189,11 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
             className="bg-card"
           />
 
-          <MinimalTiptapEditor
+          <NoteEditor
             value={value}
             onChange={setValue}
             className="w-full"
-            editorContentClassName={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4", {
-              "min-h-48": true,
-            })}
+            editorContentClassName="p-4 min-h-48"
             toolbarRight={
               <>
                 <TooltipProvider>
@@ -275,11 +271,9 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
                 </TooltipProvider>
               </>
             }
-            output="html"
             placeholder="Digite o conteúdo da nota..."
             autofocus={true}
             editable={true}
-            editorClassName="focus:outline-hidden"
           />
 
           {selectedTags.length > 0 ? (

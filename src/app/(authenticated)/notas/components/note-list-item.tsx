@@ -1,6 +1,6 @@
 "use client";
 
-import { cn, stripHtmlTags } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Archive, Edit3, Inbox } from "lucide-react";
 import { Heading } from "@/components/ui/typography";
@@ -63,7 +63,7 @@ export default function NoteListItem({ note }: { note: Note }) {
       <CardContent className={cn(/* design-system-escape: pt-6 padding direcional sem Inset equiv.; group-data-[view-mode=list]:pb-6 sem equivalente DS */ "pt-6 group-data-[view-mode=list]:pb-6")}>
         <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           <Heading level="card" className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; lg:text-2xl sem equivalente DS */ "font-display text-xl lg:text-2xl")}>{note.title}</Heading>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>{stripHtmlTags(note.content)}</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>{note.content}</p>
           {note.type === "checklist" && note.items && (
             <ul className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "peer space-y-4")}>
               {note.items.map((item, key) => (
@@ -87,7 +87,7 @@ export default function NoteListItem({ note }: { note: Note }) {
             </ul>
           )}
           {note.type === "text" && note.content && (
-            <p className="text-muted-foreground whitespace-pre-line">{stripHtmlTags(note.content)}</p>
+            <p className="text-muted-foreground whitespace-pre-line">{note.content}</p>
           )}
           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-4 flex flex-wrap gap-2")}>
             {note.labels.map((id, key) => {
