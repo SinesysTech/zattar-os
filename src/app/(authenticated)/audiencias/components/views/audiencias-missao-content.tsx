@@ -167,9 +167,9 @@ export function AudienciasMissaoContent({
             <div className="flex items-center justify-between mb-4">
               <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <Clock className="size-3 text-muted-foreground/50" />
-                <Text variant="caption" as="span" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground/60")}>Timeline do dia</Text>
+                <Text variant="meta-label">Timeline do dia</Text>
               </div>
-              <span className="text-micro-caption tabular-nums text-muted-foreground/60">
+              <span className="text-mono-num text-muted-foreground/60">
                 {dayAudiencias.length} audiência{dayAudiencias.length !== 1 ? 's' : ''}
               </span>
             </div>
@@ -194,9 +194,9 @@ export function AudienciasMissaoContent({
                 )}
 
                 {morning.length > 0 && afternoon.length > 0 && (
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-3 padding direcional sem Inset equiv.; px-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 py-3 px-2")}>
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-3 px-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 py-3 px-2")}>
                     <div className="flex-1 h-px bg-border/8" />
-                    <span className={cn(/* design-system-escape: tracking-widest sem token DS */ "text-micro-badge text-muted-foreground/45 uppercase tracking-widest")}>Intervalo</span>
+                    <span className="text-overline text-muted-foreground/45">Intervalo</span>
                     <div className="flex-1 h-px bg-border/8" />
                   </div>
                 )}
@@ -226,7 +226,7 @@ export function AudienciasMissaoContent({
                   <>
                     <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 py-2 mt-2")}>
                       <div className="flex-1 h-px bg-border/8" />
-                      <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Concluídas</span>
+                      <span className="text-overline text-muted-foreground/60">Concluídas</span>
                       <div className="flex-1 h-px bg-border/8" />
                     </div>
                     {finalizadas.map((a) => (
@@ -255,7 +255,7 @@ function SectionHeader({ label, icon: Icon }: { label: string; icon: typeof Sun 
   return (
     <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 py-2")}>
       <Icon className="size-3 text-muted-foreground/40" />
-      <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-micro-caption font-semibold text-muted-foreground/60 uppercase tracking-wider")}>{label}</span>
+      <h3 className="text-overline">{label}</h3>
       <div className="flex-1 h-px bg-border/6" />
     </div>
   );
@@ -302,7 +302,7 @@ function TimelineCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: (
       <button
         onClick={onClick}
         className={cn(
-          /* design-system-escape: p-3 → usar <Inset> */ 'flex-1 rounded-xl p-3 transition-all duration-200 min-w-0 text-left cursor-pointer',
+          /* design-system-escape: p-3 → migrar para <Inset variant="card-compact"> */ 'flex-1 rounded-xl p-3 transition-all duration-200 min-w-0 text-left cursor-pointer',
           'border border-border/12 hover:border-border/20 hover:shadow-sm hover:scale-[1.005]',
           isPast && 'opacity-50',
           isOngoing && 'ring-1 ring-success/20 border-success/15',
@@ -312,7 +312,7 @@ function TimelineCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: (
           <div className="min-w-0 flex-1">
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <Gavel className="size-3 text-primary/40 shrink-0" />
-              <Text variant="label" as="span" className="truncate text-foreground">{audiencia.tipoDescricao || 'Audiência'}</Text>
+              <span className="text-subsection-title text-foreground truncate">{audiencia.tipoDescricao || 'Audiência'}</span>
               {isOngoing && <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-badge font-semibold text-success px-1.5 py-px rounded-full bg-success/10")}>Agora</span>}
               <Text variant="micro-badge" as="span" className={cn(
                 /* design-system-escape: gap-0.5 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center gap-0.5 px-1.5 py-px rounded-full font-semibold tabular-nums shrink-0',
@@ -323,17 +323,26 @@ function TimelineCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: (
               </Text>
             </div>
             <span className="text-mono-num text-muted-foreground/55 mt-0.5 block">{audiencia.numeroProcesso}</span>
+            {audiencia.orgaoJulgadorOrigem && (
+              <span className="text-mono-num text-muted-foreground/55 mt-0.5 block">{audiencia.orgaoJulgadorOrigem}</span>
+            )}
           </div>
           {!isPast && !isOngoing && <HearingCountdown targetDate={parseISO(audiencia.dataInicio)} compact />}
         </div>
 
         {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
-          <p className="text-micro-caption text-muted-foreground/70 mt-1 truncate ml-5">
-            {audiencia.poloAtivoNome || '–'} <span className="text-muted-foreground/45">vs</span> {audiencia.poloPassivoNome || '–'}
-          </p>
+          <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "mt-1 space-y-0.5")}>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "truncate text-xs font-semibold text-foreground")}>
+              {audiencia.poloAtivoNome || '—'}
+            </p>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "truncate text-xs font-semibold text-foreground")}>
+              <span className="mr-1 text-[9px] font-normal text-muted-foreground/50">vs</span>
+              {audiencia.poloPassivoNome || '—'}
+            </p>
+          </div>
         )}
 
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-2 ml-5 flex-wrap")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-2 flex-wrap")}>
           <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
             <ModalIcon className="size-2 text-muted-foreground/50" />
             <span className="text-micro-caption text-muted-foreground/60">

@@ -29,14 +29,12 @@ import {
   AlertTriangle,
   CheckCircle2,
   CalendarDays,
-  MessageSquare,
   Lock,
   ExternalLink,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { CountBadge } from '@/components/ui/semantic-badge';
 import { GlassPanel } from '@/components/shared/glass-panel';
-import { Text } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { Audiencia } from '../../domain';
 import { StatusAudiencia, GRAU_TRIBUNAL_LABELS } from '../../domain';
@@ -254,15 +252,30 @@ export function AudienciasSemanaView({
             const today = isToday(day);
 
             return (
-              <TabsTrigger key={key} value={key} className={cn(/* design-system-escape: gap-1.5 → sem token DS equiv. */ "gap-1.5")}>
-                <span className={cn('capitalize', today && /* design-system-escape: font-semibold → ênfase visual de dia atual */ 'font-semibold text-primary')}>
-                  {format(day, 'EEE d', { locale: ptBR })}
-                </span>
-                {dayAudiencias.length > 0 && (
-                  <CountBadge className={lowPrepCount > 0 ? 'bg-warning/15 text-warning' : undefined}>
-                    {dayAudiencias.length}
-                  </CountBadge>
+              <TabsTrigger
+                key={key}
+                value={key}
+                className={cn(
+                  /* design-system-escape: gap-0.5 gap sem token DS; px-3 py-2 padding direcional sem Inset equiv. */ 'flex flex-col items-center gap-0.5 min-w-16 px-3 py-2 rounded-xl',
+                  today && 'bg-primary/12'
                 )}
+              >
+                <span className={cn('text-overline capitalize', today && 'text-primary')}>
+                  {format(day, 'EEE', { locale: ptBR })}
+                </span>
+                <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+                  <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-caption font-semibold tabular-nums', today && 'text-primary')}>
+                    {format(day, 'd')}
+                  </span>
+                  {dayAudiencias.length > 0 && (
+                    <span className={cn(
+                      /* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ 'text-micro-badge tabular-nums rounded-full px-1.5 py-px inline-flex items-center justify-center',
+                      lowPrepCount > 0 ? 'bg-warning/15 text-warning' : 'bg-primary/15 text-primary'
+                    )}>
+                      {dayAudiencias.length}
+                    </span>
+                  )}
+                </div>
               </TabsTrigger>
             );
           })}
@@ -283,24 +296,24 @@ export function AudienciasSemanaView({
                   <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                     <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                       <CalendarDays className="size-4 text-primary/70" />
-                      <Text variant="overline" className="text-muted-foreground/70">
+                      <Text variant="meta-label">
                         {dayIsToday ? 'Hoje' : 'Dia selecionado'}
                       </Text>
                     </div>
                     <div>
-                      <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-label font-semibold capitalize")}>
+                      <Heading level="card" className="capitalize">
                         {format(day, "EEEE, d 'de' MMMM", { locale: ptBR })}
-                      </h3>
-                      <p className="text-caption text-muted-foreground/60">
+                      </Heading>
+                      <Text variant="caption" as="p">
                         {dayIsToday
                           ? 'Acompanhamento operacional da pauta do dia.'
                           : 'Visão do preparo, sequência e encerramento das audiências deste dia.'}
-                      </p>
+                      </Text>
                     </div>
                     {nextAudiencia && (
-                      <p className="text-caption text-muted-foreground/70">
+                      <Text variant="caption" as="p">
                         Próxima prioridade: <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/85")}>{fmtTime(nextAudiencia.dataInicio)}</span> · {nextAudiencia.tipoDescricao || 'Audiência'} · {nextAudiencia.numeroProcesso}
-                      </p>
+                      </Text>
                     )}
                   </div>
 
@@ -355,12 +368,12 @@ export function AudienciasSemanaView({
 
               {dayAudiencias.length === 0 ? (
                 <GlassPanel className={cn(/* design-system-escape: p-10 → usar <Inset> */ "p-10 text-center")}>
-                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium text-foreground/75")}>
+                  <Text variant="label" as="p">
                     Nenhuma audiência neste dia útil.
-                  </p>
-                  <p className="mt-1 text-caption text-muted-foreground/55">
+                  </Text>
+                  <Text variant="caption" as="p" className="mt-1">
                     Use as tabs para revisar outra pauta da semana.
-                  </p>
+                  </Text>
                 </GlassPanel>
               ) : (
                 <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
@@ -374,11 +387,11 @@ export function AudienciasSemanaView({
                             group.tone === 'primary' && 'bg-primary',
                             group.tone === 'muted' && 'bg-muted-foreground/35',
                           )} />
-                          <h4 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-caption font-semibold text-foreground/85")}>
+                          <h3 className="text-overline">
                             {group.title}
-                          </h4>
+                          </h3>
                         </div>
-                        <span className="text-micro-caption tabular-nums text-muted-foreground/55">
+                        <span className="text-mono-num text-muted-foreground/40">
                           {group.items.length}
                         </span>
                       </div>
@@ -420,9 +433,9 @@ function SummaryMetric({
   return (
     <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "rounded-2xl border border-border/30 bg-background/55 px-3 py-2.5")}>
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
-        <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption uppercase tracking-wider text-muted-foreground/55")}>
+        <Text variant="meta-label">
           {label}
-        </span>
+        </Text>
         <Icon className={cn(
           'size-3.5',
           tone === 'primary' && 'text-primary/70',
@@ -431,16 +444,16 @@ function SummaryMetric({
           tone === 'muted' && 'text-muted-foreground/55',
         )} />
       </div>
-      <div className="mt-1 text-[18px] font-bold leading-none tracking-tight tabular-nums text-foreground/85">
+      <Text variant="kpi-value" className={cn(/* design-system-escape: leading-none sem token DS; tracking-tight sem token DS */ "mt-1 leading-none tracking-tight")}>
         {value}
-      </div>
+      </Text>
     </div>
   );
 }
 
 function StatusPill({ children }: { children: React.ReactNode }) {
   return (
-    <span className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "rounded-full border border-border/30 bg-background/60 px-2.5 py-1 text-micro-caption text-muted-foreground/70")}>
+    <span className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "rounded-full border border-border/30 bg-background/60 px-2.5 py-1 text-meta-label normal-case")}>
       {children}
     </span>
   );
@@ -498,7 +511,7 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
         isOngoing && 'border-l-2 border-l-success ring-1 ring-success/20 bg-success/3',
         (isPast || isFinalizada) && !isOngoing && 'opacity-55',
-        isCancelada && !isOngoing && 'opacity-45',
+        isCancelada && !isOngoing && 'opacity-45 border-l-2 border-l-destructive',
       )}
     >
       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start gap-4")}>
@@ -509,8 +522,10 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
             <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-caption font-semibold text-foreground leading-tight whitespace-nowrap tabular-nums")}>
               {fmtTime(audiencia.dataInicio)}
             </div>
-            <div className="text-micro-caption text-muted-foreground/30">–</div>
-            <div className="text-caption text-muted-foreground/60 tabular-nums">
+            <div className={cn(/* design-system-escape: tracking-wider sem token DS */ "mt-0.5 text-micro-caption uppercase tracking-wider text-muted-foreground/55")}>
+              Início
+            </div>
+            <div className="text-mono-num text-muted-foreground/55 tabular-nums">
               {fmtTime(audiencia.dataFim)}
             </div>
           </div>
@@ -532,7 +547,7 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
 
           {/* L1 — Tipo como título + badges/flags à direita */}
           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
-            <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ 'text-label font-semibold text-foreground leading-tight truncate')}>
+            <h3 className="text-card-title text-foreground truncate">
               {audiencia.tipoDescricao || 'Audiência'}
             </h3>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "ml-auto flex items-center gap-1.5 shrink-0")}>
@@ -569,50 +584,67 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
             </div>
           </div>
 
-          {/* L2 — Partes */}
-          {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
-            <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-snug sem token DS */ "mt-0.5 text-caption font-semibold text-foreground/85 leading-snug flex flex-wrap items-baseline gap-x-1")}>
-              {audiencia.poloAtivoNome && <span>{audiencia.poloAtivoNome}</span>}
-              {audiencia.poloAtivoNome && audiencia.poloPassivoNome && (
-                <span className="text-[9px] font-normal text-muted-foreground/50">vs</span>
+          {/* Identidade Processual */}
+          {(audiencia.poloAtivoNome || audiencia.poloPassivoNome || audiencia.trt || audiencia.numeroProcesso) && (
+            <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; space-y-1 sem token DS */ "mt-3 border-t border-border/40 pt-3 space-y-1")}>
+              {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
+                <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
+                  <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; text-xs → migrar para <Text variant="caption"> */ "truncate text-xs font-semibold text-foreground")}>
+                    {audiencia.poloAtivoNome || '—'}
+                  </p>
+                  <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; text-xs → migrar para <Text variant="caption"> */ "truncate text-xs font-semibold text-foreground")}>
+                    <span className="mr-1 text-[9px] font-normal text-muted-foreground/50">vs</span>
+                    {audiencia.poloPassivoNome || '—'}
+                  </p>
+                </div>
               )}
-              {audiencia.poloPassivoNome && <span>{audiencia.poloPassivoNome}</span>}
+              {(audiencia.trt || grauLabel || audiencia.numeroProcesso) && (
+                <p className="truncate text-mono-num">
+                  {[audiencia.trt, grauLabel, audiencia.numeroProcesso].filter(Boolean).join(' · ')}
+                </p>
+              )}
+              {orgao && (
+                <p className="truncate text-mono-num text-muted-foreground/55">{orgao}</p>
+              )}
             </div>
           )}
 
-          {/* L3 — Identificação legal unificada em mono */}
-          <div className="mt-1 text-mono-num flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
-            {audiencia.trt && <span>{audiencia.trt}</span>}
-            {audiencia.trt && <span className="text-muted-foreground/30">·</span>}
-            {grauLabel && <span>{grauLabel}</span>}
-            {grauLabel && audiencia.numeroProcesso && (
-              <span className="text-muted-foreground/30">·</span>
-            )}
-            {audiencia.numeroProcesso && (
-              <span className="tabular-nums">{audiencia.numeroProcesso}</span>
-            )}
-            {orgao && (
-              <>
-                <span className="text-muted-foreground/30">·</span>
-                <span className="truncate max-w-48" title={orgao}>{orgao}</span>
-              </>
-            )}
-          </div>
+          {/* Observações */}
+          {audiencia.observacoes && (
+            <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 border-t border-border/40 pt-3")}>
+              <Text variant="overline" as="p" className="mb-1">Observações</Text>
+              <p className="text-caption text-foreground/75 line-clamp-2">{audiencia.observacoes}</p>
+            </div>
+          )}
 
-          {/* FOOTER — observações + responsável */}
+          {/* Footer */}
           <div
-            className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "mt-2.5 pt-2.5 border-t border-border/50 flex items-center gap-3")}
+            className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; gap-1.5 gap sem token DS */ "mt-3 border-t border-border/40 pt-3 flex items-center gap-1.5")}
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => e.stopPropagation()}
           >
-            {audiencia.observacoes && (
-              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 min-w-0 flex-1")}>
-                <MessageSquare className="w-3 h-3 shrink-0 text-muted-foreground/60" />
-                <span className="text-caption text-muted-foreground/65 line-clamp-1 flex-1">
-                  {audiencia.observacoes}
-                </span>
-              </div>
-            )}
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+              <button
+                type="button"
+                onClick={onClick}
+                className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex h-6 cursor-pointer items-center gap-1 rounded-md border border-border/20 px-2 text-[10px] font-medium text-muted-foreground/60 transition-colors hover:border-border/40 hover:text-muted-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
+              >
+                <ExternalLink className="size-3" />
+                Detalhes
+              </button>
+              {hasVirtualRoom && audiencia.urlAudienciaVirtual && (
+                <a
+                  href={audiencia.urlAudienciaVirtual}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex h-6 items-center gap-1 rounded-md border border-info/25 bg-info/10 px-2 text-[10px] font-medium text-info transition-colors hover:bg-info/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
+                >
+                  <ExternalLink className="size-3" />
+                  Entrar na sala
+                </a>
+              )}
+            </div>
 
             <div className="shrink-0 ml-auto">
               {usuarios ? (

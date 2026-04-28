@@ -4,7 +4,7 @@ import * as React from 'react';
 import { format, parseISO, differenceInMinutes, isPast } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import {
-  Gavel, Lock, Monitor, CheckCircle2, Users, Clock, Building2, Layers, Video, Pencil, Check, X, Link as LinkIcon, MessageSquare, Copy} from 'lucide-react';
+  Gavel, Lock, Monitor, CheckCircle2, Users, Clock, Building2, Layers, Video, Pencil, Check, X, ExternalLink} from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
@@ -25,6 +25,7 @@ import { actionAtualizarObservacoes } from '../actions';
 import { AudienciaResponsavelPopover, ResponsavelTriggerContent } from './audiencia-responsavel-popover';
 import { calcPrepItems, calcPrepScore } from './prep-score';
 
+import { Text } from '@/components/ui/typography';
 import { LoadingSpinner } from "@/components/ui/loading-state"
 // =============================================================================
 // TIPOS
@@ -134,7 +135,7 @@ function PrepRing({ audiencia }: { audiencia: Audiencia }) {
       </svg>
       <span
         className={cn(
-          /* design-system-escape: font-bold → className de <Text>/<Heading> */ 'absolute inset-0 flex items-center justify-center text-micro-caption font-bold tabular-nums',
+          /* design-system-escape: font-bold → className de <Text>/<Heading> */ 'absolute inset-0 flex items-center justify-center text-micro-badge font-bold tabular-nums',
           getScoreColor(score)
         )}
       >
@@ -161,7 +162,6 @@ function GlassRow({
   const [obsDraft, setObsDraft] = React.useState('');
   const [savingObs, setSavingObs] = React.useState(false);
   const [obsValue, setObsValue] = React.useState<string | null>(audiencia.observacoes ?? null);
-  const [copiedUrl, setCopiedUrl] = React.useState(false);
 
   React.useEffect(() => {
     setObsValue(audiencia.observacoes ?? null);
@@ -181,6 +181,10 @@ function GlassRow({
     audiencia.orgaoJulgadorDescricao ||
     audiencia.orgaoJulgadorOrigem ||
     null;
+  const grauLabel = audiencia.grau ? GRAU_TRIBUNAL_LABELS[audiencia.grau] : null;
+  const hasVirtualRoom =
+    (audiencia.modalidade === ModalidadeAudiencia.Virtual || audiencia.modalidade === ModalidadeAudiencia.Hibrida) &&
+    audiencia.urlAudienciaVirtual;
 
   const handleStartObs = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -202,17 +206,6 @@ function GlassRow({
       setEditingObs(false);
     }
     setSavingObs(false);
-  };
-
-  const handleCopyUrl = async (e: React.MouseEvent, url: string) => {
-    e.stopPropagation();
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopiedUrl(true);
-      setTimeout(() => setCopiedUrl(false), 2000);
-    } catch {
-      // silencioso
-    }
   };
 
   const handleCardClick = () => {
@@ -246,9 +239,14 @@ function GlassRow({
               {format(dataInicio, 'dd MMM yyyy', { locale: ptBR })}
             </div>
             {audiencia.horaInicio && (
-              <div className="text-caption text-muted-foreground mt-0.5 tabular-nums">
-                {audiencia.horaInicio.substring(0, 5).replace(':', 'h')}
-              </div>
+              <>
+                <div className={cn(/* design-system-escape: tracking-wider sem token DS */ "mt-0.5 text-micro-caption uppercase tracking-wider text-muted-foreground/55")}>
+                  Início
+                </div>
+                <div className="text-mono-num text-muted-foreground/55 tabular-nums">
+                  {audiencia.horaInicio.substring(0, 5).replace(':', 'h')}
+                </div>
+              </>
             )}
           </div>
           <PrepRing audiencia={audiencia} />
@@ -256,22 +254,24 @@ function GlassRow({
 
         {/* MAIN INFO */}
         <div className="flex-1 min-w-0">
-          {/* Linha 1: modalidade badge + status à direita */}
+
+          {/* L1 — Título + badges/flags à direita */}
           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
-            {audiencia.modalidade && (
-              <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 rounded-md bg-primary/10 border border-primary/20 px-1.5 py-0.5 text-caption font-semibold tracking-[0.02em] text-primary")}>
-                <ModalidadeIcon className="w-2.5 h-2.5" />
-                {MODALIDADE_AUDIENCIA_LABELS[audiencia.modalidade]}
-              </span>
-            )}
+            <h3 className="text-card-title text-foreground truncate">
+              {audiencia.tipoDescricao || 'Audiência'}
+            </h3>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "ml-auto flex items-center gap-1.5 shrink-0")}>
+              {audiencia.modalidade && (
+                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 rounded-md bg-primary/10 border border-primary/20 px-1.5 py-0.5 text-micro-caption font-semibold tracking-[0.02em] text-primary")}>
+                  <ModalidadeIcon className="w-2.5 h-2.5" />
+                  {MODALIDADE_AUDIENCIA_LABELS[audiencia.modalidade]}
+                </span>
+              )}
               {countdown ? (
-                <span
-                  className={cn(
-                    /* design-system-escape: gap-1 gap sem token DS; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center gap-1 text-caption font-semibold',
-                    countdown.isUrgent ? 'text-warning' : 'text-success'
-                  )}
-                >
+                <span className={cn(
+                  /* design-system-escape: gap-1 gap sem token DS; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center gap-1 text-micro-caption font-semibold',
+                  countdown.isUrgent ? 'text-warning' : 'text-success'
+                )}>
                   <Clock className="w-3 h-3" />
                   {countdown.text}
                 </span>
@@ -284,28 +284,26 @@ function GlassRow({
                   {STATUS_AUDIENCIA_LABELS[audiencia.status]}
                 </SemanticBadge>
               )}
-            </div>
-          </div>
-
-          {/* Linha 2: título + partes + litisconsórcio + nº processo */}
-          <div className="mt-1">
-            <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-label font-semibold text-foreground leading-tight")}>
-              {audiencia.tipoDescricao || 'Audiência'}
-            </h3>
-            <div className={cn(/* design-system-escape: leading-snug sem token DS */ "mt-0.5 text-caption text-foreground/85 leading-snug flex flex-wrap items-baseline gap-x-0")}>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{poloAtivo}</span>
-              {audiencia.poloAtivoRepresentaVarios && (
-                <span className="text-muted-foreground/60"> e outros</span>
+              {audiencia.segredoJustica && (
+                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-warning/10 border border-warning/25 text-warning rounded-md px-1.5 py-0.5 text-micro-caption font-semibold")}>
+                  <Lock className="w-2.5 h-2.5" />
+                  Segredo
+                </span>
               )}
-              <span className={cn(/* design-system-escape: mx-1.5 margin sem primitiva DS; font-medium → className de <Text>/<Heading> */ "mx-1.5 text-muted-foreground/60 font-medium")}>×</span>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{poloPassivo}</span>
-              {audiencia.poloPassivoRepresentaVarios && (
-                <span className="text-muted-foreground/60"> e outros</span>
+              {audiencia.juizoDigital && (
+                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-info/10 border border-info/25 text-info rounded-md px-1.5 py-0.5 text-micro-caption font-semibold")}>
+                  <Monitor className="w-2.5 h-2.5" />
+                  Digital
+                </span>
               )}
-              <span className={cn(/* design-system-escape: mx-2 margin sem primitiva DS */ "mx-2 inline-block w-0.75 h-0.75 rounded-full bg-muted-foreground/50 align-middle")} />
-              <span className="text-muted-foreground tabular-nums">{audiencia.numeroProcesso}</span>
+              {audiencia.designada && (
+                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-success/10 border border-success/25 text-success rounded-md px-1.5 py-0.5 text-micro-caption font-semibold")}>
+                  <CheckCircle2 className="w-2.5 h-2.5" />
+                  Designada
+                </span>
+              )}
               {(audiencia.poloAtivoRepresentaVarios || audiencia.poloPassivoRepresentaVarios) && (
-                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "ml-2 inline-flex items-center gap-1 bg-muted border border-border/70 text-muted-foreground rounded-md px-1.5 py-0.5 text-micro-caption font-semibold")}>
+                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-muted border border-border/70 text-muted-foreground rounded-md px-1.5 py-0.5 text-micro-caption font-semibold")}>
                   <Users className="w-2.5 h-2.5" />
                   Litisconsórcio
                 </span>
@@ -313,55 +311,26 @@ function GlassRow({
             </div>
           </div>
 
-          {/* Linha 3: TRT + grau + sala + órgão julgador + indicadores */}
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "mt-1 flex flex-wrap items-center gap-1.5")}>
-            {audiencia.trt && (
-              <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-caption font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/60")}>
-                {audiencia.trt}
-              </span>
-            )}
-            {audiencia.grau && (
-              <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center rounded bg-muted border border-border/50 px-1.5 py-px text-micro-caption font-semibold text-muted-foreground")}>
-                {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
-              </span>
-            )}
-            {audiencia.salaAudienciaNome && (
-              <>
-                <span className="w-0.75 h-0.75 rounded-full bg-muted-foreground/30 shrink-0" />
-                <span className="text-caption text-muted-foreground/60">
-                  {audiencia.salaAudienciaNome}
-                </span>
-              </>
-            )}
+          {/* Identidade Processual */}
+          <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; space-y-1 sem token DS */ "mt-3 border-t border-border/40 pt-3 space-y-1")}>
+            <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
+              <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; text-xs → migrar para <Text variant="caption"> */ "truncate text-xs font-semibold text-foreground")}>{poloAtivo}</p>
+              <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; text-xs → migrar para <Text variant="caption"> */ "truncate text-xs font-semibold text-foreground")}>
+                <span className="mr-1 text-[9px] font-normal text-muted-foreground/50">vs</span>
+                {poloPassivo}
+              </p>
+            </div>
+            <p className="truncate text-mono-num">
+              {[audiencia.trt, grauLabel, audiencia.salaAudienciaNome, audiencia.numeroProcesso].filter(Boolean).join(' · ')}
+            </p>
             {orgaoJulgador && (
-              <>
-                <span className="w-0.75 h-0.75 rounded-full bg-muted-foreground/30 shrink-0" />
-                <span className="text-caption text-muted-foreground/50">{orgaoJulgador}</span>
-              </>
-            )}
-            {audiencia.segredoJustica && (
-              <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-warning/10 border border-warning/25 text-warning rounded-md px-1.5 py-0.5 text-micro-caption font-semibold")}>
-                <Lock className="w-2.5 h-2.5" />
-                Segredo
-              </span>
-            )}
-            {audiencia.juizoDigital && (
-              <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-info/10 border border-info/25 text-info rounded-md px-1.5 py-0.5 text-micro-caption font-semibold")}>
-                <Monitor className="w-2.5 h-2.5" />
-                Digital
-              </span>
-            )}
-            {audiencia.designada && (
-              <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-success/10 border border-success/25 text-success rounded-md px-1.5 py-0.5 text-micro-caption font-semibold")}>
-                <CheckCircle2 className="w-2.5 h-2.5" />
-                Designada
-              </span>
+              <p className="truncate text-mono-num text-muted-foreground/55">{orgaoJulgador}</p>
             )}
           </div>
 
-          {/* Barra meta: obs à esquerda + responsável à direita */}
+          {/* Observações (editável) */}
           <div
-            className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "mt-2.5 pt-2.5 border-t border-border/50")}
+            className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 border-t border-border/40 pt-3")}
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => e.stopPropagation()}
           >
@@ -401,54 +370,56 @@ function GlassRow({
                 </div>
               </div>
             ) : (
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
-                {/* Esquerda: link virtual + observações */}
-                <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 min-w-0 flex-1")}>
-                  {audiencia.urlAudienciaVirtual && (
-                    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "inline-flex items-center gap-1.5 min-w-0 max-w-48")}>
-                      <LinkIcon className="w-3 h-3 text-muted-foreground/70 shrink-0" />
-                      <a
-                        href={audiencia.urlAudienciaVirtual}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="text-caption text-primary truncate hover:underline"
-                        title={audiencia.urlAudienciaVirtual}
-                      >
-                        {audiencia.urlAudienciaVirtual.replace(/^https?:\/\//, '')}
-                      </a>
-                      <button
-                        type="button"
-                        onClick={(e) => handleCopyUrl(e, audiencia.urlAudienciaVirtual!)}
-                        className="inline-flex items-center justify-center w-5 h-5 rounded text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-                        aria-label="Copiar link"
-                      >
-                        {copiedUrl ? (
-                          <Check className="w-3 h-3 text-success" />
-                        ) : (
-                          <Copy className="w-3 h-3" />
-                        )}
-                      </button>
-                    </div>
+              <div>
+                <Text variant="overline" as="p" className="mb-1">Observações</Text>
+                <button
+                  type="button"
+                  onClick={handleStartObs}
+                  className={cn(
+                    /* design-system-escape: gap-1.5 gap sem token DS; px-1.5 py-1 padding direcional sem Inset equiv. */ 'flex items-center gap-1.5 rounded-md px-1.5 py-1 -mx-1.5 -my-1 w-full text-left',
+                    'transition-colors cursor-pointer hover:bg-muted/60',
+                    obsValue ? 'text-foreground/75' : 'text-muted-foreground/60'
                   )}
-                  <button
-                    type="button"
-                    onClick={handleStartObs}
-                    className={cn(
-                      /* design-system-escape: gap-1.5 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; -mx-1.5 sem equivalente DS; -my-1 sem equivalente DS */ 'flex items-center gap-1.5 rounded-md px-1.5 py-1 -mx-1.5 -my-1 text-left',
-                      'transition-colors cursor-pointer hover:bg-muted/60',
-                      obsValue ? 'text-foreground/75' : 'text-muted-foreground/60'
-                    )}
-                  >
-                    <MessageSquare className="w-3 h-3 shrink-0 text-muted-foreground/60" />
-                    <span className={cn(/* design-system-escape: leading-snug sem token DS */ "text-caption flex-1 line-clamp-1 leading-snug")}>
-                      {obsValue || 'Adicionar observações'}
-                    </span>
-                    <Pencil className="w-2.5 h-2.5 shrink-0 text-muted-foreground/40 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </button>
-                </div>
+                >
+                  <span className={cn(/* design-system-escape: leading-snug sem token DS */ "text-caption flex-1 line-clamp-1 leading-snug")}>
+                    {obsValue || 'Adicionar observações'}
+                  </span>
+                  <Pencil className="w-2.5 h-2.5 shrink-0 text-muted-foreground/40 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </button>
+              </div>
+            )}
+          </div>
 
-                {/* Direita: responsável */}
+          {/* Footer */}
+          {!editingObs && (
+            <div
+              className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; gap-1.5 gap sem token DS */ "mt-3 border-t border-border/40 pt-3 flex items-center gap-1.5")}
+              onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => e.stopPropagation()}
+            >
+              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+                <button
+                  type="button"
+                  onClick={onView}
+                  className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex h-6 cursor-pointer items-center gap-1 rounded-md border border-border/20 px-2 text-[10px] font-medium text-muted-foreground/60 transition-colors hover:border-border/40 hover:text-muted-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
+                >
+                  <ExternalLink className="size-3" />
+                  Detalhes
+                </button>
+                {hasVirtualRoom && audiencia.urlAudienciaVirtual && (
+                  <a
+                    href={audiencia.urlAudienciaVirtual}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex h-6 items-center gap-1 rounded-md border border-info/25 bg-info/10 px-2 text-[10px] font-medium text-info transition-colors hover:bg-info/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
+                  >
+                    <ExternalLink className="size-3" />
+                    Entrar na sala
+                  </a>
+                )}
+              </div>
+              <div className="ml-auto">
                 <AudienciaResponsavelPopover
                   audienciaId={audiencia.id}
                   responsavelId={audiencia.responsavelId}
@@ -461,8 +432,8 @@ function GlassRow({
                   />
                 </AudienciaResponsavelPopover>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
