@@ -10,6 +10,7 @@ import {
   Trash2,
   MoreHorizontal,
   FileDown,
+  Loader2,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -50,6 +51,13 @@ import {
 } from '../actions';
 import { TIPO_PECA_LABELS, type ContratoDocumento } from '../domain';
 
+import {
+  actionBuscarDocumento,
+  exportTextToPdf,
+  exportToDocx
+} from '@/app/(authenticated)/documentos';
+
+
 // =============================================================================
 // TYPES
 // =============================================================================
@@ -71,6 +79,7 @@ export function ContratoDocumentosList({ contratoId }: ContratoDocumentosListPro
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [documentoToDelete, setDocumentoToDelete] = React.useState<ContratoDocumento | null>(null);
   const [deleting, setDeleting] = React.useState(false);
+  const [exporting, setExporting] = React.useState<'pdf' | 'docx' | null>(null);
 
   // Carregar documentos
   const loadDocumentos = React.useCallback(async () => {
@@ -107,13 +116,45 @@ export function ContratoDocumentosList({ contratoId }: ContratoDocumentosListPro
   };
 
   const handleExportPDF = async (documentoId: number) => {
-    // TODO: Implementar exportação direta
-    router.push(`/app/documentos/${documentoId}?export=pdf`);
+    if (exporting) return;
+    setExporting('pdf');
+    try {
+      const response = await actionBuscarDocumento(documentoId);
+      if (response.success && response.data) {
+        await exportTextToPdf(response.data.conteudo, response.data.titulo);
+        toast.success('PDF exportado com sucesso');
+      } else {
+        toast.error('Erro ao carregar documento para exportação', {
+          description: response.error,
+        });
+      }
+    } catch (error) {
+      console.error('Erro ao exportar PDF:', error);
+      toast.error('Erro ao exportar PDF');
+    } finally {
+      setExporting(null);
+    }
   };
 
   const handleExportDOCX = async (documentoId: number) => {
-    // TODO: Implementar exportação direta
-    router.push(`/app/documentos/${documentoId}?export=docx`);
+    if (exporting) return;
+    setExporting('docx');
+    try {
+      const response = await actionBuscarDocumento(documentoId);
+      if (response.success && response.data) {
+        await exportToDocx(response.data.conteudo, response.data.titulo);
+        toast.success('DOCX exportado com sucesso');
+      } else {
+        toast.error('Erro ao carregar documento para exportação', {
+          description: response.error,
+        });
+      }
+    } catch (error) {
+      console.error('Erro ao exportar DOCX:', error);
+      toast.error('Erro ao exportar DOCX');
+    } finally {
+      setExporting(null);
+    }
   };
 
   const handleDeleteClick = (documento: ContratoDocumento) => {
@@ -235,12 +276,12 @@ export function ContratoDocumentosList({ contratoId }: ContratoDocumentosListPro
                       <DropdownMenuSeparator />
                       {doc.documentoId && (
                         <>
-                          <DropdownMenuItem onClick={() => handleExportPDF(doc.documentoId!)}>
-                            <FileDown className="h-4 w-4 mr-2" />
+                          <DropdownMenuItem onClick={() => handleExportPDF(doc.documentoId!)} disabled={exporting === 'pdf'}>
+                            {exporting === 'pdf' ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <FileDown className="h-4 w-4 mr-2" />}
                             Exportar PDF
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleExportDOCX(doc.documentoId!)}>
-                            <Download className="h-4 w-4 mr-2" />
+                          <DropdownMenuItem onClick={() => handleExportDOCX(doc.documentoId!)} disabled={exporting === 'docx'}>
+                            {exporting === 'docx' ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Download className="h-4 w-4 mr-2" />}
                             Exportar DOCX
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
