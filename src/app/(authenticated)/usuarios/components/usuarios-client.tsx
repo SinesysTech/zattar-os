@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Plus, Settings } from 'lucide-react';
 import { useDebounce } from '@/hooks/use-debounce';
 import { Button } from '@/components/ui/button';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { Skeleton } from '@/components/ui/skeleton';
 import { InsightBanner } from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { useUsuarios } from '../hooks/use-usuarios';
@@ -122,26 +122,26 @@ export function UsuariosClient() {
       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start justify-between gap-4")}>
         <div className="min-w-0">
           <Heading level="page">Usuários</Heading>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 mt-0.5")}>{subtitle}</p>
+          <Text variant="body-sm" className="text-muted-foreground/50 mt-0.5">{subtitle}</Text>
         </div>
         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 shrink-0")}>
           <Button
             type="button"
             variant="outline"
             size="sm"
-            className="h-9"
+            className="rounded-xl"
             onClick={() => setCargosOpen(true)}
           >
-            <Settings className="h-4 w-4" />
+            <Settings className="size-3.5" />
             Cargos
           </Button>
           <Button
             type="button"
             size="sm"
-            className="h-9"
+            className="rounded-xl"
             onClick={() => setCreateOpen(true)}
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="size-3.5" />
             Novo Usuário
           </Button>
         </div>

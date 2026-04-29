@@ -2,12 +2,13 @@
 
 import * as React from 'react';
 import type { ColumnDef } from '@tanstack/react-table';
-import { Eye, Pencil, RotateCcw, ShieldAlert } from 'lucide-react';
+import { Eye, Pencil, RotateCcw, ShieldAlert, Scale } from 'lucide-react';
 import { DataShell } from '@/components/shared/data-shell/data-shell';
 import { DataTable } from '@/components/shared/data-shell/data-table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/typography';
+import { AppBadge } from '@/components/ui/app-badge';
 import { cn } from '@/lib/utils';
 import { getAvatarUrl, formatarOab } from '../../utils';
 import { UserStatusDot, getStatusFromLastLogin } from '../shared/user-status-dot';
@@ -97,14 +98,14 @@ export function UsuariosListView({
               </span>
             );
           return (
-            <span
-              className={cn(
-                /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'px-2 py-0.5 rounded-md text-[11px] font-medium bg-muted/8 text-muted-foreground',
-                !isAtivo && 'opacity-50',
-              )}
+            <AppBadge
+              variant="secondary"
+              tone="soft"
+              size="sm"
+              className={cn(!isAtivo && 'opacity-50')}
             >
               {nome}
-            </span>
+            </AppBadge>
           );
         },
         meta: { align: 'left' },
@@ -125,11 +126,12 @@ export function UsuariosListView({
           return (
             <span
               className={cn(
-                /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'px-1.5 py-0.5 rounded bg-info/8 text-[11px] text-info/70',
+                'flex items-center gap-1 text-[11px] text-info/70',
                 !usuario.ativo && 'opacity-50',
               )}
             >
-              ⚖ {formatarOab(usuario.oab, usuario.ufOab)}
+              <Scale className="size-3 shrink-0" />
+              {formatarOab(usuario.oab, usuario.ufOab)}
             </span>
           );
         },
@@ -142,16 +144,9 @@ export function UsuariosListView({
         cell: ({ getValue }) => {
           const ativo = getValue<boolean>();
           return (
-            <span
-              className={cn(
-                /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'px-2 py-0.5 rounded-md text-[11px] font-semibold',
-                ativo
-                  ? 'bg-success/10 text-success'
-                  : 'bg-destructive/10 text-destructive',
-              )}
-            >
+            <AppBadge variant={ativo ? 'success' : 'destructive'} tone="soft" size="sm">
               {ativo ? 'Ativo' : 'Inativo'}
-            </span>
+            </AppBadge>
           );
         },
         meta: { align: 'left' },

@@ -25,6 +25,7 @@ import {
   Scale,
   ScrollText,
   Search,
+  Settings,
   Users,
   Clock,
 } from "lucide-react"
@@ -67,9 +68,10 @@ const navServicos: HubNavItem[] = [
 ]
 
 const navGestao: HubNavItem[] = [
-  { id: "captura",    title: "Captura",    url: "/app/captura",    icon: Database,  description: "Automação PJE/TRT" },
-  { id: "financeiro", title: "Financeiro", url: "/app/financeiro", icon: Briefcase, description: "Contas e fluxo" },
-  { id: "usuarios",   title: "Usuários",   url: "/app/usuarios",   icon: Users,     description: "Gestão de usuários" },
+  { id: "captura",        title: "Captura",        url: "/app/captura",        icon: Database,  description: "Automação PJE/TRT" },
+  { id: "configuracoes",  title: "Configurações",  url: "/app/configuracoes",  icon: Settings,  description: "Sistema e integrações" },
+  { id: "financeiro",     title: "Financeiro",     url: "/app/financeiro",     icon: Briefcase, description: "Contas e fluxo" },
+  { id: "usuarios",       title: "Usuários",       url: "/app/usuarios",       icon: Users,     description: "Gestão de usuários" },
 ]
 
 // ─── Recents (persisted in localStorage) ───────────────────────────────

@@ -1,9 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import { Mail, Phone, Building, Calendar, RefreshCw, Pencil, KeyRound, Power, Camera } from 'lucide-react';
+import { Mail, Phone, Building, Calendar, RefreshCw, Pencil, KeyRound, Power, Camera, Check, Circle } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
@@ -122,7 +122,7 @@ export function ProfileSidebar({
         {/* 3. Name + Role */}
         <Heading level="section" className="text-lg font-bold mt-3 text-center">{usuario.nomeCompleto}</Heading>
         {usuario.cargo?.nome && (
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/40 mt-0.5 text-center")}>{usuario.cargo.nome}</p>
+          <Text variant="caption" className="text-muted-foreground/40 mt-0.5 text-center">{usuario.cargo.nome}</Text>
         )}
 
         {/* 4. Badges row */}
@@ -147,14 +147,16 @@ export function ProfileSidebar({
       {contactItems.length > 0 && (
         <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv.; space-y-2.5 sem token DS */ "px-5 py-4 mt-4 border-t border-border/10 space-y-2.5")}>
           {contactItems.map(({ icon: Icon, value, label }, idx) => (
-            <div key={idx} className={cn(/* design-system-escape: gap-2.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-2.5 text-xs")}>
+            <div key={idx} className="flex items-center gap-2.5">
               <Icon className="size-3.5 text-muted-foreground/35 shrink-0" />
-              <span
+              <Text
+                variant="caption"
+                as="span"
                 className="text-muted-foreground/55 truncate"
                 title={label ? `${label}: ${value}` : String(value)}
               >
                 {label ? `${label}: ${value}` : value}
-              </span>
+              </Text>
             </div>
           ))}
         </div>
@@ -163,12 +165,10 @@ export function ProfileSidebar({
       {/* 6. Completeness section */}
       <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-5 py-3 border-t border-border/10")}>
         <div className="flex justify-between items-center mb-1.5">
-          <span className={cn(/* design-system-escape: tracking-wider sem token DS; font-medium → className de <Text>/<Heading> */ "text-[10px] uppercase tracking-wider text-muted-foreground/40 font-medium")}>
-            Perfil
-          </span>
-          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-[11px] font-semibold', colorCss.text)}>
+          <Text variant="meta-label" className="text-muted-foreground/40 uppercase">Perfil</Text>
+          <Text variant="meta-label" className={cn('font-semibold', colorCss.text)}>
             {completeness.score}%
-          </span>
+          </Text>
         </div>
         {/* Progress bar */}
         <div className="h-1 rounded-full bg-muted/30 mb-2.5 overflow-hidden">
@@ -178,20 +178,23 @@ export function ProfileSidebar({
           />
         </div>
         {/* Checklist */}
-        <ul className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+        <ul className="space-y-1">
           {completeness.items.map((item) => (
-            <li key={item.key} className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 text-[11px]")}>
-              <span className={item.done ? 'text-success' : 'text-warning'}>
-                {item.done ? '✓' : '○'}
-              </span>
-              <span
+            <li key={item.key} className="flex items-center gap-1.5">
+              {item.done
+                ? <Check className="size-3 text-success shrink-0" />
+                : <Circle className="size-3 text-warning shrink-0" />
+              }
+              <Text
+                variant="meta-label"
+                as="span"
                 className={cn(
                   'text-muted-foreground/55',
                   item.done && 'line-through text-muted-foreground/30',
                 )}
               >
                 {item.label}
-              </span>
+              </Text>
             </li>
           ))}
         </ul>

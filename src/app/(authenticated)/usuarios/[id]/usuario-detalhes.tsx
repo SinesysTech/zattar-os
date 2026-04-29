@@ -4,7 +4,7 @@ import { FORMAT } from '@/lib/design-system';
 import { cn } from '@/lib/utils';
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, AlertCircle, User, Shield} from 'lucide-react';
+import { ArrowLeft, AlertCircle, User, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
@@ -14,7 +14,7 @@ import { toast } from 'sonner';
 import { LoadingSpinner } from "@/components/ui/loading-state"
 // Design System
 import { GlassPanel } from '@/components/shared/glass-panel';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { TabPills } from '@/components/dashboard/tab-pills';
 
 // Feature Components & Hooks
@@ -62,9 +62,9 @@ interface UsuarioDetalhesProps {
 
 function DataField({ label, value }: { label: string; value: string | null | undefined }) {
   return (
-    <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
-      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wide sem token DS */ "text-xs font-medium text-muted-foreground uppercase tracking-wide")}>{label}</p>
-      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{value || '-'}</p>
+    <div className="space-y-1">
+      <Text variant="meta-label" className="uppercase tracking-wide text-muted-foreground">{label}</Text>
+      <Text variant="body-sm">{value || '-'}</Text>
     </div>
   );
 }
@@ -328,11 +328,11 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
                   label="OAB"
                   value={usuario.oab && usuario.ufOab ? `${usuario.oab} / ${usuario.ufOab}` : null}
                 />
-                <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
-                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wide sem token DS */ "text-xs font-medium text-muted-foreground uppercase tracking-wide")}>Cargo</p>
-                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{usuario.cargo ? usuario.cargo.nome : '-'}</p>
+                <div className="space-y-1">
+                  <Text variant="meta-label" className="uppercase tracking-wide text-muted-foreground">Cargo</Text>
+                  <Text variant="body-sm">{usuario.cargo ? usuario.cargo.nome : '-'}</Text>
                   {usuario.cargo?.descricao && (
-                    <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{usuario.cargo.descricao}</p>
+                    <Text variant="caption" className="text-muted-foreground">{usuario.cargo.descricao}</Text>
                   )}
                 </div>
                 <div className="md:col-span-2 lg:col-span-3">
@@ -374,12 +374,12 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
               {/* Credentials */}
               <GlassPanel depth={1} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
                 <Heading level="card" className="mb-4">Credenciais de Acesso</Heading>
-                <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between")}>
-                  <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
-                    <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Redefinir Senha</div>
-                    <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="space-y-1">
+                    <Text variant="label" className="font-medium">Redefinir Senha</Text>
+                    <Text variant="body-sm" className="text-muted-foreground">
                       Define uma nova senha para o usuário selecionado.
-                    </div>
+                    </Text>
                   </div>
                   <Button
                     type="button"
@@ -401,16 +401,16 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
                     <Shield className="size-4 text-muted-foreground/50" />
                     <Heading level="card">Configurações de Segurança</Heading>
                   </div>
-                  <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex items-center justify-between p-4 border border-border/20 rounded-xl")}>
-                    <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
-                      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Super Administrador</div>
-                      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                  <div className="flex items-center justify-between p-4 border border-border/20 rounded-xl">
+                    <div className="space-y-0.5">
+                      <Text variant="label" className="font-medium">Super Administrador</Text>
+                      <Text variant="body-sm" className="text-muted-foreground">
                         Super Admins possuem acesso total ao sistema e bypassam todas as permissões.
-                      </div>
+                      </Text>
                       {usuario.id === usuarioLogado.id && (
-                        <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-warning mt-2")}>
+                        <Text variant="caption" className="text-warning mt-2 block">
                           Você não pode remover seu próprio status de Super Admin
-                        </div>
+                        </Text>
                       )}
                     </div>
                     <Switch

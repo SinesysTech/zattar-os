@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import { Users, CheckCircle, Scale, AlertTriangle } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { IconContainer } from '@/components/ui/icon-container';
+import { Text } from '@/components/ui/typography';
 import { AnimatedNumber } from '@/app/(authenticated)/dashboard/widgets/primitives';
 import type { Usuario } from '../../domain';
 import { calcularCompleteness } from '../shared/completeness-utils';
@@ -75,12 +76,12 @@ export function UserKpiStrip({ usuarios }: UserKpiStripProps) {
           {/* Top row */}
           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
             <div className="flex flex-col min-w-0">
-              <span className={cn(/* design-system-escape: tracking-wider sem token DS; font-semibold → className de <Text>/<Heading> */ "text-[10px] uppercase tracking-wider text-muted-foreground/40 font-semibold truncate")}>
+              <Text variant="meta-label" className="text-muted-foreground/40 uppercase truncate">
                 {card.label}
-              </span>
-              <span className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-bold mt-1")}>
+              </Text>
+              <Text variant="kpi-value" className="mt-1">
                 <AnimatedNumber value={card.value} />
-              </span>
+              </Text>
             </div>
             <IconContainer size="md" className={card.iconColor}>
               {card.icon}
