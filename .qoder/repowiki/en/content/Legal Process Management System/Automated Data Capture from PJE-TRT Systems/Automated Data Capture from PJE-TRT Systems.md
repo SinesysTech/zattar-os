@@ -16,15 +16,19 @@
 - [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx)
 - [acervo-geral-form.tsx](file://src/app/(authenticated)/captura/components/acervo-geral-form.tsx)
 - [audiencias-form.tsx](file://src/app/(authenticated)/captura/components/audiencias-form.tsx)
+- [credenciais-combobox.tsx](file://src/app/(authenticated)/captura/components/credenciais-combobox.tsx)
+- [credenciais-dialog.tsx](file://src/app/(authenticated)/captura/components/credenciais/credenciais-dialog.tsx)
+- [credenciais-columns.tsx](file://src/app/(authenticated)/captura/components/credenciais/credenciais-columns.tsx)
 - [constants.ts](file://src/app/(authenticated)/captura/constants.ts)
+- [credenciais.ts](file://src/app/(authenticated)/captura/types/credenciais.ts)
 </cite>
 
 ## Update Summary
 **Changes Made**
-- Updated UI component documentation to reflect CapturaDialog simplification with static 'Iniciar' label
-- Enhanced CapturaFormBase documentation to cover improved credential selection interface and automatic sorting algorithm
-- Added documentation for streamlined validation logic with `validarCamposCaptura` function
-- Updated form component examples to show new validation approach
+- Updated UI component documentation to reflect enhanced credential selection interface with new popover-based system
+- Added comprehensive documentation for Select All functionality and improved grade formatting
+- Enhanced credential selection interface documentation with modernized UI components
+- Updated form component examples to show new popover-based credential selection with Select All feature
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -32,12 +36,13 @@
 3. [Core Components](#core-components)
 4. [Architecture Overview](#architecture-overview)
 5. [Detailed Component Analysis](#detailed-component-analysis)
-6. [UI Component Enhancements](#ui-component-enhancements)
-7. [Dependency Analysis](#dependency-analysis)
-8. [Performance Considerations](#performance-considerations)
-9. [Troubleshooting Guide](#troubleshooting-guide)
-10. [Conclusion](#conclusion)
-11. [Appendices](#appendices)
+6. [Enhanced Credential Selection Interface](#enhanced-credential-selection-interface)
+7. [UI Component Enhancements](#ui-component-enhancements)
+8. [Dependency Analysis](#dependency-analysis)
+9. [Performance Considerations](#performance-considerations)
+10. [Troubleshooting Guide](#troubleshooting-guide)
+11. [Conclusion](#conclusion)
+12. [Appendices](#appendices)
 
 ## Introduction
 This document describes the automated data capture system that integrates with PJE-TRT legal databases. It covers the authentication architecture, session lifecycle, and end-to-end capture workflows for process movements, audiência schedules, and party information. It also documents error handling, retry mechanisms, data validation, mapping between PJE-TRT data structures and internal Processo entities, and operational guidance for configuration, monitoring, and troubleshooting.
@@ -49,7 +54,7 @@ The capture system is organized around:
 - Persistence services for timelines, audiências, expedientes, and parties
 - Document capture pipeline for pending manifestação documents
 - Shared type definitions and repositories for cross-cutting concerns
-- Enhanced UI components with simplified credential management and streamlined validation
+- Enhanced UI components with modernized credential management and streamlined validation
 
 ```mermaid
 graph TB
@@ -67,6 +72,9 @@ DIALOG["captura-dialog.tsx"]
 FORMBASE["captura-form-base.tsx"]
 ACERVO["acervo-geral-form.tsx"]
 AUDIENCIAS["audiencias-form.tsx"]
+CRED_COMB["credenciais-combobox.tsx"]
+CRED_DIALOG["credenciais-dialog.tsx"]
+CRED_COLUMNS["credenciais-columns.tsx"]
 end
 subgraph "Persistence"
 TIMELINE["timeline persistence"]
@@ -92,6 +100,9 @@ COMB --> EXPEDIENTES
 DIALOG --> FORMBASE
 FORMBASE --> ACERVO
 FORMBASE --> AUDIENCIAS
+FORMBASE --> CRED_COMB
+CRED_COMB --> CRED_DIALOG
+CRED_COMB --> CRED_COLUMNS
 PARTES --> CAD_PJE
 DOC_SERVICE --> EXPEDIENTES
 DOC_TYPES --> DOC_SERVICE
@@ -108,6 +119,9 @@ DOC_TYPES --> DOC_SERVICE
 - [cadastros-pje-repository.ts:45-73](file://src/shared/partes/repositories/cadastros-pje-repository.ts#L45-L73)
 - [captura-dialog.tsx](file://src/app/(authenticated)/captura/components/captura-dialog.tsx#L40-L41)
 - [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L44-L51)
+- [credenciais-combobox.tsx](file://src/app/(authenticated)/captura/components/credenciais-combobox.tsx#L1-L101)
+- [credenciais-dialog.tsx](file://src/app/(authenticated)/captura/components/credenciais/credenciais-dialog.tsx#L1-L138)
+- [credenciais-columns.tsx](file://src/app/(authenticated)/captura/components/credenciais/credenciais-columns.tsx#L1-L125)
 
 **Section sources**
 - [trt-driver.ts](file://src/app/(authenticated)/captura/drivers/pje/trt-driver.ts#L1-L81)
@@ -120,7 +134,10 @@ DOC_TYPES --> DOC_SERVICE
 - [cadastros-pje-repository.ts:1-117](file://src/shared/partes/repositories/cadastros-pje-repository.ts#L1-L117)
 - [cadastros-pje-repository.ts](file://src/app/(authenticated)/partes/repositories/cadastros-pje-repository.ts#L1-L5)
 - [captura-dialog.tsx](file://src/app/(authenticated)/captura/components/captura-dialog.tsx#L1-L125)
-- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L1-L186)
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L1-L258)
+- [credenciais-combobox.tsx](file://src/app/(authenticated)/captura/components/credenciais-combobox.tsx#L1-L101)
+- [credenciais-dialog.tsx](file://src/app/(authenticated)/captura/components/credenciais/credenciais-dialog.tsx#L1-L138)
+- [credenciais-columns.tsx](file://src/app/(authenticated)/captura/components/credenciais/credenciais-columns.tsx#L1-L125)
 
 ## Core Components
 - Authentication and session management:
@@ -134,8 +151,8 @@ DOC_TYPES --> DOC_SERVICE
 - Repositories:
   - Upsert and lookup of PJE entity mappings for clients, parties, third parties, and representatives.
 - UI Components:
-  - Simplified dialog interface with static submit button label
-  - Enhanced credential selection with automatic sorting and streamlined validation
+  - Modernized credential selection interface with popover-based system and Select All functionality
+  - Enhanced credential management with improved grade formatting and streamlined validation
 
 **Section sources**
 - [trt-auth.service.ts](file://src/app/(authenticated)/captura/services/trt/trt-auth.service.ts#L65-L84)
@@ -148,6 +165,7 @@ DOC_TYPES --> DOC_SERVICE
 - [cadastros-pje-repository.ts:45-73](file://src/shared/partes/repositories/cadastros-pje-repository.ts#L45-L73)
 - [captura-dialog.tsx](file://src/app/(authenticated)/captura/components/captura-dialog.tsx#L40-L41)
 - [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L44-L51)
+- [credenciais-combobox.tsx](file://src/app/(authenticated)/captura/components/credenciais-combobox.tsx#L1-L101)
 
 ## Architecture Overview
 The system authenticates via SSO gov.br with OTP, maintains a browser session, and executes targeted captures. It consolidates unique process identifiers, enriches with timeline and parties, and persists results to PostgreSQL and storage systems.
@@ -390,6 +408,101 @@ D --> E["Lookup/Map Entities to PJE IDs"]
 **Section sources**
 - [trt-driver.ts](file://src/app/(authenticated)/captura/drivers/pje/trt-driver.ts#L33-L81)
 
+## Enhanced Credential Selection Interface
+
+### Modernized Popover-Based System
+The credential selection interface has been completely redesigned with a modern popover-based system that replaces the previous grid-based approach. This new system provides improved user experience with better credential organization and selection capabilities.
+
+**Updated** Enhanced credential selection interface with popover-based system and Select All functionality
+
+```mermaid
+flowchart TD
+A["Credential Selection"] --> B["Popover Trigger Button"]
+B --> C["Popover Content"]
+C --> D["Select All Checkbox"]
+D --> E["Individual Credential Checkboxes"]
+E --> F["Automatic Sorting Algorithm"]
+F --> G["Grade Formatting"]
+```
+
+**Diagram sources**
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L183-L240)
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L202-L238)
+
+### Select All Functionality
+The new interface includes a comprehensive Select All feature that allows users to quickly select or deselect all available credentials with a single action. The system displays the count of selected vs total credentials and provides visual feedback through indeterminate state checkboxes.
+
+**Updated** Select All functionality with visual feedback and credential count display
+
+```mermaid
+flowchart TD
+A["User Clicks Select All"] --> B{"All Selected?"}
+B --> |Yes| C["Deselect All Credentials"]
+B --> |No| D["Select All Available Credentials"]
+C --> E["Update UI State"]
+D --> E
+E --> F["Show Selected Count"]
+```
+
+**Diagram sources**
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L114-L120)
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L202-L217)
+
+### Improved Grade Formatting
+The system now provides enhanced grade formatting with proper Portuguese labels (1º Grau, 2º Grau, Tribunal Superior) instead of raw enum values. This improvement makes the interface more user-friendly and internationally comprehensible.
+
+**Updated** Enhanced grade formatting with proper Portuguese labels
+
+```mermaid
+flowchart TD
+A["Raw Grade Value"] --> B{"Grade Type"}
+B --> |primeiro_grau| C["Format as '1º Grau'"]
+B --> |segundo_grau| D["Format as '2º Grau'"]
+B --> |tribunal_superior| E["Format as 'Tribunal Superior'"]
+C --> F["Display Formatted Label"]
+D --> F
+E --> F
+```
+
+**Diagram sources**
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L49-L54)
+
+### Automatic Credential Sorting Algorithm
+The system implements a sophisticated sorting algorithm that organizes credentials by tribunal number and degree priority. The algorithm prioritizes TRT1 through TRT24 in numerical order, followed by TST, and then sorts by degree (1º Grau, 2º Grau, Tribunal Superior).
+
+**Updated** Automatic sorting algorithm with tribunal number extraction and degree weighting
+
+```mermaid
+flowchart TD
+A["Credential List"] --> B["Extract Tribunal Number"]
+B --> C["Calculate Degree Weight"]
+C --> D["Sort by Tribunal Number"]
+D --> E{"Same Tribunal?"}
+E --> |Yes| F["Sort by Degree Priority"]
+E --> |No| G["Sort by Tribunal Number"]
+F --> H["Final Sorted List"]
+G --> H
+```
+
+**Diagram sources**
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L36-L63)
+
+### Modernized UI Components
+The credential selection interface now uses modern UI components including:
+- Popover-based dropdown with proper width alignment
+- Clean checkbox list with hover states and visual feedback
+- Responsive design with proper spacing and typography
+- Status indicators for credential activation state
+
+**Section sources**
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L183-L240)
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L114-L120)
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L49-L54)
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L36-L63)
+- [credenciais-combobox.tsx](file://src/app/(authenticated)/captura/components/credenciais-combobox.tsx#L1-L101)
+- [credenciais-dialog.tsx](file://src/app/(authenticated)/captura/components/credenciais/credenciais-dialog.tsx#L1-L138)
+- [credenciais-columns.tsx](file://src/app/(authenticated)/captura/components/credenciais/credenciais-columns.tsx#L1-L125)
+
 ## UI Component Enhancements
 
 ### Simplified Dialog Interface
@@ -415,24 +528,6 @@ C --> D["Consistent User Experience"]
 ### Enhanced Credential Selection Interface
 The CapturaFormBase component has been significantly enhanced with improved credential selection interface, automatic sorting algorithm, and streamlined validation logic.
 
-#### Automatic Credential Sorting Algorithm
-The system now automatically sorts credentials by tribunal number and degree priority using the `ordenarCredenciais` function:
-
-**Updated** Automatic sorting algorithm with tribunal number extraction and degree weighting
-
-```mermaid
-flowchart TD
-A["Credential List"] --> B["extractNumeroTribunal()"]
-B --> C["pesoGrau()"]
-C --> D["Sort Algorithm"]
-D --> E["TRT1 → TRT2 → ... → TRT24 → TST"]
-E --> F["First Degree → Second Degree → Higher Courts"]
-```
-
-**Diagram sources**
-- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L31-L51)
-- [constants.ts](file://src/app/(authenticated)/captura/constants.ts#L15-L19)
-
 #### Streamlined Validation Logic
 The validation system has been simplified with the `validarCamposCaptura` function that provides consistent validation across all form components.
 
@@ -449,17 +544,14 @@ E --> |Yes| G["Return True"]
 ```
 
 **Diagram sources**
-- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L178-L185)
-- [acervo-geral-form.tsx](file://src/app/(authenticated)/captura/components/acervo-geral-form.tsx#L32-L39)
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L250-L257)
 
 #### Improved Credential Selection Interface
 The credential selection interface now provides better user experience with automatic sorting and validation feedback.
 
 **Section sources**
-- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L44-L51)
-- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L178-L185)
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L250-L257)
 - [acervo-geral-form.tsx](file://src/app/(authenticated)/captura/components/acervo-geral-form.tsx#L32-L39)
-- [constants.ts](file://src/app/(authenticated)/captura/constants.ts#L15-L19)
 
 ## Dependency Analysis
 - Authentication depends on browser connection utilities and OTP retrieval.
@@ -481,6 +573,7 @@ CAD["cadastros-pje-repository.ts"] --> SUPABASE["Supabase Client"]
 UI["UI Components"] --> FORMBASE["Enhanced CapturaFormBase"]
 FORMBASE --> VALIDATION["Streamlined Validation"]
 FORMBASE --> SORTING["Automatic Credential Sorting"]
+FORMBASE --> POPOVER["Modernized Popover Interface"]
 ```
 
 **Diagram sources**
@@ -490,7 +583,7 @@ FORMBASE --> SORTING["Automatic Credential Sorting"]
 - [pje-expediente-documento.service.ts](file://src/app/(authenticated)/captura/services/pje/pje-expediente-documento.service.ts#L37-L39)
 - [cadastros-pje-repository.ts](file://src/shared/partes/repositories/cadastros-pje-repository.ts#L6)
 - [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L44-L51)
-- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L178-L185)
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L250-L257)
 
 **Section sources**
 - [trt-auth.service.ts](file://src/app/(authenticated)/captura/services/trt/trt-auth.service.ts#L8-L10)
@@ -498,7 +591,7 @@ FORMBASE --> SORTING["Automatic Credential Sorting"]
 - [pje-expediente-documento.service.ts](file://src/app/(authenticated)/captura/services/pje/pje-expediente-documento.service.ts#L37-L39)
 - [cadastros-pje-repository.ts](file://src/shared/partes/repositories/cadastros-pje-repository.ts#L6)
 - [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L44-L51)
-- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L178-L185)
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L250-L257)
 
 ## Performance Considerations
 - Session reuse across multiple capture domains reduces authentication overhead.
@@ -507,6 +600,8 @@ FORMBASE --> SORTING["Automatic Credential Sorting"]
 - Anti-detection measures reduce timeouts and retries caused by automation detection.
 - Enhanced credential sorting reduces user interaction time for credential selection.
 - Simplified dialog interface reduces component complexity and improves rendering performance.
+- Popover-based credential selection improves performance by lazy-loading credential lists.
+- Select All functionality reduces individual checkbox interactions for bulk operations.
 
 ## Troubleshooting Guide
 Common issues and remedies:
@@ -523,8 +618,14 @@ Common issues and remedies:
 - Credential selection issues:
   - Verify that the `validarCamposCaptura` function returns true before attempting capture.
   - Check that credentials are properly sorted and displayed in the interface.
+  - Ensure Select All functionality works correctly for bulk credential selection.
+  - Verify that grade formatting displays proper Portuguese labels.
 - Dialog submission problems:
   - Ensure the static 'Iniciar' label is properly rendered and accessible.
+- Popover credential interface problems:
+  - Check that the popover opens correctly and displays credential options.
+  - Verify that automatic sorting works for tribunal and degree combinations.
+  - Ensure individual credential selection works within the popover interface.
 
 **Section sources**
 - [trt-auth.service.ts](file://src/app/(authenticated)/captura/services/trt/trt-auth.service.ts#L164-L178)
@@ -532,11 +633,12 @@ Common issues and remedies:
 - [trt-auth.service.ts](file://src/app/(authenticated)/captura/services/trt/trt-auth.service.ts#L439-L450)
 - [pje-expediente-documento.service.ts](file://src/app/(authenticated)/captura/services/pje/pje-expediente-documento.service.ts#L231-L235)
 - [captura-combinada.service.ts](file://src/app/(authenticated)/captura/services/trt/captura-combinada.service.ts#L693-L697)
-- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L178-L185)
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L250-L257)
 - [captura-dialog.tsx](file://src/app/(authenticated)/captura/components/captura-dialog.tsx#L116-L119)
+- [credenciais-combobox.tsx](file://src/app/(authenticated)/captura/components/credenciais-combobox.tsx#L1-L101)
 
 ## Conclusion
-The system provides a robust, session-reuse-based capture pipeline for PJE-TRT with strong typing, anti-detection, and resilient retry logic. It supports combined capture across audiências, expedientes, and enriched timeline+partes, with dedicated document capture for pending manifestação and entity-to-PJE ID mapping via repositories. Recent UI enhancements simplify the user interface while improving credential management and validation processes.
+The system provides a robust, session-reuse-based capture pipeline for PJE-TRT with strong typing, anti-detection, and resilient retry logic. It supports combined capture across audiências, expedientes, and enriched timeline+partes, with dedicated document capture for pending manifestação and entity-to-PJE ID mapping via repositories. Recent UI enhancements include a modernized popover-based credential selection interface with Select All functionality, improved grade formatting, and streamlined validation processes, significantly enhancing the user experience while maintaining system reliability and performance.
 
 ## Appendices
 
@@ -552,8 +654,12 @@ The system provides a robust, session-reuse-based capture pipeline for PJE-TRT w
   - Review OTP handling, SSO exit timing, and cookie presence; validate document type and storage upload; confirm tribunal/grau and mapping IDs before persisting parties.
   - Verify credential validation using the `validarCamposCaptura` function.
   - Check that credentials are properly sorted and displayed in the enhanced interface.
+  - Ensure Select All functionality works correctly for bulk credential selection.
+  - Verify that grade formatting displays proper Portuguese labels.
 
 - UI Component Usage:
   - The simplified dialog interface provides consistent 'Iniciar' button labeling across all capture types.
   - Enhanced credential selection interface automatically sorts credentials by tribunal and degree.
   - Streamlined validation ensures consistent form validation across all capture components.
+  - Popover-based credential selection provides improved user experience with Select All functionality.
+  - Modernized grade formatting displays proper Portuguese labels for tribunal degrees.

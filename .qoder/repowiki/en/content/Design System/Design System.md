@@ -10,6 +10,7 @@
 - [semantic-badge.tsx](file://src/components/ui/semantic-badge.tsx)
 - [badge.tsx](file://src/components/ui/badge.tsx)
 - [tabs.tsx](file://src/components/ui/tabs.tsx)
+- [popover.tsx](file://src/components/ui/popover.tsx)
 - [globals.css](file://src/app/globals.css)
 - [variants.ts](file://src/lib/design-system/variants.ts)
 - [colors-section.tsx](file://src/app/(authenticated)/design-system/_components/colors-section.tsx)
@@ -57,15 +58,19 @@
 - [page.tsx](file://src/app/(authenticated)/captura/historico/[id]/page.tsx)
 - [glass-panel.tsx](file://src/components/shared/glass-panel.tsx)
 - [ambient-backdrop.tsx](file://src/components/shared/ambient-backdrop.tsx)
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx)
+- [audiencia-responsavel-popover.tsx](file://src/app/(authenticated)/audiencias/components/audiencia-responsavel-popover.tsx)
+- [authenticator-popover.tsx](file://src/components/layout/header/authenticator-popover.tsx)
 </cite>
 
 ## Update Summary
 **Changes Made**
-- Enhanced atmospheric glow effects with reduced opacity values for improved visual subtlety
-- Refined completion indicator styling with more subtle background colors for better visual hierarchy
-- Improved mobile responsiveness with adjusted max-height values for better content display
-- Enhanced glass panel system with optimized blur effects and transparency levels
-- Refined ambient backdrop system with improved opacity calculations and blur intensity controls
+- Added comprehensive documentation for Popover component usage in credential selection interface
+- Documented PopoverTrigger, PopoverContent, and enhanced Button component integration
+- Updated component library integration section with new Popover component patterns
+- Enhanced responsive utilities documentation with Popover-specific considerations
+- Added new section on Popover component architecture and design patterns
+- Updated page-specific implementation examples with credential selection interface patterns
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -102,6 +107,8 @@ The ZattarOS Design System represents a comprehensive visual and interaction fra
 **Updated** The most significant enhancement is the standardized integration of the text-muted-foreground color palette across the entire design system, ensuring consistent typography hierarchy and improved component styling consistency. This change establishes a unified approach to secondary text styling that enhances readability and maintains accessibility compliance across all components and modules.
 
 **Updated** The Captura module components have received styling refinements with reduced opacity values for atmospheric glow effects, more subtle background colors for completion indicators, and improved mobile responsiveness with adjusted max-height values. These refinements enhance the visual hierarchy and user experience while maintaining design system consistency.
+
+**Updated** The system now includes comprehensive Popover component usage patterns with enhanced Button component integration, providing sophisticated dropdown and selection interfaces for credential management and other interactive elements.
 
 This architecture ensures consistency across the legal management platform while allowing for module-specific adaptations through a well-defined override mechanism and modernized component development practices.
 
@@ -658,12 +665,6 @@ The system implements strict accessibility standards:
 - **Screen Reader Support**: Proper ARIA attributes and semantic HTML
 - **Motion Sensitivity**: Respect for `prefers-reduced-motion` preferences
 
-**Accessibility Governance**
-- **Compliance Standards**: All components meet WCAG AAA requirements
-- **Testing Framework**: Automated accessibility validation
-- **User Experience**: Inclusive design patterns for diverse users
-- **Legal Compliance**: Meeting accessibility requirements for legal services
-
 ### Accessibility Implementation Patterns
 
 **Focus Management**
@@ -749,10 +750,59 @@ The week variant provides specialized styling for day navigation:
 </TabsList>
 ```
 
+### Popover Component Integration
+
+**Updated** The system now includes comprehensive Popover component integration with enhanced Button component usage patterns, providing sophisticated dropdown and selection interfaces.
+
+**Popover Component Architecture**
+The Popover component system provides a complete set of popover-related components:
+- **Popover**: Root component managing popover state and lifecycle
+- **PopoverTrigger**: Trigger element that opens/closes the popover
+- **PopoverContent**: Main content area with positioning and animation
+- **PopoverAnchor**: Anchor element for positioning
+- **PopoverHeader**: Header section with title and description
+- **PopoverTitle**: Title element for popover headers
+- **PopoverDescription**: Description element for popover content
+
+**Enhanced Button Integration**
+The Popover components integrate seamlessly with Button components:
+- **asChild Pattern**: PopoverTrigger uses asChild to wrap Button components
+- **Role Attributes**: Proper ARIA roles and attributes for accessibility
+- **State Management**: Open/close state management with controlled components
+- **Positioning**: Automatic positioning relative to trigger elements
+
+**Popover Usage Patterns**
+```typescript
+// Credential selection with enhanced Button integration
+<Popover>
+  <PopoverTrigger asChild>
+    <Button
+      variant="outline"
+      role="combobox"
+      aria-expanded={open}
+      className="w-full justify-between font-normal"
+    >
+      <span className={cn(selectedCount === 0 && 'text-muted-foreground')}>
+        {triggerLabel}
+      </span>
+      <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+    </Button>
+  </PopoverTrigger>
+  <PopoverContent
+    className="p-0 w-[--radix-popover-trigger-width]"
+    align="start"
+    sideOffset={4}
+  >
+    {/* Selection options */}
+  </PopoverContent>
+</Popover>
+```
+
 **Section sources**
 - [tabs.tsx:27-41](file://src/components/ui/tabs.tsx#L27-L41)
 - [tabs.tsx:18-25](file://src/components/ui/tabs.tsx#L18-L25)
 - [MASTER.md:143-181](file://design-system/zattaros/MASTER.md#L143-L181)
+- [popover.tsx:1-90](file://src/components/ui/popover.tsx#L1-L90)
 
 ### Component Usage Patterns and Migration
 
@@ -761,6 +811,7 @@ The week variant provides specialized styling for day navigation:
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 ```
 
 **Variant System**
@@ -1363,6 +1414,14 @@ The playground includes comprehensive testing capabilities:
 - **Size Variants Testing**: Validating sm and md size variants
 - **Accessibility Compliance**: Ensuring progress indicators meet WCAG standards
 
+**Popover Component Testing**
+**Updated** The playground now includes comprehensive testing for the Popover component system:
+- **Trigger Integration Testing**: Validating PopoverTrigger with Button components
+- **Content Positioning Testing**: Testing PopoverContent positioning and alignment
+- **State Management Testing**: Validating open/close state management
+- **Accessibility Compliance**: Ensuring Popover components meet WCAG standards
+- **Performance Optimization**: Testing Popover rendering and interaction performance
+
 **Section sources**
 - [badge.test.tsx:29-78](file://src/components/ui/__tests__/badge.test.tsx#L29-L78)
 - [avatar.test.tsx:93-132](file://src/components/ui/__tests__/avatar.test.tsx#L93-L132)
@@ -1514,6 +1573,67 @@ The captura module shows systematic migration from raw Tailwind classes with cle
 - **Blur Intensity Controls**: Configurable blur intensity with mathematical opacity calculations
 - **Grid Overlay**: Optional grid overlay with configurable opacity (0.03)
 - **Gradient Base**: Smooth gradient base with configurable tint variations
+
+**Credential Selection Interface Implementation**
+**Updated** The captura module features comprehensive Popover component usage in credential selection interfaces:
+
+**Enhanced Button Integration**
+The credential selection interface demonstrates sophisticated Button component integration with Popover:
+- **asChild Pattern**: PopoverTrigger wraps Button components for seamless integration
+- **Role Attributes**: Proper ARIA roles for accessibility compliance
+- **State Management**: Controlled open/close state management
+- **Positioning**: Automatic positioning relative to trigger elements
+
+**Popover Content Structure**
+```typescript
+<Popover>
+  <PopoverTrigger asChild>
+    <Button
+      variant="outline"
+      role="combobox"
+      aria-expanded={open}
+      className="w-full justify-between font-normal"
+    >
+      <span className={cn(selectedCount === 0 && 'text-muted-foreground')}>
+        {triggerLabel}
+      </span>
+      <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+    </Button>
+  </PopoverTrigger>
+  <PopoverContent
+    className="p-0 w-[--radix-popover-trigger-width]"
+    align="start"
+    sideOffset={4}
+  >
+    {/* Select all option */}
+    <div className="border-b">
+      <label className="flex items-center gap-3 px-3 py-2.5 text-sm cursor-pointer hover:bg-muted/50 transition-colors">
+        <Checkbox checked={allSelected} onCheckedChange={toggleAll} />
+        <span className="font-medium">Selecionar todos</span>
+        {someSelected && (
+          <span className="ml-auto text-xs text-muted-foreground">
+            {selectedCount}/{totalCount}
+          </span>
+        )}
+      </label>
+    </div>
+    
+    {/* Credential list */}
+    <div className="max-h-52 overflow-y-auto">
+      {credentials.map((cred) => {
+        const checked = selectedIds.includes(cred.id);
+        return (
+          <label key={cred.id} className="flex items-center gap-3 px-3 py-2 text-sm cursor-pointer hover:bg-muted/50 transition-colors">
+            <Checkbox checked={checked} onCheckedChange={(v) => toggleCredential(cred.id, !!v)} />
+            <span className="flex-1">{cred.tribunal} — {formatGrau(cred.grau)}</span>
+            {checked && <Check className="h-3.5 w-3.5 text-primary shrink-0" />}
+          </label>
+        );
+      })}
+    </div>
+  </PopoverContent>
+</Popover>
+```
 
 **Typography Migration Examples**
 ```typescript
@@ -1779,6 +1899,105 @@ The inline combobox adapts to different editor contexts:
 - [inline-combobox.tsx:1-200](file://src/components/editor/plate-ui/inline-combobox.tsx#L1-L200)
 - [slash-node.tsx:211-252](file://src/components/editor/plate-ui/slash-node.tsx#L211-L252)
 
+### Credential Selection Interface Implementation
+
+**Updated** The credential selection interface demonstrates comprehensive Popover component usage with enhanced Button integration, providing sophisticated dropdown and selection capabilities.
+
+**Popover Component Architecture**
+The credential selection interface utilizes the complete Popover component system:
+- **Root Management**: Popover manages state and lifecycle
+- **Trigger Integration**: PopoverTrigger wraps Button components with asChild pattern
+- **Content Positioning**: PopoverContent handles automatic positioning and alignment
+- **Accessibility Compliance**: Proper ARIA roles and keyboard navigation
+
+**Enhanced Button Integration Patterns**
+The interface demonstrates sophisticated Button component integration:
+- **asChild Pattern**: Seamless wrapping of Button components within PopoverTrigger
+- **Role Attributes**: Proper ARIA roles for combobox functionality
+- **State Management**: Controlled open/close state with useState hooks
+- **Accessibility Compliance**: Proper focus management and keyboard navigation
+
+**Credential Selection Logic**
+The interface implements comprehensive credential selection logic:
+- **Multi-Select Support**: Checkbox-based selection with select-all functionality
+- **Dynamic Counting**: Real-time count updates with indeterminate state
+- **Filtering**: Intelligent filtering based on selection criteria
+- **Validation**: Form validation for required selections
+
+**Popover Content Structure**
+```typescript
+<Popover open={open} onOpenChange={setOpen}>
+  <PopoverTrigger asChild>
+    <Button
+      variant="outline"
+      role="combobox"
+      aria-expanded={open}
+      className="w-full justify-between font-normal"
+    >
+      <span className={cn(selectedCount === 0 && 'text-muted-foreground')}>
+        {triggerLabel}
+      </span>
+      <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+    </Button>
+  </PopoverTrigger>
+  <PopoverContent
+    className="p-0 w-[--radix-popover-trigger-width]"
+    align="start"
+    sideOffset={4}
+  >
+    {/* Select all option with count */}
+    <div className="border-b">
+      <label className="flex items-center gap-3 px-3 py-2.5 text-sm cursor-pointer hover:bg-muted/50 transition-colors">
+        <Checkbox
+          checked={allSelected}
+          data-state={someSelected ? 'indeterminate' : allSelected ? 'checked' : 'unchecked'}
+          onCheckedChange={toggleAll}
+        />
+        <span className="font-medium">Selecionar todos</span>
+        {someSelected && (
+          <span className="ml-auto text-xs text-muted-foreground">
+            {selectedCount}/{totalCount}
+          </span>
+        )}
+      </label>
+    </div>
+    
+    {/* Scrollable credential list */}
+    <div className="max-h-52 overflow-y-auto">
+      {orderedCredentials.map((cred) => {
+        const checked = selectedIds.includes(cred.id);
+        const label = `${cred.tribunal} — ${formatGrau(cred.grau)}`;
+        return (
+          <label
+            key={cred.id}
+            className="flex items-center gap-3 px-3 py-2 text-sm cursor-pointer hover:bg-muted/50 transition-colors"
+          >
+            <Checkbox
+              checked={checked}
+              onCheckedChange={(v) => toggleCredential(cred.id, !!v)}
+            />
+            <span className="flex-1">{label}</span>
+            {checked && <Check className="h-3.5 w-3.5 text-primary shrink-0" />}
+          </label>
+        );
+      })}
+    </div>
+  </PopoverContent>
+</Popover>
+```
+
+**Accessibility and Responsive Considerations**
+The credential selection interface meets comprehensive accessibility and responsive requirements:
+- **Keyboard Navigation**: Full keyboard support for selection and navigation
+- **Screen Reader Support**: Proper ARIA labels and descriptions
+- **Mobile Optimization**: Touch-friendly interaction patterns
+- **Responsive Positioning**: Automatic positioning for different screen sizes
+- **Performance Optimization**: Efficient rendering for large credential lists
+
+**Section sources**
+- [captura-form-base.tsx:183-240](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L183-L240)
+- [popover.tsx:1-90](file://src/components/ui/popover.tsx#L1-L90)
+
 ## Quality Assurance and Migration Tracking
 
 The design system includes comprehensive quality assurance processes to ensure consistent implementation and track migration progress, now enhanced with modern responsive utility validation.
@@ -1890,6 +2109,18 @@ The design system includes comprehensive quality assurance processes to ensure c
 - **Blur Intensity Control**: Measuring configurable blur intensity implementation
 - **Performance Optimization**: Monitoring ambient backdrop rendering performance
 - **Visual Consistency**: Ensuring consistent atmospheric effects across components
+
+**Popover Component Metrics**
+**Updated** The system now tracks metrics for the Popover component system:
+- **Component Adoption**: Tracking of Popover component usage across credential interfaces
+- **Button Integration**: Validation of enhanced Button component integration
+- **Accessibility Compliance**: Ensuring Popover components meet WCAG standards
+- **Performance Metrics**: Monitoring Popover rendering and interaction performance
+- **Developer Education**: Tracking adoption of Popover component patterns
+
+**Section sources**
+- [captura-form-base.tsx:183-240](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L183-L240)
+- [popover.tsx:1-90](file://src/components/ui/popover.tsx#L1-L90)
 
 ## Integration and Maintenance
 
@@ -2021,6 +2252,14 @@ The design system architecture supports scalable maintenance and evolution throu
 - **Visual Consistency Validation**: Ensuring consistent atmospheric effects across components
 - **Developer Education**: Training on enhanced ambient backdrop usage and best practices
 
+**Popover Component Maintenance and Governance**
+**Updated** The system now includes maintenance processes for the Popover component system:
+- **Component Usage Analytics**: Tracking Popover component adoption across credential interfaces
+- **Button Integration Validation**: Ensuring enhanced Button component integration
+- **Accessibility Compliance**: Regular validation of Popover component accessibility
+- **Performance Optimization**: Monitoring Popover component rendering performance
+- **Developer Education**: Training on Popover component patterns and best practices
+
 ## Conclusion
 
 The ZattarOS Design System represents a comprehensive approach to design system governance that balances centralized authority with module-specific flexibility. Through the implementation of MASTER.md as the central authority, systematic page-specific override mechanisms, and design-system-escape comments, the system provides a robust foundation for maintaining design integrity while accommodating the unique requirements of different application modules.
@@ -2039,6 +2278,8 @@ The ZattarOS Design System represents a comprehensive approach to design system 
 
 **Updated** The Captura module components have received styling refinements with reduced opacity values for atmospheric glow effects, more subtle background colors for completion indicators, and improved mobile responsiveness with adjusted max-height values. These refinements enhance the visual hierarchy and user experience while maintaining design system consistency.
 
+**Updated** The credential selection interface demonstrates comprehensive Popover component usage with enhanced Button integration, providing sophisticated dropdown and selection capabilities for credential management. The Popover component system offers complete control over positioning, styling, and accessibility, while the enhanced Button integration ensures seamless user interaction patterns.
+
 The hierarchical architecture ensures that all modules follow consistent design principles while allowing for targeted adaptations through documented overrides. The comprehensive audit and validation processes guarantee high-quality implementations across all modules, while the playground environment facilitates testing and validation of design system implementations.
 
 The integration with shadcn/ui components ensures scalability and maintainability, while the centralized badge system and component governance provide consistent visual language across the platform. The systematic migration approach with design-system-escape comments guides developers through the transition from raw Tailwind classes to standardized components, creating a sustainable development workflow.
@@ -2055,12 +2296,14 @@ The enhanced badge component with 5 new semantic status variants (success, warni
 
 **Updated** The new AvatarIndicator component with comprehensive testing coverage and accessibility compliance represents the latest advancement in user presence communication within the design system. The component's integration with the avatar ecosystem and its support for multiple status variants (online, away, offline, success) provides a consistent and accessible way to communicate user status across the platform.
 
-**Updated** The refactored combobox components with native HTML implementation, server-side search capabilities, and inline editor integration represent significant improvements in component functionality and user experience. The enhanced progress indicator with advanced styling props provides developers with greater flexibility in creating progress visualization components.
+**Updated** The refactored combobox components with native HTML implementation, server-side search capabilities, and inline editor integration represent significant improvements in component functionality and user experience.
 
 **Updated** The standardized text-muted-foreground color palette integration represents a major advancement in component styling consistency, ensuring that secondary text elements maintain consistent visual hierarchy and accessibility compliance across all components and modules.
 
 **Updated** The enhanced glass panel system with optimized blur effects and reduced opacity values provides improved visual performance while maintaining the atmospheric depth that enhances the user experience.
 
 **Updated** The ambient backdrop system with mathematical opacity calculations and configurable blur intensity offers developers precise control over visual effects while maintaining performance standards.
+
+**Updated** The comprehensive Popover component system with enhanced Button integration represents the latest advancement in dropdown and selection interface design, providing sophisticated user interaction patterns with comprehensive accessibility compliance.
 
 The comprehensive design system improvements ensure that the ZattarOS platform remains at the forefront of legal technology design, providing both developers and users with a consistent, accessible, and visually appealing interface that supports the complex needs of legal case management.
