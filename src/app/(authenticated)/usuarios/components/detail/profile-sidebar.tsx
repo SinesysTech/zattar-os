@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { getAvatarUrl, formatarOab, formatarData } from '../../utils';
+import { getAvatarUrl, getCoverUrl, formatarOab, formatarData } from '../../utils';
 import { RoleBanner } from '../shared/role-banner';
 import { UserStatusDot, getStatusFromLastLogin } from '../shared/user-status-dot';
 import { UserCompletenessRing } from '../shared/user-completeness-ring';
@@ -72,6 +72,7 @@ export function ProfileSidebar({
       <div className="relative">
         <RoleBanner
           cargoNome={usuario.cargo?.nome}
+          coverUrl={getCoverUrl(usuario.coverUrl)}
           inactive={!usuario.ativo}
           height="h-[100px]"
         />

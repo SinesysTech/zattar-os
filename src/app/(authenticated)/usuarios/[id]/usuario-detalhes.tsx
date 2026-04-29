@@ -22,6 +22,7 @@ import {
   useUsuario,
   useUsuarioPermissoes,
   AvatarEditDialog,
+  CoverEditDialog,
   UsuarioEditDialog,
   RedefinirSenhaDialog,
   PermissoesMatriz,
@@ -34,10 +35,12 @@ import {
   formatarGenero,
   formatarEnderecoCompleto,
   getAvatarUrl,
+  getCoverUrl,
   type Usuario,
   actionAtualizarUsuario,
   actionDesativarUsuario,
 } from '@/app/(authenticated)/usuarios';
+
 import { actionObterPerfil } from '@/app/(authenticated)/perfil';
 
 // Detail components
@@ -89,6 +92,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
   // UI States
   const [usuarioLogado, setUsuarioLogado] = useState<UsuarioComPermissao | null>(null);
   const [avatarDialogOpen, setAvatarDialogOpen] = useState(false);
+  const [coverDialogOpen, setCoverDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [redefinirSenhaOpen, setRedefinirSenhaOpen] = useState(false);
   const [deactivateDialogOpen, setDeactivateDialogOpen] = useState(false);
@@ -249,7 +253,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
         <ProfileSidebar
           usuario={usuario}
           onEditAvatar={() => setAvatarDialogOpen(true)}
-          onEditCover={() => { /* TODO: integrate cover dialog if needed */ }}
+          onEditCover={() => setCoverDialogOpen(true)}
           onEdit={() => setEditDialogOpen(true)}
           onResetPassword={() => setRedefinirSenhaOpen(true)}
           onDeactivate={() => setDeactivateDialogOpen(true)}
@@ -430,6 +434,14 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
         usuarioId={usuario.id}
         avatarUrl={getAvatarUrl(usuario.avatarUrl)}
         nomeExibicao={usuario.nomeExibicao}
+        onSuccess={() => refetchUsuario()}
+      />
+
+      <CoverEditDialog
+        open={coverDialogOpen}
+        onOpenChange={setCoverDialogOpen}
+        usuarioId={usuario.id}
+        coverUrl={getCoverUrl(usuario.coverUrl)}
         onSuccess={() => refetchUsuario()}
       />
 
