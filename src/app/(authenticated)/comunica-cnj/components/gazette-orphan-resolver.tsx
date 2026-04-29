@@ -20,7 +20,7 @@ import { GlassPanel } from '@/components/shared/glass-panel';
 import { Heading, Text } from '@/components/ui/typography';
 import { useGazetteStore } from './hooks/use-gazette-store';
 import { usePesquisaStore } from './hooks/use-pesquisa-store';
-import { ExpedienteDialog } from '@/app/(authenticated)/expedientes';
+import { ExpedienteDialog, GrauTribunal } from '@/app/(authenticated)/expedientes';
 import type {
   ComunicacaoCNJEnriquecida,
   MatchCriterio,
@@ -684,6 +684,14 @@ export function GazetteOrphanResolver() {
         open={isExpedienteDialogOpen}
         onOpenChange={setIsExpedienteDialogOpen}
         onSuccess={handleExpedienteCriado}
+        dadosIniciais={current ? {
+          numeroProcesso: current.numeroProcesso,
+          processoId: 0,
+          trt: 'TRT1',
+          grau: GrauTribunal.PRIMEIRO_GRAU,
+          nomeParteAutora: current.partesAutor?.[0],
+          nomeParteRe: current.partesReu?.[0],
+        } : undefined}
       />
     </GlassPanel>
   );
