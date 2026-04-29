@@ -144,7 +144,7 @@ describe('Captura Timeline Actions', () => {
         it('deve relinkar documentos com sucesso e revalidar cache', async () => {
             (relinkBackblazeDocumentos as jest.Mock).mockResolvedValue(mockRelinkResult);
 
-            const result = await actionRelinkBackblaze('pje-123', '0010702-80.2025.5.03.0111');
+            const result = await actionRelinkBackblaze('pje-123', '0010702-80.2025.5.03.0111', 'TRT3', 'primeiro_grau');
 
             expect(result.success).toBe(true);
             expect(result.data).toEqual(mockRelinkResult);
@@ -152,7 +152,9 @@ describe('Captura Timeline Actions', () => {
             expect(checkPermission).toHaveBeenCalledWith(mockUser.id, 'acervo', 'editar');
             expect(relinkBackblazeDocumentos).toHaveBeenCalledWith(
                 'pje-123',
-                '0010702-80.2025.5.03.0111'
+                '0010702-80.2025.5.03.0111',
+                'TRT3',
+                'primeiro_grau'
             );
             expect(revalidatePath).toHaveBeenCalledWith('/app/processos/pje-123');
         });
@@ -160,7 +162,7 @@ describe('Captura Timeline Actions', () => {
         it('deve retornar erro quando não autenticado', async () => {
             (getCurrentUser as jest.Mock).mockResolvedValue(null);
 
-            const result = await actionRelinkBackblaze('pje-123', '0010702-80.2025.5.03.0111');
+            const result = await actionRelinkBackblaze('pje-123', '0010702-80.2025.5.03.0111', 'TRT3', 'primeiro_grau');
 
             expect(result.success).toBe(false);
             expect(result.error).toBe('Não autenticado');
@@ -170,7 +172,7 @@ describe('Captura Timeline Actions', () => {
         it('deve retornar erro quando sem permissão', async () => {
             (checkPermission as jest.Mock).mockResolvedValue(false);
 
-            const result = await actionRelinkBackblaze('pje-123', '0010702-80.2025.5.03.0111');
+            const result = await actionRelinkBackblaze('pje-123', '0010702-80.2025.5.03.0111', 'TRT3', 'primeiro_grau');
 
             expect(result.success).toBe(false);
             expect(result.error).toBe('Sem permissão para relinkar documentos');
@@ -182,7 +184,7 @@ describe('Captura Timeline Actions', () => {
                 new Error('Backblaze indisponível')
             );
 
-            const result = await actionRelinkBackblaze('pje-123', '0010702-80.2025.5.03.0111');
+            const result = await actionRelinkBackblaze('pje-123', '0010702-80.2025.5.03.0111', 'TRT3', 'primeiro_grau');
 
             expect(result.success).toBe(false);
             expect(result.error).toBe('Backblaze indisponível');

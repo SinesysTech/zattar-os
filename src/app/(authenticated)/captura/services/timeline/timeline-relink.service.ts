@@ -62,11 +62,15 @@ function construirUrlBackblaze(key: string, bucket: string): string {
  *
  * @param processoIdPje - ID do processo no PJE (coluna id_pje na tabela acervo)
  * @param numeroProcesso - Número formatado do processo (ex: 0010702-80.2025.5.03.0111)
+ * @param trt - Código do TRT (necessário para identificar o registro único em acervo)
+ * @param grau - Grau da instância (necessário para identificar o registro único em acervo)
  * @returns Resultado do relink com estatísticas
  */
 export async function relinkBackblazeDocumentos(
   processoIdPje: string,
-  numeroProcesso: string
+  numeroProcesso: string,
+  trt: string,
+  grau: string
 ): Promise<RelinkResult> {
   const bucket = process.env.BACKBLAZE_BUCKET_NAME || process.env.B2_BUCKET || '';
 
@@ -78,18 +82,20 @@ export async function relinkBackblazeDocumentos(
     .from('acervo')
     .select('timeline_jsonb')
     .eq('id_pje', processoIdPje)
-    .limit(1);
+    .eq('trt', trt)
+    .eq('grau', grau)
+    .maybeSingle();
 
   if (error) {
     throw new Error(`[timeline-relink] Erro ao buscar timeline: ${error.message}`);
   }
 
-  if (!data || data.length === 0 || !data[0]?.timeline_jsonb) {
+  if (!data?.timeline_jsonb) {
     console.log('[timeline-relink] Nenhuma timeline encontrada no banco');
     return { totalNoBackblaze: 0, totalRelinkados: 0, totalJaVinculados: 0, totalSemMatch: 0 };
   }
 
-  const timelineJsonb = data[0].timeline_jsonb as {
+  const timelineJsonb = data.timeline_jsonb as {
     timeline?: TimelineItemEnriquecido[];
     metadata?: Record<string, unknown>;
   };
@@ -190,7 +196,9 @@ export async function relinkBackblazeDocumentos(
     const { error: updateError } = await supabase
       .from('acervo')
       .update({ timeline_jsonb: updatedJsonb })
-      .eq('id_pje', processoIdPje);
+      .eq('id_pje', processoIdPje)
+      .eq('trt', trt)
+      .eq('grau', grau);
 
     if (updateError) {
       throw new Error(`[timeline-relink] Erro ao salvar timeline relinkada: ${updateError.message}`);

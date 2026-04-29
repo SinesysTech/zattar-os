@@ -55,6 +55,12 @@ export async function buscarContratosResumo(): Promise<ContratosResumo> {
 
     const data = contratos || [];
 
+    // --- Filtro: primeiro dia do mês corrente ---
+    const agora = new Date();
+    const primeiroDiaMes = new Date(agora.getFullYear(), agora.getMonth(), 1);
+    primeiroDiaMes.setHours(0, 0, 0, 0);
+    const doMes = data.filter((c) => new Date(c.created_at) >= primeiroDiaMes);
+
     // --- Distribuição por status ---
     const statusMap = new Map<string, number>();
     data.forEach((c) => {
@@ -80,7 +86,7 @@ export async function buscarContratosResumo(): Promise<ContratosResumo> {
     // --- Modelo de cobrança ---
     const proLabore = data.filter((c) => c.tipo_cobranca === 'pro_labore' || c.tipo_cobranca === 'mensalidade');
     const proExito = data.filter((c) => c.tipo_cobranca === 'pro_exito' || c.tipo_cobranca === 'exito');
-    const proLaboreFaturado = 0; // valor_causa não existe na tabela contratos
+    const proLaboreFaturado = 0;
     const proExitoPotencial = 0;
 
     // --- Score contratual (heurística simples) ---
@@ -91,10 +97,15 @@ export async function buscarContratosResumo(): Promise<ContratosResumo> {
       ? Math.max(0, Math.min(100, Math.round(((distribuidos / totalContratos) * 70) + (1 - desistencias / totalContratos) * 30)))
       : 0;
 
+    // --- KPIs mensais ---
+    const assinadosMes = doMes.filter((c) => c.status === 'contratado').length;
+    const distribuidosMes = doMes.filter((c) => c.status === 'distribuido').length;
+    const novosMes = doMes.length;
+
     return {
       porStatus,
       porTipo,
-      obrigacoesVencer: [], // Requer tabela de obrigações — retorna vazio por enquanto
+      obrigacoesVencer: [],
       parcelasStatus: [
         { status: 'Pagas', count: 0, valor: 0, tone: PARCELA_TONES['Pagas'] },
         { status: 'Pendentes', count: 0, valor: 0, tone: PARCELA_TONES['Pendentes'] },
@@ -112,8 +123,10 @@ export async function buscarContratosResumo(): Promise<ContratosResumo> {
       })),
       scoreContratual,
       total: totalContratos,
-      novosMes: distribuidos, // Approximation as we aren't querying the actual date limit right now
+      novosMes,
       taxaConversao: totalContratos > 0 ? Math.round((distribuidos / totalContratos) * 100) : 0,
+      assinadosMes,
+      distribuidosMes,
     };
   } catch (error) {
     console.error('[Dashboard] Erro ao buscar contratos resumo:', error);
@@ -162,5 +175,7 @@ function getContratosResumoPadrao(): ContratosResumo {
     total: 0,
     novosMes: 0,
     taxaConversao: 0,
+    assinadosMes: 0,
+    distribuidosMes: 0,
   };
 }

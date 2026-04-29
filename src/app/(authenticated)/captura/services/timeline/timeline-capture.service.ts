@@ -215,19 +215,19 @@ export async function capturarTimeline(
     // 6. Merge incremental: carregar backblaze existente do banco
     //    para não re-baixar documentos que já estão no Backblaze
     //    Usa indexação dupla (por ID e por idUnicoDocumento) para resiliência
-    const backblazeExistente = await carregarBackblazeExistente(processoId);
+    const backblazeExistente = await carregarBackblazeExistente(processoId, trtCodigo, grau);
 
     // 6b. Fallback: se o merge do banco não encontrou backblaze,
     //     tentar relink direto do Backblaze B2 (lista arquivos e reconstrói links)
     if (backblazeExistente.porId.size === 0) {
       try {
         console.log('[capturarTimeline] Nenhum backblaze no banco — tentando relink do Backblaze B2...');
-        const relinkResult = await relinkBackblazeDocumentos(processoId, numeroProcesso);
+        const relinkResult = await relinkBackblazeDocumentos(processoId, numeroProcesso, trtCodigo, grau);
 
         if (relinkResult.totalRelinkados > 0) {
           console.log(`[capturarTimeline] Relink restaurou ${relinkResult.totalRelinkados} documentos do Backblaze B2`);
           // Recarregar backblaze do banco após relink ter atualizado
-          const backblazeRecarregado = await carregarBackblazeExistente(processoId);
+          const backblazeRecarregado = await carregarBackblazeExistente(processoId, trtCodigo, grau);
           // Substituir o mapa vazio pelo recarregado
           for (const [id, info] of backblazeRecarregado.porId) {
             backblazeExistente.porId.set(id, info);

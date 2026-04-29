@@ -1,16 +1,20 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { FileSearchIcon, LayoutGridIcon, ListIcon, MenuIcon, Plus, Search } from "lucide-react";
+import { FileSearchIcon, LayoutGridIcon, ListIcon, MenuIcon, Plus } from "lucide-react";
 import { Heading, Text } from "@/components/ui/typography";
+import { SearchInput } from "@/components/dashboard/search-input";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { AddNoteModal } from "./add-note-modal";
 import type { Note } from "../domain";
 import NoteListItem from "./note-list-item";
 import { NoteMobileSidebar } from "./note-sidebar";
 import { useNotes } from "../notes-context";
+
+const VIEW_OPTIONS = [
+  { id: "masonry" as const, icon: LayoutGridIcon, label: "Grade" },
+  { id: "list" as const, icon: ListIcon, label: "Lista" },
+];
 
 export default function NoteContent() {
   const { notes, mode } = useNotes();
@@ -25,12 +29,12 @@ export default function NoteContent() {
 
   const modeLabel = mode === "arquivadas" ? "Arquivadas" : "Notas";
   const modeSubtitle = mode === "arquivadas"
-    ? `${filteredNotes.length} nota${filteredNotes.length !== 1 ? "s" : ""} arquivada${filteredNotes.length !== 1 ? "s" : ""}`
-    : `${filteredNotes.length} nota${filteredNotes.length !== 1 ? "s" : ""}`;
+    ? "Notas arquivadas e fora de circulação"
+    : "Anote, organize e arquive suas ideias";
 
   return (
     <div className="flex-1 space-y-5">
-      {/* Header canônico DS */}
+      {/* ── Header canônico DS ── */}
       <div className="flex items-end justify-between gap-4">
         <div>
           <Heading level="page">{modeLabel}</Heading>
@@ -44,8 +48,9 @@ export default function NoteContent() {
         </AddNoteModal>
       </div>
 
-      {/* View controls canônicos DS */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+      {/* ── View Controls (Search + ViewToggle) ── */}
+      <div className="flex items-center gap-2 flex-wrap">
+        {/* Menu mobile — só aparece abaixo de xl */}
         <div className="flex xl:hidden">
           <NoteMobileSidebar>
             <Button variant="outline" size="icon" aria-label="Abrir menu de notas">
@@ -54,57 +59,34 @@ export default function NoteContent() {
           </NoteMobileSidebar>
         </div>
 
-        <div className="flex items-center gap-2 flex-1">
-          <div className="relative flex-1 sm:max-w-md">
-            <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              className="w-full bg-card pl-10"
-              placeholder="Buscar notas"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-
-          <div className="ml-auto flex shrink-0 items-center gap-2">
-            <div className="hidden overflow-hidden rounded-xl border sm:flex">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className={cn("rounded-none", {
-                        "bg-accent text-accent-foreground": viewMode === "masonry",
-                        "bg-card": viewMode !== "masonry",
-                      })}
-                      onClick={() => setViewMode("masonry")}>
-                      <LayoutGridIcon className="size-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Grade</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className={cn("rounded-none", {
-                        "bg-accent text-accent-foreground": viewMode === "list",
-                        "bg-card": viewMode !== "list",
-                      })}
-                      onClick={() => setViewMode("list")}>
-                      <ListIcon className="size-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Lista</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
+        <div className="flex items-center gap-2 flex-1 justify-end">
+          <SearchInput
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder="Buscar notas..."
+          />
+          <div className="flex items-center gap-0.5 p-0.5 rounded-lg bg-border/6">
+            {VIEW_OPTIONS.map((opt) => (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => setViewMode(opt.id)}
+                aria-label={opt.label}
+                className={cn(
+                  "p-1.5 rounded-md transition-all cursor-pointer",
+                  viewMode === opt.id
+                    ? "bg-primary/12 text-primary"
+                    : "text-muted-foreground/55 hover:text-muted-foreground",
+                )}
+              >
+                <opt.icon className="size-3.5" />
+              </button>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Empty state */}
+      {/* ── Empty state (busca sem resultado) ── */}
       {searchQuery && filteredNotes.length === 0 && (
         <div className="flex flex-col items-center justify-center p-8 text-center">
           <div className="bg-muted/30 mb-4 rounded-full p-6">
@@ -120,6 +102,7 @@ export default function NoteContent() {
         </div>
       )}
 
+      {/* ── Grid de notas ── */}
       <div
         data-view-mode={viewMode}
         className={cn("group", {

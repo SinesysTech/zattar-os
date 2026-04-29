@@ -17,7 +17,7 @@ import { Bold, Italic, Underline, Strikethrough } from 'lucide-react';
 import { Plate, ParagraphPlugin, usePlateEditor } from 'platejs/react';
 
 import { Editor, EditorContainer } from '@/components/editor/plate-ui/editor';
-import { ToolbarGroup } from '@/components/editor/plate-ui/toolbar';
+import { Toolbar, ToolbarGroup } from '@/components/editor/plate-ui/toolbar';
 import { MarkToolbarButton } from '@/components/editor/plate-ui/mark-toolbar-button';
 import {
   BulletedListToolbarButton,
@@ -129,7 +129,7 @@ export function NoteEditor({
         <div className="shrink-0 border-b border-border p-2">
           <div className="flex items-center gap-2">
             <div className="min-w-0 flex-1 overflow-x-auto">
-              <div className="flex w-max items-center gap-px">
+              <Toolbar className="flex w-max items-center gap-px">
                 <ToolbarGroup>
                   <MarkToolbarButton nodeType={KEYS.bold} tooltip="Negrito">
                     <Bold className="h-4 w-4" />
@@ -156,7 +156,7 @@ export function NoteEditor({
                   <UndoToolbarButton />
                   <RedoToolbarButton />
                 </ToolbarGroup>
-              </div>
+              </Toolbar>
             </div>
             {toolbarRight && (
               <div className="flex shrink-0 items-center gap-2">

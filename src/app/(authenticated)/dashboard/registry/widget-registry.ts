@@ -60,6 +60,7 @@ import { WidgetDespesasCategoria } from '../widgets/financeiro/despesas-categori
 import { WidgetDREComparativo } from '../widgets/financeiro/dre-comparativo';
 
 // ─── Contratos (conectados) ─────────────────────────────────────────────────
+import { WidgetKpiContratos } from '../widgets/contratos/kpi-contratos';
 import { WidgetSaudeContratual } from '../widgets/contratos/saude-contratual';
 import { WidgetObrigacoesTreemap } from '../widgets/contratos/obrigacoes-treemap';
 import { WidgetStatusContratos } from '../widgets/contratos/status-contratos';
@@ -488,6 +489,16 @@ export const WIDGET_REGISTRY: WidgetDefinition[] = [
   },
 
   // ── Contratos ──────────────────────────────────────────────────────────────
+  {
+    id: 'contratos-kpi',
+    title: 'Visão Geral de Contratos',
+    description: '4 métricas-chave: assinados não distribuídos, distribuídos esse mês, assinados esse mês e em contratação.',
+    module: 'contratos',
+    permission: PERM.contratos,
+    size: 'md',
+    defaultEnabled: true,
+    component: WidgetKpiContratos,
+  },
   {
     id: 'contratos-saude-contratual',
     title: 'Saúde Contratual',

@@ -24,14 +24,15 @@ export interface BackblazeExistenteResult {
 /**
  * Carrega backblaze existente da timeline no banco, indexado por ID e por idUnicoDocumento.
  *
- * Usa .limit(1) ao invés de .single() para evitar erro PGRST116
- * quando existem 0 ou múltiplas linhas com mesmo id_pje.
- *
  * @param processoIdPje - ID do processo no PJE (coluna id_pje)
+ * @param trt - Código do TRT (necessário para identificar o registro único em acervo)
+ * @param grau - Grau da instância (necessário para identificar o registro único em acervo)
  * @returns Objeto com dois mapas para lookup flexível
  */
 export async function carregarBackblazeExistente(
-  processoIdPje: string
+  processoIdPje: string,
+  trt: string,
+  grau: string
 ): Promise<BackblazeExistenteResult> {
   const porId = new Map<number, BackblazeB2Info>();
   const porIdUnico = new Map<string, BackblazeB2Info>();
@@ -39,25 +40,25 @@ export async function carregarBackblazeExistente(
   try {
     const supabase = createServiceClient();
 
-    // Usar .limit(1) ao invés de .single() para evitar erro PGRST116
-    // quando existem 0 ou >1 linhas com mesmo id_pje
     const { data, error } = await supabase
       .from('acervo')
       .select('timeline_jsonb')
       .eq('id_pje', processoIdPje)
-      .limit(1);
+      .eq('trt', trt)
+      .eq('grau', grau)
+      .maybeSingle();
 
     if (error) {
       console.warn('[timeline-merge] Erro na query Supabase:', error.message);
       return { porId, porIdUnico };
     }
 
-    if (!data || data.length === 0 || !data[0]?.timeline_jsonb) {
+    if (!data?.timeline_jsonb) {
       console.log('[timeline-merge] Nenhuma timeline existente encontrada para merge');
       return { porId, porIdUnico };
     }
 
-    const timeline = (data[0].timeline_jsonb as { timeline?: TimelineItemEnriquecido[] }).timeline;
+    const timeline = (data.timeline_jsonb as { timeline?: TimelineItemEnriquecido[] }).timeline;
     if (!timeline) return { porId, porIdUnico };
 
     for (const item of timeline) {

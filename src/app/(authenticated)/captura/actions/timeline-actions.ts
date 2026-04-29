@@ -80,7 +80,9 @@ export async function actionCapturarTimeline(
  */
 export async function actionRelinkBackblaze(
   processoIdPje: string,
-  numeroProcesso: string
+  numeroProcesso: string,
+  trt: string,
+  grau: string
 ): Promise<ActionResponse> {
   try {
     const user = await getCurrentUser();
@@ -93,9 +95,9 @@ export async function actionRelinkBackblaze(
       return { success: false, error: 'Sem permissão para relinkar documentos' };
     }
 
-    console.log('[actionRelinkBackblaze] Iniciando relink', { processoIdPje, numeroProcesso });
+    console.log('[actionRelinkBackblaze] Iniciando relink', { processoIdPje, numeroProcesso, trt, grau });
 
-    const result = await relinkBackblazeDocumentos(processoIdPje, numeroProcesso);
+    const result = await relinkBackblazeDocumentos(processoIdPje, numeroProcesso, trt, grau);
 
     console.log('[actionRelinkBackblaze] Relink concluído', result);
 

@@ -270,6 +270,10 @@ export interface ContratosResumo {
   total?: number;
   novosMes?: number;
   taxaConversao?: number;
+  /** Contratos com status 'contratado' criados no mês corrente */
+  assinadosMes?: number;
+  /** Contratos com status 'distribuido' criados no mês corrente */
+  distribuidosMes?: number;
 }
 
 // ============================================================================

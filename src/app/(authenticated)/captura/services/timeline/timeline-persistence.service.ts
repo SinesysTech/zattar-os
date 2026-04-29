@@ -86,7 +86,9 @@ export async function salvarTimeline(
   const { error } = await supabase
     .from('acervo')
     .update({ timeline_jsonb: timelineJsonb })
-    .eq('id_pje', processoId);
+    .eq('id_pje', processoId)
+    .eq('trt', trtCodigo)
+    .eq('grau', grau);
 
   if (error) {
     console.error('❌ [TimelinePersistence] Erro ao salvar no PostgreSQL:', error);

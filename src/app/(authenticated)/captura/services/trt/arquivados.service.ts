@@ -218,8 +218,9 @@ export async function arquivadosCapture(
     // 5.3 Persistir timelines no PostgreSQL (apenas para processos não pulados)
     console.log('   📜 Persistindo timelines no PostgreSQL...');
     let timelinesPersistidas = 0;
-    for (const [processoId, dados] of dadosComplementares.porProcesso) {
-      if (dados.timeline && Array.isArray(dados.timeline) && dados.timeline.length > 0) {
+    const timelinePromises = Array.from(dadosComplementares.porProcesso.entries())
+      .filter(([_, dados]) => dados.timeline && Array.isArray(dados.timeline) && dados.timeline.length > 0)
+      .map(async ([processoId, dados]) => {
         try {
           await salvarTimeline({
             processoId: String(processoId),
@@ -237,8 +238,9 @@ export async function arquivadosCapture(
             grau: params.config.grau,
           });
         }
-      }
-    }
+      });
+
+    await Promise.all(timelinePromises);
     console.log(`   ✅ ${timelinesPersistidas} timelines persistidas no PostgreSQL`);
 
     // 5.4 Persistir partes (usa dados já buscados, sem refetch da API)
@@ -248,23 +250,22 @@ export async function arquivadosCapture(
     if (mapeamentoIds.size === 0 && dadosComplementares.porProcesso.size > 0) {
       console.warn('   ⚠️ Pulando persistência de partes: mapeamento de IDs do acervo está vazio (salvarAcervoBatch pode ter falhado)');
     } else {
-      for (const [processoId, dados] of dadosComplementares.porProcesso) {
-        if (dados.partes && dados.partes.length > 0) {
+      const partesPromises = Array.from(dadosComplementares.porProcesso.entries())
+        .filter(([_, dados]) => dados.partes && dados.partes.length > 0)
+        .map(async ([processoId, dados]) => {
           const idAcervo = mapeamentoIds.get(processoId);
 
           if (!idAcervo) {
             console.log(`   ⚠️ Processo ${processoId} não encontrado no mapeamento, pulando partes...`);
-            continue;
+            return;
           }
 
           try {
             const processo = processos.find(p => p.id === processoId);
             const numeroProcesso = processo?.numeroProcesso;
 
-            // Usa persistirPartesProcesso em vez de capturarPartesProcesso
-            // para evitar refetch da API (partes já foram buscadas em dados-complementares)
             await persistirPartesProcesso(
-              dados.partes,
+              dados.partes!,
               {
                 id_pje: processoId,
                 trt: params.config.codigo,
@@ -287,8 +288,9 @@ export async function arquivadosCapture(
               grau: params.config.grau,
             });
           }
-        }
-      }
+        });
+
+      await Promise.all(partesPromises);
     }
     console.log(`   ✅ ${partesPersistidas} processos com partes persistidas`);
 
