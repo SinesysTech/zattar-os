@@ -29,6 +29,7 @@ import {
 import {
   Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import {
@@ -672,21 +673,23 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
                 )}
 
                 <DropdownMenu>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-9 w-9 bg-card"
-                          aria-label="Configurações de captura"
-                        >
-                          <Settings className="h-4 w-4" aria-hidden="true" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                    </TooltipTrigger>
-                    <TooltipContent>Configurações</TooltipContent>
-                  </Tooltip>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-9 w-9 bg-card"
+                            aria-label="Configurações de captura"
+                          >
+                            <Settings className="h-4 w-4" aria-hidden="true" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                      </TooltipTrigger>
+                      <TooltipContent>Configurações</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem asChild>
                       <Link href="/app/captura/agendamentos">Agendamentos</Link>
