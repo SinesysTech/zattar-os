@@ -437,7 +437,6 @@ export const usuarioRepository = {
       "acervo",
       "audiencias",
       "expedientes",
-      "expedientes_manuais",
       "contratos",
     ].map((table) =>
       supabase
@@ -451,8 +450,7 @@ export const usuarioRepository = {
       processos: results[0].count ?? 0,
       audiencias: results[1].count ?? 0,
       pendentes: results[2].count ?? 0,
-      expedientes_manuais: results[3].count ?? 0,
-      contratos: results[4].count ?? 0,
+      contratos: results[3].count ?? 0,
     };
 
     // Configurar contexto
@@ -462,7 +460,8 @@ export const usuarioRepository = {
       is_local: false,
     });
 
-    // RPCs
+    // RPCs (o trigger BEFORE UPDATE já faz a desatribuição; as RPCs abaixo
+    // garantem que o contexto de app.current_user_id seja respeitado)
     if (contagens.processos > 0)
       await supabase.rpc("desatribuir_todos_processos_usuario", {
         p_usuario_id: usuarioId,
@@ -473,10 +472,6 @@ export const usuarioRepository = {
       });
     if (contagens.pendentes > 0)
       await supabase.rpc("desatribuir_todos_pendentes_usuario", {
-        p_usuario_id: usuarioId,
-      });
-    if (contagens.expedientes_manuais > 0)
-      await supabase.rpc("desatribuir_todos_expedientes_usuario", {
         p_usuario_id: usuarioId,
       });
     if (contagens.contratos > 0)

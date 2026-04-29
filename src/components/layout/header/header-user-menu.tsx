@@ -63,7 +63,6 @@ export function HeaderUserMenu() {
   }
 
   const name = userData.nomeExibicao || userData.nomeCompleto || "Usuário"
-  const email = userData.emailCorporativo || userData.emailPessoal || ""
   const avatar = resolveAvatarUrl(userData.avatarUrl) || ""
   const isSuperAdmin = userData.isSuperAdmin || false
   const initials = getInitials(name)
@@ -79,82 +78,57 @@ export function HeaderUserMenu() {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="min-w-56 rounded-xl border-border/20 bg-popover/80 p-0 shadow-lg backdrop-blur-xl dark:bg-popover/70"
+        className="w-52 rounded-xl border-border/20 bg-popover/80 p-0 shadow-lg backdrop-blur-xl dark:bg-popover/70"
         align="start"
         sideOffset={8}
       >
-        {/* ── User identity ── */}
-        <div className="relative px-3 pb-3 pt-3.5">
-          <div className="pointer-events-none absolute inset-0 rounded-t-xl bg-linear-to-br from-primary/6 via-transparent to-transparent" />
-          <div className="relative flex items-center gap-2.5">
-            <div className="shrink-0 rounded-full bg-linear-to-br from-primary/40 to-primary/10 p-[1.5px]">
-              <Avatar size="lg" className="ring-[1.5px] ring-background">
-                <AvatarImage src={avatar} alt={name} />
-                <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">
-                  {initials}
-                </AvatarFallback>
-              </Avatar>
-            </div>
-            <div className="grid flex-1 gap-px">
-              <span className="truncate text-[13px] font-semibold leading-tight tracking-tight">
-                {name}
-              </span>
-              <span className="text-[11px] leading-tight text-muted-foreground/70">
-                {email}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <DropdownMenuSeparator className="mx-2.5 bg-border/30" />
-
         {/* ── Navigation ── */}
-        <DropdownMenuGroup className="p-1">
+        <DropdownMenuGroup className="p-1 pt-1.5">
           <DropdownMenuItem
             onClick={() => router.push('/perfil')}
-            className="cursor-pointer gap-2.5 rounded-lg px-2.5 py-1.75 text-[13px] transition-colors duration-150 focus:bg-primary/6 focus:text-foreground"
+            className="cursor-pointer gap-2 rounded-lg px-2.5 py-1.5 text-[13px] transition-colors duration-150 focus:bg-primary/6 focus:text-foreground"
           >
-            <BadgeCheck className="h-3.5 w-3.5 text-muted-foreground/60" />
+            <BadgeCheck className="size-4 shrink-0 text-muted-foreground/60" />
             Conta
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => router.push('/notificacoes')}
-            className="cursor-pointer gap-2.5 rounded-lg px-2.5 py-1.75 text-[13px] transition-colors duration-150 focus:bg-primary/6 focus:text-foreground"
+            className="cursor-pointer gap-2 rounded-lg px-2.5 py-1.5 text-[13px] transition-colors duration-150 focus:bg-primary/6 focus:text-foreground"
           >
-            <Bell className="h-3.5 w-3.5 text-muted-foreground/60" />
+            <Bell className="size-4 shrink-0 text-muted-foreground/60" />
             Notificações
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => window.open('/ajuda', '_blank')}
-            className="cursor-pointer gap-2.5 rounded-lg px-2.5 py-1.75 text-[13px] transition-colors duration-150 focus:bg-primary/6 focus:text-foreground"
+            className="cursor-pointer gap-2 rounded-lg px-2.5 py-1.5 text-[13px] transition-colors duration-150 focus:bg-primary/6 focus:text-foreground"
           >
-            <HelpCircle className="h-3.5 w-3.5 text-muted-foreground/60" />
+            <HelpCircle className="size-4 shrink-0 text-muted-foreground/60" />
             Ajuda
           </DropdownMenuItem>
           {isSuperAdmin && (
             <DropdownMenuItem
               onClick={() => router.push('/app/configuracoes')}
-              className="cursor-pointer gap-2.5 rounded-lg px-2.5 py-1.75 text-[13px] transition-colors duration-150 focus:bg-primary/6 focus:text-foreground"
+              className="cursor-pointer gap-2 rounded-lg px-2.5 py-1.5 text-[13px] transition-colors duration-150 focus:bg-primary/6 focus:text-foreground"
             >
-              <Settings className="h-3.5 w-3.5 text-muted-foreground/60" />
+              <Settings className="size-4 shrink-0 text-muted-foreground/60" />
               Configurações
             </DropdownMenuItem>
           )}
         </DropdownMenuGroup>
 
-        <DropdownMenuSeparator className="mx-2.5 bg-border/30" />
+        <DropdownMenuSeparator className="mx-2 bg-border/30" />
 
         {/* ── Theme toggle ── */}
         <div className="p-1">
           <DropdownMenuItem
-            className="cursor-pointer gap-2.5 rounded-lg px-2.5 py-1.75 text-[13px] transition-colors duration-150 focus:bg-primary/6 focus:text-foreground"
+            className="cursor-pointer gap-2 rounded-lg px-2.5 py-1.5 text-[13px] transition-colors duration-150 focus:bg-primary/6 focus:text-foreground"
             onSelect={(e) => e.preventDefault()}
           >
-            <div className="flex flex-1 items-center gap-2.5">
+            <div className="flex flex-1 items-center gap-2">
               {mounted && theme === "dark" ? (
-                <Moon className="h-3.5 w-3.5 text-muted-foreground/60" />
+                <Moon className="size-4 shrink-0 text-muted-foreground/60" />
               ) : (
-                <Sun className="h-3.5 w-3.5 text-muted-foreground/60" />
+                <Sun className="size-4 shrink-0 text-muted-foreground/60" />
               )}
               Tema escuro
             </div>
@@ -162,24 +136,25 @@ export function HeaderUserMenu() {
               <Switch
                 checked={theme === "dark"}
                 onCheckedChange={toggleTheme}
+                className="scale-[0.8] origin-right"
               />
             )}
           </DropdownMenuItem>
         </div>
 
-        <DropdownMenuSeparator className="mx-2.5 bg-border/30" />
+        <DropdownMenuSeparator className="mx-2 bg-border/30" />
 
         {/* ── Logout ── */}
-        <div className="p-1">
+        <div className="p-1 pb-1.5">
           <DropdownMenuItem
             onSelect={(e) => {
               e.preventDefault()
               fetch('/api/auth/logout', { method: 'POST', credentials: 'include' })
                 .finally(() => { window.location.href = '/login' })
             }}
-            className="cursor-pointer gap-2.5 rounded-lg px-2.5 py-1.75 text-[13px] text-muted-foreground transition-colors duration-150 focus:bg-destructive/6 focus:text-destructive"
+            className="cursor-pointer gap-2 rounded-lg px-2.5 py-1.5 text-[13px] text-muted-foreground/70 transition-colors duration-150 focus:bg-destructive/6 focus:text-destructive"
           >
-            <LogOut className="h-3.5 w-3.5" />
+            <LogOut className="size-4 shrink-0" />
             Sair
           </DropdownMenuItem>
         </div>
