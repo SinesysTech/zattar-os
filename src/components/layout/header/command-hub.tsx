@@ -69,6 +69,7 @@ const navServicos: HubNavItem[] = [
 const navGestao: HubNavItem[] = [
   { id: "captura",    title: "Captura",    url: "/app/captura",    icon: Database,  description: "Automação PJE/TRT" },
   { id: "financeiro", title: "Financeiro", url: "/app/financeiro", icon: Briefcase, description: "Contas e fluxo" },
+  { id: "usuarios",   title: "Usuários",   url: "/app/usuarios",   icon: Users,     description: "Gestão de usuários" },
 ]
 
 // ─── Recents (persisted in localStorage) ───────────────────────────────
