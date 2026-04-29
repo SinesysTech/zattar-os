@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { FileSearchIcon, LayoutGridIcon, ListIcon, MenuIcon, PenSquare, Search } from "lucide-react";
-import { Heading } from "@/components/ui/typography";
+import { FileSearchIcon, LayoutGridIcon, ListIcon, MenuIcon, Plus, Search } from "lucide-react";
+import { Heading, Text } from "@/components/ui/typography";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,61 +23,29 @@ export default function NoteContent() {
     ? baseNotes.filter((note: Note) => note.title.toLowerCase().includes(normalizedQuery))
     : baseNotes;
 
+  const modeLabel = mode === "arquivadas" ? "Arquivadas" : "Notas";
+  const modeSubtitle = mode === "arquivadas"
+    ? `${filteredNotes.length} nota${filteredNotes.length !== 1 ? "s" : ""} arquivada${filteredNotes.length !== 1 ? "s" : ""}`
+    : `${filteredNotes.length} nota${filteredNotes.length !== 1 ? "s" : ""}`;
+
   return (
-    <div className="flex-1">
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "mb-4 space-y-3")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
-          <div className="relative flex-1 sm:max-w-md">
-            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
-            <Input
-              className={cn(/* design-system-escape: pl-10 padding direcional sem Inset equiv. */ "w-full bg-card pl-10")}
-              placeholder="Buscar notas"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "ml-auto flex shrink-0 items-center gap-2")}>
-            <div className="hidden overflow-hidden rounded-md border sm:flex">
-              <Button
-                variant="ghost"
-                size="sm"
-                className={cn("rounded-none", {
-                  "bg-accent text-accent-foreground": viewMode === "masonry",
-                  "bg-card": viewMode !== "masonry",
-                })}
-                onClick={() => setViewMode("masonry")}>
-                <LayoutGridIcon className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className={cn("rounded-none", {
-                  "bg-accent text-accent-foreground": viewMode === "list",
-                  "bg-card": viewMode !== "list",
-                })}
-                onClick={() => setViewMode("list")}>
-                <ListIcon className="h-4 w-4" />
-              </Button>
-            </div>
-
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div>
-                    <AddNoteModal>
-                      <Button variant="default" size="icon" aria-label="Adicionar Nota">
-                        <PenSquare className="h-4 w-4" />
-                      </Button>
-                    </AddNoteModal>
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent>Adicionar Nota</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
+    <div className="flex-1 space-y-5">
+      {/* Header canônico DS */}
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <Heading level="page">{modeLabel}</Heading>
+          <Text variant="caption" as="p" className="mt-0.5">{modeSubtitle}</Text>
         </div>
+        <AddNoteModal>
+          <Button size="sm" className="rounded-xl">
+            <Plus className="size-3.5" />
+            Nova Nota
+          </Button>
+        </AddNoteModal>
+      </div>
 
+      {/* View controls canônicos DS */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
         <div className="flex xl:hidden">
           <NoteMobileSidebar>
             <Button variant="outline" size="icon" aria-label="Abrir menu de notas">
@@ -85,29 +53,77 @@ export default function NoteContent() {
             </Button>
           </NoteMobileSidebar>
         </div>
+
+        <div className="flex items-center gap-2 flex-1">
+          <div className="relative flex-1 sm:max-w-md">
+            <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              className="w-full bg-card pl-10"
+              placeholder="Buscar notas"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+
+          <div className="ml-auto flex shrink-0 items-center gap-2">
+            <div className="hidden overflow-hidden rounded-xl border sm:flex">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className={cn("rounded-none", {
+                        "bg-accent text-accent-foreground": viewMode === "masonry",
+                        "bg-card": viewMode !== "masonry",
+                      })}
+                      onClick={() => setViewMode("masonry")}>
+                      <LayoutGridIcon className="size-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Grade</TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className={cn("rounded-none", {
+                        "bg-accent text-accent-foreground": viewMode === "list",
+                        "bg-card": viewMode !== "list",
+                      })}
+                      onClick={() => setViewMode("list")}>
+                      <ListIcon className="size-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Lista</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          </div>
+        </div>
       </div>
 
+      {/* Empty state */}
       {searchQuery && filteredNotes.length === 0 && (
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex flex-col items-center justify-center p-4 text-center")}>
-          <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "bg-muted/30 mb-4 rounded-full p-6")}>
-            <FileSearchIcon className="text-muted-foreground h-12 w-12" />
+        <div className="flex flex-col items-center justify-center p-8 text-center">
+          <div className="bg-muted/30 mb-4 rounded-full p-6">
+            <FileSearchIcon className="text-muted-foreground size-12" />
           </div>
           <Heading level="card" className="mb-2">Nenhuma nota encontrada</Heading>
-          <p className="text-muted-foreground max-w-md">
+          <Text variant="caption" as="p" className="max-w-md">
             {`Não encontramos nenhuma nota que corresponda a "${searchQuery}".`}
-          </p>
-          {searchQuery && (
-            <Button variant="outline" className="mt-4" onClick={() => setSearchQuery("")}>
-              Limpar filtros
-            </Button>
-          )}
+          </Text>
+          <Button variant="outline" className="mt-4" onClick={() => setSearchQuery("")}>
+            Limpar filtros
+          </Button>
         </div>
       )}
 
       <div
         data-view-mode={viewMode}
         className={cn("group", {
-          /* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "box-border columns-1 gap-4 [column-fill:balance]group-data-[theme-content-layout=centered]/layout:columns-3 group-data-[theme-content-layout=full]/layout:columns-1 sm:group-data-[theme-content-layout=full]:columns-2 md:group-data-[theme-content-layout=full]/layout:columns-3 lg:columns-2 xl:group-data-[theme-content-layout=full]/layout:columns-4":
+          "box-border columns-1 gap-4 [column-fill:balance] group-data-[theme-content-layout=centered]/layout:columns-3 group-data-[theme-content-layout=full]/layout:columns-1 sm:group-data-[theme-content-layout=full]:columns-2 md:group-data-[theme-content-layout=full]/layout:columns-3 lg:columns-2 xl:group-data-[theme-content-layout=full]/layout:columns-4":
             viewMode === "masonry"
         })}>
         {filteredNotes.map((note: Note, key: number) => (

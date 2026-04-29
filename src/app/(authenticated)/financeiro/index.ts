@@ -353,11 +353,12 @@ export {
 } from "./domain";
 
 // Obrigações - validação de sincronização (export direto para consumo externo)
+// Importa direto do arquivo-fonte para não puxar serviços server-only via barrel
 export {
   validarSincronizacaoParcela,
   validarSincronizacaoAcordo,
   formatarResultadoValidacao,
-} from "./services";
+} from "./services/obrigacoes-validacao";
 
 // ============================================================================
 // Utils

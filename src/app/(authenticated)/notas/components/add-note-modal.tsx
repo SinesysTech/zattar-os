@@ -2,23 +2,15 @@
 
 import React from "react";
 import Image from "next/image";
-import {
-  cn } from "@/lib/utils";
-import { Check,
-  ImageIcon,
-  PenSquare,
-  Tag } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Check, ImageIcon, PenSquare, Tag } from "lucide-react";
 import { NoteEditor } from "@/components/editor/plate/note-editor";
+import { Text } from "@/components/ui/typography";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger } from "@/components/ui/tooltip";
-import { Popover,
-  PopoverContent,
-  PopoverTrigger } from "@/components/ui/popover";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Command,
   CommandEmpty,
@@ -26,10 +18,9 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  } from "@/components/ui/command";
+} from "@/components/ui/command";
 import { AppBadge as Badge } from "@/components/ui/app-badge";
-import type { Note,
-  NoteLabel } from "../domain";
+import type { Note, NoteLabel } from "../domain";
 import { useNotes } from "../notes-context";
 import {
   Dialog,
@@ -104,7 +95,6 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
   const trigger = React.isValidElement(triggerNode)
     ? React.cloneElement(triggerNode as React.ReactElement, {
         onClick: (e: unknown) => {
-          // Preserva onClick original (se existir)
           const original = (triggerNode as React.ReactElement).props?.onClick;
           if (typeof original === "function") original(e);
           setOpen(true);
@@ -118,191 +108,191 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent
           showCloseButton={false}
-          className="sm:max-w-xl  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
+          className="sm:max-w-xl overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
         >
           <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
             <DialogTitle>{dialogTitle}</DialogTitle>
             <DialogDescription className="sr-only">Preencha os dados para salvar a nota</DialogDescription>
           </DialogHeader>
+
           <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
             <form
               id="note-form"
-              className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6 px-6 py-4")}
+              className="space-y-5"
               onSubmit={async (e) => {
-            e.preventDefault();
-            setError(null);
+                e.preventDefault();
+                setError(null);
 
-            const trimmed = title.trim();
-            if (!trimmed) {
-              setError("O título é obrigatório");
-              return;
-            }
+                const trimmed = title.trim();
+                if (!trimmed) {
+                  setError("O título é obrigatório");
+                  return;
+                }
 
-            setIsSubmitting(true);
+                setIsSubmitting(true);
 
-            try {
-              const content = value;
-              const noteType = imagePreview ? "image" : mode === "edit" && note ? note.type : "text";
+                try {
+                  const content = value;
+                  const noteType = imagePreview ? "image" : mode === "edit" && note ? note.type : "text";
 
-              if (mode === "edit" && note) {
-                await updateNote(note.id, {
-                  title: trimmed,
-                  content: content || undefined,
-                  labels: selectedTags,
-                  imageDataUrl: imagePreview,
-                  type: noteType,
-                });
-              } else {
-                await createNote({
-                  title: trimmed,
-                  content: content || undefined,
-                  labels: selectedTags,
-                  imageDataUrl: imagePreview,
-                });
-              }
+                  if (mode === "edit" && note) {
+                    await updateNote(note.id, {
+                      title: trimmed,
+                      content: content || undefined,
+                      labels: selectedTags,
+                      imageDataUrl: imagePreview,
+                      type: noteType,
+                    });
+                  } else {
+                    await createNote({
+                      title: trimmed,
+                      content: content || undefined,
+                      labels: selectedTags,
+                      imageDataUrl: imagePreview,
+                    });
+                  }
 
-              handleReset();
-              setOpen(false);
-            } catch (error) {
-              console.error("Erro ao salvar nota:", error);
-              setError(error instanceof Error ? error.message : "Erro ao salvar nota. Tente novamente.");
-            } finally {
-              setIsSubmitting(false);
-            }
-          }}
-        >
-          {error && (
-            <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/10 p-4 text-sm text-destructive")}>
-              {error}
-            </div>
-          )}
+                  handleReset();
+                  setOpen(false);
+                } catch (error) {
+                  console.error("Erro ao salvar nota:", error);
+                  setError(error instanceof Error ? error.message : "Erro ao salvar nota. Tente novamente.");
+                } finally {
+                  setIsSubmitting(false);
+                }
+              }}
+            >
+              {error && (
+                <div className="rounded-xl bg-destructive/10 p-4 text-destructive">
+                  <Text variant="caption" as="p">{error}</Text>
+                </div>
+              )}
 
-          {imagePreview && (
-            <figure className="overflow-hidden rounded-md border">
-              <Image
-                src={imagePreview}
-                width={800}
-                height={450}
-                alt="Imagem da nota"
-                className="aspect-video w-full object-cover"
-                unoptimized
+              {imagePreview && (
+                <figure className="overflow-hidden rounded-xl border">
+                  <Image
+                    src={imagePreview}
+                    width={800}
+                    height={450}
+                    alt="Imagem da nota"
+                    className="aspect-video w-full object-cover"
+                    unoptimized
+                  />
+                </figure>
+              )}
+
+              <Input
+                placeholder="Título"
+                name="title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="bg-card"
               />
-            </figure>
-          )}
 
-          <Input
-            placeholder="Título"
-            name="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="bg-card"
-          />
-
-          <NoteEditor
-            value={value}
-            onChange={setValue}
-            className="w-full"
-            editorContentClassName="p-4 min-h-48"
-            toolbarRight={
-              <>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div>
-                        <Input
-                          id={fileInputId}
-                          type="file"
-                          className="hidden"
-                          accept="image/*"
-                          onChange={handleFileChange}
-                        />
-                        <Button type="button" variant="ghost" size="icon" aria-label="Imagem" asChild>
-                          <label htmlFor={fileInputId} className="cursor-pointer" aria-label="Adicionar imagem">
-                            <ImageIcon className="size-4" />
-                          </label>
-                        </Button>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>Adicionar imagem</TooltipContent>
-                  </Tooltip>
-
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button variant="ghost" size="icon" aria-label="Adicionar etiqueta">
-                              <Tag className="h-4 w-4" />
+              <NoteEditor
+                value={value}
+                onChange={setValue}
+                className="w-full"
+                editorContentClassName="p-4 min-h-48"
+                toolbarRight={
+                  <>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div>
+                            <Input
+                              id={fileInputId}
+                              type="file"
+                              className="hidden"
+                              accept="image/*"
+                              onChange={handleFileChange}
+                            />
+                            <Button type="button" variant="ghost" size="icon" aria-label="Imagem" asChild>
+                              <label htmlFor={fileInputId} className="cursor-pointer" aria-label="Adicionar imagem">
+                                <ImageIcon className="size-4" />
+                              </label>
                             </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-55 p-0")}>
-                            <Command>
-                              <CommandInput placeholder="Buscar etiquetas..." className="h-9" />
-                              <CommandList>
-                                <CommandEmpty>Nenhuma etiqueta encontrada.</CommandEmpty>
-                                <CommandGroup className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2")}>
-                                  {noteLabels &&
-                                    noteLabels.length &&
-                                    noteLabels.map((label, key: number) => (
-                                      <CommandItem
-                                        key={key}
-                                        className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}
-                                        onSelect={() => {
-                                          if (selectedTags.includes(label)) {
-                                            return setSelectedTags(
-                                              selectedTags.filter((item) => item.id !== label.id)
-                                            );
-                                          }
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>Adicionar imagem</TooltipContent>
+                      </Tooltip>
 
-                                          return setSelectedTags(
-                                            [...noteLabels].filter((u) => [...selectedTags, label].includes(u))
-                                          );
-                                        }}
-                                      >
-                                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex grow items-center gap-2")}>
-                                          <span className={cn("block size-3 rounded-full", label.color)} />
-                                          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-none sem token DS */ "text-sm leading-none")}>{label.title}</span>
-                                          {selectedTags.includes(label) ? (
-                                            <Check className="text-primary ms-auto size-3" />
-                                          ) : null}
-                                        </div>
-                                      </CommandItem>
-                                    ))}
-                                </CommandGroup>
-                              </CommandList>
-                            </Command>
-                          </PopoverContent>
-                        </Popover>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>Adicionar etiqueta</TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </>
-            }
-            placeholder="Digite o conteúdo da nota..."
-            autofocus={true}
-            editable={true}
-          />
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button variant="ghost" size="icon" aria-label="Adicionar etiqueta">
+                                  <Tag className="size-4" />
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-55 p-0">
+                                <Command>
+                                  <CommandInput placeholder="Buscar etiquetas..." className="h-9" />
+                                  <CommandList>
+                                    <CommandEmpty>Nenhuma etiqueta encontrada.</CommandEmpty>
+                                    <CommandGroup className="p-2">
+                                      {noteLabels &&
+                                        noteLabels.length &&
+                                        noteLabels.map((label, key: number) => (
+                                          <CommandItem
+                                            key={key}
+                                            className="flex items-center py-2"
+                                            onSelect={() => {
+                                              if (selectedTags.includes(label)) {
+                                                return setSelectedTags(
+                                                  selectedTags.filter((item) => item.id !== label.id)
+                                                );
+                                              }
 
-          {selectedTags.length > 0 ? (
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2")}>
-              {selectedTags.map((tag, key) => (
-                <Badge key={key} variant="outline">
-                  {tag.title}
-                </Badge>
-              ))}
-            </div>
-          ) : null}
+                                              return setSelectedTags(
+                                                [...noteLabels].filter((u) => [...selectedTags, label].includes(u))
+                                              );
+                                            }}
+                                          >
+                                            <div className="flex grow items-center gap-2">
+                                              <span className={cn("block size-3 rounded-full", label.color)} />
+                                              <Text variant="caption" as="span">{label.title}</Text>
+                                              {selectedTags.includes(label) ? (
+                                                <Check className="text-primary ms-auto size-3" />
+                                              ) : null}
+                                            </div>
+                                          </CommandItem>
+                                        ))}
+                                    </CommandGroup>
+                                  </CommandList>
+                                </Command>
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>Adicionar etiqueta</TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </>
+                }
+                placeholder="Digite o conteúdo da nota..."
+                autofocus={true}
+                editable={true}
+              />
+
+              {selectedTags.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {selectedTags.map((tag, key) => (
+                    <Badge key={key} variant="outline">
+                      {tag.title}
+                    </Badge>
+                  ))}
+                </div>
+              )}
             </form>
           </div>
+
           <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
             <Button variant="outline" onClick={() => setOpen(false)}>Cancelar</Button>
-            <div className="flex items-center gap-2">
-              <Button type="submit" form="note-form" disabled={!title.trim() || isSubmitting}>
-                {isSubmitting ? "Salvando..." : submitLabel}
-              </Button>
-            </div>
+            <Button type="submit" form="note-form" disabled={!title.trim() || isSubmitting}>
+              {isSubmitting ? "Salvando..." : submitLabel}
+            </Button>
           </div>
         </DialogContent>
       </Dialog>

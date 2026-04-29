@@ -3,9 +3,8 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Archive, Edit3, Inbox } from "lucide-react";
-import { Heading } from "@/components/ui/typography";
+import { Heading, Text } from "@/components/ui/typography";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { AppBadge as Badge } from "@/components/ui/app-badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -17,8 +16,13 @@ import { EditNoteModal } from "./add-note-modal";
 export default function NoteListItem({ note }: { note: Note }) {
   const { labels, archiveNote } = useNotes();
   return (
-    <Card className={cn(/* design-system-escape: gap-0 gap sem token DS; group-data-[view-mode=list]:py-0 sem equivalente DS; group-data-[view-mode=masonry]:pt-0 sem equivalente DS */ "group relative mb-4 block break-inside-avoid gap-0 overflow-hidden rounded-md transition-shadow group-data-[view-mode=list]:py-0 group-data-[view-mode=masonry]:pt-0 hover:shadow-lg md:group-data-[view-mode=list]:flex md:group-data-[view-mode=list]:flex-row")}>
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "absolute top-2 right-2 z-10 flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100")}>
+    <div className={cn(
+      "glass-widget group relative mb-4 block break-inside-avoid overflow-hidden rounded-2xl border transition-all duration-300",
+      "hover:shadow-md cursor-pointer",
+      "md:group-data-[view-mode=list]:flex md:group-data-[view-mode=list]:flex-row",
+    )}>
+      {/* Ações flutuantes — aparecem no hover */}
+      <div className="absolute top-2 right-2 z-10 flex items-center gap-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -26,10 +30,10 @@ export default function NoteListItem({ note }: { note: Note }) {
                 variant="secondary"
                 size="icon"
                 aria-label={note.isArchived ? "Desarquivar nota" : "Arquivar nota"}
-                className="h-8 w-8"
+                className="size-8"
                 onClick={() => archiveNote(note.id, !note.isArchived)}
               >
-                {note.isArchived ? <Inbox className="h-4 w-4" /> : <Archive className="h-4 w-4" />}
+                {note.isArchived ? <Inbox className="size-4" /> : <Archive className="size-4" />}
               </Button>
             </TooltipTrigger>
             <TooltipContent>{note.isArchived ? "Desarquivar" : "Arquivar"}</TooltipContent>
@@ -38,8 +42,8 @@ export default function NoteListItem({ note }: { note: Note }) {
             <TooltipTrigger asChild>
               <div>
                 <EditNoteModal note={note}>
-                  <Button variant="secondary" size="icon" aria-label="Editar nota" className="h-8 w-8">
-                    <Edit3 className="h-4 w-4" />
+                  <Button variant="secondary" size="icon" aria-label="Editar nota" className="size-8">
+                    <Edit3 className="size-4" />
                   </Button>
                 </EditNoteModal>
               </div>
@@ -48,6 +52,8 @@ export default function NoteListItem({ note }: { note: Note }) {
           </Tooltip>
         </TooltipProvider>
       </div>
+
+      {/* Imagem (tipo image) */}
       {note.type === "image" && note.image && (
         <figure className="top-0 h-full shrink-0 md:group-data-[view-mode=list]:w-62">
           <Image
@@ -60,36 +66,44 @@ export default function NoteListItem({ note }: { note: Note }) {
           />
         </figure>
       )}
-      <CardContent className={cn(/* design-system-escape: pt-6 padding direcional sem Inset equiv.; group-data-[view-mode=list]:pb-6 sem equivalente DS */ "pt-6 group-data-[view-mode=list]:pb-6")}>
-        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-          <Heading level="card" className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; lg:text-2xl sem equivalente DS */ "font-display text-xl lg:text-2xl")}>{note.title}</Heading>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>{note.content}</p>
-          {note.type === "checklist" && note.items && (
-            <ul className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "peer space-y-4")}>
-              {note.items.map((item, key) => (
-                <li
-                  key={key}
-                  className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2", {
-                    "text-muted-foreground line-through": item.checked
-                  })}>
-                  <Checkbox
-                    className="peer"
-                    id={`checklist_${key}`}
-                    defaultChecked={item.checked}
-                  />
-                  <label
-                    htmlFor={`checklist_${key}`}
-                    className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-none sem token DS; font-medium → className de <Text>/<Heading> */ "text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 aria-checked:line-through")}>
-                    {item.text}
-                  </label>
-                </li>
-              ))}
-            </ul>
-          )}
-          {note.type === "text" && note.content && (
-            <p className="text-muted-foreground whitespace-pre-line">{note.content}</p>
-          )}
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-4 flex flex-wrap gap-2")}>
+
+      {/* Conteúdo */}
+      <div className={cn(
+        "space-y-3 p-5",
+        "group-data-[view-mode=masonry]:pt-6",
+        "group-data-[view-mode=list]:pb-6",
+      )}>
+        <Heading level="card">{note.title}</Heading>
+
+        {note.type === "text" && note.content && (
+          <Text variant="caption" as="p" className="whitespace-pre-line">{note.content}</Text>
+        )}
+
+        {note.type === "checklist" && note.items && (
+          <ul className="space-y-3">
+            {note.items.map((item, key) => (
+              <li
+                key={key}
+                className={cn("flex items-center gap-2", {
+                  "text-muted-foreground line-through": item.checked
+                })}>
+                <Checkbox
+                  className="peer"
+                  id={`checklist_${key}`}
+                  defaultChecked={item.checked}
+                />
+                <label
+                  htmlFor={`checklist_${key}`}
+                  className="text-body-sm font-medium leading-none cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  {item.text}
+                </label>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {note.labels.length > 0 && (
+          <div className="mt-2 flex flex-wrap gap-2">
             {note.labels.map((id, key) => {
               const label = labels.find((e) => e.id === id);
               if (label)
@@ -101,8 +115,8 @@ export default function NoteListItem({ note }: { note: Note }) {
                 );
             })}
           </div>
-        </div>
-      </CardContent>
-    </Card>
+        )}
+      </div>
+    </div>
   );
 }
