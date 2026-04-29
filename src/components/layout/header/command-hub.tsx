@@ -31,7 +31,7 @@ import {
 } from "lucide-react"
 import { usePermissoes } from "@/providers/user-provider"
 
-// ─── Navigation data (mirrors app-sidebar.tsx) ─────────────────────────
+// ─── Navigation data ───────────────────────────────────────────────────
 
 export interface HubNavItem {
   id: string
