@@ -238,7 +238,7 @@ export function AudienciasSemanaView({
         {weekDays.map((day) => {
           const key = getDayKey(day);
           const dayAudiencias = audienciasByDay.get(key) ?? [];
-          const dayIsToday = isToday(day);
+          // const dayIsToday = isToday(day);
           const groupedAudiencias = getGroupedAudiencias(dayAudiencias);
 
           return (
