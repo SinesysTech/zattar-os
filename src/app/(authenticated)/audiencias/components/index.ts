@@ -1,5 +1,4 @@
 // Mission View components
-export { AudienciasMissionView } from './audiencias-mission-view';
 export { MissionCard } from './mission-card';
 export { MissionKpiStrip } from './mission-kpi-strip';
 export { HearingCountdown } from './hearing-countdown';

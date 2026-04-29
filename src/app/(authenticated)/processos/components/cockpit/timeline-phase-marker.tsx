@@ -28,8 +28,8 @@ export function TimelinePhaseMarker({ phase, className }: TimelinePhaseMarkerPro
       aria-label={`Fase: ${config.label}`}
     >
       <div className="h-px flex-1 bg-border/8" />
-      <Icon className="size-3 text-muted-foreground/25 shrink-0" />
-      <Text variant="overline" as="span" className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-muted-foreground/30 font-bold whitespace-nowrap shrink-0")}>
+      <Icon className="size-3 text-muted-foreground/55 shrink-0" />
+      <Text variant="overline" as="span" className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-muted-foreground/55 font-bold whitespace-nowrap shrink-0")}>
         Fase: {config.label}
       </Text>
       <div className="h-px flex-1 bg-border/8" />

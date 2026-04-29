@@ -58,8 +58,8 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
   return (
     <>
       {/* Atmospheric glow */}
-      <div className="fixed -top-8 right-16 w-64 h-48 bg-primary/[0.04] rounded-full blur-3xl pointer-events-none" />
-      <div className="fixed top-16 right-48 w-32 h-32 bg-info/[0.03] rounded-full blur-3xl pointer-events-none" />
+      <div className="fixed -top-8 right-16 w-64 h-48 bg-primary/4 rounded-full blur-3xl pointer-events-none" />
+      <div className="fixed top-16 right-48 w-32 h-32 bg-info/3 rounded-full blur-3xl pointer-events-none" />
 
       {/* Header da página */}
       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between relative")}>
@@ -91,8 +91,8 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
           {/* Status */}
           <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
-              <Activity className="size-3 text-muted-foreground/50" />
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
+              <Activity className="size-3 text-muted-foreground/70" />
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
                 Status
               </p>
             </div>
@@ -107,8 +107,8 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
           {/* Iniciado em */}
           <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
-              <CalendarClock className="size-3 text-muted-foreground/50" />
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
+              <CalendarClock className="size-3 text-muted-foreground/70" />
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
                 Iniciado em
               </p>
             </div>
@@ -120,28 +120,28 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
           {/* Concluído em */}
           <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
-              <CalendarCheck className="size-3 text-muted-foreground/50" />
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
+              <CalendarCheck className="size-3 text-muted-foreground/70" />
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
                 Concluído em
               </p>
             </div>
             <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm tabular-nums text-foreground/80")}>
               {captura.concluido_em
                 ? new Date(captura.concluido_em).toLocaleString('pt-BR')
-                : <span className="text-muted-foreground/40">—</span>}
+                : <span className="text-muted-foreground/65">—</span>}
             </p>
           </div>
 
           {/* Duração */}
           <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
-              <Timer className="size-3 text-muted-foreground/50" />
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
+              <Timer className="size-3 text-muted-foreground/70" />
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
                 Duração
               </p>
             </div>
             <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm tabular-nums font-display font-semibold text-foreground/80")}>
-              {duracao ?? <span className="text-muted-foreground/40 font-normal">—</span>}
+              {duracao ?? <span className="text-muted-foreground/65 font-normal">—</span>}
             </p>
           </div>
         </div>
@@ -151,8 +151,8 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
       {(isCompleted || isFailed) && (
         <div className={`flex items-center gap-2.5 rounded-lg border px-4 py-2.5 ${
           isCompleted
-            ? 'border-success/20 bg-success/[0.04]'
-            : 'border-destructive/20 bg-destructive/[0.04]'
+            ? 'border-success/20 bg-success/4'
+            : 'border-destructive/20 bg-destructive/4'
         }`}>
           {isCompleted ? (
             <CheckCircle2 className="h-4 w-4 text-success shrink-0" />
@@ -220,12 +220,12 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
             </div>
             <DetailSectionCard className={cn(/* design-system-escape: p-0 → usar <Inset> */ "p-0 overflow-hidden")}>
               {captura.resultado ? (
-                <pre className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; text-xs → migrar para <Text variant="caption">; leading-relaxed sem token DS */ "p-4 overflow-auto max-h-[500px] text-xs font-mono leading-relaxed")}>
+                <pre className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; text-xs → migrar para <Text variant="caption">; leading-relaxed sem token DS */ "p-4 overflow-auto max-h-125 text-xs font-mono leading-relaxed")}>
                   {JSON.stringify(captura.resultado, null, 2)}
                 </pre>
               ) : (
                 <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 text-center")}>
-                  <p className="text-[11px] text-muted-foreground/60">
+                  <p className="text-[11px] text-muted-foreground/75">
                     Nenhum dado disponível.
                   </p>
                 </div>

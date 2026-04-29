@@ -54,11 +54,11 @@ function TimestampRow({ message, shouldShow }: { message: MensagemComUsuario; sh
   return (
     <div
       className={cn(
-        "flex items-center gap-[0.25rem] mt-[0.25rem] px-[0.125rem]",
+        "flex items-center gap-1 mt-1 px-0.5",
         message.ownMessage && "justify-end"
       )}
     >
-      <time className="text-[0.625rem] text-muted-foreground/35 tabular-nums font-mono">
+      <time className="text-[0.625rem] text-muted-foreground/55 tabular-nums font-mono">
         {formatTime(message.createdAt)}
       </time>
       {message.ownMessage && (
@@ -113,10 +113,10 @@ function TextChatBubble({
       {/* Bubble */}
       <div
         className={cn(
-          /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "px-4 py-2 text-[0.8125rem] leading-[1.5]",
+          /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "px-4 py-2 text-[0.8125rem] leading-normal",
           bubbleCornerClass(!!message.ownMessage, isFirstInGroup),
           // Received bubble
-          !message.ownMessage && "bg-(--chat-bubble-received) border border-border/30 dark:border-white/[0.05] shadow-[0_1px_3px_rgba(0,0,0,0.03)] dark:shadow-none",
+          !message.ownMessage && "bg-chat-bubble-received border border-border/30 dark:border-white/5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] dark:shadow-none",
           // Sent bubble
           message.ownMessage && "bg-primary text-white shadow-lg shadow-primary/20"
         )}
@@ -150,12 +150,12 @@ function FileChatBubble({
       {/* File bubble container */}
       <div
         className={cn(
-          /* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset>; pr-4 padding direcional sem Inset equiv. */ "flex items-center gap-3 p-3 pr-4 min-w-[240px]",
+          /* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset>; pr-4 padding direcional sem Inset equiv. */ "flex items-center gap-3 p-3 pr-4 min-w-60",
           bubbleCornerClass(isOwn, isFirstInGroup),
           // Received
-          !isOwn && "bg-foreground/[0.03] border border-foreground/[0.06]",
+          !isOwn && "bg-foreground/3 border border-foreground/6",
           // Sent
-          isOwn && "bg-primary/[0.08] border border-primary/[0.12]"
+          isOwn && "bg-primary/8 border border-primary/12"
         )}
       >
         {/* File icon container — 36px, rounded-lg */}
@@ -175,7 +175,7 @@ function FileChatBubble({
             {fileName}
           </span>
           {fileSizeLabel && (
-            <span className="text-[0.625rem] text-muted-foreground/40 mt-0.5">
+            <span className="text-[0.625rem] text-muted-foreground/65 mt-0.5">
               {fileSizeLabel}
             </span>
           )}
@@ -191,8 +191,8 @@ function FileChatBubble({
             aria-label={`Baixar ${fileName}`}
             className={cn(
               "size-7 rounded-md flex items-center justify-center shrink-0 transition-colors",
-              "bg-foreground/[0.04] text-muted-foreground/50",
-              "hover:bg-foreground/[0.08] hover:text-foreground",
+              "bg-foreground/4 text-muted-foreground/70",
+              "hover:bg-foreground/8 hover:text-foreground",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
             )}
           >
@@ -270,9 +270,9 @@ function AudioChatBubble({
     <div>
       <div
         className={cn(
-          /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "px-4 py-2 flex items-center gap-[0.625rem] min-w-[220px]",
+          /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "px-4 py-2 flex items-center gap-2.5 min-w-55",
           bubbleCornerClass(isOwn, isFirstInGroup),
-          !isOwn && "bg-(--chat-bubble-received) border border-border/30 dark:border-white/[0.05] shadow-[0_1px_3px_rgba(0,0,0,0.03)] dark:shadow-none",
+          !isOwn && "bg-chat-bubble-received border border-border/30 dark:border-white/5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] dark:shadow-none",
           isOwn && "bg-primary text-white shadow-lg shadow-primary/20"
         )}
       >
@@ -300,8 +300,8 @@ function AudioChatBubble({
           )}
         >
           {isPlaying
-            ? <Pause className="size-[0.875rem] fill-current" />
-            : <Play className="size-[0.875rem] fill-current" />
+            ? <Pause className="size-3.5 fill-current" />
+            : <Play className="size-3.5 fill-current" />
           }
         </button>
 
@@ -348,11 +348,11 @@ function ImageChatBubble({
         className={cn(
           /* design-system-escape: p-2 → usar <Inset> */ "p-2",
           bubbleCornerClass(isOwn, isFirstInGroup),
-          !isOwn && "bg-(--chat-bubble-received) border border-border/30 dark:border-white/[0.05] shadow-[0_1px_3px_rgba(0,0,0,0.03)] dark:shadow-none",
+          !isOwn && "bg-chat-bubble-received border border-border/30 dark:border-white/5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] dark:shadow-none",
           isOwn && "bg-primary shadow-lg shadow-primary/20"
         )}
       >
-        <div className="rounded-xl overflow-hidden max-w-[280px]">
+        <div className="rounded-xl overflow-hidden max-w-70">
           {imageUrl ? (
             <Image
               src={imageUrl}
@@ -363,8 +363,8 @@ function ImageChatBubble({
               unoptimized
             />
           ) : (
-            <div className="w-[280px] h-32 bg-foreground/10 rounded-xl flex items-center justify-center">
-              <span className="text-[0.625rem] text-muted-foreground/40">Imagem anexada</span>
+            <div className="w-70 h-32 bg-foreground/10 rounded-xl flex items-center justify-center">
+              <span className="text-[0.625rem] text-muted-foreground/65">Imagem anexada</span>
             </div>
           )}
         </div>
@@ -396,7 +396,7 @@ function VideoChatBubble({
         <video
           src={videoUrl}
           controls
-          className="max-w-full rounded-xl max-h-[300px]"
+          className="max-w-full rounded-xl max-h-75"
           preload="metadata"
         />
       </div>
@@ -460,7 +460,7 @@ export function ChatBubble({
       );
     case "sistema":
       return (
-        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "text-[0.625rem] text-muted-foreground/40 text-center py-2")}>
+        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "text-[0.625rem] text-muted-foreground/65 text-center py-2")}>
           {message.conteudo}
         </div>
       );

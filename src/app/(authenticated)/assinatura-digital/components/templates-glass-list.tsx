@@ -402,7 +402,7 @@ function GlassCard({
       {template.descricao ? (
         <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground line-clamp-3 flex-1")}>{template.descricao}</p>
       ) : (
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/40 italic flex-1")}>Sem descrição</p>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/65 italic flex-1")}>Sem descrição</p>
       )}
 
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between gap-2 pt-2 border-t border-border/40")}>
@@ -449,9 +449,9 @@ function CardsSkeleton() {
 function EmptyState() {
   return (
     <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
-      <FileText className="w-10 h-10 text-muted-foreground/30 mb-4" />
-      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/50")}>Nenhum template encontrado</p>
-      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/30 mt-1")}>Tente ajustar os filtros ou criar um novo template</p>
+      <FileText className="w-10 h-10 text-muted-foreground/55 mb-4" />
+      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/70")}>Nenhum template encontrado</p>
+      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/55 mt-1")}>Tente ajustar os filtros ou criar um novo template</p>
     </div>
   );
 }

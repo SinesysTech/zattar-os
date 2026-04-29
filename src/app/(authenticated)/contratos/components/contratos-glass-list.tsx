@@ -92,7 +92,7 @@ function SelectAllRail({
   visibleCount: number;
 }) {
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-4 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 px-4 pb-2 text-muted-foreground/50")}>
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-4 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 px-4 pb-2 text-muted-foreground/70")}>
       <Checkbox
         checked={allSelected ? true : someSelected ? 'indeterminate' : false}
         onCheckedChange={onToggleSelectAll}
@@ -281,7 +281,7 @@ function ResponsavelAssignPopover({
           onClick={(e) => e.stopPropagation()}
           aria-label="Adicionar responsável"
           disabled={isPending}
-          className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "inline-flex items-center gap-1.5 rounded-lg border border-dashed border-border/30 px-2 py-1 text-muted-foreground/60 hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-colors cursor-pointer disabled:opacity-50 w-fit")}
+          className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "inline-flex items-center gap-1.5 rounded-lg border border-dashed border-border/50 px-2 py-1 text-muted-foreground/60 hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-colors cursor-pointer disabled:opacity-50 w-fit")}
         >
           <Plus className="size-3" aria-hidden="true" />
           <Text variant="caption" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
@@ -299,7 +299,7 @@ function ResponsavelAssignPopover({
           <CommandInput placeholder="Buscar usuário..." className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs rounded-lg")} />
           <CommandList className="max-h-52">
             <CommandEmpty>
-              <Text variant="caption" className="text-muted-foreground/40">
+              <Text variant="caption" className="text-muted-foreground/65">
                 Nenhum usuário encontrado
               </Text>
             </CommandEmpty>
@@ -469,10 +469,10 @@ function GlassRow({
           </div>
           {reNome && (
             <Text variant="caption" className="truncate mt-0.5 block">
-              <span className="text-muted-foreground/50">vs. </span>
+              <span className="text-muted-foreground/70">vs. </span>
               {reNome}
               {partesRe.length > 1 && (
-                <span className="text-muted-foreground/50"> e outros</span>
+                <span className="text-muted-foreground/70"> e outros</span>
               )}
               {contrato.papelClienteNoContrato === 're' && (
                 <Text
@@ -485,7 +485,7 @@ function GlassRow({
             </Text>
           )}
           {segmentoNome && (
-            <Text variant="micro-caption" className="mt-0.5 truncate block text-muted-foreground/50">
+            <Text variant="micro-caption" className="mt-0.5 truncate block text-muted-foreground/70">
               {segmentoNome}
             </Text>
           )}
@@ -516,13 +516,13 @@ function GlassRow({
                 </Text>
               </Link>
               {processosRestantes > 0 && (
-                <Text variant="micro-caption" className="text-muted-foreground/50">
+                <Text variant="micro-caption" className="text-muted-foreground/70">
                   +{processosRestantes} vinculado{processosRestantes > 1 ? 's' : ''}
                 </Text>
               )}
             </>
           ) : (
-            <Text variant="caption" className="text-muted-foreground/40">—</Text>
+            <Text variant="caption" className="text-muted-foreground/65">—</Text>
           )}
         </div>
 
@@ -599,11 +599,11 @@ function ListSkeleton() {
 function EmptyState() {
   return (
     <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
-      <FileText className="w-10 h-10 text-muted-foreground/30 mb-4" />
+      <FileText className="w-10 h-10 text-muted-foreground/55 mb-4" />
       <Text variant="label" className="text-muted-foreground/60">
         Nenhum contrato encontrado
       </Text>
-      <Text variant="caption" className="text-muted-foreground/40 mt-1">
+      <Text variant="caption" className="text-muted-foreground/65 mt-1">
         Tente ajustar os filtros ou cadastre um novo contrato
       </Text>
     </div>

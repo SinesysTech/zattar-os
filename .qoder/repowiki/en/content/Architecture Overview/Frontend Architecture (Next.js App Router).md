@@ -32,15 +32,20 @@
 - [src/components/shared/dialog-shell/dialog-section.tsx](file://src/components/shared/dialog-shell/dialog-section.tsx)
 - [src/components/shared/dialog-shell/index.ts](file://src/components/shared/dialog-shell/index.ts)
 - [src/app/globals.css](file://src/app/globals.css)
+- [src/app/(authenticated)/dashboard/service.ts](file://src/app/(authenticated)/dashboard/service.ts)
+- [src/app/(authenticated)/captura/services/persistence/captura-log-persistence.service.ts](file://src/app/(authenticated)/captura/services/persistence/captura-log-persistence.service.ts)
+- [src/app/(authenticated)/captura/services/persistence/captura-raw-log.service.ts](file://src/app/(authenticated)/captura/services/persistence/captura-raw-log.service.ts)
+- [src/app/api/captura/trt/partes/route.ts](file://src/app/api/captura/trt/partes/route.ts)
+- [src/lib/supabase/query-logger.ts](file://src/lib/supabase/query-logger.ts)
 </cite>
 
 ## Update Summary
 **Changes Made**
-- Updated dialog system documentation to reflect enhanced DialogHeader and DialogFooter components
-- Removed documentation for DialogBody component which has been deprecated
-- Updated dialog architecture to reflect simplified system using native Dialog and Drawer components
-- Enhanced testing infrastructure documentation with property-based testing enhancements
-- Revised component composition patterns to emphasize DialogSection and DialogNavButtons as consolidated dialog utilities
+- Updated performance considerations section to reflect new batch fetching mechanism in persistence layer
+- Added documentation for improved throughput in capture operations
+- Enhanced dashboard service documentation with batch processing optimizations
+- Updated capture log persistence service documentation with new batch capabilities
+- Added query logging and monitoring for batch operations
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -539,6 +544,8 @@ Fallback --> UpdateMsg["Listen for CLEAR_CACHE / SKIP_WAITING"]
 - **Updated** Capture dashboard components depend on GlassPanel and AnimatedNumber primitives
 - **Updated** Dialog system depends on native Dialog/Drawer components and consolidated utilities
 - **Updated** Testing infrastructure depends on FastCheck for property-based testing
+- **Updated** Dashboard service depends on batch processing for improved performance
+- **Updated** Capture persistence services depend on optimized batch operations
 
 ```mermaid
 graph TB
@@ -564,6 +571,11 @@ DialogSystem --> DialogNavButtons["DialogNavButtons"]
 TestingInfra["Enhanced Testing Infrastructure"] --> FastCheck["FastCheck Property Testing"]
 TestingInfra --> DialogTests["Dialog Component Tests"]
 TestingInfra --> ResponsiveTests["Responsive Behavior Tests"]
+DashboardService["Enhanced Dashboard Service"] --> BatchProcessing["Batch Processing"]
+BatchProcessing --> CapturaPersistence["Capture Persistence Services"]
+CapturaPersistence --> CapturaLogService["Captura Log Persistence"]
+CapturaPersistence --> RawLogService["Raw Log Persistence"]
+QueryLogger["Query Logger"] --> BatchProcessing
 ```
 
 **Diagram sources**
@@ -585,6 +597,10 @@ TestingInfra --> ResponsiveTests["Responsive Behavior Tests"]
 - [src/components/ui/drawer.tsx:8](file://src/components/ui/drawer.tsx#L8)
 - [src/components/shared/dialog-shell/dialog-section.tsx:67](file://src/components/shared/dialog-shell/dialog-section.tsx#L67)
 - [src/components/shared/dialog-shell/dialog-nav-buttons.tsx:43](file://src/components/shared/dialog-shell/dialog-nav-buttons.tsx#L43)
+- [src/app/(authenticated)/dashboard/service.ts:258](file://src/app/(authenticated)/dashboard/service.ts#L258)
+- [src/app/(authenticated)/captura/services/persistence/captura-log-persistence.service.ts:16](file://src/app/(authenticated)/captura/services/persistence/captura-log-persistence.service.ts#L16)
+- [src/app/(authenticated)/captura/services/persistence/captura-raw-log.service.ts:109](file://src/app/(authenticated)/captura/services/persistence/captura-raw-log.service.ts#L109)
+- [src/lib/supabase/query-logger.ts:153](file://src/lib/supabase/query-logger.ts#L153)
 
 **Section sources**
 - [next.config.ts:79-434](file://next.config.ts#L79-L434)
@@ -605,6 +621,10 @@ TestingInfra --> ResponsiveTests["Responsive Behavior Tests"]
 - [src/components/ui/drawer.tsx:8](file://src/components/ui/drawer.tsx#L8)
 - [src/components/shared/dialog-shell/dialog-section.tsx:67](file://src/components/shared/dialog-shell/dialog-section.tsx#L67)
 - [src/components/shared/dialog-shell/dialog-nav-buttons.tsx:43](file://src/components/shared/dialog-shell/dialog-nav-buttons.tsx#L43)
+- [src/app/(authenticated)/dashboard/service.ts:258](file://src/app/(authenticated)/dashboard/service.ts#L258)
+- [src/app/(authenticated)/captura/services/persistence/captura-log-persistence.service.ts:16](file://src/app/(authenticated)/captura/services/persistence/captura-log-persistence.service.ts#L16)
+- [src/app/(authenticated)/captura/services/persistence/captura-raw-log.service.ts:109](file://src/app/(authenticated)/captura/services/persistence/captura-raw-log.service.ts#L109)
+- [src/lib/supabase/query-logger.ts:153](file://src/lib/supabase/query-logger.ts#L153)
 
 ## Performance Considerations
 - Image optimization: AVIF and WebP formats with remote patterns for Unsplash and Strapi
@@ -612,11 +632,56 @@ TestingInfra --> ResponsiveTests["Responsive Behavior Tests"]
 - Static generation: SSR prefetch in authenticated layout with graceful handling for static generation errors
 - Bundle analysis: optional analyzer for identifying optimization opportunities
 - PWA caching: runtime cache excludes APIs and Server Actions to avoid stale endpoints
-- **Updated** Audiências performance: Hybrid filtering reduces data transfer by up to 70%, debounced search prevents API spam, and Redis caching improves response times
-- **Updated** Component performance: GlassPanel and AnimatedNumber components are optimized for smooth animations and efficient rendering
+- **Updated** Dashboard service performance: Batch processing with 4-task concurrency prevents fetch failures and connection pool exhaustion
+- **Updated** Capture persistence optimization: Raw log insertion now uses batch operations to reduce database load and improve throughput
+- **Updated** Query monitoring: Enhanced query logging provides visibility into batch operation performance and completion metrics
 - **Updated** Database optimization: Column selection reduces disk I/O by 35%, and optimized queries prevent N+1 problems
+- **Updated** Component performance: GlassPanel and AnimatedNumber components are optimized for smooth animations and efficient rendering
 - **Updated** Dialog system performance: Native components eliminate abstraction overhead and improve accessibility
 - **Updated** Testing performance: Property-based testing with FastCheck provides comprehensive coverage without manual test maintenance
+
+### Batch Processing Implementation
+The dashboard service implements a sophisticated batch processing mechanism to handle concurrent database operations efficiently:
+
+```mermaid
+flowchart TD
+subgraph "Batch Processing Architecture"
+BatchSize["BATCH_SIZE = 4"]
+FetchTasks["fetchTasks Array"]
+BatchLoop["for (let i = 0; i < fetchTasks.length; i += BATCH_SIZE)"]
+BatchSlice["slice(i, i + BATCH_SIZE)"]
+BatchMap["map(fn => fn())"]
+PromiseAll["Promise.all(batch)"]
+BatchResults["await Promise.all(batch)"]
+PushResults["results.push(...batchResults)"]
+end
+subgraph "Connection Pool Management"
+ConnectionPool["Node/Fetch Connection Pool"]
+FetchFailed["TypeError: fetch failed"]
+PoolStarvation["Pool Starvation Prevention"]
+end
+BatchSize --> FetchTasks
+FetchTasks --> BatchLoop
+BatchLoop --> BatchSlice
+BatchSlice --> BatchMap
+BatchMap --> PromiseAll
+PromiseAll --> BatchResults
+BatchResults --> PushResults
+ConnectionPool --> PoolStarvation
+PoolStarvation --> FetchFailed
+```
+
+**Diagram sources**
+- [src/app/(authenticated)/dashboard/service.ts:258-265](file://src/app/(authenticated)/dashboard/service.ts#L258-L265)
+- [src/app/(authenticated)/dashboard/service.ts:141](file://src/app/(authenticated)/dashboard/service.ts#L141)
+
+### Capture Operations Throughput
+The capture persistence layer has been optimized with batch fetching mechanisms that significantly improve database throughput:
+
+- **Raw Log Insertion**: Batch operations reduce individual database round trips
+- **Consistency Validation**: Built-in validation ensures data integrity across batch operations
+- **Performance Monitoring**: Query logging tracks batch completion times and error rates
+- **Resource Management**: Controlled batch sizes prevent connection pool exhaustion
 
 **Section sources**
 - [next.config.ts:294-313](file://next.config.ts#L294-L313)
@@ -627,6 +692,9 @@ TestingInfra --> ResponsiveTests["Responsive Behavior Tests"]
 - [src/app/(authenticated)/audiencias/hooks/use-audiencias-unified.ts:106](file://src/app/(authenticated)/audiencias/hooks/use-audiencias-unified.ts#L106)
 - [src/app/(authenticated)/audiencias/repository.ts:628-647](file://src/app/(authenticated)/audiencias/repository.ts#L628-L647)
 - [src/app/(authenticated)/captura/components/captura-kpi-strip.tsx:23-31](file://src/app/(authenticated)/captura/components/captura-kpi-strip.tsx#L23-L31)
+- [src/app/(authenticated)/dashboard/service.ts:258-265](file://src/app/(authenticated)/dashboard/service.ts#L258-L265)
+- [src/app/(authenticated)/captura/services/persistence/captura-raw-log.service.ts:109-152](file://src/app/(authenticated)/captura/services/persistence/captura-raw-log.service.ts#L109-L152)
+- [src/lib/supabase/query-logger.ts:153-169](file://src/lib/supabase/query-logger.ts#L153-L169)
 
 ## Troubleshooting Guide
 - CSP violations: verify nonce propagation from middleware to HTML and inline scripts/styles
@@ -641,6 +709,9 @@ TestingInfra --> ResponsiveTests["Responsive Behavior Tests"]
 - **Updated** Dialog utility conflicts: ensure DialogSection is used instead of deprecated DialogBody, and DialogNavButtons are used consistently
 - **Updated** Testing infrastructure issues: verify FastCheck property-based tests are running correctly and covering edge cases
 - **Updated** Property-based testing failures: check test configurations and ensure proper viewport mocking for responsive components
+- **Updated** Batch processing failures: verify connection pool limits and batch size configuration prevent fetch failures
+- **Updated** Capture persistence issues: check raw log batch operations and consistency validation for data integrity
+- **Updated** Query monitoring problems: verify query logger configuration and batch operation tracking metrics
 
 **Section sources**
 - [src/middleware/security-headers.ts:285-302](file://src/middleware/security-headers.ts#L285-L302)
@@ -654,6 +725,9 @@ TestingInfra --> ResponsiveTests["Responsive Behavior Tests"]
 - [src/components/ui/drawer.tsx:8](file://src/components/ui/drawer.tsx#L8)
 - [src/components/shared/dialog-shell/dialog-section.tsx:67](file://src/components/shared/dialog-shell/dialog-section.tsx#L67)
 - [src/components/shared/dialog-shell/dialog-nav-buttons.tsx:43](file://src/components/shared/dialog-shell/dialog-nav-buttons.tsx#L43)
+- [src/app/(authenticated)/dashboard/service.ts:258-265](file://src/app/(authenticated)/dashboard/service.ts#L258-L265)
+- [src/app/(authenticated)/captura/services/persistence/captura-raw-log.service.ts:109-152](file://src/app/(authenticated)/captura/services/persistence/captura-raw-log.service.ts#L109-L152)
+- [src/lib/supabase/query-logger.ts:153-169](file://src/lib/supabase/query-logger.ts#L153-L169)
 
 ## Conclusion
 The frontend leverages Next.js 16's App Router to organize routes into logical groups, enforce security via middleware, and provide a consistent user experience through shared components and global styling. Supabase Auth is integrated centrally with deduplication and robust error handling. Performance is optimized through image formats, code splitting, and PWA caching strategies, while the manifest and service worker enable progressive enhancement and offline readiness.
@@ -665,3 +739,5 @@ The frontend leverages Next.js 16's App Router to organize routes into logical g
 **Updated** The dialog system architecture reflects a successful simplification and enhancement effort, consolidating specialized components into a streamlined approach using native Dialog and Drawer components with enhanced DialogHeader and DialogFooter components. The removal of DialogBody and introduction of DialogSection provides better content organization while the addition of property-based testing ensures comprehensive validation across diverse scenarios. This architectural evolution reduces complexity, improves performance, and enhances maintainability while preserving all essential functionality.
 
 **Updated** The testing infrastructure demonstrates modern quality assurance practices through the adoption of property-based testing with FastCheck, providing comprehensive coverage of edge cases and ensuring component reliability across various scenarios. This approach reduces manual test maintenance while improving confidence in component behavior under diverse conditions.
+
+**Updated** The persistence layer performance optimizations represent a significant advancement in database throughput and resource management. The implementation of batch fetching mechanisms in capture operations reduces database load by optimizing connection usage and preventing pool exhaustion. The enhanced query logging and monitoring systems provide valuable insights into batch operation performance, enabling continuous optimization and troubleshooting. These improvements demonstrate the application's commitment to scalable architecture and efficient resource utilization in high-throughput scenarios.

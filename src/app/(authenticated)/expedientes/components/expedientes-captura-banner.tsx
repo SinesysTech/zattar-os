@@ -64,7 +64,7 @@ export function ExpedientesCapturaBanner({
       <Button
         variant="ghost"
         size="icon"
-        className="ml-auto h-6 w-6 shrink-0 text-muted-foreground/50 hover:text-foreground"
+        className="ml-auto h-6 w-6 shrink-0 text-muted-foreground/70 hover:text-foreground"
         onClick={onDismiss}
         aria-label="Remover filtro de captura"
       >

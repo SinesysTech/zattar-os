@@ -153,7 +153,7 @@ export function ProcessoCard({
               </span>
             ))}
             {tags.length > 3 && (
-              <span className="text-[9px] text-muted-foreground/40">
+              <span className="text-[9px] text-muted-foreground/65">
                 +{tags.length - 3}
               </span>
             )}
@@ -175,11 +175,11 @@ export function ProcessoCard({
               {responsavel ? getInitials(responsavel.nomeExibicao) : 'NA'}
             </AvatarFallback>
           </Avatar>
-          <span className="text-[9px] text-muted-foreground/50 whitespace-nowrap">
+          <span className="text-[9px] text-muted-foreground/70 whitespace-nowrap">
             {responsavel?.nomeExibicao || 'Sem resp.'}
           </span>
         </ResponsavelPopover>
-        <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-[9px] text-muted-foreground/40 flex items-center gap-1 font-mono tabular-nums")}>
+        <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-[9px] text-muted-foreground/65 flex items-center gap-1 font-mono tabular-nums")}>
           <Clock className="size-2.5" />
           {timeAgo(processo.updatedAt)}
         </span>

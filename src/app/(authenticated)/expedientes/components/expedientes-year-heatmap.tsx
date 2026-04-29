@@ -144,7 +144,7 @@ const MonthGrid = React.memo(function MonthGrid({
         <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[11px] font-semibold capitalize text-foreground")}>
           {monthName}
         </span>
-        <span className="text-[9px] tabular-nums text-muted-foreground/50">
+        <span className="text-[9px] tabular-nums text-muted-foreground/70">
           {monthTotal}
         </span>
       </div>
@@ -152,7 +152,7 @@ const MonthGrid = React.memo(function MonthGrid({
         {WEEKDAY_LABELS.map((d, i) => (
           <span
             key={i}
-            className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[7px] font-semibold text-center text-muted-foreground/30 uppercase")}
+            className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[7px] font-semibold text-center text-muted-foreground/55 uppercase")}
           >
             {d}
           </span>
@@ -179,7 +179,7 @@ const MonthGrid = React.memo(function MonthGrid({
                   type="button"
                   onClick={() => count > 0 && onDayClick(monthIndex, day)}
                   className={cn(
-                    'aspect-square rounded-[2px] transition-all duration-100',
+                    'aspect-square rounded-xs transition-all duration-100',
                     getDayBg(count),
                     count > 0 &&
                       'cursor-pointer hover:scale-[1.3] hover:opacity-80',
@@ -444,7 +444,7 @@ export function ExpedientesYearHeatmap({
               label="Total no Ano"
             >
               <Text variant="kpi-value">{stats.total}</Text>
-              <p className="text-[10px] text-muted-foreground/50 mt-0.5">
+              <p className="text-[10px] text-muted-foreground/70 mt-0.5">
                 expedientes recebidos
               </p>
             </StatCard>
@@ -463,7 +463,7 @@ export function ExpedientesYearHeatmap({
                   style={{ width: `${stats.taxa}%` }}
                 />
               </div>
-              <p className="text-[10px] text-muted-foreground/50 mt-1">
+              <p className="text-[10px] text-muted-foreground/70 mt-1">
                 {stats.taxa}% conclusao
               </p>
             </StatCard>
@@ -514,7 +514,7 @@ export function ExpedientesYearHeatmap({
               label="Media Semanal"
             >
               <Text variant="kpi-value">{stats.weekAvg}</Text>
-              <p className="text-[10px] text-muted-foreground/50 mt-0.5">
+              <p className="text-[10px] text-muted-foreground/70 mt-0.5">
                 expedientes / semana
               </p>
             </StatCard>
@@ -522,13 +522,13 @@ export function ExpedientesYearHeatmap({
             {/* Top Months Ranking */}
             {topMonths.length > 0 && (
               <div className="mt-4">
-                <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/40")}>
+                <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/65")}>
                   Ranking por Volume
                 </span>
                 <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "mt-2 space-y-1.5")}>
                   {topMonths.map((m, i) => (
                     <div key={m.idx} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
-                      <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[9px] font-bold text-muted-foreground/40 w-3 text-right")}>
+                      <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[9px] font-bold text-muted-foreground/65 w-3 text-right")}>
                         {i + 1}
                       </span>
                       <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium w-10")}>
@@ -570,15 +570,15 @@ export function ExpedientesYearHeatmap({
 
             {/* Legend */}
             <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 justify-end mt-4")}>
-              <span className="text-[9px] text-muted-foreground/40 mr-1">
+              <span className="text-[9px] text-muted-foreground/65 mr-1">
                 Menos
               </span>
-              <div className="size-3 rounded-[2px] bg-muted/50" />
-              <div className="size-3 rounded-[2px] bg-primary/15" />
-              <div className="size-3 rounded-[2px] bg-primary/35" />
-              <div className="size-3 rounded-[2px] bg-primary/[0.55]" />
-              <div className="size-3 rounded-[2px] bg-primary/80" />
-              <span className="text-[9px] text-muted-foreground/40 ml-1">
+              <div className="size-3 rounded-xs bg-muted/50" />
+              <div className="size-3 rounded-xs bg-primary/15" />
+              <div className="size-3 rounded-xs bg-primary/35" />
+              <div className="size-3 rounded-xs bg-primary/[0.55]" />
+              <div className="size-3 rounded-xs bg-primary/80" />
+              <span className="text-[9px] text-muted-foreground/65 ml-1">
                 Mais
               </span>
             </div>

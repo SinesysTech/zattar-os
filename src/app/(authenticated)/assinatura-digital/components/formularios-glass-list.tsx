@@ -132,7 +132,7 @@ function GlassRow({
                 {formulario.descricao}
               </div>
             )}
-            <div className="text-[10px] text-muted-foreground/50 mt-0.5 font-mono truncate">
+            <div className="text-[10px] text-muted-foreground/70 mt-0.5 font-mono truncate">
               {formulario.slug}
             </div>
           </div>
@@ -277,7 +277,7 @@ function GlassCard({
           {formulario.descricao}
         </p>
       ) : (
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/40 italic flex-1")}>Sem descrição</p>
+        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/65 italic flex-1")}>Sem descrição</p>
       )}
 
       {/* Footer: captura + status */}
@@ -296,7 +296,7 @@ function GlassCard({
             </span>
           )}
           {!formulario.foto_necessaria && !formulario.geolocation_necessaria && (
-            <span className="text-[10px] text-muted-foreground/50">Sem captura</span>
+            <span className="text-[10px] text-muted-foreground/70">Sem captura</span>
           )}
         </div>
         <span
@@ -477,9 +477,9 @@ function CardsSkeleton() {
 function EmptyState() {
   return (
     <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
-      <ClipboardList className="w-10 h-10 text-muted-foreground/30 mb-4" />
-      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/50")}>Nenhum formulário encontrado</p>
-      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/30 mt-1")}>Tente ajustar os filtros ou criar um novo formulário</p>
+      <ClipboardList className="w-10 h-10 text-muted-foreground/55 mb-4" />
+      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/70")}>Nenhum formulário encontrado</p>
+      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/55 mt-1")}>Tente ajustar os filtros ou criar um novo formulário</p>
     </div>
   );
 }

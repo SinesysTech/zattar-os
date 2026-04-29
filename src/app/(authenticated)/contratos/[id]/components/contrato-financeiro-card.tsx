@@ -65,7 +65,7 @@ function KpiTile({
   tone?: 'success' | 'warning';
 }) {
   return (
-    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex flex-col gap-1.5 px-4 py-3 rounded-xl bg-muted/30 border border-border/20")}>
+    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex flex-col gap-1.5 px-4 py-3 rounded-xl bg-muted/30 border border-border/40")}>
       <Text variant="meta-label">{label}</Text>
       <Text
         variant="kpi-value"
@@ -110,7 +110,7 @@ function ProgressBar({ pct }: { pct: number }) {
 
 function LancamentoRow({ lancamento }: { lancamento: Lancamento }) {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "grid grid-cols-[2.2fr_1fr_1fr_1fr] gap-3 items-center px-3 py-2.5 rounded-xl bg-muted/30 border border-border/20 transition-colors hover:bg-muted/50")}>
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "grid grid-cols-[2.2fr_1fr_1fr_1fr] gap-3 items-center px-3 py-2.5 rounded-xl bg-muted/30 border border-border/40 transition-colors hover:bg-muted/50")}>
       <Text variant="label" className="truncate block">
         {lancamento.descricao}
       </Text>
@@ -198,7 +198,7 @@ export function ContratoFinanceiroCard({
                 {lancamentos.length > 10 && (
                   <Text
                     variant="caption"
-                    className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "pt-2.5 mt-2 text-center block border-t border-border/20")}
+                    className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "pt-2.5 mt-2 text-center block border-t border-border/40")}
                   >
                     Mostrando 10 de {lancamentos.length} lançamentos
                   </Text>

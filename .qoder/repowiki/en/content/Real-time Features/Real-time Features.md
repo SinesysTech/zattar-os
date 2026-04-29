@@ -8,7 +8,12 @@
 - [use-realtime-chat.tsx](file://src/hooks/use-realtime-chat.tsx)
 - [realtime-chat.tsx](file://src/components/realtime/realtime-chat.tsx)
 - [realtime-cursors.tsx](file://src/components/realtime/realtime-cursors.tsx)
+- [realtime-avatar-stack.tsx](file://src/components/realtime/realtime-avatar-stack.tsx)
+- [cursor.tsx](file://src/components/realtime/cursor.tsx)
 - [supabase-yjs-provider.ts](file://src/lib/yjs/supabase-yjs-provider.ts)
+- [avatar.tsx](file://src/components/ui/avatar.tsx)
+- [user-status-dot.tsx](file://src/app/(authenticated)/usuarios/components/shared/user-status-dot.tsx)
+- [chat-header.tsx](file://src/app/(authenticated)/chat/components/chat-header.tsx)
 - [SKILL.md (realtime-websocket)](.agents/skills/realtime-websocket/SKILL.md)
 - [notificacoes.tsx](file://src/app/(authenticated)/ajuda/content/configuracoes/notificacoes.tsx)
 - [use-notificacoes.ts](file://src/app/(authenticated)/notificacoes/hooks/use-notificacoes.ts)
@@ -19,6 +24,13 @@
 - [invalidation.ts](file://src/lib/redis/invalidation.ts)
 - [utils.ts](file://src/lib/redis/utils.ts)
 </cite>
+
+## Update Summary
+**Changes Made**
+- Added documentation for the new RealtimeAvatarStack component
+- Enhanced presence indicators documentation with AvatarIndicator and UserStatusDot components
+- Updated component architecture to reflect the new avatar stack integration
+- Expanded real-time presence system documentation to include multiple status display methods
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -41,13 +53,14 @@ This document explains the real-time features implemented in the project, focusi
 - Practical examples of real-time collaboration, instant messaging, and live updates
 - Performance optimization, connection handling, and scalability considerations
 
-The implementation leverages Supabase Realtime for bidirectional messaging, presence tracking, and broadcasting, complemented by Redis utilities for caching and invalidation strategies.
+The implementation leverages Supabase Realtime for bidirectional messaging, presence tracking, and broadcasting, complemented by Redis utilities for caching and invalidation strategies. The system now includes enhanced avatar-based presence indicators through the AvatarIndicator component and UserStatusDot for comprehensive user status visualization.
 
 ## Project Structure
 The real-time capabilities are organized around:
 - Hooks for real-time collaboration, presence, cursors, and chat
 - Components that wrap hooks for UI rendering
 - A Yjs provider that integrates CRDT-based collaborative editing via Supabase channels
+- Avatar-based presence indicators including RealtimeAvatarStack, AvatarIndicator, and UserStatusDot
 - Redis utilities for caching and cache invalidation
 - Notification utilities and help documentation for push notifications
 
@@ -62,6 +75,12 @@ end
 subgraph "UI Components"
 CompChat["realtime-chat.tsx"]
 CompCurs["realtime-cursors.tsx"]
+CompAvatarStack["realtime-avatar-stack.tsx"]
+end
+subgraph "Avatar Presence Indicators"
+AvatarIndicator["avatar.tsx"]
+UserStatusDot["user-status-dot.tsx"]
+CursorComp["cursor.tsx"]
 end
 subgraph "Yjs Integration"
 YProvider["supabase-yjs-provider.ts"]
@@ -80,9 +99,12 @@ RHelp["utils.ts"]
 end
 RTCollab --> YProvider
 RTChat --> CompChat
+RTPres --> CompAvatarStack
 RTPres --> CompCurs
 RTCurs --> CompCurs
 YProvider --> RTCollab
+AvatarIndicator --> CompAvatarStack
+UserStatusDot --> CompAvatarStack
 HelpPush --> HookNotify
 RIndex --> RClient
 RUtils --> RKeys
@@ -96,6 +118,10 @@ RInv --> RClient
 - [use-realtime-cursors.ts:1-177](file://src/hooks/use-realtime-cursors.ts#L1-L177)
 - [realtime-chat.tsx:1-70](file://src/components/realtime/realtime-chat.tsx#L1-L70)
 - [realtime-cursors.tsx:1-30](file://src/components/realtime/realtime-cursors.tsx#L1-L30)
+- [realtime-avatar-stack.tsx:1-18](file://src/components/realtime/realtime-avatar-stack.tsx#L1-L18)
+- [avatar.tsx:105-144](file://src/components/ui/avatar.tsx#L105-L144)
+- [user-status-dot.tsx:1-58](file://src/app/(authenticated)/usuarios/components/shared/user-status-dot.tsx#L1-L58)
+- [cursor.tsx:1-28](file://src/components/realtime/cursor.tsx#L1-L28)
 - [supabase-yjs-provider.ts:1-358](file://src/lib/yjs/supabase-yjs-provider.ts#L1-L358)
 - [notificacoes.tsx](file://src/app/(authenticated)/ajuda/content/configuracoes/notificacoes.tsx#L186-L214)
 - [use-notificacoes.ts](file://src/app/(authenticated)/notificacoes/hooks/use-notificacoes.ts#L628-L644)
@@ -113,6 +139,10 @@ RInv --> RClient
 - [use-realtime-cursors.ts:1-177](file://src/hooks/use-realtime-cursors.ts#L1-L177)
 - [realtime-chat.tsx:1-70](file://src/components/realtime/realtime-chat.tsx#L1-L70)
 - [realtime-cursors.tsx:1-30](file://src/components/realtime/realtime-cursors.tsx#L1-L30)
+- [realtime-avatar-stack.tsx:1-18](file://src/components/realtime/realtime-avatar-stack.tsx#L1-L18)
+- [avatar.tsx:105-144](file://src/components/ui/avatar.tsx#L105-L144)
+- [user-status-dot.tsx:1-58](file://src/app/(authenticated)/usuarios/components/shared/user-status-dot.tsx#L1-L58)
+- [cursor.tsx:1-28](file://src/components/realtime/cursor.tsx#L1-L28)
 - [supabase-yjs-provider.ts:1-358](file://src/lib/yjs/supabase-yjs-provider.ts#L1-L358)
 - [notificacoes.tsx](file://src/app/(authenticated)/ajuda/content/configuracoes/notificacoes.tsx#L186-L214)
 - [use-notificacoes.ts](file://src/app/(authenticated)/notificacoes/hooks/use-notificacoes.ts#L628-L644)
@@ -128,7 +158,9 @@ RInv --> RClient
 - Real-time chat hook: Handles message broadcasting, typing indicators, and connection state.
 - Presence room hook: Tracks users present in a named room.
 - Real-time cursors hook: Broadcasts mouse movement events and renders remote cursors.
+- Real-time avatar stack: Displays avatar-based presence indicators for collaborative rooms.
 - Yjs provider: Implements a unified provider for CRDT-based collaborative editing over Supabase Realtime.
+- Avatar presence indicators: Comprehensive user status display through AvatarIndicator and UserStatusDot components.
 - Notification utilities: Provide push notification setup and polling-based alert retrieval.
 - Redis utilities: Offer cache keys, cache helpers, client initialization, invalidation, and general utilities.
 
@@ -137,7 +169,10 @@ RInv --> RClient
 - [use-realtime-chat.tsx:1-256](file://src/hooks/use-realtime-chat.tsx#L1-L256)
 - [use-realtime-presence-room.ts:1-56](file://src/hooks/use-realtime-presence-room.ts#L1-L56)
 - [use-realtime-cursors.ts:1-177](file://src/hooks/use-realtime-cursors.ts#L1-L177)
+- [realtime-avatar-stack.tsx:1-18](file://src/components/realtime/realtime-avatar-stack.tsx#L1-L18)
 - [supabase-yjs-provider.ts:1-358](file://src/lib/yjs/supabase-yjs-provider.ts#L1-L358)
+- [avatar.tsx:105-144](file://src/components/ui/avatar.tsx#L105-L144)
+- [user-status-dot.tsx:1-58](file://src/app/(authenticated)/usuarios/components/shared/user-status-dot.tsx#L1-L58)
 - [notificacoes.tsx](file://src/app/(authenticated)/ajuda/content/configuracoes/notificacoes.tsx#L186-L214)
 - [use-notificacoes.ts](file://src/app/(authenticated)/notificacoes/hooks/use-notificacoes.ts#L628-L644)
 - [cache-keys.ts](file://src/lib/redis/cache-keys.ts)
@@ -153,6 +188,11 @@ The system uses Supabase Realtime channels for:
 - Broadcast events for chat messages and collaborative updates
 - Awareness updates for Yjs cursors and selections
 
+Enhanced avatar-based presence indicators provide comprehensive user status visualization through multiple components:
+- RealtimeAvatarStack: Displays avatar stacks for collaborative rooms
+- AvatarIndicator: Shows user status dots on avatars
+- UserStatusDot: Provides detailed status indicators with pulse animations
+
 Redis is used for caching and cache invalidation strategies to reduce database load and improve responsiveness.
 
 ```mermaid
@@ -164,6 +204,7 @@ Yjs["Yjs CRDT Engine"]
 Providers["Unified Provider (Yjs)"]
 Cache["Redis Cache"]
 DB["PostgreSQL"]
+AvatarIndicators["Avatar Presence Indicators"]
 ClientApp --> Hooks
 Hooks --> Supabase
 Hooks --> Yjs
@@ -171,6 +212,8 @@ Yjs --> Providers
 Providers --> Supabase
 Hooks --> Cache
 Cache --> DB
+AvatarIndicators --> Hooks
+AvatarIndicators --> Supabase
 ```
 
 **Diagram sources**
@@ -178,6 +221,9 @@ Cache --> DB
 - [use-realtime-chat.tsx:71-151](file://src/hooks/use-realtime-chat.tsx#L71-L151)
 - [use-realtime-presence-room.ts:23-47](file://src/hooks/use-realtime-presence-room.ts#L23-L47)
 - [use-realtime-cursors.ts:107-163](file://src/hooks/use-realtime-cursors.ts#L107-L163)
+- [realtime-avatar-stack.tsx:7-17](file://src/components/realtime/realtime-avatar-stack.tsx#L7-L17)
+- [avatar.tsx:105-144](file://src/components/ui/avatar.tsx#L105-L144)
+- [user-status-dot.tsx:32-49](file://src/app/(authenticated)/usuarios/components/shared/user-status-dot.tsx#L32-L49)
 - [supabase-yjs-provider.ts:134-192](file://src/lib/yjs/supabase-yjs-provider.ts#L134-L192)
 - [cache-keys.ts](file://src/lib/redis/cache-keys.ts)
 - [cache-utils.ts](file://src/lib/redis/cache-utils.ts)
@@ -219,6 +265,66 @@ Hook->>Client : onRemoteUpdate/onRemoteCursors callbacks
 
 **Section sources**
 - [use-realtime-collaboration.ts:1-244](file://src/hooks/use-realtime-collaboration.ts#L1-L244)
+
+### Real-time Avatar Stack Component
+Displays avatar-based presence indicators for collaborative rooms:
+- Integrates with useRealtimePresenceRoom hook to get current users
+- Converts user data to avatar format for AvatarStack component
+- Automatically updates when presence changes
+- Provides a compact visual representation of active collaborators
+
+```mermaid
+flowchart TD
+Start(["RealtimeAvatarStack Mount"]) --> Hook["useRealtimePresenceRoom(roomName)"]
+Hook --> Users["usersMap from presence"]
+Users --> Extract["Extract {name, image} from usersMap"]
+Extract --> AvatarStack["AvatarStack avatars prop"]
+AvatarStack --> Render["Render avatar stack"]
+Users --> Update["On presence changes"]
+Update --> Hook
+```
+
+**Diagram sources**
+- [realtime-avatar-stack.tsx:7-17](file://src/components/realtime/realtime-avatar-stack.tsx#L7-L17)
+- [use-realtime-presence-room.ts:23-47](file://src/hooks/use-realtime-presence-room.ts#L23-L47)
+
+**Section sources**
+- [realtime-avatar-stack.tsx:1-18](file://src/components/realtime/realtime-avatar-stack.tsx#L1-L18)
+
+### Avatar Presence Indicators System
+Comprehensive user status visualization through multiple components:
+- AvatarIndicator: Status dot overlay for individual avatars with four variants (online, away, offline, success)
+- UserStatusDot: Detailed status indicators with pulse animations and size variants
+- Integration with chat components for contact lists and headers
+
+```mermaid
+classDiagram
+class AvatarIndicator {
++variant : "online" | "away" | "offline" | "success"
++render() AvatarIndicator
+}
+class UserStatusDot {
++status : "online" | "away" | "offline"
++size : "sm" | "md" | "lg"
++render() UserStatusDot
+}
+class RealtimeAvatarStack {
++roomName : string
++render() AvatarStack
+}
+AvatarIndicator --> RealtimeAvatarStack : used in
+UserStatusDot --> RealtimeAvatarStack : alternative display
+```
+
+**Diagram sources**
+- [avatar.tsx:105-144](file://src/components/ui/avatar.tsx#L105-L144)
+- [user-status-dot.tsx:6-58](file://src/app/(authenticated)/usuarios/components/shared/user-status-dot.tsx#L6-L58)
+- [realtime-avatar-stack.tsx:1-18](file://src/components/realtime/realtime-avatar-stack.tsx#L1-L18)
+
+**Section sources**
+- [avatar.tsx:105-144](file://src/components/ui/avatar.tsx#L105-L144)
+- [user-status-dot.tsx:1-58](file://src/app/(authenticated)/usuarios/components/shared/user-status-dot.tsx#L1-L58)
+- [realtime-avatar-stack.tsx:1-18](file://src/components/realtime/realtime-avatar-stack.tsx#L1-L18)
 
 ### Yjs Provider for Collaborative Editing
 Implements a unified provider for Yjs that:
@@ -397,6 +503,7 @@ Simpler --> |No| WS
 - Supabase Realtime is central to presence, broadcasting, and Yjs synchronization.
 - Yjs provider depends on Y.Doc and Awareness for CRDT state and cursor awareness.
 - UI components depend on hooks for state and event handling.
+- Avatar presence indicators integrate with both Supabase presence and local status calculations.
 - Redis utilities provide caching and invalidation mechanisms to offload database reads and manage cache coherence.
 
 ```mermaid
@@ -405,9 +512,12 @@ Supabase["@supabase/supabase-js"] --> RTCollab["use-realtime-collaboration.ts"]
 Supabase --> RTChat["use-realtime-chat.tsx"]
 Supabase --> RTPres["use-realtime-presence-room.ts"]
 Supabase --> RTCurs["use-realtime-cursors.ts"]
+Supabase --> RTAvatar["realtime-avatar-stack.tsx"]
 Yjs["yjs"] --> YProvider["supabase-yjs-provider.ts"]
 Awareness["y-protocols/awareness"] --> YProvider
 YProvider --> RTCollab
+AvatarUI["avatar.tsx"] --> RTAvatar
+UserStatus["user-status-dot.tsx"] --> RTAvatar
 Redis["Redis"] --> RIndex["index.ts (Redis)"]
 RIndex --> RClient["client.ts"]
 RUtils["cache-utils.ts"] --> RKeys["cache-keys.ts"]
@@ -419,6 +529,9 @@ RInv["invalidation.ts"] --> RClient
 - [use-realtime-chat.tsx:30-31](file://src/hooks/use-realtime-chat.tsx#L30-L31)
 - [use-realtime-presence-room.ts:3-5](file://src/hooks/use-real-time-presence-room.ts#L3-L5)
 - [use-realtime-cursors.ts:1-2](file://src/hooks/use-realtime-cursors.ts#L1-L2)
+- [realtime-avatar-stack.tsx:3-4](file://src/components/realtime/realtime-avatar-stack.tsx#L3-L4)
+- [avatar.tsx:105-144](file://src/components/ui/avatar.tsx#L105-L144)
+- [user-status-dot.tsx:1-58](file://src/app/(authenticated)/usuarios/components/shared/user-status-dot.tsx#L1-L58)
 - [supabase-yjs-provider.ts:8-10](file://src/lib/yjs/supabase-yjs-provider.ts#L8-L10)
 - [index.ts (Redis)](file://src/lib/redis/index.ts)
 - [client.ts](file://src/lib/redis/client.ts)
@@ -431,7 +544,10 @@ RInv["invalidation.ts"] --> RClient
 - [use-realtime-chat.tsx:1-256](file://src/hooks/use-realtime-chat.tsx#L1-L256)
 - [use-realtime-presence-room.ts:1-56](file://src/hooks/use-realtime-presence-room.ts#L1-L56)
 - [use-realtime-cursors.ts:1-177](file://src/hooks/use-realtime-cursors.ts#L1-L177)
+- [realtime-avatar-stack.tsx:1-18](file://src/components/realtime/realtime-avatar-stack.tsx#L1-L18)
 - [supabase-yjs-provider.ts:1-358](file://src/lib/yjs/supabase-yjs-provider.ts#L1-L358)
+- [avatar.tsx:105-144](file://src/components/ui/avatar.tsx#L105-L144)
+- [user-status-dot.tsx:1-58](file://src/app/(authenticated)/usuarios/components/shared/user-status-dot.tsx#L1-L58)
 - [index.ts (Redis)](file://src/lib/redis/index.ts)
 - [client.ts](file://src/lib/redis/client.ts)
 - [cache-utils.ts](file://src/lib/redis/cache-utils.ts)
@@ -442,17 +558,28 @@ RInv["invalidation.ts"] --> RClient
 - Presence and broadcast event handling:
   - Use throttling for cursor movement to limit event frequency.
   - Deduplicate messages on the client to avoid redundant renders.
+  - Optimize avatar stack rendering by memoizing avatar data extraction.
 - Yjs synchronization:
   - Request full sync only when necessary; rely on incremental updates.
   - Avoid echoing remote-origin updates to prevent loops.
 - Connection lifecycle:
   - Track connection state and gracefully handle CLOSED/ERROR statuses.
   - Clean up intervals and subscriptions on unmount.
+- Avatar presence indicators:
+  - Use useMemo for avatar data transformation to prevent unnecessary re-renders.
+  - Implement efficient presence state updates to minimize DOM changes.
 - Redis caching:
   - Use cache keys and invalidation strategies to minimize database queries.
   - Apply cache utilities to normalize and invalidate cached entries efficiently.
 
-[No sources needed since this section provides general guidance]
+**Section sources**
+- [realtime-avatar-stack.tsx:8-14](file://src/components/realtime/realtime-avatar-stack.tsx#L8-L14)
+- [use-realtime-collaboration.ts:155-169](file://src/hooks/use-realtime-collaboration.ts#L155-L169)
+- [use-realtime-chat.tsx:83-93](file://src/hooks/use-realtime-chat.tsx#L83-L93)
+- [use-realtime-chat.tsx:127-143](file://src/hooks/use-realtime-chat.tsx#L127-L143)
+- [supabase-yjs-provider.ts:243-250](file://src/lib/yjs/supabase-yjs-provider.ts#L243-L250)
+- [invalidation.ts](file://src/lib/redis/invalidation.ts)
+- [cache-keys.ts](file://src/lib/redis/cache-keys.ts)
 
 ## Troubleshooting Guide
 - Connection issues:
@@ -464,6 +591,10 @@ RInv["invalidation.ts"] --> RClient
   - Confirm timeout intervals and cleanup logic for stale typing users.
 - Yjs sync failures:
   - Validate sync request/response handling and error logging for malformed updates.
+- Avatar presence issues:
+  - Verify that useRealtimePresenceRoom hook is properly subscribed to the room.
+  - Check avatar data extraction in RealtimeAvatarStack component.
+  - Ensure AvatarIndicator and UserStatusDot components receive correct props.
 - Redis cache problems:
   - Review cache key generation and invalidation flows to ensure cache coherence.
 
@@ -471,6 +602,9 @@ RInv["invalidation.ts"] --> RClient
 - [use-realtime-collaboration.ts:155-169](file://src/hooks/use-realtime-collaboration.ts#L155-L169)
 - [use-realtime-chat.tsx:83-93](file://src/hooks/use-realtime-chat.tsx#L83-L93)
 - [use-realtime-chat.tsx:127-143](file://src/hooks/use-realtime-chat.tsx#L127-L143)
+- [realtime-avatar-stack.tsx:7-17](file://src/components/realtime/realtime-avatar-stack.tsx#L7-L17)
+- [avatar.tsx:105-144](file://src/components/ui/avatar.tsx#L105-L144)
+- [user-status-dot.tsx:32-49](file://src/app/(authenticated)/usuarios/components/shared/user-status-dot.tsx#L32-L49)
 - [supabase-yjs-provider.ts:243-250](file://src/lib/yjs/supabase-yjs-provider.ts#L243-L250)
 - [invalidation.ts](file://src/lib/redis/invalidation.ts)
 - [cache-keys.ts](file://src/lib/redis/cache-keys.ts)
@@ -479,22 +613,23 @@ RInv["invalidation.ts"] --> RClient
 The project implements robust real-time features centered on Supabase Realtime channels:
 - Presence tracking and broadcasting enable collaborative editing and cursor overlays.
 - Yjs-based CRDT ensures conflict-free collaborative editing synchronized across clients.
+- Enhanced avatar-based presence indicators provide comprehensive user status visualization through RealtimeAvatarStack, AvatarIndicator, and UserStatusDot components.
 - Chat components provide instant messaging with typing indicators and optimistic updates.
 - Notifications support both push notifications and polling-based alerts.
 - Redis utilities enhance performance and scalability through caching and invalidation.
 
-These components work together to deliver responsive, scalable, and user-friendly real-time experiences.
-
-[No sources needed since this section summarizes without analyzing specific files]
+These components work together to deliver responsive, scalable, and user-friendly real-time experiences with rich presence visualization.
 
 ## Appendices
 - Practical examples:
   - Real-time collaboration: Use the collaboration hook to broadcast content updates and synchronize cursors/selections.
   - Instant messaging: Integrate the chat component to send and receive messages with typing indicators.
   - Live updates: Combine presence and broadcast events to reflect live state changes across clients.
+  - Avatar presence: Use RealtimeAvatarStack to display collaborative room participants with avatar indicators.
+  - User status: Integrate AvatarIndicator and UserStatusDot for comprehensive user status visualization.
 - Scalability tips:
   - Use throttling for high-frequency events (e.g., cursors).
   - Implement efficient cache invalidation and key normalization.
   - Monitor connection states and reconnect strategies for resilience.
-
-[No sources needed since this section provides general guidance]
+  - Optimize avatar data transformation with useMemo for better performance.
+  - Use presence state updates to minimize DOM changes in avatar stacks.

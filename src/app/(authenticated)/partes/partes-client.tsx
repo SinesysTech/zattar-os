@@ -222,7 +222,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
                 {data.tipo === 'pf' ? 'Pessoa Física' : 'Pessoa Jurídica'}
               </span>
               {!data.ativo && (
-                <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] px-1.5 py-0.5 rounded bg-muted-foreground/10 text-muted-foreground/50")}>
+                <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] px-1.5 py-0.5 rounded bg-muted-foreground/10 text-muted-foreground/70")}>
                   Inativo
                 </span>
               )}
@@ -261,7 +261,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
         </div>
         <div className="w-px bg-border/10" />
         <div className="flex-1 text-center">
-          <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "font-display text-xl font-bold text-muted-foreground/50")}>
+          <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "font-display text-xl font-bold text-muted-foreground/70")}>
             {Math.max(0, data.metricas.total - data.metricas.ativos)}
           </p>
           <p className="text-[9px] text-muted-foreground/60">Encerrados</p>
@@ -304,7 +304,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
         <button
           onClick={handleCopy}
           aria-label="Copiar nome"
-          className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/50 text-xs font-medium hover:bg-foreground/6 transition-colors cursor-pointer")}
+          className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/70 text-xs font-medium hover:bg-foreground/6 transition-colors cursor-pointer")}
         >
           <Copy className="size-3" />
         </button>
@@ -589,7 +589,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
         <div>
           <Heading level="page">Partes</Heading>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 mt-0.5")}>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/70 mt-0.5")}>
             {totalGeral > 0
               ? `${totalGeral.toLocaleString('pt-BR')} registros${novosEsteMes > 0 ? ` · ${novosEsteMes} novos este mês` : ''}`
               : total > 0
@@ -703,8 +703,8 @@ export function PartesClient({ initialStats }: PartesClientProps) {
 
           {!isLoading && !error && partes.length === 0 && (
             <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "col-span-full flex flex-col items-center justify-center py-16 text-center")}>
-              <Users className="size-8 text-muted-foreground/45 mb-3" />
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/50")}>
+              <Users className="size-8 text-muted-foreground/65 mb-3" />
+              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/70")}>
                 Nenhuma parte encontrada
               </p>
               <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/55 mt-1")}>
@@ -725,7 +725,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
       {/* ── Paginação ──────────────────────────────────────────── */}
       {totalPages > 1 && (
         <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between pt-2")}>
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/50")}>
+          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/70")}>
             {((pagina - 1) * PAGE_SIZE) + 1}–{Math.min(pagina * PAGE_SIZE, total)} de {total.toLocaleString('pt-BR')}
           </p>
           <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>

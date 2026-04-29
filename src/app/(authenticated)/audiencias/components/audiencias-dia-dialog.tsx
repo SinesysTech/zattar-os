@@ -112,9 +112,9 @@ function AudienciaContent({
         <SemanticBadge category="grau" value={audiencia.grau} className="text-micro-badge">
           {GRAU_TRIBUNAL_LABELS[audiencia.grau] || audiencia.grau}
         </SemanticBadge>
-        <span className="text-muted-foreground/30">|</span>
+        <span className="text-muted-foreground/55">|</span>
         <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
-          <Clock className="size-3.5 text-muted-foreground/50" />
+          <Clock className="size-3.5 text-muted-foreground/70" />
           <span className="text-label tabular-nums">
             {formatarHora(audiencia.dataInicio)}
             {audiencia.dataFim && ` – ${formatarHora(audiencia.dataFim)}`}
@@ -151,9 +151,9 @@ function AudienciaContent({
               <div className="text-meta-label mb-1">Local</div>
               <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-1.5 text-sm")}>
                 {audiencia.modalidade === 'presencial' ? (
-                  <Building2 className="size-3.5 text-muted-foreground/50 shrink-0" />
+                  <Building2 className="size-3.5 text-muted-foreground/70 shrink-0" />
                 ) : (
-                  <Video className="size-3.5 text-muted-foreground/50 shrink-0" />
+                  <Video className="size-3.5 text-muted-foreground/70 shrink-0" />
                 )}
                 {audiencia.salaAudienciaNome && (
                   <span className="text-label">{audiencia.salaAudienciaNome}</span>
@@ -261,7 +261,7 @@ export function AudienciasDiaDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset>; gap-0 gap sem token DS */ "sm:max-w-xl max-h-[85vh] flex flex-col p-0 gap-0 overflow-hidden")}>
         <DialogDescription className="sr-only">Audiências do dia</DialogDescription>
-        <DialogHeader className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; pt-5 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv. */ "shrink-0 gap-0 px-6 pt-5 pb-4 border-b border-border/20")}>
+        <DialogHeader className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; pt-5 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv. */ "shrink-0 gap-0 px-6 pt-5 pb-4 border-b border-border/40")}>
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
             <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 min-w-0")}>
               <IconContainer size="md" className="bg-primary/10 shrink-0">
@@ -315,7 +315,7 @@ export function AudienciasDiaDialog({
           </div>
         </ScrollArea>
 
-        <DialogFooter className="shrink-0 border-t border-border/20 px-6 py-3">
+        <DialogFooter className="shrink-0 border-t border-border/40 px-6 py-3">
           <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
             Fechar
           </Button>

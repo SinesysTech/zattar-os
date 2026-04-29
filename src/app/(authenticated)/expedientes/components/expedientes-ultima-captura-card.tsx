@@ -32,7 +32,7 @@ function MetricColumn({
 }) {
   return (
     <div className="flex-1 min-w-0">
-      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
+      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 truncate")}>
         {label}
       </p>
       <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none mt-1 text-foreground")}>
@@ -82,7 +82,7 @@ export function ExpedientesUltimaCapturaCard({
   if (!resumo) {
     return (
       <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5 opacity-50")}>
-        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50")}>
+        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70")}>
           ÚLTIMA CAPTURA
         </p>
         <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/60 mt-1")}>Nenhuma captura realizada</p>
@@ -127,13 +127,13 @@ export function ExpedientesUltimaCapturaCard({
             <Radar className="size-4 text-info/70" />
           </IconContainer>
           <div className="min-w-0">
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60")}>
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70")}>
               ÚLTIMA CAPTURA
             </p>
             <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[10px] text-info/70 leading-tight")}>{tempoRelativo}</p>
           </div>
         </div>
-        <ArrowRight className="size-3 text-info/50 shrink-0 mt-1" />
+        <ArrowRight className="size-3 text-info/70 shrink-0 mt-1" />
       </div>
 
       {/* Métricas */}
@@ -159,7 +159,7 @@ export function ExpedientesUltimaCapturaCard({
       </div>
 
       {/* Footer */}
-      <p className="text-[9px] tabular-nums text-muted-foreground/45 mt-2 truncate">
+      <p className="text-[9px] tabular-nums text-muted-foreground/65 mt-2 truncate">
         #{resumo.capturaId} · {resumo.tipoCaptura} · Clique para ver expedientes
       </p>
     </GlassPanel>

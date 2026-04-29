@@ -86,7 +86,7 @@ function FieldLabel({ htmlFor, children }: { htmlFor?: string; children: React.R
 
 function InlineLoader({ label }: { label: string }) {
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 px-3 py-2.5 rounded-lg border border-border/30 bg-muted/30 text-muted-foreground/60")}>
+    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 px-3 py-2.5 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75")}>
       <LoadingSpinner size="sm" className="shrink-0" />
       <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{label}</span>
     </div>
@@ -439,7 +439,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
         data-density="compact"
         className="sm:max-w-2xl  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col"
       >
-        <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
+        <DialogHeader className="px-6 py-4 border-b border-border/40 shrink-0">
           <DialogTitle>Nova Audiência</DialogTitle>
           <DialogDescription>Preencha os dados para registrar uma nova audiência no sistema.</DialogDescription>
         </DialogHeader>
@@ -494,7 +494,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
             <div>
               <FieldLabel htmlFor="processo">Processo *</FieldLabel>
               {!trt || !grau ? (
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2 px-3 py-2.5 rounded-lg border border-dashed border-border/40 bg-muted/20 text-muted-foreground/50 text-sm")}>
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2 px-3 py-2.5 rounded-lg border border-dashed border-border/40 bg-muted/20 text-muted-foreground/70 text-sm")}>
                   Selecione o TRT e Grau para listar os processos
                 </div>
               ) : loadingProcessos ? (
@@ -756,7 +756,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
         </Stack>
         </form>
         </div>
-        <DialogFooter className="px-6 py-4 border-t border-border/20 shrink-0 justify-between sm:justify-between">
+        <DialogFooter className="px-6 py-4 border-t border-border/40 shrink-0 justify-between sm:justify-between">
           <Button variant="outline" onClick={handleClose}>Cancelar</Button>
           <div className="flex items-center gap-2">
             <Button type="submit" form="nova-audiencia-form" disabled={isLoading}>

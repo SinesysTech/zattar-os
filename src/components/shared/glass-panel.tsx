@@ -38,9 +38,9 @@ export interface GlassPanelProps
 }
 
 const DEPTH_STYLES = {
-  1: 'glass-widget bg-transparent border-border/20',
-  2: 'glass-kpi bg-transparent border-border/30',
-  3: 'bg-primary/[0.04] backdrop-blur-xl border-primary/10',
+  1: 'glass-widget bg-transparent',
+  2: 'glass-kpi bg-transparent',
+  3: 'bg-primary/[0.04] backdrop-blur-xl border border-primary/20',
 } as const;
 
 export function GlassPanel({
@@ -88,7 +88,7 @@ export function WidgetContainer({
     <GlassPanel depth={depth} className={cn('p-5', className)}>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          {Icon && <Icon className="size-4 text-muted-foreground/50" />}
+          {Icon && <Icon className="size-4 text-muted-foreground/70" />}
           <div>
             <Heading level="widget">{title}</Heading>
             {subtitle && <p className="text-widget-sub">{subtitle}</p>}

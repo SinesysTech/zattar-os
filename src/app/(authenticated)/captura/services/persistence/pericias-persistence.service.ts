@@ -33,6 +33,8 @@ export interface SalvarPericiasResult {
   inseridos: number;
   atualizados: number;
   naoAtualizados: number;
+  /** Conflitos OCC: outro scraper atualizou a linha entre o SELECT e o UPDATE */
+  conflitos: number;
   erros: number;
   total: number;
   especialidadesCriadas: number;
@@ -137,6 +139,7 @@ export async function salvarPericias(
       inseridos: 0,
       atualizados: 0,
       naoAtualizados: 0,
+      conflitos: 0,
       erros: 0,
       total: 0,
       especialidadesCriadas: 0,
@@ -236,9 +239,39 @@ export async function salvarPericias(
   let inseridos = 0;
   let atualizados = 0;
   let naoAtualizados = 0;
+  let conflitos = 0;
   let erros = 0;
 
   const entidade: TipoEntidade = 'pericias';
+
+  // Batch: buscar todos os registros existentes de uma vez (evita N+1 queries)
+  const idsPje = pericias.map((p) => p.id);
+  const existentesMap = new Map<string, Record<string, unknown>>();
+
+  try {
+    const { data: existentes, error: erroBatch } = await supabase
+      .from('pericias')
+      .select('*')
+      .in('id_pje', idsPje)
+      .eq('trt', trt)
+      .eq('grau', grau);
+
+    if (erroBatch) {
+      console.warn(
+        `⚠️ [Perícias] Erro ao buscar existentes em batch: ${erroBatch.message}. Continuando sem cache.`,
+      );
+    } else if (existentes) {
+      for (const reg of existentes) {
+        // Chave espelha a constraint UNIQUE (id_pje, trt, grau, numero_processo)
+        const key = `${reg.id_pje}::${(reg.numero_processo as string) ?? ''}`;
+        existentesMap.set(key, reg as Record<string, unknown>);
+      }
+    }
+  } catch {
+    console.warn(
+      `⚠️ [Perícias] Exceção ao buscar existentes em batch. Continuando sem cache.`,
+    );
+  }
 
   // Fase 3: Garantir que todos os órgãos julgadores estão salvos
   for (const pericia of pericias) {
@@ -341,13 +374,13 @@ export async function salvarPericias(
         funcionalidade_editor: pericia.funcionalidadeEditor ?? null,
       };
 
-      // Buscar registro existente
-      const registroExistente = await buscarPericiaExistente(
-        pericia.id,
-        trt,
-        grau,
-        numeroProcesso
-      );
+      // Lookup no cache batch; fallback para query individual se cache vazio
+      const cacheKey = `${pericia.id}::${numeroProcesso}`;
+      const registroExistente = existentesMap.has(cacheKey)
+        ? existentesMap.get(cacheKey)!
+        : existentesMap.size === 0
+          ? await buscarPericiaExistente(pericia.id, trt, grau, numeroProcesso)
+          : null;
 
       if (!registroExistente) {
         // Inserir
@@ -380,7 +413,12 @@ export async function salvarPericias(
             registroExistente as Record<string, unknown>
           );
 
-          const { error } = await supabase
+          // OCC: ancorar o UPDATE no updated_at do SELECT. Se outro scraper
+          // atualizou a linha entre nosso SELECT e este UPDATE, o filtro não
+          // casará, data virá vazio e tratamos como conflito (sem persistir).
+          const updatedAtEsperado = registroExistente.updated_at as string | null;
+
+          const { data: linhasAtualizadas, error } = await supabase
             .from('pericias')
             .update({
               ...dadosNovos,
@@ -389,10 +427,24 @@ export async function salvarPericias(
             .eq('id_pje', pericia.id)
             .eq('trt', trt)
             .eq('grau', grau)
-            .eq('numero_processo', numeroProcesso);
+            .eq('numero_processo', numeroProcesso)
+            .eq('updated_at', updatedAtEsperado)
+            .select('id');
 
           if (error) {
             throw error;
+          }
+
+          if (!linhasAtualizadas || linhasAtualizadas.length === 0) {
+            conflitos++;
+            captureLogService.logConflito(
+              entidade,
+              pericia.id,
+              trt,
+              grau,
+              numeroProcesso,
+            );
+            continue;
           }
 
           atualizados++;
@@ -424,6 +476,7 @@ export async function salvarPericias(
     inseridos,
     atualizados,
     naoAtualizados,
+    conflitos,
     erros,
     total: pericias.length,
     especialidadesCriadas,

@@ -94,7 +94,7 @@ export function ContratoProcessosCard({
                 <Link
                   key={vinculo.id}
                   href={`/app/processos/${processo.id}`}
-                  className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "group flex items-center gap-3 px-3 py-2.5 rounded-xl bg-muted/30 border border-border/20 transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
+                  className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "group flex items-center gap-3 px-3 py-2.5 rounded-xl bg-muted/30 border border-border/40 transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
                 >
                   <div className="flex-1 min-w-0">
                     <Text variant="label" className="tabular-nums truncate block">
@@ -106,7 +106,7 @@ export function ContratoProcessosCard({
                       </Text>
                     )}
                   </div>
-                  <ExternalLink className="size-3.5 text-muted-foreground/50 group-hover:text-primary transition-colors shrink-0" />
+                  <ExternalLink className="size-3.5 text-muted-foreground/70 group-hover:text-primary transition-colors shrink-0" />
                 </Link>
               );
             })}

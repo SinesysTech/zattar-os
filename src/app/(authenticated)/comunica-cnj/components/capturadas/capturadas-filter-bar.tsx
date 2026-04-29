@@ -217,7 +217,7 @@ function TribunalFilter({
           </div>
           <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-52 px-1.5 pb-1.5")}>
             <CommandEmpty>
-              <span className="text-[11px] text-muted-foreground/40">
+              <span className="text-[11px] text-muted-foreground/65">
                 Não encontrado
               </span>
             </CommandEmpty>
@@ -234,7 +234,7 @@ function TribunalFilter({
                       'size-3.5 rounded border flex items-center justify-center',
                       selected.includes(sigla)
                         ? 'bg-primary border-primary'
-                        : 'border-border/30',
+                        : 'border-border/50',
                     )}
                   >
                     {selected.includes(sigla) && (
@@ -307,7 +307,7 @@ function TipoFilter({
           </div>
           <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-52 px-1.5 pb-1.5")}>
             <CommandEmpty>
-              <span className="text-[11px] text-muted-foreground/40">
+              <span className="text-[11px] text-muted-foreground/65">
                 Não encontrado
               </span>
             </CommandEmpty>
@@ -324,7 +324,7 @@ function TipoFilter({
                       'size-3.5 rounded border flex items-center justify-center',
                       selected.includes(tipo)
                         ? 'bg-primary border-primary'
-                        : 'border-border/30',
+                        : 'border-border/50',
                     )}
                   >
                     {selected.includes(tipo) && (

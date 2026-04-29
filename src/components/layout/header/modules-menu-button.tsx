@@ -81,7 +81,7 @@ export function ModulesMenuButton() {
         className={cn(
           "group/modules relative flex items-center justify-center",
           "size-9 rounded-xl cursor-pointer",
-          "bg-card/50 border border-border/30",
+          "bg-card/80 border border-border",
           "active:scale-95",
           "transition-all duration-200 ease-out",
           isOpen
@@ -101,7 +101,7 @@ export function ModulesMenuButton() {
         <span className="relative grid grid-cols-2 gap-0.75">
           <span
             className={cn(
-              "size-1.5 rounded-[2px] transition-colors duration-200",
+              "size-1.5 rounded-xs transition-colors duration-200",
               isOpen
                 ? "bg-primary"
                 : "bg-primary/70 group-hover/modules:bg-primary"
@@ -109,7 +109,7 @@ export function ModulesMenuButton() {
           />
           <span
             className={cn(
-              "size-1.5 rounded-[2px] transition-colors duration-200",
+              "size-1.5 rounded-xs transition-colors duration-200",
               isOpen
                 ? "bg-primary"
                 : "bg-primary/70 group-hover/modules:bg-primary"
@@ -117,7 +117,7 @@ export function ModulesMenuButton() {
           />
           <span
             className={cn(
-              "size-1.5 rounded-[2px] transition-colors duration-200",
+              "size-1.5 rounded-xs transition-colors duration-200",
               isOpen
                 ? "bg-primary"
                 : "bg-primary/70 group-hover/modules:bg-primary"
@@ -125,7 +125,7 @@ export function ModulesMenuButton() {
           />
           <span
             className={cn(
-              "size-1.5 rounded-[2px] transition-colors duration-200",
+              "size-1.5 rounded-xs transition-colors duration-200",
               isOpen
                 ? "bg-primary"
                 : "bg-primary/70 group-hover/modules:bg-primary"

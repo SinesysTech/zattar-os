@@ -66,7 +66,7 @@ export function DocumentListRow({ doc, onSelect, selected }: DocumentListRowProp
 
       <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "items-center gap-1 shrink-0 hidden md:flex")}>
         {doc.selfieHabilitada && (
-          <Camera className="size-3 text-muted-foreground/45" />
+          <Camera className="size-3 text-muted-foreground/65" />
         )}
         {doc.origem === "formulario" && (
           <FileText className="size-3 text-info/30" />

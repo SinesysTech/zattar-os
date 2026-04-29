@@ -219,7 +219,7 @@ export default function AgendamentosPage() {
         {/* Toolbar */}
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
-            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60")}>
+            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/75")}>
               {filteredAgendamentos.length} agendamento{filteredAgendamentos.length !== 1 ? 's' : ''}
             </span>
             {agendamentos.filter((a) => a.ativo).length > 0 && (
@@ -260,12 +260,12 @@ export default function AgendamentosPage() {
           <GlassPanel depth={1} className="overflow-hidden">
             {/* Column Headers */}
             <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "grid grid-cols-[70px_1fr_100px_140px_100px_100px_44px] gap-3 items-center px-4 py-2.5 border-b border-foreground/5")}>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider")}>Status</span>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider")}>Nome / Tipo</span>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider")}>Frequência</span>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider")}>Próxima Exec.</span>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider")}>Última Exec.</span>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider")}>Advogado</span>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Status</span>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Nome / Tipo</span>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Frequência</span>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Próxima Exec.</span>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Última Exec.</span>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Advogado</span>
               <div />
             </div>
 
@@ -317,14 +317,14 @@ export default function AgendamentosPage() {
 
                   {/* Última Execução */}
                   <div>
-                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60 tabular-nums")}>
+                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/75 tabular-nums")}>
                       {formatarDataHora(agendamento.ultima_execucao)}
                     </span>
                   </div>
 
                   {/* Advogado */}
                   <div>
-                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60 truncate block")}>
+                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/75 truncate block")}>
                       {advNome ?? `ID ${agendamento.advogado_id}`}
                     </span>
                   </div>
@@ -335,7 +335,7 @@ export default function AgendamentosPage() {
                       <DropdownMenuTrigger asChild>
                         <button
                           type="button"
-                          className="size-7 rounded-md flex items-center justify-center text-muted-foreground/45 hover:bg-muted/30 hover:text-foreground transition-colors"
+                          className="size-7 rounded-md flex items-center justify-center text-muted-foreground/65 hover:bg-muted/30 hover:text-foreground transition-colors"
                         >
                           <MoreHorizontal className="size-3.5" />
                         </button>

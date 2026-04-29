@@ -1,0 +1,14 @@
+{
+  "resumo": {
+    "total": 31,
+    "idsUnicos": 31,
+    "idsDuplicados": 0,
+    "audienciasComIdRepetido": 0,
+    "idsDuplicadosComProcessosDiferentes": 0,
+    "processosComMultiplasAudiencias": 0,
+    "audienciasComNrProcessoVazio": 0
+  },
+  "duplicatas": [],
+  "processosComMultiplasAudiencias": [],
+  "audienciasComNrProcessoVazio": []
+}

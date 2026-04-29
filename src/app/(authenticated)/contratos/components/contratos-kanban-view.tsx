@@ -120,7 +120,7 @@ function KanbanColumnContent({
             </span>
           </div>
           <span
-            className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-micro-caption font-semibold tabular-nums text-muted-foreground/50 shrink-0")}
+            className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-micro-caption font-semibold tabular-nums text-muted-foreground/70 shrink-0")}
             aria-label={`${contratos.length} contratos`}
           >
             {contratos.length}
@@ -136,7 +136,7 @@ function KanbanColumnContent({
         />
 
         {contratos.length === 0 ? (
-          <div className="flex items-center justify-center h-16 text-caption text-muted-foreground/45 border border-dashed border-border/30 rounded-xl">
+          <div className="flex items-center justify-center h-16 text-caption text-muted-foreground/65 border border-dashed border-border/50 rounded-xl">
             Nenhum contrato
           </div>
         ) : (

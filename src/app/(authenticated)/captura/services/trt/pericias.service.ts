@@ -535,6 +535,7 @@ export async function periciasCapture(
         inseridos: persistencia.inseridos,
         atualizados: persistencia.atualizados,
         naoAtualizados: persistencia.naoAtualizados,
+        conflitos: persistencia.conflitos,
         erros: persistencia.erros,
       });
     } catch (error) {

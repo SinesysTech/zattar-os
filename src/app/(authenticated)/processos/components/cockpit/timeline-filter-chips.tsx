@@ -55,7 +55,7 @@ export function TimelineFilterChips({
             <FileText className="size-3" />
             {counts.docs} {counts.docs === 1 ? 'doc' : 'docs'}
           </span>
-          <Text variant="caption" as="span" className="text-muted-foreground/30">·</Text>
+          <Text variant="caption" as="span" className="text-muted-foreground/55">·</Text>
           <span>{counts.movs} {counts.movs === 1 ? 'mov' : 'movs'}</span>
         </div>
         <kbd className={cn(/* design-system-escape: gap-0.5 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex items-center gap-0.5 rounded border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground")}>
@@ -77,7 +77,7 @@ export function TimelineFilterChips({
                 /* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-medium whitespace-nowrap transition-all duration-200 cursor-pointer',
                 isActive
                   ? 'bg-primary/12 text-primary shadow-sm'
-                  : 'text-muted-foreground/50 hover:text-muted-foreground/70 hover:bg-foreground/4'
+                  : 'text-muted-foreground/70 hover:text-muted-foreground/70 hover:bg-foreground/4'
               )}
             >
               <Icon className="size-3" />
@@ -101,7 +101,7 @@ export function TimelineFilterChips({
                   /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'px-2 py-0.5 rounded text-[9px] font-medium transition-all cursor-pointer',
                   isActive
                     ? 'bg-primary/10 text-primary'
-                    : 'text-muted-foreground/40 hover:text-muted-foreground/60'
+                    : 'text-muted-foreground/65 hover:text-muted-foreground/75'
                 )}
               >
                 {GRAU_LABELS[grau] || grau}

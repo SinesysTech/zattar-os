@@ -183,7 +183,7 @@ export function ProcessosClient({
       <div className="flex items-end justify-between">
         <div>
           <Heading level="page">Processos</Heading>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 mt-0.5")}>{subtitle}</p>
+          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/70 mt-0.5")}>{subtitle}</p>
         </div>
       </div>
 
@@ -246,8 +246,8 @@ export function ProcessosClient({
 
         {processos.length === 0 && !isPending && (
           <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 text-center")}>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/50")}>Nenhum processo encontrado</p>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/40 mt-1")}>Tente ajustar os filtros ou a busca</p>
+            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/70")}>Nenhum processo encontrado</p>
+            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/65 mt-1")}>Tente ajustar os filtros ou a busca</p>
           </div>
         )}
       </div>

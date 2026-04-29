@@ -55,7 +55,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
                 </span>
               )}
               {doc.origem === "formulario" && (
-                <span className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "text-[8px] flex items-center gap-0.5 text-info/40")}>
+                <span className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "text-[8px] flex items-center gap-0.5 text-info/65")}>
                   <FileText className="size-2.5" /> Formulário
                 </span>
               )}
@@ -204,10 +204,10 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
           <ExternalLink className="size-3" />
           Ver documento
         </button>
-        <button className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center justify-center px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/50 hover:bg-foreground/6 transition-colors cursor-pointer")}>
+        <button className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center justify-center px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/70 hover:bg-foreground/6 transition-colors cursor-pointer")}>
           <Download className="size-3" />
         </button>
-        <button className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center justify-center px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/50 hover:bg-foreground/6 transition-colors cursor-pointer")}>
+        <button className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center justify-center px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/70 hover:bg-foreground/6 transition-colors cursor-pointer")}>
           <Copy className="size-3" />
         </button>
       </div>

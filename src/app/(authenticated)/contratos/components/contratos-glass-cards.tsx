@@ -323,10 +323,10 @@ function GlassCard({
 
           {parteContrariaNome && (
             <Text variant="caption" className="truncate mt-0.5 block">
-              <span className="text-muted-foreground/50">vs. </span>
+              <span className="text-muted-foreground/70">vs. </span>
               {parteContrariaNome}
               {partesContrarias.length > 1 && (
-                <span className="text-muted-foreground/50">
+                <span className="text-muted-foreground/70">
                   {' '}e outros ({partesContrarias.length})
                 </span>
               )}
@@ -367,7 +367,7 @@ function GlassCard({
         {segmentoNome && (
           <Text
             variant="micro-badge"
-            className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center font-medium text-muted-foreground/70 bg-muted/50 border border-border/30 rounded px-1.5 py-0.5")}
+            className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center font-medium text-muted-foreground/70 bg-muted/50 border border-border/50 rounded px-1.5 py-0.5")}
           >
             {segmentoNome}
           </Text>
@@ -377,7 +377,7 @@ function GlassCard({
       {/* Processos vinculados */}
       <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "relative mt-3 pt-3 border-t border-border/20")}>
         <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mb-1.5")}>
-          <Scale className="size-3 text-muted-foreground/50" />
+          <Scale className="size-3 text-muted-foreground/70" />
           <Text variant="micro-caption" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground/70")}>
             {processos.length === 0
               ? 'Sem processos vinculados'
@@ -470,11 +470,11 @@ function CardSkeleton() {
 function EmptyState() {
   return (
     <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "col-span-full flex flex-col items-center justify-center py-16 opacity-60")}>
-      <FileText className="w-10 h-10 text-muted-foreground/30 mb-4" />
+      <FileText className="w-10 h-10 text-muted-foreground/55 mb-4" />
       <Text variant="label" className="text-muted-foreground/60">
         Nenhum contrato encontrado
       </Text>
-      <Text variant="caption" className="text-muted-foreground/40 mt-1">
+      <Text variant="caption" className="text-muted-foreground/65 mt-1">
         Tente ajustar os filtros ou cadastre um novo contrato
       </Text>
     </div>

@@ -123,7 +123,7 @@ export function ContratoTimeline({ historico }: ContratoTimelineProps) {
               <div key={monthLabel}>
                 <Text
                   variant="meta-label"
-                  className={cn(/* design-system-escape: pt-1.5 padding direcional sem Inset equiv.; pb-3 padding direcional sem Inset equiv.; pl-10 padding direcional sem Inset equiv. */ "block pt-1.5 pb-3 pl-10 text-muted-foreground/50")}
+                  className={cn(/* design-system-escape: pt-1.5 padding direcional sem Inset equiv.; pb-3 padding direcional sem Inset equiv.; pl-10 padding direcional sem Inset equiv. */ "block pt-1.5 pb-3 pl-10 text-muted-foreground/70")}
                 >
                   {monthLabel}
                 </Text>
@@ -152,7 +152,7 @@ export function ContratoTimeline({ historico }: ContratoTimelineProps) {
 
                       <div
                         className={cn(
-                          'inline-flex items-center justify-center size-6 rounded-lg shrink-0 relative z-10 border border-border/30',
+                          'inline-flex items-center justify-center size-6 rounded-lg shrink-0 relative z-10 border border-border/50',
                           tone,
                         )}
                       >

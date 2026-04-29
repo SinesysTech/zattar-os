@@ -72,7 +72,7 @@ function FilterDropdownTrigger({
         /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 font-medium transition-colors cursor-pointer',
         active
           ? 'border-primary/20 bg-primary/5 text-primary'
-          : 'border-border/15 text-muted-foreground/60 hover:bg-muted/30',
+          : 'border-border/40 text-muted-foreground/75 hover:bg-muted/30',
         open && 'ring-1 ring-ring'
       )}
     >
@@ -262,7 +262,7 @@ function ResponsavelFilter({
           </div>
           <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-44 px-1.5 pb-1.5")}>
             <CommandEmpty>
-              <Text variant="caption" as="span" className="text-muted-foreground/40">Não encontrado</Text>
+              <Text variant="caption" as="span" className="text-muted-foreground/65">Não encontrado</Text>
             </CommandEmpty>
             <CommandGroup>
               {usuarios.map((usuario) => (
@@ -345,7 +345,7 @@ function TRTFilter({
           </div>
           <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-52 px-1.5 pb-1.5")}>
             <CommandEmpty>
-              <Text variant="caption" as="span" className="text-muted-foreground/40">Não encontrado</Text>
+              <Text variant="caption" as="span" className="text-muted-foreground/65">Não encontrado</Text>
             </CommandEmpty>
             <CommandGroup>
               {TRIBUNAIS.map((trt) => (
@@ -359,7 +359,7 @@ function TRTFilter({
                     'size-3.5 rounded border flex items-center justify-center',
                     selected.includes(trt)
                       ? 'bg-primary border-primary'
-                      : 'border-border/30'
+                      : 'border-border/50'
                   )}>
                     {selected.includes(trt) && <Check className="size-2.5 text-primary-foreground" />}
                   </div>
@@ -496,7 +496,7 @@ function GrauFilter({
                 'size-3.5 rounded border flex items-center justify-center',
                 selected.includes(opt.value)
                   ? 'bg-primary border-primary'
-                  : 'border-border/30'
+                  : 'border-border/50'
               )}>
                 {selected.includes(opt.value) && <Check className="size-2.5 text-primary-foreground" />}
               </div>
@@ -554,7 +554,7 @@ function TipoAudienciaFilter({
           </div>
           <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-52 px-1.5 pb-1.5")}>
             <CommandEmpty>
-              <Text variant="caption" as="span" className="text-muted-foreground/40">Não encontrado</Text>
+              <Text variant="caption" as="span" className="text-muted-foreground/65">Não encontrado</Text>
             </CommandEmpty>
             <CommandGroup>
               {tiposAudiencia.map((tipo) => (
@@ -568,7 +568,7 @@ function TipoAudienciaFilter({
                     'size-3.5 rounded border flex items-center justify-center',
                     selected.includes(tipo.id)
                       ? 'bg-primary border-primary'
-                      : 'border-border/30'
+                      : 'border-border/50'
                   )}>
                     {selected.includes(tipo.id) && <Check className="size-2.5 text-primary-foreground" />}
                   </div>

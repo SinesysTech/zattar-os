@@ -69,24 +69,40 @@ function parseDate(dateString: string | null | undefined): string | null {
 }
 
 /**
- * Busca um processo pendente existente com todos os campos
+ * Busca um expediente existente pela chave composta completa.
+ * Chave: (id_pje, id_documento, trt, grau, data_criacao_expediente)
  */
 async function buscarPendenteExistente(
   idPje: number,
   trt: CodigoTRT,
   grau: GrauTRT,
-  numeroProcesso: string
+  idDocumento: number | null,
+  dataCriacaoExpediente: string | null
 ): Promise<Record<string, unknown> | null> {
   const supabase = createServiceClient();
 
-  const { data, error } = await supabase
+  let query = supabase
     .from("expedientes")
     .select("*")
     .eq("id_pje", idPje)
     .eq("trt", trt)
-    .eq("grau", grau)
-    .eq("numero_processo", numeroProcesso.trim())
-    .single();
+    .eq("grau", grau);
+
+  // Filtra por id_documento (pode ser null para expedientes sem documento)
+  if (idDocumento !== null && idDocumento !== undefined) {
+    query = query.eq("id_documento", idDocumento) as typeof query;
+  } else {
+    query = query.is("id_documento", null) as typeof query;
+  }
+
+  // Filtra por data_criacao_expediente (diferencia reuso de IDs pelo PJE)
+  if (dataCriacaoExpediente !== null && dataCriacaoExpediente !== undefined) {
+    query = query.eq("data_criacao_expediente", dataCriacaoExpediente) as typeof query;
+  } else {
+    query = query.is("data_criacao_expediente", null) as typeof query;
+  }
+
+  const { data, error } = await query.single();
 
   if (error) {
     if (error.code === "PGRST116") {
@@ -145,7 +161,9 @@ export async function salvarPendentes(
       );
     } else if (existentes) {
       for (const reg of existentes) {
-        const key = `${reg.id_pje}:${(reg.numero_processo as string).trim()}`;
+        // Chave composta: id_pje + id_documento + data_criacao_expediente
+        // Permite múltiplos expedientes por processo e trata reutilização de IDs pelo PJE
+        const key = `${reg.id_pje}:${reg.id_documento ?? '∅'}:${reg.data_criacao_expediente ?? '∅'}`;
         existentesMap.set(key, reg as Record<string, unknown>);
       }
     }
@@ -191,11 +209,18 @@ export async function salvarPendentes(
       };
 
       // Lookup no cache batch (ou fallback para query individual se cache vazio)
-      const cacheKey = `${processo.id}:${numeroProcesso}`;
+      // Chave: id_pje + id_documento + data_criacao_expediente
+      const cacheKey = `${processo.id}:${dadosNovos.id_documento ?? '∅'}:${dadosNovos.data_criacao_expediente ?? '∅'}`;
       const registroExistente = existentesMap.has(cacheKey)
         ? existentesMap.get(cacheKey)!
         : existentesMap.size === 0
-          ? await buscarPendenteExistente(processo.id, trt, grau, numeroProcesso)
+          ? await buscarPendenteExistente(
+              processo.id,
+              trt,
+              grau,
+              dadosNovos.id_documento as number | null,
+              dadosNovos.data_criacao_expediente as string | null
+            )
           : null;
 
       if (!registroExistente) {
@@ -227,13 +252,26 @@ export async function salvarPendentes(
           // Dados PJE não mudaram, mas ainda estampamos ultima_captura_id para
           // indicar que esse expediente foi visto nesta captura.
           if (capturaLogId) {
-            await supabase
+            let updateQuery = supabase
               .from("expedientes")
               .update({ ultima_captura_id: capturaLogId })
               .eq("id_pje", processo.id)
               .eq("trt", trt)
-              .eq("grau", grau)
-              .eq("numero_processo", numeroProcesso);
+              .eq("grau", grau);
+
+            if (dadosNovos.id_documento !== null && dadosNovos.id_documento !== undefined) {
+              updateQuery = updateQuery.eq("id_documento", dadosNovos.id_documento) as typeof updateQuery;
+            } else {
+              updateQuery = updateQuery.is("id_documento", null) as typeof updateQuery;
+            }
+
+            if (dadosNovos.data_criacao_expediente !== null && dadosNovos.data_criacao_expediente !== undefined) {
+              updateQuery = updateQuery.eq("data_criacao_expediente", dadosNovos.data_criacao_expediente) as typeof updateQuery;
+            } else {
+              updateQuery = updateQuery.is("data_criacao_expediente", null) as typeof updateQuery;
+            }
+
+            await updateQuery;
           }
           naoAtualizados++;
           captureLogService.logNaoAtualizado(
@@ -253,7 +291,7 @@ export async function salvarPendentes(
           // casará, data virá vazio e tratamos como conflito (sem persistir).
           const updatedAtEsperado = registroExistente.updated_at as string | null;
 
-          const { data: linhasAtualizadas, error } = await supabase
+          let updateOCCQuery = supabase
             .from("expedientes")
             .update({
               ...dadosNovos,
@@ -263,9 +301,21 @@ export async function salvarPendentes(
             .eq("id_pje", processo.id)
             .eq("trt", trt)
             .eq("grau", grau)
-            .eq("numero_processo", numeroProcesso)
-            .eq("updated_at", updatedAtEsperado)
-            .select("id");
+            .eq("updated_at", updatedAtEsperado);
+
+          if (dadosNovos.id_documento !== null && dadosNovos.id_documento !== undefined) {
+            updateOCCQuery = updateOCCQuery.eq("id_documento", dadosNovos.id_documento) as typeof updateOCCQuery;
+          } else {
+            updateOCCQuery = updateOCCQuery.is("id_documento", null) as typeof updateOCCQuery;
+          }
+
+          if (dadosNovos.data_criacao_expediente !== null && dadosNovos.data_criacao_expediente !== undefined) {
+            updateOCCQuery = updateOCCQuery.eq("data_criacao_expediente", dadosNovos.data_criacao_expediente) as typeof updateOCCQuery;
+          } else {
+            updateOCCQuery = updateOCCQuery.is("data_criacao_expediente", null) as typeof updateOCCQuery;
+          }
+
+          const { data: linhasAtualizadas, error } = await updateOCCQuery.select("id");
 
           if (error) {
             throw error;

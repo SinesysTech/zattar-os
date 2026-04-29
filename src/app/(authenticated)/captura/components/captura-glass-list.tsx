@@ -212,14 +212,14 @@ function GlassRow({
           ? 'border-destructive/20 hover:border-destructive/35'
           : captura.status === 'in_progress'
             ? 'border-info/20 hover:border-info/35'
-            : 'border-border/20 hover:border-border/40',
+            : 'border-border/40 hover:border-border/40',
       )}
     >
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-[90px_1fr_200px_120px_80px_56px] gap-3 items-center")}>
         {/* Data + hora (ancoragem temporal) */}
         <div className={cn(/* design-system-escape: leading-tight sem token DS */ "flex flex-col leading-tight")}>
           <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-foreground/80 tabular-nums")}>{data}</span>
-          <span className="text-[11px] text-muted-foreground/60 tabular-nums">{hora}</span>
+          <span className="text-[11px] text-muted-foreground/75 tabular-nums">{hora}</span>
         </div>
 
         {/* Ícone + tipo */}
@@ -249,7 +249,7 @@ function GlassRow({
 
         {/* Duração */}
         <div className="text-right">
-          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60 tabular-nums")}>
+          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/75 tabular-nums")}>
             {calcularDuracao(captura)}
           </span>
         </div>
@@ -259,7 +259,7 @@ function GlassRow({
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); onView(); }}
-            className="size-7 rounded-md flex items-center justify-center text-muted-foreground/45 hover:bg-muted/30 hover:text-foreground transition-colors"
+            className="size-7 rounded-md flex items-center justify-center text-muted-foreground/65 hover:bg-muted/30 hover:text-foreground transition-colors"
             aria-label="Ver detalhes"
           >
             <Eye className="size-3.5" />
@@ -267,7 +267,7 @@ function GlassRow({
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); onDeleteRequest(captura); }}
-            className="size-7 rounded-md flex items-center justify-center text-muted-foreground/45 hover:bg-destructive/10 hover:text-destructive transition-colors"
+            className="size-7 rounded-md flex items-center justify-center text-muted-foreground/65 hover:bg-destructive/10 hover:text-destructive transition-colors"
             aria-label="Excluir"
           >
             <Trash2 className="size-3.5" />
@@ -331,7 +331,7 @@ function PaginationBar({
 
   return (
     <div className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv. */ "flex items-center justify-between mt-4 px-1")}>
-      <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60")}>
+      <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/75")}>
         {paginacao.total > 0 ? `${inicio}–${fim} de ${paginacao.total}` : '0 resultados'}
       </span>
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>

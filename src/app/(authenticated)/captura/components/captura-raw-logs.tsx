@@ -74,16 +74,16 @@ function ValoresDiff({ valores }: { valores: ValorAlteradoLog[] }) {
       {valores.map((v, i) => (
         <div
           key={i}
-          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex flex-wrap items-start gap-x-2 gap-y-0.5 rounded-md bg-info/[0.04] border border-info/10 px-3 py-2")}
+          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex flex-wrap items-start gap-x-2 gap-y-0.5 rounded-md bg-info/4 border border-info/10 px-3 py-2")}
         >
-          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; min-w arbitrária para alinhar diff lado a lado */ "text-[11px] font-medium text-foreground/70 shrink-0 min-w-[120px]")}>
+          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; min-w arbitrária para alinhar diff lado a lado */ "text-[11px] font-medium text-foreground/70 shrink-0 min-w-30")}>
             {formatarCampoAlterado(v.campo)}
           </span>
           <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 flex-wrap")}>
             <span className="text-[11px] text-muted-foreground line-through decoration-muted-foreground/40">
               {formatarValor(v.antes)}
             </span>
-            <ArrowRight className="size-3 text-muted-foreground/50 shrink-0" />
+            <ArrowRight className="size-3 text-muted-foreground/70 shrink-0" />
             <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-foreground/80")}>
               {formatarValor(v.depois)}
             </span>
@@ -158,7 +158,7 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
             {erros.map((log, i) => (
               <div
                 key={i}
-                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2.5 → usar <Inset> */ "flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/[0.06] p-2.5")}
+                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2.5 → usar <Inset> */ "flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/6 p-2.5")}
               >
                 <XCircle className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />
                 <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "min-w-0 text-xs")}>
@@ -180,7 +180,7 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
             {inseridos.slice(0, 30).map((log, i) => (
               <div
                 key={i}
-                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 rounded-md bg-success/[0.04] border border-success/15 px-2.5 py-1.5")}
+                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 rounded-md bg-success/4 border border-success/15 px-2.5 py-1.5")}
               >
                 <CheckCircle2 className="h-3 w-3 text-success shrink-0" />
                 <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/80")}>
@@ -241,7 +241,7 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
   if (rawLogs.length === 0) {
     return (
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-8 → usar <Inset> */ "flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-8 text-center")}>
-        <ScrollText className="h-8 w-8 text-muted-foreground/40" />
+        <ScrollText className="h-8 w-8 text-muted-foreground/65" />
         <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Nenhum log detalhado disponível para esta captura.</p>
       </div>
     );
@@ -319,7 +319,7 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
                     </span>
                   )}
                   {isError && rawLog.erro && (
-                    <span className={cn(/* design-system-escape: pl-2 padding direcional sem Inset equiv. */ "ml-auto text-[11px] text-destructive hidden sm:inline truncate max-w-[200px] pl-2")}>
+                    <span className={cn(/* design-system-escape: pl-2 padding direcional sem Inset equiv. */ "ml-auto text-[11px] text-destructive hidden sm:inline truncate max-w-50 pl-2")}>
                       {rawLog.erro.length > 60 ? `${rawLog.erro.slice(0, 60)}…` : rawLog.erro}
                     </span>
                   )}
@@ -329,7 +329,7 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
                 <div className={cn(/* design-system-escape: space-y-3 sem token DS; pb-3 padding direcional sem Inset equiv. */ "space-y-3 pb-3")}>
                   {/* Erro principal do raw log */}
                   {rawLog.erro && (
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset> */ "flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/[0.06] p-3")}>
+                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset> */ "flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/6 p-3")}>
                       <XCircle className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />
                       <p className={cn(/* design-system-escape: leading-relaxed sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-foreground leading-relaxed")}>{rawLog.erro}</p>
                     </div>

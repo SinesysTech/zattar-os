@@ -1,0 +1,67 @@
+[2026-04-28T21:34:53.137Z] ═══════════════════════════════════════════════════════════
+[2026-04-28T21:34:53.137Z]   DEBUG: Captura direta de audiências TRT3 (1º grau)
+[2026-04-28T21:34:53.138Z]   Iniciado: 2026-04-28T21:34:53.137Z
+[2026-04-28T21:34:53.138Z]   Período: 2026-04-28 a 2027-04-28 | Situação: M (designadas)
+[2026-04-28T21:34:53.138Z]   Sem persistência | Somente leitura
+[2026-04-28T21:34:53.138Z] ═══════════════════════════════════════════════════════════
+[2026-04-28T21:34:53.138Z] 📋 Buscando config TRT3 (primeiro_grau) no banco...
+[2026-04-28T21:34:53.749Z] ✅ Config TRT3 encontrada (estratégia JOIN)
+[2026-04-28T21:34:53.897Z] 💾 Salvo: /Users/jordanmedeiros/Projetos/zattar-os/test-audiencias/2026-04-28T21-34-53-129Z_01_config_trt3.json
+[2026-04-28T21:34:53.897Z] ✅ Config | loginUrl=https://pje.trt3.jus.br/primeirograu/login.seam | apiUrl=https://pje.trt3.jus.br/pje-comum-api/api
+[2026-04-28T21:34:53.897Z] 🔑 Buscando credencial TRT3 ativa no banco...
+[2026-04-28T21:34:54.017Z] ✅ Credencial carregada | CPF: ***4610
+[2026-04-28T21:34:54.017Z] 
+🌐 Lançando Chromium local (headless)...
+[2026-04-28T21:34:56.355Z] 
+🔐 Fase 1: Autenticando no PJE TRT3...
+[2026-04-28T21:34:56.359Z] 🌐 Navegando para https://pje.trt3.jus.br/primeirograu/login.seam
+[2026-04-28T21:34:59.517Z] 🔑 Clicando em SSO PDPJ...
+[2026-04-28T21:35:00.696Z] 📝 Preenchendo CPF e senha...
+[2026-04-28T21:35:05.668Z] 🚀 Submetendo login...
+[2026-04-28T21:35:09.205Z] ⏳ Aguardando campo OTP...
+[2026-04-28T21:35:09.243Z] ✅ Campo OTP encontrado: #otp
+[2026-04-28T21:35:09.243Z] 📱 Buscando OTP do 2FAuth...
+[2026-04-28T21:35:09.752Z] ✅ OTP obtido com sucesso
+[2026-04-28T21:35:15.770Z] ✅ Saiu do SSO: pje.trt3.jus.br
+[2026-04-28T21:35:18.782Z] ✅ Autenticado | idAdvogado=29203 | nome=N/A
+[2026-04-28T21:35:18.782Z] 
+📡 Fase 2: Buscando audiências designadas (M)...
+[2026-04-28T21:35:18.783Z] 
+📡 Buscando audiências [designadas] (situacao=M)...
+[2026-04-28T21:35:20.019Z]    Página 1: 31 registros | qtdPaginas=0 | totalRegistros=31
+[2026-04-28T21:35:20.019Z] ✅ Total [designadas]: 31 audiências
+[2026-04-28T21:35:20.020Z] 💾 Salvo: /Users/jordanmedeiros/Projetos/zattar-os/test-audiencias/2026-04-28T21-34-53-129Z_02_designadas_audiencias.json
+[2026-04-28T21:35:20.020Z] 💾 Salvo: /Users/jordanmedeiros/Projetos/zattar-os/test-audiencias/2026-04-28T21-34-53-129Z_02_designadas_paginas_raw.json
+[2026-04-28T21:35:20.020Z] 
+🔎 Fase 3: Analisando audiências capturadas...
+[2026-04-28T21:35:20.020Z] 💾 Salvo: /Users/jordanmedeiros/Projetos/zattar-os/test-audiencias/2026-04-28T21-34-53-129Z_03_analise_audiencias.json
+[2026-04-28T21:35:20.020Z]    Total: 31 audiências
+[2026-04-28T21:35:20.020Z]    IDs únicos: 31
+[2026-04-28T21:35:20.021Z]    IDs duplicados: 0
+[2026-04-28T21:35:20.021Z]    Audiências com ID repetido: 0
+[2026-04-28T21:35:20.021Z]    IDs duplicados com processos DIFERENTES: 0
+[2026-04-28T21:35:20.021Z]    Processos com múltiplas audiências: 0
+[2026-04-28T21:35:20.021Z]    Audiências com nrProcesso vazio: 0
+[2026-04-28T21:35:20.021Z] 
+🔐 Fase 4: Verificando violações potenciais da constraint UNIQUE...
+[2026-04-28T21:35:20.021Z] 💾 Salvo: /Users/jordanmedeiros/Projetos/zattar-os/test-audiencias/2026-04-28T21-34-53-129Z_04_constraint_check.json
+[2026-04-28T21:35:20.021Z]    ✅ Nenhum conflito de constraint encontrado na resposta da API
+[2026-04-28T21:35:20.021Z] 
+🗄️  Fase 5: Comparando com banco de dados...
+[2026-04-28T21:35:20.021Z] 
+🔍 Comparando com banco de dados...
+[2026-04-28T21:35:20.239Z]    Capturadas agora: 31 IDs únicos | No banco: 28 | Apenas no capturado (novas): 3 | Apenas no banco (sumidas): 0
+[2026-04-28T21:35:20.239Z] 💾 Salvo: /Users/jordanmedeiros/Projetos/zattar-os/test-audiencias/2026-04-28T21-34-53-129Z_05_comparacao_banco.json
+[2026-04-28T21:35:20.240Z] 💾 Salvo: /Users/jordanmedeiros/Projetos/zattar-os/test-audiencias/2026-04-28T21-34-53-129Z_06_relatorio_final.json
+[2026-04-28T21:35:20.240Z] 
+═══════════════════════════════════════════════════════════
+[2026-04-28T21:35:20.241Z] ✅ Diagnóstico concluído!
+[2026-04-28T21:35:20.241Z]    Designadas:              31 audiências
+[2026-04-28T21:35:20.241Z]    IDs duplicados:          0
+[2026-04-28T21:35:20.241Z]    Reuso de IDs (ID≠proc):  0
+[2026-04-28T21:35:20.241Z]    Conflitos constraint:    0
+[2026-04-28T21:35:20.241Z]    Novas (não no BD):       3
+[2026-04-28T21:35:20.241Z]    Pasta de saída:          /Users/jordanmedeiros/Projetos/zattar-os/test-audiencias
+[2026-04-28T21:35:20.241Z] ═══════════════════════════════════════════════════════════
+
+[2026-04-28T21:35:20.274Z] 🔒 Browser fechado

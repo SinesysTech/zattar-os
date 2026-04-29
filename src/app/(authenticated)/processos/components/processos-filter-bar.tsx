@@ -300,7 +300,7 @@ function ResponsavelFilter({
           </div>
           <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-44 px-1.5 pb-1.5")}>
             <CommandEmpty>
-              <Text variant="caption" as="span" className="text-muted-foreground/40">Não encontrado</Text>
+              <Text variant="caption" as="span" className="text-muted-foreground/65">Não encontrado</Text>
             </CommandEmpty>
             <CommandGroup>
               {usuarios.map((usuario) => (
@@ -376,7 +376,7 @@ function TRTFilter({
           </div>
           <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-52 px-1.5 pb-1.5")}>
             <CommandEmpty>
-              <Text variant="caption" as="span" className="text-muted-foreground/40">Não encontrado</Text>
+              <Text variant="caption" as="span" className="text-muted-foreground/65">Não encontrado</Text>
             </CommandEmpty>
             <CommandGroup>
               {TRIBUNAIS.map((trt) => (
@@ -390,7 +390,7 @@ function TRTFilter({
                     'size-3.5 rounded border flex items-center justify-center',
                     selected.includes(trt)
                       ? 'bg-primary border-primary'
-                      : 'border-border/30'
+                      : 'border-border/50'
                   )}>
                     {selected.includes(trt) && <Check className="size-2.5 text-primary-foreground" />}
                   </div>

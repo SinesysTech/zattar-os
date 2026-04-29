@@ -115,7 +115,7 @@ export function TransitoriasListClient() {
               <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-10 text-center")}>
                 <AlertTriangle
                   aria-hidden="true"
-                  className="size-10 text-muted-foreground/40 mb-3"
+                  className="size-10 text-muted-foreground/65 mb-3"
                 />
                 <Text variant="caption" className="text-muted-foreground">
                   {search

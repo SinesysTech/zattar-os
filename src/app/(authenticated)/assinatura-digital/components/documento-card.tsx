@@ -31,7 +31,7 @@ export const STATUS_CONFIG: Record<
 > = {
   rascunho: {
     label: "Rascunho",
-    color: "text-muted-foreground/50",
+    color: "text-muted-foreground/70",
     cssColor: "var(--muted-foreground)",
     icon: FileText,
     bg: "bg-muted-foreground/8",
@@ -113,10 +113,10 @@ export function DocumentCard({ doc, onSelect }: DocumentCardProps) {
                 {cfg.label}
               </span>
               {doc.selfieHabilitada && (
-                <Camera className="size-3 text-muted-foreground/50" />
+                <Camera className="size-3 text-muted-foreground/70" />
               )}
               {doc.origem === "formulario" && (
-                <span className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[8px] px-1 py-0.5 rounded bg-info/6 text-info/40")}>
+                <span className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[8px] px-1 py-0.5 rounded bg-info/6 text-info/65")}>
                   formulário
                 </span>
               )}
@@ -156,7 +156,7 @@ export function DocumentCard({ doc, onSelect }: DocumentCardProps) {
           <span className="text-[9px] text-muted-foreground/55">
             {doc.criadoPor}
           </span>
-          <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-[9px] text-muted-foreground/50 flex items-center gap-1")}>
+          <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-[9px] text-muted-foreground/70 flex items-center gap-1")}>
             <Clock className="size-2.5" />
             {timeAgo(doc.atualizadoEm)}
           </span>

@@ -95,7 +95,7 @@ export function CaseIdentityBar({
       >
         <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "font-mono text-xs text-muted-foreground")}>{numeroProcesso}</span>
         <span className="w-px h-4 bg-border/10" />
-        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60 truncate")}>{tituloPartes}</span>
+        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/75 truncate")}>{tituloPartes}</span>
       </GlassPanel>
     );
   }

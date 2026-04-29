@@ -10,6 +10,7 @@
 - [semantic-badge.tsx](file://src/components/ui/semantic-badge.tsx)
 - [badge.tsx](file://src/components/ui/badge.tsx)
 - [tabs.tsx](file://src/components/ui/tabs.tsx)
+- [popover.tsx](file://src/components/ui/popover.tsx)
 - [globals.css](file://src/app/globals.css)
 - [variants.ts](file://src/lib/design-system/variants.ts)
 - [colors-section.tsx](file://src/app/(authenticated)/design-system/_components/colors-section.tsx)
@@ -34,19 +35,42 @@
 - [heading-node-static.tsx](file://src/components/editor/plate-ui/heading-node-static.tsx)
 - [typography/page.tsx](file://src/app/(ajuda)/ajuda/design-system/typography/page.tsx)
 - [badge.test.tsx](file://src/components/ui/__tests__/badge.test.tsx)
+- [avatar.tsx](file://src/components/ui/avatar.tsx)
+- [current-user-avatar.tsx](file://src/components/ui/current-user-avatar.tsx)
+- [avatar-stack.tsx](file://src/components/ui/avatar-stack.tsx)
+- [avatar-group.tsx](file://src/components/ui/avatar-group.tsx)
+- [avatar.test.tsx](file://src/components/ui/__tests__/avatar.test.tsx)
+- [user-status-dot.tsx](file://src/app/(authenticated)/usuarios/components/shared/user-status-dot.tsx)
+- [chat-header.tsx](file://src/app/(authenticated)/chat/components/chat-header.tsx)
+- [usuario-card.tsx](file://src/app/(authenticated)/usuarios/components/shared/usuario-card.tsx)
+- [combobox.tsx](file://src/components/ui/combobox.tsx)
+- [inline-combobox.tsx](file://src/components/editor/plate-ui/inline-combobox.tsx)
+- [server-combobox.tsx](file://src/components/ui/server-combobox.tsx)
+- [progress.tsx](file://src/components/ui/progress.tsx)
+- [progress-indicator.tsx](file://src/app/(authenticated)/project-management/components/shared/progress-indicator.tsx)
+- [progress-item.tsx](file://src/components/calendar/progress-item.tsx)
+- [input-styles.ts](file://src/components/ui/input-styles.ts)
+- [styles.ts](file://src/components/auth/styles.ts)
+- [urgency-helpers.ts](file://src/app/(authenticated)/expedientes/components/urgency-helpers.ts)
+- [constants.ts](file://src/app/(authenticated)/processos/components/timeline/constants.ts)
+- [view-toggle.tsx](file://src/components/dashboard/view-toggle.tsx)
+- [captura-raw-logs.tsx](file://src/app/(authenticated)/captura/components/captura-raw-logs.tsx)
+- [page.tsx](file://src/app/(authenticated)/captura/historico/[id]/page.tsx)
+- [glass-panel.tsx](file://src/components/shared/glass-panel.tsx)
+- [ambient-backdrop.tsx](file://src/components/shared/ambient-backdrop.tsx)
+- [captura-form-base.tsx](file://src/app/(authenticated)/captura/components/captura-form-base.tsx)
+- [audiencia-responsavel-popover.tsx](file://src/app/(authenticated)/audiencias/components/audiencia-responsavel-popover.tsx)
+- [authenticator-popover.tsx](file://src/components/layout/header/authenticator-popover.tsx)
 </cite>
 
 ## Update Summary
 **Changes Made**
-- Enhanced comprehensive theming improvements with unified font families and systematic CSS custom property updates
-- Updated color token registry with refined color tokens and new highlight foreground variable
-- Documented major design system modernization with OKLCH color system implementation
-- Added detailed coverage of theme presets, radius variations, and scale adjustments
-- Updated design system governance with enhanced color consistency standards and typography improvements
-- **Updated** Unified font families with 'font-inter' system across typography architecture
-- **Updated** Comprehensive typography improvements with typed Typography components replacing deprecated custom components
-- **Updated** Removal of glass dialog overlay variants from token system affecting design token governance
-- **Updated** Enhanced CSS variable management with systematic font family property updates
+- Added comprehensive documentation for Popover component usage in credential selection interface
+- Documented PopoverTrigger, PopoverContent, and enhanced Button component integration
+- Updated component library integration section with new Popover component patterns
+- Enhanced responsive utilities documentation with Popover-specific considerations
+- Added new section on Popover component architecture and design patterns
+- Updated page-specific implementation examples with credential selection interface patterns
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -56,23 +80,35 @@
 5. [Enhanced Typography System](#enhanced-typography-system)
 6. [New CountBadge Component](#new-countbadge-component)
 7. [Enhanced Semantic Badge System](#enhanced-semantic-badge-system)
-8. [Accessibility Compliance Improvements](#accessibility-compliance-improvements)
-9. [Component Library Integration](#component-library-integration)
-10. [Responsive Utilities and Breakpoint Management](#responsive-utilities-and-breakpoint-management)
-11. [Radix UI Modernization and Component Refactoring](#radix-ui-modernization-and-component-refactoring)
-12. [Enhanced CSS Variables and Design Tokens](#enhanced-css-variables-and-design-tokens)
-13. [Unified Font Families and Typography System](#unified-font-families-and-typography-system)
-14. [Theme Presets and Customization System](#theme-presets-and-customization-system)
-15. [Design System Playground](#design-system-playground)
-16. [Page-Specific Implementation Examples](#page-specific-implementation-examples)
-17. [Quality Assurance and Migration Tracking](#quality-assurance-and-migration-tracking)
-18. [Integration and Maintenance](#integration-and-maintenance)
-19. [Conclusion](#conclusion)
+8. [New AvatarIndicator Component](#new-avatarindicator-component)
+9. [Enhanced Avatar System](#enhanced-avatar-system)
+10. [Accessibility Compliance Improvements](#accessibility-compliance-improvements)
+11. [Component Library Integration](#component-library-integration)
+12. [Responsive Utilities and Breakpoint Management](#responsive-utilities-and-breakpoint-management)
+13. [Radix UI Modernization and Component Refactoring](#radix-ui-modernization-and-component-refactoring)
+14. [Enhanced CSS Variables and Design Tokens](#enhanced-css-variables-and-design-tokens)
+15. [Unified Font Families and Typography System](#unified-font-families-and-typography-system)
+16. [Theme Presets and Customization System](#theme-presets-and-customization-system)
+17. [Design System Playground](#design-system-playground)
+18. [Page-Specific Implementation Examples](#page-specific-implementation-examples)
+19. [Quality Assurance and Migration Tracking](#quality-assurance-and-migration-tracking)
+20. [Integration and Maintenance](#integration-and-maintenance)
+21. [Conclusion](#conclusion)
 
 ## Introduction
 The ZattarOS Design System represents a comprehensive visual and interaction framework built on shadcn/ui components with semantic badge architecture and advanced theming capabilities. The system has undergone a major modernization effort featuring comprehensive theming improvements with unified font families, refined color tokens, systematic CSS custom property updates, and enhanced design token governance.
 
 **Updated** The system now features comprehensive responsive utility management, modernized component architecture, enhanced design token governance, and a unified theming system with OKLCH color space implementation. The migration to unified radix-ui packages ensures better maintainability and consistency across the component library, while the new responsive utilities provide developers with powerful tools for adaptive UI development.
+
+**Updated** The design system now includes a comprehensive avatar system with the new AvatarIndicator component that provides consistent user status indicators (online, away, offline, success) across chat interfaces and user profiles. This addition enhances the system's ability to communicate user presence and status effectively while maintaining accessibility and design consistency.
+
+**Updated** Recent enhancements include the refactoring of the combobox component from Base UI to a custom native HTML implementation, providing better performance and more predictable behavior. The progress indicator component has been enhanced with new styling props for advanced customization, and the inline combobox integration with @ariakit/react enables rich text editing capabilities with intelligent suggestion functionality.
+
+**Updated** The most significant enhancement is the standardized integration of the text-muted-foreground color palette across the entire design system, ensuring consistent typography hierarchy and improved component styling consistency. This change establishes a unified approach to secondary text styling that enhances readability and maintains accessibility compliance across all components and modules.
+
+**Updated** The Captura module components have received styling refinements with reduced opacity values for atmospheric glow effects, more subtle background colors for completion indicators, and improved mobile responsiveness with adjusted max-height values. These refinements enhance the visual hierarchy and user experience while maintaining design system consistency.
+
+**Updated** The system now includes comprehensive Popover component usage patterns with enhanced Button component integration, providing sophisticated dropdown and selection interfaces for credential management and other interactive elements.
 
 This architecture ensures consistency across the legal management platform while allowing for module-specific adaptations through a well-defined override mechanism and modernized component development practices.
 
@@ -426,6 +462,195 @@ The CountBadge component complements the semantic badge system by providing spec
 - [semantic-badge.tsx:124-189](file://src/components/ui/semantic-badge.tsx#L124-L189)
 - [semantic-badge.tsx:200-219](file://src/components/ui/semantic-badge.tsx#L200-L219)
 
+## New AvatarIndicator Component
+
+The design system introduces a comprehensive AvatarIndicator component as part of the enhanced avatar system, providing consistent user status indicators with Tailwind CSS integration and accessibility features.
+
+### AvatarIndicator Architecture and Design Philosophy
+
+**Component Design**
+The AvatarIndicator component is a specialized indicator designed specifically for displaying user status in avatar contexts. It provides a consistent visual pattern for status communication across chat interfaces and user profiles.
+
+**Design Philosophy**
+- **Status Communication**: Uses semantic color variants (online, away, offline, success)
+- **Positioning System**: Absolute positioning for seamless avatar integration
+- **Size Flexibility**: Supports sm, md, and lg sizes for different avatar contexts
+- **Accessibility Compliance**: Proper ARIA labeling and semantic meaning
+- **Consistent Styling**: Provides uniform appearance across all status indicators
+
+**Component Implementation**
+```typescript
+interface AvatarIndicatorProps extends React.ComponentProps<"span"> {
+  variant?: "online" | "away" | "offline" | "success";
+}
+
+function AvatarIndicator({
+  className,
+  variant = "offline",
+  ...props
+}: AvatarIndicatorProps) {
+  const variantStyles = {
+    online: "bg-green-500 border-green-600",
+    away: "bg-yellow-500 border-yellow-600",
+    offline: "bg-gray-400 border-gray-500",
+    success: "bg-blue-500 border-blue-600",
+  };
+
+  return (
+    <span
+      data-slot="avatar-indicator"
+      data-variant={variant}
+      className={cn(
+        "absolute bottom-0 right-0 z-10 flex items-center justify-center rounded-full border-2 size-3 group-data-[size=lg]/avatar:size-4 group-data-[size=sm]/avatar:size-2",
+        variantStyles[variant],
+        className
+      )}
+      {...props}
+    />
+  );
+}
+```
+
+### AvatarIndicator Usage Patterns
+
+**Chat Interface Integration**
+```typescript
+// Chat header with online status
+<Avatar className="size-8 rounded-full overflow-visible shrink-0">
+  <AvatarImage src={image} alt={name} className="rounded-full" />
+  <AvatarFallback>{generateAvatarFallback(name)}</AvatarFallback>
+  {!isGroup && <AvatarIndicator variant={onlineStatus} />}
+</Avatar>
+```
+
+**User Profile Integration**
+```typescript
+// User card with status indicator
+<div className="relative inline-block" style={{ width: ringSize, height: ringSize }}>
+  <UserCompletenessRing score={score} size={ringSize} strokeWidth={2} />
+  <div className="absolute inset-0 flex items-center justify-center">
+    <Avatar
+      style={{
+        width: avatarSize,
+        height: avatarSize,
+        borderWidth: 3,
+        margin: 4,
+      }}
+      className="border-background shrink-0"
+    >
+      <AvatarImage src={getAvatarUrl(usuario.avatarUrl)} alt={usuario.nomeExibicao} />
+      <AvatarFallback>{getInitials(usuario.nomeExibicao)}</AvatarFallback>
+    </Avatar>
+  </div>
+  <UserStatusDot status={status} size="sm" className="absolute bottom-0.5 right-0.5" />
+</div>
+```
+
+### AvatarIndicator Integration Examples
+
+**Chat Module Integration**
+The AvatarIndicator component is extensively used in the chat module for displaying user online status:
+- Chat header user presence indicators
+- User detail panel status displays
+- Contact list status indicators
+
+**Accessibility Integration**
+The component integrates with accessibility standards:
+- Proper ARIA labeling for screen readers
+- Semantic color usage for status communication
+- Focus management for interactive contexts
+
+**Responsive Integration**
+The component seamlessly integrates with modern responsive utilities, adapting its size and positioning based on avatar size and screen context.
+
+**Section sources**
+- [avatar.tsx:105-133](file://src/components/ui/avatar.tsx#L105-L133)
+- [avatar.test.tsx:93-132](file://src/components/ui/__tests__/avatar.test.tsx#L93-L132)
+- [chat-header.tsx:50-56](file://src/app/(authenticated)/chat/components/chat-header.tsx#L50-L56)
+
+## Enhanced Avatar System
+
+The avatar system has been comprehensively enhanced with the new AvatarIndicator component, providing consistent status communication across chat interfaces and user profiles. The system now includes multiple avatar components with specialized functionality.
+
+### Avatar Component Architecture
+
+**Core Avatar Components**
+The enhanced avatar system provides a comprehensive set of avatar components:
+- **Avatar**: Core avatar container with size variants and ring support
+- **AvatarImage**: Image display with aspect ratio control
+- **AvatarFallback**: Initials fallback with size-aware styling
+- **AvatarBadge**: Notification badges for avatar contexts
+- **AvatarGroup**: Multiple avatar grouping with overlap management
+- **AvatarGroupCount**: Count badges for avatar groups
+- **AvatarIndicator**: Status indicators with semantic variants
+- **CurrentUserAvatar**: User-specific avatar with provider integration
+
+**AvatarIndicator Integration**
+The AvatarIndicator component integrates seamlessly with the core avatar system:
+- **Positioning**: Absolute positioning for seamless avatar overlap
+- **Sizing**: Responsive sizing based on parent avatar size
+- **Styling**: Consistent border and size styling with avatar groups
+- **Accessibility**: Proper ARIA labeling and semantic meaning
+
+**Enhanced Avatar Usage Patterns**
+```typescript
+// Avatar with status indicator
+<Avatar className="size-8 rounded-full overflow-visible shrink-0">
+  <AvatarImage src={image} alt={name} className="rounded-full" />
+  <AvatarFallback>{generateAvatarFallback(name)}</AvatarFallback>
+  {!isGroup && <AvatarIndicator variant={onlineStatus} />}
+</Avatar>
+
+// Avatar group with status indicators
+<AvatarGroup max={3}>
+  {users.map((user) => (
+    <Avatar key={user.id}>
+      <AvatarImage src={user.avatarUrl} alt={user.name} />
+      <AvatarFallback>{user.initials}</AvatarFallback>
+      <AvatarIndicator variant={user.status} />
+    </Avatar>
+  ))}
+</AvatarGroup>
+```
+
+### Avatar System Integration Examples
+
+**Chat Module Integration**
+The avatar system is extensively used in the chat module:
+- Chat header user avatars with online status
+- User detail panels with avatar and status
+- Contact list with avatar groups and individual indicators
+- Collaborator avatars in document sharing contexts
+
+**User Management Integration**
+The avatar system integrates with user management features:
+- User profile cards with completeness rings and status indicators
+- Team member displays with avatar groups and counts
+- Presence indicators in collaborative contexts
+
+**Accessibility Integration**
+The avatar system prioritizes accessibility:
+- Proper ARIA labeling for all interactive avatar elements
+- Focus management for keyboard navigation
+- Screen reader support for avatar content
+- Color contrast compliance for status indicators
+
+**Responsive Integration**
+The avatar system adapts to different screen sizes:
+- Mobile-optimized avatar sizes and spacing
+- Responsive avatar group layouts
+- Adaptive status indicator visibility
+- Touch-friendly avatar interaction areas
+
+**Section sources**
+- [avatar.tsx:1-144](file://src/components/ui/avatar.tsx#L1-144)
+- [current-user-avatar.tsx:1-26](file://src/components/ui/current-user-avatar.tsx#L1-L26)
+- [avatar-stack.tsx:1-85](file://src/components/ui/avatar-stack.tsx#L1-L85)
+- [avatar-group.tsx:1-58](file://src/components/ui/avatar-group.tsx#L1-L58)
+- [avatar.test.tsx:1-207](file://src/components/ui/__tests__/avatar.test.tsx#L1-L207)
+- [chat-header.tsx:50-75](file://src/app/(authenticated)/chat/components/chat-header.tsx#L50-L75)
+- [usuario-card.tsx:117-148](file://src/app/(authenticated)/usuarios/components/shared/usuario-card.tsx#L117-L148)
+
 ## Accessibility Compliance Improvements
 
 The design system now emphasizes comprehensive accessibility compliance with WCAG AAA standards, ensuring inclusive design for all users.
@@ -439,12 +664,6 @@ The system implements strict accessibility standards:
 - **Keyboard Navigation**: Full keyboard accessibility for all interactive elements
 - **Screen Reader Support**: Proper ARIA attributes and semantic HTML
 - **Motion Sensitivity**: Respect for `prefers-reduced-motion` preferences
-
-**Accessibility Governance**
-- **Compliance Standards**: All components meet WCAG AAA requirements
-- **Testing Framework**: Automated accessibility validation
-- **User Experience**: Inclusive design patterns for diverse users
-- **Legal Compliance**: Meeting accessibility requirements for legal services
 
 ### Accessibility Implementation Patterns
 
@@ -531,10 +750,59 @@ The week variant provides specialized styling for day navigation:
 </TabsList>
 ```
 
+### Popover Component Integration
+
+**Updated** The system now includes comprehensive Popover component integration with enhanced Button component usage patterns, providing sophisticated dropdown and selection interfaces.
+
+**Popover Component Architecture**
+The Popover component system provides a complete set of popover-related components:
+- **Popover**: Root component managing popover state and lifecycle
+- **PopoverTrigger**: Trigger element that opens/closes the popover
+- **PopoverContent**: Main content area with positioning and animation
+- **PopoverAnchor**: Anchor element for positioning
+- **PopoverHeader**: Header section with title and description
+- **PopoverTitle**: Title element for popover headers
+- **PopoverDescription**: Description element for popover content
+
+**Enhanced Button Integration**
+The Popover components integrate seamlessly with Button components:
+- **asChild Pattern**: PopoverTrigger uses asChild to wrap Button components
+- **Role Attributes**: Proper ARIA roles and attributes for accessibility
+- **State Management**: Open/close state management with controlled components
+- **Positioning**: Automatic positioning relative to trigger elements
+
+**Popover Usage Patterns**
+```typescript
+// Credential selection with enhanced Button integration
+<Popover>
+  <PopoverTrigger asChild>
+    <Button
+      variant="outline"
+      role="combobox"
+      aria-expanded={open}
+      className="w-full justify-between font-normal"
+    >
+      <span className={cn(selectedCount === 0 && 'text-muted-foreground')}>
+        {triggerLabel}
+      </span>
+      <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+    </Button>
+  </PopoverTrigger>
+  <PopoverContent
+    className="p-0 w-[--radix-popover-trigger-width]"
+    align="start"
+    sideOffset={4}
+  >
+    {/* Selection options */}
+  </PopoverContent>
+</Popover>
+```
+
 **Section sources**
 - [tabs.tsx:27-41](file://src/components/ui/tabs.tsx#L27-L41)
 - [tabs.tsx:18-25](file://src/components/ui/tabs.tsx#L18-L25)
 - [MASTER.md:143-181](file://design-system/zattaros/MASTER.md#L143-L181)
+- [popover.tsx:1-90](file://src/components/ui/popover.tsx#L1-L90)
 
 ### Component Usage Patterns and Migration
 
@@ -543,6 +811,7 @@ The week variant provides specialized styling for day navigation:
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 ```
 
 **Variant System**
@@ -829,33 +1098,59 @@ The design system now implements OKLCH color tokens for superior color managemen
 - **Accessibility Standards**: WCAG AAA compliant color contrasts
 - **Performance Monitoring**: Efficient color token resolution
 
+### Standardized Text-Muted-Foreground Color Palette
+
+**Enhanced Typography Integration**
+**Updated** The design system now features a standardized text-muted-foreground color palette that ensures consistent secondary text styling across all components and modules. This enhancement establishes a unified approach to typography hierarchy and improves component styling consistency.
+
+**Color Palette Implementation**
+The standardized palette provides consistent secondary text colors:
+- **Primary Muted Foreground**: `oklch(0.556 0 0)` for general secondary text
+- **Subtle Muted Foreground**: `oklch(0.708 0 0)` for lighter secondary text
+- **Ghost Muted Foreground**: `oklch(0.985 0 0)` for very light secondary text
+- **Faint Muted Foreground**: `oklch(1 0 0)` for minimal secondary text
+
+**Typography Consistency**
+The standardized palette ensures consistent typography across:
+- **Caption Text**: `.text-caption` uses muted foreground with 70% opacity
+- **Helper Text**: `.text-helper` uses muted foreground with 70% opacity
+- **Widget Subtitles**: `.text-widget-sub` uses muted foreground with 70% opacity
+- **Meta Labels**: `.text-meta-label` uses muted foreground with 70% opacity
+- **Mono Numbers**: `.text-mono-num` uses muted foreground with 55% opacity
+- **Micro Captions**: `.text-micro-caption` uses muted foreground with 50% opacity
+
+**Component Styling Consistency**
+The standardized palette improves component styling consistency through:
+- **Input Placeholder Text**: `placeholder:text-muted-foreground/40` for consistent placeholder styling
+- **Selection Text**: `selection:text-muted-foreground` for consistent selection styling
+- **Toggle States**: `text-muted-foreground/40` for consistent toggle button styling
+- **Hover States**: `hover:text-muted-foreground` for consistent hover styling
+
+**Accessibility Compliance**
+The standardized palette maintains WCAG AAA compliance:
+- **Contrast Ratios**: All muted foreground colors maintain minimum 7:1 contrast ratios
+- **Color Blindness**: Colors optimized for color vision deficiency
+- **High Contrast Mode**: Automatic adaptation to high contrast browser settings
+- **Reduced Motion**: Consistent color transitions for motion-sensitive users
+
 **Section sources**
 - [globals.css:251-553](file://src/app/globals.css#L251-L553)
 - [globals.css:555-753](file://src/app/globals.css#L555-L753)
 - [MASTER.md:37-54](file://design-system/zattaros/MASTER.md#L37-L54)
 - [token-registry.ts:96-105](file://src/lib/design-system/token-registry.ts#L96-L105)
 - [colors-section.tsx:52-64](file://src/app/(authenticated)/design-system/_components/colors-section.tsx#L52-L64)
-
-### Design Token Integration
-
-**Modern Token Usage Patterns**
-Tokens are now integrated throughout the system with modern patterns:
-- **TypeScript Integration**: Strongly typed token access throughout the application
-- **CSS Variable Resolution**: Efficient CSS variable resolution and caching
-- **Theme Switching**: Seamless theme switching with token updates
-- **Runtime Modification**: Dynamic token modification for advanced theming
-
-**Token Performance Optimization**
-- **Efficient Resolution**: Optimized token resolution for better performance
-- **Caching Strategies**: Intelligent caching of token values and computed styles
-- **Memory Management**: Efficient memory usage for large token registries
-- **Bundle Optimization**: Minimal impact on bundle size through token optimization
-
-**Token Governance**
-- **Consistency Enforcement**: Automated enforcement of token usage patterns
-- **Migration Support**: Tools and processes for migrating to new token systems
-- **Performance Monitoring**: Continuous monitoring of token system performance
-- **Future Planning**: Long-term planning for token system evolution
+- [input-styles.ts:24](file://src/components/ui/input-styles.ts#L24)
+- [styles.ts:7](file://src/components/auth/styles.ts#L7)
+- [styles.ts:12](file://src/components/auth/styles.ts#L12)
+- [styles.ts:21](file://src/components/auth/styles.ts#L21)
+- [urgency-helpers.ts:38](file://src/app/(authenticated)/expedientes/components/urgency-helpers.ts#L38)
+- [constants.ts:56](file://src/app/(authenticated)/processos/components/timeline/constants.ts#L56)
+- [constants.ts:59](file://src/app/(authenticated)/processos/components/timeline/constants.ts#L59)
+- [constants.ts:112](file://src/app/(authenticated)/processos/components/timeline/constants.ts#L112)
+- [constants.ts:115](file://src/app/(authenticated)/processos/components/timeline/constants.ts#L115)
+- [constants.ts:162](file://src/app/(authenticated)/processos/components/timeline/constants.ts#L162)
+- [constants.ts:165](file://src/app/(authenticated)/processos/components/timeline/constants.ts#L165)
+- [view-toggle.tsx:59](file://src/components/dashboard/view-toggle.tsx#L59)
 
 ## Unified Font Families and Typography System
 
@@ -1077,6 +1372,14 @@ The playground includes comprehensive testing capabilities:
 - **Accessibility Compliance**: Ensuring CountBadge meets accessibility standards
 - **Performance Optimization**: Testing CountBadge rendering performance
 
+**AvatarIndicator Testing and Validation**
+**Updated** The playground now includes comprehensive testing for the new AvatarIndicator component:
+- **Variant Coverage Testing**: Testing all four status variants (online, away, offline, success)
+- **Size Variants Testing**: Validating sm, md, and lg size variants
+- **Integration Scenarios**: Testing AvatarIndicator usage with avatar components
+- **Accessibility Compliance**: Ensuring AvatarIndicator meets WCAG AAA standards
+- **Performance Optimization**: Testing AvatarIndicator rendering performance
+
 **Responsive Utilities Testing**
 - **Breakpoint Hook Testing**: Comprehensive testing of useBreakpoint utilities
 - **Mobile Detection**: Validation of useIsMobile and related responsive utilities
@@ -1097,8 +1400,31 @@ The playground includes comprehensive testing capabilities:
 - **Scale Preset Testing**: Testing font size scaling preset functionality
 - **Layout Preset Testing**: Validating content layout preset application
 
+**Combobox Component Testing**
+**Updated** The playground now includes comprehensive testing for the refactored combobox components:
+- **Native Implementation Testing**: Validating custom HTML implementation
+- **Server Combobox Testing**: Testing server-side search functionality
+- **Inline Combobox Testing**: Validating @ariakit/react integration
+- **Performance Optimization**: Testing combobox rendering and interaction performance
+
+**Progress Indicator Testing**
+**Updated** The playground includes comprehensive testing for the enhanced progress indicator:
+- **Indicator Styling Testing**: Validating new styling props (indicatorClassName, indicatorColor)
+- **Color Logic Testing**: Testing dynamic color assignment based on value
+- **Size Variants Testing**: Validating sm and md size variants
+- **Accessibility Compliance**: Ensuring progress indicators meet WCAG standards
+
+**Popover Component Testing**
+**Updated** The playground now includes comprehensive testing for the Popover component system:
+- **Trigger Integration Testing**: Validating PopoverTrigger with Button components
+- **Content Positioning Testing**: Testing PopoverContent positioning and alignment
+- **State Management Testing**: Validating open/close state management
+- **Accessibility Compliance**: Ensuring Popover components meet WCAG standards
+- **Performance Optimization**: Testing Popover rendering and interaction performance
+
 **Section sources**
 - [badge.test.tsx:29-78](file://src/components/ui/__tests__/badge.test.tsx#L29-L78)
+- [avatar.test.tsx:93-132](file://src/components/ui/__tests__/avatar.test.tsx#L93-L132)
 
 ## Page-Specific Implementation Examples
 
@@ -1196,7 +1522,28 @@ The module demonstrates modern responsive utility usage:
 
 ### Captura Module Implementation
 
-The captura module demonstrates design system adoption with specialized documentation and clear governance patterns, now enhanced with modern responsive utilities.
+**Updated** The captura module demonstrates design system adoption with specialized documentation and clear governance patterns, now enhanced with refined styling for atmospheric glow effects, completion indicators, and mobile responsiveness.
+
+**Atmospheric Glow Effects**
+The CapturaDetalhesPage component features enhanced atmospheric glow effects with reduced opacity values:
+- **Primary Glow**: `bg-primary/4` with `blur-3xl` for subtle primary color ambiance
+- **Secondary Glow**: `bg-info/3` with `blur-3xl` for complementary information highlighting
+- **Opacity Balance**: Carefully tuned opacity levels (4% and 3%) for visual subtlety
+- **Performance Optimization**: Efficient blur effects without impacting rendering performance
+
+**Completion Indicator Styling**
+The completion indicator now uses more subtle background colors:
+- **Success State**: `border-success/20 bg-success/4` for gentle success indication
+- **Failure State**: `border-destructive/20 bg-destructive/4` for mild failure indication
+- **Visual Hierarchy**: Reduced visual intensity compared to previous implementations
+- **Accessibility Compliance**: Maintained contrast ratios for color-coded states
+
+**Mobile Responsiveness Enhancements**
+The CapturaRawLogs component features improved mobile responsiveness:
+- **Max-Height Optimization**: `max-h-125` for optimal content display on mobile devices
+- **Overflow Management**: `overflow-auto` for scrollable content in constrained spaces
+- **Responsive Typography**: `text-xs` for compact mobile text rendering
+- **Performance Considerations**: Efficient scrolling with virtualization for large datasets
 
 **Dashboard Layout Migration and Governance**
 The captura module shows systematic migration from raw Tailwind classes with clear governance:
@@ -1212,6 +1559,112 @@ The captura module shows systematic migration from raw Tailwind classes with cle
 - **Migration Tracking**: Clear documentation of migration progress
 - **Quality Assurance**: Validation of design system compliance
 - **Responsive Typography**: Testing across different screen sizes and breakpoints
+
+**Enhanced Glass Panel System**
+**Updated** The glass panel system has been optimized for better visual performance:
+- **Blur Intensity**: Reduced blur intensity for improved performance
+- **Transparency Levels**: Carefully balanced transparency for visual appeal
+- **Depth Variations**: Consistent depth levels across different components
+- **Performance Monitoring**: Efficient rendering without impacting user experience
+
+**Ambient Backdrop System**
+**Updated** The ambient backdrop system features improved opacity calculations:
+- **Blob Opacity**: `opacity: opacity * 0.2` and `opacity: opacity * 0.1` for layered effects
+- **Blur Intensity Controls**: Configurable blur intensity with mathematical opacity calculations
+- **Grid Overlay**: Optional grid overlay with configurable opacity (0.03)
+- **Gradient Base**: Smooth gradient base with configurable tint variations
+
+**Credential Selection Interface Implementation**
+**Updated** The captura module features comprehensive Popover component usage in credential selection interfaces:
+
+**Enhanced Button Integration**
+The credential selection interface demonstrates sophisticated Button component integration with Popover:
+- **asChild Pattern**: PopoverTrigger wraps Button components for seamless integration
+- **Role Attributes**: Proper ARIA roles for accessibility compliance
+- **State Management**: Controlled open/close state management
+- **Positioning**: Automatic positioning relative to trigger elements
+
+**Popover Content Structure**
+```typescript
+<Popover>
+  <PopoverTrigger asChild>
+    <Button
+      variant="outline"
+      role="combobox"
+      aria-expanded={open}
+      className="w-full justify-between font-normal"
+    >
+      <span className={cn(selectedCount === 0 && 'text-muted-foreground')}>
+        {triggerLabel}
+      </span>
+      <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+    </Button>
+  </PopoverTrigger>
+  <PopoverContent
+    className="p-0 w-[--radix-popover-trigger-width]"
+    align="start"
+    sideOffset={4}
+  >
+    {/* Select all option */}
+    <div className="border-b">
+      <label className="flex items-center gap-3 px-3 py-2.5 text-sm cursor-pointer hover:bg-muted/50 transition-colors">
+        <Checkbox checked={allSelected} onCheckedChange={toggleAll} />
+        <span className="font-medium">Selecionar todos</span>
+        {someSelected && (
+          <span className="ml-auto text-xs text-muted-foreground">
+            {selectedCount}/{totalCount}
+          </span>
+        )}
+      </label>
+    </div>
+    
+    {/* Credential list */}
+    <div className="max-h-52 overflow-y-auto">
+      {credentials.map((cred) => {
+        const checked = selectedIds.includes(cred.id);
+        return (
+          <label key={cred.id} className="flex items-center gap-3 px-3 py-2 text-sm cursor-pointer hover:bg-muted/50 transition-colors">
+            <Checkbox checked={checked} onCheckedChange={(v) => toggleCredential(cred.id, !!v)} />
+            <span className="flex-1">{cred.tribunal} — {formatGrau(cred.grau)}</span>
+            {checked && <Check className="h-3.5 w-3.5 text-primary shrink-0" />}
+          </label>
+        );
+      })}
+    </div>
+  </PopoverContent>
+</Popover>
+```
+
+**Typography Migration Examples**
+```typescript
+// Heading migration examples
+// Before: <h1 className="text-2xl font-bold">KPIs</h1>
+// After: <Heading level="widget">KPIs</Heading>
+
+// Text migration examples
+// Before: <p className="text-xs uppercase">Status</p>
+// After: <Text variant="meta-label">Status</Text>
+
+// Caption migration examples
+// Before: <p className="text-sm text-muted-foreground">Detalhes</p>
+// After: <Text variant="caption" as="p">Detalhes</Text>
+```
+
+**Responsive Migration Examples**
+```typescript
+// Before: hidden lg:block
+// After: {useIsMobile() ? null : <DesktopFeature />}
+
+// Before: space-y-4
+// After: {useIsMobile() ? 'space-y-2' : 'space-y-4'}
+```
+
+**Governance and Compliance**
+- **Audit Results**: Comprehensive compliance reporting with automated scanning
+- **Override Validation**: Verification that page-specific rules are properly implemented
+- **Migration Tracking**: Quantifiable progress in design system adoption
+- **Quality Assurance**: Multi-layered validation of implementation quality
+- **Responsive Validation**: Ensuring modern breakpoint patterns are properly implemented
 
 ### Expedientes Module Implementation
 
@@ -1265,6 +1718,286 @@ The module demonstrates modern responsive utility usage:
 - **Quality Assurance**: Multi-layered validation of implementation quality
 - **Responsive Validation**: Ensuring modern breakpoint patterns are properly implemented
 
+### Chat Module Implementation
+
+**Updated** The chat module demonstrates comprehensive integration of the new AvatarIndicator component with clear usage patterns and accessibility compliance.
+
+**AvatarIndicator Integration and Usage**
+The chat module showcases the AvatarIndicator component in multiple contexts:
+- **Chat Header Integration**: Online status indicators in chat headers
+- **User Detail Integration**: Status displays in user detail panels
+- **Contact List Integration**: Presence indicators in contact lists
+- **Collaborator Integration**: Status indicators in document collaboration contexts
+
+**Chat Header Implementation**
+```typescript
+// Avatar with online status indicator
+<Avatar className="size-8 rounded-full overflow-visible shrink-0">
+  <AvatarImage src={image} alt={name} className="rounded-full" />
+  <AvatarFallback>{generateAvatarFallback(name)}</AvatarFallback>
+  {!isGroup && <AvatarIndicator variant={onlineStatus} />}
+</Avatar>
+```
+
+**User Detail Panel Integration**
+```typescript
+// User detail with status indicator
+<div className="flex items-center gap-3">
+  <Avatar className="size-12">
+    <AvatarImage src={user.avatarUrl} alt={user.name} />
+    <AvatarFallback>{user.initials}</AvatarFallback>
+    <AvatarIndicator variant={user.status} />
+  </Avatar>
+  <div>
+    <h3 className="font-semibold">{user.name}</h3>
+    <p className="text-sm text-muted-foreground">
+      {user.status === 'online' ? 'Online agora' : `Última vez visto ${user.lastSeen}`}
+    </p>
+  </div>
+</div>
+```
+
+**Accessibility Integration**
+The AvatarIndicator component integrates with chat accessibility standards:
+- **Proper ARIA Labeling**: Screen reader support for user status
+- **Focus Management**: Keyboard navigation for interactive contexts
+- **Color Contrast**: WCAG AAA compliant color usage for status indicators
+- **Motion Sensitivity**: Respect for reduced motion preferences
+
+**Responsive Integration**
+The AvatarIndicator component adapts to different screen sizes:
+- **Mobile Optimization**: Compact status indicators for small screens
+- **Touch-Friendly**: Adequate touch targets for mobile interaction
+- **Adaptive Positioning**: Status indicators that work across avatar sizes
+- **Performance Optimization**: Efficient rendering across different contexts
+
+**Section sources**
+- [chat-header.tsx:50-75](file://src/app/(authenticated)/chat/components/chat-header.tsx#L50-L75)
+- [user-status-dot.tsx:1-59](file://src/app/(authenticated)/usuarios/components/shared/user-status-dot.tsx#L1-L59)
+
+### Project Management Module Implementation
+
+**Updated** The project management module demonstrates the enhanced progress indicator component with new styling capabilities and dynamic color assignment.
+
+**Progress Indicator Implementation**
+The module showcases the ProgressIndicator component with advanced styling options:
+- **Dynamic Color Assignment**: Automatic color selection based on progress percentage
+- **Size Variants**: Support for both small and medium indicator sizes
+- **Label Display**: Optional percentage display with tabular numbers
+- **Integration Patterns**: Seamless integration with project management workflows
+
+**Progress Indicator Usage**
+```typescript
+// Basic progress indicator
+<ProgressIndicator value={project.progress} />
+
+// Medium size with custom styling
+<ProgressIndicator 
+  value={teamProgress} 
+  size="md" 
+  className="mb-4"
+/>
+
+// Conditional label display
+<ProgressIndicator 
+  value={milestone.progress} 
+  showLabel={milestone.showPercentage}
+/>
+```
+
+**Dynamic Styling Integration**
+The component integrates with project management color schemes:
+- **Success State**: Green indicator for completed milestones
+- **Info State**: Blue indicator for active projects
+- **Warning State**: Yellow indicator for at-risk tasks
+- **Default State**: Neutral indicator for pending items
+
+**Accessibility Integration**
+The ProgressIndicator component meets accessibility standards:
+- **Progress Role**: Proper ARIA role for screen reader support
+- **Color Contrast**: WCAG AAA compliant color contrast ratios
+- **Keyboard Navigation**: Accessible interaction patterns
+- **Reduced Motion**: Respect for motion sensitivity preferences
+
+**Responsive Integration**
+The component adapts to different screen sizes and contexts:
+- **Mobile Optimization**: Compact indicators for small screens
+- **Touch-Friendly**: Adequate touch targets for mobile interaction
+- **Adaptive Sizing**: Automatic size adjustment based on container width
+- **Performance Optimization**: Efficient rendering for large datasets
+
+**Section sources**
+- [progress-indicator.tsx:1-42](file://src/app/(authenticated)/project-management/components/shared/progress-indicator.tsx#L1-L42)
+- [progress.tsx:1-40](file://src/components/ui/progress.tsx#L1-L40)
+
+### Editor Module Implementation
+
+**Updated** The editor module demonstrates comprehensive integration of the inline combobox component with @ariakit/react, providing intelligent text editing capabilities with contextual suggestions.
+
+**Inline Combobox Integration**
+The module showcases the inline combobox component in rich text editing contexts:
+- **Slash Command Integration**: Triggering suggestions with "/" character
+- **Contextual Filtering**: Intelligent filtering based on content context
+- **Grouped Suggestions**: Organized suggestions by category and relevance
+- **Keyboard Navigation**: Full keyboard accessibility for suggestion selection
+
+**Slash Command Implementation**
+```typescript
+// Slash command trigger
+<InlineCombobox element={element} trigger="/">
+  <InlineComboboxInput />
+  
+  <InlineComboboxContent>
+    <InlineComboboxEmpty>Nenhum resultado</InlineComboboxEmpty>
+    
+    {groups.map(({ group, items }) => (
+      <InlineComboboxGroup key={group}>
+        <InlineComboboxGroupLabel>{group}</InlineComboboxGroupLabel>
+        
+        {items.map(({ focusEditor, icon, keywords, label, value, onSelect }) => (
+          <InlineComboboxItem
+            key={value}
+            value={value}
+            onClick={() => onSelect(editor, value)}
+            label={label}
+            focusEditor={focusEditor}
+            group={group}
+            keywords={keywords}
+          >
+            <div className="mr-2 text-muted-foreground">{icon}</div>
+            {label ?? value}
+          </InlineComboboxItem>
+        ))}
+      </InlineComboboxGroup>
+    ))}
+  </InlineComboboxContent>
+</InlineCombobox>
+```
+
+**Contextual Filtering Integration**
+The inline combobox provides intelligent filtering based on editor context:
+- **Content-Aware Filtering**: Suggestions filtered by current editor content
+- **Keyword Matching**: Advanced keyword matching for better suggestion relevance
+- **Group Organization**: Logical grouping of suggestions by functionality
+- **Performance Optimization**: Efficient filtering for large suggestion sets
+
+**Accessibility Integration**
+The inline combobox meets accessibility standards:
+- **ARIA Support**: Proper ARIA attributes for screen reader compatibility
+- **Keyboard Navigation**: Full keyboard navigation for suggestion selection
+- **Focus Management**: Proper focus handling for editor integration
+- **Error Handling**: Graceful handling of empty states and errors
+
+**Responsive Integration**
+The inline combobox adapts to different editor contexts:
+- **Positioning**: Intelligent positioning relative to editor content
+- **Scroll Behavior**: Auto-scrolling for long suggestion lists
+- **Performance Optimization**: Efficient rendering for real-time editing
+- **Mobile Support**: Touch-friendly interaction patterns
+
+**Section sources**
+- [inline-combobox.tsx:1-200](file://src/components/editor/plate-ui/inline-combobox.tsx#L1-L200)
+- [slash-node.tsx:211-252](file://src/components/editor/plate-ui/slash-node.tsx#L211-L252)
+
+### Credential Selection Interface Implementation
+
+**Updated** The credential selection interface demonstrates comprehensive Popover component usage with enhanced Button integration, providing sophisticated dropdown and selection capabilities.
+
+**Popover Component Architecture**
+The credential selection interface utilizes the complete Popover component system:
+- **Root Management**: Popover manages state and lifecycle
+- **Trigger Integration**: PopoverTrigger wraps Button components with asChild pattern
+- **Content Positioning**: PopoverContent handles automatic positioning and alignment
+- **Accessibility Compliance**: Proper ARIA roles and keyboard navigation
+
+**Enhanced Button Integration Patterns**
+The interface demonstrates sophisticated Button component integration:
+- **asChild Pattern**: Seamless wrapping of Button components within PopoverTrigger
+- **Role Attributes**: Proper ARIA roles for combobox functionality
+- **State Management**: Controlled open/close state with useState hooks
+- **Accessibility Compliance**: Proper focus management and keyboard navigation
+
+**Credential Selection Logic**
+The interface implements comprehensive credential selection logic:
+- **Multi-Select Support**: Checkbox-based selection with select-all functionality
+- **Dynamic Counting**: Real-time count updates with indeterminate state
+- **Filtering**: Intelligent filtering based on selection criteria
+- **Validation**: Form validation for required selections
+
+**Popover Content Structure**
+```typescript
+<Popover open={open} onOpenChange={setOpen}>
+  <PopoverTrigger asChild>
+    <Button
+      variant="outline"
+      role="combobox"
+      aria-expanded={open}
+      className="w-full justify-between font-normal"
+    >
+      <span className={cn(selectedCount === 0 && 'text-muted-foreground')}>
+        {triggerLabel}
+      </span>
+      <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+    </Button>
+  </PopoverTrigger>
+  <PopoverContent
+    className="p-0 w-[--radix-popover-trigger-width]"
+    align="start"
+    sideOffset={4}
+  >
+    {/* Select all option with count */}
+    <div className="border-b">
+      <label className="flex items-center gap-3 px-3 py-2.5 text-sm cursor-pointer hover:bg-muted/50 transition-colors">
+        <Checkbox
+          checked={allSelected}
+          data-state={someSelected ? 'indeterminate' : allSelected ? 'checked' : 'unchecked'}
+          onCheckedChange={toggleAll}
+        />
+        <span className="font-medium">Selecionar todos</span>
+        {someSelected && (
+          <span className="ml-auto text-xs text-muted-foreground">
+            {selectedCount}/{totalCount}
+          </span>
+        )}
+      </label>
+    </div>
+    
+    {/* Scrollable credential list */}
+    <div className="max-h-52 overflow-y-auto">
+      {orderedCredentials.map((cred) => {
+        const checked = selectedIds.includes(cred.id);
+        const label = `${cred.tribunal} — ${formatGrau(cred.grau)}`;
+        return (
+          <label
+            key={cred.id}
+            className="flex items-center gap-3 px-3 py-2 text-sm cursor-pointer hover:bg-muted/50 transition-colors"
+          >
+            <Checkbox
+              checked={checked}
+              onCheckedChange={(v) => toggleCredential(cred.id, !!v)}
+            />
+            <span className="flex-1">{label}</span>
+            {checked && <Check className="h-3.5 w-3.5 text-primary shrink-0" />}
+          </label>
+        );
+      })}
+    </div>
+  </PopoverContent>
+</Popover>
+```
+
+**Accessibility and Responsive Considerations**
+The credential selection interface meets comprehensive accessibility and responsive requirements:
+- **Keyboard Navigation**: Full keyboard support for selection and navigation
+- **Screen Reader Support**: Proper ARIA labels and descriptions
+- **Mobile Optimization**: Touch-friendly interaction patterns
+- **Responsive Positioning**: Automatic positioning for different screen sizes
+- **Performance Optimization**: Efficient rendering for large credential lists
+
+**Section sources**
+- [captura-form-base.tsx:183-240](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L183-L240)
+- [popover.tsx:1-90](file://src/components/ui/popover.tsx#L1-L90)
+
 ## Quality Assurance and Migration Tracking
 
 The design system includes comprehensive quality assurance processes to ensure consistent implementation and track migration progress, now enhanced with modern responsive utility validation.
@@ -1308,10 +2041,19 @@ The design system includes comprehensive quality assurance processes to ensure c
 - **Migration Progress Visualization**: Clear metrics for typography migration
 
 **CountBadge Migration Metrics**
+**Updated** The system now tracks metrics for the new CountBadge component:
 - **CountBadge Component Adoption**: Tracking of CountBadge usage across modules
 - **Count Display Standardization**: Evidence of consistent count presentation
 - **Badge System Enhancement**: Improved semantic badge architecture
 - **Developer Productivity**: Measured improvement in count display implementation
+
+**AvatarIndicator Migration Metrics**
+**Updated** The system now tracks metrics for the new AvatarIndicator component:
+- **AvatarIndicator Component Adoption**: Tracking of AvatarIndicator usage across chat and user interfaces
+- **Status Indicator Standardization**: Evidence of consistent user status communication
+- **Avatar System Enhancement**: Improved avatar component architecture
+- **Developer Productivity**: Measured improvement in user status display implementation
+- **Accessibility Compliance**: Validation of AvatarIndicator accessibility standards
 
 **Responsive Utility Metrics**
 - **useIsMobile Adoption**: Tracking of mobile detection usage
@@ -1332,6 +2074,53 @@ The design system includes comprehensive quality assurance processes to ensure c
 - **Radius Preset Usage**: Validation of border radius preset adoption
 - **Scale Preset Usage**: Measuring font size scaling preset adoption
 - **Layout Preset Usage**: Tracking of content layout preset adoption
+
+**Combobox Component Metrics**
+**Updated** The system now tracks metrics for the refactored combobox components:
+- **Native Implementation Adoption**: Tracking of custom HTML combobox usage
+- **Server Combobox Adoption**: Validation of server-side search functionality
+- **Inline Combobox Adoption**: Measuring @ariakit/react integration usage
+- **Performance Metrics**: Monitoring combobox rendering and interaction performance
+
+**Progress Indicator Metrics**
+**Updated** The system now tracks metrics for the enhanced progress indicator:
+- **Indicator Styling Adoption**: Tracking of new styling props usage
+- **Dynamic Color Assignment**: Validation of automatic color selection
+- **Size Variant Usage**: Measuring sm and md size variant adoption
+- **Accessibility Compliance**: Ensuring progress indicators meet WCAG standards
+
+**Standardized Text-Muted-Foreground Metrics**
+**Updated** The system now tracks metrics for the standardized text-muted-foreground color palette:
+- **Palette Adoption**: Tracking of standardized muted foreground usage across components
+- **Typography Consistency**: Measuring adherence to unified secondary text styling
+- **Component Styling Improvement**: Evidence of enhanced component styling consistency
+- **Accessibility Compliance**: Validation of WCAG AAA color contrast ratios
+
+**Enhanced Glass Panel Metrics**
+**Updated** The system now tracks metrics for the enhanced glass panel system:
+- **Glass Effect Adoption**: Tracking of reduced opacity and blur intensity usage
+- **Performance Metrics**: Monitoring glass panel rendering performance
+- **Visual Hierarchy**: Measuring improved visual depth and clarity
+- **Accessibility Compliance**: Ensuring glass panels meet contrast requirements
+
+**Ambient Backdrop Metrics**
+**Updated** The system now tracks metrics for the enhanced ambient backdrop system:
+- **Opacity Calculation Adoption**: Tracking of mathematical opacity calculation usage
+- **Blur Intensity Control**: Measuring configurable blur intensity implementation
+- **Performance Optimization**: Monitoring ambient backdrop rendering performance
+- **Visual Consistency**: Ensuring consistent atmospheric effects across components
+
+**Popover Component Metrics**
+**Updated** The system now tracks metrics for the Popover component system:
+- **Component Adoption**: Tracking of Popover component usage across credential interfaces
+- **Button Integration**: Validation of enhanced Button component integration
+- **Accessibility Compliance**: Ensuring Popover components meet WCAG standards
+- **Performance Metrics**: Monitoring Popover rendering and interaction performance
+- **Developer Education**: Tracking adoption of Popover component patterns
+
+**Section sources**
+- [captura-form-base.tsx:183-240](file://src/app/(authenticated)/captura/components/captura-form-base.tsx#L183-L240)
+- [popover.tsx:1-90](file://src/components/ui/popover.tsx#L1-L90)
 
 ## Integration and Maintenance
 
@@ -1391,6 +2180,15 @@ The design system architecture supports scalable maintenance and evolution throu
 - **Developer Education**: Training on CountBadge usage patterns and best practices
 - **Responsive Integration**: Ensuring CountBadge works with modern breakpoint utilities
 
+**AvatarIndicator Maintenance and Governance**
+**Updated** The system now includes maintenance processes for the new AvatarIndicator component:
+- **Component Usage Analytics**: Tracking AvatarIndicator adoption across chat and user interfaces
+- **Performance Monitoring**: Ensuring efficient AvatarIndicator rendering
+- **Accessibility Compliance**: Regular validation of AvatarIndicator accessibility
+- **Developer Education**: Training on AvatarIndicator usage patterns and best practices
+- **Responsive Integration**: Ensuring AvatarIndicator works with modern breakpoint utilities
+- **Integration Testing**: Validating AvatarIndicator with avatar component ecosystem
+
 **Responsive Utility Maintenance and Governance**
 - **Breakpoint Utility Usage Analytics**: Tracking modern breakpoint adoption
 - **Performance Monitoring**: Ensuring efficient responsive utility usage
@@ -1414,13 +2212,73 @@ The design system architecture supports scalable maintenance and evolution throu
 - **Developer Education**: Training on theme preset usage and customization
 - **Migration Support**: Assisting teams in adopting theme preset system
 
+**Combobox Component Maintenance and Governance**
+**Updated** The system now includes maintenance processes for the refactored combobox components:
+- **Native Implementation Analytics**: Tracking custom HTML combobox adoption
+- **Server Combobox Performance**: Monitoring server-side search functionality
+- **Inline Combobox Integration**: Validating @ariakit/react integration effectiveness
+- **Performance Optimization**: Ensuring efficient combobox rendering and interaction
+- **Developer Education**: Training on new combobox patterns and best practices
+
+**Progress Indicator Maintenance and Governance**
+**Updated** The system now includes maintenance processes for the enhanced progress indicator:
+- **Indicator Styling Analytics**: Tracking new styling props usage
+- **Dynamic Color Performance**: Monitoring automatic color assignment efficiency
+- **Size Variant Adoption**: Measuring sm and md size variant usage
+- **Accessibility Compliance**: Ensuring progress indicators meet WCAG standards
+- **Performance Optimization**: Monitoring progress indicator rendering performance
+
+**Standardized Text-Muted-Foreground Maintenance and Governance**
+**Updated** The system now includes maintenance processes for the standardized text-muted-foreground color palette:
+- **Palette Usage Analytics**: Tracking standardized muted foreground adoption across components
+- **Typography Consistency Monitoring**: Ensuring adherence to unified secondary text styling
+- **Component Styling Improvement**: Measuring enhanced component styling consistency
+- **Accessibility Compliance**: Regular validation of WCAG AAA color contrast ratios
+- **Performance Optimization**: Monitoring typography rendering performance
+
+**Enhanced Glass Panel Maintenance and Governance**
+**Updated** The system now includes maintenance processes for the enhanced glass panel system:
+- **Glass Effect Analytics**: Tracking reduced opacity and blur intensity usage
+- **Performance Monitoring**: Monitoring glass panel rendering performance
+- **Visual Hierarchy Validation**: Ensuring improved visual depth and clarity
+- **Accessibility Compliance**: Regular validation of glass panel contrast requirements
+- **Developer Education**: Training on enhanced glass panel usage and best practices
+
+**Ambient Backdrop Maintenance and Governance**
+**Updated** The system now includes maintenance processes for the enhanced ambient backdrop system:
+- **Opacity Calculation Analytics**: Tracking mathematical opacity calculation usage
+- **Blur Intensity Control**: Monitoring configurable blur intensity implementation
+- **Performance Optimization**: Ensuring efficient ambient backdrop rendering
+- **Visual Consistency Validation**: Ensuring consistent atmospheric effects across components
+- **Developer Education**: Training on enhanced ambient backdrop usage and best practices
+
+**Popover Component Maintenance and Governance**
+**Updated** The system now includes maintenance processes for the Popover component system:
+- **Component Usage Analytics**: Tracking Popover component adoption across credential interfaces
+- **Button Integration Validation**: Ensuring enhanced Button component integration
+- **Accessibility Compliance**: Regular validation of Popover component accessibility
+- **Performance Optimization**: Monitoring Popover component rendering performance
+- **Developer Education**: Training on Popover component patterns and best practices
+
 ## Conclusion
 
 The ZattarOS Design System represents a comprehensive approach to design system governance that balances centralized authority with module-specific flexibility. Through the implementation of MASTER.md as the central authority, systematic page-specific override mechanisms, and design-system-escape comments, the system provides a robust foundation for maintaining design integrity while accommodating the unique requirements of different application modules.
 
 **Updated** The system now features major typography improvements with typed Typography components (Heading and Text) replacing deprecated custom components, enhanced accessibility compliance with WCAG AAA standards, comprehensive anti-pattern prevention measures, and a new CountBadge component for consistent count display across tabs and badges. The introduction of typed Typography components provides semantic HTML elements with proper heading hierarchy, improving accessibility and reducing unnecessary abstraction layers across the application.
 
-The comprehensive modernization effort has successfully migrated the component library to the unified radix-ui package, streamlining component APIs and improving maintainability. The enhanced responsive utility system provides developers with powerful tools for adaptive UI development, while the expanded CSS variable and design token system ensures better consistency and maintainability across the platform.
+**Updated** The comprehensive modernization effort has successfully migrated the component library to the unified radix-ui package, streamlining component APIs and improving maintainability. The enhanced responsive utility system provides developers with powerful tools for adaptive UI development, while the expanded CSS variable and design token system ensures better consistency and maintainability across the platform.
+
+**Updated** The most significant enhancement is the refactoring of the combobox component from Base UI to a custom native HTML implementation, providing better performance and more predictable behavior. The new implementation supports both single and multiple selection modes, intelligent search filtering, and comprehensive accessibility features. The inline combobox integration with @ariakit/react enables rich text editing capabilities with contextual suggestions and keyboard navigation.
+
+**Updated** The progress indicator component has been enhanced with new styling props (indicatorClassName, indicatorColor) that provide advanced customization capabilities. The component now supports dynamic color assignment based on progress values, size variants for different contexts, and optional percentage display with tabular numbers.
+
+**Updated** The comprehensive design system improvements ensure that the ZattarOS platform remains at the forefront of legal technology design, providing both developers and users with a consistent, accessible, and visually appealing interface that supports the complex needs of legal case management.
+
+**Updated** The standardized text-muted-foreground color palette integration represents a significant advancement in component styling consistency. This enhancement ensures that secondary text elements maintain consistent visual hierarchy and accessibility compliance across all components and modules, improving the overall user experience and reducing design debt.
+
+**Updated** The Captura module components have received styling refinements with reduced opacity values for atmospheric glow effects, more subtle background colors for completion indicators, and improved mobile responsiveness with adjusted max-height values. These refinements enhance the visual hierarchy and user experience while maintaining design system consistency.
+
+**Updated** The credential selection interface demonstrates comprehensive Popover component usage with enhanced Button integration, providing sophisticated dropdown and selection capabilities for credential management. The Popover component system offers complete control over positioning, styling, and accessibility, while the enhanced Button integration ensures seamless user interaction patterns.
 
 The hierarchical architecture ensures that all modules follow consistent design principles while allowing for targeted adaptations through documented overrides. The comprehensive audit and validation processes guarantee high-quality implementations across all modules, while the playground environment facilitates testing and validation of design system implementations.
 
@@ -1436,8 +2294,16 @@ The modernized component architecture with unified radix-ui packages, enhanced r
 
 The enhanced badge component with 5 new semantic status variants (success, warning, info, neutral, accent) and the new highlight foreground color variable demonstrate the system's commitment to continuous improvement and enhanced color consistency. These improvements provide developers with more granular control over status communication while maintaining accessibility and visual coherence across the platform.
 
+**Updated** The new AvatarIndicator component with comprehensive testing coverage and accessibility compliance represents the latest advancement in user presence communication within the design system. The component's integration with the avatar ecosystem and its support for multiple status variants (online, away, offline, success) provides a consistent and accessible way to communicate user status across the platform.
+
+**Updated** The refactored combobox components with native HTML implementation, server-side search capabilities, and inline editor integration represent significant improvements in component functionality and user experience.
+
+**Updated** The standardized text-muted-foreground color palette integration represents a major advancement in component styling consistency, ensuring that secondary text elements maintain consistent visual hierarchy and accessibility compliance across all components and modules.
+
+**Updated** The enhanced glass panel system with optimized blur effects and reduced opacity values provides improved visual performance while maintaining the atmospheric depth that enhances the user experience.
+
+**Updated** The ambient backdrop system with mathematical opacity calculations and configurable blur intensity offers developers precise control over visual effects while maintaining performance standards.
+
+**Updated** The comprehensive Popover component system with enhanced Button integration represents the latest advancement in dropdown and selection interface design, providing sophisticated user interaction patterns with comprehensive accessibility compliance.
+
 The comprehensive design system improvements ensure that the ZattarOS platform remains at the forefront of legal technology design, providing both developers and users with a consistent, accessible, and visually appealing interface that supports the complex needs of legal case management.
-
-The unified font families and comprehensive theme preset system position the ZattarOS Design System as a leader in customizable, accessible, and scalable design systems for legal technology applications. The systematic approach to font family management, theme preset implementation, and user customization ensures that the platform can adapt to diverse user preferences while maintaining design consistency and accessibility standards.
-
-The enhanced design system improvements ensure that the ZattarOS platform remains at the forefront of legal technology design, providing both developers and users with a consistent, accessible, and visually appealing interface that supports the complex needs of legal case management.

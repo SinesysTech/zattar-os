@@ -48,7 +48,7 @@ export function ChatSidebar({
         <div className="flex items-center justify-between">
           <div>
             <Heading level="page">Mensagens</Heading>
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[0.65rem] uppercase tracking-[0.08em] text-muted-foreground/50 font-medium")}>
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[0.65rem] uppercase tracking-[0.08em] text-muted-foreground/70 font-medium")}>
               {onlineCount !== undefined ? `${onlineCount} online agora` : "Comunicacao da equipe"}
             </p>
           </div>
@@ -77,7 +77,7 @@ export function ChatSidebar({
       <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "flex-1 overflow-y-auto px-2 scrollbar-thin")}>
         {fixadas.length > 0 && (
           <>
-            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-widest sem token DS; px-2 padding direcional sem Inset equiv.; pt-4 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "text-[0.6rem] font-semibold uppercase tracking-widest text-muted-foreground/35 px-2 pt-4 pb-2")}>
+            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-widest sem token DS; px-2 padding direcional sem Inset equiv.; pt-4 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "text-[0.6rem] font-semibold uppercase tracking-widest text-muted-foreground/55 px-2 pt-4 pb-2")}>
               Fixadas
             </p>
             {fixadas.map(sala => (
@@ -91,7 +91,7 @@ export function ChatSidebar({
           </>
         )}
         {(fixadas.length > 0 || recentes.length > 0) && (
-          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-widest sem token DS; px-2 padding direcional sem Inset equiv.; pt-4 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "text-[0.6rem] font-semibold uppercase tracking-widest text-muted-foreground/35 px-2 pt-4 pb-2")}>
+          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-widest sem token DS; px-2 padding direcional sem Inset equiv.; pt-4 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "text-[0.6rem] font-semibold uppercase tracking-widest text-muted-foreground/55 px-2 pt-4 pb-2")}>
             Recentes
           </p>
         )}

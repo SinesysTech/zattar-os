@@ -105,7 +105,7 @@ const URGENCY_TEXT: Record<UrgencyLevel, string> = {
   alto:
     /* design-system-escape: font-semibold contextual de status (urgência alta), não decorativo */ 'text-warning/80 font-semibold',
   medio: 'text-primary/70',
-  baixo: 'text-muted-foreground/45',
+  baixo: 'text-muted-foreground/65',
   ok: 'text-success/60',
 };
 
@@ -292,7 +292,7 @@ function IdentidadeProcessual({ expediente }: { expediente: Expediente }) {
               /* design-system-escape: text-xs/font-semibold/text-foreground — mirror exato do QueueCard original; text-caption (13px) causava regressão visual */ 'truncate text-xs font-semibold text-foreground',
             )}
           >
-            <span className="mr-1 text-[9px] font-normal text-muted-foreground/50">vs</span>
+            <span className="mr-1 text-[9px] font-normal text-muted-foreground/70">vs</span>
             {partes.re || '—'}
           </p>
         </div>
@@ -405,7 +405,7 @@ function FooterAcoes({
             type="button"
             onClick={() => onViewDetail(expediente)}
             className={cn(
-              /* design-system-escape: pill de ação secundária — gap-1/px-2/font-medium específico do botão Detalhes */ 'flex h-6 cursor-pointer items-center gap-1 rounded-md border border-border/20 px-2 text-[10px] font-medium text-muted-foreground/60 transition-colors hover:border-border/40 hover:text-muted-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+              /* design-system-escape: pill de ação secundária — gap-1/px-2/font-medium específico do botão Detalhes */ 'flex h-6 cursor-pointer items-center gap-1 rounded-md border border-border/40 px-2 text-[10px] font-medium text-muted-foreground/60 transition-colors hover:border-border/40 hover:text-muted-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
             )}
           >
             <ExternalLink className="size-3" />
@@ -497,7 +497,7 @@ export function ExpedienteCard({
               ) : (
                 <span
                   className={cn(
-                    /* design-system-escape: font-mono/text-[10px]/tabular-nums — label de "sem prazo" no canto direito do header comfortable */ 'shrink-0 font-mono text-[10px] tabular-nums text-muted-foreground/35',
+                    /* design-system-escape: font-mono/text-[10px]/tabular-nums — label de "sem prazo" no canto direito do header comfortable */ 'shrink-0 font-mono text-[10px] tabular-nums text-muted-foreground/55',
                   )}
                 >
                   —

@@ -685,6 +685,7 @@ export async function audienciasCapture(
         atualizados: persistencia.atualizados,
         naoAtualizados: persistencia.naoAtualizados,
         pulados: persistencia.pulados,
+        conflitos: persistencia.conflitos,
         erros: persistencia.erros,
       });
     } catch (error) {

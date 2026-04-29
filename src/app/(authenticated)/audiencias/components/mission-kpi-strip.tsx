@@ -142,7 +142,7 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
             </div>
           </div>
           <IconContainer size="md" className="bg-primary/8">
-            <CalendarDays className="size-4 text-primary/50" />
+            <CalendarDays className="size-4 text-primary/70" />
           </IconContainer>
         </div>
         {/* Sparkline de tendência 6m */}
@@ -180,7 +180,7 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
               {stats.nextDetail}
             </span>
           ) : (
-            <span className="text-caption text-muted-foreground/45">Nenhuma agendada</span>
+            <span className="text-caption text-muted-foreground/65">Nenhuma agendada</span>
           )}
         </div>
       </GlassPanel>
@@ -228,7 +228,7 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
             </div>
           </div>
           <IconContainer size="md" className="bg-primary/8">
-            <ShieldCheck className="size-4 text-primary/50" />
+            <ShieldCheck className="size-4 text-primary/70" />
           </IconContainer>
         </div>
         {/* Barra de preparo com cor dinâmica */}

@@ -90,7 +90,7 @@ export function WidgetWrapper({
       <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ 'pb-2', headerClassName)}>
         <div className="flex items-center justify-between">
           <Heading level="widget" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
-            {Icon && <Icon className="h-4 w-4 text-muted-foreground" />}
+            {Icon && <Icon className="h-4 w-4 text-muted-foreground/80" />}
             {title}
           </Heading>
           <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>

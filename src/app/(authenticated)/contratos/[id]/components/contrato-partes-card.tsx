@@ -47,7 +47,7 @@ function ParteRow({ nome, subtitulo, papel, cpfCnpj }: ParteRowProps) {
   const papelLabel = PAPEL_CONTRATUAL_LABELS[papel] ?? papel;
 
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-3 px-3 py-2.5 rounded-xl bg-muted/30 border border-border/20 transition-colors hover:bg-muted/50")}>
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-3 px-3 py-2.5 rounded-xl bg-muted/30 border border-border/40 transition-colors hover:bg-muted/50")}>
       <span
         aria-hidden="true"
         className={cn('w-1 h-7 rounded-full shrink-0', RAIL_COLOR[papel])}

@@ -40,7 +40,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
         <Button
           size="icon"
           variant="ghost"
-          className="size-7 text-muted-foreground/50 hover:bg-foreground/4 hover:text-foreground"
+          className="size-7 text-muted-foreground/70 hover:bg-foreground/4 hover:text-foreground"
           onClick={() => toggleProfileSheet(false)}
           aria-label="Fechar detalhes"
         >
@@ -76,17 +76,17 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
 
         {/* Informacoes section — icon + label + value per mock */}
         <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-5 py-3.5 border-t border-border/40 dark:border-white/6")}>
-          <Text variant="overline" as="h5" className="text-muted-foreground/35 mb-3">
+          <Text variant="overline" as="h5" className="text-muted-foreground/55 mb-3">
             Informacoes
           </Text>
           <div className={cn(/* design-system-escape: space-y-0 sem token DS */ "space-y-0")}>
             {/* Email */}
             <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2.5 py-2")}>
               <div className="size-7 rounded-md flex items-center justify-center bg-primary/6 shrink-0">
-                <Mail className="size-3 text-primary/50" />
+                <Mail className="size-3 text-primary/70" />
               </div>
               <div>
-                <p className="text-[0.6rem] text-muted-foreground/40">Email</p>
+                <p className="text-[0.6rem] text-muted-foreground/65">Email</p>
                 <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[0.725rem] font-medium text-foreground")}>
                   {user.email || user.emailCorporativo || "—"}
                 </p>
@@ -96,10 +96,10 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
             {user.phone && (
               <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2.5 py-2")}>
                 <div className="size-7 rounded-md flex items-center justify-center bg-primary/6 shrink-0">
-                  <Phone className="size-3 text-primary/50" />
+                  <Phone className="size-3 text-primary/70" />
                 </div>
                 <div>
-                  <p className="text-[0.6rem] text-muted-foreground/40">Telefone</p>
+                  <p className="text-[0.6rem] text-muted-foreground/65">Telefone</p>
                   <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[0.725rem] font-medium text-foreground")}>{user.phone}</p>
                 </div>
               </div>
@@ -108,10 +108,10 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
             {user.country && (
               <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2.5 py-2")}>
                 <div className="size-7 rounded-md flex items-center justify-center bg-primary/6 shrink-0">
-                  <Calendar className="size-3 text-primary/50" />
+                  <Calendar className="size-3 text-primary/70" />
                 </div>
                 <div>
-                  <p className="text-[0.6rem] text-muted-foreground/40">Pais</p>
+                  <p className="text-[0.6rem] text-muted-foreground/65">Pais</p>
                   <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[0.725rem] font-medium text-foreground")}>{user.country}</p>
                 </div>
               </div>
@@ -122,7 +122,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
         {/* Media section — 3-column grid per mock */}
         {user.medias && user.medias.length > 0 && (
           <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-5 py-3.5 border-t border-border/40 dark:border-white/6")}>
-            <Text variant="overline" as="h5" className="text-muted-foreground/35 mb-3">
+            <Text variant="overline" as="h5" className="text-muted-foreground/55 mb-3">
               Midia Compartilhada
             </Text>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "grid grid-cols-3 gap-1.5")}>
@@ -148,7 +148,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
         {/* Website */}
         {user.website && (
           <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-5 py-3.5 border-t border-border/40 dark:border-white/6")}>
-            <Text variant="overline" as="h5" className="text-muted-foreground/35 mb-3">
+            <Text variant="overline" as="h5" className="text-muted-foreground/55 mb-3">
               Website
             </Text>
             <a

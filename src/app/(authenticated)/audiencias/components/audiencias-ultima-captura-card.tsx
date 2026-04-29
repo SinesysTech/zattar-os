@@ -32,7 +32,7 @@ function MetricColumn({
 }) {
   return (
     <div className="flex-1 min-w-0">
-      <p className="text-meta-label text-muted-foreground/50 truncate">
+      <p className="text-meta-label text-muted-foreground/70 truncate">
         {label}
       </p>
       <p className="text-kpi-value leading-none mt-1 text-foreground font-display">
@@ -82,7 +82,7 @@ export function AudienciasUltimaCapturaCard({
   if (!resumo) {
     return (
       <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5 opacity-50")}>
-        <p className="text-meta-label text-muted-foreground/50">
+        <p className="text-meta-label text-muted-foreground/70">
           ÚLTIMA CAPTURA
         </p>
         <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/60 mt-1")}>Nenhuma captura de audiências realizada</p>
@@ -159,7 +159,7 @@ export function AudienciasUltimaCapturaCard({
       </div>
 
       {/* Footer */}
-      <p className="text-[9px] tabular-nums text-muted-foreground/45 mt-2 truncate">
+      <p className="text-[9px] tabular-nums text-muted-foreground/65 mt-2 truncate">
         #{resumo.capturaId} · {resumo.tipoCaptura} · Clique para ver audiências
       </p>
     </GlassPanel>

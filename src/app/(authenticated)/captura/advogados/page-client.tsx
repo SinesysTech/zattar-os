@@ -189,7 +189,7 @@ export default function AdvogadosPage() {
     <>
       <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
         {/* Breadcrumb */}
-        <nav className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-1.5 text-xs text-muted-foreground/60")}>
+        <nav className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-1.5 text-xs text-muted-foreground/75")}>
           <a href="/captura" className="hover:text-foreground transition-colors">Captura</a>
           <ChevronRight className="size-3" />
           <a href="/captura?tab=credenciais" className="hover:text-foreground transition-colors">Credenciais</a>
@@ -201,7 +201,7 @@ export default function AdvogadosPage() {
         <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
           <div>
             <Heading level="page">Advogados</Heading>
-            <Text variant="caption" className="text-muted-foreground/50 mt-0.5">
+            <Text variant="caption" className="text-muted-foreground/70 mt-0.5">
               Gestão de advogados com acesso aos sistemas judiciais
             </Text>
           </div>
@@ -290,8 +290,8 @@ export default function AdvogadosPage() {
                   <div className={cn(/* design-system-escape: my-2 margin sem primitiva DS */ "border-t border-border/10 my-2")} />
 
                   {/* CPF */}
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-2 text-xs text-muted-foreground/60 mb-1.5")}>
-                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wide sem token DS */ "font-medium text-muted-foreground/40 uppercase tracking-wide text-[10px]")}>CPF</span>
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-2 text-xs text-muted-foreground/75 mb-1.5")}>
+                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wide sem token DS */ "font-medium text-muted-foreground/65 uppercase tracking-wide text-[10px]")}>CPF</span>
                     <span className="truncate">{advogado.cpf}</span>
                   </div>
 
@@ -299,13 +299,13 @@ export default function AdvogadosPage() {
 
                   {/* Credenciais count */}
                   <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-1.5 text-xs")}>
-                    <Lock className="size-3.5 text-muted-foreground/45 shrink-0" />
+                    <Lock className="size-3.5 text-muted-foreground/65 shrink-0" />
                     {temCredenciais ? (
                       <span className="text-muted-foreground/70">
                         <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-success font-medium")}>{ativas} ativa{ativas !== 1 ? 's' : ''}</span>
                         {inativas > 0 && (
                           <>
-                            <span className={cn(/* design-system-escape: mx-1 margin sem primitiva DS */ "text-muted-foreground/35 mx-1")}>/</span>
+                            <span className={cn(/* design-system-escape: mx-1 margin sem primitiva DS */ "text-muted-foreground/55 mx-1")}>/</span>
                             <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-warning font-medium")}>{inativas} inativa{inativas !== 1 ? 's' : ''}</span>
                           </>
                         )}
@@ -349,7 +349,7 @@ export default function AdvogadosPage() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; p-0 → usar <Inset> */ "text-xs h-7 w-7 p-0 text-muted-foreground/45 hover:text-destructive")}
+                      className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; p-0 → usar <Inset> */ "text-xs h-7 w-7 p-0 text-muted-foreground/65 hover:text-destructive")}
                       onClick={() => handleDelete(advogado)}
                       aria-label="Excluir"
                     >

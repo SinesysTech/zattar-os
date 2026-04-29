@@ -316,7 +316,7 @@ function GlassRow({
             <p className="text-sm font-semibold text-foreground leading-snug">
               {poloAtivo}
               {poloAtivo !== '—' && poloPassivo !== '—' && (
-                <span className="mx-1.5 text-[10px] font-normal text-muted-foreground/40">vs</span>
+                <span className="mx-1.5 text-[10px] font-normal text-muted-foreground/65">vs</span>
               )}
               {poloPassivo !== '—' && (
                 <span className="font-medium text-muted-foreground/80">{poloPassivo}</span>
@@ -386,7 +386,7 @@ function GlassRow({
                   <span className={cn(/* design-system-escape: leading-snug sem token DS */ "text-caption flex-1 line-clamp-1 leading-snug")}>
                     {obsValue || 'Adicionar observações'}
                   </span>
-                  <Pencil className="w-2.5 h-2.5 shrink-0 text-muted-foreground/40 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <Pencil className="w-2.5 h-2.5 shrink-0 text-muted-foreground/65 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </button>
               </div>
             )}
@@ -403,7 +403,7 @@ function GlassRow({
                 <button
                   type="button"
                   onClick={onView}
-                  className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex h-6 cursor-pointer items-center gap-1 rounded-md border border-border/20 px-2 text-[10px] font-medium text-muted-foreground/60 transition-colors hover:border-border/40 hover:text-muted-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
+                  className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex h-6 cursor-pointer items-center gap-1 rounded-md border border-border/40 px-2 text-[10px] font-medium text-muted-foreground/75 transition-colors hover:border-border/60 hover:text-muted-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
                 >
                   <ExternalLink className="size-3" />
                   Detalhes
@@ -477,9 +477,9 @@ function ListSkeleton() {
 function EmptyState() {
   return (
     <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
-      <Gavel className="w-10 h-10 text-muted-foreground/30 mb-4" />
-      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/50")}>Nenhuma audiência encontrada</p>
-      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/30 mt-1")}>
+      <Gavel className="w-10 h-10 text-muted-foreground/55 mb-4" />
+      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/70")}>Nenhuma audiência encontrada</p>
+      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/55 mt-1")}>
         Tente ajustar os filtros ou criar uma nova audiência
       </p>
     </div>

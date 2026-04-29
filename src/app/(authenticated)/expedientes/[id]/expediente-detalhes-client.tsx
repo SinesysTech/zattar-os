@@ -184,7 +184,7 @@ export function ExpedienteDetalhesClient({
               <ArrowLeft className="size-3" />
               Expedientes
             </Link>
-            <ChevronRight className="size-3 text-muted-foreground/40" />
+            <ChevronRight className="size-3 text-muted-foreground/65" />
             <span className="text-foreground/80 tabular-nums">
               #{expedienteId.toString().padStart(6, '0')}
             </span>
@@ -379,7 +379,7 @@ function HeroBlock({
               <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-0.5 padding direcional sem Inset equiv. */ "flex items-center gap-3 py-0.5")}>
                 <Text
                   variant="micro-caption"
-                  className="uppercase tracking-[0.3em] text-muted-foreground/50"
+                  className="uppercase tracking-[0.3em] text-muted-foreground/70"
                 >
                   versus
                 </Text>
@@ -407,14 +407,14 @@ function HeroBlock({
               >
                 <Text
                   variant="micro-badge"
-                  className="uppercase tracking-[0.22em] text-muted-foreground/50 group-hover:text-muted-foreground transition-colors"
+                  className="uppercase tracking-[0.22em] text-muted-foreground/70 group-hover:text-muted-foreground transition-colors"
                 >
                   Processo
                 </Text>
                 <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-mono text-[13px] font-medium text-foreground/85 tabular-nums group-hover:text-foreground transition-colors")}>
                   {expediente.numeroProcesso}
                 </span>
-                <Copy className="size-3 text-muted-foreground/30 group-hover:text-foreground/60 transition-colors" />
+                <Copy className="size-3 text-muted-foreground/55 group-hover:text-foreground/75 transition-colors" />
               </button>
             </div>
 
@@ -466,7 +466,7 @@ function EditorialTabs({
                 /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ 'font-heading text-sm font-semibold tracking-tight',
                 isActive
                   ? 'text-foreground'
-                  : 'text-muted-foreground/50 hover:text-muted-foreground',
+                  : 'text-muted-foreground/70 hover:text-muted-foreground',
               )}
             >
               <span className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "inline-flex items-center gap-2")}>
@@ -547,7 +547,7 @@ function DadosTab({
           <Text
             variant="overline"
             as="p"
-            className="tracking-[0.2em] text-muted-foreground/50 mb-3"
+            className="tracking-[0.2em] text-muted-foreground/70 mb-3"
           >
             Texto oficial publicado no PJE
           </Text>
@@ -573,7 +573,7 @@ function DadosTab({
           <Text
             variant="overline"
             as="p"
-            className="tracking-[0.2em] text-muted-foreground/50 mb-3"
+            className="tracking-[0.2em] text-muted-foreground/70 mb-3"
           >
             Resumo interno, estratégia, pontos de atenção
           </Text>
@@ -725,7 +725,7 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
             className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-bold text-foreground mt-1 tabular-nums")}
           >
             {arquivos.length.toString().padStart(2, '0')}{' '}
-            <span className="text-muted-foreground/50 font-normal">documentos</span>
+            <span className="text-muted-foreground/70 font-normal">documentos</span>
           </Heading>
         </div>
         <Button variant="outline" size="sm" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; gap-1.5 gap sem token DS */ "rounded-full h-8 px-3 text-xs gap-1.5")}>
@@ -743,7 +743,7 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
             >
               <Text
                 variant="micro-caption"
-                className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-muted-foreground/40 tabular-nums w-6")}
+                className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-muted-foreground/65 tabular-nums w-6")}
               >
                 {(idx + 1).toString().padStart(2, '0')}
               </Text>
@@ -757,7 +757,7 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
                   </Text>
                   <Text
                     variant="micro-badge"
-                    className={cn(/* design-system-escape: tracking-wider sem token DS */ "uppercase tracking-wider text-muted-foreground/40")}
+                    className={cn(/* design-system-escape: tracking-wider sem token DS */ "uppercase tracking-wider text-muted-foreground/65")}
                   >
                     · {arq.tipo}
                   </Text>
@@ -773,7 +773,7 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
                   {formatSize(arq.tamanhoBytes)} · {format(parseISO(arq.criadoEm), 'dd MMM yyyy', { locale: ptBR })}
                 </Text>
               </div>
-              <ArrowUpRight className="size-4 text-muted-foreground/40 group-hover:text-primary transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              <ArrowUpRight className="size-4 text-muted-foreground/65 group-hover:text-primary transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </button>
           </li>
         ))}
@@ -838,7 +838,7 @@ function HistoricoTab({
               <span className="h-px flex-1 bg-border/20 max-w-16" />
               <Text
                 variant="micro-caption"
-                className="tabular-nums text-muted-foreground/50"
+                className="tabular-nums text-muted-foreground/70"
               >
                 {format(parseISO(evt.data), "dd MMM · HH:mm", { locale: ptBR })}
               </Text>
@@ -894,7 +894,7 @@ function EditorialBlock({
             variant="overline"
             className={cn(
               'tracking-[0.22em] shrink-0',
-              accent === 'primary' ? 'text-primary' : 'text-muted-foreground/50',
+              accent === 'primary' ? 'text-primary' : 'text-muted-foreground/70',
             )}
           >
             {overline}
@@ -910,7 +910,7 @@ function EditorialBlock({
         {hint && (
           <Text
             variant="micro-badge"
-            className={cn(/* design-system-escape: gap-1.5 gap sem token DS; tracking-wider sem token DS */ "inline-flex items-center gap-1.5 uppercase tracking-wider text-muted-foreground/50 shrink-0")}
+            className={cn(/* design-system-escape: gap-1.5 gap sem token DS; tracking-wider sem token DS */ "inline-flex items-center gap-1.5 uppercase tracking-wider text-muted-foreground/70 shrink-0")}
           >
             <Pencil className="size-2.5" />
             {hint}
@@ -958,7 +958,7 @@ function MetaPill({ label, value }: { label: string; value: string }) {
     <span className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "inline-flex items-center gap-2")}>
       <Text
         variant="micro-badge"
-        className="uppercase tracking-[0.22em] text-muted-foreground/50"
+        className="uppercase tracking-[0.22em] text-muted-foreground/70"
       >
         {label}
       </Text>
@@ -1037,7 +1037,7 @@ function ResponsavelCard({
         </Text>
         <Text
           variant="micro-badge"
-          className={cn(/* design-system-escape: tracking-wider sem token DS */ "uppercase tracking-wider text-muted-foreground/40")}
+          className={cn(/* design-system-escape: tracking-wider sem token DS */ "uppercase tracking-wider text-muted-foreground/65")}
         >
           reatribuir ↗
         </Text>
@@ -1075,7 +1075,7 @@ function ResponsavelCard({
         ) : (
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-1 padding direcional sem Inset equiv. */ "flex items-center gap-3 w-full text-left py-1")}>
             <div className="size-12 rounded-full bg-muted/40 flex items-center justify-center ring-2 ring-dashed ring-border/40">
-              <User className="size-5 text-muted-foreground/40" />
+              <User className="size-5 text-muted-foreground/65" />
             </div>
             <div>
               <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; leading-tight sem token DS */ "font-heading font-bold text-warning/80 italic leading-tight")}>
@@ -1084,7 +1084,7 @@ function ResponsavelCard({
               <Text
                 variant="micro-caption"
                 as="p"
-                className={cn(/* design-system-escape: tracking-wider sem token DS */ "uppercase tracking-wider text-muted-foreground/50 mt-0.5")}
+                className={cn(/* design-system-escape: tracking-wider sem token DS */ "uppercase tracking-wider text-muted-foreground/70 mt-0.5")}
               >
                 clique para atribuir
               </Text>
@@ -1107,7 +1107,7 @@ function SidebarSection({
     <section>
       <Heading
         level="subsection"
-        className="text-meta-label tracking-[0.24em] text-muted-foreground/55 mb-3"
+        className="text-meta-label tracking-[0.24em] text-muted-foreground/70 mb-3"
       >
         {label}
       </Heading>
@@ -1232,7 +1232,7 @@ function InlineTipoEditor({
               Clique para atribuir tipo
             </span>
           )}
-          <Tag className="size-3 text-muted-foreground/40 group-hover:text-primary transition-colors" />
+          <Tag className="size-3 text-muted-foreground/65 group-hover:text-primary transition-colors" />
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-72 p-0 rounded-2xl glass-dropdown overflow-hidden")} align="start">
@@ -1241,7 +1241,7 @@ function InlineTipoEditor({
             <Text
               variant="micro-badge"
               as="p"
-              className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground/50 uppercase tracking-[0.2em] mb-2")}
+              className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground/70 uppercase tracking-[0.2em] mb-2")}
             >
               Escolher tipo
             </Text>

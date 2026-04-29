@@ -35,17 +35,17 @@ const SUGGESTION_CARDS = [
 export function ChatEmptyState() {
   return (
     <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "hidden md:flex h-full w-full items-center justify-center p-8")}>
-      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "flex flex-col items-center gap-6 max-w-[420px] w-full")}>
+      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "flex flex-col items-center gap-6 max-w-105 w-full")}>
         {/* Icon + Copy */}
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col items-center gap-3")}>
-          <div className="size-16 rounded-[1.25rem] bg-primary/[0.08] flex items-center justify-center mb-2">
-            <MessageSquare className="size-7 text-primary/50" />
+          <div className="size-16 rounded-[1.25rem] bg-primary/8 flex items-center justify-center mb-2">
+            <MessageSquare className="size-7 text-primary/70" />
           </div>
           <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col items-center gap-1.5")}>
             <Heading level="section" className="text-foreground">
               Suas conversas
             </Heading>
-            <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[0.8rem] text-muted-foreground/50 text-center text-balance leading-relaxed")}>
+            <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[0.8rem] text-muted-foreground/70 text-center text-balance leading-relaxed")}>
               Selecione uma conversa para começar ou inicie uma nova.
             </p>
           </div>
@@ -56,7 +56,7 @@ export function ChatEmptyState() {
           {SUGGESTION_CARDS.map(({ icon, title, description, colorClass }) => (
             <button
               key={title}
-              className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-3.5 → usar <Inset> */ "flex items-start gap-2.5 p-3.5 rounded-[0.875rem] bg-foreground/[0.03] border border-foreground/[0.06] text-left hover:bg-foreground/[0.05] hover:border-primary/[0.12] hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(0,0,0,0.15)] transition-all duration-250 cursor-pointer group")}
+              className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-3.5 → usar <Inset> */ "flex items-start gap-2.5 p-3.5 rounded-[0.875rem] bg-foreground/3 border border-foreground/6 text-left hover:bg-foreground/5 hover:border-primary/12 hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(0,0,0,0.15)] transition-all duration-250 cursor-pointer group")}
               onClick={() => toast("Em breve", { description: title })}
             >
               <div
@@ -68,7 +68,7 @@ export function ChatEmptyState() {
                 <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[0.7rem] font-semibold text-foreground mb-0.5")}>
                   {title}
                 </p>
-                <p className={cn(/* design-system-escape: leading-snug sem token DS */ "text-[0.6rem] text-muted-foreground/45 leading-snug")}>
+                <p className={cn(/* design-system-escape: leading-snug sem token DS */ "text-[0.6rem] text-muted-foreground/65 leading-snug")}>
                   {description}
                 </p>
               </div>

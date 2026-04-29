@@ -13,7 +13,7 @@ export function MessageStatusIcon({ status }: { status: MessageStatus }) {
     case "forwarded":
       return <CheckCheck className="size-3 shrink-0 text-muted-foreground" />;
     case "sent":
-      return <Check className="size-3 shrink-0 text-primary/50" />;
+      return <Check className="size-3 shrink-0 text-primary/70" />;
     default:
       return null;
   }
