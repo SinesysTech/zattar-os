@@ -530,16 +530,20 @@ export class ChatService {
     if (salaResult.isErr()) return err(salaResult.error);
     if (!salaResult.value) return err(new Error('Sala não encontrada.'));
 
-    // TODO: Adicionar lógica mais refinada de permissão?
-    // Por enquanto, apenas criador ou participante podem arquivar (mas is_archive é flag da sala ou relação user_sala?)
-    // Se is_archive for na tabela salas_chat, afeta ambos. Se for tabela user_rooms, é individual.
-    // O schema atual sugere ser na tabela salas_chat (simplificado).
-    // Vou assumir que quem criou pode arquivar (como deletar).
-    // Ou se for privado, qualquer um dos dois.
-    // Dado o schema simplificado:
     const sala = salaResult.value;
-    if (sala.criadoPor !== usuarioId && sala.participanteId !== usuarioId) {
-       return err(new Error('Permissão negada para arquivar sala.'));
+
+    if (sala.tipo === TipoSalaChat.Geral) {
+      return err(new Error('Sala Geral não pode ser arquivada.'));
+    }
+
+    if (sala.tipo === TipoSalaChat.Privado) {
+      if (sala.criadoPor !== usuarioId && sala.participanteId !== usuarioId) {
+        return err(new Error('Apenas os participantes podem arquivar esta conversa.'));
+      }
+    } else {
+      if (sala.criadoPor !== usuarioId) {
+        return err(new Error('Apenas o criador pode arquivar esta sala.'));
+      }
     }
 
     return this.roomsRepo.archiveSala(id);
@@ -554,8 +558,19 @@ export class ChatService {
     if (!salaResult.value) return err(new Error('Sala não encontrada.'));
 
     const sala = salaResult.value;
-    if (sala.criadoPor !== usuarioId && sala.participanteId !== usuarioId) {
-       return err(new Error('Permissão negada para desarquivar sala.'));
+
+    if (sala.tipo === TipoSalaChat.Geral) {
+      return err(new Error('Sala Geral não pode ser desarquivada.'));
+    }
+
+    if (sala.tipo === TipoSalaChat.Privado) {
+      if (sala.criadoPor !== usuarioId && sala.participanteId !== usuarioId) {
+        return err(new Error('Apenas os participantes podem desarquivar esta conversa.'));
+      }
+    } else {
+      if (sala.criadoPor !== usuarioId) {
+        return err(new Error('Apenas o criador pode desarquivar esta sala.'));
+      }
     }
 
     return this.roomsRepo.unarchiveSala(id);
