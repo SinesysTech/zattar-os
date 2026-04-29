@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 
-import { buscarExpediente } from '@/app/(authenticated)/expedientes/service';
+import { buscarExpediente, listarLogsPorExpediente } from '@/app/(authenticated)/expedientes/service';
 import { ResultadoDecisao } from '@/app/(authenticated)/expedientes/domain';
 import { service as usuariosService } from '@/app/(authenticated)/usuarios/service';
 import * as tiposExpedientesService from '@/app/(authenticated)/tipos-expedientes/service';
@@ -76,10 +76,42 @@ async function carregarBundle(
         ]
       : [];
 
-  // TODO(expedientes-historico): expor `listarLogsPorExpediente(id)` sobre
-  // `logs_alteracao` (tipo_entidade = 'expedientes') e hidratar este campo.
-  // Até lá, a aba "Histórico" renderiza estado vazio — melhor do que mock.
-  const historico: DetalheHistoricoEvento[] = [];
+const logsResult = await listarLogsPorExpediente(expedienteId);
+  const historicoRaw = logsResult.success && logsResult.data ? logsResult.data : [];
+
+  const historico: DetalheHistoricoEvento[] = historicoRaw.map((log) => {
+    // Tenta mapear o tipo_evento do banco para o union type suportado
+    let tipoMapeado: DetalheHistoricoEvento['tipo'] = 'alteracao_observacoes'; // fallback padrão
+    const te = log.tipo_evento;
+
+    if (te === 'criacao') tipoMapeado = 'criacao';
+    else if (te === 'atribuicao_responsavel') tipoMapeado = 'atribuicao_responsavel';
+    else if (te === 'alteracao_tipo') tipoMapeado = 'alteracao_tipo';
+    else if (te === 'alteracao_tipo_descricao') tipoMapeado = 'alteracao_descricao'; // Assumindo mapeamento aproximado
+    else if (te === 'alteracao_observacoes') tipoMapeado = 'alteracao_observacoes';
+    else if (te === 'baixa') tipoMapeado = 'baixa';
+    else if (te === 'reversao_baixa') tipoMapeado = 'reversao_baixa';
+    else if (te === 'visualizacao') tipoMapeado = 'visualizacao';
+
+    // Gera uma descricao automatica caso o front requeira
+    let descricao = 'Alteração no expediente';
+    if (tipoMapeado === 'criacao') descricao = 'Expediente criado';
+    else if (tipoMapeado === 'atribuicao_responsavel') descricao = 'Responsável alterado';
+    else if (tipoMapeado === 'alteracao_tipo') descricao = 'Tipo alterado';
+    else if (tipoMapeado === 'alteracao_descricao') descricao = 'Descrição ou tipo alterado';
+    else if (tipoMapeado === 'baixa') descricao = 'Expediente baixado';
+    else if (tipoMapeado === 'reversao_baixa') descricao = 'Baixa revertida';
+
+    return {
+      id: String(log.id),
+      tipo: tipoMapeado,
+      data: log.created_at,
+      autorId: log.usuario_que_executou_id,
+      descricao,
+      dadosAnteriores: log.dados_evento as Record<string, unknown>, // the actual front end might expect old vs new
+      dadosNovos: log.dados_evento as Record<string, unknown>
+    };
+  });
 
   return {
     expediente,
