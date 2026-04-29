@@ -114,6 +114,16 @@ export async function POST(request: NextRequest) {
         erro?: string;
       }> = [];
 
+      // Pre-fetch das configurações de tribunal em paralelo para aquecer o cache (Otimização de N+1 I/O)
+      await Promise.all(
+        credenciaisOrdenadas.map((cred) =>
+          getTribunalConfig(cred.tribunal, cred.grau).catch((e) => {
+            // Ignoramos o erro no pre-fetch; ele será tratado individualmente no loop principal
+            console.warn(`[Perícias] Erro no pre-fetch de config para ${cred.tribunal} ${cred.grau}:`, e instanceof Error ? e.message : String(e));
+          })
+        )
+      );
+
       for (const credCompleta of credenciaisOrdenadas) {
         console.log(`[Perícias] Iniciando captura: ${credCompleta.tribunal} ${credCompleta.grau} (Credencial ID: ${credCompleta.credentialId})`);
 
