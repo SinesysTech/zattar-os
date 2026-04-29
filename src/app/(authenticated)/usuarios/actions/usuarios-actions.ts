@@ -136,12 +136,11 @@ export async function actionAtualizarUsuario(
   dados: Partial<UsuarioDados>
 ) {
   try {
-    await requireAuth(["usuarios:editar"]);
+    const { userId } = await requireAuth(["usuarios:editar"]);
 
     // Se estiver desativando (ativo: false), usar lógica específica de desativação
     if (dados.ativo === false) {
-      // Need to get userId - bug in original code, it was removed but still referenced
-      const { userId } = await requireAuth(["usuarios:editar"]);
+      // Usando o userId obtido do auth
       const result = await usuariosService.desativarUsuario(id, userId);
       if (result.sucesso) {
         revalidatePath("/app/usuarios");
