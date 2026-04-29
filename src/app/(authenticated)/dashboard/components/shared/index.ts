@@ -4,3 +4,4 @@
 
 export { MetricCard } from './metric-card';
 export { ObrigacoesRecentesCard } from './obrigacoes-recentes-card';
+export { StatCard, MiniStat } from './stat-card';

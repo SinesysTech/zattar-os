@@ -46,7 +46,6 @@ import {
   countContratosSemResponsavel,
   countContratosNovosMes,
   countContratosTrendMensal,
-  countContratosStatusMes,
 } from "../repository";
 
 import { createDbClient } from "@/lib/supabase";
@@ -1484,49 +1483,3 @@ export async function actionContratosPulseStats(): Promise<
   };
 }
 
-// =============================================================================
-// KPI CARDS DO DASHBOARD DE CONTRATOS
-// =============================================================================
-
-export type ContratosKpiData = {
-  contratadosNaoDistribuidos: number;
-  distribuidosMes: number;
-  assinadosMes: number;
-  emContratacao: number;
-};
-
-/**
- * Retorna as 4 métricas dos KPI cards do dashboard de contratos em paralelo.
- *
- * - contratadosNaoDistribuidos: total com status='contratado' (assinados, aguardando distribuição)
- * - distribuidosMes: status='distribuido' criados no mês corrente
- * - assinadosMes: status='contratado' criados no mês corrente
- * - emContratacao: total com status='em_contratacao'
- */
-export async function actionContratosKpiDashboard(): Promise<
-  ActionResult<ContratosKpiData>
-> {
-  const [statusResult, distribuidosMesResult, assinadosMesResult] =
-    await Promise.all([
-      contarContratosPorStatus(),
-      countContratosStatusMes("distribuido"),
-      countContratosStatusMes("contratado"),
-    ]);
-
-  return {
-    success: true,
-    data: {
-      contratadosNaoDistribuidos: statusResult.success
-        ? (statusResult.data.contratado ?? 0)
-        : 0,
-      distribuidosMes: distribuidosMesResult.success
-        ? distribuidosMesResult.data
-        : 0,
-      assinadosMes: assinadosMesResult.success ? assinadosMesResult.data : 0,
-      emContratacao: statusResult.success
-        ? (statusResult.data.em_contratacao ?? 0)
-        : 0,
-    },
-    message: "KPIs carregados",
-  };
-}

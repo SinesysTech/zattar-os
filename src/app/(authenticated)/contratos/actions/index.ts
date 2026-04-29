@@ -13,7 +13,6 @@ export type {
   SegmentoDetalhado,
   ContratosPulseStats,
 } from "./types";
-export type { ContratosKpiData } from "./contratos-actions";
 export {
   actionCriarContrato,
   actionAtualizarContrato,
@@ -31,7 +30,6 @@ export {
   actionAlterarResponsavelContrato,
   actionContratosStats,
   actionContratosPulseStats,
-  actionContratosKpiDashboard,
 } from "./contratos-actions";
 
 // Segmentos Actions

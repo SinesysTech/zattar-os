@@ -1124,44 +1124,6 @@ export async function countContratosSemResponsavel(): Promise<Result<number>> {
 }
 
 /**
- * Conta contratos de um status específico criados no mês corrente
- */
-export async function countContratosStatusMes(
-  status: StatusContrato,
-): Promise<Result<number>> {
-  try {
-    const db = createDbClient();
-
-    const agora = new Date();
-    const primeiroDiaMes = new Date(agora.getFullYear(), agora.getMonth(), 1);
-    primeiroDiaMes.setHours(0, 0, 0, 0);
-
-    const { count, error } = await db
-      .from(TABLE_CONTRATOS)
-      .select("*", { count: "exact", head: true })
-      .eq("status", status)
-      .gte("created_at", primeiroDiaMes.toISOString());
-
-    if (error) {
-      return err(
-        appError("DATABASE_ERROR", error.message, { code: error.code }),
-      );
-    }
-
-    return ok(count ?? 0);
-  } catch (error) {
-    return err(
-      appError(
-        "DATABASE_ERROR",
-        "Erro ao contar contratos por status no mês",
-        undefined,
-        error instanceof Error ? error : undefined,
-      ),
-    );
-  }
-}
-
-/**
  * Remove permanentemente um contrato
  */
 export async function deleteContrato(id: number): Promise<Result<void>> {

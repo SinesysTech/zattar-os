@@ -60,8 +60,7 @@ export {
   actionContratosPulseStats,
 } from './actions';
 
-export type { ContratosPulseStats, ContratosKpiData } from './actions';
-export { actionContratosKpiDashboard } from './actions';
+export type { ContratosPulseStats } from './actions';
 
 // --- Segmentos Actions ---
 export type {

@@ -1,0 +1,149 @@
+'use client';
+
+import { LucideIcon, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import Link from 'next/link';
+import { CardContent } from '@/components/ui/card';
+import { GlassPanel } from '@/components/shared/glass-panel';
+import { cn } from '@/lib/utils';
+import { Heading } from '@/components/ui/typography';
+
+interface StatCardProps {
+  title: string;
+  value: number | string;
+  change?: number;
+  changeLabel?: string;
+  trend?: 'up' | 'down' | 'neutral';
+  icon?: LucideIcon;
+  href?: string;
+  description?: string;
+  className?: string;
+  variant?: 'default' | 'success' | 'warning' | 'danger' | 'info';
+}
+
+const variantStyles = {
+  default: {
+    icon: 'text-primary bg-primary/10',
+    trend: {
+      up: 'text-success',
+      down: 'text-destructive',
+      neutral: 'text-muted-foreground',
+    },
+  },
+  success: {
+    icon: 'text-success bg-success/10',
+    trend: {
+      up: 'text-success',
+      down: 'text-destructive',
+      neutral: 'text-muted-foreground',
+    },
+  },
+  warning: {
+    icon: 'text-warning bg-warning/10',
+    trend: {
+      up: 'text-warning',
+      down: 'text-success',
+      neutral: 'text-muted-foreground',
+    },
+  },
+  danger: {
+    icon: 'text-destructive bg-destructive/10',
+    trend: {
+      up: 'text-destructive',
+      down: 'text-success',
+      neutral: 'text-muted-foreground',
+    },
+  },
+  info: {
+    icon: 'text-info bg-info/10',
+    trend: {
+      up: 'text-info',
+      down: 'text-destructive',
+      neutral: 'text-muted-foreground',
+    },
+  },
+};
+
+export function StatCard({
+  title,
+  value,
+  change,
+  changeLabel,
+  trend = 'neutral',
+  icon: Icon,
+  href,
+  description,
+  className,
+  variant = 'default',
+}: StatCardProps) {
+  const styles = variantStyles[variant];
+  const TrendIcon = trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : Minus;
+
+  const content = (
+    <GlassPanel depth={2} className={cn('transition-all hover:shadow-md', href && 'cursor-pointer', className)}>
+      <CardContent className={cn("pt-4 sm:pt-6")}>
+        <div className={cn("flex items-start justify-between gap-2")}>
+          <div className={cn("space-y-1 sm:space-y-2 flex-1 min-w-0")}>
+            <Heading level="widget" className="text-muted-foreground truncate">{title}</Heading>
+            <div className={cn("flex items-baseline gap-2 flex-wrap")}>
+              <p className={cn("text-2xl sm:text-3xl font-bold tracking-tight break-all")}>
+                {typeof value === 'number' ? value.toLocaleString('pt-BR') : value}
+              </p>
+              {change !== undefined && (
+                <div className={cn('flex items-center gap-1 text-sm font-medium whitespace-nowrap', styles.trend[trend])}>
+                  <TrendIcon className="h-4 w-4" />
+                  <span>
+                    {change > 0 ? '+' : ''}
+                    {change}%
+                  </span>
+                </div>
+              )}
+            </div>
+            {(changeLabel || description) && (
+              <p className={cn("text-xs text-muted-foreground line-clamp-2")}>{changeLabel || description}</p>
+            )}
+          </div>
+          {Icon && (
+            <div className={cn('rounded-lg p-2 sm:p-3 shrink-0', styles.icon)}>
+              <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </GlassPanel>
+  );
+
+  if (href) {
+    return <Link href={href}>{content}</Link>;
+  }
+
+  return content;
+}
+
+interface MiniStatProps {
+  label: string;
+  value: number | string;
+  icon?: LucideIcon;
+  color?: string;
+  className?: string;
+}
+
+export function MiniStat({ label, value, icon: Icon, color, className }: MiniStatProps) {
+  return (
+    <div className={cn('flex items-center gap-3', className)}>
+      {Icon && (
+        <div
+          className={cn("rounded-md p-2")}
+          style={{ backgroundColor: color ? `${color}20` : undefined }}
+        >
+          <Icon className="h-4 w-4" style={{ color }} />
+        </div>
+      )}
+      <div>
+        <p className={cn("text-xs text-muted-foreground")}>{label}</p>
+        <p className={cn("text-lg font-semibold")}>
+          {typeof value === 'number' ? value.toLocaleString('pt-BR') : value}
+        </p>
+      </div>
+    </div>
+  );
+}
