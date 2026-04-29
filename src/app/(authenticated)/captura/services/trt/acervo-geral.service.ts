@@ -1,8 +1,8 @@
 /**
  * Serviço de captura de acervo geral do TRT
- * 
+ *
  * FLUXO OTIMIZADO (aproveita sessão autenticada):
- * 
+ *
  * ┌─────────────────────────────────────────────────────────────────┐
  * │  🔐 FASE 1: AUTENTICAÇÃO                                        │
  * │  └── Login SSO PDPJ → OTP → JWT + Cookies                       │
@@ -44,20 +44,26 @@
  * └─────────────────────────────────────────────────────────────────┘
  */
 
-import { autenticarPJE, type AuthResult } from './trt-auth.service';
-import type { CapturaTRTParams } from './trt-capture.service';
+import { autenticarPJE, type AuthResult } from "./trt-auth.service";
+import type { CapturaTRTParams } from "./trt-capture.service";
 import {
   obterTodosProcessosAcervoGeral,
   obterTotalizadoresAcervoGeral,
-} from '@/app/(authenticated)/captura/pje-trt';
-import type { Processo } from '../../types/types';
-import { salvarAcervoBatch, type SalvarAcervoResult } from '../persistence/acervo-persistence.service';
-import { buscarOuCriarAdvogadoPorCpf } from '../advogado-helper.service';
-import { captureLogService, type LogEntry } from '../persistence/capture-log.service';
-import { buscarDadosComplementaresProcessos } from './dados-complementares.service';
-import { salvarTimeline } from '../timeline/timeline-persistence.service';
-import { persistirPartesProcesso } from '../partes/partes-capture.service';
-import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
+} from "@/app/(authenticated)/captura/pje-trt";
+import type { Processo } from "../../types/types";
+import {
+  salvarAcervoBatch,
+  type SalvarAcervoResult,
+} from "../persistence/acervo-persistence.service";
+import { buscarOuCriarAdvogadoPorCpf } from "../advogado-helper.service";
+import {
+  captureLogService,
+  type LogEntry,
+} from "../persistence/capture-log.service";
+import { buscarDadosComplementaresProcessos } from "./dados-complementares.service";
+import { salvarTimeline } from "../timeline/timeline-persistence.service";
+import { persistirPartesProcesso } from "../partes/partes-capture.service";
+import type { TimelineItemEnriquecido } from "@/types/contracts/pje-trt";
 
 /**
  * Resultado da captura de acervo geral
@@ -88,14 +94,16 @@ export interface AcervoGeralResult {
  * Extrai IDs únicos de processos
  */
 function extrairProcessosUnicosDeAcervo(processos: Processo[]): number[] {
-  const idsUnicos = [...new Set(processos.map(p => p.id))];
-  console.log(`📋 [AcervoGeral] ${idsUnicos.length} processos únicos extraídos`);
+  const idsUnicos = [...new Set(processos.map((p) => p.id))];
+  console.log(
+    `📋 [AcervoGeral] ${idsUnicos.length} processos únicos extraídos`,
+  );
   return idsUnicos;
 }
 
 /**
  * Serviço de captura de acervo geral
- * 
+ *
  * Fluxo otimizado em 6 fases:
  * 1. Autenticação
  * 2. Buscar processos (API)
@@ -105,7 +113,7 @@ function extrairProcessosUnicosDeAcervo(processos: Processo[]): number[] {
  * 6. Fechar browser
  */
 export async function acervoGeralCapture(
-  params: CapturaTRTParams
+  params: CapturaTRTParams,
 ): Promise<AcervoGeralResult> {
   let authResult: AuthResult | null = null;
 
@@ -113,7 +121,7 @@ export async function acervoGeralCapture(
     // ═══════════════════════════════════════════════════════════════
     // FASE 1: AUTENTICAÇÃO
     // ═══════════════════════════════════════════════════════════════
-    console.log('🔐 [AcervoGeral] Fase 1: Autenticando...');
+    console.log("🔐 [AcervoGeral] Fase 1: Autenticando...");
     authResult = await autenticarPJE({
       credential: params.credential,
       config: params.config,
@@ -126,7 +134,9 @@ export async function acervoGeralCapture(
     // ═══════════════════════════════════════════════════════════════
     // FASE 2: BUSCAR PROCESSOS
     // ═══════════════════════════════════════════════════════════════
-    console.log('📡 [AcervoGeral] Fase 2: Buscando processos do acervo geral...');
+    console.log(
+      "📡 [AcervoGeral] Fase 2: Buscando processos do acervo geral...",
+    );
 
     const idAdvogado = parseInt(advogadoInfo.idAdvogado, 10);
     if (isNaN(idAdvogado)) {
@@ -134,7 +144,10 @@ export async function acervoGeralCapture(
     }
 
     // Obter totalizador para validação
-    const totalizadorAcervoGeral = await obterTotalizadoresAcervoGeral(page, idAdvogado);
+    const totalizadorAcervoGeral = await obterTotalizadoresAcervoGeral(
+      page,
+      idAdvogado,
+    );
 
     // Buscar processos
     const processos = await obterTodosProcessosAcervoGeral(page, idAdvogado);
@@ -146,13 +159,13 @@ export async function acervoGeralCapture(
       const quantidadeEsperada = totalizadorAcervoGeral.quantidadeProcessos;
       if (processos.length !== quantidadeEsperada) {
         throw new Error(
-          `Quantidade de processos (${processos.length}) não condiz com totalizador (${quantidadeEsperada})`
+          `Quantidade de processos (${processos.length}) não condiz com totalizador (${quantidadeEsperada})`,
         );
       }
     }
 
     if (processos.length === 0) {
-      console.log('ℹ️ [AcervoGeral] Nenhum processo encontrado');
+      console.log("ℹ️ [AcervoGeral] Nenhum processo encontrado");
       return {
         processos: [],
         total: 0,
@@ -162,13 +175,13 @@ export async function acervoGeralCapture(
     // ═══════════════════════════════════════════════════════════════
     // FASE 3: EXTRAIR IDs ÚNICOS
     // ═══════════════════════════════════════════════════════════════
-    console.log('📋 [AcervoGeral] Fase 3: Extraindo IDs únicos...');
+    console.log("📋 [AcervoGeral] Fase 3: Extraindo IDs únicos...");
     const processosIds = extrairProcessosUnicosDeAcervo(processos);
 
     // ═══════════════════════════════════════════════════════════════
     // FASE 4: BUSCAR DADOS COMPLEMENTARES (com verificação de recaptura)
     // ═══════════════════════════════════════════════════════════════
-    console.log('🔄 [AcervoGeral] Fase 4: Buscando dados complementares...');
+    console.log("🔄 [AcervoGeral] Fase 4: Buscando dados complementares...");
 
     const dadosComplementares = await buscarDadosComplementaresProcessos(
       page,
@@ -178,29 +191,31 @@ export async function acervoGeralCapture(
         buscarPartes: true,
         trt: params.config.codigo,
         grau: params.config.grau,
-        verificarRecaptura: true,  // Pula processos atualizados recentemente
-        horasParaRecaptura: 24,    // Recaptura se > 24h desde última atualização
+        verificarRecaptura: true, // Pula processos atualizados recentemente
+        horasParaRecaptura: 24, // Recaptura se > 24h desde última atualização
         onProgress: (atual, total, processoId) => {
           if (atual % 10 === 0 || atual === 1 || atual === total) {
-            console.log(`   📊 Progresso: ${atual}/${total} (processo ${processoId})`);
+            console.log(
+              `   📊 Progresso: ${atual}/${total} (processo ${processoId})`,
+            );
           }
         },
-      }
+      },
     );
 
     // ═══════════════════════════════════════════════════════════════
     // FASE 5: PERSISTÊNCIA
     // ═══════════════════════════════════════════════════════════════
-    console.log('💾 [AcervoGeral] Fase 5: Persistindo dados...');
+    console.log("💾 [AcervoGeral] Fase 5: Persistindo dados...");
 
     // 5.1 Buscar/criar advogado
     const advogadoDb = await buscarOuCriarAdvogadoPorCpf(
       advogadoInfo.cpf,
-      advogadoInfo.nome
+      advogadoInfo.nome,
     );
 
     // 5.2 Persistir processos no acervo (PRIMEIRO para obter IDs)
-    console.log('   📦 Persistindo processos no acervo...');
+    console.log("   📦 Persistindo processos no acervo...");
     let persistencia: SalvarAcervoResult | undefined;
     let mapeamentoIds = new Map<number, number>();
 
@@ -208,22 +223,32 @@ export async function acervoGeralCapture(
       persistencia = await salvarAcervoBatch({
         processos,
         advogadoId: advogadoDb.id,
-        origem: 'acervo_geral',
+        origem: "acervo_geral",
         trt: params.config.codigo,
         grau: params.config.grau,
       });
 
       mapeamentoIds = persistencia.mapeamentoIds;
-      console.log(`   ✅ ${persistencia.total} processos processados (${persistencia.inseridos} inseridos, ${persistencia.atualizados} atualizados, ${persistencia.naoAtualizados} sem alteração, ${persistencia.erros} erros)`);
+      console.log(
+        `   ✅ ${persistencia.total} processos processados (${persistencia.inseridos} inseridos, ${persistencia.atualizados} atualizados, ${persistencia.naoAtualizados} sem alteração, ${persistencia.erros} erros)`,
+      );
     } catch (error) {
-      console.error('   ❌ Erro ao salvar processos no acervo:', error);
+      console.error("   ❌ Erro ao salvar processos no acervo:", error);
     }
 
     // 5.3 Persistir timelines no PostgreSQL (apenas para processos não pulados)
-    console.log('   📜 Persistindo timelines no PostgreSQL...');
+    console.log("   📜 Persistindo timelines no PostgreSQL...");
     let timelinesPersistidas = 0;
-    for (const [processoId, dados] of dadosComplementares.porProcesso) {
-      if (dados.timeline && Array.isArray(dados.timeline) && dados.timeline.length > 0) {
+    const timelinePromises = Array.from(
+      dadosComplementares.porProcesso.entries(),
+    )
+      .filter(
+        ([_, dados]) =>
+          dados.timeline &&
+          Array.isArray(dados.timeline) &&
+          dados.timeline.length > 0,
+      )
+      .map(async ([processoId, dados]) => {
         try {
           await salvarTimeline({
             processoId: String(processoId),
@@ -234,45 +259,65 @@ export async function acervoGeralCapture(
           });
           timelinesPersistidas++;
         } catch (e) {
-          console.warn(`   ⚠️ Erro ao persistir timeline do processo ${processoId}:`, e);
-          captureLogService.logErro('timeline', e instanceof Error ? e.message : String(e), {
-            processoId,
-            trt: params.config.codigo,
-            grau: params.config.grau,
-          });
+          console.warn(
+            `   ⚠️ Erro ao persistir timeline do processo ${processoId}:`,
+            e,
+          );
+          captureLogService.logErro(
+            "timeline",
+            e instanceof Error ? e.message : String(e),
+            {
+              processoId,
+              trt: params.config.codigo,
+              grau: params.config.grau,
+            },
+          );
         }
-      }
-    }
-    console.log(`   ✅ ${timelinesPersistidas} timelines persistidas no PostgreSQL`);
+      });
+
+    await Promise.all(timelinePromises);
+    console.log(
+      `   ✅ ${timelinesPersistidas} timelines persistidas no PostgreSQL`,
+    );
 
     // 5.4 Persistir partes (usa dados já buscados, sem refetch da API)
-    console.log('   👥 Persistindo partes...');
+    console.log("   👥 Persistindo partes...");
     let partesPersistidas = 0;
 
     if (mapeamentoIds.size === 0 && dadosComplementares.porProcesso.size > 0) {
-      console.warn('   ⚠️ Pulando persistência de partes: mapeamento de IDs do acervo está vazio (salvarAcervoBatch pode ter falhado)');
+      console.warn(
+        "   ⚠️ Pulando persistência de partes: mapeamento de IDs do acervo está vazio (salvarAcervoBatch pode ter falhado)",
+      );
     } else {
-      for (const [processoId, dados] of dadosComplementares.porProcesso) {
-        if (dados.partes && dados.partes.length > 0) {
+      const partesPromises = Array.from(
+        dadosComplementares.porProcesso.entries(),
+      )
+        .filter(([_, dados]) => dados.partes && dados.partes.length > 0)
+        .map(async ([processoId, dados]) => {
           const idAcervo = mapeamentoIds.get(processoId);
 
           if (!idAcervo) {
-            console.log(`   ⚠️ Processo ${processoId} não encontrado no mapeamento, pulando partes...`);
-            continue;
+            console.log(
+              `   ⚠️ Processo ${processoId} não encontrado no mapeamento, pulando partes...`,
+            );
+            return;
           }
 
           try {
-            const processo = processos.find(p => p.id === processoId);
+            const processo = processos.find((p) => p.id === processoId);
             const numeroProcesso = processo?.numeroProcesso;
 
             // Usa persistirPartesProcesso em vez de capturarPartesProcesso
             // para evitar refetch da API (partes já foram buscadas em dados-complementares)
             await persistirPartesProcesso(
-              dados.partes,
+              dados.partes!,
               {
                 id_pje: processoId,
                 trt: params.config.codigo,
-                grau: params.config.grau === 'primeiro_grau' ? 'primeiro_grau' : 'segundo_grau',
+                grau:
+                  params.config.grau === "primeiro_grau"
+                    ? "primeiro_grau"
+                    : "segundo_grau",
                 id: idAcervo,
                 numero_processo: numeroProcesso,
               },
@@ -280,19 +325,27 @@ export async function acervoGeralCapture(
                 id: parseInt(advogadoInfo.idAdvogado, 10),
                 documento: advogadoInfo.cpf,
                 nome: advogadoInfo.nome,
-              }
+              },
             );
             partesPersistidas++;
           } catch (e) {
-            console.warn(`   ⚠️ Erro ao persistir partes do processo ${processoId}:`, e);
-            captureLogService.logErro('partes', e instanceof Error ? e.message : String(e), {
-              processoId,
-              trt: params.config.codigo,
-              grau: params.config.grau,
-            });
+            console.warn(
+              `   ⚠️ Erro ao persistir partes do processo ${processoId}:`,
+              e,
+            );
+            captureLogService.logErro(
+              "partes",
+              e instanceof Error ? e.message : String(e),
+              {
+                processoId,
+                trt: params.config.codigo,
+                grau: params.config.grau,
+              },
+            );
           }
-        }
-      }
+        });
+
+      await Promise.all(partesPromises);
     }
     console.log(`   ✅ ${partesPersistidas} processos com partes persistidas`);
 
@@ -303,11 +356,15 @@ export async function acervoGeralCapture(
     // ═══════════════════════════════════════════════════════════════
     // RESULTADO FINAL
     // ═══════════════════════════════════════════════════════════════
-    console.log('🏁 [AcervoGeral] Captura concluída!');
+    console.log("🏁 [AcervoGeral] Captura concluída!");
     console.log(`   📊 Resumo:`);
     console.log(`      - Processos: ${processos.length}`);
-    console.log(`      - Processos pulados: ${dadosComplementares.resumo.processosPulados}`);
-    console.log(`      - Timelines: ${dadosComplementares.resumo.timelinesObtidas}`);
+    console.log(
+      `      - Processos pulados: ${dadosComplementares.resumo.processosPulados}`,
+    );
+    console.log(
+      `      - Timelines: ${dadosComplementares.resumo.timelinesObtidas}`,
+    );
     console.log(`      - Partes: ${dadosComplementares.resumo.partesObtidas}`);
     console.log(`      - Erros: ${dadosComplementares.resumo.erros}`);
 
@@ -320,8 +377,14 @@ export async function acervoGeralCapture(
     for (const [processoId, dados] of dadosComplementares.porProcesso) {
       if (dados.payloadBrutoPartes !== undefined) {
         // Buscar número do processo
-        const processoCorrespondente = processos.find(p => p.id === processoId);
-        const numeroProcesso = processoCorrespondente?.numeroProcesso || (processoCorrespondente?.numero ? String(processoCorrespondente.numero) : undefined);
+        const processoCorrespondente = processos.find(
+          (p) => p.id === processoId,
+        );
+        const numeroProcesso =
+          processoCorrespondente?.numeroProcesso ||
+          (processoCorrespondente?.numero
+            ? String(processoCorrespondente.numero)
+            : undefined);
         payloadsBrutosPartes.push({
           processoId,
           numeroProcesso,
@@ -329,7 +392,9 @@ export async function acervoGeralCapture(
         });
       }
     }
-    console.log(`   📦 Payloads de partes coletados: ${payloadsBrutosPartes.length}`);
+    console.log(
+      `   📦 Payloads de partes coletados: ${payloadsBrutosPartes.length}`,
+    );
 
     return {
       processos,
@@ -351,7 +416,7 @@ export async function acervoGeralCapture(
     // FASE 6: FECHAR BROWSER
     // ═══════════════════════════════════════════════════════════════
     if (authResult?.browser) {
-      console.log('🚪 [AcervoGeral] Fechando browser...');
+      console.log("🚪 [AcervoGeral] Fechando browser...");
       await authResult.browser.close();
     }
   }
