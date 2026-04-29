@@ -20,6 +20,8 @@ import {
   buscarRepresentantePorCPFRepo as buscarRepresentantePorCPF,
 } from "@/app/(authenticated)/partes/server";
 import getLogger from "@/lib/logger";
+import pLimit from "p-limit";
+import { CAPTURA_CONFIG } from "../config";
 import { normalizarDocumento } from "../utils";
 import { extrairCamposRepresentantePJE } from "../utils";
 import { processarEnderecoRepresentante } from "./addresses.service";
@@ -49,45 +51,51 @@ export async function processarRepresentantes(
     "Processando representantes"
   );
 
-  for (const rep of representantes) {
-    try {
-      const representanteId = await processarRepresentante(rep, logger);
+  const limit = pLimit(CAPTURA_CONFIG.MAX_CONCURRENT_REPRESENTANTES);
 
-      if (representanteId) {
-        // Registrar em cadastros_pje
-        await registrarRepresentanteCadastroPJE(
-          representanteId,
-          rep.idPessoa,
-          rep.dadosCompletos,
-          processo
-        );
+  const promises = representantes.map((rep) =>
+    limit(async () => {
+      try {
+        const representanteId = await processarRepresentante(rep, logger);
 
-        count++;
-        logger.debug(
-          { nome: rep.nome, numeroDocumento: rep.numeroDocumento },
-          "Representante salvo"
-        );
-
-        // Processa endereço do representante se houver
-        if (rep.dadosCompletos?.endereco) {
-          await processarEnderecoRepresentante(
-            rep,
-            tipoParte,
-            parteId,
+        if (representanteId) {
+          // Registrar em cadastros_pje
+          await registrarRepresentanteCadastroPJE(
+            representanteId,
+            rep.idPessoa,
+            rep.dadosCompletos,
             processo
           );
+
+          count++;
+          logger.debug(
+            { nome: rep.nome, numeroDocumento: rep.numeroDocumento },
+            "Representante salvo"
+          );
+
+          // Processa endereço do representante se houver
+          if (rep.dadosCompletos?.endereco) {
+            await processarEnderecoRepresentante(
+              rep,
+              tipoParte,
+              parteId,
+              processo
+            );
+          }
         }
+      } catch (error) {
+        logger.error(
+          {
+            nome: rep.nome,
+            error: error instanceof Error ? error.message : String(error),
+          },
+          "Erro ao salvar representante"
+        );
       }
-    } catch (error) {
-      logger.error(
-        {
-          nome: rep.nome,
-          error: error instanceof Error ? error.message : String(error),
-        },
-        "Erro ao salvar representante"
-      );
-    }
-  }
+    })
+  );
+
+  await Promise.all(promises);
 
   logger.info(
     { salvos: count, total: representantes.length },
