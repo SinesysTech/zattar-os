@@ -1,6 +1,6 @@
-import { FORMAT } from '@/lib/design-system';
-
 'use client';
+
+import { FORMAT } from '@/lib/design-system';
 
 import { cn } from '@/lib/utils';
 import * as React from 'react';

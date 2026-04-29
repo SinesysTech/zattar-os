@@ -1,5 +1,6 @@
-import { FORMAT } from '@/lib/design-system';
 'use client';
+
+import { FORMAT } from '@/lib/design-system';
 
 /**
  * Célula de Contato reutilizável para tabelas de partes
