@@ -3,8 +3,6 @@
  */
 import { NextRequest } from "next/server";
 import { authenticateRequest } from "@/lib/auth/api-auth";
-import { getClientIp } from "@/lib/utils/get-client-ip";
-import { recordSuspiciousActivity } from "@/lib/security/ip-blocking";
 import { createServiceClient } from "@/lib/supabase/service-client";
 
 jest.mock("@/lib/supabase/service-client", () => {

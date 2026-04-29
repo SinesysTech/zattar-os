@@ -92,7 +92,7 @@ export async function atualizarTarefa(usuarioId: number, input: UpdateTaskInput)
         const validSources = ["audiencias", "expedientes", "pericias", "obrigacoes"];
         if (validSources.includes(task.source)) {
           const syncResult = await atualizarStatusEntidadeOrigem({
-            source: task.source as any,
+            source: task.source as EventSource,
             entityId: task.sourceEntityId,
             novoStatus: val.data.status
           }, usuarioId);

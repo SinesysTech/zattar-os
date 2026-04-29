@@ -212,18 +212,6 @@ function AllResolvedState() {
 export function GazetteOrphanResolver() {
   const [isExpedienteDialogOpen, setIsExpedienteDialogOpen] = useState(false);
 
-  const handleExpedienteCriado = useCallback(() => {
-    setIsExpedienteDialogOpen(false);
-    if (!current) return;
-
-    const updated = comunicacoes.map((c) =>
-      c.id === current.id ? { ...c, statusVinculacao: 'vinculado' as const } : c,
-    );
-    setComunicacoes(updated);
-    setResolvedCount((prev) => prev + 1);
-    toast.success('Expediente criado e comunicação vinculada com sucesso!');
-  }, [current, comunicacoes, setComunicacoes]);
-
   const { comunicacoes, setComunicacoes } = useGazetteStore();
 
   const orphans = useMemo(
@@ -236,6 +224,18 @@ export function GazetteOrphanResolver() {
   const totalOrphans = orphans.length + resolvedCount;
 
   const current = orphans[currentIndex] as ComunicacaoCNJEnriquecida | undefined;
+
+  const handleExpedienteCriado = useCallback(() => {
+    setIsExpedienteDialogOpen(false);
+    if (!current) return;
+
+    const updated = comunicacoes.map((c) =>
+      c.id === current.id ? { ...c, statusVinculacao: 'vinculado' as const } : c,
+    );
+    setComunicacoes(updated);
+    setResolvedCount((prev) => prev + 1);
+    toast.success('Expediente criado e comunicação vinculada com sucesso!');
+  }, [current, comunicacoes, setComunicacoes]);
 
   // Ensure currentIndex stays within bounds
   useEffect(() => {

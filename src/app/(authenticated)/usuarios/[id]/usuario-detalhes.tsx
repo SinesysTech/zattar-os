@@ -1,7 +1,6 @@
-import { FORMAT } from '@/lib/design-system';
-
 'use client';
 
+import { FORMAT } from '@/lib/design-system';
 import { cn } from '@/lib/utils';
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
@@ -157,14 +156,14 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
     try {
       if (!usuario) return;
       const result = await actionDesativarUsuario(usuario.id);
-      if (result.success) {
+      if (result.sucesso) {
         toast.success('Usuário desativado com sucesso');
         setDeactivateDialogOpen(false);
         await refetchUsuario();
       } else {
-        toast.error(result.error || 'Erro ao desativar usuário');
+        toast.error(result.erro || 'Erro ao desativar usuário');
       }
-    } catch (error) {
+    } catch (_error) {
       toast.error('Erro ao desativar usuário');
     } finally {
       setIsDeactivating(false);

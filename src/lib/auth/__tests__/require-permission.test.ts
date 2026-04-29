@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { authenticateRequest } from '../api-auth';
 import { checkPermission } from '../authorization';
 import { requirePermission, requireAuthentication } from '../require-permission';

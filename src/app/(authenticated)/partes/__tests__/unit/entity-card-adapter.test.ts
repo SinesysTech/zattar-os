@@ -3,7 +3,6 @@
 import {
   formatDocument,
   extractFirstEmail,
-  formatPhone,
   formatLocation,
   clienteToEntityCard,
   parteContrariaToEntityCard,

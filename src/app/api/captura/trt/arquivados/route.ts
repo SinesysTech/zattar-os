@@ -236,7 +236,6 @@ export async function POST(request: NextRequest) {
         Array.from(uniqueConfigs).map(async (key) => {
           const [tribunal, grau] = key.split('|');
           try {
-            // @ts-expect-error - Expected error due to generic string parameters not exactly matching union type
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const config = await getTribunalConfig(tribunal as any, grau as any);
             configsMap.set(key, { success: true, data: config });

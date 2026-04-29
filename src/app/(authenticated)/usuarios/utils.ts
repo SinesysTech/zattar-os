@@ -1,4 +1,3 @@
-import { FORMAT } from '@/lib/design-system';
 import { resolveAvatarUrl } from '@/lib/avatar-url';
 
 

@@ -112,10 +112,10 @@ function AvatarIndicator({
   ...props
 }: AvatarIndicatorProps) {
   const variantStyles = {
-    online: "bg-green-500 border-green-600",
-    away: "bg-yellow-500 border-yellow-600",
+    online: "bg-success border-success",
+    away: "bg-warning border-warning",
     offline: "bg-gray-400 border-gray-500",
-    success: "bg-blue-500 border-blue-600",
+    success: "bg-info border-info",
   };
 
   return (

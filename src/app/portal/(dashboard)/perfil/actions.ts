@@ -1,6 +1,6 @@
-import { FORMAT } from '@/lib/design-system';
 "use server"
 
+import { FORMAT } from '@/lib/design-system';
 import { cookies } from "next/headers"
 // Import directly from service — barrel does not export service (server-only deps)
 import { buscarClientePorCPF } from "@/app/(authenticated)/partes/service"

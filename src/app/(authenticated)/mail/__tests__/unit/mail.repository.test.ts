@@ -1,4 +1,4 @@
-import { describe, it, expect, jest, beforeEach } from '@jest/globals';
+import { describe, it, expect, jest } from '@jest/globals';
 import * as repository from '../../repository';
 import type { EmailCredentials } from '../../domain';
 

@@ -15,8 +15,6 @@ import {
 const BUILD_ID_STORAGE_KEY = "__SYNTHROPIC_BUILD_ID__";
 
 describe("version utils", () => {
-  let originalWindow: Window & typeof globalThis;
-
   beforeAll(() => {
     // Cannot mock window directly in JSDOM easily.
     // Since we need to test 'typeof window === "undefined"',
@@ -152,12 +150,12 @@ describe("version utils", () => {
     });
 
     afterEach(() => {
-      // @ts-ignore
+      // @ts-expect-error -- caches não é deletável no tipo Window mas é necessário para limpar entre testes
       delete window.caches;
     });
 
     it("does nothing if caches is undefined in window", async () => {
-      // @ts-ignore
+      // @ts-expect-error -- caches não é deletável no tipo Window mas é necessário para simular ausência
       delete window.caches;
 
       await clearServiceWorkerCache();

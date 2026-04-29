@@ -13,9 +13,9 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Heading } from '@/components/ui/typography';
 import { Edit, Mail, Phone, MapPin, Briefcase, User, Calendar, KeyRound, Camera } from 'lucide-react';
+import { FORMAT } from '@/lib/design-system';
 import {
   formatarCpf,
-  formatarTelefone,
   formatarOab,
   formatarData,
   formatarEnderecoCompleto,
@@ -224,7 +224,7 @@ export function PerfilView() {
                   Telefone
                 </div>
                 <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
-                  {formatarTelefone(usuario.telefone)}
+                  {FORMAT.phone(usuario.telefone)}
                   {usuario.ramal && ` (Ramal: ${usuario.ramal})`}
                 </div>
               </div>

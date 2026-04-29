@@ -12,6 +12,7 @@ jest.mock('@/lib/event-aggregation/domain', () => ({
 
 import * as service from '../../service';
 import * as repository from '../../repository';
+import { atualizarStatusEntidadeOrigem } from '@/lib/event-aggregation/service';
 import { ok, err, appError } from '@/types';
 
 const USUARIO_ID = 42;
@@ -172,8 +173,6 @@ describe('Tarefas Service', () => {
             (repository.getTaskById as jest.Mock).mockResolvedValue(ok(taskComOrigem));
             (repository.updateTask as jest.Mock).mockResolvedValue(ok({ ...taskComOrigem, status: 'done' }));
 
-            const { atualizarStatusEntidadeOrigem } = require('@/lib/event-aggregation/service');
-
             const result = await service.atualizarTarefa(USUARIO_ID, { id: 'TASK-0001', status: 'done' });
 
             expect(result.success).toBe(true);
@@ -192,7 +191,6 @@ describe('Tarefas Service', () => {
             };
             (repository.getTaskById as jest.Mock).mockResolvedValue(ok(taskComOrigem));
 
-            const { atualizarStatusEntidadeOrigem } = require('@/lib/event-aggregation/service');
             (atualizarStatusEntidadeOrigem as jest.Mock).mockResolvedValueOnce(err(appError("INTERNAL_ERROR", "sync error")));
 
             const result = await service.atualizarTarefa(USUARIO_ID, { id: 'TASK-0001', status: 'done' });

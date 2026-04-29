@@ -189,8 +189,8 @@ export async function actionDesativarUsuario(id: number) {
     return result;
   } catch (error) {
     return {
-      success: false,
-      error:
+      sucesso: false,
+      erro:
         error instanceof Error ? error.message : "Erro ao desativar usuário",
     };
   }
