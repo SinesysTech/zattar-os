@@ -4,6 +4,7 @@
  */
 
 import { ConciliacaoRepository } from '../repository/conciliacao';
+import { LancamentosService } from '../services/lancamentos';
 import {
     filtrarCandidatos,
     validarConciliacao,
@@ -103,11 +104,26 @@ export class ConciliacaoService {
             });
         }
 
-        // TODO: Se criarNovoLancamento, criar o lançamento primeiro
+        let lancamentoId = dto.lancamentoFinanceiroId;
+
+        // Se criarNovoLancamento, criar o lançamento primeiro
+        if (dto.criarNovoLancamento) {
+            const novoLancamento = await LancamentosService.criar({
+                ...dto.dadosNovoLancamento,
+                tipo: transacao.tipoTransacao === 'credito' ? 'receita' : 'despesa',
+                valor: transacao.valor,
+                dataLancamento: transacao.dataTransacao,
+                descricao: dto.dadosNovoLancamento?.descricao || transacao.descricao,
+                contaBancariaId: transacao.contaBancariaId,
+                status: 'confirmado',
+                origem: 'importacao_bancaria'
+            });
+            lancamentoId = novoLancamento.id;
+        }
 
         return ConciliacaoRepository.criarConciliacao({
             transacaoImportadaId: dto.transacaoImportadaId,
-            lancamentoFinanceiroId: dto.lancamentoFinanceiroId,
+            lancamentoFinanceiroId: lancamentoId,
             status: 'conciliado',
             diferencaValor: 0, // TODO: Calcular diferença
             usuarioId: 'system'
