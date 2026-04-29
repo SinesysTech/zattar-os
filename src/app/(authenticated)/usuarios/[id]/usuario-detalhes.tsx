@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, AlertCircle, User, Shield} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 
@@ -35,6 +36,7 @@ import {
   getAvatarUrl,
   type Usuario,
   actionAtualizarUsuario,
+  actionDesativarUsuario,
 } from '@/app/(authenticated)/usuarios';
 import { actionObterPerfil } from '@/app/(authenticated)/perfil';
 
@@ -89,6 +91,9 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
   const [avatarDialogOpen, setAvatarDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [redefinirSenhaOpen, setRedefinirSenhaOpen] = useState(false);
+  const [deactivateDialogOpen, setDeactivateDialogOpen] = useState(false);
+  const [isDeactivating, setIsDeactivating] = useState(false);
+
   const [isSavingSuperAdmin, setIsSavingSuperAdmin] = useState(false);
   const [activeTab, setActiveTab] = useState('visao-geral');
 
@@ -140,6 +145,27 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
       setIsSavingSuperAdmin(false);
     }
   };
+
+
+  const handleDeactivateUsuario = async () => {
+    setIsDeactivating(true);
+    try {
+      if (!usuario) return;
+      const result = await actionDesativarUsuario(usuario.id);
+      if (result.success) {
+        toast.success('Usuário desativado com sucesso');
+        setDeactivateDialogOpen(false);
+        await refetchUsuario();
+      } else {
+        toast.error(result.error || 'Erro ao desativar usuário');
+      }
+    } catch (error) {
+      toast.error('Erro ao desativar usuário');
+    } finally {
+      setIsDeactivating(false);
+    }
+  };
+
 
   const handleSavePermissoes = async () => {
     const success = await savePermissoes();
@@ -226,7 +252,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
           onEditCover={() => { /* TODO: integrate cover dialog if needed */ }}
           onEdit={() => setEditDialogOpen(true)}
           onResetPassword={() => setRedefinirSenhaOpen(true)}
-          onDeactivate={() => { /* TODO: trigger deactivation flow */ }}
+          onDeactivate={() => setDeactivateDialogOpen(true)}
         />
 
         {/* ── Right: Breadcrumb + Tabs + Content ───────────────────────────── */}
@@ -414,12 +440,40 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
         onSuccess={() => refetchUsuario()}
       />
 
+
       <RedefinirSenhaDialog
         open={redefinirSenhaOpen}
         onOpenChange={setRedefinirSenhaOpen}
         usuario={usuario}
         onSuccess={() => undefined}
       />
+
+      <AlertDialog open={deactivateDialogOpen} onOpenChange={setDeactivateDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Desativar Usuário</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja desativar o usuário <strong>{usuario.nomeCompleto}</strong>?
+              Isso irá desatribuí-lo automaticamente de todos os processos, audiências, pendentes,
+              expedientes e contratos atribuídos a ele.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeactivating}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                handleDeactivateUsuario();
+              }}
+              disabled={isDeactivating}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {isDeactivating ? "Desativando..." : "Desativar"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
     </div>
   );
 }
