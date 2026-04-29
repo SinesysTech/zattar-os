@@ -1439,8 +1439,13 @@ import type { ContratosPulseStats } from './types';
 export async function actionContratosPulseStats(): Promise<
   ActionResult<ContratosPulseStats>
 > {
+  const primeiroDiaMes = new Date();
+  primeiroDiaMes.setDate(1);
+  primeiroDiaMes.setHours(0, 0, 0, 0);
+
   const [
     statusResult,
+    statusMesResult,
     valorResult,
     vencendoResult,
     novosResult,
@@ -1448,6 +1453,7 @@ export async function actionContratosPulseStats(): Promise<
     trendResult,
   ] = await Promise.all([
     contarContratosPorStatus(),
+    contarContratosPorStatus({ dataInicio: primeiroDiaMes }),
     sumValorContratosAtivos(),
     countContratosVencendo(30),
     countContratosNovosMes(),
@@ -1465,6 +1471,7 @@ export async function actionContratosPulseStats(): Promise<
 
   const porStatus = statusResult.data;
   const ativos = (porStatus.contratado ?? 0) + (porStatus.distribuido ?? 0);
+  const statusMes = statusMesResult.success ? statusMesResult.data : null;
 
   return {
     success: true,
@@ -1478,6 +1485,10 @@ export async function actionContratosPulseStats(): Promise<
       trendMensal: trendResult.success
         ? trendResult.data.map((t) => t.count)
         : [],
+      assinadosNaoDistribuidos: porStatus.contratado ?? 0,
+      distribuidosMes: statusMes?.distribuido ?? 0,
+      assinadosMes: statusMes?.contratado ?? 0,
+      emContratacao: porStatus.em_contratacao ?? 0,
     },
     message: "Estatísticas carregadas",
   };

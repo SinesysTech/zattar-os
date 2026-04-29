@@ -1,4 +1,3 @@
-import { cn } from '@/lib/utils';
 import type { Metadata } from "next";
 import { authenticateRequest } from "@/lib/auth/session";
 import NotesApp from "./components/note-app";
@@ -12,13 +11,12 @@ export const metadata: Metadata = {
 export default async function Page() {
   const user = await authenticateRequest();
   if (!user) {
-    return <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "py-6")}>Você precisa estar autenticado.</div>;
+    return <div className="py-6">Você precisa estar autenticado.</div>;
   }
 
-  // Carrega todas (inclui arquivadas) para permitir alternância na UI sem novo roundtrip.
   const result = await notasService.listarDadosNotas(user.id, { includeArchived: true });
   if (!result.success) {
-    return <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "py-6")}>Erro ao carregar Notas: {result.error.message}</div>;
+    return <div className="py-6">Erro ao carregar Notas: {result.error.message}</div>;
   }
 
   return <NotesApp initialData={result.data} />;

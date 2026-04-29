@@ -33,7 +33,6 @@ import { cn } from '@/lib/utils';
 import type { ContratosPulseStats } from '../actions/types';
 import { useSegmentos, type SegmentoOption } from '../hooks/use-segmentos';
 import { ContratosPulseStrip } from './contratos-pulse-strip';
-import { ContratosPipelineStepper } from './contratos-pipeline-stepper';
 import { ContratosListWrapper } from './contratos-list-wrapper';
 import { ContratosKanbanView } from './contratos-kanban-view';
 import {
@@ -76,7 +75,6 @@ export function ContratosContent({
   initialSegmentos,
 }: ContratosContentProps = {}) {
   const [stats] = React.useState<ContratosPulseStats | null>(initialStats);
-  const [statusFilter, setStatusFilter] = React.useState<string | null>(null);
   const [createOpen, setCreateOpen] = React.useState(false);
 
   const [viewMode, setViewMode] = React.useState<ContratosViewMode>(initialView);
@@ -108,10 +106,6 @@ export function ContratosContent({
   const currentSegmentoNome = segmentos.find((s) => s.id === currentSegmentoId)?.nome ?? null;
 
   // ── Handlers ──────────────────────────────────────────────────────────────
-  const handleStatusClick = React.useCallback((status: string) => {
-    setStatusFilter((prev) => (prev === status ? null : status));
-  }, []);
-
   const handleViewChange = React.useCallback((value: string) => {
     setViewMode(value as ContratosViewMode);
   }, []);
@@ -136,12 +130,10 @@ export function ContratosContent({
       {/* ── Pulse Strip (KPIs) ──────────────────────────────────── */}
       {stats ? (
         <ContratosPulseStrip
-          ativos={stats.ativos}
-          valorTotal={stats.valorTotal}
-          vencendo30d={stats.vencendo30d}
-          novosMes={stats.novosMes}
-          total={totalContratos}
-          trendMensal={stats.trendMensal}
+          assinadosNaoDistribuidos={stats.assinadosNaoDistribuidos}
+          distribuidosMes={stats.distribuidosMes}
+          assinadosMes={stats.assinadosMes}
+          emContratacao={stats.emContratacao}
         />
       ) : null}
 
@@ -161,15 +153,6 @@ export function ContratosContent({
           </InsightBanner>
         )}
       </div>
-
-      {/* ── Pipeline Stepper ────────────────────────────────────── */}
-      {stats ? (
-        <ContratosPipelineStepper
-          porStatus={stats.porStatus}
-          activeStatus={statusFilter}
-          onStatusClick={handleStatusClick}
-        />
-      ) : null}
 
       {/* ── View Controls (FilterBar + Search + ViewToggle + Settings) ─────── */}
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
@@ -243,7 +226,6 @@ export function ContratosContent({
       ) : (
         <ContratosListWrapper
           viewLayout={viewMode === 'cards' ? 'cards' : 'lista'}
-          statusFilter={statusFilter}
           createOpen={createOpen}
           onCreateOpenChange={setCreateOpen}
           busca={search}

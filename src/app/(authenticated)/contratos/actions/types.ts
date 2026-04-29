@@ -102,4 +102,12 @@ export interface ContratosPulseStats {
   semResponsavel: number;
   porStatus: Record<string, number>;
   trendMensal: number[];
+  /** Contratos com status 'contratado' (total — aguardando distribuição) */
+  assinadosNaoDistribuidos: number;
+  /** Contratos com status 'distribuido' criados no mês corrente */
+  distribuidosMes: number;
+  /** Contratos com status 'contratado' criados no mês corrente */
+  assinadosMes: number;
+  /** Contratos com status 'em_contratacao' (total) */
+  emContratacao: number;
 }
