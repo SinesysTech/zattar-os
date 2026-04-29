@@ -221,10 +221,30 @@ export function formatDocument(doc: string | null | undefined): string {
  * formatPhone('11999887766') // "(11) 99988-7766"
  * formatPhone('1133445566') // "(11) 3344-5566"
  */
-export function formatPhone(phone: string | null | undefined): string {
-  if (!phone) return '-';
+export function formatPhone(phone: string | null | undefined): string;
+export function formatPhone(ddd: string | null | undefined, numero: string | null | undefined): string;
+export function formatPhone(dddOrPhone: string | null | undefined, numero?: string | null | undefined): string {
+  if (numero !== undefined) {
+    if (!dddOrPhone && !numero) return '-';
+    const d = dddOrPhone?.replace(/\D/g, '') ?? '';
+    const n = numero?.replace(/\D/g, '') ?? '';
 
-  const digits = phone.replace(/\D/g, '');
+    if (!d && !n) return '-';
+    if (!d) return n;
+    if (!n) return `(${d})`;
+
+    if (n.length === 9) {
+      return `(${d}) ${n.slice(0, 5)}-${n.slice(5)}`;
+    }
+    if (n.length === 8) {
+      return `(${d}) ${n.slice(0, 4)}-${n.slice(4)}`;
+    }
+    return `(${d}) ${n}`;
+  }
+
+  if (!dddOrPhone) return '-';
+
+  const digits = dddOrPhone.replace(/\D/g, '');
 
   if (digits.length === 11) {
     // Celular: (XX) XXXXX-XXXX
@@ -236,7 +256,7 @@ export function formatPhone(phone: string | null | undefined): string {
     return digits.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
   }
 
-  return phone;
+  return dddOrPhone;
 }
 
 // =============================================================================

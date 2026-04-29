@@ -1,3 +1,4 @@
+import { FORMAT } from '@/lib/design-system';
 
 import { cn } from '@/lib/utils';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
@@ -6,7 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import type { Usuario } from '../../domain';
 import {
   formatarCpf,
-  formatarTelefone,
+
   formatarNomeExibicao,
 } from '../../utils';
 import { formatDate } from '@/lib/formatters';
@@ -121,7 +122,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
                     <Phone className="h-4 w-4" />
                     Telefone
                   </p>
-                  <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{formatarTelefone(usuario.telefone)}</div>
+                  <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{FORMAT.phone(usuario.telefone)}</div>
                 </div>
               )}
 

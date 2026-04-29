@@ -1,3 +1,4 @@
+import { FORMAT } from '@/lib/design-system';
 
 'use client';
 
@@ -15,7 +16,7 @@ import { Separator } from '@/components/ui/separator';
 import { Heading } from '@/components/ui/typography';
 import {
   formatarCpf,
-  formatarTelefone,
+
   formatarOab,
   formatarNomeExibicao,
   formatarData,
@@ -155,7 +156,7 @@ export function UsuarioViewSheet({
                     Telefone
                   </p>
                   <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
-                    {formatarTelefone(usuario.telefone)}
+                    {FORMAT.phone(usuario.telefone)}
                     {usuario.ramal && ` (Ramal: ${usuario.ramal})`}
                   </div>
                 </div>

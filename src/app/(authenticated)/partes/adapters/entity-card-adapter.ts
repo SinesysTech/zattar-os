@@ -1,3 +1,4 @@
+import { FORMAT } from '@/lib/design-system';
 /**
  * Partes > Entity Card Adapter
  *
@@ -96,24 +97,7 @@ export function extractFirstEmail(emails: string[] | string | null | undefined):
 /**
  * Formata DDD + número como "(DD) NNNNN-NNNN" ou "(DD) NNNN-NNNN".
  */
-export function formatPhone(
-  ddd: string | null | undefined,
-  numero: string | null | undefined
-): string | undefined {
-  const d = ddd?.replace(/\D/g, '') ?? '';
-  const n = numero?.replace(/\D/g, '') ?? '';
-  if (!d && !n) return undefined;
-  if (!d) return n || undefined;
-  if (!n) return `(${d})`;
 
-  if (n.length === 9) {
-    return `(${d}) ${n.slice(0, 5)}-${n.slice(5)}`;
-  }
-  if (n.length === 8) {
-    return `(${d}) ${n.slice(0, 4)}-${n.slice(4)}`;
-  }
-  return `(${d}) ${n}`;
-}
 
 /**
  * Formata localização como "Cidade, UF" a partir do objeto endereco (join).
@@ -213,7 +197,7 @@ export function clienteToEntityCard(
     documentoMasked: formatDocument(doc),
     documentoRaw: doc ?? undefined,
     email: extractFirstEmail(prop(r, 'emails') as string[] | string | null | undefined),
-    telefone: formatPhone(strProp(r, 'ddd_celular'), strProp(r, 'numero_celular')),
+    telefone: FORMAT.phone(strProp(r, 'ddd_celular'), strProp(r, 'numero_celular')),
     localizacao: formatLocation(cliente.endereco),
     enderecoCompleto: formatarEnderecoCompleto(cliente.endereco),
     ativo: cliente.ativo !== false,
@@ -247,7 +231,7 @@ export function parteContrariaToEntityCard(
     documentoMasked: formatDocument(doc),
     documentoRaw: doc ?? undefined,
     email: extractFirstEmail(prop(r, 'emails') as string[] | string | null | undefined),
-    telefone: formatPhone(strProp(r, 'ddd_celular'), strProp(r, 'numero_celular')),
+    telefone: FORMAT.phone(strProp(r, 'ddd_celular'), strProp(r, 'numero_celular')),
     localizacao: formatLocation(parte.endereco),
     enderecoCompleto: formatarEnderecoCompleto(parte.endereco),
     ativo: parte.ativo !== false,
@@ -286,7 +270,7 @@ export function terceiroToEntityCard(
     documentoMasked: formatDocument(doc),
     documentoRaw: doc ?? undefined,
     email: extractFirstEmail(prop(r, 'emails') as string[] | string | null | undefined),
-    telefone: formatPhone(strProp(r, 'ddd_celular'), strProp(r, 'numero_celular')),
+    telefone: FORMAT.phone(strProp(r, 'ddd_celular'), strProp(r, 'numero_celular')),
     localizacao: formatLocation(terceiro.endereco),
     enderecoCompleto: formatarEnderecoCompleto(terceiro.endereco),
     ativo: terceiro.ativo !== false,
@@ -324,7 +308,7 @@ export function representanteToEntityCard(
     documentoMasked: formatDocument(cpf),
     documentoRaw: cpf ?? undefined,
     email: extractFirstEmail(emails as string[] | string | null | undefined),
-    telefone: formatPhone(strProp(r, 'ddd_celular'), strProp(r, 'numero_celular')),
+    telefone: FORMAT.phone(strProp(r, 'ddd_celular'), strProp(r, 'numero_celular')),
     localizacao: formatLocation(representante.endereco),
     enderecoCompleto: formatarEnderecoCompleto(representante.endereco),
     ativo: true,

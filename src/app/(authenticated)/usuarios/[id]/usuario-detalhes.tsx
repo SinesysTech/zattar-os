@@ -1,3 +1,4 @@
+import { FORMAT } from '@/lib/design-system';
 
 'use client';
 
@@ -30,7 +31,7 @@ import {
   AtividadesCards,
   AtividadesRecentes,
   formatarCpf,
-  formatarTelefone,
+
   formatarData,
   formatarGenero,
   formatarEnderecoCompleto,
@@ -322,7 +323,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
                 <DataField label="Gênero" value={formatarGenero(usuario.genero)} />
                 <DataField label="E-mail Corporativo" value={usuario.emailCorporativo} />
                 <DataField label="E-mail Pessoal" value={usuario.emailPessoal} />
-                <DataField label="Telefone" value={formatarTelefone(usuario.telefone)} />
+                <DataField label="Telefone" value={FORMAT.phone(usuario.telefone)} />
                 <DataField label="Ramal" value={usuario.ramal} />
                 <DataField
                   label="OAB"

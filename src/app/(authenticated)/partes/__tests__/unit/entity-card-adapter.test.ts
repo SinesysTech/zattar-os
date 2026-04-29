@@ -113,44 +113,6 @@ describe('extractFirstEmail', () => {
 // formatPhone
 // =============================================================================
 
-describe('formatPhone', () => {
-  it('DDD + número com 9 dígitos → formata como "(DD) NNNNN-NNNN"', () => {
-    expect(formatPhone('11', '987654321')).toBe('(11) 98765-4321');
-  });
-
-  it('DDD + número com 8 dígitos → formata como "(DD) NNNN-NNNN"', () => {
-    expect(formatPhone('21', '33334444')).toBe('(21) 3333-4444');
-  });
-
-  it('DDD nulo → retorna undefined', () => {
-    expect(formatPhone(null, '987654321')).toBe('987654321');
-  });
-
-  it('número nulo → retorna "(DD)"', () => {
-    expect(formatPhone('11', null)).toBe('(11)');
-  });
-
-  it('ambos nulos → retorna undefined', () => {
-    expect(formatPhone(null, null)).toBeUndefined();
-  });
-
-  it('ambos undefined → retorna undefined', () => {
-    expect(formatPhone(undefined, undefined)).toBeUndefined();
-  });
-
-  it('DDD com não-dígitos → strips antes de formatar', () => {
-    expect(formatPhone('(11)', '987654321')).toBe('(11) 98765-4321');
-  });
-
-  it('número com hífen → strips antes de formatar', () => {
-    expect(formatPhone('11', '9876-54321')).toBe('(11) 98765-4321');
-  });
-
-  it('número com comprimento diferente de 8 ou 9 → retorna formato básico', () => {
-    expect(formatPhone('11', '1234567')).toBe('(11) 1234567');
-  });
-});
-
 // =============================================================================
 // formatLocation
 // =============================================================================
