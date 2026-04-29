@@ -223,13 +223,38 @@ export async function POST(request: NextRequest) {
         erro?: string;
       }> = [];
 
+      // 5.5 Pre-fetch all required configurations concurrently to avoid N+1 queries
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const configsMap = new Map<string, { success: boolean; data?: any; error?: unknown }>();
+      const uniqueConfigs = new Set<string>();
+
+      for (const cred of credenciaisOrdenadas) {
+        uniqueConfigs.add(`${cred.tribunal}|${cred.grau}`);
+      }
+
+      await Promise.all(
+        Array.from(uniqueConfigs).map(async (key) => {
+          const [tribunal, grau] = key.split('|');
+          try {
+            // @ts-expect-error - Expected error due to generic string parameters not exactly matching union type
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const config = await getTribunalConfig(tribunal as any, grau as any);
+            configsMap.set(key, { success: true, data: config });
+          } catch (error) {
+            configsMap.set(key, { success: false, error });
+          }
+        })
+      );
+
       for (const credCompleta of credenciaisOrdenadas) {
         console.log(`[Arquivados] Iniciando captura: ${credCompleta.tribunal} ${credCompleta.grau} (Credencial ID: ${credCompleta.credentialId})`);
 
         let tribunalConfig;
-        try {
-          tribunalConfig = await getTribunalConfig(credCompleta.tribunal, credCompleta.grau);
-        } catch (error) {
+        const configKey = `${credCompleta.tribunal}|${credCompleta.grau}`;
+        const configResult = configsMap.get(configKey);
+
+        if (!configResult || !configResult.success) {
+          const error = configResult?.error || new Error('Configuration fetch failed silently');
           console.error(`Tribunal configuration not found for ${credCompleta.tribunal} ${credCompleta.grau}:`, error);
           resultados.push({
             credencial_id: credCompleta.credentialId,
@@ -255,6 +280,8 @@ export async function POST(request: NextRequest) {
           });
           continue;
         }
+
+        tribunalConfig = configResult.data;
 
         try {
           const resultado = await arquivadosCapture({
