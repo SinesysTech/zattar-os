@@ -44,7 +44,7 @@ export interface EnderecoPresencial {
 
 export interface Audiencia {
   id: number;
-  idPje: number;
+  idPje: number | null;
   advogadoId: number;
   processoId: number;
   orgaoJulgadorId: number | null;
@@ -165,6 +165,9 @@ export const createAudienciaSchema = baseAudienciaSchema
   );
 
 export const updateAudienciaSchema = baseAudienciaSchema.partial();
+
+export type CreateAudienciaInput = z.infer<typeof createAudienciaSchema>;
+export type UpdateAudienciaInput = z.infer<typeof updateAudienciaSchema>;
 
 // =============================================================================
 // FONTE DE ORIGEM (PJE captura vs. manual)

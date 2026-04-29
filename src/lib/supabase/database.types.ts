@@ -1204,7 +1204,7 @@ export type Database = {
           hora_fim: string | null
           hora_inicio: string | null
           id: number
-          id_pje: number
+          id_pje: number | null
           juizo_digital: boolean
           modalidade: Database["public"]["Enums"]["modalidade_audiencia"] | null
           modalidade_editada_manualmente: boolean
@@ -1248,7 +1248,7 @@ export type Database = {
           hora_fim?: string | null
           hora_inicio?: string | null
           id?: never
-          id_pje: number
+          id_pje?: number | null
           juizo_digital?: boolean
           modalidade?:
             | Database["public"]["Enums"]["modalidade_audiencia"]
@@ -1294,7 +1294,7 @@ export type Database = {
           hora_fim?: string | null
           hora_inicio?: string | null
           id?: never
-          id_pje?: number
+          id_pje?: number | null
           juizo_digital?: boolean
           modalidade?:
             | Database["public"]["Enums"]["modalidade_audiencia"]

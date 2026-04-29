@@ -34,7 +34,9 @@ describe("Audiencias Service", () => {
 
     it("deve criar audiencia com sucesso", async () => {
       // Arrange
-      (repo.processoExists as jest.Mock).mockResolvedValue(ok(true));
+      (repo.findProcessoParaAudiencia as jest.Mock).mockResolvedValue(
+        ok({ trt: 'TRT1', grau: 'primeiro_grau', numero_processo: '0001', advogado_id: 1 })
+      );
       (repo.tipoAudienciaExists as jest.Mock).mockResolvedValue(ok(true));
       (repo.saveAudiencia as jest.Mock).mockResolvedValue(
         ok({ id: 1, ...validAudiencia })
@@ -50,7 +52,7 @@ describe("Audiencias Service", () => {
 
     it("deve falhar se processo nao existir", async () => {
       // Arrange
-      (repo.processoExists as jest.Mock).mockResolvedValue(ok(false));
+      (repo.findProcessoParaAudiencia as jest.Mock).mockResolvedValue(ok(null));
       (repo.tipoAudienciaExists as jest.Mock).mockResolvedValue(ok(true));
 
       // Act
@@ -120,7 +122,9 @@ describe("Audiencias Service", () => {
     };
 
     beforeEach(() => {
-      (repo.processoExists as jest.Mock).mockResolvedValue(ok(true));
+      (repo.findProcessoParaAudiencia as jest.Mock).mockResolvedValue(
+        ok({ trt: 'TRT1', grau: 'primeiro_grau', numero_processo: '0001', advogado_id: 1 })
+      );
       (repo.tipoAudienciaExists as jest.Mock).mockResolvedValue(ok(true));
       (repo.saveAudiencia as jest.Mock).mockResolvedValue(ok({ id: 1 }));
     });
