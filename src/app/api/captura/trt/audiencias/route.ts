@@ -1,16 +1,24 @@
 // Rota de API para captura de audiências do TRT
 
-import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/lib/auth/api-auth';
-import { getCredentialComplete } from '@/app/(authenticated)/captura/credentials/credential.service';
-import { audienciasCapture } from '@/app/(authenticated)/captura/services/trt/audiencias.service';
-import { getTribunalConfig } from '@/app/(authenticated)/captura/services/trt/config';
-import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '@/app/(authenticated)/captura/services/captura-log.service';
-import { ordenarCredenciaisPorTRT } from '@/app/(authenticated)/captura';
-import { registrarCapturaRawLog } from '@/app/(authenticated)/captura/services/persistence/captura-raw-log.service';
-import { formatarErroCaptura, formatarErroTecnico } from '@/app/(authenticated)/captura';
+import { NextRequest, NextResponse } from "next/server";
+import { authenticateRequest } from "@/lib/auth/api-auth";
+import { getCredentialComplete } from "@/app/(authenticated)/captura/credentials/credential.service";
+import { audienciasCapture } from "@/app/(authenticated)/captura/services/trt/audiencias.service";
+import { getTribunalConfig } from "@/app/(authenticated)/captura/services/trt/config";
+import type { ConfigTRT } from "@/app/(authenticated)/captura";
+import {
+  iniciarCapturaLog,
+  finalizarCapturaLogSucesso,
+  finalizarCapturaLogErro,
+} from "@/app/(authenticated)/captura/services/captura-log.service";
+import { ordenarCredenciaisPorTRT } from "@/app/(authenticated)/captura";
+import { registrarCapturaRawLog } from "@/app/(authenticated)/captura/services/persistence/captura-raw-log.service";
+import {
+  formatarErroCaptura,
+  formatarErroTecnico,
+} from "@/app/(authenticated)/captura";
 
-type StatusAudiencia = 'M' | 'C' | 'F';
+type StatusAudiencia = "M" | "C" | "F";
 
 interface AudienciasParams {
   advogado_id: number;
@@ -20,7 +28,7 @@ interface AudienciasParams {
   statusAudiencias: StatusAudiencia[];
 }
 
-const STATUS_VALIDOS: StatusAudiencia[] = ['C', 'M', 'F'];
+const STATUS_VALIDOS: StatusAudiencia[] = ["C", "M", "F"];
 
 /**
  * @swagger
@@ -187,45 +195,79 @@ export async function POST(request: NextRequest) {
     const authResult = await authenticateRequest(request);
     if (!authResult.authenticated) {
       return NextResponse.json(
-        { error: { code: 'UNAUTHORIZED', message: 'Unauthorized' } },
-        { status: 401 }
+        { error: { code: "UNAUTHORIZED", message: "Unauthorized" } },
+        { status: 401 },
       );
     }
 
     // 2. Validar e parsear body da requisição
     const body = await request.json();
-    const { advogado_id, credencial_ids, dataInicio, dataFim, statusAudiencias } = body as AudienciasParams;
+    const {
+      advogado_id,
+      credencial_ids,
+      dataInicio,
+      dataFim,
+      statusAudiencias,
+    } = body as AudienciasParams;
 
     // Validações básicas
-    if (!advogado_id || !credencial_ids || !Array.isArray(credencial_ids) || credencial_ids.length === 0) {
+    if (
+      !advogado_id ||
+      !credencial_ids ||
+      !Array.isArray(credencial_ids) ||
+      credencial_ids.length === 0
+    ) {
       return NextResponse.json(
-        { error: { code: 'BAD_REQUEST', message: 'Missing required parameters: advogado_id, credencial_ids (array não vazio)' } },
-        { status: 400 }
+        {
+          error: {
+            code: "BAD_REQUEST",
+            message:
+              "Missing required parameters: advogado_id, credencial_ids (array não vazio)",
+          },
+        },
+        { status: 400 },
       );
     }
 
-    if (!statusAudiencias || !Array.isArray(statusAudiencias) || statusAudiencias.length === 0) {
+    if (
+      !statusAudiencias ||
+      !Array.isArray(statusAudiencias) ||
+      statusAudiencias.length === 0
+    ) {
       return NextResponse.json(
-        { error: { code: 'BAD_REQUEST', message: 'Missing required parameter: statusAudiencias (array não vazio)' } },
-        { status: 400 }
+        {
+          error: {
+            code: "BAD_REQUEST",
+            message:
+              "Missing required parameter: statusAudiencias (array não vazio)",
+          },
+        },
+        { status: 400 },
       );
     }
 
-    const invalidos = statusAudiencias.filter((v) => !STATUS_VALIDOS.includes(v));
+    const invalidos = statusAudiencias.filter(
+      (v) => !STATUS_VALIDOS.includes(v),
+    );
     if (invalidos.length > 0) {
       return NextResponse.json(
-        { error: { code: 'BAD_REQUEST', message: `statusAudiencias inválido(s): ${invalidos.join(', ')}` } },
-        { status: 400 }
+        {
+          error: {
+            code: "BAD_REQUEST",
+            message: `statusAudiencias inválido(s): ${invalidos.join(", ")}`,
+          },
+        },
+        { status: 400 },
       );
     }
 
     const statusParaExecutar = [...new Set(statusAudiencias)].sort(
-      (a, b) => STATUS_VALIDOS.indexOf(a) - STATUS_VALIDOS.indexOf(b)
+      (a, b) => STATUS_VALIDOS.indexOf(a) - STATUS_VALIDOS.indexOf(b),
     );
 
     // 3. Buscar credenciais completas por IDs
     const credenciaisCompletas = await Promise.all(
-      credencial_ids.map((id) => getCredentialComplete(id))
+      credencial_ids.map((id) => getCredentialComplete(id)),
     );
 
     // Verificar se todas as credenciais foram encontradas
@@ -237,55 +279,61 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: {
-            code: 'NOT_FOUND',
-            message: 'One or more credentials not found',
+            code: "NOT_FOUND",
+            message: "One or more credentials not found",
             details: {
               credencial_ids_nao_encontradas: credenciaisNaoEncontradas,
-              message: 'Verifique se todas as credenciais existem e estão ativas',
+              message:
+                "Verifique se todas as credenciais existem e estão ativas",
             },
           },
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     // Verificar se todas as credenciais pertencem ao advogado
     const credenciaisInvalidas = credenciaisCompletas
-      .map((cred, index) => (cred && cred.advogadoId !== advogado_id ? credencial_ids[index] : null))
+      .map((cred, index) =>
+        cred && cred.advogadoId !== advogado_id ? credencial_ids[index] : null,
+      )
       .filter((id): id is number => id !== null);
 
     if (credenciaisInvalidas.length > 0) {
       return NextResponse.json(
         {
           error: {
-            code: 'BAD_REQUEST',
-            message: 'One or more credentials do not belong to the specified advogado',
+            code: "BAD_REQUEST",
+            message:
+              "One or more credentials do not belong to the specified advogado",
             details: {
               credencial_ids_invalidas: credenciaisInvalidas,
               advogado_id,
             },
           },
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // 4. Ordenar credenciais por número do TRT (TRT1, TRT2, ..., TRT10, ...)
     const credenciaisOrdenadas = ordenarCredenciaisPorTRT(
-      credenciaisCompletas.filter((c): c is NonNullable<typeof c> => c !== null)
+      credenciaisCompletas.filter(
+        (c): c is NonNullable<typeof c> => c !== null,
+      ),
     );
 
     // 5. Criar registro de histórico de captura
     let logId: number | null = null;
     try {
       logId = await iniciarCapturaLog({
-        tipo_captura: 'audiencias',
+        tipo_captura: "audiencias",
         advogado_id: advogado_id,
         credencial_ids: credencial_ids,
-        status: 'in_progress',
+        status: "in_progress",
       });
     } catch (error) {
-      console.error('Erro ao criar registro de histórico:', error);
+      console.error("Erro ao criar registro de histórico:", error);
     }
 
     // 6. Processar cada credencial SEQUENCIALMENTE (SSO invalida sessão anterior ao fazer novo login)
@@ -297,20 +345,57 @@ export async function POST(request: NextRequest) {
         grau: string;
         resultado?: unknown;
         erro?: string;
-        status_results?: Array<{ codigoSituacao: StatusAudiencia; resultado?: unknown; erro?: string }>;
+        status_results?: Array<{
+          codigoSituacao: StatusAudiencia;
+          resultado?: unknown;
+          erro?: string;
+        }>;
       }> = [];
 
-      for (const credCompleta of credenciaisOrdenadas) {
-        console.log(`[Audiências] Iniciando captura: ${credCompleta.tribunal} ${credCompleta.grau} (Credencial ID: ${credCompleta.credentialId})`);
+      // Pré-carregar as configurações de tribunal em paralelo para evitar consultas N+1
+      const tribunalConfigsMap = new Map<string, ConfigTRT>();
+      await Promise.all(
+        credenciaisOrdenadas.map(async (cred) => {
+          const cacheKey = `${cred.tribunal}:${cred.grau}`;
+          if (!tribunalConfigsMap.has(cacheKey)) {
+            try {
+              // Placeholder for deduplicating promises if needed, but since Promise.all
+              // executes them, getTribunalConfig already has an internal cache anyway.
+              // We explicitly fetch and store to avoid awaiting inside the sequential loop.
+              const config = await getTribunalConfig(cred.tribunal, cred.grau);
+              tribunalConfigsMap.set(cacheKey, config);
+            } catch (_error) {
+              // Ignorar erros aqui para que sejam tratados individualmente no loop
+            }
+          }
+        }),
+      );
 
-        let tribunalConfig;
+      for (const credCompleta of credenciaisOrdenadas) {
+        console.log(
+          `[Audiências] Iniciando captura: ${credCompleta.tribunal} ${credCompleta.grau} (Credencial ID: ${credCompleta.credentialId})`,
+        );
+
+        const cacheKey = `${credCompleta.tribunal}:${credCompleta.grau}`;
+        let tribunalConfig = tribunalConfigsMap.get(cacheKey);
         try {
-          tribunalConfig = await getTribunalConfig(credCompleta.tribunal, credCompleta.grau);
+          if (!tribunalConfig)
+            tribunalConfig = await getTribunalConfig(
+              credCompleta.tribunal,
+              credCompleta.grau,
+            );
         } catch (error) {
-          const erroFormatado = formatarErroCaptura(error, credCompleta.tribunal, credCompleta.grau);
+          const erroFormatado = formatarErroCaptura(
+            error,
+            credCompleta.tribunal,
+            credCompleta.grau,
+          );
           const erroTecnico = formatarErroTecnico(error);
 
-          console.error(`Tribunal configuration not found for ${credCompleta.tribunal} ${credCompleta.grau}:`, erroTecnico);
+          console.error(
+            `Tribunal configuration not found for ${credCompleta.tribunal} ${credCompleta.grau}:`,
+            erroTecnico,
+          );
           resultados.push({
             credencial_id: credCompleta.credentialId,
             tribunal: credCompleta.tribunal,
@@ -321,13 +406,13 @@ export async function POST(request: NextRequest) {
 
           await registrarCapturaRawLog({
             captura_log_id: (logId ?? -1) as number,
-            tipo_captura: 'audiencias',
+            tipo_captura: "audiencias",
             advogado_id,
             credencial_id: credCompleta.credentialId,
             credencial_ids: credencial_ids,
             trt: credCompleta.tribunal,
             grau: credCompleta.grau,
-            status: 'error',
+            status: "error",
             requisicao: {
               dataInicioSolicitado: dataInicio,
               dataFimSolicitado: dataFim,
@@ -354,7 +439,9 @@ export async function POST(request: NextRequest) {
               codigoSituacao,
             });
 
-            console.log(`[Audiências] Captura concluída (${codigoSituacao}): ${credCompleta.tribunal} ${credCompleta.grau} (Credencial ID: ${credCompleta.credentialId})`);
+            console.log(
+              `[Audiências] Captura concluída (${codigoSituacao}): ${credCompleta.tribunal} ${credCompleta.grau} (Credencial ID: ${credCompleta.credentialId})`,
+            );
 
             resultadosPorStatus.push({
               codigoSituacao,
@@ -363,13 +450,13 @@ export async function POST(request: NextRequest) {
 
             await registrarCapturaRawLog({
               captura_log_id: (logId ?? -1) as number,
-              tipo_captura: 'audiencias',
+              tipo_captura: "audiencias",
               advogado_id,
               credencial_id: credCompleta.credentialId,
               credencial_ids: credencial_ids,
               trt: credCompleta.tribunal,
               grau: credCompleta.grau,
-              status: 'success',
+              status: "success",
               requisicao: {
                 dataInicioSolicitado: dataInicio,
                 dataFimSolicitado: dataFim,
@@ -383,10 +470,17 @@ export async function POST(request: NextRequest) {
               logs: resultado.logs,
             });
           } catch (error) {
-            const erroFormatado = formatarErroCaptura(error, credCompleta.tribunal, credCompleta.grau);
+            const erroFormatado = formatarErroCaptura(
+              error,
+              credCompleta.tribunal,
+              credCompleta.grau,
+            );
             const erroTecnico = formatarErroTecnico(error);
 
-            console.error(`[Audiências] Erro ao capturar ${credCompleta.tribunal} ${credCompleta.grau} (Credencial ID: ${credCompleta.credentialId}) para status ${codigoSituacao}:`, erroTecnico);
+            console.error(
+              `[Audiências] Erro ao capturar ${credCompleta.tribunal} ${credCompleta.grau} (Credencial ID: ${credCompleta.credentialId}) para status ${codigoSituacao}:`,
+              erroTecnico,
+            );
 
             resultadosPorStatus.push({
               codigoSituacao,
@@ -395,13 +489,13 @@ export async function POST(request: NextRequest) {
 
             await registrarCapturaRawLog({
               captura_log_id: (logId ?? -1) as number,
-              tipo_captura: 'audiencias',
+              tipo_captura: "audiencias",
               advogado_id,
               credencial_id: credCompleta.credentialId,
               credencial_ids: credencial_ids,
               trt: credCompleta.tribunal,
               grau: credCompleta.grau,
-              status: 'error',
+              status: "error",
               requisicao: {
                 dataInicioSolicitado: dataInicio,
                 dataFimSolicitado: dataFim,
@@ -425,19 +519,26 @@ export async function POST(request: NextRequest) {
       if (logId) {
         try {
           const errosColetados = resultados.flatMap((r) => {
-            const errosStatus = r.status_results
-              ?.filter((s) => s.erro)
-              .map((s) => `${r.tribunal} ${r.grau} (ID ${r.credencial_id}) - ${s.codigoSituacao}: ${s.erro}`) || [];
+            const errosStatus =
+              r.status_results
+                ?.filter((s) => s.erro)
+                .map(
+                  (s) =>
+                    `${r.tribunal} ${r.grau} (ID ${r.credencial_id}) - ${s.codigoSituacao}: ${s.erro}`,
+                ) || [];
 
             if (r.erro) {
-              return [`${r.tribunal} ${r.grau} (ID ${r.credencial_id}): ${r.erro}`, ...errosStatus];
+              return [
+                `${r.tribunal} ${r.grau} (ID ${r.credencial_id}): ${r.erro}`,
+                ...errosStatus,
+              ];
             }
 
             return errosStatus;
           });
 
           if (errosColetados.length > 0) {
-            await finalizarCapturaLogErro(logId, errosColetados.join('; '));
+            await finalizarCapturaLogErro(logId, errosColetados.join("; "));
           } else {
             await finalizarCapturaLogSucesso(logId, {
               credenciais_processadas: resultados.length,
@@ -445,16 +546,21 @@ export async function POST(request: NextRequest) {
               resultados,
             });
           }
-          console.log(`[Audiências] Processamento concluído. Total: ${resultados.length} credenciais processadas, ${statusParaExecutar.length} status por credencial.`);
+          console.log(
+            `[Audiências] Processamento concluído. Total: ${resultados.length} credenciais processadas, ${statusParaExecutar.length} status por credencial.`,
+          );
         } catch (error) {
-          console.error('Erro ao atualizar histórico de captura:', error);
+          console.error("Erro ao atualizar histórico de captura:", error);
         }
       }
     })().catch((error) => {
-      console.error('[Audiências] Erro ao processar capturas:', error);
+      console.error("[Audiências] Erro ao processar capturas:", error);
       if (logId) {
-        finalizarCapturaLogErro(logId, error instanceof Error ? error.message : 'Erro desconhecido').catch(
-          (err) => console.error('Erro ao registrar erro no histórico:', err)
+        finalizarCapturaLogErro(
+          logId,
+          error instanceof Error ? error.message : "Erro desconhecido",
+        ).catch((err) =>
+          console.error("Erro ao registrar erro no histórico:", err),
         );
       }
     });
@@ -462,30 +568,34 @@ export async function POST(request: NextRequest) {
     // 7. Retornar resultado imediato
     return NextResponse.json({
       success: true,
-      message: 'Captura iniciada com sucesso',
-      status: 'in_progress',
+      message: "Captura iniciada com sucesso",
+      status: "in_progress",
       capture_id: logId,
       data: {
         credenciais_processadas: credenciaisCompletas.length,
         status_audiencias: statusParaExecutar,
-        message: 'A captura está sendo processada em background. Consulte o histórico para acompanhar o progresso.',
+        message:
+          "A captura está sendo processada em background. Consulte o histórico para acompanhar o progresso.",
       },
     });
-
   } catch (error) {
-    console.error('Error in audiencias capture:', error);
+    console.error("Error in audiencias capture:", error);
 
     // Retornar erro específico se for erro de validação
-    if (error instanceof Error && (error.message.includes('Formato de data') || error.message.includes('não pode ser posterior'))) {
+    if (
+      error instanceof Error &&
+      (error.message.includes("Formato de data") ||
+        error.message.includes("não pode ser posterior"))
+    ) {
       return NextResponse.json(
-        { error: { code: 'BAD_REQUEST', message: error.message } },
-        { status: 400 }
+        { error: { code: "BAD_REQUEST", message: error.message } },
+        { status: 400 },
       );
     }
 
     return NextResponse.json(
-      { error: { code: 'INTERNAL', message: 'Internal server error' } },
-      { status: 500 }
+      { error: { code: "INTERNAL", message: "Internal server error" } },
+      { status: 500 },
     );
   }
 }
