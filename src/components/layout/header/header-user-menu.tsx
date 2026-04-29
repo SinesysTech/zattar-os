@@ -9,7 +9,6 @@ import {
   HelpCircle,
   LogOut,
   Moon,
-  Settings,
   Sun,
 } from "lucide-react"
 
@@ -64,7 +63,6 @@ export function HeaderUserMenu() {
 
   const name = userData.nomeExibicao || userData.nomeCompleto || "Usuário"
   const avatar = resolveAvatarUrl(userData.avatarUrl) || ""
-  const isSuperAdmin = userData.isSuperAdmin || false
   const initials = getInitials(name)
 
   return (
@@ -105,15 +103,6 @@ export function HeaderUserMenu() {
             <HelpCircle className="size-4 shrink-0 text-muted-foreground/60" />
             Ajuda
           </DropdownMenuItem>
-          {isSuperAdmin && (
-            <DropdownMenuItem
-              onClick={() => router.push('/app/configuracoes')}
-              className="cursor-pointer gap-2 rounded-lg px-2.5 py-1.5 text-[13px] transition-colors duration-150 focus:bg-primary/6 focus:text-foreground"
-            >
-              <Settings className="size-4 shrink-0 text-muted-foreground/60" />
-              Configurações
-            </DropdownMenuItem>
-          )}
         </DropdownMenuGroup>
 
         <DropdownMenuSeparator className="mx-2 bg-border/30" />

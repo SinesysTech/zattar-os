@@ -21,6 +21,7 @@ import {
   Scale,
   ScrollText,
   Search,
+  Settings,
   Users,
 } from "lucide-react"
 
@@ -32,6 +33,7 @@ import {
   SidebarContent,
   SidebarHeader,
   SidebarRail,
+  SidebarSeparator,
 } from "@/components/ui/sidebar"
 import { usePermissoes } from "@/providers/user-provider"
 
@@ -146,6 +148,11 @@ const navGestao = [
     icon: Database,
   },
   {
+    title: "Configurações",
+    url: "/app/configuracoes",
+    icon: Settings,
+  },
+  {
     title: "Financeiro",
     url: "/app/financeiro",
     icon: Briefcase,
@@ -182,23 +189,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   }, [canSeePangea, canSeeProjetos])
 
   const todosItens = React.useMemo(() => {
-    const items = [...navPrincipal, ...navServicosFiltrado]
-    if (isSuperAdmin) {
-      items.push(...navGestao)
-    }
-
-    return items.sort((a, b) => {
-      if (a.url === DASHBOARD_URL) {
-        return -1
-      }
-
-      if (b.url === DASHBOARD_URL) {
-        return 1
-      }
-
+    return [...navPrincipal, ...navServicosFiltrado].sort((a, b) => {
+      if (a.url === DASHBOARD_URL) return -1
+      if (b.url === DASHBOARD_URL) return 1
       return a.title.localeCompare(b.title, "pt-BR")
     })
-  }, [navServicosFiltrado, isSuperAdmin])
+  }, [navServicosFiltrado])
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -207,6 +203,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={todosItens} />
+        {isSuperAdmin && (
+          <>
+            <SidebarSeparator />
+            <NavMain items={navGestao} />
+          </>
+        )}
       </SidebarContent>
       <SidebarRail />
     </Sidebar>

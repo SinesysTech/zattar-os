@@ -1,15 +1,7 @@
 'use client';
 
-/**
- * AparenciaContent - Componente de configurações de aparência/tema
- *
- * Centraliza todas as opções de personalização de tema em um único local,
- * organizadas em cards responsivos com labels em português.
- */
-
-import { cn } from '@/lib/utils';
 import * as React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { WidgetContainer } from '@/components/shared/glass-panel';
 import {
   PresetSelector,
   ColorModeSelector,
@@ -18,89 +10,45 @@ import {
   ContentLayoutSelector,
   ResetThemeButton,
 } from '@/components/layout/header/theme-customizer';
+import { Button } from '@/components/ui/button';
+import { RotateCcw } from 'lucide-react';
 
-/**
- * Componente principal de configurações de aparência
- * 
- * Renderiza todos os seletores de tema em um layout organizado com cards.
- * Cada card agrupa configurações relacionadas com título e descrição explicativa.
- */
 export function AparenciaContent() {
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
-      {/* Grid de cards com configurações */}
-      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "grid gap-6 md:grid-cols-2")}>
-        {/* Card: Tema (Preset) */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Tema</CardTitle>
-            <CardDescription>Escolha o esquema de cores da aplicação</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <PresetSelector label="Tema" placeholder="Selecione um tema" />
-          </CardContent>
-        </Card>
+    <div className="space-y-4">
+      <div className="grid gap-4 md:grid-cols-2">
+        <WidgetContainer title="Tema" subtitle="Esquema de cores da aplicação">
+          <PresetSelector label="Tema" placeholder="Selecione um tema" />
+        </WidgetContainer>
 
-        {/* Card: Modo de Cor (Light/Dark) */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Modo de Cor</CardTitle>
-            <CardDescription>Alterne entre modo claro e escuro</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ColorModeSelector 
-              label="Modo de cor" 
-              lightLabel="Claro" 
-              darkLabel="Escuro" 
-            />
-          </CardContent>
-        </Card>
+        <WidgetContainer title="Modo de Cor" subtitle="Alterne entre modo claro e escuro">
+          <ColorModeSelector
+            label="Modo de cor"
+            lightLabel="Claro"
+            darkLabel="Escuro"
+          />
+        </WidgetContainer>
 
-        {/* Card: Escala */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Escala</CardTitle>
-            <CardDescription>Ajuste o tamanho dos elementos da interface</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ThemeScaleSelector label="Escala" />
-          </CardContent>
-        </Card>
+        <WidgetContainer title="Escala" subtitle="Tamanho dos elementos da interface">
+          <ThemeScaleSelector label="Escala" />
+        </WidgetContainer>
 
-        {/* Card: Arredondamento */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Arredondamento</CardTitle>
-            <CardDescription>Defina o raio das bordas dos componentes</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ThemeRadiusSelector label="Arredondamento" />
-          </CardContent>
-        </Card>
+        <WidgetContainer title="Arredondamento" subtitle="Raio das bordas dos componentes">
+          <ThemeRadiusSelector label="Arredondamento" />
+        </WidgetContainer>
 
-        {/* Card: Layout do Conteúdo (apenas desktop) */}
-        <Card className="hidden lg:block">
-          <CardHeader>
-            <CardTitle>Layout do Conteúdo</CardTitle>
-            <CardDescription>Escolha a largura da área de conteúdo</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ContentLayoutSelector 
-              label="Layout do conteúdo"
-              fullLabel="Completo"
-              centeredLabel="Centralizado"
-            />
-          </CardContent>
-        </Card>
-
+        <WidgetContainer title="Layout do Conteúdo" subtitle="Largura da área de conteúdo" className="hidden lg:flex">
+          <ContentLayoutSelector
+            label="Layout do conteúdo"
+            fullLabel="Completo"
+            centeredLabel="Centralizado"
+          />
+        </WidgetContainer>
       </div>
 
-      {/* Card: Botão de Reset */}
-      <Card>
-        <CardContent className={cn(/* design-system-escape: pt-6 padding direcional sem Inset equiv. */ "pt-6")}>
-          <ResetThemeButton label="Restaurar Padrão" />
-        </CardContent>
-      </Card>
+      <WidgetContainer title="Restaurar" subtitle="Redefinir todas as configurações para o padrão" icon={RotateCcw}>
+        <ResetThemeButton label="Restaurar Padrão" />
+      </WidgetContainer>
     </div>
   );
 }
