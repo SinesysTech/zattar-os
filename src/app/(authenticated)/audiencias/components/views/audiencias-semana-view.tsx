@@ -355,19 +355,12 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
 
         {/* TEMPORAL: hora + prep score (coluna fixa à esquerda) */}
         <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; pt-0.5 padding direcional sem Inset equiv. */ "flex flex-col items-center gap-1.5 w-22 shrink-0 pt-0.5")}>
-          <div className="text-center">
-            <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-caption font-semibold text-foreground leading-tight whitespace-nowrap tabular-nums")}>
-              {fmtTime(audiencia.dataInicio)}
-            </div>
-            <div className={cn(/* design-system-escape: tracking-wider sem token DS */ "mt-0.5 text-micro-caption uppercase tracking-wider text-muted-foreground/55")}>
-              Início
-            </div>
-            <div className="text-mono-num text-muted-foreground/55 tabular-nums">
-              {fmtTime(audiencia.dataFim)}
-            </div>
+          {isOngoing && <span className="size-2 rounded-full bg-success animate-pulse" />}
+          <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-caption font-semibold text-foreground leading-tight whitespace-nowrap tabular-nums")}>
+            {fmtTime(audiencia.dataInicio)}
           </div>
           <div className={cn(
-            /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'text-micro-badge font-semibold tabular-nums rounded-md px-1.5 py-0.5',
+            /* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'text-[10px] font-semibold tabular-nums rounded px-1 py-0.5',
             prepStatus === 'good'
               ? 'bg-success/15 text-success'
               : prepStatus === 'warning'
@@ -376,7 +369,6 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
           )}>
             {prepScore}%
           </div>
-          {isOngoing && <span className="size-2 rounded-full bg-success animate-pulse" />}
         </div>
 
         {/* MAIN INFO */}
@@ -425,7 +417,7 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
           {(audiencia.poloAtivoNome || audiencia.poloPassivoNome || audiencia.trt || audiencia.numeroProcesso) && (
             <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; space-y-1 sem token DS */ "mt-3 border-t border-border/40 pt-3 space-y-1")}>
               {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
-                <p className="text-sm font-semibold text-foreground leading-snug">
+                <p className="text-caption font-semibold text-foreground leading-snug">
                   {audiencia.poloAtivoNome || '—'}
                   {audiencia.poloAtivoNome && audiencia.poloPassivoNome && (
                     <span className="mx-1.5 text-[10px] font-normal text-muted-foreground/65">vs</span>
@@ -435,13 +427,10 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
                   )}
                 </p>
               )}
-              {(audiencia.trt || grauLabel || audiencia.numeroProcesso) && (
-                <p className="truncate text-mono-num">
-                  {[audiencia.trt, grauLabel, audiencia.numeroProcesso].filter(Boolean).join(' · ')}
+              {(audiencia.trt || grauLabel || audiencia.numeroProcesso || orgao) && (
+                <p className="truncate text-mono-num text-muted-foreground/55">
+                  {[audiencia.trt, grauLabel, audiencia.numeroProcesso, orgao].filter(Boolean).join(' · ')}
                 </p>
-              )}
-              {orgao && (
-                <p className="truncate text-mono-num text-muted-foreground/55">{orgao}</p>
               )}
             </div>
           )}
