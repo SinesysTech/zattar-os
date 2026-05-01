@@ -53,14 +53,7 @@ import {
   salvarAudiencias,
   type SalvarAudienciasResult,
 } from "../persistence/audiencias-persistence.service";
-import { obterTimeline } from "@/app/(authenticated)/captura/pje-trt/timeline/obter-timeline";
-import { obterDocumento } from "@/app/(authenticated)/captura/pje-trt/timeline/obter-documento";
-import { baixarDocumento } from "@/app/(authenticated)/captura/pje-trt/timeline/baixar-documento";
-import { uploadToBackblaze } from "@/lib/storage/backblaze-b2.service";
-import {
-  gerarNomeDocumentoAudiencia,
-  gerarCaminhoDocumento,
-} from "@/lib/storage/file-naming.utils";
+import { tentarCapturarAta } from "./capturar-ata-audiencia.service";
 import { buscarOuCriarAdvogadoPorCpf } from "../advogado-helper.service";
 import {
   captureLogService,
@@ -593,58 +586,15 @@ export async function audienciasCapture(
       console.log("   📄 Buscando atas de audiências realizadas...");
       for (const a of audiencias) {
         try {
-          // Usar timeline já capturada se disponível
-          const dadosProcesso = dadosComplementares.porProcesso.get(
-            a.idProcesso,
-          );
-          const timeline =
-            dadosProcesso?.timeline ||
-            (await obterTimeline(page, String(a.idProcesso), {
-              somenteDocumentosAssinados: true,
-              buscarDocumentos: true,
-              buscarMovimentos: false,
-            }));
-
-          const candidato = timeline.find(
-            (d) =>
-              d.documento &&
-              ((d.tipo || "").toLowerCase().includes("ata") ||
-                (d.titulo || "").toLowerCase().includes("ata")),
-          );
-
-          if (candidato && candidato.id) {
-            const documentoId = candidato.id;
-            const docDetalhes = await obterDocumento(
-              page,
-              String(a.idProcesso),
-              String(documentoId),
-              {
-                incluirAssinatura: true,
-                grau: 1,
-              },
-            );
-            const pdf = await baixarDocumento(
-              page,
-              String(a.idProcesso),
-              String(documentoId),
-              {
-                incluirCapa: false,
-                incluirAssinatura: true,
-                grau: 1,
-              },
-            );
-            const nomeArquivo = gerarNomeDocumentoAudiencia(a.id);
-            const key = gerarCaminhoDocumento(
-              a.nrProcesso || a.processo?.numero || "",
-              "audiencias",
-              nomeArquivo,
-            );
-            const upload = await uploadToBackblaze({
-              buffer: pdf,
-              key,
-              contentType: "application/pdf",
-            });
-            atasMap[a.id] = { documentoId: docDetalhes.id, url: upload.url };
+          const dadosProcesso = dadosComplementares.porProcesso.get(a.idProcesso);
+          const ata = await tentarCapturarAta(page, {
+            audienciaId: a.id,
+            idPje: a.idProcesso,
+            numeroProcesso: a.nrProcesso || a.processo?.numero || "",
+            timelinePreCarregada: dadosProcesso?.timeline,
+          });
+          if (ata) {
+            atasMap[a.id] = { documentoId: ata.documentoId, url: ata.url };
           }
         } catch (e) {
           captureLogService.logErro(

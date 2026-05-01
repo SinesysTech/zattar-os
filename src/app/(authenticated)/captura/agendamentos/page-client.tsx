@@ -169,6 +169,8 @@ export default function AgendamentosPage() {
       const res = await fetch(`/api/captura/agendamentos/${agendamentoToDelete.id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Falha ao excluir');
       toast.success('Agendamento excluído');
+      const deletedId = agendamentoToDelete.id;
+      setAgendamentos((prev) => prev.filter((a) => a.id !== deletedId));
       fetchAgendamentos();
     } catch (e) {
       toast.error(e instanceof Error ? e.message : 'Erro ao excluir');

@@ -20,9 +20,9 @@ export async function criarAgendamento(
   const supabase = createServiceClient();
 
   // Validar periodicidade e dias_intervalo
-  if (params.periodicidade === 'a_cada_N_dias') {
+  if (params.periodicidade === 'a_cada_N_dias' || params.periodicidade === 'a_cada_N_horas') {
     if (!params.dias_intervalo || params.dias_intervalo <= 0) {
-      throw new Error('dias_intervalo é obrigatório e deve ser maior que 0 quando periodicidade = a_cada_N_dias');
+      throw new Error(`dias_intervalo é obrigatório e deve ser maior que 0 quando periodicidade = ${params.periodicidade}`);
     }
   }
 
@@ -152,9 +152,9 @@ export async function atualizarAgendamento(
   const supabase = createServiceClient();
 
   // Validar periodicidade e dias_intervalo se ambos estão sendo atualizados
-  if (params.periodicidade === 'a_cada_N_dias') {
+  if (params.periodicidade === 'a_cada_N_dias' || params.periodicidade === 'a_cada_N_horas') {
     if (params.dias_intervalo === undefined || params.dias_intervalo === null || params.dias_intervalo <= 0) {
-      throw new Error('dias_intervalo é obrigatório e deve ser maior que 0 quando periodicidade = a_cada_N_dias');
+      throw new Error(`dias_intervalo é obrigatório e deve ser maior que 0 quando periodicidade = ${params.periodicidade}`);
     }
   }
 
@@ -224,22 +224,18 @@ export async function deletarAgendamento(id: number): Promise<void> {
 }
 
 /**
- * Busca agendamentos que estão prontos para execução
- * (ativo = true e proxima_execucao <= now())
+ * Reivindica atomicamente agendamentos prontos para execução via RPC com FOR UPDATE SKIP LOCKED.
+ * Garante que processos concorrentes nunca processem o mesmo agendamento.
+ * Define proxima_execucao como sentinel (NOW() + 24h); o scheduler sobrescreve
+ * imediatamente com o valor correto calculado antes de iniciar a captura.
  */
-export async function buscarAgendamentosParaExecutar(): Promise<Agendamento[]> {
+export async function clamarAgendamentosParaExecutar(): Promise<Agendamento[]> {
   const supabase = createServiceClient();
-  const agora = new Date().toISOString();
 
-  const { data, error } = await supabase
-    .from(TABLE_NAME)
-    .select('*')
-    .eq('ativo', true)
-    .lte('proxima_execucao', agora)
-    .order('proxima_execucao', { ascending: true });
+  const { data, error } = await supabase.rpc('clamar_agendamentos_para_executar');
 
   if (error) {
-    throw new Error(`Erro ao buscar agendamentos para executar: ${error.message}`);
+    throw new Error(`Erro ao clamar agendamentos para executar: ${error.message}`);
   }
 
   return (data || []) as Agendamento[];

@@ -24,6 +24,7 @@ interface Usuario {
   nomeExibicao?: string;
   nomeCompleto?: string;
   avatarUrl?: string | null;
+  ativo?: boolean;
 }
 
 interface AudienciaResponsavelPopoverProps {
@@ -144,7 +145,7 @@ export function AudienciaResponsavelPopover({
                   <Check className="size-3 ml-auto text-primary" />
                 )}
               </CommandItem>
-              {usuarios.map((usuario) => (
+              {usuarios.filter((u) => u.ativo !== false).map((usuario) => (
                 <CommandItem
                   key={usuario.id}
                   value={getUsuarioNome(usuario)}
@@ -193,7 +194,7 @@ export function ResponsavelTriggerContent({
           size="xs"
           className={cn(
             'shrink-0',
-            size === 'xs' ? 'size-3.5' : size === 'sm' ? 'size-4' : 'size-7'
+            size === 'xs' ? 'size-3' : size === 'sm' ? 'size-4' : 'size-7'
           )}
         >
           <AvatarImage src={responsavel.avatarUrl || undefined} alt={nome} />
@@ -204,7 +205,7 @@ export function ResponsavelTriggerContent({
         <span className={cn(
           'truncate',
           size === 'xs'
-            ? 'text-micro-badge text-muted-foreground/75'
+            ? 'text-[9px] text-muted-foreground/75'
             : size === 'sm'
               ? 'text-micro-caption text-muted-foreground/75'
               : /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-label font-medium text-foreground',
@@ -219,7 +220,7 @@ export function ResponsavelTriggerContent({
     <>
       <div className={cn(
         'rounded-full bg-muted/40 flex items-center justify-center shrink-0',
-        size === 'xs' ? 'size-3.5' : size === 'sm' ? 'size-4' : 'size-7',
+        size === 'xs' ? 'size-3' : size === 'sm' ? 'size-4' : 'size-7',
       )}>
         <User
           className={cn(

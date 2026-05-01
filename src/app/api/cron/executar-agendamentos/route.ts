@@ -1,25 +1,12 @@
 /**
  * API Route: Executar Agendamentos de Captura
  *
- * Esta rota executa o scheduler de agendamentos de captura.
- * Busca todos os agendamentos com proxima_execucao <= NOW() e os executa.
+ * Chamada automaticamente a cada minuto pelo Cloudron Cron Addon.
+ * Autenticação: Bearer token via header Authorization (env: CRON_SECRET)
  *
- * Chamada automaticamente a cada minuto via pg_cron do Supabase.
- *
- * Autenticação: Requer secret token via header Authorization
- *
- * Configuração pg_cron (Supabase):
- *   SELECT cron.schedule('executar-agendamentos-captura', '* * * * *', $$
- *     SELECT net.http_post(
- *       url := (SELECT decrypted_secret FROM vault.decrypted_secrets WHERE name = 'app_url')
- *              || '/api/cron/executar-agendamentos',
- *       headers := jsonb_build_object(
- *         'Authorization', 'Bearer ' || (SELECT decrypted_secret FROM vault.decrypted_secrets WHERE name = 'cron_secret')
- *       ),
- *       body := '{}'::jsonb,
- *       timeout_milliseconds := 300000
- *     );
- *   $$);
+ * Configuração no Cloudron (app manifest — addons.cron):
+ *   "* * * * * curl -s -X POST https://<dominio>/api/cron/executar-agendamentos \
+ *     -H 'Authorization: Bearer <CRON_SECRET>'"
  */
 
 import { NextRequest, NextResponse } from "next/server";

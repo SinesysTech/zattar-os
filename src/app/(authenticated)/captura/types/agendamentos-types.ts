@@ -7,7 +7,7 @@ import type { TipoCaptura } from '../types';
 /**
  * Tipo de periodicidade do agendamento
  */
-export type Periodicidade = 'diario' | 'a_cada_N_dias';
+export type Periodicidade = 'diario' | 'a_cada_N_dias' | 'a_cada_N_horas';
 
 /**
  * Dados de um agendamento de captura
@@ -22,9 +22,20 @@ export interface Agendamento {
   horario: string; // HH:mm format
   ativo: boolean;
   parametros_extras: {
-    dataInicio?: string; // Para audiências (YYYY-MM-DD)
-    dataFim?: string; // Para audiências (YYYY-MM-DD)
-    filtroPrazo?: 'no_prazo' | 'sem_prazo'; // Para pendentes
+    // Audiências: período fixo (YYYY-MM-DD) ou relativo ao dia de execução
+    dataInicio?: string;
+    dataFim?: string;
+    dataRelativa?: 'hoje'; // quando 'hoje', usa a data do dia de execução para dataInicio e dataFim
+    codigoSituacao?: 'M' | 'C' | 'F'; // M = marcada, C = cancelada, F = realizada (ata)
+    // Pendentes
+    filtroPrazo?: 'no_prazo' | 'sem_prazo'; // filtro único (legado)
+    filtrosPrazo?: Array<'no_prazo' | 'sem_prazo'>; // múltiplos filtros
+    // Janela de execução para periodicidade horária (HH:mm Brasília)
+    // Fora dessa janela, proxima_execucao pula para inicio do dia seguinte
+    janela_execucao?: {
+      inicio: string; // ex: '09:00'
+      fim: string;    // ex: '18:00'
+    };
   } | null;
   ultima_execucao: string | null; // ISO timestamp
   proxima_execucao: string; // ISO timestamp
@@ -46,7 +57,14 @@ export interface CriarAgendamentoParams {
   parametros_extras?: {
     dataInicio?: string;
     dataFim?: string;
+    dataRelativa?: 'hoje';
+    codigoSituacao?: 'M' | 'C' | 'F';
     filtroPrazo?: 'no_prazo' | 'sem_prazo';
+    filtrosPrazo?: Array<'no_prazo' | 'sem_prazo'>;
+    janela_execucao?: {
+      inicio: string;
+      fim: string;
+    };
   };
 }
 
@@ -64,7 +82,14 @@ export interface AtualizarAgendamentoParams {
   parametros_extras?: {
     dataInicio?: string;
     dataFim?: string;
+    dataRelativa?: 'hoje';
+    codigoSituacao?: 'M' | 'C' | 'F';
     filtroPrazo?: 'no_prazo' | 'sem_prazo';
+    filtrosPrazo?: Array<'no_prazo' | 'sem_prazo'>;
+    janela_execucao?: {
+      inicio: string;
+      fim: string;
+    };
   } | null;
 }
 

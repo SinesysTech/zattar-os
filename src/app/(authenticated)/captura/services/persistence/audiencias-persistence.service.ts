@@ -585,3 +585,26 @@ export async function salvarAudiencias(
     salasAudienciaCriadas,
   };
 }
+
+/**
+ * Atualiza os campos de ata de uma audiência após captura bem-sucedida.
+ */
+export async function atualizarAtaAudiencia(
+  audienciaId: number,
+  params: { ata_audiencia_id: number; url_ata_audiencia: string }
+): Promise<void> {
+  const supabase = createServiceClient();
+
+  const { error } = await supabase
+    .from('audiencias')
+    .update({
+      ata_audiencia_id: params.ata_audiencia_id,
+      url_ata_audiencia: params.url_ata_audiencia,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', audienciaId);
+
+  if (error) {
+    throw new Error(`Erro ao atualizar ata da audiência ${audienciaId}: ${error.message}`);
+  }
+}

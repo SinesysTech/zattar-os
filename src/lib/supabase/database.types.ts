@@ -8935,6 +8935,30 @@ export type Database = {
         }
         Returns: Json
       }
+      clamar_agendamentos_para_executar: {
+        Args: never
+        Returns: {
+          advogado_id: number | null
+          ativo: boolean | null
+          created_at: string | null
+          credencial_ids: number[]
+          dias_intervalo: number | null
+          horario: string
+          id: number
+          parametros_extras: Json | null
+          periodicidade: string
+          proxima_execucao: string
+          tipo_captura: Database["public"]["Enums"]["tipo_captura"]
+          ultima_execucao: string | null
+          updated_at: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "agendamentos"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       cleanup_expired_locks: { Args: never; Returns: number }
       cleanup_old_mcp_audit_logs: { Args: never; Returns: number }
       count_processos_unicos: {
@@ -9302,6 +9326,7 @@ export type Database = {
         | "comunica_cnj"
         | "combinada"
         | "pericias"
+        | "audiencias_ata"
       tipo_cobranca: "pro_exito" | "pro_labore"
       tipo_conta_bancaria: "corrente" | "poupanca" | "investimento" | "caixa"
       tipo_conta_contabil:
@@ -9654,6 +9679,7 @@ export const Constants = {
         "comunica_cnj",
         "combinada",
         "pericias",
+        "audiencias_ata",
       ],
       tipo_cobranca: ["pro_exito", "pro_labore"],
       tipo_conta_bancaria: ["corrente", "poupanca", "investimento", "caixa"],

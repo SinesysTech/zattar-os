@@ -44,6 +44,7 @@ interface Usuario {
   nomeExibicao?: string;
   nomeCompleto?: string;
   avatarUrl?: string | null;
+  ativo?: boolean;
 }
 
 export interface AudienciasSemanaViewProps {
@@ -351,13 +352,13 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
         isCancelada && !isOngoing && 'opacity-45 border-l-2 border-l-destructive',
       )}
     >
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start gap-4")}>
+      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
 
         {/* TEMPORAL: hora + prep score (coluna fixa à esquerda) */}
         <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; pt-0.5 padding direcional sem Inset equiv. */ "flex flex-col items-center gap-1.5 w-22 shrink-0 pt-0.5")}>
           {isOngoing && <span className="size-2 rounded-full bg-success animate-pulse" />}
           <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-caption font-semibold text-foreground leading-tight whitespace-nowrap tabular-nums")}>
-            {fmtTime(audiencia.dataInicio)}
+            {fmtTime(audiencia.dataInicio)}<span className="text-[10px] font-normal ml-px">h</span>
           </div>
           <div className={cn(
             /* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'text-[10px] font-semibold tabular-nums rounded px-1 py-0.5',
@@ -428,7 +429,7 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
                 </p>
               )}
               {(audiencia.trt || grauLabel || audiencia.numeroProcesso || orgao) && (
-                <p className="truncate text-mono-num text-muted-foreground/55">
+                <p className="truncate text-caption text-muted-foreground/55">
                   {[audiencia.trt, grauLabel, audiencia.numeroProcesso, orgao].filter(Boolean).join(' · ')}
                 </p>
               )}
@@ -484,7 +485,7 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
                   <ResponsavelTriggerContent
                     responsavelId={audiencia.responsavelId}
                     usuarios={usuarios}
-                    size="sm"
+                    size="xs"
                   />
                 </AudienciaResponsavelPopover>
               ) : (

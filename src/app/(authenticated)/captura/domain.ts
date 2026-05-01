@@ -166,6 +166,7 @@ export type TipoCaptura =
   | "audiencias_designadas"
   | "audiencias_realizadas"
   | "audiencias_canceladas"
+  | "audiencias_ata" // captura inteligente: só processa audiências sem ata no banco local
   | "expedientes_no_prazo"
   | "expedientes_sem_prazo"
   | "pericias"

@@ -81,20 +81,29 @@ export function AudienciaTimeline({
 }: AudienciaTimelineProps) {
   const [logs, setLogs] = useState<LogAlteracao[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
 
   // Fetch audit logs
   useEffect(() => {
     let cancelled = false;
     setIsLoading(true);
-    auditLogService
-      .getLogs('audiencias', audienciaId)
+    setFetchError(false);
+
+    const timeout = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('timeout')), 8000)
+    );
+
+    Promise.race([auditLogService.getLogs('audiencias', audienciaId), timeout])
       .then((data) => {
         if (!cancelled) setLogs(data);
       })
-      .catch((err) => console.error('Timeline fetch error:', err))
+      .catch(() => {
+        if (!cancelled) setFetchError(true);
+      })
       .finally(() => {
         if (!cancelled) setIsLoading(false);
       });
+
     return () => {
       cancelled = true;
     };
@@ -178,6 +187,31 @@ export function AudienciaTimeline({
 
     return result;
   }, [logs, audiencia]);
+
+  // Error state
+  if (fetchError) {
+    return (
+      <div className={cn('flex flex-col items-center gap-2 py-4', className)}>
+        <Text variant="caption" className="text-muted-foreground">
+          Não foi possível carregar o histórico.
+        </Text>
+        <button
+          onClick={() => {
+            setFetchError(false);
+            setIsLoading(true);
+            auditLogService
+              .getLogs('audiencias', audienciaId)
+              .then(setLogs)
+              .catch(() => setFetchError(true))
+              .finally(() => setIsLoading(false));
+          }}
+          className="text-xs text-primary underline-offset-2 hover:underline"
+        >
+          Tentar novamente
+        </button>
+      </div>
+    );
+  }
 
   // Loading skeleton
   if (isLoading) {

@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Heading, Text } from '@/components/ui/typography';
+import { Text } from '@/components/ui/typography';
 import { AudienciaStatusBadge } from './audiencia-status-badge';
 import { AudienciaIndicadorBadges } from './audiencia-indicador-badges';
 import { AudienciaTimeline } from './audiencia-timeline';
@@ -362,66 +362,62 @@ export function AudienciaDetailDialog({
   // Slots do DialogDetailShell — composição declarativa da capa + hero + split.
   // ───────────────────────────────────────────────────────────────────────
 
-  const titleNode = (
-    <>
-      {poloAtivo}
-      <span className={cn(/* design-system-escape: mx-1.5 margin sem primitiva DS; font-medium → className de <Text>/<Heading> */ "mx-1.5 font-medium text-muted-foreground/70")}>×</span>
-      {poloPassivo}
-    </>
-  );
+  const titleNode = audiencia?.tipoDescricao || 'Audiência';
 
   const metaNode = audiencia ? (
-    <Text
-      variant="caption"
-      as="div"
-      className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-muted-foreground"
-    >
-      <span>{audiencia.numeroProcesso}</span>
-      {audiencia.classeJudicialDescricao && (
-        <>
-          <MetaDot />
-          <span>{audiencia.classeJudicialDescricao}</span>
-        </>
-      )}
-      <MetaDot />
-      <span>
-        {TRT_NOMES[audiencia.trt] || audiencia.trt} · {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
-      </span>
-      {orgaoJulgador && (
-        <>
-          <MetaDot />
-          <span>{orgaoJulgador}</span>
-        </>
-      )}
-      {audiencia.dataAutuacao && (
-        <>
-          <MetaDot />
-          <span>
-            Autuado em{' '}
-            {format(parseISO(audiencia.dataAutuacao), 'dd MMM yyyy', { locale: ptBR })}
-          </span>
-        </>
-      )}
-    </Text>
+    <div className="space-y-0.5">
+      {/* Partes — espelha hierarquia do card */}
+      <Text variant="caption" as="p" className="text-foreground">
+        <span className="font-semibold">{poloAtivo}</span>
+        <span className={cn(/* design-system-escape: mx-1.5 margin sem primitiva DS */ "mx-1.5 text-[10px] font-normal text-muted-foreground/65")}>vs</span>
+        <span className="font-medium text-muted-foreground/80">{poloPassivo}</span>
+      </Text>
+      {/* Processo */}
+      <Text
+        variant="caption"
+        as="div"
+        className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-muted-foreground"
+      >
+        <span>{audiencia.numeroProcesso}</span>
+        {audiencia.classeJudicialDescricao && (
+          <>
+            <MetaDot />
+            <span>{audiencia.classeJudicialDescricao}</span>
+          </>
+        )}
+        <MetaDot />
+        <span>
+          {TRT_NOMES[audiencia.trt] || audiencia.trt} · {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
+        </span>
+        {orgaoJulgador && (
+          <>
+            <MetaDot />
+            <span>{orgaoJulgador}</span>
+          </>
+        )}
+        {audiencia.dataAutuacao && (
+          <>
+            <MetaDot />
+            <span>
+              Autuado em{' '}
+              {format(parseISO(audiencia.dataAutuacao), 'dd MMM yyyy', { locale: ptBR })}
+            </span>
+          </>
+        )}
+      </Text>
+    </div>
   ) : undefined;
 
   const heroNode =
     audiencia && !isLoading && !error ? (
       <div className={cn(/* design-system-escape: mx-5 margin sem primitiva DS; p-4 → migrar para <Inset variant="card-compact"> */ "mx-5 mt-3 rounded-xl border border-primary/15 bg-primary/5 p-4")}>
-        <div className="mb-3.5 min-w-0">
-          <Heading level="subsection" as="h4" className={cn(/* design-system-escape: leading-tight sem token DS */ "leading-tight")}>
-            {audiencia.tipoDescricao || 'Audiência'}
-          </Heading>
-          {dataInicio && dataFim && (
-            <Text variant="caption" as="p" className="mt-0.5 capitalize text-muted-foreground">
-              {format(dataInicio, 'EEE, dd MMM yyyy', { locale: ptBR })}
-              {' · '}
-              <span className="tabular-nums">
-                {format(dataInicio, 'HH:mm')} – {format(dataFim, 'HH:mm')}
-              </span>
-            </Text>
-          )}
-        </div>
+        {dataInicio && (
+          <Text variant="caption" as="p" className="mb-3.5 capitalize text-muted-foreground">
+            {format(dataInicio, 'EEE, dd MMM yyyy', { locale: ptBR })}
+            {' · '}
+            <span className="tabular-nums">{format(dataInicio, 'HH:mm')}</span>
+          </Text>
+        )}
 
         <div className={cn(/* design-system-escape: pb-3.5 padding direcional sem Inset equiv. */ "mb-3.5 grid grid-cols-2 gap-x-5 gap-y-2.5 border-b border-border/40 pb-3.5 sm:grid-cols-4")}>
           {/* Modalidade */}
@@ -636,10 +632,10 @@ export function AudienciaDetailDialog({
         )}
       >
         <DialogDescription className="sr-only">Detalhes da audiência</DialogDescription>
-        <div className={cn("flex min-w-0 flex-1 flex-col", isSplitOpen && "border-border/50 md:border-r")}>
+        <div className={cn("flex min-w-0 flex-1 flex-col min-h-0", isSplitOpen && "border-border/50 md:border-r")}>
           <DialogHeader className="shrink-0 gap-0 border-b border-border/40 px-5 pt-5 pb-3">
             <div className="mb-1 flex items-center justify-between gap-3">
-              <DialogTitle className="min-w-0 flex-1 truncate -tracking-[0.01em] text-foreground">
+              <DialogTitle className="min-w-0 flex-1 -tracking-[0.01em] text-foreground">
                 {titleNode}
               </DialogTitle>
               {audiencia && <div className="shrink-0"><AudienciaStatusBadge status={audiencia.status} /></div>}
@@ -655,7 +651,7 @@ export function AudienciaDetailDialog({
             {metaNode && <div>{metaNode}</div>}
           </DialogHeader>
           {heroNode && <div data-slot="dialog-hero" className="shrink-0">{heroNode}</div>}
-          <div data-slot="dialog-body" className="flex-1 overflow-y-auto px-5 py-3.5 [scrollbar-width:thin]">
+          <div data-slot="dialog-body" className="min-h-0 flex-1 overflow-y-auto px-5 py-3.5 [scrollbar-width:thin]">
             {isLoading && (
               <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv. */ "flex items-center justify-center py-10")}>
                 <LoadingSpinner className="size-6 text-muted-foreground" />
@@ -1006,7 +1002,7 @@ export function AudienciaDetailDialog({
                         <button
                           type="button"
                           onClick={handleStartEditObs}
-                          className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; gap-1 gap sem token DS */ "text-micro-caption font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center gap-1")}
+                          className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; gap-1 gap sem token DS; tracking-wider sem token DS */ "flex cursor-pointer items-center gap-1 text-micro-caption font-semibold uppercase tracking-wider text-primary/70 transition-colors hover:text-primary")}
                         >
                           <Pencil className="size-2.5" />
                           {audiencia.observacoes ? 'Editar' : 'Adicionar'}

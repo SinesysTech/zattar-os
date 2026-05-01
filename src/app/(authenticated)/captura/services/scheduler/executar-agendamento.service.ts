@@ -9,11 +9,13 @@ import { audienciasCapture, type AudienciasResult } from '../trt/audiencias.serv
 import { pendentesManifestacaoCapture, type PendentesManifestacaoResult } from '../trt/pendentes-manifestacao.service';
 import { periciasCapture, type PericiasResult } from '../trt/pericias.service';
 import { capturaCombinada, type CapturaCombinAdaResult } from '../trt/captura-combinada.service';
+import { capturarAtasAudiencias, type CapturarAtasResult } from '../trt/capturar-atas-audiencias.service';
 import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '../captura-log.service';
 import { atualizarAgendamento } from '../persistence/agendamento-persistence.service';
 import { recalcularProximaExecucaoAposExecucao } from '../agendamentos/calcular-proxima-execucao.service';
 import type { FiltroPrazoPendentes, CodigoTRT, GrauTRT } from '../../types/trt-types';
 import { registrarCapturaRawLog } from '../persistence/captura-raw-log.service';
+import { todayDateString } from '@/lib/date-utils';
 
 /**
  * Parâmetros para salvar payloads brutos de partes como raw logs no Supabase
@@ -269,13 +271,21 @@ export async function executarAgendamento(
               });
             }
             break;
-          case 'audiencias':
-            const paramsAudiencias = agendamento.parametros_extras as { dataInicio?: string; dataFim?: string } | null;
+          case 'audiencias': {
+            const paramsAudiencias = agendamento.parametros_extras as {
+              dataInicio?: string;
+              dataFim?: string;
+              dataRelativa?: 'hoje';
+              codigoSituacao?: 'M' | 'C' | 'F';
+            } | null;
+            // dataRelativa: 'hoje' → resolve a data de execução dinamicamente (evita datas fixas que ficam obsoletas)
+            const dataHoje = paramsAudiencias?.dataRelativa === 'hoje' ? todayDateString() : undefined;
             resultado = await audienciasCapture({
               credential: credCompleta.credenciais,
               config: tribunalConfig,
-              dataInicio: paramsAudiencias?.dataInicio,
-              dataFim: paramsAudiencias?.dataFim,
+              dataInicio: dataHoje ?? paramsAudiencias?.dataInicio,
+              dataFim: dataHoje ?? paramsAudiencias?.dataFim,
+              codigoSituacao: paramsAudiencias?.codigoSituacao,
             });
             await registrarRawLog({
               tipo_captura: agendamento.tipo_captura,
@@ -287,8 +297,10 @@ export async function executarAgendamento(
               status: 'success',
               requisicao: {
                 agendamento_id: agendamento.id,
-                dataInicioSolicitado: paramsAudiencias?.dataInicio,
-                dataFimSolicitado: paramsAudiencias?.dataFim,
+                dataRelativa: paramsAudiencias?.dataRelativa,
+                codigoSituacao: paramsAudiencias?.codigoSituacao,
+                dataInicioSolicitado: dataHoje ?? paramsAudiencias?.dataInicio,
+                dataFimSolicitado: dataHoje ?? paramsAudiencias?.dataFim,
                 dataInicioExecutado: (resultado as AudienciasResult).dataInicio,
                 dataFimExecutado: (resultado as AudienciasResult).dataFim,
               },
@@ -310,6 +322,7 @@ export async function executarAgendamento(
               });
             }
             break;
+          }
           case 'pendentes': {
             const paramsPendentes = agendamento.parametros_extras as { filtroPrazo?: FiltroPrazoPendentes; filtrosPrazo?: FiltroPrazoPendentes[] } | null;
             const filtrosParaExecutar = resolverFiltrosPendentes(
@@ -479,6 +492,29 @@ export async function executarAgendamento(
             }
             break;
           }
+          case 'audiencias_ata': {
+            // O serviço usa todas as credencial_ids internamente e itera por (trt, grau).
+            // Para evitar múltiplas execuções no loop externo de credenciais, executa
+            // apenas na primeira iteração e faz break nas demais.
+            if (credCompleta.credentialId !== agendamento.credencial_ids[0]) {
+              break;
+            }
+            resultado = await capturarAtasAudiencias({
+              credencial_ids: agendamento.credencial_ids,
+            });
+            await registrarRawLog({
+              tipo_captura: agendamento.tipo_captura,
+              advogado_id: agendamento.advogado_id,
+              credencial_id: credCompleta.credentialId,
+              credencial_ids: agendamento.credencial_ids,
+              trt: credCompleta.tribunal,
+              grau: credCompleta.grau,
+              status: (resultado as CapturarAtasResult).erros === 0 ? 'success' : 'error',
+              requisicao: { agendamento_id: agendamento.id },
+              resultado_processado: resultado as CapturarAtasResult,
+            });
+            break;
+          }
           default:
             throw new Error(`Tipo de captura não suportado: ${agendamento.tipo_captura}`);
         }
@@ -526,10 +562,12 @@ export async function executarAgendamento(
   // com proxima_execucao no passado e dispare capturas duplicadas em loop.
   if (atualizarProximaExecucao) {
     try {
+      const janela = (agendamento.parametros_extras as { janela_execucao?: { inicio: string; fim: string } } | null)?.janela_execucao;
       const proximaExecucao = recalcularProximaExecucaoAposExecucao(
         agendamento.periodicidade,
         agendamento.dias_intervalo,
-        agendamento.horario
+        agendamento.horario,
+        janela
       );
       await atualizarAgendamento(agendamento.id, {
         proxima_execucao: proximaExecucao,
