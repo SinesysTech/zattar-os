@@ -480,15 +480,12 @@ export async function audienciasCapture(
       console.error(`   ❌ [5.2] Stack:`, e instanceof Error ? e.stack : "N/A");
     }
 
-    // 5.3 Persistir timelines no PostgreSQL
-    console.log("   📜 Persistindo timelines no PostgreSQL...");
+    // 5.3 Persistir timelines no PostgreSQL em paralelo
+    console.log("   📜 Persistindo timelines no PostgreSQL em paralelo...");
     let timelinesPersistidas = 0;
-    for (const [processoId, dados] of dadosComplementares.porProcesso) {
-      if (
-        dados.timeline &&
-        Array.isArray(dados.timeline) &&
-        dados.timeline.length > 0
-      ) {
+    const timelinePromises = Array.from(dadosComplementares.porProcesso.entries())
+      .filter(([_, dados]) => dados.timeline && Array.isArray(dados.timeline) && dados.timeline.length > 0)
+      .map(async ([processoId, dados]) => {
         try {
           await salvarTimeline({
             processoId: String(processoId),
@@ -513,8 +510,9 @@ export async function audienciasCapture(
             },
           );
         }
-      }
-    }
+      });
+
+    await Promise.all(timelinePromises);
     console.log(
       `   ✅ ${timelinesPersistidas} timelines persistidas no PostgreSQL`,
     );
