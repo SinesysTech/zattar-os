@@ -30,7 +30,7 @@ ENV_PRODUCTION="${PROJECT_DIR}/.env.production"
 GENERATED_BUILD_ENV=false
 REGISTRY="registry.sinesys.online"
 IMAGE_NAME="zattar-os"
-CLOUDRON_APP="www.zattaradvogados.com"
+CLOUDRON_APP="www.app.zattaradvogados.com"
 KEEP_IMAGES=5  # Numero de imagens locais antigas para manter
 
 # Autenticacao CI/CD (via env vars ou flags)

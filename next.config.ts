@@ -57,9 +57,8 @@ function getServerActionAllowedOrigins(): string[] {
   const defaults = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "https://zattaradvogados.com",
-    "https://zattaradvogados.com.br",
-    "https://app.synthropic.com.br",
+    "https://www.app.zattaradvogados.com",
+    "https://app.zattaradvogados.com",
   ];
 
   const configuredOrigins = [
