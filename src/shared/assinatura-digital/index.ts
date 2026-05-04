@@ -94,8 +94,7 @@ export {
 export { getTemplate } from './services/templates.service'
 export { generateMockDataForPreview } from './utils/mock-data-generator'
 
-// Pacote de assinatura (agrupamento de múltiplos documentos sob 1 link compartilhado)
-export { criarPacote, lerPacotePorToken } from './services/pacote.service'
+// Pacote de assinatura — criarPacote/lerPacotePorToken são server-only (importar diretamente de ./services/pacote.service)
 export type {
   Pacote,
   PacoteComDocumentos,

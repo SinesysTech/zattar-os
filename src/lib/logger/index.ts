@@ -1,6 +1,6 @@
 import 'server-only';
 import pino from 'pino';
-import { AsyncLocalStorage } from 'async_hooks';
+import { AsyncLocalStorage } from 'node:async_hooks';
 
 // AsyncLocalStorage para correlation IDs
 export const correlationStorage = new AsyncLocalStorage<{ correlationId: string }>();
