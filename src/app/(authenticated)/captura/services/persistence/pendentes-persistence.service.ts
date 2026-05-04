@@ -43,6 +43,20 @@ export interface SalvarPendentesResult {
 }
 
 /**
+ * Normaliza qualquer representação de timestamp para ISO UTC, ou '∅' se nulo.
+ * Usado para construir chaves de cache comparáveis independente do formato do DB
+ * (PostgreSQL retorna "2026-04-23 17:24:31.366+00"; parseDate retorna ISO "...Z").
+ */
+function normalizarParaChave(ts: string | null | undefined): string {
+  if (!ts) return '∅';
+  try {
+    return new Date(ts).toISOString();
+  } catch {
+    return ts;
+  }
+}
+
+/**
  * Converte data ISO string para timestamptz ou null
  *
  * IMPORTANTE: A API do PJE retorna datas sem timezone (ex: "2025-12-04T10:00:00")
@@ -161,9 +175,10 @@ export async function salvarPendentes(
       );
     } else if (existentes) {
       for (const reg of existentes) {
-        // Chave composta: id_pje + id_documento + data_criacao_expediente
-        // Permite múltiplos expedientes por processo e trata reutilização de IDs pelo PJE
-        const key = `${reg.id_pje}:${reg.id_documento ?? '∅'}:${reg.data_criacao_expediente ?? '∅'}`;
+        // Chave composta: id_pje + id_documento + data_criacao_expediente (normalizado para ISO)
+        // normalizarParaChave garante que "2026-04-23 17:24:31.366+00" (DB) e
+        // "2026-04-23T17:24:31.366Z" (parseDate) produzam a mesma chave.
+        const key = `${reg.id_pje}:${reg.id_documento ?? '∅'}:${normalizarParaChave(reg.data_criacao_expediente as string | null)}`;
         existentesMap.set(key, reg as Record<string, unknown>);
       }
     }
@@ -209,8 +224,8 @@ export async function salvarPendentes(
       };
 
       // Lookup no cache batch (ou fallback para query individual se cache vazio)
-      // Chave: id_pje + id_documento + data_criacao_expediente
-      const cacheKey = `${processo.id}:${dadosNovos.id_documento ?? '∅'}:${dadosNovos.data_criacao_expediente ?? '∅'}`;
+      // Chave: id_pje + id_documento + data_criacao_expediente (normalizado para ISO)
+      const cacheKey = `${processo.id}:${dadosNovos.id_documento ?? '∅'}:${normalizarParaChave(dadosNovos.data_criacao_expediente as string | null)}`;
       const registroExistente = existentesMap.has(cacheKey)
         ? existentesMap.get(cacheKey)!
         : existentesMap.size === 0
@@ -230,6 +245,12 @@ export async function salvarPendentes(
           .insert({ ...dadosNovos, ultima_captura_id: capturaLogId ?? null });
 
         if (error) {
+          // 23505 = unique_violation: registro já existe (cache miss por mismatch de formato).
+          // Tratar como "sem alteração" — não é erro de negócio, apenas foi inserido antes.
+          if (error.code === '23505') {
+            naoAtualizados++;
+            continue;
+          }
           throw error;
         }
 
