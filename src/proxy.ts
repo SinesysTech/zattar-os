@@ -3,7 +3,7 @@
  * - Supabase session management
  * - Security headers
  * - IP blocking/whitelisting
- * - Multi-app routing (website, dashboard, portal)
+ * - Routing (dashboard)
  */
 
 import { createServerClient } from "@supabase/ssr";
@@ -32,9 +32,8 @@ if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_P
  * Proxy para gerenciar autenticação Supabase e roteamento multi-app
  *
  * ARQUITETURA BASEADA EM DIRETÓRIOS:
- * - Website: / (raiz) -> Público
  * - Dashboard: /app/* -> Requer autenticação Supabase
- * - Portal do Cliente: /portal/* -> Requer sessão CPF
+ * - Público: / (raiz) -> Redirect para /dashboard
  *
  * Responsabilidades:
  * 1. Atualizar sessão do usuário automaticamente
@@ -130,9 +129,8 @@ export async function proxy(request: NextRequest) {
   };
 
   // Determinar qual app baseado no path
-  function getAppType(path: string): "website" | "dashboard" | "portal" {
+  function getAppType(path: string): "website" | "dashboard" {
     if (path.startsWith("/app")) return "dashboard";
-    if (path.startsWith("/portal")) return "portal";
     return "website";
   }
 
@@ -149,7 +147,6 @@ export async function proxy(request: NextRequest) {
       '/api/auth',
       '/api/cache',
       '/api/captura',
-      '/api/clientes',
       '/api/copilotkit',
       '/api/cron',
       '/api/csp-report',
@@ -179,30 +176,9 @@ export async function proxy(request: NextRequest) {
   }
 
   // ============================================================================
-  // WEBSITE - Público (raiz /)
+  // PÚBLICO - Raiz e assets sem autenticação
   // ============================================================================
   if (appType === "website") {
-    return applyHeaders(supabaseResponse);
-  }
-
-  // ============================================================================
-  // PORTAL DO CLIENTE - Requer sessão CPF (/portal/*)
-  // ============================================================================
-  if (appType === "portal") {
-    // Permitir acesso à página de login do portal
-    if (pathname === "/portal" || pathname === "/portal/") {
-      return applyHeaders(supabaseResponse);
-    }
-
-    // Verificar cookie de sessão do portal
-    const portalCookie = request.cookies.get("portal-cpf-session");
-    if (!portalCookie) {
-      const url = request.nextUrl.clone();
-      url.pathname = "/portal";
-      return applyHeaders(NextResponse.redirect(url));
-    }
-
-    // Sessão válida, permitir acesso
     return applyHeaders(supabaseResponse);
   }
 

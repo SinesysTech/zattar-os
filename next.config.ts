@@ -335,44 +335,6 @@ const nextConfig: NextConfig = {
         source: "/app/:path*",
         destination: "/:path*",
       },
-      // Website public pages — expose without /website/ prefix
-      {
-        source: "/expertise",
-        destination: "/website/expertise",
-      },
-      {
-        source: "/insights",
-        destination: "/website/insights",
-      },
-      {
-        source: "/insights/tendencias",
-        destination: "/website/insights/tendencias",
-      },
-      // Artigos dinâmicos do Strapi — deve ficar APÓS /tendencias
-      {
-        source: "/insights/:slug",
-        destination: "/website/insights/:slug",
-      },
-      {
-        source: "/solucoes",
-        destination: "/website/solucoes",
-      },
-      {
-        source: "/contato",
-        destination: "/website/contato",
-      },
-      {
-        source: "/faq",
-        destination: "/website/faq",
-      },
-      {
-        source: "/politica-de-privacidade",
-        destination: "/website/politica-de-privacidade",
-      },
-      {
-        source: "/termos-de-uso",
-        destination: "/website/termos-de-uso",
-      },
     ];
   },
   async headers() {
@@ -406,6 +368,8 @@ const nextConfig: NextConfig = {
     "192.168.1.100:3000",
     "192.168.1.103",
     "192.168.1.103:3000",
+    "192.168.1.131",
+    "192.168.1.131:3000",
     "192.168.1.146",
     "192.168.1.146:3000",
     "192.168.1.150",
