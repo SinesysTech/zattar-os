@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 
 export interface LogAlteracao {
   id: number;
@@ -24,6 +25,22 @@ export interface LogAlteracao {
 
 export class AuditLogService {
   private supabase = createClient();
+
+  async registrarLog(params: {
+    tipo_entidade: string;
+    entidade_id: number;
+    tipo_evento: string;
+    usuario_que_executou_id?: number;
+    responsavel_anterior_id?: number;
+    responsavel_novo_id?: number;
+    dados_evento: Record<string, unknown>;
+  }) {
+    const supabaseService = createServiceClient();
+    const { error } = await supabaseService.from('logs_alteracao').insert(params);
+    if (error) {
+      console.error('Error creating audit log:', error);
+    }
+  }
 
   async getLogs(entityType: string, entityId: number): Promise<LogAlteracao[]> {
     const { data, error } = await this.supabase

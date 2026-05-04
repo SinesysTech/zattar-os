@@ -12,6 +12,7 @@ import {
   type ResumoUltimaCapturaAudiencias,
 } from "./domain";
 import * as repo from "./repository";
+import { auditLogService } from "@/lib/domain/audit/services/audit-log.service";
 
 /**
  * Teto máximo de itens por chamada de listagem. Calendários anuais de tenants
@@ -197,15 +198,37 @@ export async function atualizarEnderecoPresencialAudiencia(
 export async function atualizarStatusAudiencia(
   id: number,
   status: StatusAudiencia,
-  statusDescricao?: string
+  statusDescricao?: string,
+  userId?: number
 ): Promise<Result<Audiencia>> {
   if (!Object.values(StatusAudiencia).includes(status)) {
     return err(appError("VALIDATION_ERROR", "Status inválido."));
   }
 
+  const anteriorResult = await repo.findAudienciaById(id);
+
   // Supabase .single() retorna erro PGRST116 se o ID não existir,
   // dispensando query de pré-validação (N+1).
-  return repo.atualizarStatus(id, status, statusDescricao);
+  const result = await repo.atualizarStatus(id, status, statusDescricao);
+
+  if (result.success) {
+    auditLogService.registrarLog({
+      tipo_entidade: "audiencias",
+      entidade_id: id,
+      tipo_evento: "alteracao_status",
+      usuario_que_executou_id: userId,
+      dados_evento: {
+        status_anterior: anteriorResult.success ? anteriorResult.data?.status : undefined,
+        status_novo: status,
+        status_descricao: statusDescricao,
+        alterado_em: new Date().toISOString(),
+      },
+    }).catch((e) => {
+      console.error("[AUDIT] Erro ao registrar log de status de audiência:", e);
+    });
+  }
+
+  return result;
 }
 
 /**

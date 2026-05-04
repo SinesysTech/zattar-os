@@ -269,7 +269,7 @@ export async function actionAtualizarStatusAudiencia(
   const auth = await autorizar('editar');
   if (!auth.ok) return auth.result;
 
-  const result = await service.atualizarStatusAudiencia(id, status, statusDescricao);
+  const result = await service.atualizarStatusAudiencia(id, status, statusDescricao, auth.userId);
 
   if (!result.success) {
     return {
