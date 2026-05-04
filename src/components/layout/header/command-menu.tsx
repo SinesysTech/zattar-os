@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ClienteFormDialog } from "@/app/(authenticated)/partes/components/clientes";
+import { ClienteFormDialog } from "@/app/(authenticated)/partes";
 import { ProcessoForm } from "@/app/(authenticated)/processos/components";
 import {
   Calculator,

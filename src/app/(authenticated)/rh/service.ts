@@ -124,7 +124,7 @@ export const gerarFolhaPagamento = async (
         observacoes: undefined,
       }))
     );
-  } catch (error) {
+  } catch {
     // Se falhar o lote (ex: duplicidade ou erro de banco), cai no fallback individual
     // para identificar erros específicos e manter a funcionalidade original de permitir sucesso parcial
     for (const salario of salariosVigentes) {

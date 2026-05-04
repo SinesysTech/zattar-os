@@ -13,6 +13,7 @@ export type { FilterOption } from "./shared";
 export {
   ClientesTableWrapper,
   ClienteForm,
+  ClienteFormDialog,
   ClienteDocumentosViewer,
 } from "./clientes";
 

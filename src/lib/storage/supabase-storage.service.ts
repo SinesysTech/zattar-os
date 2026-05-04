@@ -59,11 +59,11 @@ export async function uploadToSupabase(
     const { buffer, key, contentType, upsert = true } = params;
     const bucket = params.bucket || getDefaultBucket();
 
-    logger.info(`📤 [Supabase Storage] Iniciando upload: ${key}`, {
+    logger.info({
         bucket,
         size: `${(buffer.length / 1024).toFixed(2)} KB`,
         contentType,
-    });
+    }, `📤 [Supabase Storage] Iniciando upload: ${key}`);
 
     const supabase = createServiceClient();
 
@@ -76,7 +76,7 @@ export async function uploadToSupabase(
         });
 
     if (error) {
-        logger.error(`❌ [Supabase Storage] Erro ao fazer upload: ${key}`, error);
+        logger.error({ err: error }, `❌ [Supabase Storage] Erro ao fazer upload: ${key}`);
         throw new Error(
             `Falha ao fazer upload para Supabase Storage: ${error.message}`
         );
@@ -111,7 +111,7 @@ export async function deleteFromSupabase(
     bucket?: string
 ): Promise<void> {
     const bucketName = bucket || getDefaultBucket();
-    logger.info(`🗑️ [Supabase Storage] Deletando arquivo: ${key}`, { bucket: bucketName });
+    logger.info({ bucket: bucketName }, `🗑️ [Supabase Storage] Deletando arquivo: ${key}`);
 
     const supabase = createServiceClient();
 
@@ -120,7 +120,7 @@ export async function deleteFromSupabase(
         .remove([key]);
 
     if (error) {
-        logger.error(`❌ [Supabase Storage] Erro ao deletar: ${key}`, error);
+        logger.error({ err: error }, `❌ [Supabase Storage] Erro ao deletar: ${key}`);
         throw new Error(
             `Falha ao deletar arquivo do Supabase Storage: ${error.message}`
         );
@@ -143,7 +143,7 @@ export async function createPresignedUrl(
     bucket?: string
 ): Promise<string> {
     const bucketName = bucket || getDefaultBucket();
-    logger.info(`🔐 [Supabase Storage] Gerando URL assinada: ${key}`, { bucket: bucketName, expiresIn });
+    logger.info({ bucket: bucketName, expiresIn }, `🔐 [Supabase Storage] Gerando URL assinada: ${key}`);
 
     const supabase = createServiceClient();
 
@@ -152,7 +152,7 @@ export async function createPresignedUrl(
         .createSignedUrl(key, expiresIn);
 
     if (error || !data) {
-        logger.error(`❌ [Supabase Storage] Erro ao gerar URL assinada: ${key}`, error);
+        logger.error({ err: error }, `❌ [Supabase Storage] Erro ao gerar URL assinada: ${key}`);
         throw new Error(
             `Falha ao gerar URL assinada: ${error?.message || 'Erro desconhecido'}`
         );
@@ -169,7 +169,7 @@ export async function downloadFromSupabase(
     bucket?: string
 ): Promise<ArrayBuffer> {
     const bucketName = bucket || getDefaultBucket();
-    logger.info(`⬇️ [Supabase Storage] Baixando arquivo: ${key}`, { bucket: bucketName });
+    logger.info({ bucket: bucketName }, `⬇️ [Supabase Storage] Baixando arquivo: ${key}`);
 
     const supabase = createServiceClient();
 
@@ -178,7 +178,7 @@ export async function downloadFromSupabase(
         .download(key);
 
     if (error || !data) {
-        logger.error(`❌ [Supabase Storage] Erro ao baixar arquivo: ${key}`, error);
+        logger.error({ err: error }, `❌ [Supabase Storage] Erro ao baixar arquivo: ${key}`);
         throw new Error(
             `Falha ao baixar arquivo: ${error?.message || 'Erro desconhecido'}`
         );

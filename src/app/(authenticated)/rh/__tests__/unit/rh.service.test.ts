@@ -6,7 +6,6 @@ import {
   verificarFolhaExistente,
   buscarSalariosVigentesNoMes,
   criarFolhaPagamento,
-  criarItemFolha,
   criarItensFolha,
   atualizarValorTotalFolha,
   buscarFolhaPorId,

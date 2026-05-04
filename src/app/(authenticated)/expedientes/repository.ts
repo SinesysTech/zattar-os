@@ -442,7 +442,7 @@ export async function findAllExpedientes(
       );
     }
 
-    const expedientes = (data || []).map(converterParaExpediente);
+    const expedientes = ((data as unknown as ExpedienteRowComOrigem[]) || []).map(converterParaExpediente);
     const total = count ?? 0;
     const totalPages = Math.ceil(total / limite);
 

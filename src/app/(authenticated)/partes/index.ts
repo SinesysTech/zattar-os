@@ -30,6 +30,7 @@ export {
   // Clientes
   ClientesTableWrapper,
   ClienteForm,
+  ClienteFormDialog,
   ClienteDocumentosViewer,
   // Partes Contrarias
   PartesContrariasTableWrapper,
