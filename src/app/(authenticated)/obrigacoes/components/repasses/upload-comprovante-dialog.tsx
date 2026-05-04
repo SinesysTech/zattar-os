@@ -3,6 +3,7 @@
 
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
+import { useUser } from '@/providers/user-provider';
 import {
   Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle,
 } from '@/components/ui/dialog';
@@ -23,18 +24,23 @@ interface UploadComprovanteDialogProps {
 export function UploadComprovanteDialog({ open, onOpenChange, parcelaId, valorRepasse, onSuccess }: UploadComprovanteDialogProps) {
   const [file, setFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const { id: userId } = useUser();
 
   const handleUpload = async () => {
     if (!file) return;
+    if (!userId) {
+      toast.error('Não foi possível identificar o usuário atual. Tente recarregar a página.');
+      return;
+    }
     try {
       setIsUploading(true);
       // Simulating upload
       const fakeUrl = `https://storage.example.com/comprovantes/${parcelaId}/${file.name}`;
-      
+
       const response = await actionRegistrarRepasse(parcelaId, {
           dataRepasse: new Date().toISOString(),
           arquivoComprovantePath: fakeUrl,
-          usuarioRepasseId: 0 // TODO: Get current user ID
+          usuarioRepasseId: userId
       });
       
       if (response.success) {
@@ -60,7 +66,9 @@ export function UploadComprovanteDialog({ open, onOpenChange, parcelaId, valorRe
                <Input type="file" onChange={e => setFile(e.target.files?.[0] || null)} disabled={isUploading} />
            </div>
            <DialogFooter>
-               <Button onClick={handleUpload} disabled={!file}>Confirmar</Button>
+               <Button onClick={handleUpload} disabled={!file || isUploading || !userId}>
+                 {isUploading ? 'Enviando...' : 'Confirmar'}
+               </Button>
            </DialogFooter>
        </DialogContent>
     </Dialog>
