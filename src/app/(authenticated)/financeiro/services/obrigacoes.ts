@@ -84,11 +84,14 @@ export const ObrigacoesService = {
                 return { sucesso: true, mensagem: 'Acordo sem parcelas.' };
             }
 
+            const resultados = await Promise.all(
+                parcelas.map(parcela => this.sincronizarParcela(parcela.id, forcar))
+            );
+
             let sucessos = 0;
             let erros = 0;
 
-            for (const parcela of parcelas) {
-                const res = await this.sincronizarParcela(parcela.id, forcar);
+            for (const res of resultados) {
                 if (res.sucesso) sucessos++;
                 else erros++;
             }
