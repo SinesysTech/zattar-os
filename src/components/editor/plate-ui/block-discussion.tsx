@@ -24,6 +24,7 @@ import {
   TextApi,
 } from 'platejs';
 import { useEditorPlugin, useEditorRef, usePluginOption } from 'platejs/react';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -318,30 +319,43 @@ const useResolvedDiscussion = (
   const { api, getOption, setOption } = useEditorPlugin(commentPlugin);
 
   const discussions = usePluginOption(discussionPlugin, 'discussions');
+  const uniquePathMap = usePluginOption(commentPlugin, 'uniquePathMap');
 
   React.useEffect(() => {
+    let hasError = false;
+
     commentNodes.forEach(([node]) => {
-      const id = api.comment.nodeId(node);
-      const map = getOption('uniquePathMap');
+      try {
+        const id = api.comment.nodeId(node);
+        const map = getOption('uniquePathMap');
 
-      if (!id) return;
+        if (!id) return;
 
-      const previousPath = map.get(id);
+        const previousPath = map.get(id);
 
-      // If there are no comment nodes in the corresponding path in the map, then update it.
-      if (PathApi.isPath(previousPath)) {
-        const nodes = api.comment.node({ id, at: previousPath });
+        // If there are no comment nodes in the corresponding path in the map, then update it.
+        if (PathApi.isPath(previousPath)) {
+          const nodes = api.comment.node({ id, at: previousPath });
 
-        if (!nodes) {
-          setOption('uniquePathMap', new Map(map).set(id, blockPath));
+          if (!nodes) {
+            setOption('uniquePathMap', new Map(map).set(id, blockPath));
+            return;
+          }
+
           return;
         }
 
-        return;
+        setOption('uniquePathMap', new Map(map).set(id, blockPath));
+      } catch (error) {
+        console.error('Error resolving discussion:', error);
+        hasError = true;
       }
-      setOption('uniquePathMap', new Map(map).set(id, blockPath));
     });
-  }, [commentNodes, blockPath, api, getOption, setOption]);
+
+    if (hasError) {
+      toast.error('Failed to process block discussion');
+    }
+  }, [api.comment, blockPath, commentNodes, getOption, setOption]);
 
   const commentsIds = new Set(
     commentNodes.map(([node]) => api.comment.nodeId(node)).filter(Boolean)
@@ -354,8 +368,7 @@ const useResolvedDiscussion = (
     }))
     .filter((item: TDiscussion) => {
       /** If comment cross blocks just show it in the first block */
-      const commentsPathMap = getOption('uniquePathMap');
-      const firstBlockPath = commentsPathMap.get(item.id);
+      const firstBlockPath = uniquePathMap.get(item.id);
 
       if (!firstBlockPath) return false;
       if (!PathApi.equals(firstBlockPath, blockPath)) return false;
