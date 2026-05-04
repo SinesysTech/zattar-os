@@ -10,7 +10,6 @@ import {
   ContentLayoutSelector,
   ResetThemeButton,
 } from '@/components/layout/header/theme-customizer';
-import { Button } from '@/components/ui/button';
 import { RotateCcw } from 'lucide-react';
 
 export function AparenciaContent() {

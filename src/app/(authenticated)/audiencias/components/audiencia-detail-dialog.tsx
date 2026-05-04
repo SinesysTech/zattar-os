@@ -208,7 +208,7 @@ export function AudienciaDetailDialog({
   const hasAta = !!audiencia?.urlAtaAudiencia;
 
   const dataInicio = audiencia ? parseISO(audiencia.dataInicio) : null;
-  const dataFim = audiencia ? parseISO(audiencia.dataFim) : null;
+  const _dataFim = audiencia ? parseISO(audiencia.dataFim) : null;
 
   const poloAtivo = audiencia?.poloAtivoOrigem || audiencia?.poloAtivoNome || '—';
   const poloPassivo = audiencia?.poloPassivoOrigem || audiencia?.poloPassivoNome || '—';
