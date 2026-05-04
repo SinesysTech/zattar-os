@@ -1,3 +1,4 @@
+import 'server-only';
 import { uploadToBackblaze } from '@/lib/storage/backblaze-b2.service';
 import { buildFileName, decodeDataUrlToBuffer } from './base64';
 

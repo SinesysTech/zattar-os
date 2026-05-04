@@ -1,11 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requirePermission } from "@/lib/auth/require-permission";
-import {
-  getTemplate,
-  generatePdfFromTemplate,
-  storePdf,
-  generateMockDataForPreview,
-} from "@/shared/assinatura-digital";
+import { getTemplate, generateMockDataForPreview } from "@/shared/assinatura-digital";
+import { generatePdfFromTemplate } from "@/shared/assinatura-digital/services/template-pdf.service";
+import { storePdf } from "@/shared/assinatura-digital/services/storage.service";
 import { generatePresignedUrl } from "@/lib/storage/backblaze-b2.service";
 import type {
   TemplateCampo,

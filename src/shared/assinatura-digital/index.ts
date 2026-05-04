@@ -85,13 +85,13 @@ export {
 } from './utils'
 
 // Services comumente consumidos fora (inclui backend)
+// NOTA: storePdf e generatePdfFromTemplate são server-only — importar diretamente
+// de ./services/storage.service e ./services/template-pdf.service respectivamente
 export { getSegmentoBySlug } from './services/segmentos.service'
 export {
   getFormularioBySlugAndSegmentoId,
 } from './services/formularios.service'
 export { getTemplate } from './services/templates.service'
-export { generatePdfFromTemplate } from './services/template-pdf.service'
-export { storePdf } from './services/storage.service'
 export { generateMockDataForPreview } from './utils/mock-data-generator'
 
 // Pacote de assinatura (agrupamento de múltiplos documentos sob 1 link compartilhado)

@@ -1,10 +1,11 @@
 /**
  * Serviço de Upload para Backblaze B2
- * 
+ *
  * Responsável por fazer upload de arquivos para o Backblaze B2 usando a API S3-Compatible.
  * Utiliza AWS SDK v3 para compatibilidade com a API S3 do Backblaze.
  */
 
+import 'server-only';
 import { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import getLogger from '@/lib/logger';
