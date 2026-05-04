@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils';
 import {
   Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
@@ -39,6 +40,7 @@ export function MapButton({ address, label = 'Abrir no Google Maps', alwaysVisib
   }
 
   return (
+    <TooltipProvider>
     <Tooltip>
       <TooltipTrigger asChild>
         <button
@@ -58,5 +60,6 @@ export function MapButton({ address, label = 'Abrir no Google Maps', alwaysVisib
         {label}
       </TooltipContent>
     </Tooltip>
+    </TooltipProvider>
   );
 }

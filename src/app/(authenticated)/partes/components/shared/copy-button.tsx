@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils';
 import {
   Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
@@ -37,6 +38,7 @@ export function CopyButton({ text, label, alwaysVisible = false }: CopyButtonPro
   }, [text]);
 
   return (
+    <TooltipProvider>
     <Tooltip>
       <TooltipTrigger asChild>
         <button
@@ -60,5 +62,6 @@ export function CopyButton({ text, label, alwaysVisible = false }: CopyButtonPro
         {copied ? 'Copiado!' : label}
       </TooltipContent>
     </Tooltip>
+    </TooltipProvider>
   );
 }
