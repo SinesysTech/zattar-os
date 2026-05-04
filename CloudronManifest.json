@@ -12,6 +12,12 @@
     "redis": {},
     "sendmail": {
       "supportsDisplayName": true
+    },
+    "scheduler": {
+      "executar_agendamentos": {
+        "schedule": "* * * * *",
+        "command": "curl -sf -m 290 -X POST http://127.0.0.1:3000/api/cron/executar-agendamentos -H \"Authorization: Bearer ${CRON_SECRET}\""
+      }
     }
   },
   "manifestVersion": 2,

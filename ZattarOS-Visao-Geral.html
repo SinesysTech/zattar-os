@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZattarOS — Visão Geral do Sistema</title>
+<style>
+  :root {
+    --azul-titulo: #1B3A5C;
+    --azul-destaque: #2563EB;
+    --azul-claro: #EFF6FF;
+    --azul-borda: #BFDBFE;
+    --texto: #1E293B;
+    --texto-sub: #475569;
+    --texto-muted: #94A3B8;
+    --bg: #F8FAFC;
+    --branco: #FFFFFF;
+    --borda: #E2E8F0;
+    --verde: #059669;
+    --roxo: #7C3AED;
+    --laranja: #D97706;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--texto);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* ── Layout ── */
+  .page-wrap { display: flex; min-height: 100vh; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 260px;
+    min-width: 260px;
+    background: var(--azul-titulo);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .sidebar-header {
+    padding: 28px 20px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+  }
+  .sidebar-logo { font-size: 22px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+  .sidebar-sub { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 4px; }
+  .sidebar-nav { padding: 16px 0; flex: 1; }
+  .sidebar-section { padding: 8px 20px 4px; font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: rgba(255,255,255,0.4); font-weight: 600; }
+  .sidebar-nav a {
+    display: block;
+    padding: 8px 20px;
+    color: rgba(255,255,255,0.72);
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+  }
+  .sidebar-nav a:hover, .sidebar-nav a.active {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    border-left-color: #60A5FA;
+  }
+
+  /* ── Main ── */
+  .main { flex: 1; overflow-x: hidden; }
+
+  /* ── Hero ── */
+  .hero {
+    background: linear-gradient(135deg, var(--azul-titulo) 0%, #1e4d8c 60%, #2563EB 100%);
+    padding: 60px 60px 48px;
+    color: white;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.9);
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .hero h1 { font-size: 48px; font-weight: 900; letter-spacing: -1.5px; margin-bottom: 8px; }
+  .hero-subtitle { font-size: 20px; opacity: 0.8; margin-bottom: 16px; font-weight: 400; }
+  .hero-meta { font-size: 13px; opacity: 0.55; }
+  .hero-tags { display: flex; gap: 8px; margin-top: 24px; flex-wrap: wrap; }
+  .hero-tag {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.85);
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  /* ── Content ── */
+  .content { padding: 48px 60px; max-width: 960px; }
+
+  /* ── Seções ── */
+  .section { margin-bottom: 56px; }
+  .section-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--azul-titulo);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--azul-destaque);
+  }
+  .section-num {
+    background: var(--azul-destaque);
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .subsection-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--azul-destaque);
+    margin: 28px 0 12px;
+  }
+  .sub2-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--texto);
+    margin: 20px 0 8px;
+  }
+  p { margin-bottom: 12px; color: var(--texto-sub); }
+  code {
+    background: #F1F5F9;
+    color: var(--azul-destaque);
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 13px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--borda);
+  }
+  pre {
+    background: #1E293B;
+    color: #E2E8F0;
+    padding: 16px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: 'Consolas', monospace;
+    overflow-x: auto;
+    margin: 12px 0 16px;
+  }
+
+  /* ── Tabelas ── */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 14px; }
+  thead tr { background: var(--azul-titulo); color: white; }
+  thead th { padding: 11px 14px; text-align: left; font-weight: 600; font-size: 13px; }
+  tbody tr:nth-child(even) { background: #F8FAFC; }
+  tbody tr:hover { background: var(--azul-claro); }
+  tbody td { padding: 10px 14px; border-bottom: 1px solid var(--borda); color: var(--texto-sub); vertical-align: top; }
+  tbody td:first-child { color: var(--texto); font-weight: 500; }
+
+  /* ── Listas ── */
+  ul { padding-left: 20px; margin-bottom: 16px; }
+  ul li { margin-bottom: 6px; color: var(--texto-sub); }
+  ul li::marker { color: var(--azul-destaque); }
+
+  /* ── Callout ── */
+  .callout {
+    background: var(--azul-claro);
+    border-left: 4px solid var(--azul-destaque);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 16px 0 20px;
+  }
+  .callout-title { font-weight: 700; color: var(--azul-destaque); font-size: 13px; margin-bottom: 4px; }
+  .callout p { color: var(--texto); margin: 0; font-size: 14px; }
+
+  /* ── Módulos Grid ── */
+  .modules-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin: 20px 0; }
+  .module-card {
+    background: white;
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    padding: 18px 20px;
+    transition: all 0.2s;
+  }
+  .module-card:hover { border-color: var(--azul-destaque); box-shadow: 0 4px 12px rgba(37,99,235,0.1); transform: translateY(-1px); }
+  .module-card-icon { font-size: 22px; margin-bottom: 10px; }
+  .module-card-title { font-weight: 700; color: var(--texto); font-size: 15px; margin-bottom: 4px; }
+  .module-card-desc { font-size: 13px; color: var(--texto-muted); line-height: 1.5; }
+
+  /* ── Stack chips ── */
+  .stack-grid { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+  .stack-chip {
+    background: white;
+    border: 1px solid var(--borda);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--texto);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .stack-chip .chip-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--azul-destaque); }
+
+  /* ── Badge ── */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-left: 6px;
+  }
+  .badge-blue { background: #DBEAFE; color: #1D4ED8; }
+  .badge-green { background: #D1FAE5; color: #065F46; }
+  .badge-purple { background: #EDE9FE; color: #5B21B6; }
+  .badge-orange { background: #FEF3C7; color: #92400E; }
+
+  /* ── Fluxo ── */
+  .flow-steps { display: flex; align-items: center; gap: 0; margin: 16px 0; flex-wrap: wrap; }
+  .flow-step {
+    background: white;
+    border: 1.5px solid var(--azul-destaque);
+    color: var(--azul-titulo);
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .flow-arrow { color: var(--azul-destaque); font-size: 18px; padding: 0 6px; font-weight: 700; }
+
+  /* ── Status chips ── */
+  .status-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+  .status-chip {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1.5px solid;
+  }
+  .status-ativo { background: #D1FAE5; color: #065F46; border-color: #6EE7B7; }
+  .status-suspenso { background: #FEF3C7; color: #92400E; border-color: #FCD34D; }
+  .status-arquivado { background: #F1F5F9; color: #475569; border-color: #CBD5E1; }
+  .status-extinto { background: #FEE2E2; color: #991B1B; border-color: #FCA5A5; }
+  .status-recurso { background: #EDE9FE; color: #5B21B6; border-color: #C4B5FD; }
+
+  /* ── Footer ── */
+  footer {
+    background: var(--azul-titulo);
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+    margin-top: 40px;
+  }
+
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .hero, .content { padding: 32px 24px; }
+    .hero h1 { font-size: 32px; }
+    .modules-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+<!-- Sidebar -->
+<nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">ZattarOS</div>
+    <div class="sidebar-sub">Documentação · v1.0 · 2026</div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="sidebar-section">Conteúdo</div>
+    <a href="#intro">1. Introdução</a>
+    <a href="#arquitetura">2. Arquitetura Técnica</a>
+    <a href="#modulos">3. Módulos</a>
+    <a href="#integracoes">4. Integrações</a>
+    <a href="#infra">5. Infraestrutura</a>
+    <a href="#seguranca">6. Segurança</a>
+    <a href="#design">7. Design System</a>
+    <a href="#testes">8. Testes</a>
+    <a href="#glossario">9. Glossário</a>
+    <div class="sidebar-section" style="margin-top:16px">Módulos</div>
+    <a href="#m-processos">Processos</a>
+    <a href="#m-expedientes">Expedientes</a>
+    <a href="#m-audiencias">Audiências</a>
+    <a href="#m-partes">Partes</a>
+    <a href="#m-documentos">Documentos</a>
+    <a href="#m-financeiro">Financeiro</a>
+    <a href="#m-contratos">Contratos</a>
+    <a href="#m-captura">Captura</a>
+    <a href="#m-cnj">Comunica CNJ</a>
+    <a href="#m-pericias">Perícias</a>
+    <a href="#m-tarefas">Tarefas</a>
+    <a href="#m-dashboard">Dashboard</a>
+    <a href="#m-rh">RH</a>
+    <a href="#m-ia">Assistentes IA</a>
+  </div>
+</nav>
+
+<!-- Main -->
+<div class="main">
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-badge">by Synthropic</div>
+    <h1>ZattarOS</h1>
+    <div class="hero-subtitle">Sistema de Gestão Jurídica</div>
+    <div class="hero-meta">Escritório Zattar Advogados · Documentação Interna · Maio 2026</div>
+    <div class="hero-tags">
+      <span class="hero-tag">⚖️ Direito Trabalhista</span>
+      <span class="hero-tag">🤖 IA Integrada</span>
+      <span class="hero-tag">⚡ Next.js 16</span>
+      <span class="hero-tag">🗄️ Supabase + pgvector</span>
+      <span class="hero-tag">🔌 MCP Protocol</span>
+      <span class="hero-tag">📋 PJE / TRT</span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- 1. Introdução -->
+    <div class="section" id="intro">
+      <div class="section-title"><span class="section-num">1</span> Introdução</div>
+
+      <div class="subsection-title">O que é o ZattarOS</div>
+      <p>O <strong>ZattarOS</strong> é um sistema de gestão jurídica corporativa desenvolvido pela Synthropic, focado em automação inteligente e integração com Inteligência Artificial. O sistema é utilizado pelo escritório <strong>Zattar Advogados</strong> para gerenciar toda a operação jurídica e administrativa: desde o acervo de processos judiciais até o financeiro, RH, captura automatizada de expedientes nos tribunais e comunicação com clientes.</p>
+      <p>A plataforma é acessada via web (navegador) e disponibiliza também um portal exclusivo para clientes, além de uma camada de automação por agentes de IA via <strong>MCP (Model Context Protocol)</strong>.</p>
+
+      <div class="subsection-title">Contexto de Uso</div>
+      <p>O escritório atua na área <strong>trabalhista</strong> com múltiplos advogados distribuídos nos TRT1 a TRT24 e TST. Funcionalidades principais:</p>
+      <ul>
+        <li>Captura automatizada de intimações e prazos do <strong>PJE</strong> via Playwright</li>
+        <li>Integração com a API do <strong>Comunica CNJ</strong> (Diário Oficial Digital)</li>
+        <li>Gestão unificada de processos em múltiplos graus de jurisdição</li>
+        <li>Agenda, audiências, perícias e controle de prazos processuais</li>
+        <li>Módulo financeiro integrado ao ciclo processual</li>
+        <li>Dashboard com métricas em tempo real para usuários e administradores</li>
+        <li>Automação por agentes de IA via MCP</li>
+      </ul>
+    </div>
+
+    <!-- 2. Arquitetura -->
+    <div class="section" id="arquitetura">
+      <div class="section-title"><span class="section-num">2</span> Arquitetura Técnica</div>
+
+      <div class="subsection-title">Stack Tecnológico</div>
+      <table>
+        <thead><tr><th>Camada</th><th>Tecnologia / Decisão</th></tr></thead>
+        <tbody>
+          <tr><td>Framework Web</td><td>Next.js 16 (App Router) + React 19 + TypeScript 5</td></tr>
+          <tr><td>Banco de Dados</td><td>Supabase (PostgreSQL 15 + Row Level Security + pgvector)</td></tr>
+          <tr><td>Cache</td><td>Redis (cache de queries, TTL configurável, streaming de logs)</td></tr>
+          <tr><td>Interface Visual</td><td>Tailwind CSS 4 + shadcn/ui (New York) + Design System Glass Briefing</td></tr>
+          <tr><td>Busca Semântica</td><td>pgvector + OpenAI Embeddings (text-embedding-3-small)</td></tr>
+          <tr><td>Automação de Navegador</td><td>Playwright (captura automatizada nos tribunais)</td></tr>
+          <tr><td>Storage de Arquivos</td><td>Backblaze B2 (compatível com S3)</td></tr>
+          <tr><td>Autenticação</td><td>Supabase Auth (JWT + SSO + 2FA via 2FAuth)</td></tr>
+          <tr><td>Editor de Documentos</td><td>Plate.js (rich-text colaborativo via Yjs)</td></tr>
+          <tr><td>Videoconferência</td><td>Dyte SDK (audiências virtuais)</td></tr>
+          <tr><td>Chat / Suporte</td><td>Chatwoot (assistente Pedrinho)</td></tr>
+          <tr><td>Deploy</td><td>Docker + Cloudron + Docker Swarm</td></tr>
+          <tr><td>Testes</td><td>Jest + Playwright E2E</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subsection-title">Arquitetura Feature-Sliced Design (FSD)</div>
+      <p>O projeto adota <strong>Feature-Sliced Design</strong> com colocation rigoroso: cada módulo é autossuficiente dentro de sua rota em <code>src/app/(authenticated)/</code>.</p>
+
+      <div class="callout">
+        <div class="callout-title">⚠️ Regra Fundamental de Importação</div>
+        <p>Nunca faça "deep imports". Sempre use o barrel <code>index.ts</code> de cada módulo.<br>
+        ✅ <code>import { actionListarClientes } from "@/app/(authenticated)/partes"</code><br>
+        ❌ <code>import { ... } from "@/app/(authenticated)/partes/actions/listar-action"</code></p>
+      </div>
+
+      <table>
+        <thead><tr><th>Arquivo / Pasta</th><th>Responsabilidade</th></tr></thead>
+        <tbody>
+          <tr><td><code>domain.ts</code></td><td>Schemas Zod, tipos TypeScript, constantes e regras lógicas</td></tr>
+          <tr><td><code>service.ts</code></td><td>Casos de uso — regras de negócio e orquestração</td></tr>
+          <tr><td><code>repository.ts</code></td><td>Integração com banco de dados (Supabase) e APIs externas</td></tr>
+          <tr><td><code>actions/</code></td><td>Server Actions (Next.js) — ponto de entrada da UI para o servidor</td></tr>
+          <tr><td><code>components/</code></td><td>Componentes React específicos do domínio</td></tr>
+          <tr><td><code>index.ts</code></td><td>Barrel — único ponto de exportação público do módulo</td></tr>
+          <tr><td><code>RULES.md</code></td><td>Documentação de regras de negócio para agentes cognitivos</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subsection-title">Fluxo de Dados</div>
+      <div class="flow-steps">
+        <span class="flow-step">Client (React)</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step">Server Action</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step">Service</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step">Repository</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-step">Supabase (PostgreSQL)</span>
+      </div>
+
+      <div class="subsection-title">Model Context Protocol (MCP) e IA</div>
+      <p>O ZattarOS expõe um endpoint MCP em <code>/api/mcp</code> que permite a agentes de IA controlarem o sistema programaticamente. Cada módulo tem seu arquivo de tools registrado em <code>src/lib/mcp/registry.ts</code>. O assistente <strong>Pedrinho</strong> (Chatwoot) pode executar ações reais no sistema via MCP.</p>
+    </div>
+
+    <!-- 3. Módulos -->
+    <div class="section" id="modulos">
+      <div class="section-title"><span class="section-num">3</span> Módulos do Sistema</div>
+
+      <div class="modules-grid">
+        <div class="module-card"><div class="module-card-icon">📁</div><div class="module-card-title">Processos</div><div class="module-card-desc">Acervo completo de processos judiciais trabalhistas com integração PJE</div></div>
+        <div class="module-card"><div class="module-card-icon">📋</div><div class="module-card-title">Expedientes</div><div class="module-card-desc">Intimações, notificações e prazos processuais de PJE, manual e Comunica CNJ</div></div>
+        <div class="module-card"><div class="module-card-icon">🏛️</div><div class="module-card-title">Audiências</div><div class="module-card-desc">Agendamento de audiências virtuais, presenciais e híbridas</div></div>
+        <div class="module-card"><div class="module-card-icon">👥</div><div class="module-card-title">Partes</div><div class="module-card-desc">Clientes PF/PJ, partes contrárias e terceiros processuais</div></div>
+        <div class="module-card"><div class="module-card-icon">📄</div><div class="module-card-title">Documentos</div><div class="module-card-desc">Editor rich-text Plate.js + uploads no Backblaze B2</div></div>
+        <div class="module-card"><div class="module-card-icon">💰</div><div class="module-card-title">Financeiro</div><div class="module-card-desc">Receitas, despesas, DRE, fluxo de caixa e conciliação bancária</div></div>
+        <div class="module-card"><div class="module-card-icon">📜</div><div class="module-card-title">Contratos</div><div class="module-card-desc">Contratos com clientes: ajuizamento, defesa, assessoria (pró-êxito / pró-labore)</div></div>
+        <div class="module-card"><div class="module-card-icon">🤖</div><div class="module-card-title">Captura</div><div class="module-card-desc">Scraping automático via Playwright nos portais PJE, ESAJ, EPROC, PROJUDI</div></div>
+        <div class="module-card"><div class="module-card-icon">📰</div><div class="module-card-title">Comunica CNJ</div><div class="module-card-desc">Integração com API CNJ para comunicações do Diário Oficial Digital</div></div>
+        <div class="module-card"><div class="module-card-icon">🔬</div><div class="module-card-title">Perícias</div><div class="module-card-desc">Controle de perícias judiciais com situação e prazos de laudo</div></div>
+        <div class="module-card"><div class="module-card-icon">✅</div><div class="module-card-title">Tarefas & Kanban</div><div class="module-card-desc">Quadros Kanban, subtarefas, comentários e eventos do sistema unificados</div></div>
+        <div class="module-card"><div class="module-card-icon">📊</div><div class="module-card-title">Dashboard</div><div class="module-card-desc">Métricas consolidadas para usuário e administrador</div></div>
+        <div class="module-card"><div class="module-card-icon">📅</div><div class="module-card-title">Agenda & Calendário</div><div class="module-card-desc">Eventos do escritório e calendário unificado do sistema</div></div>
+        <div class="module-card"><div class="module-card-icon">👔</div><div class="module-card-title">RH</div><div class="module-card-desc">Salários e folhas de pagamento integradas ao Financeiro</div></div>
+        <div class="module-card"><div class="module-card-icon">🧠</div><div class="module-card-title">Assistentes IA</div><div class="module-card-desc">Pedrinho (Chatwoot), assistentes Dify e iframes externos</div></div>
+        <div class="module-card"><div class="module-card-icon">⚙️</div><div class="module-card-title">Configurações</div><div class="module-card-desc">Métricas do BD, integrações, temas e prompts de IA (admin only)</div></div>
+        <div class="module-card"><div class="module-card-icon">🌐</div><div class="module-card-title">Portal do Cliente</div><div class="module-card-desc">Interface exclusiva para clientes acompanharem seus processos</div></div>
+      </div>
+
+      <!-- Processos Detalhado -->
+      <div id="m-processos" style="margin-top:36px">
+        <div class="subsection-title">3.1 Processos (Acervo)</div>
+        <p>Módulo central. Gerencia o acervo de processos judiciais trabalhistas com integração ao PJE para captura automática de movimentações.</p>
+        <div class="sub2-title">Status de Processo</div>
+        <div class="status-list">
+          <span class="status-chip status-ativo">ATIVO</span>
+          <span class="status-chip status-suspenso">SUSPENSO</span>
+          <span class="status-chip status-arquivado">ARQUIVADO</span>
+          <span class="status-chip status-extinto">EXTINTO</span>
+          <span class="status-chip status-arquivado">BAIXADO</span>
+          <span class="status-chip status-suspenso">PENDENTE</span>
+          <span class="status-chip status-recurso">EM_RECURSO</span>
+        </div>
+        <div class="sub2-title">Regras Principais</div>
+        <ul>
+          <li>Número CNJ obrigatório no formato <code>NNNNNNN-DD.AAAA.J.TT.OOOO</code></li>
+          <li>Arquivamento só permitido sem audiências futuras ou expedientes pendentes</li>
+          <li>Um processo pode ter instâncias simultâneas em múltiplos graus (ProcessoUnificado)</li>
+          <li>Após persistência, indexado no pgvector para busca semântica por IA</li>
+          <li>19 filtros disponíveis: origem, TRT, grau, número, partes, datas, booleanos</li>
+        </ul>
+      </div>
+
+      <!-- Expedientes Detalhado -->
+      <div id="m-expedientes" style="margin-top:36px">
+        <div class="subsection-title">3.2 Expedientes</div>
+        <p>Gestão de intimações, notificações e prazos processuais.</p>
+        <table>
+          <thead><tr><th>Origem</th><th>Descrição</th></tr></thead>
+          <tbody>
+            <tr><td><code>captura</code></td><td>Capturado automaticamente do PJE via scraper Playwright</td></tr>
+            <tr><td><code>manual</code></td><td>Cadastrado manualmente pelo usuário (padrão)</td></tr>
+            <tr><td><code>comunica_cnj</code></td><td>Importado via API do Comunica CNJ (Diário Oficial Digital)</td></tr>
+          </tbody>
+        </table>
+        <div class="sub2-title">Ciclo de Vida</div>
+        <ul>
+          <li><strong>Criação:</strong> valida processo e tipo; preserva histórico em <code>dados_anteriores</code> (JSONB)</li>
+          <li><strong>Baixa:</strong> exige protocolo OU justificativa; impede baixa duplicada; auditoria via RPC</li>
+          <li><strong>Reversão:</strong> só permitida se já está baixado; auditoria via RPC</li>
+          <li><strong>Bulk:</strong> atribuição de responsável em lote via RPC com log</li>
+        </ul>
+      </div>
+
+      <!-- Audiências -->
+      <div id="m-audiencias" style="margin-top:36px">
+        <div class="subsection-title">3.3 Audiências</div>
+        <p>Agendamento e acompanhamento de audiências judiciais. Integra-se com Dyte para audiências virtuais.</p>
+        <table>
+          <thead><tr><th>Modalidade</th><th>Descrição</th></tr></thead>
+          <tbody>
+            <tr><td>Virtual</td><td>Videoconferência via Dyte SDK, Google Meet, Zoom ou Webex</td></tr>
+            <tr><td>Presencial</td><td>Com endereço físico vinculado</td></tr>
+            <tr><td>Híbrida</td><td>Combinação — define quem é presencial (advogado ou cliente)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Captura Detalhada -->
+      <div id="m-captura" style="margin-top:36px">
+        <div class="subsection-title">3.8 Captura Automatizada</div>
+        <p>Extração automática de dados dos portais judiciais via Playwright.</p>
+        <table>
+          <thead><tr><th>Sistema</th><th>Tribunais</th><th>Dados Capturados</th></tr></thead>
+          <tbody>
+            <tr><td>PJE</td><td>TRT1 a TRT24 + TST</td><td>Processos, expedientes, audiências, perícias, partes, timeline</td></tr>
+            <tr><td>ESAJ</td><td>TJSP e outros</td><td>Processos e movimentações</td></tr>
+            <tr><td>EPROC</td><td>TRF e outros</td><td>Processos e movimentações</td></tr>
+            <tr><td>PROJUDI</td><td>Tribunais estaduais</td><td>Processos e movimentações</td></tr>
+          </tbody>
+        </table>
+        <div class="sub2-title">Fluxo de Captura PJE</div>
+        <ol style="padding-left:20px; color: var(--texto-sub);">
+          <li style="margin-bottom:6px">Autenticação no tribunal via SSO (PDPJ) + OTP (2FA)</li>
+          <li style="margin-bottom:6px">Listagem de processos/expedientes pendentes com filtros de prazo</li>
+          <li style="margin-bottom:6px">Extração de metadados: partes, timeline, datas, situação</li>
+          <li style="margin-bottom:6px">Persistência com deduplicação por hash — detecta e registra diferenças</li>
+          <li style="margin-bottom:6px">Download opcional do PDF para o Backblaze B2</li>
+          <li style="margin-bottom:6px">Indexação assíncrona no pgvector para busca semântica</li>
+        </ol>
+      </div>
+
+      <!-- Financeiro -->
+      <div id="m-financeiro" style="margin-top:36px">
+        <div class="subsection-title">3.6 Financeiro</div>
+        <p>Módulo completo: receitas, despesas, transferências, contas bancárias, orçamentos e conciliação bancária.</p>
+        <table>
+          <thead><tr><th>Status do Lançamento</th><th>Descrição</th></tr></thead>
+          <tbody>
+            <tr><td>pendente</td><td>Aguardando pagamento / recebimento</td></tr>
+            <tr><td>pago</td><td>Pago / recebido</td></tr>
+            <tr><td>vencido</td><td>Prazo expirado sem pagamento</td></tr>
+            <tr><td>cancelado</td><td>Cancelado manualmente</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- RH -->
+      <div id="m-rh" style="margin-top:36px">
+        <div class="subsection-title">3.14 Recursos Humanos</div>
+        <p>Salários e folhas de pagamento integrados ao módulo Financeiro.</p>
+        <table>
+          <thead><tr><th>Status</th><th>Efeito no Financeiro</th></tr></thead>
+          <tbody>
+            <tr><td>rascunho</td><td>Nenhum — folha em preparação</td></tr>
+            <tr><td>aprovada</td><td>Lançamentos gerados automaticamente</td></tr>
+            <tr><td>paga</td><td>Pagamento confirmado</td></tr>
+            <tr><td>cancelada</td><td>Lançamentos revertidos</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Assistentes IA -->
+      <div id="m-ia" style="margin-top:36px">
+        <div class="subsection-title">3.15 Assistentes de IA</div>
+        <table>
+          <thead><tr><th>Tipo</th><th>Descrição</th></tr></thead>
+          <tbody>
+            <tr><td>Dify</td><td>Assistente LLM com RAG e workflows customizados</td></tr>
+            <tr><td>iframe</td><td>Widget externo embarcado via código HTML</td></tr>
+          </tbody>
+        </table>
+        <p>O assistente principal é o <strong>Pedrinho</strong> (Chatwoot + MCP), que pode executar ações reais no sistema: buscar processos, criar tarefas, verificar audiências e muito mais.</p>
+      </div>
+    </div>
+
+    <!-- 4. Integrações -->
+    <div class="section" id="integracoes">
+      <div class="section-title"><span class="section-num">4</span> Integrações Externas</div>
+      <table>
+        <thead><tr><th>Serviço</th><th>Categoria</th><th>Função</th></tr></thead>
+        <tbody>
+          <tr><td>Supabase</td><td><span class="badge badge-blue">BD / Auth</span></td><td>PostgreSQL + RLS + pgvector + Autenticação JWT</td></tr>
+          <tr><td>Redis</td><td><span class="badge badge-green">Cache</span></td><td>Cache de queries, streaming de logs, sessões</td></tr>
+          <tr><td>Backblaze B2</td><td><span class="badge badge-orange">Storage</span></td><td>Armazenamento de documentos, PDFs e arquivos</td></tr>
+          <tr><td>OpenAI</td><td><span class="badge badge-purple">IA</span></td><td>Embeddings para busca semântica; LLM</td></tr>
+          <tr><td>Google Gemini</td><td><span class="badge badge-purple">IA</span></td><td>LLM alternativo para assistentes</td></tr>
+          <tr><td>Dify</td><td><span class="badge badge-purple">IA</span></td><td>Plataforma de assistentes com RAG e workflows</td></tr>
+          <tr><td>CopilotKit</td><td><span class="badge badge-purple">IA</span></td><td>Framework de agentes IA integrado à UI</td></tr>
+          <tr><td>Chatwoot</td><td><span class="badge badge-blue">Chat</span></td><td>Chat com clientes; assistente Pedrinho</td></tr>
+          <tr><td>Dyte</td><td><span class="badge badge-blue">Video</span></td><td>Audiências virtuais integradas ao sistema</td></tr>
+          <tr><td>Comunica CNJ</td><td><span class="badge badge-green">Tribunais</span></td><td>API CNJ para comunicações processuais (DJE)</td></tr>
+          <tr><td>PJE / ESAJ / EPROC</td><td><span class="badge badge-green">Tribunais</span></td><td>Captura automatizada via Playwright</td></tr>
+          <tr><td>2FAuth</td><td><span class="badge badge-orange">Segurança</span></td><td>Tokens TOTP para 2FA nos tribunais</td></tr>
+          <tr><td>Strapi</td><td><span class="badge badge-blue">CMS</span></td><td>Base de conhecimento e conteúdo editorial</td></tr>
+          <tr><td>Cloudron</td><td><span class="badge badge-orange">Infra</span></td><td>Self-hosting e gerenciamento de aplicações</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 5. Infraestrutura -->
+    <div class="section" id="infra">
+      <div class="section-title"><span class="section-num">5</span> Infraestrutura e Deploy</div>
+      <table>
+        <thead><tr><th>Ambiente</th><th>Descrição</th></tr></thead>
+        <tbody>
+          <tr><td>Desenvolvimento</td><td><code>npm run dev</code> — servidor local com Turbopack, hot reload</td></tr>
+          <tr><td>Produção (Cloudron)</td><td><code>deploy:cloudron</code> — self-hosted via CLI Cloudron</td></tr>
+          <tr><td>Produção (Docker)</td><td>Dockerfile multi-stage; docker-compose para orquestração</td></tr>
+          <tr><td>Docker Swarm</td><td><code>scripts/docker/deploy-swarm.sh</code> — alta disponibilidade</td></tr>
+        </tbody>
+      </table>
+      <div class="subsection-title">Variáveis de Ambiente Principais</div>
+      <table>
+        <thead><tr><th>Variável</th><th>Descrição</th></tr></thead>
+        <tbody>
+          <tr><td><code>NEXT_PUBLIC_SUPABASE_URL</code></td><td>URL do projeto Supabase</td></tr>
+          <tr><td><code>NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY</code></td><td>Chave pública Supabase (client-side)</td></tr>
+          <tr><td><code>SUPABASE_SECRET_KEY</code></td><td>Chave secreta Supabase (somente server-side)</td></tr>
+          <tr><td><code>OPENAI_API_KEY</code></td><td>Chave OpenAI para IA e embeddings</td></tr>
+          <tr><td><code>ENABLE_REDIS_CACHE</code></td><td>Ativa/desativa cache Redis</td></tr>
+          <tr><td><code>B2_*</code></td><td>Credenciais Backblaze B2</td></tr>
+          <tr><td><code>SERVICE_API_KEY</code></td><td>Chave interna para autenticação entre serviços</td></tr>
+          <tr><td><code>FRONTEND_URL</code></td><td>URL pública (ex: https://zattaradvogados.com)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 6. Segurança -->
+    <div class="section" id="seguranca">
+      <div class="section-title"><span class="section-num">6</span> Segurança</div>
+      <div class="subsection-title">Modelo de Permissões — 3 Camadas</div>
+      <div class="callout">
+        <div class="callout-title">Camada 1 — Row Level Security (RLS)</div>
+        <p>Políticas PostgreSQL que filtram dados no nível mais baixo, diretamente no banco.</p>
+      </div>
+      <div class="callout">
+        <div class="callout-title">Camada 2 — Service Layer</div>
+        <p>Validações de invariantes e regras de negócio (ex: "expediente já está baixado?").</p>
+      </div>
+      <div class="callout">
+        <div class="callout-title">Camada 3 — Server Actions</div>
+        <p>Wrapper <code>authenticatedAction</code> garante que toda requisição é de usuário autenticado com JWT válido.</p>
+      </div>
+      <div class="subsection-title">Proteções Adicionais</div>
+      <ul>
+        <li>JWT via Supabase Auth com refresh automático; SSO (OAuth)</li>
+        <li>2FA obrigatório para acesso aos portais dos tribunais (TOTP via 2FAuth)</li>
+        <li>Content Security Policy (CSP) configurável — report-only ou enforced</li>
+        <li>Rate limiting em rotas de API críticas</li>
+        <li>Auditoria de mutações sensíveis via RPCs com <code>SECURITY DEFINER</code></li>
+        <li>Verificação automática de segredos no código (<code>check-secrets.js</code>)</li>
+        <li>Bloqueio de IPs via allowlist/blocklist</li>
+      </ul>
+    </div>
+
+    <!-- 7. Design System -->
+    <div class="section" id="design">
+      <div class="section-title"><span class="section-num">7</span> Design System</div>
+      <p>O ZattarOS possui o Design System <strong>Glass Briefing</strong>, construído sobre shadcn/ui (New York) e Tailwind CSS 4.</p>
+      <table>
+        <thead><tr><th>Componente</th><th>Uso</th></tr></thead>
+        <tbody>
+          <tr><td>GlassPanel</td><td>Painel/card padrão com efeito glassmorphism (backdrop-blur)</td></tr>
+          <tr><td>DataShell</td><td>Layout para listagens (tabelas, filtros, paginação)</td></tr>
+          <tr><td>DialogShell</td><td>Padrão para modais e formulários</td></tr>
+          <tr><td>PageShell</td><td>Wrapper de página com breadcrumbs e header</td></tr>
+          <tr><td>DockBar</td><td>Barra de ações flutuante para ações contextuais</td></tr>
+          <tr><td>Heading / Text</td><td>Tipografia canônica — tamanhos NUNCA definidos inline</td></tr>
+        </tbody>
+      </table>
+      <p>Tokens de cor em <strong>OKLCH</strong> para consistência perceptual. Suporte a temas claro e escuro (dark mode).</p>
+    </div>
+
+    <!-- 8. Testes -->
+    <div class="section" id="testes">
+      <div class="section-title"><span class="section-num">8</span> Testes e Qualidade de Código</div>
+      <table>
+        <thead><tr><th>Tipo</th><th>Ferramenta</th><th>Escopo</th></tr></thead>
+        <tbody>
+          <tr><td>Unitários</td><td>Jest</td><td>Validações de domínio, utilitários, serviços</td></tr>
+          <tr><td>Integração</td><td>Jest + Supabase test client</td><td>Server Actions e repositórios</td></tr>
+          <tr><td>Componentes</td><td>Jest + Testing Library</td><td>Componentes React</td></tr>
+          <tr><td>E2E</td><td>Playwright</td><td>Fluxos completos de usuário</td></tr>
+        </tbody>
+      </table>
+      <div class="subsection-title">Qualidade e Linting</div>
+      <ul>
+        <li>ESLint com regras customizadas: hardcoded secrets, tokens HSL diretos, espaçamentos sem tokens</li>
+        <li>TypeScript strict mode — type-check completo em build de CI</li>
+        <li>Husky: hooks de pre-commit para lint e type-check automáticos</li>
+        <li><code>check:architecture</code> — verifica violações de deep imports</li>
+        <li><code>validate:design-system</code> — detecta uso incorreto de tokens visuais</li>
+      </ul>
+    </div>
+
+    <!-- 9. Glossário -->
+    <div class="section" id="glossario">
+      <div class="section-title"><span class="section-num">9</span> Glossário</div>
+      <table>
+        <thead><tr><th>Termo</th><th>Definição</th></tr></thead>
+        <tbody>
+          <tr><td>Acervo</td><td>Conjunto de processos ativos capturados do PJE</td></tr>
+          <tr><td>Expediente</td><td>Intimação, notificação ou comunicação processual com prazo legal</td></tr>
+          <tr><td>Baixa de Expediente</td><td>Registro formal de que o expediente foi atendido (protocolo ou justificativa)</td></tr>
+          <tr><td>Captura</td><td>Processo automatizado de extração de dados dos sistemas judiciais eletrônicos</td></tr>
+          <tr><td>CNJ</td><td>Conselho Nacional de Justiça — define o padrão de numeração processual</td></tr>
+          <tr><td>Comunica CNJ</td><td>Sistema CNJ de comunicações processuais eletrônicas (substitui Diário Oficial)</td></tr>
+          <tr><td>FSD</td><td>Feature-Sliced Design — padrão de organização de código adotado</td></tr>
+          <tr><td>Grau</td><td>Instância processual: 1º grau, 2º grau ou Tribunal Superior</td></tr>
+          <tr><td>MCP</td><td>Model Context Protocol — permite que agentes IA controlem o sistema</td></tr>
+          <tr><td>OAB</td><td>Ordem dos Advogados do Brasil — registro profissional</td></tr>
+          <tr><td>PJE</td><td>Processo Judicial Eletrônico — sistema judicial do CNJ</td></tr>
+          <tr><td>Polo Ativo</td><td>Parte que ingressa com a ação (autor)</td></tr>
+          <tr><td>Polo Passivo</td><td>Parte que defende a ação (réu)</td></tr>
+          <tr><td>RLS</td><td>Row Level Security — controle de acesso a nível de linha no PostgreSQL</td></tr>
+          <tr><td>Server Action</td><td>Função Next.js que executa no servidor, chamada diretamente pelo cliente</td></tr>
+          <tr><td>TRT</td><td>Tribunal Regional do Trabalho (TRT1 a TRT24)</td></tr>
+          <tr><td>TST</td><td>Tribunal Superior do Trabalho — instância máxima da Justiça do Trabalho</td></tr>
+          <tr><td>pgvector</td><td>Extensão PostgreSQL para armazenamento e busca vetorial (busca semântica por IA)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- /content -->
+
+  <footer>
+    ZattarOS · Documentação Interna · Confidencial · Synthropic © 2026
+  </footer>
+</div><!-- /main -->
+</div><!-- /page-wrap -->
+
+<script>
+  // Highlight sidebar link on scroll
+  const sections = document.querySelectorAll('[id]');
+  const navLinks = document.querySelectorAll('.sidebar-nav a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 100) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.classList.remove('active');
+      if (a.getAttribute('href') === '#' + current) a.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

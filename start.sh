@@ -119,34 +119,7 @@ export NEXT_TELEMETRY_DISABLED=1
 export TMPDIR="/app/data/tmp"
 
 # =============================================================================
-# 4. Configurar cron job para o scheduler de capturas
-# =============================================================================
-# O cron daemon nao herda env vars do processo pai — CRON_SECRET e salvo em
-# arquivo protegido que o script runner le via `source` antes de cada chamada.
-echo "=> Configurando cron do scheduler de capturas..."
-
-if [ -n "${CRON_SECRET:-}" ]; then
-    # Loop em background: dispara o endpoint a cada 60s.
-    # /var/spool/cron e read-only no Cloudron, entao cron/crontab do sistema nao funcionam.
-    # O subshell herda CRON_SECRET diretamente — sem necessidade de arquivo intermediario.
-    # O primeiro sleep de 90s da margem para o Next.js subir antes da primeira chamada.
-    (
-        sleep 90
-        while true; do
-            curl -sf -m 290 \
-                -X POST http://127.0.0.1:3000/api/cron/executar-agendamentos \
-                -H "Authorization: Bearer ${CRON_SECRET}" \
-                >> /app/data/logs/scheduler-cron.log 2>&1 || true
-            sleep 60
-        done
-    ) &
-    echo "   [Scheduler] Background loop ativo: a cada 60s -> POST /api/cron/executar-agendamentos"
-else
-    echo "   [Scheduler] AVISO: CRON_SECRET nao definida, scheduler automatico desabilitado"
-fi
-
-# =============================================================================
-# 5. Iniciar Next.js (standalone server)
+# 4. Iniciar Next.js (standalone server)
 # =============================================================================
 echo "=> Iniciando Next.js standalone na porta ${PORT}..."
 echo "============================================================"
