@@ -81,6 +81,7 @@ const formatarTipoCaptura = (tipo: TipoCaptura): string => {
     expedientes_no_prazo: 'Expedientes no Prazo',
     expedientes_sem_prazo: 'Expedientes sem Prazo',
     pericias: 'Perícias',
+    audiencias_ata: 'Audiências com Ata',
   };
   return tipos[tipo] || tipo;
 };

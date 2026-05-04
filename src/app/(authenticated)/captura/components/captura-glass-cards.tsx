@@ -101,6 +101,7 @@ const TIPO_LABELS: Record<TipoCaptura, string> = {
   expedientes_sem_prazo: 'Expedientes sem Prazo',
   pericias: 'Perícias',
   timeline: 'Timeline',
+  audiencias_ata: 'Audiências com Ata',
 };
 
 const STATUS_LABELS: Record<string, string> = {

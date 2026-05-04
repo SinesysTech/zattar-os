@@ -126,32 +126,23 @@ export TMPDIR="/app/data/tmp"
 echo "=> Configurando cron do scheduler de capturas..."
 
 if [ -n "${CRON_SECRET:-}" ]; then
-    # Persistir secret em arquivo protegido (somente leitura do owner)
-    printf 'CRON_SECRET=%s\n' "${CRON_SECRET}" > /app/data/tmp/.cron_env
-    chmod 600 /app/data/tmp/.cron_env
-
-    # Script runner: le o secret e chama o endpoint de agendamentos
-    # Timeout de 290s (margem ante o maxDuration=300s do Next.js)
-    cat > /app/data/tmp/run-scheduler.sh << 'SCRIPT'
-#!/bin/bash
-. /app/data/tmp/.cron_env
-mkdir -p /app/data/logs
-curl -sf -m 290 \
-    -X POST http://127.0.0.1:3000/api/cron/executar-agendamentos \
-    -H "Authorization: Bearer ${CRON_SECRET}" \
-    >> /app/data/logs/scheduler-cron.log 2>&1
-SCRIPT
-    chmod +x /app/data/tmp/run-scheduler.sh
-
-    # Registrar no crontab do usuario atual (substitui entradas anteriores do scheduler)
-    (crontab -l 2>/dev/null | grep -v 'run-scheduler.sh'; \
-     echo "* * * * * /app/data/tmp/run-scheduler.sh") | crontab -
-
-    # Iniciar daemon de cron em background (Ubuntu: cron se auto-daemoniza)
-    cron
-    echo "   [Cron] Scheduler ativo: * * * * * -> POST /api/cron/executar-agendamentos"
+    # Loop em background: dispara o endpoint a cada 60s.
+    # /var/spool/cron e read-only no Cloudron, entao cron/crontab do sistema nao funcionam.
+    # O subshell herda CRON_SECRET diretamente — sem necessidade de arquivo intermediario.
+    # O primeiro sleep de 90s da margem para o Next.js subir antes da primeira chamada.
+    (
+        sleep 90
+        while true; do
+            curl -sf -m 290 \
+                -X POST http://127.0.0.1:3000/api/cron/executar-agendamentos \
+                -H "Authorization: Bearer ${CRON_SECRET}" \
+                >> /app/data/logs/scheduler-cron.log 2>&1 || true
+            sleep 60
+        done
+    ) &
+    echo "   [Scheduler] Background loop ativo: a cada 60s -> POST /api/cron/executar-agendamentos"
 else
-    echo "   [Cron] AVISO: CRON_SECRET nao definida, scheduler automatico desabilitado"
+    echo "   [Scheduler] AVISO: CRON_SECRET nao definida, scheduler automatico desabilitado"
 fi
 
 # =============================================================================
