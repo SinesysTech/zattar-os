@@ -118,9 +118,9 @@ async function connectToRemoteBrowser(
     endpoint: wsEndpoint.replace(/\/[^\/]+$/, '/***'),
   });
 
-  // connectOverCDP é a API correta para Browserless e qualquer serviço CDP-compatível.
-  // chromium.connect() só funciona com Playwright Browser Server nativo (rota /chromium/playwright).
-  const browser = await chromium.connectOverCDP(finalEndpoint, {
+  // Playwright Browser Server nativo: usa o wire protocol do Playwright (não CDP).
+  // connectOverCDP seria para Browserless/CDP. chromium.connect() é a API correta aqui.
+  const browser = await chromium.connect(finalEndpoint, {
     timeout: options.timeout || 60000,
   });
 
