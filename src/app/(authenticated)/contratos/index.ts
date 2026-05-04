@@ -207,10 +207,8 @@ export type {
 // PDFs de Contratação (Caminho A — Rascunho Efêmero)
 // ============================================================================
 export { actionValidarGeracaoPdfs } from './actions/gerar-pdfs-contrato-action';
-export {
-  validarGeracaoPdfs,
-  gerarZipPdfsParaContrato,
-} from '@/shared/assinatura-digital/services/documentos-contratacao.service';
+// validarGeracaoPdfs e gerarZipPdfsParaContrato são server-only — importar diretamente de
+// @/shared/assinatura-digital/services/documentos-contratacao.service
 export type {
   CampoFaltante,
   DadosContratoParaMapping,
