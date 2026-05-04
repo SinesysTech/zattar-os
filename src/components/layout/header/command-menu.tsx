@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ClienteFormDialog } from "@/app/(authenticated)/partes/components/clientes";
+import { ProcessoForm } from "@/app/(authenticated)/processos/components";
 import {
   Calculator,
   CreditCard,
@@ -30,6 +32,8 @@ import {
  */
 export function CommandMenu() {
   const [open, setOpen] = useState(false);
+  const [showNewClientModal, setShowNewClientModal] = useState(false);
+  const [showNewProcessModal, setShowNewProcessModal] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -53,6 +57,7 @@ export function CommandMenu() {
   };
 
   return (
+    <>
     <CommandDialog open={open} onOpenChange={setOpen}>
       <CommandInput placeholder="Digite um comando ou busque..." />
       <CommandList>
@@ -78,26 +83,12 @@ export function CommandMenu() {
 
         {/* Ações */}
         <CommandGroup heading="Ações">
-          <CommandItem
-            onSelect={() =>
-              run(() => {
-                // TODO: Implementar modal de novo processo
-                console.log("Novo Processo");
-              })
-            }
-          >
+          <CommandItem onSelect={() => run(() => setShowNewProcessModal(true))}>
             <FileText className="mr-2 h-4 w-4" />
             <span>Novo Processo</span>
             <CommandShortcut>⌘P</CommandShortcut>
           </CommandItem>
-          <CommandItem
-            onSelect={() =>
-              run(() => {
-                // TODO: Implementar modal de novo cliente
-                console.log("Novo Cliente");
-              })
-            }
-          >
+          <CommandItem onSelect={() => run(() => setShowNewClientModal(true))}>
             <User className="mr-2 h-4 w-4" />
             <span>Novo Cliente</span>
             <CommandShortcut>⌘C</CommandShortcut>
@@ -115,5 +106,16 @@ export function CommandMenu() {
         </CommandGroup>
       </CommandList>
     </CommandDialog>
+
+    <ClienteFormDialog
+      open={showNewClientModal}
+      onOpenChange={setShowNewClientModal}
+    />
+
+    <ProcessoForm
+      open={showNewProcessModal}
+      onOpenChange={setShowNewProcessModal}
+    />
+    </>
   );
 }
