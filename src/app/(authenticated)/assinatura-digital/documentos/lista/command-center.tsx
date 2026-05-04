@@ -12,14 +12,21 @@ import {
   Plus,
 } from "lucide-react";
 import Link from "next/link";
-import { InsightBanner } from "@/app/(authenticated)/dashboard/widgets/primitives";
+import {
+  InsightBanner,
+  AnimatedNumber,
+} from "@/app/(authenticated)/dashboard/widgets/primitives";
 import { TabPills } from "@/components/dashboard/tab-pills";
 import { SearchInput } from "@/components/dashboard/search-input";
 import {
   ViewToggle,
   type ViewToggleOption,
 } from "@/components/dashboard/view-toggle";
-import { StatCard } from "@/app/(authenticated)/dashboard";
+import {
+  PulseKpiCard,
+  PulseKpiBar,
+  PulseKpiGrid,
+} from "@/components/shared/pulse-kpi-card";
 import { Button } from "@/components/ui/button";
 import type { DocumentosStats } from '@/shared/assinatura-digital/services/documentos.service';
 import type { DocumentoListItem } from '@/shared/assinatura-digital/adapters/documento-card-adapter';
@@ -77,45 +84,81 @@ export function DocumentosCommandCenter({
         }
       />
 
-      {/* ── KPI Strip (consolidado em StatCard — ver StatCard.tsx) ────── */}
+      {/* ── KPI Strip ─────────────────────────────────────────────────── */}
       {stats && (
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3 lg:grid-cols-5")}>
-          <StatCard
-            title="Total"
-            value={stats.total}
+        <PulseKpiGrid className="lg:grid-cols-5">
+          <PulseKpiCard
+            label="Total"
             icon={FileText}
-            description="documentos"
-            variant="default"
-          />
-          <StatCard
-            title="Rascunhos"
-            value={stats.rascunhos}
+            iconColor="text-primary/60"
+            iconBg="bg-primary/8"
+            footer={<PulseKpiBar pct={100} color="bg-primary/25" />}
+          >
+            <AnimatedNumber value={stats.total} />
+          </PulseKpiCard>
+          <PulseKpiCard
+            label="Rascunhos"
             icon={PenLine}
-            description="em edição"
-            variant="default"
-          />
-          <StatCard
-            title="Aguardando"
-            value={stats.aguardando}
+            iconColor="text-muted-foreground/50"
+            iconBg="bg-muted/20"
+            footer={
+              <PulseKpiBar
+                pct={stats.total > 0 ? Math.round((stats.rascunhos / stats.total) * 100) : 0}
+                color="bg-muted/30"
+              />
+            }
+          >
+            <AnimatedNumber value={stats.rascunhos} />
+          </PulseKpiCard>
+          <PulseKpiCard
+            label="Aguardando"
             icon={Clock}
-            description="pendentes de assinatura"
-            variant="info"
-          />
-          <StatCard
-            title="Concluídos"
-            value={stats.concluidos}
+            iconColor="text-warning/60"
+            iconBg="bg-warning/8"
+            footer={
+              <PulseKpiBar
+                pct={stats.total > 0 ? Math.round((stats.aguardando / stats.total) * 100) : 0}
+                color="bg-warning/25"
+              />
+            }
+          >
+            <AnimatedNumber value={stats.aguardando} />
+          </PulseKpiCard>
+          <PulseKpiCard
+            label="Concluídos"
             icon={CheckCircle2}
-            description="finalizados"
-            variant="success"
-          />
-          <StatCard
-            title="Cancelados"
-            value={stats.cancelados}
+            iconColor="text-success/60"
+            iconBg="bg-success/8"
+            footer={
+              <PulseKpiBar
+                pct={stats.total > 0 ? Math.round((stats.concluidos / stats.total) * 100) : 0}
+                color="bg-success/25"
+              />
+            }
+          >
+            <AnimatedNumber value={stats.concluidos} />
+          </PulseKpiCard>
+          <PulseKpiCard
+            label="Cancelados"
             icon={XCircle}
-            description="arquivados"
-            variant="danger"
-          />
-        </div>
+            iconColor="text-destructive/60"
+            iconBg="bg-destructive/8"
+            highlight={stats.cancelados > 0}
+            highlightBorderColor="border-destructive/15"
+            iconHighlightBorder={stats.cancelados > 0 ? "border border-destructive/20" : undefined}
+            footer={
+              <PulseKpiBar
+                pct={stats.total > 0 ? Math.round((stats.cancelados / stats.total) * 100) : 0}
+                color="bg-destructive/25"
+              />
+            }
+          >
+            <AnimatedNumber
+              value={stats.cancelados}
+              className={stats.cancelados > 0 ? "text-destructive" : ""}
+            />
+          </PulseKpiCard>
+        </PulseKpiGrid>
       )}
 
       {/* ── Insight ─────────────────────────────────────── */}

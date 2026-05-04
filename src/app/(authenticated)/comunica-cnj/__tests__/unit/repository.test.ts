@@ -1,9 +1,7 @@
-
 import {
   saveComunicacoesBatch,
 } from '../../repository';
 import { createServiceClient } from '@/lib/supabase/service-client';
-import { ok } from '@/types';
 
 // Mock Supabase
 jest.mock('@/lib/supabase/service-client');
