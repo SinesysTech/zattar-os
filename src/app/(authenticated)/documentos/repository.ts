@@ -855,7 +855,8 @@ export async function listarPastasComContadores(
 }
 
 /**
- * Busca a árvore hierárquica de pastas
+ * Busca a árvore hierárquica de pastas de forma otimizada.
+ * Substitui o modelo recursivo N+1 por uma estratégia de busca em lote (O(1) queries).
  */
 export async function buscarHierarquiaPastas(
   pasta_raiz_id?: number | null,
@@ -864,71 +865,97 @@ export async function buscarHierarquiaPastas(
 ): Promise<PastaHierarquia[]> {
   const supabase = createServiceClient();
 
-  // Buscar pasta raiz (ou raízes se pasta_raiz_id for null)
-  let query = supabase.from("pastas").select().is("deleted_at", null);
+  // 1. Buscar todas as pastas não deletadas de uma vez para construir a árvore em memória
+  const { data: todasPastas, error: errorPastas } = await supabase
+    .from("pastas")
+    .select()
+    .is("deleted_at", null);
 
-  if (pasta_raiz_id !== undefined) {
-    if (pasta_raiz_id === null) {
-      query = query.is("pasta_pai_id", null);
-    } else {
-      query = query.eq("id", pasta_raiz_id);
-    }
-  } else {
-    query = query.is("pasta_pai_id", null);
+  if (errorPastas) {
+    throw new Error(`Erro ao buscar pastas: ${errorPastas.message}`);
   }
 
-  // Filtro de privacidade
-  if (usuario_id) {
-    query = query.or(`tipo.eq.comum,criado_por.eq.${usuario_id}`);
-  }
-
-  query = query.order("nome", { ascending: true });
-
-  const { data: pastasRaiz, error } = await query;
-
-  if (error) {
-    throw new Error(`Erro ao buscar hierarquia de pastas: ${error.message}`);
-  }
-
-  if (!pastasRaiz || pastasRaiz.length === 0) {
+  if (!todasPastas || todasPastas.length === 0) {
     return [];
   }
 
-  // Função recursiva para construir árvore
-  const construirArvore = async (pasta: Pasta): Promise<PastaHierarquia> => {
-    // Buscar subpastas
-    const { data: subpastas } = await supabase
-      .from("pastas")
+  // 2. Se solicitado, buscar todos os documentos não deletados de uma vez
+  let todosDocumentos: Documento[] = [];
+  if (incluir_documentos) {
+    const { data: docs, error: errorDocs } = await supabase
+      .from("documentos")
       .select()
-      .eq("pasta_pai_id", pasta.id)
-      .is("deleted_at", null)
-      .order("nome", { ascending: true });
+      .is("deleted_at", null);
 
-    // Buscar documentos se solicitado
-    let documentos = undefined;
-    if (incluir_documentos) {
-      const { data: docs } = await supabase
-        .from("documentos")
-        .select()
-        .eq("pasta_id", pasta.id)
-        .is("deleted_at", null)
-        .order("titulo", { ascending: true });
-      documentos = docs ?? undefined;
+    if (errorDocs) {
+      throw new Error(`Erro ao buscar documentos: ${errorDocs.message}`);
     }
+    todosDocumentos = (docs ?? []) as unknown as Documento[];
+  }
 
-    // Recursão para subpastas
-    const subpastasComFilhos = await Promise.all(
-      (subpastas ?? []).map((subpasta) => construirArvore(subpasta))
+  // 3. Organizar documentos por pasta para busca rápida
+  const docsPorPasta = new Map<number, Documento[]>();
+  if (incluir_documentos) {
+    for (const doc of todosDocumentos) {
+      if (doc.pasta_id) {
+        const pastaDocs = docsPorPasta.get(doc.pasta_id) || [];
+        pastaDocs.push(doc);
+        docsPorPasta.set(doc.pasta_id, pastaDocs);
+      }
+    }
+    for (const docs of docsPorPasta.values()) {
+      docs.sort((a, b) => (a.titulo || "").localeCompare(b.titulo || ""));
+    }
+  }
+
+  // 4. Organizar subpastas por pasta pai para busca rápida
+  const subpastasPorPai = new Map<number, Pasta[]>();
+  for (const pasta of todasPastas) {
+    if (pasta.pasta_pai_id) {
+      const filhas = subpastasPorPai.get(pasta.pasta_pai_id) || [];
+      filhas.push(pasta);
+      subpastasPorPai.set(pasta.pasta_pai_id, filhas);
+    }
+  }
+  for (const filhas of subpastasPorPai.values()) {
+    filhas.sort((a, b) => (a.nome || "").localeCompare(b.nome || ""));
+  }
+
+  // 5. Identificar as pastas raiz para o resultado solicitado
+  let pastasRaiz: Pasta[];
+
+  if (pasta_raiz_id !== undefined && pasta_raiz_id !== null) {
+    pastasRaiz = todasPastas.filter((p) => p.id === pasta_raiz_id);
+  } else {
+    pastasRaiz = todasPastas.filter((p) => p.pasta_pai_id === null);
+  }
+
+  // 6. Aplicar filtro de privacidade
+  if (usuario_id) {
+    pastasRaiz = pastasRaiz.filter(
+      (p) => p.tipo === "comum" || p.criado_por === usuario_id
     );
+  }
+
+  // 7. Ordenar raízes por nome
+  pastasRaiz.sort((a, b) => (a.nome || "").localeCompare(b.nome || ""));
+
+  // 8. Construir árvore recursivamente em memória (sem queries adicionais)
+  const montarArvoreRecursivo = (pasta: Pasta): PastaHierarquia => {
+    const subpastasRaw = subpastasPorPai.get(pasta.id) || [];
+    const subpastas = subpastasRaw.map(montarArvoreRecursivo);
+    const documentos = incluir_documentos
+      ? docsPorPasta.get(pasta.id) || []
+      : undefined;
 
     return {
       ...pasta,
-      subpastas: subpastasComFilhos,
+      subpastas,
       documentos,
     };
   };
 
-  return await Promise.all(pastasRaiz.map(construirArvore));
+  return pastasRaiz.map(montarArvoreRecursivo);
 }
 
 /**
