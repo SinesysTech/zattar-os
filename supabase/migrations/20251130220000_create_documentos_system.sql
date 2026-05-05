@@ -284,12 +284,12 @@ create index idx_mensagens_chat_usuario_id on public.mensagens_chat using btree 
 create index idx_mensagens_chat_created_at on public.mensagens_chat using btree (created_at desc);
 
 -- ============================================================================
--- FUNÇÃO HELPER: Converter auth.uid() (UUID) para usuarios.id (bigint)
+-- FUNÇÃO HELPER: Converter (select auth.uid()) (UUID) para usuarios.id (bigint)
 -- ============================================================================
 
 create or replace function get_current_user_id()
 returns bigint as $$
-  select id from public.usuarios where auth_user_id = auth.uid()
+  select id from public.usuarios where auth_user_id = (select auth.uid())
 $$ language sql stable;
 
 comment on function get_current_user_id() is 'Retorna o id (bigint) do usuário atual baseado no auth_user_id (uuid)';

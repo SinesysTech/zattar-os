@@ -57,14 +57,14 @@ CREATE POLICY "Usuários autenticados gerenciam próprias tarefas"
     EXISTS (
       SELECT 1 FROM public.usuarios u
       WHERE u.id = public.tarefas.usuario_id
-        AND u.auth_user_id = auth.uid()
+        AND u.auth_user_id = (select auth.uid())
     )
   )
   WITH CHECK (
     EXISTS (
       SELECT 1 FROM public.usuarios u
       WHERE u.id = public.tarefas.usuario_id
-        AND u.auth_user_id = auth.uid()
+        AND u.auth_user_id = (select auth.uid())
     )
   );
 
@@ -113,14 +113,14 @@ CREATE POLICY "Usuários autenticados gerenciam próprias notas"
     EXISTS (
       SELECT 1 FROM public.usuarios u
       WHERE u.id = public.notas.usuario_id
-        AND u.auth_user_id = auth.uid()
+        AND u.auth_user_id = (select auth.uid())
     )
   )
   WITH CHECK (
     EXISTS (
       SELECT 1 FROM public.usuarios u
       WHERE u.id = public.notas.usuario_id
-        AND u.auth_user_id = auth.uid()
+        AND u.auth_user_id = (select auth.uid())
     )
   );
 
@@ -166,14 +166,14 @@ CREATE POLICY "Usuários autenticados gerenciam próprio layout"
     EXISTS (
       SELECT 1 FROM public.usuarios u
       WHERE u.id = public.layouts_painel.usuario_id
-        AND u.auth_user_id = auth.uid()
+        AND u.auth_user_id = (select auth.uid())
     )
   )
   WITH CHECK (
     EXISTS (
       SELECT 1 FROM public.usuarios u
       WHERE u.id = public.layouts_painel.usuario_id
-        AND u.auth_user_id = auth.uid()
+        AND u.auth_user_id = (select auth.uid())
     )
   );
 
@@ -209,13 +209,13 @@ CREATE POLICY "Usuários autenticados gerenciam próprios links"
     EXISTS (
       SELECT 1 FROM public.usuarios u
       WHERE u.id = public.links_personalizados.usuario_id
-        AND u.auth_user_id = auth.uid()
+        AND u.auth_user_id = (select auth.uid())
     )
   )
   WITH CHECK (
     EXISTS (
       SELECT 1 FROM public.usuarios u
       WHERE u.id = public.links_personalizados.usuario_id
-        AND u.auth_user_id = auth.uid()
+        AND u.auth_user_id = (select auth.uid())
     )
   );

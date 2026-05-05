@@ -43,22 +43,22 @@ ALTER TABLE public.cargos ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Usuários autenticados podem ler cargos"
   ON public.cargos
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  USING ((select auth.role()) = 'authenticated');
 
 -- Política: Usuários autenticados podem criar cargos
 CREATE POLICY "Usuários autenticados podem criar cargos"
   ON public.cargos
   FOR INSERT
-  WITH CHECK (auth.role() = 'authenticated');
+  WITH CHECK ((select auth.role()) = 'authenticated');
 
 -- Política: Usuários autenticados podem atualizar cargos
 CREATE POLICY "Usuários autenticados podem atualizar cargos"
   ON public.cargos
   FOR UPDATE
-  USING (auth.role() = 'authenticated');
+  USING ((select auth.role()) = 'authenticated');
 
 -- Política: Usuários autenticados podem deletar cargos
 CREATE POLICY "Usuários autenticados podem deletar cargos"
   ON public.cargos
   FOR DELETE
-  USING (auth.role() = 'authenticated');
+  USING ((select auth.role()) = 'authenticated');

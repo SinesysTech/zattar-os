@@ -54,23 +54,23 @@ alter table public.agendamentos enable row level security;
 create policy "Usuários autenticados podem ler agendamentos"
   on public.agendamentos
   for select
-  using (auth.role() = 'authenticated');
+  using ((select auth.role()) = 'authenticated');
 
 -- Política: Permitir criação para usuários autenticados
 create policy "Usuários autenticados podem criar agendamentos"
   on public.agendamentos
   for insert
-  with check (auth.role() = 'authenticated');
+  with check ((select auth.role()) = 'authenticated');
 
 -- Política: Permitir atualização para usuários autenticados
 create policy "Usuários autenticados podem atualizar agendamentos"
   on public.agendamentos
   for update
-  using (auth.role() = 'authenticated');
+  using ((select auth.role()) = 'authenticated');
 
 -- Política: Permitir deleção para usuários autenticados
 create policy "Usuários autenticados podem deletar agendamentos"
   on public.agendamentos
   for delete
-  using (auth.role() = 'authenticated');
+  using ((select auth.role()) = 'authenticated');
 

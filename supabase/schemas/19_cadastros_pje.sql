@@ -65,7 +65,7 @@ alter table public.cadastros_pje enable row level security;
 
 -- Políticas RLS
 create policy "Enable all operations for service_role" on public.cadastros_pje
-    for all using (auth.role() = 'service_role');
+    for all using ((select auth.role()) = 'service_role');
 
 create policy "Enable read for authenticated users" on public.cadastros_pje
-    for select using (auth.role() = 'authenticated');
+    for select using ((select auth.role()) = 'authenticated');

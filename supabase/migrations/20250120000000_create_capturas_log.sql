@@ -41,7 +41,7 @@ alter table public.capturas_log enable row level security;
 create policy "Usuários autenticados podem visualizar histórico de capturas"
   on public.capturas_log
   for select
-  using (auth.role() = 'authenticated');
+  using ((select auth.role()) = 'authenticated');
 
 -- Política RLS: apenas o sistema pode inserir/atualizar (via service role)
 -- Service role já tem acesso completo por padrão

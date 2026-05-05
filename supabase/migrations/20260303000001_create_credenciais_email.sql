@@ -36,7 +36,7 @@ create policy "Users can view own email credentials"
   on public.credenciais_email for select
   using (
     usuario_id in (
-      select id from public.usuarios where auth_user_id = auth.uid()
+      select id from public.usuarios where auth_user_id = (select auth.uid())
     )
   );
 
@@ -44,7 +44,7 @@ create policy "Users can insert own email credentials"
   on public.credenciais_email for insert
   with check (
     usuario_id in (
-      select id from public.usuarios where auth_user_id = auth.uid()
+      select id from public.usuarios where auth_user_id = (select auth.uid())
     )
   );
 
@@ -52,7 +52,7 @@ create policy "Users can update own email credentials"
   on public.credenciais_email for update
   using (
     usuario_id in (
-      select id from public.usuarios where auth_user_id = auth.uid()
+      select id from public.usuarios where auth_user_id = (select auth.uid())
     )
   );
 
@@ -60,10 +60,10 @@ create policy "Users can delete own email credentials"
   on public.credenciais_email for delete
   using (
     usuario_id in (
-      select id from public.usuarios where auth_user_id = auth.uid()
+      select id from public.usuarios where auth_user_id = (select auth.uid())
     )
   );
 
 create policy "Service role full access to email credentials"
   on public.credenciais_email for all
-  using (auth.role() = 'service_role');
+  using ((select auth.role()) = 'service_role');

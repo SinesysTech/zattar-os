@@ -58,20 +58,20 @@ ALTER TABLE public.assistentes_tipos_expedientes ENABLE ROW LEVEL SECURITY;
 CREATE POLICY select_assistentes_tipos_expedientes
   ON public.assistentes_tipos_expedientes
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  USING ((select auth.role()) = 'authenticated');
 
 -- Policy: Usuários autenticados podem inserir/atualizar/deletar
 CREATE POLICY insert_assistentes_tipos_expedientes
   ON public.assistentes_tipos_expedientes
   FOR INSERT
-  WITH CHECK (auth.role() = 'authenticated');
+  WITH CHECK ((select auth.role()) = 'authenticated');
 
 CREATE POLICY update_assistentes_tipos_expedientes
   ON public.assistentes_tipos_expedientes
   FOR UPDATE
-  USING (auth.role() = 'authenticated');
+  USING ((select auth.role()) = 'authenticated');
 
 CREATE POLICY delete_assistentes_tipos_expedientes
   ON public.assistentes_tipos_expedientes
   FOR DELETE
-  USING (auth.role() = 'authenticated');
+  USING ((select auth.role()) = 'authenticated');

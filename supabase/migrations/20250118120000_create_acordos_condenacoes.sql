@@ -68,22 +68,22 @@ alter table public.acordos_condenacoes enable row level security;
 create policy "Usuários autenticados podem ler acordos/condenações"
   on public.acordos_condenacoes
   for select
-  using (auth.role() = 'authenticated');
+  using ((select auth.role()) = 'authenticated');
 
 -- Política: Permitir criação para usuários autenticados
 create policy "Usuários autenticados podem criar acordos/condenações"
   on public.acordos_condenacoes
   for insert
-  with check (auth.role() = 'authenticated');
+  with check ((select auth.role()) = 'authenticated');
 
 -- Política: Permitir atualização para usuários autenticados
 create policy "Usuários autenticados podem atualizar acordos/condenações"
   on public.acordos_condenacoes
   for update
-  using (auth.role() = 'authenticated');
+  using ((select auth.role()) = 'authenticated');
 
 -- Política: Permitir deleção para usuários autenticados
 create policy "Usuários autenticados podem deletar acordos/condenações"
   on public.acordos_condenacoes
   for delete
-  using (auth.role() = 'authenticated');
+  using ((select auth.role()) = 'authenticated');

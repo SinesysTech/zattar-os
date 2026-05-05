@@ -71,17 +71,17 @@ alter table config_atribuicao_estado enable row level security;
 -- Política: Usuários autenticados podem ler
 create policy "config_regioes_select_authenticated" on config_regioes_atribuicao
   for select
-  using (auth.role() = 'authenticated');
+  using ((select auth.role()) = 'authenticated');
 
 -- Política: Todos podem gerenciar (simplificado - ajustar se necessário com permissões)
 create policy "config_regioes_all_authenticated" on config_regioes_atribuicao
   for all
-  using (auth.role() = 'authenticated');
+  using ((select auth.role()) = 'authenticated');
 
 -- Política para estado do round-robin
 create policy "config_estado_all_authenticated" on config_atribuicao_estado
   for all
-  using (auth.role() = 'authenticated');
+  using ((select auth.role()) = 'authenticated');
 
 -- ============================================================================
 -- PARTE 4: Migrar dados hard-coded atuais

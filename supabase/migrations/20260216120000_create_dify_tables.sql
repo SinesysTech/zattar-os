@@ -41,33 +41,33 @@ alter table dify_conversas enable row level security;
 -- Policies: usuários autenticados veem apenas seus próprios registros
 create policy "dify_execucoes_select_own"
   on dify_execucoes for select
-  using (usuario_id = (select id from usuarios where auth_user_id = auth.uid() limit 1));
+  using (usuario_id = (select id from usuarios where auth_user_id = (select auth.uid()) limit 1));
 
 create policy "dify_execucoes_insert_own"
   on dify_execucoes for insert
-  with check (usuario_id = (select id from usuarios where auth_user_id = auth.uid() limit 1));
+  with check (usuario_id = (select id from usuarios where auth_user_id = (select auth.uid()) limit 1));
 
 create policy "dify_execucoes_update_own"
   on dify_execucoes for update
-  using (usuario_id = (select id from usuarios where auth_user_id = auth.uid() limit 1));
+  using (usuario_id = (select id from usuarios where auth_user_id = (select auth.uid()) limit 1));
 
 create policy "dify_conversas_select_own"
   on dify_conversas for select
-  using (usuario_id = (select id from usuarios where auth_user_id = auth.uid() limit 1));
+  using (usuario_id = (select id from usuarios where auth_user_id = (select auth.uid()) limit 1));
 
 create policy "dify_conversas_insert_own"
   on dify_conversas for insert
-  with check (usuario_id = (select id from usuarios where auth_user_id = auth.uid() limit 1));
+  with check (usuario_id = (select id from usuarios where auth_user_id = (select auth.uid()) limit 1));
 
 create policy "dify_conversas_update_own"
   on dify_conversas for update
-  using (usuario_id = (select id from usuarios where auth_user_id = auth.uid() limit 1));
+  using (usuario_id = (select id from usuarios where auth_user_id = (select auth.uid()) limit 1));
 
 -- Service role bypass (para MCP tools e server actions)
 create policy "dify_execucoes_service_all"
   on dify_execucoes for all
-  using (auth.role() = 'service_role');
+  using ((select auth.role()) = 'service_role');
 
 create policy "dify_conversas_service_all"
   on dify_conversas for all
-  using (auth.role() = 'service_role');
+  using ((select auth.role()) = 'service_role');

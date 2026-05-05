@@ -116,13 +116,13 @@ ALTER TABLE public.processo_partes ENABLE ROW LEVEL SECURITY;
 
 -- Basic RLS policies (authenticated users can perform operations, permissions handled elsewhere)
 CREATE POLICY "Authenticated users can select processo_partes" ON public.processo_partes
-FOR SELECT USING (auth.uid() IS NOT NULL);
+FOR SELECT USING ((select auth.uid()) IS NOT NULL);
 
 CREATE POLICY "Authenticated users can insert processo_partes" ON public.processo_partes
-FOR INSERT WITH CHECK (auth.uid() IS NOT NULL);
+FOR INSERT WITH CHECK ((select auth.uid()) IS NOT NULL);
 
 CREATE POLICY "Authenticated users can update processo_partes" ON public.processo_partes
-FOR UPDATE USING (auth.uid() IS NOT NULL) WITH CHECK (auth.uid() IS NOT NULL);
+FOR UPDATE USING ((select auth.uid()) IS NOT NULL) WITH CHECK ((select auth.uid()) IS NOT NULL);
 
 CREATE POLICY "Authenticated users can delete processo_partes" ON public.processo_partes
-FOR DELETE USING (auth.uid() IS NOT NULL);
+FOR DELETE USING ((select auth.uid()) IS NOT NULL);

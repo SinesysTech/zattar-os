@@ -32,7 +32,7 @@ ALTER TABLE assinatura_digital_pacotes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE assinatura_digital_pacote_documentos ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY pacotes_service_admin ON assinatura_digital_pacotes
-  FOR ALL USING (auth.role() = 'service_role');
+  FOR ALL USING ((select auth.role()) = 'service_role');
 
 CREATE POLICY pacote_documentos_service_admin ON assinatura_digital_pacote_documentos
-  FOR ALL USING (auth.role() = 'service_role');
+  FOR ALL USING ((select auth.role()) = 'service_role');

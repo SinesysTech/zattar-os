@@ -270,14 +270,14 @@ AS $$
   );
 $$;
 
--- Função auxiliar: obtém o usuario_id a partir do auth.uid()
+-- Função auxiliar: obtém o usuario_id a partir do (select auth.uid())
 CREATE OR REPLACE FUNCTION public.pm_current_user_id()
 RETURNS bigint
 LANGUAGE sql
 STABLE
 SECURITY DEFINER
 AS $$
-  SELECT id FROM public.usuarios WHERE auth_user_id = auth.uid() LIMIT 1;
+  SELECT id FROM public.usuarios WHERE auth_user_id = (select auth.uid()) LIMIT 1;
 $$;
 
 -- pm_projetos

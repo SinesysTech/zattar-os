@@ -63,10 +63,10 @@ $$;
 -- --------------------------------------------------------------------------
 
 alter table public.pecas_modelos
-  alter column criado_por set default ((auth.uid())::text)::bigint;
+  alter column criado_por set default (((select auth.uid()))::text)::bigint;
 
 alter table public.contrato_documentos
-  alter column created_by set default ((auth.uid())::text)::bigint;
+  alter column created_by set default (((select auth.uid()))::text)::bigint;
 
 -- --------------------------------------------------------------------------
 -- 3) Tighten permissive RLS policies
@@ -81,18 +81,18 @@ drop policy if exists "Usuários autenticados podem deletar contrato_documentos"
 create policy "Usuários autenticados podem inserir contrato_documentos"
 on public.contrato_documentos for insert
 to authenticated
-with check (created_by = ((auth.uid())::text)::bigint);
+with check (created_by = (((select auth.uid()))::text)::bigint);
 
 create policy "Usuários autenticados podem atualizar contrato_documentos"
 on public.contrato_documentos for update
 to authenticated
-using (created_by = ((auth.uid())::text)::bigint)
-with check (created_by = ((auth.uid())::text)::bigint);
+using (created_by = (((select auth.uid()))::text)::bigint)
+with check (created_by = (((select auth.uid()))::text)::bigint);
 
 create policy "Usuários autenticados podem deletar contrato_documentos"
 on public.contrato_documentos for delete
 to authenticated
-using (created_by = ((auth.uid())::text)::bigint);
+using (created_by = (((select auth.uid()))::text)::bigint);
 
 -- pecas_modelos: restrict write operations to row owner (criado_por)
 
@@ -104,17 +104,17 @@ create policy "Usuários autenticados podem ler pecas_modelos públicos ou próp
 on public.pecas_modelos for select
 to authenticated
 using (
-  (criado_por = ((auth.uid())::text)::bigint)
+  (criado_por = (((select auth.uid()))::text)::bigint)
   or (visibilidade = 'publico' and ativo = true)
 );
 
 create policy "Usuários autenticados podem inserir pecas_modelos"
 on public.pecas_modelos for insert
 to authenticated
-with check (criado_por = ((auth.uid())::text)::bigint);
+with check (criado_por = (((select auth.uid()))::text)::bigint);
 
 create policy "Usuários autenticados podem atualizar pecas_modelos próprios"
 on public.pecas_modelos for update
 to authenticated
-using (criado_por = ((auth.uid())::text)::bigint)
-with check (criado_por = ((auth.uid())::text)::bigint);
+using (criado_por = (((select auth.uid()))::text)::bigint)
+with check (criado_por = (((select auth.uid()))::text)::bigint);

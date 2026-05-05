@@ -17,7 +17,7 @@ STABLE
 SECURITY DEFINER
 SET search_path = public, pg_temp
 AS $$
-  SELECT id FROM public.usuarios WHERE auth_user_id = auth.uid()
+  SELECT id FROM public.usuarios WHERE auth_user_id = (select auth.uid())
 $$;
 
 COMMENT ON FUNCTION public.get_current_user_id() IS

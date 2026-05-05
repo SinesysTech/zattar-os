@@ -2,7 +2,7 @@
 -- Migration: Otimizar RLS policies com (select auth.uid()) wrapper
 -- ============================================================================
 --
--- CONTEXTO: O PostgreSQL avalia auth.uid() por LINHA quando usado diretamente
+-- CONTEXTO: O PostgreSQL avalia (select auth.uid()) por LINHA quando usado diretamente
 -- em policies RLS. Ao envolver com (select auth.uid()), o PostgreSQL cria um
 -- "initPlan" que cacheia o resultado UMA vez por statement, eliminando chamadas
 -- repetidas para cada linha da tabela.
@@ -13,14 +13,14 @@
 -- RISCO: Baixo — comportamento funcional idêntico, apenas otimização de performance
 -- ============================================================================
 
--- Helper: Buscar usuario_id a partir de auth.uid() (cacheável via initPlan)
+-- Helper: Buscar usuario_id a partir de (select auth.uid()) (cacheável via initPlan)
 -- Muitas policies fazem subquery para encontrar o usuario.id — vamos manter esse padrão
--- mas garantir que auth.uid() está wrapped.
+-- mas garantir que (select auth.uid()) está wrapped.
 
 BEGIN;
 
 -- ─── credenciais_email ──────────────────────────────────────────────────────
--- Padrão: WHERE usuarios.auth_user_id = auth.uid() → (select auth.uid())
+-- Padrão: WHERE usuarios.auth_user_id = (select auth.uid()) → (select auth.uid())
 
 DROP POLICY IF EXISTS "Users can view own email credentials" ON credenciais_email;
 CREATE POLICY "Users can view own email credentials" ON credenciais_email
@@ -51,7 +51,7 @@ CREATE POLICY "Users can delete own email credentials" ON credenciais_email
   ));
 
 -- ─── contrato_documentos ────────────────────────────────────────────────────
--- Padrão: ((auth.uid())::text)::bigint → ((select auth.uid())::text)::bigint
+-- Padrão: (((select auth.uid()))::text)::bigint → ((select auth.uid())::text)::bigint
 
 DROP POLICY IF EXISTS "Usuários autenticados podem atualizar contrato_documentos" ON contrato_documentos;
 CREATE POLICY "Usuários autenticados podem atualizar contrato_documentos" ON contrato_documentos
@@ -211,7 +211,7 @@ CREATE POLICY "Usuários podem atualizar suas próprias notificações" ON notif
 DROP POLICY IF EXISTS "Authenticated users can create organization" ON organizations;
 CREATE POLICY "Authenticated users can create organization" ON organizations
   FOR INSERT TO authenticated
-  WITH CHECK ((auth.role() = 'authenticated'::text) AND (owner_id = (select auth.uid()) OR is_super_admin()));
+  WITH CHECK (((select auth.role()) = 'authenticated'::text) AND (owner_id = (select auth.uid()) OR is_super_admin()));
 
 DROP POLICY IF EXISTS "Owners can update organization" ON organizations;
 CREATE POLICY "Owners can update organization" ON organizations
@@ -347,8 +347,8 @@ CREATE POLICY "Usuários podem atualizar seus próprios dados" ON usuarios
   USING ((select auth.uid()) = auth_user_id)
   WITH CHECK ((select auth.uid()) = auth_user_id);
 
--- ─── arquivos (já usa subquery wrap parcial, mas precisa fix em auth.uid() interno) ──
--- Nota: arquivos policies já usam (SELECT auth.uid() AS uid) na maioria dos casos,
+-- ─── arquivos (já usa subquery wrap parcial, mas precisa fix em (select auth.uid()) interno) ──
+-- Nota: arquivos policies já usam (SELECT (select auth.uid()) AS uid) na maioria dos casos,
 -- mas o padrão detectado indica que algumas subqueries internas não estão otimizadas.
 -- As policies de arquivos usam um pattern complexo com subselects aninhados.
 -- Vamos manter o padrão existente pois já está parcialmente otimizado.

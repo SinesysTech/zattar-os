@@ -59,7 +59,7 @@ CREATE POLICY "Users can delete their own chat files"
   TO authenticated
   USING (
     bucket_id = 'chat-files' AND 
-    auth.uid()::text = (storage.foldername(name))[1]
+    (select auth.uid())::text = (storage.foldername(name))[1]
   );
 
 -- Função para gerar nomes únicos de arquivos

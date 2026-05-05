@@ -48,12 +48,12 @@ CREATE POLICY "Usuários podem ler suas próprias permissões"
   ON public.permissoes
   FOR SELECT
   USING (
-    auth.role() = 'authenticated' AND
-    usuario_id = (SELECT id FROM public.usuarios WHERE auth_user_id = auth.uid())
+    (select auth.role()) = 'authenticated' AND
+    usuario_id = (SELECT id FROM public.usuarios WHERE auth_user_id = (select auth.uid()))
   );
 
 -- Política: Usuários autenticados podem gerenciar permissões (verificação adicional no backend)
 CREATE POLICY "Usuários autenticados podem gerenciar permissões"
   ON public.permissoes
   FOR ALL
-  USING (auth.role() = 'authenticated');
+  USING ((select auth.role()) = 'authenticated');

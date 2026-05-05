@@ -52,16 +52,16 @@ create policy "Usuários autenticados podem ler agenda_eventos"
   on public.agenda_eventos
   for select
   to authenticated
-  using (auth.role() = 'authenticated');
+  using ((select auth.role()) = 'authenticated');
 
 create policy "Usuários autenticados podem criar agenda_eventos"
   on public.agenda_eventos
   for insert
   to authenticated
-  with check (auth.role() = 'authenticated');
+  with check ((select auth.role()) = 'authenticated');
 
 create policy "Usuários autenticados podem atualizar agenda_eventos"
   on public.agenda_eventos
   for update
   to authenticated
-  using (auth.role() = 'authenticated');
+  using ((select auth.role()) = 'authenticated');

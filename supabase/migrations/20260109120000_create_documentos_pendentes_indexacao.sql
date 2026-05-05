@@ -21,6 +21,6 @@ alter table public.documentos_pendentes_indexacao enable row level security;
 create policy if not exists "Service role only"
   on public.documentos_pendentes_indexacao
   for all
-  using (auth.role() = 'service_role');
+  using ((select auth.role()) = 'service_role');
 
 comment on table public.documentos_pendentes_indexacao is 'Fila de documentos aguardando indexação AI/RAG';

@@ -18,7 +18,7 @@ stable
 security definer
 set search_path = public, pg_temp
 as $$
-  select id from public.usuarios where auth_user_id = auth.uid()
+  select id from public.usuarios where auth_user_id = (select auth.uid())
 $$;
 
 -- Função: update_updated_at_column

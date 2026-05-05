@@ -12,7 +12,7 @@
 -- 3. Backend faz a verificação granular de permissões antes de permitir INSERT/UPDATE/DELETE
 
 -- ============================================================================
--- FUNÇÃO HELPER: Obter ID do usuário a partir do auth.uid()
+-- FUNÇÃO HELPER: Obter ID do usuário a partir do (select auth.uid())
 -- ============================================================================
 
 CREATE OR REPLACE FUNCTION public.get_usuario_id_from_auth()
@@ -22,11 +22,11 @@ STABLE
 SECURITY DEFINER
 SET search_path = public
 AS $$
-  SELECT id FROM public.usuarios WHERE auth_user_id = auth.uid() LIMIT 1;
+  SELECT id FROM public.usuarios WHERE auth_user_id = (select auth.uid()) LIMIT 1;
 $$;
 
 COMMENT ON FUNCTION public.get_usuario_id_from_auth() IS 
-'Retorna o ID do usuário (tabela usuarios) a partir do auth.uid() do Supabase Auth';
+'Retorna o ID do usuário (tabela usuarios) a partir do (select auth.uid()) do Supabase Auth';
 
 -- ============================================================================
 -- TABELA: acervo (6.140 registros)
@@ -311,10 +311,10 @@ COMMENT ON POLICY "Service role: acesso total a capturas_log" ON public.capturas
 'Service role (backend) tem acesso total para gravar logs de captura';
 
 -- ============================================================================
--- ATUALIZAR POLÍTICAS EXISTENTES PARA REMOVER auth.role()
+-- ATUALIZAR POLÍTICAS EXISTENTES PARA REMOVER (select auth.role())
 -- ============================================================================
 
--- A função auth.role() não funciona bem com autenticação por sessão do Next.js
+-- A função (select auth.role()) não funciona bem com autenticação por sessão do Next.js
 -- Substituir por verificação mais robusta
 
 -- Remover políticas antigas das tabelas que já têm políticas
@@ -338,7 +338,7 @@ DROP POLICY IF EXISTS "Usuários autenticados podem criar cargos" ON public.carg
 DROP POLICY IF EXISTS "Usuários autenticados podem atualizar cargos" ON public.cargos;
 DROP POLICY IF EXISTS "Usuários autenticados podem deletar cargos" ON public.cargos;
 
--- Recriar políticas sem auth.role()
+-- Recriar políticas sem (select auth.role())
 -- AGENDAMENTOS
 CREATE POLICY "Service role: acesso total a agendamentos"
   ON public.agendamentos
@@ -399,10 +399,10 @@ CREATE POLICY "Usuários autenticados podem ler cargos"
 -- ATUALIZAR POLÍTICA DE PERMISSÕES
 -- ============================================================================
 
--- Remover política antiga que usa auth.role()
+-- Remover política antiga que usa (select auth.role())
 DROP POLICY IF EXISTS "Usuários autenticados podem gerenciar permissões" ON public.permissoes;
 
--- Recriar sem auth.role()
+-- Recriar sem (select auth.role())
 CREATE POLICY "Service role: acesso total a permissoes"
   ON public.permissoes
   FOR ALL

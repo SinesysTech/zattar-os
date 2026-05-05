@@ -19,18 +19,18 @@ alter table dify_apps enable row level security;
 -- Leitura para autenticados
 create policy "dify_apps_select_auth"
   on dify_apps for select
-  using (auth.role() = 'authenticated');
+  using ((select auth.role()) = 'authenticated');
 
 -- Escrita (Insert/Update/Delete)
 -- Idealmente restrito a admins, mas permissivo para desenvolvimento
 create policy "dify_apps_modify_auth"
   on dify_apps for insert
-  with check (auth.role() = 'authenticated');
+  with check ((select auth.role()) = 'authenticated');
 
 create policy "dify_apps_update_auth"
   on dify_apps for update
-  using (auth.role() = 'authenticated');
+  using ((select auth.role()) = 'authenticated');
 
 create policy "dify_apps_delete_auth"
   on dify_apps for delete
-  using (auth.role() = 'authenticated');
+  using ((select auth.role()) = 'authenticated');

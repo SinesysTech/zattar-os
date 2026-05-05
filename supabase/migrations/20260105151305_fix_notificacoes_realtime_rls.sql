@@ -18,7 +18,7 @@ ON public.notificacoes FOR SELECT
 TO authenticated
 USING (
   usuario_id IN (
-    SELECT id FROM public.usuarios WHERE auth_user_id = auth.uid()
+    SELECT id FROM public.usuarios WHERE auth_user_id = (select auth.uid())
   )
 );
 
@@ -27,12 +27,12 @@ ON public.notificacoes FOR UPDATE
 TO authenticated
 USING (
   usuario_id IN (
-    SELECT id FROM public.usuarios WHERE auth_user_id = auth.uid()
+    SELECT id FROM public.usuarios WHERE auth_user_id = (select auth.uid())
   )
 )
 WITH CHECK (
   usuario_id IN (
-    SELECT id FROM public.usuarios WHERE auth_user_id = auth.uid()
+    SELECT id FROM public.usuarios WHERE auth_user_id = (select auth.uid())
   )
 );
 

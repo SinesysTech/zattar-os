@@ -1713,7 +1713,7 @@ CREATE OR REPLACE FUNCTION "public"."get_current_user_id"() RETURNS bigint
     LANGUAGE "sql" STABLE SECURITY DEFINER
     SET "search_path" TO 'public', 'pg_temp'
     AS $$
-  select id from public.usuarios where auth_user_id = auth.uid()
+  select id from public.usuarios where auth_user_id = (select auth.uid())
 $$;
 
 
@@ -1748,7 +1748,7 @@ CREATE OR REPLACE FUNCTION "public"."get_my_admin_org_ids"() RETURNS SETOF "uuid
     AS $$
   select organization_id
   from memberships
-  where user_id = auth.uid()
+  where user_id = (select auth.uid())
     and role in ('owner', 'admin');
 $$;
 
@@ -1760,7 +1760,7 @@ CREATE OR REPLACE FUNCTION "public"."get_my_org_ids"() RETURNS SETOF "uuid"
     LANGUAGE "sql" STABLE SECURITY DEFINER
     SET "search_path" TO 'public'
     AS $$
-  select organization_id from memberships where user_id = auth.uid();
+  select organization_id from memberships where user_id = (select auth.uid());
 $$;
 
 
@@ -1771,14 +1771,14 @@ CREATE OR REPLACE FUNCTION "public"."get_usuario_id_from_auth"() RETURNS bigint
     LANGUAGE "sql" STABLE SECURITY DEFINER
     SET "search_path" TO 'public'
     AS $$
-  SELECT id FROM public.usuarios WHERE auth_user_id = auth.uid() LIMIT 1;
+  SELECT id FROM public.usuarios WHERE auth_user_id = (select auth.uid()) LIMIT 1;
 $$;
 
 
 ALTER FUNCTION "public"."get_usuario_id_from_auth"() OWNER TO "postgres";
 
 
-COMMENT ON FUNCTION "public"."get_usuario_id_from_auth"() IS 'Retorna o ID do usuário (tabela usuarios) a partir do auth.uid() do Supabase Auth';
+COMMENT ON FUNCTION "public"."get_usuario_id_from_auth"() IS 'Retorna o ID do usuário (tabela usuarios) a partir do (select auth.uid()) do Supabase Auth';
 
 
 
@@ -1837,7 +1837,7 @@ CREATE OR REPLACE FUNCTION "public"."is_current_user_active"() RETURNS boolean
     AS $$
   SELECT EXISTS (
     SELECT 1 FROM public.usuarios 
-    WHERE auth_user_id = auth.uid() 
+    WHERE auth_user_id = (select auth.uid()) 
     AND ativo = true
   )
 $$;
@@ -1893,7 +1893,7 @@ CREATE OR REPLACE FUNCTION "public"."is_super_admin"() RETURNS boolean
     LANGUAGE "sql" STABLE SECURITY DEFINER
     SET "search_path" TO 'public'
     AS $$
-  select coalesce((select p.is_super_admin from public.profiles p where p.id = auth.uid()), false);
+  select coalesce((select p.is_super_admin from public.profiles p where p.id = (select auth.uid())), false);
 $$;
 
 

@@ -50,7 +50,7 @@ CREATE POLICY "Apenas admins podem inserir integrações"
   WITH CHECK (
     EXISTS (
       SELECT 1 FROM public.usuarios
-      WHERE usuarios.auth_user_id = auth.uid()
+      WHERE usuarios.auth_user_id = (select auth.uid())
       AND usuarios.role = 'admin'
     )
   );
@@ -63,14 +63,14 @@ CREATE POLICY "Apenas admins podem atualizar integrações"
   USING (
     EXISTS (
       SELECT 1 FROM public.usuarios
-      WHERE usuarios.auth_user_id = auth.uid()
+      WHERE usuarios.auth_user_id = (select auth.uid())
       AND usuarios.role = 'admin'
     )
   )
   WITH CHECK (
     EXISTS (
       SELECT 1 FROM public.usuarios
-      WHERE usuarios.auth_user_id = auth.uid()
+      WHERE usuarios.auth_user_id = (select auth.uid())
       AND usuarios.role = 'admin'
     )
   );
@@ -83,7 +83,7 @@ CREATE POLICY "Apenas admins podem deletar integrações"
   USING (
     EXISTS (
       SELECT 1 FROM public.usuarios
-      WHERE usuarios.auth_user_id = auth.uid()
+      WHERE usuarios.auth_user_id = (select auth.uid())
       AND usuarios.role = 'admin'
     )
   );

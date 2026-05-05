@@ -42,7 +42,7 @@ AS $$
   );
 $$;
 
--- 1b. pm_current_user_id: obtém o usuario_id a partir do auth.uid()
+-- 1b. pm_current_user_id: obtém o usuario_id a partir do (select auth.uid())
 CREATE OR REPLACE FUNCTION public.pm_current_user_id()
 RETURNS bigint
 LANGUAGE sql
@@ -50,7 +50,7 @@ STABLE
 SECURITY DEFINER
 SET search_path = ''
 AS $$
-  SELECT id FROM public.usuarios WHERE auth_user_id = auth.uid() LIMIT 1;
+  SELECT id FROM public.usuarios WHERE auth_user_id = (select auth.uid()) LIMIT 1;
 $$;
 
 -- ============================================================================
