@@ -89,6 +89,8 @@
     "ai:index-existing": "tsx scripts/ai/index-existing-documents.ts",
     "ai:index-dry-run": "tsx scripts/ai/index-existing-documents.ts --dry-run",
     "test:api-pendentes-manifestacao": "tsx scripts/captura/pendentes/test-api-pendentes-manifestacao.ts",
+    "captura:recuperar-documentos": "tsx --require ./scripts/mock-server-only.cjs scripts/captura/pendentes/processar-documentos-pendentes.ts",
+    "captura:recuperar-documentos:dry-run": "DRY_RUN=1 tsx --require ./scripts/mock-server-only.cjs scripts/captura/pendentes/processar-documentos-pendentes.ts",
     "debug:expedientes-trt3": "tsx scripts/captura/pendentes/debug-expedientes-trt3-direto.ts",
     "debug:audiencias-trt3": "tsx scripts/captura/audiencias/debug-audiencias-trt3-direto.ts",
     "debug:pericias-trt3": "tsx scripts/captura/pericias/debug-pericias-trt3-direto.ts",

@@ -109,6 +109,9 @@ scripts/results/depositos-uber-tst/
 !scripts/results/build-performance/history/.gitkeep
 !scripts/results/bundle-analysis/.gitkeep
 
+# Logs de execução de scripts standalone (gerados localmente)
+scripts/captura/pendentes/.logs/
+
 # Diagnósticos de banco (podem conter dados sensíveis)
 DIAGNOSTICO_DISK_IO*.md
 
