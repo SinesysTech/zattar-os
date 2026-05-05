@@ -252,6 +252,7 @@
     "lowlight": "^3.3.0",
     "lucide-react": "0.557.0",
     "mailparser": "3.9.8",
+    "mammoth": "^1.8.0",
     "marked": "17.0.1",
     "mdast-util-to-string": "4.0.0",
     "motion": "^12.23.25",
