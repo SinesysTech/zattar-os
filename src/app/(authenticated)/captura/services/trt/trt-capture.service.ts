@@ -21,6 +21,8 @@ export interface CapturaTRTParams {
 export interface CapturaPendentesManifestacaoParams extends CapturaTRTParams {
   filtroPrazo?: FiltroPrazoPendentes; // 'no_prazo' ou 'sem_prazo'
   capturarDocumentos?: boolean; // Se true, baixa documentos PDF de cada pendente (default: false)
+  /** Horas mínimas desde última atualização de dados complementares para pular re-fetch (default: 24). Use 36 para execuções diárias às 6h. */
+  horasParaRecaptura?: number;
 }
 
 /**

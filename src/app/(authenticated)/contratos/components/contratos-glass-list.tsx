@@ -73,8 +73,14 @@ const STATUS_DOT_COLOR: Record<StatusContrato, string> = {
   desistencia: 'bg-destructive',
 };
 
-const GRID_TEMPLATE =
-  'grid-cols-[28px_10px_minmax(0,2.2fr)_minmax(0,0.9fr)_minmax(0,1fr)_minmax(0,0.9fr)_minmax(0,0.9fr)_90px_140px]';
+// Mobile  (5 cols): checkbox | dot | cliente | status | ações
+// SM      (7 cols): + tipo/cobrança + responsável
+// LG      (9 cols): + processos + data
+const GRID_TEMPLATE = cn(
+  'grid-cols-[28px_10px_minmax(0,1fr)_minmax(0,0.9fr)_88px]',
+  'sm:grid-cols-[28px_10px_minmax(0,2fr)_minmax(0,0.9fr)_minmax(0,0.9fr)_minmax(0,0.9fr)_100px]',
+  'lg:grid-cols-[28px_10px_minmax(0,2.2fr)_minmax(0,0.9fr)_minmax(0,1fr)_minmax(0,0.9fr)_minmax(0,0.9fr)_90px_140px]',
+);
 
 // =============================================================================
 // SELECT-ALL RAIL
@@ -451,48 +457,30 @@ function GlassRow({
 
         {/* 3. Cliente / Parte */}
         <div className="min-w-0">
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
-            <Text variant="label" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "font-semibold text-foreground truncate leading-tight")}>
-              {autoraNome || clienteNome}
-              {partesAutoras.length > 1 && (
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-muted-foreground/60 font-medium")}> e outros</span>
-              )}
-            </Text>
-            {contrato.papelClienteNoContrato === 'autora' && (
-              <Text
-                variant="micro-badge"
-                className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center bg-primary/10 border border-primary/20 text-primary rounded px-1 py-px font-semibold shrink-0")}
-              >
-                Cliente
-              </Text>
+          <Text variant="label" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "font-semibold text-foreground truncate leading-tight block")}>
+            {autoraNome || clienteNome}
+            {partesAutoras.length > 1 && (
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-muted-foreground/55 font-medium")}> e outros</span>
             )}
-          </div>
+          </Text>
           {reNome && (
-            <Text variant="caption" className="truncate mt-0.5 block">
-              <span className="text-muted-foreground/70">vs. </span>
+            <Text variant="caption" className="truncate mt-0.5 block text-muted-foreground/55">
+              <span className="text-muted-foreground/40">vs. </span>
               {reNome}
               {partesRe.length > 1 && (
-                <span className="text-muted-foreground/70"> e outros</span>
-              )}
-              {contrato.papelClienteNoContrato === 're' && (
-                <Text
-                  variant="micro-badge"
-                  className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "ml-1.5 inline-flex items-center bg-primary/10 border border-primary/20 text-primary rounded px-1 py-px font-semibold")}
-                >
-                  Cliente
-                </Text>
+                <span className="text-muted-foreground/40"> e outros</span>
               )}
             </Text>
           )}
           {segmentoNome && (
-            <Text variant="micro-caption" className="mt-0.5 truncate block text-muted-foreground/70">
+            <Text variant="micro-caption" className="mt-0.5 truncate block text-muted-foreground/50">
               {segmentoNome}
             </Text>
           )}
         </div>
 
-        {/* 4. Tipo / Cobrança */}
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1 min-w-0")}>
+        {/* 4. Tipo / Cobrança — oculto em mobile, visível a partir de sm */}
+        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "hidden sm:flex flex-col gap-1 min-w-0")}>
           <SemanticBadge category="tipo_contrato" value={contrato.tipoContrato} className="w-fit">
             {TIPO_CONTRATO_LABELS[contrato.tipoContrato]}
           </SemanticBadge>
@@ -501,8 +489,8 @@ function GlassRow({
           </SemanticBadge>
         </div>
 
-        {/* 5. Processos vinculados */}
-        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5 min-w-0")}>
+        {/* 5. Processos vinculados — oculto até lg */}
+        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "hidden lg:flex flex-col gap-0.5 min-w-0")}>
           {firstProcesso ? (
             <>
               <Link
@@ -533,16 +521,18 @@ function GlassRow({
           </SemanticBadge>
         </div>
 
-        {/* 7. Responsável */}
-        <ResponsavelCell
-          contrato={contrato}
-          usuariosMap={usuariosMap}
-          usuarios={usuarios}
-          onChanged={onResponsavelChanged}
-        />
+        {/* 7. Responsável — oculto em mobile, visível a partir de sm */}
+        <div className="hidden sm:block min-w-0">
+          <ResponsavelCell
+            contrato={contrato}
+            usuariosMap={usuariosMap}
+            usuarios={usuarios}
+            onChanged={onResponsavelChanged}
+          />
+        </div>
 
-        {/* 8. Data de cadastro */}
-        <Text variant="caption" className="tabular-nums">
+        {/* 8. Data de cadastro — oculta até lg */}
+        <Text variant="caption" className="tabular-nums hidden lg:block">
           {formatarData(contrato.cadastradoEm)}
         </Text>
 
@@ -569,17 +559,21 @@ function ListSkeleton() {
               <Skeleton className="h-3.5 w-48" />
               <Skeleton className="h-2.5 w-36" />
             </div>
-            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+            {/* Tipo/Cobrança — espelha visibilidade sm */}
+            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "hidden sm:block space-y-1")}>
               <Skeleton className="h-4 w-16 rounded-md" />
               <Skeleton className="h-4 w-14 rounded-md" />
             </div>
-            <Skeleton className="h-3 w-24" />
+            {/* Processos — espelha visibilidade lg */}
+            <Skeleton className="hidden lg:block h-3 w-24" />
             <Skeleton className="h-4 w-20 rounded-md" />
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            {/* Responsável — espelha visibilidade sm */}
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "hidden sm:flex items-center gap-2")}>
               <Skeleton className="size-5 rounded-full" />
               <Skeleton className="h-3 w-16" />
             </div>
-            <Skeleton className="h-3 w-14" />
+            {/* Data — espelha visibilidade lg */}
+            <Skeleton className="hidden lg:block h-3 w-14" />
             <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center justify-end gap-0.5")}>
               {[0, 1, 2, 3].map((j) => (
                 <Skeleton key={j} className="size-7 rounded-md" />

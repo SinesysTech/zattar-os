@@ -324,7 +324,11 @@ export async function executarAgendamento(
             break;
           }
           case 'pendentes': {
-            const paramsPendentes = agendamento.parametros_extras as { filtroPrazo?: FiltroPrazoPendentes; filtrosPrazo?: FiltroPrazoPendentes[] } | null;
+            const paramsPendentes = agendamento.parametros_extras as {
+              filtroPrazo?: FiltroPrazoPendentes;
+              filtrosPrazo?: FiltroPrazoPendentes[];
+              horasParaRecaptura?: number;
+            } | null;
             const filtrosParaExecutar = resolverFiltrosPendentes(
               paramsPendentes?.filtrosPrazo || null,
               paramsPendentes?.filtroPrazo || null
@@ -340,6 +344,7 @@ export async function executarAgendamento(
                   filtroPrazo: filtro,
                   capturarDocumentos: true,
                   capturaLogId: logId ?? undefined,
+                  horasParaRecaptura: paramsPendentes?.horasParaRecaptura,
                 });
 
                 resultadosPendentes.push({ filtroPrazo: filtro, resultado: captura });
