@@ -91,7 +91,7 @@ async function salvarPayloadsBrutosPartes(params: SalvarPayloadsPartesParams): P
 
 const ORDEM_FILTROS_PENDENTES: FiltroPrazoPendentes[] = ['sem_prazo', 'no_prazo'];
 
-const resolverFiltrosPendentes = (
+export const resolverFiltrosPendentes = (
   filtros?: FiltroPrazoPendentes[] | null,
   filtroUnico?: FiltroPrazoPendentes | null
 ): FiltroPrazoPendentes[] => {
@@ -99,6 +99,14 @@ const resolverFiltrosPendentes = (
   const valores: FiltroPrazoPendentes[] = candidatos.length ? candidatos : ['sem_prazo'];
   const unicos = Array.from(new Set(valores));
   return unicos.sort((a, b) => ORDEM_FILTROS_PENDENTES.indexOf(a) - ORDEM_FILTROS_PENDENTES.indexOf(b));
+};
+
+export const resolverDataAudiencias = (
+  dataRelativa?: 'hoje' | 'ontem' | null
+): string | undefined => {
+  if (dataRelativa === 'hoje') return todayDateString();
+  if (dataRelativa === 'ontem') return addDays(todayDateString(), -1);
+  return undefined;
 };
 
 /**
@@ -279,11 +287,7 @@ export async function executarAgendamento(
               codigoSituacao?: 'M' | 'C' | 'F';
               horasParaRecaptura?: number;
             } | null;
-            // dataRelativa resolve a data dinamicamente (evita datas fixas obsoletas)
-            const dataResolvida =
-              paramsAudiencias?.dataRelativa === 'hoje'  ? todayDateString() :
-              paramsAudiencias?.dataRelativa === 'ontem' ? addDays(todayDateString(), -1) :
-              undefined;
+            const dataResolvida = resolverDataAudiencias(paramsAudiencias?.dataRelativa);
             resultado = await audienciasCapture({
               credential: credCompleta.credenciais,
               config: tribunalConfig,
@@ -417,9 +421,15 @@ export async function executarAgendamento(
             break;
           }
           case 'pericias': {
+            const paramsPericias = agendamento.parametros_extras as {
+              situacoes?: ('S' | 'L' | 'C' | 'F' | 'P' | 'R')[];
+              horasParaRecaptura?: number;
+            } | null;
             resultado = await periciasCapture({
               credential: credCompleta.credenciais,
               config: tribunalConfig,
+              situacoes: paramsPericias?.situacoes,
+              horasParaRecaptura: paramsPericias?.horasParaRecaptura,
             });
 
             await registrarRawLog({

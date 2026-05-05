@@ -66,20 +66,41 @@ export interface ContratosGlassListProps {
 // HELPERS
 // =============================================================================
 
-const STATUS_DOT_COLOR: Record<StatusContrato, string> = {
-  em_contratacao: 'bg-warning',
-  contratado: 'bg-success',
-  distribuido: 'bg-info',
-  desistencia: 'bg-destructive',
+// Estilos do badge unificado status+data por status
+const STATUS_BADGE_STYLE: Record<StatusContrato, { bg: string; text: string; date: string }> = {
+  em_contratacao: { bg: 'bg-warning/10',     text: 'text-warning/90',     date: 'text-warning/60'     },
+  contratado:     { bg: 'bg-success/10',     text: 'text-success/90',     date: 'text-success/60'     },
+  distribuido:    { bg: 'bg-info/10',        text: 'text-info/90',        date: 'text-info/60'        },
+  desistencia:    { bg: 'bg-destructive/10', text: 'text-destructive/80', date: 'text-destructive/55' },
 };
 
-// Mobile  (5 cols): checkbox | dot | cliente | status | ações
-// SM      (7 cols): + tipo/cobrança + responsável
-// LG      (9 cols): + processos + data
+// Extrai a data de entrada no status atual via statusHistorico (audit log).
+// Fallback: cadastradoEm quando não há histórico (contrato nunca mudou de status).
+function getStatusDate(contrato: Contrato): string | null {
+  const historico = contrato.statusHistorico ?? [];
+  const entry = [...historico]
+    .filter((h) => h.toStatus === contrato.status)
+    .sort((a, b) => new Date(b.changedAt).getTime() - new Date(a.changedAt).getTime())[0];
+  return entry?.changedAt ?? contrato.cadastradoEm ?? null;
+}
+
+function fmtDateShort(iso: string | null): string {
+  if (!iso) return '—';
+  try {
+    const d = new Date(iso);
+    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' });
+  } catch {
+    return '—';
+  }
+}
+
+// Mobile (4 cols): checkbox | badge-status+data | cliente | ações
+// SM     (6 cols): + tipo/cobrança + responsável
+// LG     (7 cols): + processos
 const GRID_TEMPLATE = cn(
-  'grid-cols-[28px_10px_minmax(0,1fr)_minmax(0,0.9fr)_88px]',
-  'sm:grid-cols-[28px_10px_minmax(0,2fr)_minmax(0,0.9fr)_minmax(0,0.9fr)_minmax(0,0.9fr)_100px]',
-  'lg:grid-cols-[28px_10px_minmax(0,2.2fr)_minmax(0,0.9fr)_minmax(0,1fr)_minmax(0,0.9fr)_minmax(0,0.9fr)_90px_140px]',
+  'grid-cols-[28px_110px_minmax(0,1fr)_88px]',
+  'sm:grid-cols-[28px_110px_minmax(0,2fr)_minmax(0,0.9fr)_minmax(0,0.9fr)_100px]',
+  'lg:grid-cols-[28px_110px_minmax(0,2.2fr)_minmax(0,0.9fr)_minmax(0,1fr)_minmax(0,0.9fr)_140px]',
 );
 
 // =============================================================================
@@ -419,7 +440,7 @@ function GlassRow({
         }
       }}
       className={cn(
-        /* design-system-escape: p-3 → usar <Inset> */ 'group w-full text-left rounded-2xl border p-3 cursor-pointer',
+        /* design-system-escape: p-3.5 → usar <Inset> */ 'group w-full text-left rounded-2xl border p-3.5 cursor-pointer',
         'transition-all duration-180 ease-out',
         'hover:border-border hover:shadow-[0_4px_14px_color-mix(in_oklch,var(--foreground)_6%,transparent)] hover:-translate-y-px',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
@@ -445,18 +466,26 @@ function GlassRow({
           />
         </div>
 
-        {/* 2. Status dot */}
-        <div className="flex items-center justify-center">
-          <span
-            className={cn('size-2 rounded-full shrink-0 opacity-80', STATUS_DOT_COLOR[contrato.status])}
-            aria-hidden="true"
-          />
-        </div>
+        {/* 2. Badge unificado status + data de entrada no status */}
+        {(() => {
+          const style = STATUS_BADGE_STYLE[contrato.status];
+          const dateStr = fmtDateShort(getStatusDate(contrato));
+          return (
+            <div className={cn('flex flex-col items-start gap-0.5 rounded-lg px-2 py-1.5 shrink-0', style.bg)}>
+              <span className={cn('text-micro-caption font-semibold leading-none', style.text)}>
+                {STATUS_CONTRATO_LABELS[contrato.status]}
+              </span>
+              <span className={cn('text-micro-badge font-mono tabular-nums leading-none', style.date)}>
+                {dateStr}
+              </span>
+            </div>
+          );
+        })()}
 
         {/* 3. Cliente / Parte */}
         <div className="min-w-0">
-          {/* text-xs (12px) espelha o padrão IdentidadeProcessual de expedientes */}
-          <p className="truncate text-xs font-semibold leading-tight text-foreground">
+          {/* text-[13px] — ligeiramente acima de text-xs (12px) para equilibrar peso visual com badges */}
+          <p className="truncate text-[13px] font-semibold leading-tight text-foreground">
             {autoraNome || clienteNome}
             {partesAutoras.length > 1 && (
               <span className="font-normal text-muted-foreground/50"> e outros</span>
@@ -513,14 +542,7 @@ function GlassRow({
           )}
         </div>
 
-        {/* 6. Estágio (status) */}
-        <div>
-          <SemanticBadge category="status_contrato" value={contrato.status}>
-            {STATUS_CONTRATO_LABELS[contrato.status]}
-          </SemanticBadge>
-        </div>
-
-        {/* 7. Responsável — oculto em mobile, visível a partir de sm */}
+        {/* 6. Responsável — oculto em mobile, visível a partir de sm */}
         <div className="hidden sm:block min-w-0">
           <ResponsavelCell
             contrato={contrato}
@@ -530,12 +552,7 @@ function GlassRow({
           />
         </div>
 
-        {/* 8. Data de cadastro — oculta até lg */}
-        <span className="text-micro-caption tabular-nums text-muted-foreground hidden lg:block">
-          {formatarData(contrato.cadastradoEm)}
-        </span>
-
-        {/* 9. Ações */}
+        {/* 7. Ações */}
         <RowActions contrato={contrato} onEdit={onEdit} onDelete={onDelete} onGerarPeca={onGerarPeca} />
       </div>
     </div>
@@ -550,29 +567,30 @@ function ListSkeleton() {
   return (
     <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
       {Array.from({ length: 6 }, (_, i) => (
-        <div key={i} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-2xl border border-border/40 bg-card p-3")}>
+        <div key={i} className={cn(/* design-system-escape: p-3.5 → usar <Inset> */ "rounded-2xl border border-border/40 bg-card p-3.5")}>
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ 'grid items-center gap-3', GRID_TEMPLATE)}>
+            {/* 1. Checkbox */}
             <Skeleton className="size-3.5 rounded" />
-            <Skeleton className="size-2 rounded-full" />
+            {/* 2. Badge status+data */}
+            <Skeleton className="h-9 w-27.5 rounded-lg" />
+            {/* 3. Cliente/Parte */}
             <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
-              <Skeleton className="h-3.5 w-48" />
-              <Skeleton className="h-2.5 w-36" />
+              <Skeleton className="h-3.5 w-44" />
+              <Skeleton className="h-2.5 w-32" />
             </div>
-            {/* Tipo/Cobrança — espelha visibilidade sm */}
+            {/* 4. Tipo/Cobrança — espelha visibilidade sm */}
             <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "hidden sm:block space-y-1")}>
               <Skeleton className="h-4 w-16 rounded-md" />
               <Skeleton className="h-4 w-14 rounded-md" />
             </div>
-            {/* Processos — espelha visibilidade lg */}
-            <Skeleton className="hidden lg:block h-3 w-24" />
-            <Skeleton className="h-4 w-20 rounded-md" />
-            {/* Responsável — espelha visibilidade sm */}
+            {/* 5. Processos — espelha visibilidade lg */}
+            <Skeleton className="hidden lg:block h-3 w-28" />
+            {/* 6. Responsável — espelha visibilidade sm */}
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "hidden sm:flex items-center gap-2")}>
               <Skeleton className="size-5 rounded-full" />
-              <Skeleton className="h-3 w-16" />
+              <Skeleton className="h-2.5 w-16" />
             </div>
-            {/* Data — espelha visibilidade lg */}
-            <Skeleton className="hidden lg:block h-3 w-14" />
+            {/* 7. Ações */}
             <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center justify-end gap-0.5")}>
               {[0, 1, 2, 3].map((j) => (
                 <Skeleton key={j} className="size-7 rounded-md" />

@@ -73,6 +73,8 @@ import { createServiceClient } from '@/lib/supabase/service-client';
 export interface CapturaPericiasParams extends CapturaTRTParams {
   /** Situações das perícias a capturar: S, L, C, F, P, R */
   situacoes?: ('S' | 'L' | 'C' | 'F' | 'P' | 'R')[];
+  /** Horas mínimas desde última atualização de dados complementares para pular re-fetch (default: 24). Use 36 para execuções diárias às 19h. */
+  horasParaRecaptura?: number;
 }
 
 interface PericiasDadosComplementaresResumo {
@@ -290,7 +292,7 @@ export async function periciasCapture(
         trt: params.config.codigo,
         grau: params.config.grau,
         verificarRecaptura: true,
-        horasParaRecaptura: 24,
+        horasParaRecaptura: params.horasParaRecaptura ?? 24,
         delayEntreRequisicoes: 300,
         onProgress: (atual, total, processoId) => {
           if (atual % 10 === 0 || atual === 1 || atual === total) {
