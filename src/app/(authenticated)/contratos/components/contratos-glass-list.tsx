@@ -35,7 +35,7 @@ import {
 } from '@/components/ui/command';
 
 import { actionAlterarResponsavelContrato } from '../actions';
-import type { Contrato, StatusContrato } from '../domain';
+import type { Contrato } from '../domain';
 import { TIPO_CONTRATO_LABELS, TIPO_COBRANCA_LABELS, STATUS_CONTRATO_LABELS } from '../domain';
 import type { ClienteInfo } from '../types';
 import { formatarData } from '../utils';

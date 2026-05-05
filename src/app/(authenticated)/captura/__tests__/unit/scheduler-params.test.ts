@@ -6,7 +6,7 @@
  * quais dados serão capturados a cada execução agendada.
  */
 
-import { describe, it, expect, jest, beforeEach } from '@jest/globals';
+import { describe, it, expect, jest } from '@jest/globals';
 
 // =============================================================================
 // MOCKS DE INFRAESTRUTURA (necessários para importar o módulo)
