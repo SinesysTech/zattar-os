@@ -35,6 +35,8 @@ export interface CapturaAudienciasParams extends CapturaTRTParams {
   dataFim?: string;
   /** Código do status da audiência: 'M' = Designada, 'C' = Cancelada, 'F' = Realizada. Padrão: 'M' */
   codigoSituacao?: 'M' | 'C' | 'F';
+  /** Horas mínimas desde última atualização de dados complementares para pular re-fetch (default: 24). Use 36 para execuções diárias. */
+  horasParaRecaptura?: number;
 }
 
 /**

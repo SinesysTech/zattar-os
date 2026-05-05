@@ -15,7 +15,7 @@ import { atualizarAgendamento } from '../persistence/agendamento-persistence.ser
 import { recalcularProximaExecucaoAposExecucao } from '../agendamentos/calcular-proxima-execucao.service';
 import type { FiltroPrazoPendentes, CodigoTRT, GrauTRT } from '../../types/trt-types';
 import { registrarCapturaRawLog } from '../persistence/captura-raw-log.service';
-import { todayDateString } from '@/lib/date-utils';
+import { todayDateString, addDays } from '@/lib/date-utils';
 
 /**
  * Parâmetros para salvar payloads brutos de partes como raw logs no Supabase
@@ -275,17 +275,22 @@ export async function executarAgendamento(
             const paramsAudiencias = agendamento.parametros_extras as {
               dataInicio?: string;
               dataFim?: string;
-              dataRelativa?: 'hoje';
+              dataRelativa?: 'hoje' | 'ontem';
               codigoSituacao?: 'M' | 'C' | 'F';
+              horasParaRecaptura?: number;
             } | null;
-            // dataRelativa: 'hoje' → resolve a data de execução dinamicamente (evita datas fixas que ficam obsoletas)
-            const dataHoje = paramsAudiencias?.dataRelativa === 'hoje' ? todayDateString() : undefined;
+            // dataRelativa resolve a data dinamicamente (evita datas fixas obsoletas)
+            const dataResolvida =
+              paramsAudiencias?.dataRelativa === 'hoje'  ? todayDateString() :
+              paramsAudiencias?.dataRelativa === 'ontem' ? addDays(todayDateString(), -1) :
+              undefined;
             resultado = await audienciasCapture({
               credential: credCompleta.credenciais,
               config: tribunalConfig,
-              dataInicio: dataHoje ?? paramsAudiencias?.dataInicio,
-              dataFim: dataHoje ?? paramsAudiencias?.dataFim,
+              dataInicio: dataResolvida ?? paramsAudiencias?.dataInicio,
+              dataFim: dataResolvida ?? paramsAudiencias?.dataFim,
               codigoSituacao: paramsAudiencias?.codigoSituacao,
+              horasParaRecaptura: paramsAudiencias?.horasParaRecaptura,
             });
             await registrarRawLog({
               tipo_captura: agendamento.tipo_captura,
