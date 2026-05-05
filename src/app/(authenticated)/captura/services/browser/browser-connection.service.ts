@@ -129,6 +129,9 @@ async function connectToRemoteBrowser(
   const browserContext = await browser.newContext({
     viewport: options.viewport || { width: 1920, height: 1080 },
     userAgent: options.userAgent || getDefaultUserAgent(),
+    locale: 'pt-BR',
+    timezoneId: 'America/Sao_Paulo',
+    extraHTTPHeaders: getRealistaHttpHeaders(),
   });
 
   const page = await browserContext.newPage();
@@ -158,6 +161,9 @@ async function launchLocalBrowser(
   const browserContext = await browser.newContext({
     viewport: options.viewport || { width: 1920, height: 1080 },
     userAgent: options.userAgent || getDefaultUserAgent(),
+    locale: 'pt-BR',
+    timezoneId: 'America/Sao_Paulo',
+    extraHTTPHeaders: getRealistaHttpHeaders(),
   });
 
   const page = await browserContext.newPage();
@@ -296,9 +302,33 @@ export async function checkBrowserServiceHealth(): Promise<{
 // ============================================================================
 
 /**
- * Retorna o user agent padrão do Chrome
+ * Retorna o user agent padrão do Chrome.
+ * Versão atualizada periodicamente para reduzir detecção como bot por WAFs (CloudFront, Cloudflare).
+ * Chrome 130+ já está em estável amplamente em 2026.
  */
 function getDefaultUserAgent(): string {
-  return 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36';
+  return 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36';
+}
+
+/**
+ * Headers HTTP que um Chrome real envia. WAFs (CloudFront, Cloudflare) costumam
+ * verificar a presença e consistência de Sec-Fetch-* / Accept-Language para
+ * distinguir browser real de scraper. Sem esses headers, o request fica
+ * "marcado" como suspeito.
+ */
+function getRealistaHttpHeaders(): Record<string, string> {
+  return {
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+    'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7',
+    'Accept-Encoding': 'gzip, deflate, br, zstd',
+    'Sec-Ch-Ua': '"Chromium";v="130", "Google Chrome";v="130", "Not?A_Brand";v="99"',
+    'Sec-Ch-Ua-Mobile': '?0',
+    'Sec-Ch-Ua-Platform': '"Windows"',
+    'Sec-Fetch-Dest': 'document',
+    'Sec-Fetch-Mode': 'navigate',
+    'Sec-Fetch-Site': 'none',
+    'Sec-Fetch-User': '?1',
+    'Upgrade-Insecure-Requests': '1',
+  };
 }
 
