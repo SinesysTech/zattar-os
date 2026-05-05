@@ -39,6 +39,7 @@ import {
   type Usuario,
   actionAtualizarUsuario,
   actionDesativarUsuario,
+  actionBuscarUltimoLogin,
 } from '@/app/(authenticated)/usuarios';
 
 import { actionObterPerfil } from '@/app/(authenticated)/perfil';
@@ -91,6 +92,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
   // UI States
   const [usuarioLogado, setUsuarioLogado] = useState<UsuarioComPermissao | null>(null);
+  const [lastLoginAt, setLastLoginAt] = useState<string | null>(null);
   const [avatarDialogOpen, setAvatarDialogOpen] = useState(false);
   const [coverDialogOpen, setCoverDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -109,6 +111,19 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
       }
     });
   }, []);
+
+  // Fetch last sign-in (alimenta status dot do sidebar)
+  useEffect(() => {
+    if (!usuario?.id) return;
+    let cancelled = false;
+    actionBuscarUltimoLogin(usuario.id).then((res) => {
+      if (cancelled) return;
+      if (res.success) setLastLoginAt(res.data);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [usuario?.id]);
 
   // Count active permissions for tab badge
   const totalPermissoesAtivas = useMemo(() => {
@@ -252,6 +267,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
         {/* ── Left: ProfileSidebar ─────────────────────────────────────────── */}
         <ProfileSidebar
           usuario={usuario}
+          lastLoginAt={lastLoginAt}
           onEditAvatar={() => setAvatarDialogOpen(true)}
           onEditCover={() => setCoverDialogOpen(true)}
           onEdit={() => setEditDialogOpen(true)}

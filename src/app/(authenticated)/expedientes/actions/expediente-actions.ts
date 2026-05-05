@@ -18,8 +18,9 @@ import {
   listarExpedientes,
   contarExpedientesPorStatus,
   obterResumoUltimaCaptura,
+  buscarExpediente,
 } from "../service";
-import type { ResumoUltimaCaptura } from "../domain";
+import type { Expediente, ResumoUltimaCaptura } from "../domain";
 import { after } from "next/server";
 import { indexDocument } from "@/lib/ai/services/indexing.service";
 import { authenticateRequest } from "@/lib/auth";
@@ -516,6 +517,39 @@ export async function actionContarExpedientesPorStatus(): Promise<ActionResult> 
       success: false,
       error: error instanceof Error ? error.message : "Erro interno do servidor",
       message: "Erro ao carregar contagens. Tente novamente.",
+    };
+  }
+}
+
+/**
+ * Refetch pontual de um único expediente após edição inline. Usado pelo
+ * `ExpedienteVisualizarDialog` para recarregar a versão fresca do registro
+ * depois que um popover (responsável, tipo, prazo) ou text editor persiste
+ * uma mudança — sem depender do caller acoplar a callback de refresh.
+ */
+export async function actionBuscarExpediente(
+  id: number
+): Promise<ActionResult<Expediente | null>> {
+  try {
+    const result = await buscarExpediente(id);
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.message,
+        message: result.error.message,
+      };
+    }
+    return {
+      success: true,
+      data: result.data,
+      message: "Expediente carregado com sucesso",
+    };
+  } catch (error) {
+    console.error("Erro ao buscar expediente:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao carregar expediente. Tente novamente.",
     };
   }
 }

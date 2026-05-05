@@ -1,20 +1,15 @@
 'use client';
 
 import * as React from 'react';
-import { ShieldAlert } from 'lucide-react';
+import { Mail, Phone, MapPin, Scale, Clock, ShieldAlert } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Text } from '@/components/ui/typography';
-import { AppBadge } from '@/components/ui/app-badge';
 import { GlassPanel } from '@/components/shared/glass-panel';
+import { InfoLine, InlineCopy, timeAgo } from '@/components/dashboard/entity-card';
 import { cn } from '@/lib/utils';
 import { getAvatarUrl, formatarOab } from '../../utils';
-import { RoleBanner } from './role-banner';
+import { getCargoColors } from './role-banner';
 import { UserStatusDot, getStatusFromLastLogin } from './user-status-dot';
-import { UserCompletenessRing } from './user-completeness-ring';
-import {
-  calcularCompleteness,
-  getCompletenessColor,
-} from './completeness-utils';
+import { calcularCompleteness } from './completeness-utils';
 import type { Usuario } from '../../domain';
 
 function getInitials(name: string): string {
@@ -26,168 +21,171 @@ function getInitials(name: string): string {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
+const CARGOS_COM_OAB = ['advogado', 'advogada', 'diretor'];
+
 interface UsuarioCardProps {
   usuario: Usuario;
   lastLoginAt?: string | null;
-  stats?: { processos: number; audiencias: number; pendentes: number };
   onView: (usuario: Usuario) => void;
 }
 
 export function UsuarioCard({
   usuario,
   lastLoginAt,
-  stats,
   onView,
 }: UsuarioCardProps) {
-  const cargoNome = usuario.cargo?.nome;
-  const cargoNomeLower = cargoNome?.toLowerCase().trim() ?? '';
   const isAtivo = usuario.ativo !== false;
+  const cargoNome = usuario.cargo?.nome ?? null;
+  const cargoColors = getCargoColors(cargoNome);
 
   const { score } = calcularCompleteness(usuario);
-  const completenessColor = getCompletenessColor(score);
-
-  const completenessTextColor =
-    completenessColor === 'success'
-      ? 'text-success'
-      : completenessColor === 'warning'
-        ? 'text-warning'
-        : 'text-destructive';
+  const isIncompleto = isAtivo && score < 70;
 
   const status = getStatusFromLastLogin(lastLoginAt ?? null);
 
-  const temOab = Boolean(usuario.oab?.trim());
-  const isCargoComOab =
-    cargoNomeLower === 'advogado' ||
-    cargoNomeLower === 'advogada' ||
-    cargoNomeLower === 'diretor';
-  const deveExibirOab = isCargoComOab && temOab;
+  const cargoNomeLower = cargoNome?.toLowerCase().trim() ?? '';
+  const isCargoComOab = CARGOS_COM_OAB.includes(cargoNomeLower);
+  const deveExibirOab = isCargoComOab && Boolean(usuario.oab?.trim());
 
-  const avatarSize = 52;
-  const ringSize = 60;
+  const cidade = usuario.endereco?.cidade?.trim();
+  const estado = usuario.endereco?.estado?.trim();
+  const localizacao =
+    cidade && estado ? `${cidade}, ${estado}` : (cidade ?? estado ?? null);
+
+  const nomeExibicao =
+    usuario.nomeExibicao && usuario.nomeExibicao !== usuario.nomeCompleto
+      ? usuario.nomeExibicao
+      : null;
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      onView(usuario);
+    }
+  };
 
   return (
     <GlassPanel
-      depth={1}
       className={cn(
-        'relative overflow-hidden cursor-pointer flex flex-col transition-all duration-200',
-        'hover:-translate-y-0.5 hover:shadow-lg hover:border-border/30',
+        'p-4 cursor-pointer group hover:border-border/40 transition-colors flex flex-col h-full',
         !isAtivo && 'opacity-55',
       )}
-      role="button"
-      tabIndex={0}
-      onClick={() => onView(usuario)}
-      onKeyDown={(event: React.KeyboardEvent<HTMLDivElement>) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          onView(usuario);
-        }
-      }}
     >
-      {/* Role Banner */}
-      <RoleBanner cargoNome={cargoNome} inactive={!isAtivo} height="h-14" />
-
-      {/* Inactive badge */}
-      {!isAtivo && (
-        <AppBadge
-          variant="destructive"
-          tone="soft"
-          size="sm"
-          className="absolute top-2 right-2 backdrop-blur-sm"
-        >
-          Inativo
-        </AppBadge>
-      )}
-
-      {/* Completeness % badge — only when active */}
-      {isAtivo && (
-        <span className={cn('absolute top-1 right-3 text-[9px] font-semibold', completenessTextColor)}>
-          {score}%
-        </span>
-      )}
-
-      {/* Avatar area — overlaps banner */}
-      <div className="px-4 -mt-7 relative">
-        {/* Completeness ring + avatar wrapper */}
-        <div className="relative inline-block" style={{ width: ringSize, height: ringSize }}>
-          <UserCompletenessRing score={score} size={ringSize} strokeWidth={2} />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Avatar
-              style={{
-                width: avatarSize,
-                height: avatarSize,
-                borderWidth: 3,
-                margin: 4,
-              }}
-              className="border-background shrink-0"
-            >
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={() => onView(usuario)}
+        onKeyDown={handleKeyDown}
+        className="flex flex-col flex-1"
+      >
+        {/* Header: Avatar + Nome + Cargo Badge */}
+        <div className="flex items-start gap-3">
+          <div className="relative shrink-0">
+            <Avatar className={cn('size-10 rounded-xl', cargoColors.bg)}>
               <AvatarImage
                 src={getAvatarUrl(usuario.avatarUrl) || undefined}
                 alt={usuario.nomeExibicao ?? usuario.nomeCompleto}
+                className="rounded-xl"
               />
-              <AvatarFallback className="text-xs font-medium">
+              <AvatarFallback
+                className={cn(
+                  'rounded-xl text-xs font-bold',
+                  cargoColors.bg,
+                  cargoColors.color,
+                )}
+              >
                 {getInitials(usuario.nomeExibicao ?? usuario.nomeCompleto ?? '')}
               </AvatarFallback>
             </Avatar>
+            <UserStatusDot
+              status={status}
+              size="sm"
+              className="absolute -bottom-0.5 -right-0.5"
+            />
           </div>
-          {/* Status dot */}
-          <UserStatusDot
-            status={status}
-            size="sm"
-            className="absolute bottom-0.5 right-0.5"
+
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-1.5">
+              <h3 className="text-sm font-semibold truncate flex-1">
+                {usuario.nomeCompleto}
+              </h3>
+              <InlineCopy text={usuario.nomeCompleto} label="Copiar nome" />
+              {usuario.isSuperAdmin && (
+                <ShieldAlert
+                  className="size-3.5 text-destructive shrink-0"
+                  aria-label="Super admin"
+                />
+              )}
+              {!isAtivo && (
+                <span className="text-[9px] px-1.5 py-0.5 rounded bg-muted-foreground/10 text-muted-foreground/50 shrink-0">
+                  Inativo
+                </span>
+              )}
+            </div>
+            {nomeExibicao && (
+              <p className="text-[10px] text-muted-foreground/55 truncate mt-0.5">
+                {nomeExibicao}
+              </p>
+            )}
+            {cargoNome && (
+              <div className="flex items-center gap-2 mt-1">
+                <span
+                  className={cn(
+                    'text-[9px] font-medium px-1.5 py-0.5 rounded',
+                    cargoColors.bg,
+                    cargoColors.color,
+                  )}
+                >
+                  {cargoNome}
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Dados de contato */}
+        <div className="mt-3 space-y-1">
+          <InfoLine
+            icon={Mail}
+            text={usuario.emailCorporativo}
+            copyLabel="Copiar e-mail"
           />
-        </div>
-      </div>
-
-      {/* Main content */}
-      <div className="px-4 pb-3 pt-2 flex flex-col gap-1 flex-1">
-        {/* Name + SuperAdmin icon */}
-        <div className="flex items-center gap-1.5">
-          <span className="text-sm font-semibold truncate leading-tight">
-            {usuario.nomeCompleto}
-          </span>
-          {usuario.isSuperAdmin && (
-            <ShieldAlert className="size-3.5 text-destructive shrink-0" />
-          )}
-        </div>
-
-        {/* Email */}
-        <Text variant="caption" as="span" className="text-muted-foreground/40 truncate leading-tight">
-          {usuario.emailCorporativo}
-        </Text>
-
-        {/* Role + OAB badges */}
-        <div className="flex flex-row gap-1.5 mt-2 flex-wrap">
-          {cargoNome && (
-            <AppBadge variant="secondary" tone="soft" size="sm">{cargoNome}</AppBadge>
+          {usuario.telefone && (
+            <InfoLine
+              icon={Phone}
+              text={usuario.telefone}
+              copyLabel="Copiar telefone"
+            />
           )}
           {deveExibirOab && (
-            <AppBadge variant="info" tone="soft" size="sm">
-              {formatarOab(usuario.oab, usuario.ufOab)}
-            </AppBadge>
+            <InfoLine
+              icon={Scale}
+              text={formatarOab(usuario.oab, usuario.ufOab)}
+              copyLabel="Copiar OAB"
+            />
+          )}
+          {localizacao && (
+            <InfoLine
+              icon={MapPin}
+              text={localizacao}
+              copyLabel="Copiar localidade"
+            />
           )}
         </div>
 
-        {/* Stats row */}
-        {stats && (
-          <div className="flex gap-1.5 border-t border-border/10 pt-2.5 mt-2.5">
-            {(
-              [
-                { label: 'Processos', value: stats.processos },
-                { label: 'Audiências', value: stats.audiencias },
-                { label: 'Pendentes', value: stats.pendentes },
-              ] as const
-            ).map(({ label, value }) => (
-              <div key={label} className="flex-1 text-center">
-                <div className="text-sm font-bold tabular-nums leading-tight">
-                  {isAtivo ? value : '—'}
-                </div>
-                <div className="text-[8px] uppercase tracking-wider text-muted-foreground/35 leading-tight">
-                  {label}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        {/* Rodapé fixo: lastLogin à esquerda, tag de incompleto à direita */}
+        <div className="flex items-center justify-between mt-auto pt-3 border-t border-border/10 min-h-7">
+          <span className="text-[9px] text-muted-foreground/50 flex items-center gap-1">
+            <Clock className="size-2.5" />
+            {lastLoginAt ? `Visto ${timeAgo(lastLoginAt)}` : 'Nunca acessou'}
+          </span>
+
+          {isIncompleto && (
+            <span className="text-[9px] px-1.5 py-0.5 rounded bg-warning/8 text-warning/70 font-medium">
+              Perfil {score}%
+            </span>
+          )}
+        </div>
       </div>
     </GlassPanel>
   );

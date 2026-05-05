@@ -479,6 +479,7 @@ export function ExpedienteActions({
         open={showVisualizar}
         onOpenChange={setShowVisualizar}
         expediente={expediente}
+        onSuccess={onSuccessAction}
       />
 
       <ExpedientesBaixarDialog

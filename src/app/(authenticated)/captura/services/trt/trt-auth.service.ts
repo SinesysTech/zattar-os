@@ -335,6 +335,76 @@ async function esperarSaidaSSO(
 // LOGIN SSO GOV.BR
 // ============================================================================
 
+/**
+ * Aguarda o botão SSO PDPJ aparecer com retry + reload + diagnóstico no erro.
+ *
+ * Substitui o waitForSelector direto por um fluxo mais robusto:
+ * - Tenta até 3 vezes (timeout reduzido de 60s para 20s por tentativa)
+ * - Entre tentativas: page.reload() para recuperar de carregamento parcial
+ * - Em todas as falhas: captura URL, title e indícios de página de erro do PJE
+ *   (error.seam, manutenção, indisponível) para diagnóstico no log
+ */
+async function aguardarBotaoSSO(page: Page, loginUrl: string): Promise<void> {
+  const MAX_TENTATIVAS = 3;
+  const TIMEOUT_POR_TENTATIVA = 20000;
+
+  for (let tentativa = 1; tentativa <= MAX_TENTATIVAS; tentativa++) {
+    try {
+      await page.waitForSelector('#btnSsoPdpj', {
+        state: 'visible',
+        timeout: TIMEOUT_POR_TENTATIVA,
+      });
+      log('success', `✅ Botão SSO encontrado (tentativa ${tentativa}/${MAX_TENTATIVAS})`);
+      return;
+    } catch (error) {
+      // Diagnóstico: o que o PJE está mostrando agora?
+      const diag = await page
+        .evaluate(() => {
+          const urlAtual = window.location.href;
+          const titulo = document.title;
+          const corpoTexto = (document.body?.innerText || '').slice(0, 400);
+          const ehErroSeam = urlAtual.includes('error.seam');
+          const indicaManutencao =
+            corpoTexto.toLowerCase().includes('manutenção') ||
+            corpoTexto.toLowerCase().includes('indisponível') ||
+            corpoTexto.toLowerCase().includes('temporariamente');
+          return { urlAtual, titulo, corpoTexto, ehErroSeam, indicaManutencao };
+        })
+        .catch(() => ({ urlAtual: '', titulo: '', corpoTexto: '', ehErroSeam: false, indicaManutencao: false }));
+
+      // Se for página de erro do PJE, falhar imediatamente sem retry inútil
+      if (diag.ehErroSeam || diag.indicaManutencao) {
+        log('error', '❌ Tribunal retornou página de erro/manutenção', diag);
+        throw new Error(
+          `Tribunal indisponível: ${diag.titulo || diag.urlAtual}. Trecho: "${diag.corpoTexto.slice(0, 150)}"`,
+        );
+      }
+
+      const ehUltimaTentativa = tentativa === MAX_TENTATIVAS;
+      log(
+        ehUltimaTentativa ? 'error' : 'warn',
+        `${ehUltimaTentativa ? '❌' : '⚠️'} #btnSsoPdpj não apareceu em ${TIMEOUT_POR_TENTATIVA / 1000}s (tentativa ${tentativa}/${MAX_TENTATIVAS})`,
+        diag,
+      );
+
+      if (ehUltimaTentativa) {
+        throw new Error(
+          `#btnSsoPdpj não apareceu após ${MAX_TENTATIVAS} tentativas. URL: ${diag.urlAtual}. Title: "${diag.titulo}". Erro original: ${(error as Error).message}`,
+        );
+      }
+
+      // Reload para a próxima tentativa: recarrega da URL original (não do estado atual)
+      log('info', '🔄 Recarregando página de login antes de retry...');
+      try {
+        await page.goto(loginUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
+      } catch (gotoErr) {
+        log('warn', `⚠️ Erro ao recarregar: ${(gotoErr as Error).message}`);
+      }
+      await delay(3000);
+    }
+  }
+}
+
 async function realizarLogin(
   page: Page,
   loginUrl: string,
@@ -346,9 +416,8 @@ async function realizarLogin(
   await page.goto(loginUrl, { waitUntil: 'networkidle', timeout: 60000 });
   await delay(2000);
 
-  log('info', '🔑 Buscando botão SSO PDPJ...');
-  await page.waitForSelector('#btnSsoPdpj', { state: 'visible', timeout: 60000 });
-  log('success', '✅ Botão SSO encontrado');
+  log('info', '🔑 Buscando botão SSO PDPJ (com retry + diagnóstico)...');
+  await aguardarBotaoSSO(page, loginUrl);
 
   log('info', '🖱️ Clicando em SSO PDPJ...');
 
@@ -379,7 +448,7 @@ async function realizarLogin(
         // Recarregar página de login
         await page.goto(loginUrl, { waitUntil: 'networkidle', timeout: 60000 });
         await delay(2000);
-        await page.waitForSelector('#btnSsoPdpj', { state: 'visible', timeout: 60000 });
+        await aguardarBotaoSSO(page, loginUrl);
       } else {
         throw lastError;
       }

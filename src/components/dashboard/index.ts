@@ -44,7 +44,7 @@ export {
 
 // ─── Entity / CRM Components ─────────────────────────────────────────────────
 
-export { EntityCard, getInitials, timeAgo } from './entity-card';
+export { EntityCard, InfoLine, InlineCopy, getInitials, timeAgo } from './entity-card';
 export type { EntityCardData, EntityCardConfig } from './entity-card';
 
 export { EntityListRow } from './entity-list-row';

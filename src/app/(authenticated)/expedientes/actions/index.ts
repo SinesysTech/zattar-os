@@ -16,6 +16,7 @@ export {
   actionBaixarExpediente,
   actionReverterBaixa,
   actionListarExpedientes,
+  actionBuscarExpediente,
   actionContarExpedientesPorStatus,
   actionObterResumoUltimaCaptura,
 } from './expediente-actions';

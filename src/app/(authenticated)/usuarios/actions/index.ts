@@ -62,6 +62,8 @@ export {
 // --- Auth Logs ---
 export {
     actionBuscarAuthLogs,
+    actionBuscarUltimosLogins,
+    actionBuscarUltimoLogin,
 } from './auth-logs-actions';
 
 // --- Audit Atividades ---

@@ -109,6 +109,8 @@ export {
 
 export {
   actionBuscarAuthLogs,
+  actionBuscarUltimosLogins,
+  actionBuscarUltimoLogin,
 } from "./actions";
 
 export {

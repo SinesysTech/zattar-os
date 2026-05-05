@@ -615,6 +615,10 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
           expediente={selectedExpediente}
           open={isDetailOpen}
           onOpenChange={setIsDetailOpen}
+          onSuccess={() => {
+            refetch();
+            setRefreshCounter((c) => c + 1);
+          }}
         />
       )}
 

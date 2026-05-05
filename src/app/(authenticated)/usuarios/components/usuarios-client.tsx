@@ -11,6 +11,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { InsightBanner } from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { useUsuarios } from '../hooks/use-usuarios';
 import { useCargos } from '../hooks/use-cargos';
+import { actionBuscarUltimosLogins } from '../actions';
 import { UsuariosToolbar, type UsuariosViewMode } from './list/usuarios-toolbar';
 import { UsuariosGridView } from './list/usuarios-grid-view';
 import { UsuariosListView } from './list/usuarios-list-view';
@@ -54,6 +55,42 @@ export function UsuariosClient() {
   const searchDebounced = useDebounce(search, 500);
   const { usuarios, isLoading, refetch } = useUsuarios({ busca: searchDebounced || undefined });
   const { cargos } = useCargos();
+
+  // ─── Last login (auth.users.last_sign_in_at) — alimenta indicador de presença
+  // dos cards/tabela em batch (uma única chamada para todos os usuários).
+  const [lastLoginMap, setLastLoginMap] = React.useState<Map<number, string | null>>(
+    () => new Map(),
+  );
+
+  const usuarioIdsKey = React.useMemo(
+    () => usuarios.map((u) => u.id).sort((a, b) => a - b).join(','),
+    [usuarios],
+  );
+
+  React.useEffect(() => {
+    if (usuarios.length === 0) {
+      setLastLoginMap(new Map());
+      return;
+    }
+
+    let cancelled = false;
+    const ids = usuarios.map((u) => u.id);
+
+    actionBuscarUltimosLogins(ids).then((res) => {
+      if (cancelled || !res.success) return;
+      const next = new Map<number, string | null>();
+      for (const [id, value] of Object.entries(res.data)) {
+        next.set(Number(id), value);
+      }
+      setLastLoginMap(next);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+    // usuarioIdsKey muda apenas quando o conjunto de IDs muda (não a cada filtro)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [usuarioIdsKey]);
 
   // ─── Derived state ─────────────────────────────────────────────────────────
 
@@ -171,9 +208,17 @@ export function UsuariosClient() {
       {isLoading ? (
         <SkeletonGrid />
       ) : viewMode === 'grid' ? (
-        <UsuariosGridView usuarios={filteredUsuarios} onView={handleView} />
+        <UsuariosGridView
+          usuarios={filteredUsuarios}
+          lastLoginMap={lastLoginMap}
+          onView={handleView}
+        />
       ) : viewMode === 'lista' ? (
-        <UsuariosListView usuarios={filteredUsuarios} onView={handleView} />
+        <UsuariosListView
+          usuarios={filteredUsuarios}
+          lastLoginMap={lastLoginMap}
+          onView={handleView}
+        />
       ) : (
         <React.Suspense fallback={<SkeletonGrid />}>
           <UsuariosOrgView usuarios={filteredUsuarios} onView={handleView} />

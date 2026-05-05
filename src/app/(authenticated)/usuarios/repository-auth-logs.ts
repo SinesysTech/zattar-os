@@ -51,6 +51,51 @@ export async function buscarAuthLogsPorUsuario(
   }
 }
 
+interface UltimoLoginRow {
+  user_id: string;
+  last_sign_in_at: string | null;
+}
+
+/**
+ * Busca o `last_sign_in_at` de auth.users para um conjunto de auth_user_ids.
+ * Retorna um Map<auth_user_id, ISO timestamp | null>. Resolução em uma única
+ * chamada RPC (sem N+1).
+ */
+export async function buscarUltimosLoginsPorAuthUsers(
+  authUserIds: string[],
+): Promise<Map<string, string | null>> {
+  const result = new Map<string, string | null>();
+
+  if (authUserIds.length === 0) {
+    return result;
+  }
+
+  const supabase = createServiceClient();
+
+  try {
+    const { data, error } = await supabase.rpc('get_users_last_sign_in', {
+      p_auth_user_ids: authUserIds,
+    });
+
+    if (error) {
+      console.error('Erro ao buscar últimos logins:', error);
+      return result;
+    }
+
+    if (!data) {
+      return result;
+    }
+
+    for (const row of data as UltimoLoginRow[]) {
+      result.set(row.user_id, row.last_sign_in_at ?? null);
+    }
+  } catch (error) {
+    console.error('Erro ao buscar últimos logins:', error);
+  }
+
+  return result;
+}
+
 /**
  * Parse do tipo de evento
  */

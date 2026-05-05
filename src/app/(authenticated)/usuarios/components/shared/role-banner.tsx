@@ -31,6 +31,32 @@ export function getRoleBannerGradient(
   return DEFAULT_GRADIENT;
 }
 
+export interface CargoColors {
+  bg: string;
+  color: string;
+}
+
+const COLOR_MAP: Array<[RegExp, CargoColors]> = [
+  [/diretor/i, { bg: 'bg-primary/10', color: 'text-primary/70' }],
+  [/advogad[oa]/i, { bg: 'bg-info/10', color: 'text-info/70' }],
+  [/estagiári[oa]/i, { bg: 'bg-success/10', color: 'text-success/70' }],
+  [/secretári[oa]/i, { bg: 'bg-warning/10', color: 'text-warning/70' }],
+];
+
+const DEFAULT_COLORS: CargoColors = {
+  bg: 'bg-muted/40',
+  color: 'text-muted-foreground/70',
+};
+
+export function getCargoColors(cargoNome: string | null | undefined): CargoColors {
+  if (!cargoNome) return DEFAULT_COLORS;
+  const trimmed = cargoNome.trim();
+  for (const [pattern, colors] of COLOR_MAP) {
+    if (pattern.test(trimmed)) return colors;
+  }
+  return DEFAULT_COLORS;
+}
+
 export function RoleBanner({
   cargoNome,
   coverUrl,

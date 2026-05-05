@@ -9040,6 +9040,13 @@ export type Database = {
           user_agent: string
         }[]
       }
+      get_users_last_sign_in: {
+        Args: { p_auth_user_ids: string[] }
+        Returns: {
+          last_sign_in_at: string
+          user_id: string
+        }[]
+      }
       get_usuario_id_from_auth: { Args: never; Returns: number }
       is_current_user_active: { Args: never; Returns: boolean }
       is_current_user_in_landlord: { Args: never; Returns: boolean }

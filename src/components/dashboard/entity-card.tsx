@@ -105,7 +105,7 @@ export function timeAgo(iso: string): string {
 
 // ─── Inline Copy Button ─────────────────────────────────────────────────────
 
-function InlineCopy({ text, label }: { text: string; label: string }) {
+export function InlineCopy({ text, label }: { text: string; label: string }) {
   const [copied, setCopied] = React.useState(false);
 
   const handleCopy = React.useCallback((e: React.MouseEvent) => {
@@ -134,7 +134,7 @@ function InlineCopy({ text, label }: { text: string; label: string }) {
 }
 
 /** Linha de informação com ícone, texto e botão copiar */
-function InfoLine({
+export function InfoLine({
   icon: Icon,
   text,
   copyLabel,

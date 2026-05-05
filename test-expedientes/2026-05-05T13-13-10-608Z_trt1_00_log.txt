@@ -1,0 +1,33 @@
+[2026-05-05T13:13:10.610Z] ═══════════════════════════════════════════════════════════
+[2026-05-05T13:13:10.610Z]   DEBUG LOGIN TRT1 primeiro_grau
+[2026-05-05T13:13:10.610Z]   Iniciado: 2026-05-05T13:13:10.610Z
+[2026-05-05T13:13:10.610Z] ═══════════════════════════════════════════════════════════
+[2026-05-05T13:13:10.610Z] 📋 Buscando config TRT1 primeiro_grau...
+[2026-05-05T13:13:10.913Z] 💾 /Users/jordanmedeiros/Projetos/zattar-os/test-expedientes/2026-05-05T13-13-10-608Z_trt1_01_config.json
+[2026-05-05T13:13:10.913Z] ✅ Config | loginUrl=https://pje.trt1.jus.br/primeirograu/login.seam
+[2026-05-05T13:13:10.913Z] 
+🌐 Lançando Chromium local (headless=true)...
+[2026-05-05T13:13:12.252Z] 
+🌐 Navegando para https://pje.trt1.jus.br/primeirograu/login.seam...
+[2026-05-05T13:13:13.537Z]    URL após goto: https://pje.trt1.jus.br/primeirograu/login.seam
+[2026-05-05T13:13:13.538Z] 
+🩺 [02_apos_goto] Capturando estado da página...
+[2026-05-05T13:13:13.538Z]    URL: https://pje.trt1.jus.br/primeirograu/login.seam
+[2026-05-05T13:13:13.538Z]    Hostname: pje.trt1.jus.br
+[2026-05-05T13:13:13.599Z]    📸 Screenshot: /Users/jordanmedeiros/Projetos/zattar-os/test-expedientes/2026-05-05T13-13-10-608Z_trt1_02_apos_goto_screenshot.png
+[2026-05-05T13:13:13.604Z] 💾 /Users/jordanmedeiros/Projetos/zattar-os/test-expedientes/2026-05-05T13-13-10-608Z_trt1_02_apos_goto_page.html
+[2026-05-05T13:13:13.607Z]    ⚠️ Erro no diag DOM: page.evaluate: ReferenceError: __name is not defined
+    at eval (eval at evaluate (:290:30), <anonymous>:1:20)
+    at UtilityScript.evaluate (<anonymous>:292:16)
+    at UtilityScript.<anonymous> (<anonymous>:1:44)
+[2026-05-05T13:13:13.607Z] 
+🔍 Tentando localizar #btnSsoPdpj (timeout 15s)...
+[2026-05-05T13:13:13.623Z] ✅ Selector #btnSsoPdpj encontrado e visível!
+[2026-05-05T13:13:13.623Z] 
+✅ #btnSsoPdpj funciona normalmente em TRT1. O problema deve ser intermitente.
+[2026-05-05T13:13:13.623Z] 
+═══════════════════════════════════════════════════════════
+[2026-05-05T13:13:13.623Z] ✅ Diagnóstico concluído | Pasta: /Users/jordanmedeiros/Projetos/zattar-os/test-expedientes
+[2026-05-05T13:13:13.623Z] ═══════════════════════════════════════════════════════════
+
+[2026-05-05T13:13:13.655Z] 🔒 Browser fechado

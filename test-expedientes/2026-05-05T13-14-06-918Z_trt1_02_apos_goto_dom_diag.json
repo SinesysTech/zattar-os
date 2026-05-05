@@ -1,0 +1,265 @@
+{
+  "title": "Bem-vindo ao PJe · Processo Judicial Eletrônico",
+  "readyState": "complete",
+  "bodyTextSample": " Processo Judicial Eletrônico\nEXIBIR NAVEGAÇÃO\nCertidões\nConsulta Processual\nFale conosco\nGerar boleto de depósito judicial\nGerenciamento de Precatórios\nIndisponibilidade do Sistema\nManuais\nOtimizador do PDF\nPJe-Calc Cidadão\nPJe-Calc Tribunal\nPré-requisitos\nVerificação de autenticidade de documento\n\nProcesso Judicial Eletrônico\n\nTribunal Regional do Trabalho da 1ª Região - 1º Grau\n\nEsqueci minha senha\n2.19.2",
+  "botoes": [
+    {
+      "id": "openNav",
+      "text": "Exibir navegação",
+      "type": "button",
+      "visible": true
+    },
+    {
+      "id": "btnSsoPdpj",
+      "text": "",
+      "type": "submit",
+      "visible": true
+    },
+    {
+      "id": "",
+      "text": "Clique para habilitar o login",
+      "type": "submit",
+      "visible": false
+    }
+  ],
+  "inputs": [
+    {
+      "id": "mpPreRequisitosOpenedState",
+      "name": "mpPreRequisitosOpenedState",
+      "type": "hidden",
+      "visible": false
+    },
+    {
+      "id": "mpFaleConoscoOpenedState",
+      "name": "mpFaleConoscoOpenedState",
+      "type": "hidden",
+      "visible": false
+    },
+    {
+      "id": "redirect_uri",
+      "name": "redirect_uri",
+      "type": "hidden",
+      "visible": false
+    },
+    {
+      "id": "signature",
+      "name": "signature",
+      "type": "hidden",
+      "visible": false
+    },
+    {
+      "id": "certChain",
+      "name": "certChain",
+      "type": "hidden",
+      "visible": false
+    },
+    {
+      "id": "certChainStringLog",
+      "name": "certChainStringLog",
+      "type": "hidden",
+      "visible": false
+    },
+    {
+      "id": "",
+      "name": "j_id58",
+      "type": "hidden",
+      "visible": false
+    },
+    {
+      "id": "j_id58:certChainStringLog",
+      "name": "j_id58:certChainStringLog",
+      "type": "hidden",
+      "visible": false
+    },
+    {
+      "id": "javax.faces.ViewState",
+      "name": "javax.faces.ViewState",
+      "type": "hidden",
+      "visible": false
+    },
+    {
+      "id": "panelNovaSenhaOpenedState",
+      "name": "panelNovaSenhaOpenedState",
+      "type": "hidden",
+      "visible": false
+    },
+    {
+      "id": "",
+      "name": "formNovaSenha",
+      "type": "hidden",
+      "visible": false
+    },
+    {
+      "id": "formNovaSenha:novaSenha1",
+      "name": "formNovaSenha:novaSenha1",
+      "type": "password",
+      "visible": false
+    },
+    {
+      "id": "formNovaSenha:novaSenha2",
+      "name": "formNovaSenha:novaSenha2",
+      "type": "password",
+      "visible": false
+    },
+    {
+      "id": "formNovaSenha:j_id76",
+      "name": "formNovaSenha:j_id76",
+      "type": "button",
+      "visible": false
+    },
+    {
+      "id": "formNovaSenha:j_id77",
+      "name": "formNovaSenha:j_id77",
+      "type": "button",
+      "visible": false
+    },
+    {
+      "id": "formNovaSenha:buttonSalvarNovaSenha",
+      "name": "formNovaSenha:buttonSalvarNovaSenha",
+      "type": "submit",
+      "visible": false
+    },
+    {
+      "id": "formNovaSenha:chaveRecuperacao",
+      "name": "formNovaSenha:chaveRecuperacao",
+      "type": "hidden",
+      "visible": false
+    },
+    {
+      "id": "javax.faces.ViewState",
+      "name": "javax.faces.ViewState",
+      "type": "hidden",
+      "visible": false
+    },
+    {
+      "id": "panelSolicitarSenhaOpenedState",
+      "name": "panelSolicitarSenhaOpenedState",
+      "type": "hidden",
+      "visible": false
+    },
+    {
+      "id": "",
+      "name": "gerarSenha",
+      "type": "hidden",
+      "visible": false
+    },
+    {
+      "id": "gerarSenha:login",
+      "name": "gerarSenha:login",
+      "type": "text",
+      "visible": false
+    },
+    {
+      "id": "gerarSenha:email",
+      "name": "gerarSenha:email",
+      "type": "text",
+      "visible": false
+    },
+    {
+      "id": "gerarSenha:confirma",
+      "name": "gerarSenha:confirma",
+      "type": "submit",
+      "visible": false
+    },
+    {
+      "id": "gerarSenha:btnTrocarSenha2",
+      "name": "gerarSenha:btnTrocarSenha2",
+      "type": "submit",
+      "visible": false
+    },
+    {
+      "id": "javax.faces.ViewState",
+      "name": "javax.faces.ViewState",
+      "type": "hidden",
+      "visible": false
+    },
+    {
+      "id": "mpModoOperacaoOpenedState",
+      "name": "mpModoOperacaoOpenedState",
+      "type": "hidden",
+      "visible": false
+    },
+    {
+      "id": "",
+      "name": "j_id96",
+      "type": "hidden",
+      "visible": false
+    },
+    {
+      "id": "j_id96:btnUtilizarAssinadorJT",
+      "name": "j_id96:btnUtilizarAssinadorJT",
+      "type": "button",
+      "visible": false
+    },
+    {
+      "id": "javax.faces.ViewState",
+      "name": "javax.faces.ViewState",
+      "type": "hidden",
+      "visible": false
+    },
+    {
+      "id": "",
+      "name": "j_id100",
+      "type": "hidden",
+      "visible": false
+    },
+    {
+      "id": "j_id100:btnUtilizarPjeOffice",
+      "name": "j_id100:btnUtilizarPjeOffice",
+      "type": "button",
+      "visible": false
+    },
+    {
+      "id": "javax.faces.ViewState",
+      "name": "javax.faces.ViewState",
+      "type": "hidden",
+      "visible": false
+    }
+  ],
+  "linksComSSO": [],
+  "iframes": [],
+  "refsSSO": [
+    {
+      "tag": "TITLE",
+      "id": "",
+      "text": "Bem-vindo ao PJe · Processo Judicial Eletrônico",
+      "visible": false
+    },
+    {
+      "tag": "SPAN",
+      "id": "",
+      "text": "Processo Judicial Eletrônico",
+      "visible": true
+    },
+    {
+      "tag": "B",
+      "id": "",
+      "text": "Passos sugeridos para preparar seu computador para usar o PJE",
+      "visible": false
+    },
+    {
+      "tag": "SCRIPT",
+      "id": "",
+      "text": "/* Força, no primeiro carregamento da página, que o assinador seja definido como PJe Office */\n        setCookie(MO_COOK",
+      "visible": false
+    },
+    {
+      "tag": "P",
+      "id": "",
+      "text": "Processo Judicial Eletrônico",
+      "visible": true
+    },
+    {
+      "tag": "SCRIPT",
+      "id": "",
+      "text": "function checkValidacao() {\n\t                        submitForm();\n\t                    }\n                        functi",
+      "visible": false
+    },
+    {
+      "tag": "SCRIPT",
+      "id": "",
+      "text": "habilitaBotaoLogin(true);\n        \t\thabilitaBotaoCertificado(true);\n        \t\thabilitaBotaoSsoPdpj(true);",
+      "visible": false
+    }
+  ]
+}

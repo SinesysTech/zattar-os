@@ -45,6 +45,7 @@ export {
   actionBaixarExpediente,
   actionReverterBaixa,
   actionListarExpedientes,
+  actionBuscarExpediente,
   actionContarExpedientesPorStatus,
   actionAtualizarExpedientePayload,
   actionBulkTransferirResponsavel,

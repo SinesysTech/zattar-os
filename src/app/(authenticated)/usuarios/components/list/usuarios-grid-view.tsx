@@ -11,7 +11,6 @@ import type { Usuario } from '../../domain';
 interface UsuariosGridViewProps {
   usuarios: Usuario[];
   lastLoginMap?: Map<number, string | null>;
-  statsMap?: Map<number, { processos: number; audiencias: number; pendentes: number }>;
   grouped?: boolean;
   onView: (usuario: Usuario) => void;
 }
@@ -19,11 +18,10 @@ interface UsuariosGridViewProps {
 interface CardGridProps {
   usuarios: Usuario[];
   lastLoginMap?: Map<number, string | null>;
-  statsMap?: Map<number, { processos: number; audiencias: number; pendentes: number }>;
   onView: (usuario: Usuario) => void;
 }
 
-function CardGrid({ usuarios, lastLoginMap, statsMap, onView }: CardGridProps) {
+function CardGrid({ usuarios, lastLoginMap, onView }: CardGridProps) {
   return (
     <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3")}>
       {usuarios.map((usuario) => (
@@ -31,7 +29,6 @@ function CardGrid({ usuarios, lastLoginMap, statsMap, onView }: CardGridProps) {
           key={usuario.id}
           usuario={usuario}
           lastLoginAt={lastLoginMap?.get(usuario.id) ?? null}
-          stats={statsMap?.get(usuario.id)}
           onView={onView}
         />
       ))}
@@ -42,7 +39,6 @@ function CardGrid({ usuarios, lastLoginMap, statsMap, onView }: CardGridProps) {
 export function UsuariosGridView({
   usuarios,
   lastLoginMap,
-  statsMap,
   grouped = false,
   onView,
 }: UsuariosGridViewProps) {
@@ -61,7 +57,6 @@ export function UsuariosGridView({
       <CardGrid
         usuarios={usuarios}
         lastLoginMap={lastLoginMap}
-        statsMap={statsMap}
         onView={onView}
       />
     );
@@ -98,7 +93,6 @@ export function UsuariosGridView({
             <CardGrid
               usuarios={members}
               lastLoginMap={lastLoginMap}
-              statsMap={statsMap}
               onView={onView}
             />
           </DepartmentGroupHeader>

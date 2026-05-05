@@ -1,0 +1,39 @@
+[2026-05-05T13:14:06.920Z] ═══════════════════════════════════════════════════════════
+[2026-05-05T13:14:06.920Z]   DEBUG LOGIN TRT1 primeiro_grau
+[2026-05-05T13:14:06.920Z]   Iniciado: 2026-05-05T13:14:06.920Z
+[2026-05-05T13:14:06.920Z] ═══════════════════════════════════════════════════════════
+[2026-05-05T13:14:06.920Z] 📋 Buscando config TRT1 primeiro_grau...
+[2026-05-05T13:14:07.186Z] 💾 /Users/jordanmedeiros/Projetos/zattar-os/test-expedientes/2026-05-05T13-14-06-918Z_trt1_01_config.json
+[2026-05-05T13:14:07.186Z] ✅ Config | loginUrl=https://pje.trt1.jus.br/primeirograu/login.seam
+[2026-05-05T13:14:07.186Z] 
+🌐 Conectando ao browser remoto (igual produção)...
+[2026-05-05T13:14:07.186Z]    Endpoint: wss://***
+[2026-05-05T13:14:07.900Z]    ✅ Conectado ao Chromium remoto
+[2026-05-05T13:14:08.750Z] 
+🌐 Navegando para https://pje.trt1.jus.br/primeirograu/login.seam...
+[2026-05-05T13:14:11.037Z]    URL após goto: https://pje.trt1.jus.br/primeirograu/login.seam
+[2026-05-05T13:14:11.038Z] 
+🩺 [02_apos_goto] Capturando estado da página...
+[2026-05-05T13:14:11.038Z]    URL: https://pje.trt1.jus.br/primeirograu/login.seam
+[2026-05-05T13:14:11.038Z]    Hostname: pje.trt1.jus.br
+[2026-05-05T13:14:11.824Z]    📸 Screenshot: /Users/jordanmedeiros/Projetos/zattar-os/test-expedientes/2026-05-05T13-14-06-918Z_trt1_02_apos_goto_screenshot.png
+[2026-05-05T13:14:11.867Z] 💾 /Users/jordanmedeiros/Projetos/zattar-os/test-expedientes/2026-05-05T13-14-06-918Z_trt1_02_apos_goto_page.html
+[2026-05-05T13:14:12.414Z] 💾 /Users/jordanmedeiros/Projetos/zattar-os/test-expedientes/2026-05-05T13-14-06-918Z_trt1_02_apos_goto_dom_diag.json
+[2026-05-05T13:14:12.414Z]    📊 Title: "Bem-vindo ao PJe · Processo Judicial Eletrônico" | readyState: complete
+[2026-05-05T13:14:12.414Z]    📊 Botões: 3 | Inputs: 32 | Iframes: 0
+[2026-05-05T13:14:12.414Z]    📊 Links/refs com SSO/PDPJ: 0 links + 7 refs no DOM
+[2026-05-05T13:14:12.414Z]    🔘 Primeiros botões da página:
+[2026-05-05T13:14:12.414Z]       - id=openNav text="Exibir navegação" visible=true
+[2026-05-05T13:14:12.414Z]       - id=btnSsoPdpj text="" visible=true
+[2026-05-05T13:14:12.414Z]       - id=(sem id) text="Clique para habilitar o login" visible=false
+[2026-05-05T13:14:12.414Z] 
+🔍 Tentando localizar #btnSsoPdpj (timeout 15s)...
+[2026-05-05T13:14:12.551Z] ✅ Selector #btnSsoPdpj encontrado e visível!
+[2026-05-05T13:14:12.551Z] 
+✅ #btnSsoPdpj funciona normalmente em TRT1. O problema deve ser intermitente.
+[2026-05-05T13:14:12.551Z] 
+═══════════════════════════════════════════════════════════
+[2026-05-05T13:14:12.551Z] ✅ Diagnóstico concluído | Pasta: /Users/jordanmedeiros/Projetos/zattar-os/test-expedientes
+[2026-05-05T13:14:12.551Z] ═══════════════════════════════════════════════════════════
+
+[2026-05-05T13:14:12.552Z] 🔒 Browser fechado

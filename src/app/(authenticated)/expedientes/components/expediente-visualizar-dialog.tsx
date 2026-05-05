@@ -42,6 +42,7 @@ import {
   GRAU_TRIBUNAL_LABELS,
   getExpedientePartyNames,
 } from '../domain';
+import { actionBuscarExpediente } from '../actions';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
 import { useTiposExpedientes } from '@/app/(authenticated)/tipos-expedientes';
 import {
@@ -226,7 +227,27 @@ export function ExpedienteVisualizarDialog({
   const { usuarios } = useUsuarios();
   const { tiposExpedientes } = useTiposExpedientes({ limite: 100 });
 
-  if (!expediente) {
+  // Estado interno para refletir as edições inline imediatamente — o dialog é
+  // autossuficiente para mostrar o resultado das próprias edições, sem depender
+  // do caller passar onSuccess corretamente. A prop `expediente` continua sendo
+  // a fonte da verdade ao (re)abrir/trocar registro.
+  const [displayExpediente, setDisplayExpediente] = React.useState(expediente);
+
+  React.useEffect(() => {
+    setDisplayExpediente(expediente);
+  }, [expediente?.id]);
+
+  const handleEditSuccess = React.useCallback(async () => {
+    if (displayExpediente?.id) {
+      const result = await actionBuscarExpediente(displayExpediente.id);
+      if (result.success && result.data) {
+        setDisplayExpediente(result.data);
+      }
+    }
+    onSuccess?.();
+  }, [displayExpediente?.id, onSuccess]);
+
+  if (!expediente || !displayExpediente) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent
@@ -255,19 +276,19 @@ export function ExpedienteVisualizarDialog({
     );
   }
 
-  const partes = getExpedientePartyNames(expediente);
+  const partes = getExpedientePartyNames(displayExpediente);
 
   const statusBadge = (
     <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
       <SemanticBadge
         category="status"
-        value={expediente.baixadoEm ? 'BAIXADO' : 'PENDENTE'}
-        variantOverride={expediente.baixadoEm ? 'neutral' : 'default'}
+        value={displayExpediente.baixadoEm ? 'BAIXADO' : 'PENDENTE'}
+        variantOverride={displayExpediente.baixadoEm ? 'neutral' : 'default'}
         toneOverride="soft"
       >
-        {expediente.baixadoEm ? 'Baixado' : 'Pendente'}
+        {displayExpediente.baixadoEm ? 'Baixado' : 'Pendente'}
       </SemanticBadge>
-      {expediente.prazoVencido && !expediente.baixadoEm && (
+      {displayExpediente.prazoVencido && !displayExpediente.baixadoEm && (
         <SemanticBadge
           category="status"
           value="PRAZO_VENCIDO"
@@ -284,21 +305,21 @@ export function ExpedienteVisualizarDialog({
     <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
       <div className="flex-1 min-w-0">
         <Heading level="card" as="h2" className="truncate">
-          {expediente.classeJudicial
-            ? `${expediente.classeJudicial} ${expediente.numeroProcesso}`
-            : expediente.numeroProcesso}
+          {displayExpediente.classeJudicial
+            ? `${displayExpediente.classeJudicial} ${displayExpediente.numeroProcesso}`
+            : displayExpediente.numeroProcesso}
         </Heading>
         <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mt-1 flex-wrap text-muted-foreground/65")}>
           <Scale className="h-3.5 w-3.5" />
-          <Text variant="caption">{expediente.trt}</Text>
+          <Text variant="caption">{displayExpediente.trt}</Text>
           <Text variant="caption">·</Text>
-          <Text variant="caption">{formatarGrau(expediente.grau)}</Text>
-          {expediente.dataCriacaoExpediente && (
+          <Text variant="caption">{formatarGrau(displayExpediente.grau)}</Text>
+          {displayExpediente.dataCriacaoExpediente && (
             <>
               <Text variant="caption">·</Text>
               <Calendar className="h-3.5 w-3.5" />
               <Text variant="caption">
-                {formatarData(expediente.dataCriacaoExpediente)}
+                {formatarData(displayExpediente.dataCriacaoExpediente)}
               </Text>
             </>
           )}
@@ -327,14 +348,14 @@ export function ExpedienteVisualizarDialog({
             <Section icon={<FileText className="h-4 w-4" />} title="Edição rápida">
               <EditableRow label="Tipo">
                 <ExpedienteTipoPopover
-                  expedienteId={expediente.id}
-                  tipoExpedienteId={expediente.tipoExpedienteId}
+                  expedienteId={displayExpediente.id}
+                  tipoExpedienteId={displayExpediente.tipoExpedienteId}
                   tiposExpedientes={tiposExpedientes}
-                  onSuccess={onSuccess}
+                  onSuccess={handleEditSuccess}
                   align="end"
                 >
                   <TipoTriggerContent
-                    tipoExpedienteId={expediente.tipoExpedienteId}
+                    tipoExpedienteId={displayExpediente.tipoExpedienteId}
                     tiposExpedientes={tiposExpedientes}
                     size="md"
                   />
@@ -342,14 +363,14 @@ export function ExpedienteVisualizarDialog({
               </EditableRow>
               <EditableRow label="Responsável">
                 <ExpedienteResponsavelPopover
-                  expedienteId={expediente.id}
-                  responsavelId={expediente.responsavelId}
+                  expedienteId={displayExpediente.id}
+                  responsavelId={displayExpediente.responsavelId}
                   usuarios={usuarios}
-                  onSuccess={onSuccess}
+                  onSuccess={handleEditSuccess}
                   align="end"
                 >
                   <ResponsavelTriggerContent
-                    responsavelId={expediente.responsavelId}
+                    responsavelId={displayExpediente.responsavelId}
                     usuarios={usuarios}
                     size="md"
                   />
@@ -357,39 +378,39 @@ export function ExpedienteVisualizarDialog({
               </EditableRow>
               <EditableRow label="Prazo legal">
                 <ExpedientePrazoPopover
-                  expedienteId={expediente.id}
-                  dataPrazoLegalParte={expediente.dataPrazoLegalParte}
-                  onSuccess={onSuccess}
+                  expedienteId={displayExpediente.id}
+                  dataPrazoLegalParte={displayExpediente.dataPrazoLegalParte}
+                  onSuccess={handleEditSuccess}
                   align="end"
                 >
                   <PrazoTriggerContent
-                    dataPrazoLegalParte={expediente.dataPrazoLegalParte}
+                    dataPrazoLegalParte={displayExpediente.dataPrazoLegalParte}
                     size="md"
-                    vencido={expediente.prazoVencido && !expediente.baixadoEm}
+                    vencido={displayExpediente.prazoVencido && !displayExpediente.baixadoEm}
                   />
                 </ExpedientePrazoPopover>
               </EditableRow>
               <EditableRow label="Descrição / arquivos">
                 <ExpedienteTextEditor
-                  expedienteId={expediente.id}
+                  expedienteId={displayExpediente.id}
                   field="descricaoArquivos"
-                  value={expediente.descricaoArquivos}
+                  value={displayExpediente.descricaoArquivos}
                   title="Editar descrição"
                   placeholder="Descreva o conteúdo do expediente..."
                   emptyPlaceholder="Clique para adicionar descrição"
-                  onSuccess={onSuccess}
+                  onSuccess={handleEditSuccess}
                   className="text-right"
                 />
               </EditableRow>
               <EditableRow label="Observações">
                 <ExpedienteTextEditor
-                  expedienteId={expediente.id}
+                  expedienteId={displayExpediente.id}
                   field="observacoes"
-                  value={expediente.observacoes}
+                  value={displayExpediente.observacoes}
                   title="Editar observações"
                   placeholder="Adicione observações..."
                   emptyPlaceholder="Clique para adicionar observações"
-                  onSuccess={onSuccess}
+                  onSuccess={handleEditSuccess}
                   className="text-right"
                 />
               </EditableRow>
@@ -397,24 +418,24 @@ export function ExpedienteVisualizarDialog({
 
             {/* Informações do Processo */}
             <Section icon={<Scale className="h-4 w-4" />} title="Informações do Processo">
-              <InfoRow label="Número do Processo">{expediente.numeroProcesso}</InfoRow>
-              {expediente.classeJudicial && (
-                <InfoRow label="Classe Judicial">{expediente.classeJudicial}</InfoRow>
+              <InfoRow label="Número do Processo">{displayExpediente.numeroProcesso}</InfoRow>
+              {displayExpediente.classeJudicial && (
+                <InfoRow label="Classe Judicial">{displayExpediente.classeJudicial}</InfoRow>
               )}
               <Separator />
               <InfoRow label="TRT">
-                <SemanticBadge category="tribunal" value={expediente.trt}>
-                  {expediente.trt}
+                <SemanticBadge category="tribunal" value={displayExpediente.trt}>
+                  {displayExpediente.trt}
                 </SemanticBadge>
               </InfoRow>
               <InfoRow label="Grau">
-                <SemanticBadge category="grau" value={expediente.grau}>
-                  {formatarGrau(expediente.grau)}
+                <SemanticBadge category="grau" value={displayExpediente.grau}>
+                  {formatarGrau(displayExpediente.grau)}
                 </SemanticBadge>
               </InfoRow>
-              {expediente.codigoStatusProcesso && (
+              {displayExpediente.codigoStatusProcesso && (
                 <InfoRow label="Status do Processo">
-                  {expediente.codigoStatusProcesso}
+                  {displayExpediente.codigoStatusProcesso}
                 </InfoRow>
               )}
             </Section>
@@ -424,35 +445,35 @@ export function ExpedienteVisualizarDialog({
               <MetaItem label="Prioridade">
                 <SemanticBadge
                   category="status"
-                  value={expediente.prioridadeProcessual ? 'ALTA' : 'NORMAL'}
+                  value={displayExpediente.prioridadeProcessual ? 'ALTA' : 'NORMAL'}
                   variantOverride={
-                    expediente.prioridadeProcessual ? 'warning' : 'neutral'
+                    displayExpediente.prioridadeProcessual ? 'warning' : 'neutral'
                   }
                   toneOverride="soft"
                 >
-                  {expediente.prioridadeProcessual ? 'Sim' : 'Não'}
+                  {displayExpediente.prioridadeProcessual ? 'Sim' : 'Não'}
                 </SemanticBadge>
               </MetaItem>
               <MetaItem label="Segredo de Justiça">
                 <SemanticBadge
                   category="status"
-                  value={expediente.segredoJustica ? 'SEGREDO' : 'PUBLICO'}
+                  value={displayExpediente.segredoJustica ? 'SEGREDO' : 'PUBLICO'}
                   variantOverride={
-                    expediente.segredoJustica ? 'destructive' : 'neutral'
+                    displayExpediente.segredoJustica ? 'destructive' : 'neutral'
                   }
                   toneOverride="soft"
                 >
-                  {expediente.segredoJustica ? 'Sim' : 'Não'}
+                  {displayExpediente.segredoJustica ? 'Sim' : 'Não'}
                 </SemanticBadge>
               </MetaItem>
               <MetaItem label="Juízo Digital">
                 <SemanticBadge
                   category="status"
-                  value={expediente.juizoDigital ? 'DIGITAL' : 'FISICO'}
+                  value={displayExpediente.juizoDigital ? 'DIGITAL' : 'FISICO'}
                   variantOverride="neutral"
                   toneOverride="soft"
                 >
-                  {expediente.juizoDigital ? 'Sim' : 'Não'}
+                  {displayExpediente.juizoDigital ? 'Sim' : 'Não'}
                 </SemanticBadge>
               </MetaItem>
             </MetaGrid>
@@ -462,9 +483,9 @@ export function ExpedienteVisualizarDialog({
               <InfoRow label="Parte Autora">
                 <span className="text-right">
                   {partes.autora || '-'}
-                  {(expediente.qtdeParteAutora ?? 0) > 1 && (
+                  {(displayExpediente.qtdeParteAutora ?? 0) > 1 && (
                     <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground block")}>
-                      {expediente.qtdeParteAutora} parte(s)
+                      {displayExpediente.qtdeParteAutora} parte(s)
                     </span>
                   )}
                 </span>
@@ -472,9 +493,9 @@ export function ExpedienteVisualizarDialog({
               <InfoRow label="Parte Ré">
                 <span className="text-right">
                   {partes.re || '-'}
-                  {expediente.qtdeParteRe && expediente.qtdeParteRe > 1 && (
+                  {displayExpediente.qtdeParteRe && displayExpediente.qtdeParteRe > 1 && (
                     <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground block")}>
-                      {expediente.qtdeParteRe} parte(s)
+                      {displayExpediente.qtdeParteRe} parte(s)
                     </span>
                   )}
                 </span>
@@ -484,17 +505,17 @@ export function ExpedienteVisualizarDialog({
             {/* Órgão Julgador */}
             <Section icon={<Building2 className="h-4 w-4" />} title="Órgão Julgador">
               <InfoRow label="Descrição">
-                {expediente.descricaoOrgaoJulgador || '-'}
+                {displayExpediente.descricaoOrgaoJulgador || '-'}
               </InfoRow>
-              {expediente.siglaOrgaoJulgador && (
+              {displayExpediente.siglaOrgaoJulgador && (
                 <InfoRow label="Sigla">
                   <SemanticBadge
                     category="status"
-                    value={expediente.siglaOrgaoJulgador}
+                    value={displayExpediente.siglaOrgaoJulgador}
                     variantOverride="neutral"
                     toneOverride="soft"
                   >
-                    {expediente.siglaOrgaoJulgador}
+                    {displayExpediente.siglaOrgaoJulgador}
                   </SemanticBadge>
                 </InfoRow>
               )}
@@ -503,40 +524,40 @@ export function ExpedienteVisualizarDialog({
             {/* Datas e Prazos — contextuais (read-only) */}
             <Section icon={<Calendar className="h-4 w-4" />} title="Datas e Prazos">
               <InfoRow label="Data de Autuação">
-                {formatarData(expediente.dataAutuacao)}
+                {formatarData(displayExpediente.dataAutuacao)}
               </InfoRow>
               <InfoRow label="Data de Ciência">
-                {formatarData(expediente.dataCienciaParte)}
+                {formatarData(displayExpediente.dataCienciaParte)}
               </InfoRow>
               <InfoRow label="Criação do Expediente">
-                {formatarData(expediente.dataCriacaoExpediente)}
+                {formatarData(displayExpediente.dataCriacaoExpediente)}
               </InfoRow>
-              {expediente.dataArquivamento && (
+              {displayExpediente.dataArquivamento && (
                 <InfoRow label="Data de Arquivamento">
-                  {formatarData(expediente.dataArquivamento)}
+                  {formatarData(displayExpediente.dataArquivamento)}
                 </InfoRow>
               )}
-              {expediente.baixadoEm && (
+              {displayExpediente.baixadoEm && (
                 <InfoRow label="Data de Baixa">
-                  {formatarDataHora(expediente.baixadoEm)}
+                  {formatarDataHora(displayExpediente.baixadoEm)}
                 </InfoRow>
               )}
             </Section>
 
             {/* Informações de Baixa */}
-            {expediente.baixadoEm && (
+            {displayExpediente.baixadoEm && (
               <Section
                 icon={<AlertCircle className="h-4 w-4" />}
                 title="Informações de Baixa"
               >
-                {expediente.protocoloId && (
+                {displayExpediente.protocoloId && (
                   <InfoRow label="Protocolo ID">
-                    <span>{expediente.protocoloId}</span>
+                    <span>{displayExpediente.protocoloId}</span>
                   </InfoRow>
                 )}
-                {expediente.justificativaBaixa && (
+                {displayExpediente.justificativaBaixa && (
                   <InfoRow label="Justificativa">
-                    <span className="text-right">{expediente.justificativaBaixa}</span>
+                    <span className="text-right">{displayExpediente.justificativaBaixa}</span>
                   </InfoRow>
                 )}
               </Section>
@@ -545,18 +566,18 @@ export function ExpedienteVisualizarDialog({
             {/* Informações Técnicas */}
             <Section icon={<FileText className="h-4 w-4" />} title="Informações Técnicas">
               <InfoRow label="ID PJE">
-                <span>{expediente.idPje || '-'}</span>
+                <span>{displayExpediente.idPje || '-'}</span>
               </InfoRow>
-              {expediente.idDocumento && (
+              {displayExpediente.idDocumento && (
                 <InfoRow label="ID Documento">
-                  <span>{expediente.idDocumento}</span>
+                  <span>{displayExpediente.idDocumento}</span>
                 </InfoRow>
               )}
             </Section>
 
             <Audit
-              createdAt={expediente.createdAt}
-              updatedAt={expediente.updatedAt}
+              createdAt={displayExpediente.createdAt}
+              updatedAt={displayExpediente.updatedAt}
             />
           </>
         </div>
@@ -564,7 +585,7 @@ export function ExpedienteVisualizarDialog({
           <Button variant="outline" onClick={() => onOpenChange(false)}>Fechar</Button>
           <div className="flex items-center gap-2">
             <Button asChild variant="outline">
-              <Link href={`/app/expedientes/${expediente.id}`}>
+              <Link href={`/app/expedientes/${displayExpediente.id}`}>
                 <ExternalLink className="h-4 w-4 mr-2" />
                 Abrir página completa
               </Link>
