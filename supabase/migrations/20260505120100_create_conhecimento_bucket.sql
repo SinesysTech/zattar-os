@@ -13,7 +13,10 @@ values (
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
   ]
 )
-on conflict (id) do nothing;
+on conflict (id) do update set
+  public             = excluded.public,
+  file_size_limit    = excluded.file_size_limit,
+  allowed_mime_types = excluded.allowed_mime_types;
 
 -- Policies: apenas service_role lê/escreve. UI gera signed URLs via Server Action.
 create policy "service_role full - conhecimento bucket"
