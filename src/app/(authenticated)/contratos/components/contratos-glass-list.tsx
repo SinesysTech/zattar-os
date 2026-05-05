@@ -66,41 +66,26 @@ export interface ContratosGlassListProps {
 // HELPERS
 // =============================================================================
 
-// Estilos do badge unificado status+data por status
-const STATUS_BADGE_STYLE: Record<StatusContrato, { bg: string; text: string; date: string }> = {
-  em_contratacao: { bg: 'bg-warning/10',     text: 'text-warning/90',     date: 'text-warning/60'     },
-  contratado:     { bg: 'bg-success/10',     text: 'text-success/90',     date: 'text-success/60'     },
-  distribuido:    { bg: 'bg-info/10',        text: 'text-info/90',        date: 'text-info/60'        },
-  desistencia:    { bg: 'bg-destructive/10', text: 'text-destructive/80', date: 'text-destructive/55' },
-};
-
 // Extrai a data de entrada no status atual via statusHistorico (audit log).
 // Fallback: cadastradoEm quando não há histórico (contrato nunca mudou de status).
-function getStatusDate(contrato: Contrato): string | null {
+function getStatusDate(contrato: Contrato): string {
   const historico = contrato.statusHistorico ?? [];
   const entry = [...historico]
     .filter((h) => h.toStatus === contrato.status)
     .sort((a, b) => new Date(b.changedAt).getTime() - new Date(a.changedAt).getTime())[0];
-  return entry?.changedAt ?? contrato.cadastradoEm ?? null;
+  return entry?.changedAt ?? contrato.cadastradoEm ?? '';
 }
 
-function fmtDateShort(iso: string | null): string {
-  if (!iso) return '—';
-  try {
-    const d = new Date(iso);
-    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' });
-  } catch {
-    return '—';
-  }
-}
-
+// 112px para col de status+data: comporta "Em Contratação" (o label mais longo) com folga.
+// Valor fixo é obrigatório — cada row é um grid container independente, e `auto`
+// resolve para a largura do próprio conteúdo, quebrando o alinhamento entre rows.
 // Mobile (4 cols): checkbox | badge-status+data | cliente | ações
 // SM     (6 cols): + tipo/cobrança + responsável
 // LG     (7 cols): + processos
 const GRID_TEMPLATE = cn(
-  'grid-cols-[28px_110px_minmax(0,1fr)_88px]',
-  'sm:grid-cols-[28px_110px_minmax(0,2fr)_minmax(0,0.9fr)_minmax(0,0.9fr)_100px]',
-  'lg:grid-cols-[28px_110px_minmax(0,2.2fr)_minmax(0,0.9fr)_minmax(0,1fr)_minmax(0,0.9fr)_140px]',
+  'grid-cols-[28px_112px_minmax(0,1fr)_88px]',
+  'sm:grid-cols-[28px_112px_minmax(0,2fr)_minmax(0,0.9fr)_minmax(0,0.9fr)_100px]',
+  'lg:grid-cols-[28px_112px_minmax(0,2.2fr)_minmax(0,0.9fr)_minmax(0,1fr)_minmax(0,0.9fr)_140px]',
 );
 
 // =============================================================================
@@ -451,7 +436,7 @@ function GlassRow({
             : 'border-border/40 bg-card',
       )}
     >
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ 'grid items-center gap-3', GRID_TEMPLATE)}>
+      <div className={cn(/* design-system-escape: gap-4 gap sem token DS */ 'grid items-center gap-4', GRID_TEMPLATE)}>
         {/* 1. Checkbox */}
         <div
           className="flex items-center justify-center"
@@ -466,21 +451,15 @@ function GlassRow({
           />
         </div>
 
-        {/* 2. Badge unificado status + data de entrada no status */}
-        {(() => {
-          const style = STATUS_BADGE_STYLE[contrato.status];
-          const dateStr = fmtDateShort(getStatusDate(contrato));
-          return (
-            <div className={cn('flex flex-col items-start gap-0.5 rounded-lg px-2 py-1.5 shrink-0', style.bg)}>
-              <span className={cn('text-micro-caption font-semibold leading-none', style.text)}>
-                {STATUS_CONTRATO_LABELS[contrato.status]}
-              </span>
-              <span className={cn('text-micro-badge font-mono tabular-nums leading-none', style.date)}>
-                {dateStr}
-              </span>
-            </div>
-          );
-        })()}
+        {/* 2. Badge status + data — SemanticBadge existente + data abaixo */}
+        <div className="flex flex-col items-start gap-1 shrink-0">
+          <SemanticBadge category="status_contrato" value={contrato.status}>
+            {STATUS_CONTRATO_LABELS[contrato.status]}
+          </SemanticBadge>
+          <span className="text-micro-caption tabular-nums text-muted-foreground/60 px-0.5">
+            {formatarData(getStatusDate(contrato))}
+          </span>
+        </div>
 
         {/* 3. Cliente / Parte */}
         <div className="min-w-0">
@@ -568,11 +547,14 @@ function ListSkeleton() {
     <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
       {Array.from({ length: 6 }, (_, i) => (
         <div key={i} className={cn(/* design-system-escape: p-3.5 → usar <Inset> */ "rounded-2xl border border-border/40 bg-card p-3.5")}>
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ 'grid items-center gap-3', GRID_TEMPLATE)}>
+          <div className={cn(/* design-system-escape: gap-4 gap sem token DS */ 'grid items-center gap-4', GRID_TEMPLATE)}>
             {/* 1. Checkbox */}
             <Skeleton className="size-3.5 rounded" />
-            {/* 2. Badge status+data */}
-            <Skeleton className="h-9 w-27.5 rounded-lg" />
+            {/* 2. Badge status + data — largura espelha os 112px fixos da coluna */}
+            <div className="flex flex-col items-start gap-1">
+              <Skeleton className="h-5 w-20 rounded-3xl" />
+              <Skeleton className="h-2.5 w-14 rounded" />
+            </div>
             {/* 3. Cliente/Parte */}
             <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
               <Skeleton className="h-3.5 w-44" />

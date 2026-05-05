@@ -98,10 +98,6 @@ export function ContratosContent({
   }, [viewMode, filters.segmentoId, segmentos]);
 
   // ── Derived values ────────────────────────────────────────────────────────
-  const totalContratos = stats
-    ? Object.values(stats.porStatus).reduce((sum, n) => sum + n, 0)
-    : 0;
-
   const currentSegmentoId = filters.segmentoId ? Number(filters.segmentoId) : null;
   const currentSegmentoNome = segmentos.find((s) => s.id === currentSegmentoId)?.nome ?? null;
 
@@ -118,7 +114,7 @@ export function ContratosContent({
         <div>
           <Heading level="page">Contratos</Heading>
           <Text variant="caption" as="p" className="mt-0.5">
-            {stats?.ativos ?? 0} ativos &middot; {totalContratos} total
+            Gerencie contratos por segmento, acompanhe estágios e pipeline de conversão.
           </Text>
         </div>
         <Button size="sm" className="rounded-xl" onClick={() => setCreateOpen(true)}>

@@ -34,7 +34,7 @@ import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/comp
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { timeAgo } from '@/components/dashboard/entity-card';
 
-import type { Contrato, StatusContrato } from '../domain';
+import type { Contrato } from '../domain';
 import {
   TIPO_CONTRATO_LABELS,
   TIPO_COBRANCA_LABELS,
@@ -42,6 +42,7 @@ import {
   isTipoParteContraria,
 } from '../domain';
 import type { ClienteInfo } from '../types';
+import { formatarData } from '../utils';
 import { ContratoAlterarResponsavelDialog } from './contrato-alterar-responsavel-dialog';
 
 // =============================================================================
@@ -68,12 +69,18 @@ export interface ContratosGlassCardsProps {
 // HELPERS
 // =============================================================================
 
-const STATUS_DOT_COLOR: Record<StatusContrato, string> = {
-  em_contratacao: 'bg-warning',
-  contratado: 'bg-success',
-  distribuido: 'bg-info',
-  desistencia: 'bg-destructive',
-};
+
+// =============================================================================
+// HELPERS
+// =============================================================================
+
+function getStatusDate(contrato: Contrato): string {
+  const historico = contrato.statusHistorico ?? [];
+  const entry = [...historico]
+    .filter((h) => h.toStatus === contrato.status)
+    .sort((a, b) => new Date(b.changedAt).getTime() - new Date(a.changedAt).getTime())[0];
+  return entry?.changedAt ?? contrato.cadastradoEm ?? '';
+}
 
 // =============================================================================
 // RESPONSÁVEL
@@ -113,14 +120,14 @@ function ResponsavelChip({
                 <Text variant="micro-badge">{generateAvatarFallback(nome)}</Text>
               </AvatarFallback>
             </Avatar>
-            <Text variant="caption" className="text-muted-foreground/80 truncate">
+            <span className="text-micro-caption text-muted-foreground/80 truncate">
               {nome}
-            </Text>
+            </span>
           </>
         ) : (
-          <Text variant="caption" className="text-destructive/70 italic">
+          <span className="text-micro-caption text-destructive/70 italic">
             Sem responsável
-          </Text>
+          </span>
         )}
       </button>
       <ContratoAlterarResponsavelDialog
@@ -285,10 +292,10 @@ function GlassCard({
         className="absolute inset-0 rounded-[inherit] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       />
 
-      {/* Header: checkbox + avatar + cliente + status */}
-      <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "relative flex items-start gap-2.5")}>
+      {/* Header: checkbox + nomes + badges tipo (top-right) */}
+      <div className="relative flex items-start gap-2.5">
         <div
-          className={cn(/* design-system-escape: pt-0.5 padding direcional sem Inset equiv. */ "pt-0.5")}
+          className="pt-1"
           onClick={(e) => e.stopPropagation()}
           onKeyDown={(e) => e.stopPropagation()}
         >
@@ -300,74 +307,46 @@ function GlassCard({
           />
         </div>
 
-        <div className="size-9 rounded-xl bg-primary/8 flex items-center justify-center shrink-0">
-          <Text variant="micro-badge" className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-bold text-primary/70")}>
-            {generateAvatarFallback(clienteNome)}
-          </Text>
-        </div>
-
         <div className="flex-1 min-w-0">
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
-            <span
-              aria-hidden="true"
-              className={cn('size-2 rounded-full shrink-0 opacity-80', STATUS_DOT_COLOR[contrato.status])}
-            />
-            <Text
-              variant="label"
-              as="h3"
-              className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "font-semibold text-foreground truncate leading-tight flex-1")}
-            >
-              {clienteNome}
-            </Text>
-          </div>
-
+          <p className="text-[14px] font-semibold text-foreground truncate leading-tight">
+            {clienteNome}
+          </p>
           {parteContrariaNome && (
-            <Text variant="caption" className="truncate mt-0.5 block">
-              <span className="text-muted-foreground/70">vs. </span>
+            <p className="truncate mt-0.5 text-micro-caption text-muted-foreground/55">
+              <span className="text-muted-foreground/40">vs. </span>
               {parteContrariaNome}
               {partesContrarias.length > 1 && (
-                <span className="text-muted-foreground/70">
-                  {' '}e outros ({partesContrarias.length})
-                </span>
+                <span className="text-muted-foreground/40"> e outros</span>
               )}
-            </Text>
+            </p>
           )}
+        </div>
 
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "mt-1.5 flex items-center gap-1 flex-wrap")}>
-            <SemanticBadge category="status_contrato" value={contrato.status}>
-              {STATUS_CONTRATO_LABELS[contrato.status]}
-            </SemanticBadge>
-            {contrato.papelClienteNoContrato === 'autora' ? (
-              <Text
-                variant="micro-badge"
-                className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center bg-primary/10 border border-primary/20 text-primary rounded px-1 py-px font-semibold")}
-              >
-                Cliente é autor
-              </Text>
-            ) : (
-              <Text
-                variant="micro-badge"
-                className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center bg-warning/10 border border-warning/20 text-warning rounded px-1 py-px font-semibold")}
-              >
-                Cliente é réu
-              </Text>
-            )}
-          </div>
+        {/* Tipo + cobrança — canto superior direito */}
+        <div className="flex flex-col items-end gap-1 shrink-0">
+          <SemanticBadge category="tipo_contrato" value={contrato.tipoContrato}>
+            {TIPO_CONTRATO_LABELS[contrato.tipoContrato]}
+          </SemanticBadge>
+          <SemanticBadge category="tipo_cobranca" value={contrato.tipoCobranca}>
+            {TIPO_COBRANCA_LABELS[contrato.tipoCobranca]}
+          </SemanticBadge>
         </div>
       </div>
 
-      {/* Tipo + cobrança + segmento */}
-      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "relative mt-3 flex flex-wrap items-center gap-1")}>
-        <SemanticBadge category="tipo_contrato" value={contrato.tipoContrato}>
-          {TIPO_CONTRATO_LABELS[contrato.tipoContrato]}
-        </SemanticBadge>
-        <SemanticBadge category="tipo_cobranca" value={contrato.tipoCobranca}>
-          {TIPO_COBRANCA_LABELS[contrato.tipoCobranca]}
-        </SemanticBadge>
+      {/* Status + data + segmento */}
+      <div className="relative mt-2.5 flex items-start justify-between gap-2">
+        <div className="flex flex-col items-start gap-0.5">
+          <SemanticBadge category="status_contrato" value={contrato.status}>
+            {STATUS_CONTRATO_LABELS[contrato.status]}
+          </SemanticBadge>
+          <span className="text-micro-caption tabular-nums text-muted-foreground/60 px-0.5">
+            {formatarData(getStatusDate(contrato))}
+          </span>
+        </div>
         {segmentoNome && (
           <Text
             variant="micro-badge"
-            className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center font-medium text-muted-foreground/70 bg-muted/50 border border-border/50 rounded px-1.5 py-0.5")}
+            className="inline-flex items-center font-medium text-muted-foreground/65 bg-muted/50 border border-border/50 rounded px-1.5 py-0.5 mt-0.5"
           >
             {segmentoNome}
           </Text>

@@ -1,7 +1,23 @@
 import { google } from '@ai-sdk/google'
 import { generateText } from 'ai'
 import { NextRequest, NextResponse } from 'next/server'
-import type { MultimodalRequest, MultimodalResponse } from '@/components/layout/pedrinho-agent/types'
+
+interface MultimodalAttachment {
+  data: string
+  mediaType: string
+  name?: string
+}
+
+interface MultimodalRequest {
+  text?: string
+  attachments: MultimodalAttachment[]
+  threadId?: string
+}
+
+interface MultimodalResponse {
+  content: string
+  error?: string
+}
 
 const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY ?? process.env.GOOGLE_API_KEY
 
