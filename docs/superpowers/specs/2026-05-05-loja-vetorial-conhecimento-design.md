@@ -243,18 +243,20 @@ create policy "authenticated read - knowledge_documents" on public.knowledge_doc
 -- Escrita: apenas super_admin
 create policy "super_admin write - knowledge_bases" on public.knowledge_bases
   for all to authenticated
-  using ((select is_super_admin from public.usuarios where id = auth.uid()::bigint))
-  with check ((select is_super_admin from public.usuarios where id = auth.uid()::bigint));
+  using (exists (select 1 from public.usuarios where auth_user_id = (select auth.uid()) and is_super_admin = true))
+  with check (exists (select 1 from public.usuarios where auth_user_id = (select auth.uid()) and is_super_admin = true));
 create policy "super_admin write - knowledge_documents" on public.knowledge_documents
   for all to authenticated
-  using ((select is_super_admin from public.usuarios where id = auth.uid()::bigint))
-  with check ((select is_super_admin from public.usuarios where id = auth.uid()::bigint));
+  using (exists (select 1 from public.usuarios where auth_user_id = (select auth.uid()) and is_super_admin = true))
+  with check (exists (select 1 from public.usuarios where auth_user_id = (select auth.uid()) and is_super_admin = true));
 
 -- knowledge_chunks: SEM policy de SELECT direto. Apenas via RPC match_knowledge (security definer).
 ```
 
-O subselect com `(select is_super_admin from public.usuarios where id = auth.uid()::bigint)`
-deve passar no lint do projeto (`npm run lint:rls`). Validar na implementação.
+O `exists`-subselect com `auth_user_id = (select auth.uid())` joinedo com `is_super_admin = true`
+é o pattern canônico do projeto (ver `08_usuarios.sql` e `40_mcp_audit.sql`) e passa no
+`npm run lint:rls`. **Importante:** `usuarios.id` é `bigint` mas `auth.uid()` retorna
+`uuid` — sempre joinar via `auth_user_id`, nunca tentar cast `auth.uid()::bigint`.
 
 **Storage bucket `conhecimento`:**
 
