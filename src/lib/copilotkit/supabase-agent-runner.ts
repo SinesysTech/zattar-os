@@ -11,13 +11,13 @@
  * - isRunning/stop(): Tracking in-memory (mesmo processo, não precisa DB)
  */
 
-import { AgentRunner } from '@copilotkitnext/runtime';
+import { AgentRunner } from '@copilotkit/runtime/v2';
 import type {
   AgentRunnerRunRequest,
   AgentRunnerConnectRequest,
   AgentRunnerIsRunningRequest,
   AgentRunnerStopRequest,
-} from '@copilotkitnext/runtime';
+} from '@copilotkit/runtime/v2';
 import { ReplaySubject, type Observable } from 'rxjs';
 import { createServiceClient } from '@/lib/supabase/service-client';
 
@@ -31,7 +31,7 @@ type AbstractAgent = any;
 // Dynamic imports para compactEvents e finalizeRunEvents (evita conflitos de tipo)
 async function getAgUiUtils() {
   const { EventType, compactEvents } = await import('@ag-ui/client');
-  const { finalizeRunEvents } = await import('@copilotkitnext/shared');
+  const { finalizeRunEvents } = await import('@copilotkit/runtime/v2');
   return { EventType, compactEvents, finalizeRunEvents };
 }
 
