@@ -36,7 +36,7 @@ export function ConfiguracoesTab({ base, isSuperAdmin }: Props) {
   return (
     <div className="space-y-8">
       <section className="space-y-2">
-        <Heading level={3}>Informações</Heading>
+        <Heading level="card">Informações</Heading>
         <dl className="grid grid-cols-2 gap-2 text-sm">
           <dt className="text-muted-foreground">Slug</dt>
           <dd className="font-medium">{base.slug}</dd>
@@ -53,8 +53,8 @@ export function ConfiguracoesTab({ base, isSuperAdmin }: Props) {
 
       {isSuperAdmin && (
         <section className="space-y-3 rounded-2xl border border-destructive/30 bg-destructive/5 p-4">
-          <Heading level={3}>Zona de perigo</Heading>
-          <Text className="text-sm text-muted-foreground">
+          <Heading level="card">Zona de perigo</Heading>
+          <Text variant="body-sm" className="text-muted-foreground">
             Deletar esta base remove permanentemente todos os documentos e chunks indexados.
           </Text>
           <Button variant="destructive" size="sm" onClick={handleDeletar} disabled={pending} className="rounded-xl">

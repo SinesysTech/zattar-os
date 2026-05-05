@@ -55,8 +55,8 @@ export function ConhecimentoDetalheClient({ base, documentos, isSuperAdmin }: Pr
       </Link>
 
       <header>
-        <Heading level={1}>{base.nome}</Heading>
-        {base.descricao && <Text className="text-muted-foreground mt-1">{base.descricao}</Text>}
+        <Heading level="page">{base.nome}</Heading>
+        {base.descricao && <Text variant="body" className="text-muted-foreground mt-1">{base.descricao}</Text>}
       </header>
 
       <nav className="border-b">
