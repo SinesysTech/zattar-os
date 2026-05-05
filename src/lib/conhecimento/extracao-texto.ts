@@ -25,11 +25,21 @@ function stripHtml(html: string): string {
 }
 
 async function extrairPdf(buffer: Buffer): Promise<string> {
+  // pdf-parse v2+ usa PDFParse como classe (ver src/lib/ai/services/extraction.service.ts)
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const pdfParse = require('pdf-parse') as (buf: Buffer) => Promise<{ text: string; numpages: number }>;
+  const pdfParseModule = require('pdf-parse');
+  const PDFParse = pdfParseModule.PDFParse;
+
+  if (!PDFParse || typeof PDFParse !== 'function') {
+    throw new Error('pdf-parse.PDFParse não encontrado');
+  }
+
   try {
-    const data = await pdfParse(buffer);
-    return data.text;
+    const uint8Array = new Uint8Array(buffer);
+    const parser = new PDFParse({ data: uint8Array });
+    await parser.load();
+    const result = await parser.getText();
+    return result.text || '';
   } catch (err) {
     throw new Error(`Falha ao extrair PDF: ${err instanceof Error ? err.message : String(err)}`);
   }

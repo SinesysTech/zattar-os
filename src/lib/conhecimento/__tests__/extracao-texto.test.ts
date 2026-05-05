@@ -1,9 +1,11 @@
 import { extrairTexto, type FormatoArquivo } from '../extracao-texto';
 
-jest.mock('pdf-parse', () => jest.fn(async (buf: Buffer) => ({
-  text: 'Texto extraído do PDF de teste',
-  numpages: 1,
-})));
+jest.mock('pdf-parse', () => ({
+  PDFParse: jest.fn().mockImplementation(() => ({
+    load: jest.fn(async () => undefined),
+    getText: jest.fn(async () => ({ text: 'Texto extraído do PDF de teste' })),
+  })),
+}));
 
 jest.mock('mammoth', () => ({
   extractRawText: jest.fn(async () => ({
@@ -60,7 +62,10 @@ describe('extrairTexto', () => {
 
   it('lança erro descritivo quando PDF parser falha', async () => {
     const pdfParse = require('pdf-parse');
-    pdfParse.mockImplementationOnce(async () => { throw new Error('PDF malformado'); });
+    pdfParse.PDFParse.mockImplementationOnce(() => ({
+      load: jest.fn(async () => { throw new Error('PDF malformado'); }),
+      getText: jest.fn(),
+    }));
     const buf = Buffer.from('bad');
     await expect(extrairTexto(buf, 'pdf'))
       .rejects.toThrow(/PDF malformado/);
@@ -68,7 +73,10 @@ describe('extrairTexto', () => {
 
   it('rejeita texto vazio extraído', async () => {
     const pdfParse = require('pdf-parse');
-    pdfParse.mockImplementationOnce(async () => ({ text: '   ', numpages: 0 }));
+    pdfParse.PDFParse.mockImplementationOnce(() => ({
+      load: jest.fn(async () => undefined),
+      getText: jest.fn(async () => ({ text: '   ' })),
+    }));
     const buf = Buffer.from('empty');
     await expect(extrairTexto(buf, 'pdf'))
       .rejects.toThrow('Texto extraído está vazio');
