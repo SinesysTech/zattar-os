@@ -189,6 +189,13 @@ export function CapturaStatusSemanticBadge({ value, ...props }: SpecializedBadge
 }
 
 /**
+ * Badge para status de documento de base de conhecimento (pending, processing, indexed, failed).
+ */
+export function DocumentoStatusSemanticBadge({ value, ...props }: SpecializedBadgeProps) {
+  return <SemanticBadge category="documento_status" value={value} {...props} />;
+}
+
+/**
  * Badge para contagens numéricas em tabs, pills e indicadores de quantidade.
  * Usa tom neutro (secondary soft) — não carrega semântica de domínio.
  *

@@ -75,7 +75,8 @@ export type BadgeCategory =
   | 'tipo_conta_contabil'
   | 'conciliacao_status'
   | 'orcamento_item_status'
-  | 'audiencia_indicador';
+  | 'audiencia_indicador'
+  | 'documento_status';
 
 /**
  * Determina o tom (intensidade) padrão por categoria.
@@ -747,6 +748,16 @@ export const AUDIENCIA_INDICADOR_VARIANTS: Record<string, BadgeVisualVariant> = 
   presenca_hibrida: 'accent',
 };
 
+/**
+ * Mapeamento de status de documento de base de conhecimento.
+ */
+export const DOCUMENTO_STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
+  pending: 'secondary',
+  processing: 'info',
+  indexed: 'success',
+  failed: 'destructive',
+};
+
 export function getSemanticBadgeVariant(
   category: BadgeCategory,
   key: string | number | null | undefined
@@ -905,6 +916,10 @@ export function getSemanticBadgeVariant(
     case 'audiencia_indicador':
       return AUDIENCIA_INDICADOR_VARIANTS[key as string] ??
         AUDIENCIA_INDICADOR_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'documento_status':
+      return DOCUMENTO_STATUS_VARIANTS[key as string] ??
+        DOCUMENTO_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
 
     default:
       return 'neutral';

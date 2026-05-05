@@ -1,4 +1,5 @@
 import { extrairTexto, type FormatoArquivo } from '../extracao-texto';
+import { PDFParse } from 'pdf-parse';
 
 jest.mock('pdf-parse', () => ({
   PDFParse: jest.fn().mockImplementation(() => ({
@@ -61,8 +62,7 @@ describe('extrairTexto', () => {
   });
 
   it('lança erro descritivo quando PDF parser falha', async () => {
-    const pdfParse = require('pdf-parse');
-    pdfParse.PDFParse.mockImplementationOnce(() => ({
+    (PDFParse as jest.Mock).mockImplementationOnce(() => ({
       load: jest.fn(async () => { throw new Error('PDF malformado'); }),
       getText: jest.fn(),
     }));
@@ -72,8 +72,7 @@ describe('extrairTexto', () => {
   });
 
   it('rejeita texto vazio extraído', async () => {
-    const pdfParse = require('pdf-parse');
-    pdfParse.PDFParse.mockImplementationOnce(() => ({
+    (PDFParse as jest.Mock).mockImplementationOnce(() => ({
       load: jest.fn(async () => undefined),
       getText: jest.fn(async () => ({ text: '   ' })),
     }));

@@ -2,6 +2,7 @@
  * @jest-environment node
  */
 import { criarDocumento } from '../../actions/criar-documento.action';
+import { getCurrentUser } from '@/lib/auth/server';
 
 jest.mock('next/cache', () => ({ revalidatePath: jest.fn() }));
 
@@ -67,8 +68,7 @@ describe('criarDocumento action', () => {
   });
 
   it('rejeita não super_admin', async () => {
-    const { getCurrentUser } = require('@/lib/auth/server');
-    getCurrentUser.mockResolvedValueOnce({ id: 99, roles: [] });
+    (getCurrentUser as jest.Mock).mockResolvedValueOnce({ id: 99, roles: [] });
     const fd = makeFormData({
       baseSlug: 'x',
       nome: 'a.pdf',

@@ -1,7 +1,6 @@
 import {
   KnowledgeBaseSchema,
   KnowledgeDocumentSchema,
-  KnowledgeChunkSchema,
   CriarBaseInputSchema,
   CriarDocumentoInputSchema,
   BuscarConhecimentoInputSchema,

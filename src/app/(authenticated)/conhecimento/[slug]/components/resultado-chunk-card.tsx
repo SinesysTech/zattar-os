@@ -2,7 +2,7 @@
 
 import { ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { CountBadge } from '@/components/ui/semantic-badge';
 import { gerarUrlAssinada } from '../../actions/gerar-signed-url.action';
 import { toast } from 'sonner';
 import type { KnowledgeChunk } from '../../domain';
@@ -29,7 +29,7 @@ export function ResultadoChunkCard({ chunk }: { chunk: KnowledgeChunk }) {
             <span>chunk {chunk.posicao}</span>
           </p>
         </div>
-        <Badge variant="secondary">{(chunk.similarity * 100).toFixed(1)}%</Badge>
+        <CountBadge>{(chunk.similarity * 100).toFixed(1)}%</CountBadge>
       </div>
       <p className="text-sm leading-relaxed whitespace-pre-wrap">{chunk.conteudo}</p>
       <Button size="sm" variant="ghost" onClick={abrir} className="rounded-xl">

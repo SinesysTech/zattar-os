@@ -1,4 +1,4 @@
-import { chunkText, type ChunkOptions } from '../chunking';
+import { chunkText } from '../chunking';
 
 describe('chunkText', () => {
   it('retorna um único chunk se o texto cabe inteiro', () => {

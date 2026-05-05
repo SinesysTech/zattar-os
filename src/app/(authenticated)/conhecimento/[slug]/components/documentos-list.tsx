@@ -4,7 +4,7 @@ import { useTransition, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { FileText, Trash2, RotateCw, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { DocumentoStatusSemanticBadge } from '@/components/ui/semantic-badge';
 import { toast } from 'sonner';
 import { deletarDocumento } from '../../actions/deletar-documento.action';
 import { reindexarDocumento } from '../../actions/reindexar-documento.action';
@@ -25,12 +25,6 @@ const STATUS_LABEL: Record<StatusDocumento, string> = {
   failed: 'Falha',
 };
 
-const STATUS_VARIANT: Record<StatusDocumento, 'default' | 'secondary' | 'destructive'> = {
-  pending: 'secondary',
-  processing: 'default',
-  indexed: 'default',
-  failed: 'destructive',
-};
 
 export function DocumentosList({ baseSlug, documentos, isSuperAdmin }: Props) {
   const router = useRouter();
@@ -114,9 +108,9 @@ export function DocumentosList({ baseSlug, documentos, isSuperAdmin }: Props) {
               <td className="px-4 py-3 text-muted-foreground">{formatBytes(doc.arquivo_tamanho_bytes)}</td>
               <td className="px-4 py-3 text-muted-foreground">{doc.total_chunks}</td>
               <td className="px-4 py-3">
-                <Badge variant={STATUS_VARIANT[doc.status]}>
+                <DocumentoStatusSemanticBadge value={doc.status}>
                   {STATUS_LABEL[doc.status]}
-                </Badge>
+                </DocumentoStatusSemanticBadge>
                 {doc.status === 'failed' && doc.ultimo_erro && (
                   <p className="mt-1 text-xs text-destructive max-w-xs truncate" title={doc.ultimo_erro}>
                     {doc.ultimo_erro}

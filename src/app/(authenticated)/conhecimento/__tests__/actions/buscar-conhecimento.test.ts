@@ -2,6 +2,7 @@
  * @jest-environment node
  */
 import { buscarConhecimento } from '../../actions/buscar-conhecimento.action';
+import { buscarSemantico } from '../../repository';
 
 jest.mock('@/lib/ai/embedding', () => ({
   gerarEmbedding: jest.fn(async () => Array(1536).fill(0.1)),
@@ -44,9 +45,8 @@ describe('buscarConhecimento action', () => {
   });
 
   it('aceita filtro por base_ids', async () => {
-    const { buscarSemantico } = require('../../repository');
     await buscarConhecimento({ query: 'teste válido aqui', base_ids: [1, 2] });
-    expect(buscarSemantico).toHaveBeenCalledWith(
+    expect(buscarSemantico as jest.Mock).toHaveBeenCalledWith(
       expect.objectContaining({ baseIds: [1, 2] })
     );
   });

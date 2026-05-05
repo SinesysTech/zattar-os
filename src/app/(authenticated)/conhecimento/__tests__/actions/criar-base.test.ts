@@ -1,4 +1,5 @@
 import { criarBase } from '../../actions/criar-base.action';
+import { getCurrentUser } from '@/lib/auth/server';
 
 jest.mock('next/cache', () => ({ revalidatePath: jest.fn() }));
 
@@ -48,8 +49,7 @@ describe('criarBase action', () => {
   });
 
   it('rejeita usuário sem role admin', async () => {
-    const { getCurrentUser } = require('@/lib/auth/server');
-    getCurrentUser.mockResolvedValueOnce({
+    (getCurrentUser as jest.Mock).mockResolvedValueOnce({
       id: 99,
       roles: [],
     });
