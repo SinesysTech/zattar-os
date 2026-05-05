@@ -31,6 +31,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import type { ContratosPulseStats } from '../actions/types';
+import type { ClienteInfo } from '../types';
 import { useSegmentos, type SegmentoOption } from '../hooks/use-segmentos';
 import { ContratosPulseStrip } from './contratos-pulse-strip';
 import { ContratosListWrapper } from './contratos-list-wrapper';
@@ -65,6 +66,13 @@ export interface ContratosContentProps {
   initialStats?: ContratosPulseStats | null;
   /** Segmentos pré-resolvidos no Server Component. */
   initialSegmentos?: SegmentoOption[];
+  /**
+   * Usuários ativos pré-carregados no servidor para popular selects de
+   * responsável (dialogs de alterar responsável, formulário de contrato,
+   * bulk actions). Sem isso a lista degrada para apenas usuários que já
+   * são responsáveis de algum contrato visível.
+   */
+  initialUsuarios?: ClienteInfo[];
 }
 
 // ─── Component ──────────────────────────────────────────────────────────────
@@ -73,6 +81,7 @@ export function ContratosContent({
   initialView = 'lista',
   initialStats = null,
   initialSegmentos,
+  initialUsuarios = [],
 }: ContratosContentProps = {}) {
   const [stats] = React.useState<ContratosPulseStats | null>(initialStats);
   const [createOpen, setCreateOpen] = React.useState(false);
@@ -230,6 +239,7 @@ export function ContratosContent({
           tipoCobranca={filters.tipoCobranca}
           ordenarPor={sort.campo}
           ordem={sort.ordem}
+          usuariosOptions={initialUsuarios}
         />
       )}
     </div>

@@ -11,7 +11,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { InsightBanner } from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { useUsuarios } from '../hooks/use-usuarios';
 import { useCargos } from '../hooks/use-cargos';
-import { UserKpiStrip } from './list/user-kpi-strip';
 import { UsuariosToolbar, type UsuariosViewMode } from './list/usuarios-toolbar';
 import { UsuariosGridView } from './list/usuarios-grid-view';
 import { UsuariosListView } from './list/usuarios-list-view';
@@ -146,9 +145,6 @@ export function UsuariosClient() {
           </Button>
         </div>
       </div>
-
-      {/* KPI Strip */}
-      {!isLoading && <UserKpiStrip usuarios={usuarios} />}
 
       {/* Insight Banner */}
       {!isLoading && incompletosCount > 0 && (

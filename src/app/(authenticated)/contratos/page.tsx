@@ -2,11 +2,13 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
 import { createClient } from '@/lib/supabase/server';
+import { actionListarUsuarios } from '@/app/(authenticated)/usuarios';
 import { ContratosContent } from './components/contratos-content';
 import { actionContratosPulseStats } from './actions/contratos-actions';
 import { actionListarSegmentos } from './actions/segmentos-actions';
 import type { ContratosPulseStats } from './actions/types';
 import type { SegmentoOption } from './hooks/use-segmentos';
+import type { ClienteInfo } from './types';
 
 export const metadata: Metadata = {
   title: 'Contratos',
@@ -29,9 +31,10 @@ export default async function ContratosPage() {
 
   if (!user) redirect('/app/login?redirectTo=/app/contratos');
 
-  const [statsResult, segmentosResult] = await Promise.all([
+  const [statsResult, segmentosResult, usuariosResult] = await Promise.all([
     actionContratosPulseStats(),
     actionListarSegmentos(),
+    actionListarUsuarios({ ativo: true }),
   ]);
 
   const initialStats: ContratosPulseStats | null = statsResult.success
@@ -42,10 +45,20 @@ export default async function ContratosPage() {
     ? segmentosResult.data.map((s) => ({ id: s.id, nome: s.nome, slug: s.slug }))
     : [];
 
+  const initialUsuarios: ClienteInfo[] =
+    usuariosResult.success && usuariosResult.data
+      ? (usuariosResult.data.usuarios ?? []).map((u) => ({
+          id: u.id,
+          nome: u.nomeExibicao || u.nomeCompleto,
+          avatarUrl: u.avatarUrl,
+        }))
+      : [];
+
   return (
     <ContratosContent
       initialStats={initialStats}
       initialSegmentos={initialSegmentos}
+      initialUsuarios={initialUsuarios}
     />
   );
 }

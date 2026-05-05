@@ -2235,6 +2235,96 @@
   background-color: hsl(var(--primary) / 0.4);
 }
 
+/* ─── CopilotKit Sidebar — Pedrinho / Zattar Design System ──────────────────
+ * v3 — Superfície elevada visível: light mode com shadow forte para se
+ * destacar do fundo purple-tinted; dark com warmer card claramente acima
+ * do near-black do app. Tokens redefinidos no escopo do sidebar.
+ * ----------------------------------------------------------------------- */
+
+/* Sub-tema light — branco puro com elevação dramática */
+[data-copilot-sidebar]:not(.dark *) {
+  --background: oklch(1 0 0);
+  --card: oklch(0.985 0.003 281);
+  --accent: oklch(0.95 0.005 281);
+  --border: oklch(0.92 0.005 281);
+  --input: oklch(0.96 0.005 281);
+  --muted: oklch(0.97 0.005 281);
+  --muted-foreground: oklch(0.45 0.005 281);
+  --foreground: oklch(0.15 0.005 281);
+
+  border-left: 1px solid oklch(0 0 0 / 8%);
+  box-shadow: -16px 0 40px -12px oklch(0 0 0 / 10%), -1px 0 0 0 oklch(0 0 0 / 4%);
+  font-family: var(--font-sans);
+}
+
+/* Sub-tema dark — warmer card destacado do near-black do app */
+.dark [data-copilot-sidebar] {
+  --background: oklch(0.18 0.006 281);
+  --card: oklch(0.21 0.008 281);
+  --accent: oklch(0.245 0.01 281);
+  --border: oklch(1 0 0 / 9%);
+  --input: oklch(1 0 0 / 12%);
+  --muted: oklch(0.24 0.006 281);
+  --muted-foreground: oklch(0.72 0.005 281);
+  --foreground: oklch(0.95 0.005 281);
+
+  border-left: 1px solid oklch(1 0 0 / 8%);
+  box-shadow: -16px 0 40px -12px oklch(0 0 0 / 40%);
+  font-family: var(--font-sans);
+}
+
+/* Header — separador claro e padding refinado */
+.pedrinho-sidebar-header {
+  padding: 0.875rem 1rem 0.875rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+}
+
+/* Input wrapper — sobrepõe #303030 hardcoded do pacote */
+.dark [data-copilot-sidebar] .pedrinho-sidebar-input {
+  background-color: oklch(0.235 0.008 281) !important;
+  border: 1px solid oklch(1 0 0 / 8%);
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px oklch(0 0 0 / 20%);
+  padding: 0.5rem 0.75rem;
+  margin: 0 0.875rem 0.875rem;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.dark [data-copilot-sidebar] .pedrinho-sidebar-input:focus-within {
+  border-color: oklch(0.55 0.18 281 / 50%);
+  box-shadow: 0 0 0 3px oklch(0.55 0.18 281 / 12%);
+}
+
+[data-copilot-sidebar]:not(.dark *) .pedrinho-sidebar-input {
+  background-color: oklch(0.985 0.003 281) !important;
+  border: 1px solid oklch(0.9 0.005 281);
+  border-radius: 1rem;
+  box-shadow: 0 1px 2px oklch(0 0 0 / 4%);
+  padding: 0.5rem 0.75rem;
+  margin: 0 0.875rem 0.875rem;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+[data-copilot-sidebar]:not(.dark *) .pedrinho-sidebar-input:focus-within {
+  border-color: oklch(0.55 0.18 281 / 50%);
+  box-shadow: 0 0 0 3px oklch(0.55 0.18 281 / 12%);
+}
+
+/* Textarea: maior, fonte legível, sem ring nativo */
+[data-copilot-sidebar] .pedrinho-sidebar-input textarea {
+  min-height: 56px;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  font-family: var(--font-sans);
+}
+
+/* Scrollbar custom */
+[data-sidebar-chat] {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(0.5 0 0 / 25%) transparent;
+}
+
 /* Command bar markdown */
 .pedrinho-markdown {
   white-space: pre-wrap;

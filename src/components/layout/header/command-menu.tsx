@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ClienteFormDialog } from "@/app/(authenticated)/partes";
-import { ProcessoForm } from "@/app/(authenticated)/processos/components";
+import { ProcessoForm } from "@/app/(authenticated)/processos";
 import {
   Calculator,
   CreditCard,
