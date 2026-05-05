@@ -109,6 +109,27 @@ export const resolverDataAudiencias = (
   return undefined;
 };
 
+const DELAY_BASE_ENTRE_CREDENCIAIS_MS = Number(
+  process.env.CAPTURA_DELAY_ENTRE_CREDENCIAIS_MS ?? '8000',
+);
+const DELAY_JITTER_MS = Number(
+  process.env.CAPTURA_DELAY_JITTER_MS ?? '4000',
+);
+
+/**
+ * Calcula delay antes da próxima credencial.
+ * Usa jitter aleatório para evitar padrão regular detectável por WAF.
+ * Configurável via env vars CAPTURA_DELAY_ENTRE_CREDENCIAIS_MS / CAPTURA_DELAY_JITTER_MS.
+ */
+const calcularDelayProximaCredencial = (): number => {
+  if (DELAY_BASE_ENTRE_CREDENCIAIS_MS <= 0) return 0;
+  const jitter = Math.floor(Math.random() * Math.max(0, DELAY_JITTER_MS));
+  return DELAY_BASE_ENTRE_CREDENCIAIS_MS + jitter;
+};
+
+const aguardar = (ms: number): Promise<void> =>
+  new Promise((resolve) => setTimeout(resolve, ms));
+
 /**
  * Executa um agendamento de captura
  * @param agendamento - Agendamento a ser executado
@@ -177,7 +198,7 @@ export async function executarAgendamento(
       filtros?: Array<{ filtroPrazo: FiltroPrazoPendentes; resultado?: unknown; erro?: string }>;
     }> = [];
 
-    for (const credCompleta of credenciaisCompletas) {
+    for (const [idxCredencial, credCompleta] of credenciaisCompletas.entries()) {
       if (!credCompleta) continue;
 
       let tribunalConfig;
@@ -571,6 +592,18 @@ export async function executarAgendamento(
           },
           erro: error instanceof Error ? error.message : 'Erro desconhecido',
         });
+      }
+
+      // Throttle entre credenciais para evitar rate-limit por IP nos WAFs dos TRTs.
+      // Sem isso, 49 credenciais em sequência ativam AWS WAF Bot Control que retorna
+      // 403 CloudFront. Configurável via CAPTURA_DELAY_ENTRE_CREDENCIAIS_MS / CAPTURA_DELAY_JITTER_MS.
+      const ehUltimaCredencial = idxCredencial === credenciaisCompletas.length - 1;
+      if (!ehUltimaCredencial) {
+        const delayMs = calcularDelayProximaCredencial();
+        if (delayMs > 0) {
+          console.log(`[Scheduler] ⏳ Aguardando ${delayMs}ms antes da próxima credencial (anti rate-limit)`);
+          await aguardar(delayMs);
+        }
       }
     }
 
