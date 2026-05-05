@@ -174,7 +174,7 @@ function agruparPorTribunal(
 ): Map<string, PendenteProcessar[]> {
   const grupos = new Map<string, PendenteProcessar[]>();
   for (const p of pendentes) {
-    const chave = `${p.trt}_${p.grau}`;
+    const chave = `${p.trt}|${p.grau}`;
     if (!grupos.has(chave)) grupos.set(chave, []);
     grupos.get(chave)!.push(p);
   }
@@ -186,7 +186,7 @@ function imprimirPlano(grupos: Map<string, PendenteProcessar[]>): void {
   console.log('─'.repeat(72));
   let total = 0;
   for (const [chave, lista] of grupos) {
-    const [trt, grau] = chave.split('_');
+    const [trt, grau] = chave.split('|');
     const exibido = LIMITE_POR_GRUPO ? Math.min(lista.length, LIMITE_POR_GRUPO) : lista.length;
     total += exibido;
     console.log(`   ${trt.padEnd(6)} ${grau.padEnd(20)} → ${exibido} expediente(s)`);
@@ -203,7 +203,7 @@ async function processarGrupo(
   pendentes: PendenteProcessar[],
   estatisticas: EstatisticasGlobais,
 ): Promise<void> {
-  const chave = `${trt}_${grau}`;
+  const chave = `${trt}|${grau}`;
   estatisticas.porTribunal.set(chave, {
     total: pendentes.length,
     sucessos: 0,
@@ -385,7 +385,7 @@ async function main(): Promise<void> {
   let i = 0;
   for (const [chave, lista] of grupos) {
     i++;
-    const [trt, grauStr] = chave.split('_');
+    const [trt, grauStr] = chave.split('|');
     const grau = grauStr as GrauTRT;
     await processarGrupo(trt, grau, lista, estatisticas);
 
@@ -413,7 +413,7 @@ async function main(): Promise<void> {
   if (estatisticas.porTribunal.size > 0) {
     console.log('\nPor tribunal/grau:');
     for (const [chave, s] of estatisticas.porTribunal) {
-      const [trt, grau] = chave.split('_');
+      const [trt, grau] = chave.split('|');
       console.log(
         `   ${trt.padEnd(6)} ${grau.padEnd(20)} total=${s.total} ok=${s.sucessos} fail=${s.falhas} sem_cred=${s.semCredencial}`,
       );
