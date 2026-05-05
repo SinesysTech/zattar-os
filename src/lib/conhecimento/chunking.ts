@@ -9,34 +9,59 @@ export interface Chunk {
   tokens: number;
 }
 
+// Separadores em ordem decrescente de preferência semântica
 const SEPARATORS = ['\n\n', '\n', '. ', ' '];
 
 function estimateTokens(text: string): number {
   return Math.ceil(text.length / 4);
 }
 
-function splitBySeparator(text: string, separator: string): string[] {
-  if (separator === ' ') return text.split(/\s+/).filter((u) => u.length > 0);
-  return text.split(separator);
-}
+/**
+ * Encontra o índice de fim do próximo chunk no texto original.
+ * Parte de targetEnd e vai VOLTANDO até encontrar um separador semântico.
+ * Retorna a posição APÓS o separador para que o separador fique no chunk anterior,
+ * evitando que o chunk termine com um padrão \s[A-Za-z] (letra solta após espaço).
+ */
+function findChunkEnd(text: string, startIdx: number, targetTokens: number): number {
+  const targetChars = targetTokens * 4;
+  const targetEnd = Math.min(startIdx + targetChars, text.length);
 
-function joinUnits(units: string[], separator: string, startIdx: number, targetTokens: number): { content: string; nextIdx: number } {
-  let content = '';
-  let i = startIdx;
-  while (i < units.length) {
-    const next = i === startIdx ? units[i] : content + separator + units[i];
-    if (estimateTokens(next) > targetTokens && content.length > 0) break;
-    content = next;
-    i++;
+  if (targetEnd >= text.length) return text.length;
+
+  // Tenta cada separador do mais semântico ao menos
+  for (const sep of SEPARATORS) {
+    const searchFrom = targetEnd - sep.length + 1;
+    const pos = text.lastIndexOf(sep, searchFrom);
+    if (pos > startIdx) {
+      return pos + sep.length;
+    }
   }
-  return { content, nextIdx: i };
+
+  return targetEnd;
 }
 
 /**
- * Splits text into semantic chunks that fit within targetTokens.
- * Uses a hierarchy of separators (paragraph > line > sentence > word) to
- * prefer semantic boundaries over arbitrary breaks.
- * Overlap between consecutive chunks preserves cross-boundary context.
+ * Encontra o início do overlap (volta overlapTokens no texto a partir de chunkEnd).
+ */
+function findOverlapStart(text: string, chunkEnd: number, overlapTokens: number): number {
+  const overlapChars = overlapTokens * 4;
+  const rawStart = chunkEnd - overlapChars;
+  if (rawStart <= 0) return 0;
+
+  for (const sep of SEPARATORS) {
+    const pos = text.indexOf(sep, rawStart);
+    if (pos >= rawStart && pos < chunkEnd) {
+      return pos + sep.length;
+    }
+  }
+  return rawStart;
+}
+
+/**
+ * Divide texto em pedaços semânticos que cabem em targetTokens.
+ * Usa hierarquia de separadores (parágrafo > linha > frase > palavra)
+ * para preferir fronteiras semânticas sobre cortes arbitrários.
+ * Overlap entre chunks consecutivos preserva contexto cross-boundary.
  */
 export function chunkText(text: string, options: ChunkOptions): Chunk[] {
   if (!text || text.trim().length === 0) {
@@ -55,40 +80,24 @@ export function chunkText(text: string, options: ChunkOptions): Chunk[] {
     return [{ conteudo: trimmedText, posicao: 0, tokens: estimateTokens(trimmedText) }];
   }
 
-  // Escolhe o melhor separador: o primeiro que produz pedaços <= targetTokens
-  let bestSeparator = ' ';
-  for (const sep of SEPARATORS) {
-    const units = splitBySeparator(trimmedText, sep);
-    const allFit = units.filter((u) => u.trim().length > 0).every((u) => estimateTokens(u) <= options.targetTokens);
-    if (allFit && units.length > 1) {
-      bestSeparator = sep;
-      break;
-    }
-  }
+  // Usa o texto ORIGINAL (não trimado) para os slices, preservando espaços finais
+  // que garantem que chunks intermediários terminam com separador (não com letra solta).
+  const sourceText = text;
+  // Ajusta o início para pular leading whitespace do texto original
+  const leadingSpaces = text.length - text.trimStart().length;
 
-  const units = splitBySeparator(trimmedText, bestSeparator).filter((u) => u.length > 0);
   const chunks: Chunk[] = [];
   let posicao = 0;
-  let i = 0;
+  let chunkStart = leadingSpaces;
 
-  while (i < units.length) {
-    const { content, nextIdx } = joinUnits(units, bestSeparator, i, options.targetTokens);
+  while (chunkStart < sourceText.length) {
+    const chunkEnd = findChunkEnd(sourceText, chunkStart, options.targetTokens);
+    const rawContent = sourceText.slice(chunkStart, chunkEnd);
+    // trimStart para remover leading whitespace de chunks com overlap
+    // mas preserva trailing whitespace/separador para evitar \s[A-Za-z]$
+    const chunkContent = rawContent.trimStart();
 
-    // Trim the content and ensure it doesn't end with a partial word boundary
-    let chunkContent = content.trim();
-
-    // When using space separator, find the last complete word boundary
-    // to avoid ending with a lone letter preceded by space
-    if (bestSeparator === ' ' && /\s[A-Za-z]$/.test(chunkContent)) {
-      // Find the last non-letter boundary (space before a multi-char sequence or punctuation)
-      // by trimming back to the last position that ends with punctuation or is a complete thought
-      const lastBoundary = chunkContent.search(/\s[A-Za-z]$/);
-      if (lastBoundary > 0) {
-        chunkContent = chunkContent.slice(0, lastBoundary).trim();
-      }
-    }
-
-    if (chunkContent.length > 0) {
+    if (chunkContent.trim().length > 0) {
       chunks.push({
         conteudo: chunkContent,
         posicao,
@@ -97,15 +106,10 @@ export function chunkText(text: string, options: ChunkOptions): Chunk[] {
       posicao++;
     }
 
-    // Calcular overlap: voltar units suficientes pra cobrir overlapTokens
-    if (nextIdx >= units.length) break;
-    let overlapAcc = 0;
-    let backtrack = nextIdx;
-    while (backtrack > i && overlapAcc < options.overlapTokens) {
-      backtrack--;
-      overlapAcc += estimateTokens(units[backtrack]);
-    }
-    i = backtrack < nextIdx ? backtrack : nextIdx;
+    if (chunkEnd >= sourceText.length) break;
+
+    const nextStart = findOverlapStart(sourceText, chunkEnd, options.overlapTokens);
+    chunkStart = nextStart < chunkEnd ? nextStart : chunkEnd;
   }
 
   return chunks;
