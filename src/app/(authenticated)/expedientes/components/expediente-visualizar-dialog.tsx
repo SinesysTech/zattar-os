@@ -235,6 +235,7 @@ export function ExpedienteVisualizarDialog({
 
   React.useEffect(() => {
     setDisplayExpediente(expediente);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- ressincroniza só ao trocar registro; edições inline gerenciam o state local
   }, [expediente?.id]);
 
   const handleEditSuccess = React.useCallback(async () => {
