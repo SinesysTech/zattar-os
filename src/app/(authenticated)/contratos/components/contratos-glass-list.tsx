@@ -219,15 +219,15 @@ function ResponsavelCell({
           className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-1 padding direcional sem Inset equiv.; -mx-1 sem equivalente DS; py-1 padding direcional sem Inset equiv. */ "flex items-center gap-1.5 min-w-0 rounded-lg px-1 -mx-1 py-1 text-left transition-colors hover:bg-muted/40 focus:outline-none focus-visible:ring-1 focus-visible:ring-ring cursor-pointer")}
           title={`Alterar responsável: ${nome}`}
         >
-          <Avatar className="size-6">
+          <Avatar className="size-5">
             <AvatarImage src={usuario?.avatarUrl || undefined} alt={nome} />
             <AvatarFallback>
               <Text variant="micro-badge">{generateAvatarFallback(nome)}</Text>
             </AvatarFallback>
           </Avatar>
-          <Text variant="caption" className="truncate">
+          <span className="truncate text-micro-caption text-muted-foreground/80">
             {nome}
-          </Text>
+          </span>
         </button>
         <ContratoAlterarResponsavelDialog
           open={dialogOpen}
@@ -290,9 +290,7 @@ function ResponsavelAssignPopover({
           className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "inline-flex items-center gap-1.5 rounded-lg border border-dashed border-border/50 px-2 py-1 text-muted-foreground/60 hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-colors cursor-pointer disabled:opacity-50 w-fit")}
         >
           <Plus className="size-3" aria-hidden="true" />
-          <Text variant="caption" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
-            Adicionar responsável
-          </Text>
+          <span className="text-micro-caption font-medium">Adicionar responsável</span>
         </button>
       </PopoverTrigger>
       <PopoverContent
@@ -457,25 +455,26 @@ function GlassRow({
 
         {/* 3. Cliente / Parte */}
         <div className="min-w-0">
-          <Text variant="label" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "font-semibold text-foreground truncate leading-tight block")}>
+          {/* text-xs (12px) espelha o padrão IdentidadeProcessual de expedientes */}
+          <p className="truncate text-xs font-semibold leading-tight text-foreground">
             {autoraNome || clienteNome}
             {partesAutoras.length > 1 && (
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-muted-foreground/55 font-medium")}> e outros</span>
+              <span className="font-normal text-muted-foreground/50"> e outros</span>
             )}
-          </Text>
+          </p>
           {reNome && (
-            <Text variant="caption" className="truncate mt-0.5 block text-muted-foreground/55">
+            <p className="truncate mt-0.5 text-micro-caption text-muted-foreground/55">
               <span className="text-muted-foreground/40">vs. </span>
               {reNome}
               {partesRe.length > 1 && (
                 <span className="text-muted-foreground/40"> e outros</span>
               )}
-            </Text>
+            </p>
           )}
           {segmentoNome && (
-            <Text variant="micro-caption" className="mt-0.5 truncate block text-muted-foreground/50">
+            <p className="mt-0.5 truncate text-micro-caption text-muted-foreground/45">
               {segmentoNome}
-            </Text>
+            </p>
           )}
         </div>
 
@@ -499,9 +498,9 @@ function GlassRow({
                 className={cn(/* design-system-escape: gap-1 gap sem token DS */ "inline-flex items-center gap-1 min-w-0 text-primary hover:underline")}
               >
                 <Scale className="size-2.5 shrink-0" />
-                <Text variant="caption" className="tabular-nums truncate text-primary">
+                <span className="text-micro-caption font-mono font-medium tabular-nums truncate text-primary">
                   {firstProcesso.processo?.numeroProcesso ?? `Processo #${firstProcesso.processoId}`}
-                </Text>
+                </span>
               </Link>
               {processosRestantes > 0 && (
                 <Text variant="micro-caption" className="text-muted-foreground/70">
@@ -510,7 +509,7 @@ function GlassRow({
               )}
             </>
           ) : (
-            <Text variant="caption" className="text-muted-foreground/65">—</Text>
+            <span className="text-micro-caption text-muted-foreground/50">—</span>
           )}
         </div>
 
@@ -532,9 +531,9 @@ function GlassRow({
         </div>
 
         {/* 8. Data de cadastro — oculta até lg */}
-        <Text variant="caption" className="tabular-nums hidden lg:block">
+        <span className="text-micro-caption tabular-nums text-muted-foreground hidden lg:block">
           {formatarData(contrato.cadastradoEm)}
-        </Text>
+        </span>
 
         {/* 9. Ações */}
         <RowActions contrato={contrato} onEdit={onEdit} onDelete={onDelete} onGerarPeca={onGerarPeca} />
