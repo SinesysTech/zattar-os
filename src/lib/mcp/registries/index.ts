@@ -17,6 +17,7 @@ export { registerObrigacoesTools } from './obrigacoes-tools';
 export { registerRHTools } from './rh-tools';
 export { registerDashboardTools } from './dashboard-tools';
 export { registerBuscaSemanticaTools } from './busca-semantica-tools';
+export { registerConhecimentoTools } from './conhecimento-tools';
 export { registerComunicaCnjTools } from './comunica-cnj-tools';
 export { registerUsuariosTools } from './usuarios-tools';
 export { registerAcervoTools } from './acervo-tools';

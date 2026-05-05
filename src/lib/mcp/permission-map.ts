@@ -38,7 +38,7 @@ const FEATURE_TO_RECURSO: Record<string, string> = {
 };
 
 // Features sem recurso na MATRIZ_PERMISSOES → público
-// chat, dashboard, busca_semantica, pericias
+// chat, dashboard, busca_semantica, pericias, conhecimento
 
 // ─── Nome → Operação ────────────────────────────────────────────────
 
