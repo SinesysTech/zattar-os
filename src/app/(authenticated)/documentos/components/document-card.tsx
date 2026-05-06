@@ -39,7 +39,7 @@ export function DocumentCard({ documento, onClick }: DocumentCardProps) {
     >
       <CardContent className={cn("inset-card-compact")}>
         <div className="flex items-start justify-between">
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3 flex-1 min-w-0")}>
+          <div className={cn("flex items-start inline-medium flex-1 min-w-0")}>
             <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "rounded-lg bg-primary/10 p-2")}>
               <FileText className="h-5 w-5 text-primary" />
             </div>
@@ -77,7 +77,7 @@ export function DocumentCard({ documento, onClick }: DocumentCardProps) {
 
         {/* Tags */}
         {documento.tags && documento.tags.length > 0 && (
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-wrap gap-1 mt-3")}>
+          <div className={cn("flex flex-wrap inline-micro mt-3")}>
             {documento.tags.slice(0, 3).map((tag: string) => (
               <Badge key={tag} variant="secondary" className={cn("text-caption")}>
                 {tag}
@@ -93,7 +93,7 @@ export function DocumentCard({ documento, onClick }: DocumentCardProps) {
 
         {/* Footer */}
         <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex items-center justify-between mt-4 pt-3 border-t text-caption text-muted-foreground")}>
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+          <div className={cn("flex items-center inline-micro")}>
             <Users className="h-3 w-3" />
             <span>{documento.criador.nomeCompleto}</span>
           </div>

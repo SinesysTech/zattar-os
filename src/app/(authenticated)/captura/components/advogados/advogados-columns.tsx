@@ -94,7 +94,7 @@ export function criarColunasAdvogados({
       cell: ({ row }) => {
         const advogado = row.original;
         return (
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+          <div className={cn("flex items-center inline-micro")}>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button

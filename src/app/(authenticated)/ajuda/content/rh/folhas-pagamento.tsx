@@ -22,7 +22,7 @@ import {
 
 export default function FolhasPagamento() {
   return (
-    <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
+    <div className={cn("stack-extra-loose")}>
       <div>
         <Heading level="page">Folhas de Pagamento</Heading>
         <p className="text-muted-foreground mt-2">

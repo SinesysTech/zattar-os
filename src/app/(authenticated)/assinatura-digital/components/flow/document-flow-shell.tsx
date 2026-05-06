@@ -102,14 +102,14 @@ function FlowStepper({ currentStep }: { currentStep: number }) {
   return (
     <nav
       aria-label="Progresso do fluxo de assinatura"
-      className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}
+      className={cn("flex items-center inline-micro")}
     >
       <div aria-live="polite" aria-atomic="true" className="sr-only">
         Etapa {currentStep + 1} de {FLOW_STEPS.length}:{" "}
         {FLOW_STEPS[currentStep]?.label}
       </div>
       {FLOW_STEPS.map((step, idx) => (
-        <div key={step.id} className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+        <div key={step.id} className={cn("flex items-center inline-micro")}>
           <StepPill step={step} index={idx} currentStep={currentStep} />
           {idx < FLOW_STEPS.length - 1 && (
             <StepConnector done={idx < currentStep} />
@@ -129,7 +129,7 @@ function FlowMobileProgress({ currentStep }: { currentStep: number }) {
   const stepLabel = FLOW_STEPS[currentStep]?.label;
 
   return (
-    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
+    <div className={cn("flex flex-col inline-snug")}>
       <div className="flex items-center justify-between">
         <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wide sem token DS */ "text-[11px] font-medium uppercase tracking-wide text-muted-foreground")}>
           Etapa {currentStep + 1} de {FLOW_STEPS.length}

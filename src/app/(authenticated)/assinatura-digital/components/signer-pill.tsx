@@ -15,7 +15,7 @@ export function SignerPill({ assinante: a }: SignerPillProps) {
   return (
     <span
       className={cn(
-        /* design-system-escape: gap-1 gap sem token DS; font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-full border backdrop-blur-sm transition-colors",
+        /* design-system-escape: font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center inline-micro text-[10px] font-medium px-1.5 py-0.5 rounded-full border backdrop-blur-sm transition-colors",
         isDone && "bg-success/10 border-success/25 text-success",
         isLate && "bg-warning/10 border-warning/25 text-warning",
         !isDone && !isLate && "bg-foreground/5 border-border/40 text-muted-foreground",

@@ -95,7 +95,7 @@ export const columns: ColumnDef<TarefaDisplayItem>[] = [
           {url ? (
             <a
               href={url}
-              className={cn(/* design-system-escape: gap-1 gap sem token DS; font-medium → className de <Text>/<Heading> */ "flex max-w-125 items-center gap-1 truncate font-medium text-foreground hover:text-primary hover:underline")}
+              className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "flex max-w-125 items-center inline-micro truncate font-medium text-foreground hover:text-primary hover:underline")}
               title="Abrir no módulo de origem"
             >
               <span className="truncate">{row.getValue("title")}</span>

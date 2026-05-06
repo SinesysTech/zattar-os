@@ -211,7 +211,7 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
             </Alert>
           )}
           <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-loose md:col-span-2")}>
-            <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+            <div className={cn("stack-medium")}>
               <Label htmlFor="processo-id">Número do Processo *</Label>
               <Input
                 id="processo-id"

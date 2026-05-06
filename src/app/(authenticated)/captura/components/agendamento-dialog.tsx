@@ -166,7 +166,7 @@ export function AgendamentoDialog({ open, onOpenChange, onSuccess }: Props) {
         />
 
         <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between rounded-md border p-3 bg-background")}>
-          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+          <div className={cn("stack-micro")}>
             <small className="text-sm font-semibold leading-none">Ativo</small>
             <p className="text-muted-foreground text-xs">
               Agendamentos inativos não executam automaticamente.

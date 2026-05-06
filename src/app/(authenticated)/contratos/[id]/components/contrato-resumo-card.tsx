@@ -68,7 +68,7 @@ export function ContratoResumoCard({
         {hasContactInfo && (
           <div className="flex flex-col gap-y-3">
             {cliente?.cpfCnpj && (
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 text-body-sm")}>
+              <div className={cn("flex items-center inline-medium text-body-sm")}>
                 <Hash className="text-muted-foreground size-4 shrink-0" />
                 <span>
                   <span className="text-muted-foreground">{cliente.tipoPessoa === 'pf' ? 'CPF' : 'CNPJ'}:</span>{' '}
@@ -77,19 +77,19 @@ export function ContratoResumoCard({
               </div>
             )}
             {email && (
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 text-body-sm")}>
+              <div className={cn("flex items-center inline-medium text-body-sm")}>
                 <Mail className="text-muted-foreground size-4 shrink-0" />
                 <span className="truncate">{email}</span>
               </div>
             )}
             {telefone && (
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 text-body-sm")}>
+              <div className={cn("flex items-center inline-medium text-body-sm")}>
                 <PhoneCall className="text-muted-foreground size-4 shrink-0" />
                 {telefone}
               </div>
             )}
             {localizacao && (
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 text-body-sm")}>
+              <div className={cn("flex items-center inline-medium text-body-sm")}>
                 <MapPin className="text-muted-foreground size-4 shrink-0" />
                 {localizacao}
               </div>
@@ -99,7 +99,7 @@ export function ContratoResumoCard({
 
         {/* Lancamentos */}
         {stats.totalLancamentos > 0 && (
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 text-body-sm")}>
+          <div className={cn("flex items-center inline-medium text-body-sm")}>
             <FolderOpen className="text-muted-foreground size-4 shrink-0" />
             <span>
               <span className="text-muted-foreground">Lançamentos:</span> {stats.totalLancamentos}

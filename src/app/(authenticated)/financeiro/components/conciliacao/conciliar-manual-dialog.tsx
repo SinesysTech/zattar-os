@@ -153,7 +153,7 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
 
         {transacao && (
           <div className={cn("grid inline-default md:grid-cols-2")}>
-            <div className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-1 sem token DS */ "rounded-md border p-3 space-y-1")}>
+            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md border p-3 stack-micro")}>
               <Text variant="caption" className="uppercase">Transação importada</Text>
               <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{transacao.descricao}</p>
               <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-lg font-semibold")}>{formatarValor(transacao.valor)} ({transacao.tipoTransacao === 'credito' ? 'Crédito' : 'Débito'})</p>
@@ -163,7 +163,7 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
               )}
             </div>
 
-            <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+            <div className={cn("stack-medium")}>
               <div className="flex items-center justify-between">
                 <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Sugestões automáticas</p>
                 <Button variant="outline" size="sm" onClick={handleIgnorar}>
@@ -177,7 +177,7 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
                 <p className={cn("text-body-sm text-muted-foreground")}>Nenhuma sugestão encontrada.</p>
               )}
 
-              <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+              <div className={cn("stack-medium")}>
                 {topSugestoes.map((sugestao) => (
                   <div
                     key={sugestao.lancamentoId}
@@ -190,7 +190,7 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
                           Data {sugestao.lancamento.dataLancamento} - {formatarValor(sugestao.lancamento.valor)}
                         </Text>
                       </div>
-                      <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "text-right space-y-1")}>
+                      <div className={cn("text-right stack-micro")}>
                         <Badge>{Math.round(sugestao.score)}%</Badge>
                         <Progress value={Math.min(100, sugestao.score)} className="w-28" />
                       </div>
@@ -215,9 +215,9 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
         )}
 
         {transacao && (
-          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-wrap items-end gap-3")}>
-              <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+          <div className={cn("stack-medium")}>
+            <div className={cn("flex flex-wrap items-end inline-medium")}>
+              <div className={cn("stack-micro")}>
                 <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Busca manual</p>
                 <Input
                   placeholder="Buscar por descrição ou documento"
@@ -225,11 +225,11 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
                   onChange={(e) => setBuscaManual(e.target.value)}
                 />
               </div>
-              <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+              <div className={cn("stack-micro")}>
                 <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Data inicial</p>
                 <Input type="date" value={dataInicio} onChange={(e) => setDataInicio(e.target.value)} />
               </div>
-              <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+              <div className={cn("stack-micro")}>
                 <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Data final</p>
                 <Input type="date" value={dataFim} onChange={(e) => setDataFim(e.target.value)} />
               </div>

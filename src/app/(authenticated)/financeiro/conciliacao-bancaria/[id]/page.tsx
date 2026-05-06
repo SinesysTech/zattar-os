@@ -49,7 +49,7 @@ export default function TransacaoDetalhePage() {
   return (
     <div className={cn("stack-default")}>
       <div className="flex items-center justify-between">
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+        <div className={cn("flex items-center inline-medium")}>
           <Button variant="ghost" onClick={() => router.push('/financeiro/conciliacao-bancaria')}>
             Voltar
           </Button>
@@ -99,11 +99,11 @@ export default function TransacaoDetalhePage() {
       </div>
 
       {status === 'pendente' && (
-        <Card className={cn(/* design-system-escape: space-y-3 sem token DS */ "inset-card-compact space-y-3")}>
+        <Card className={cn("inset-card-compact stack-medium")}>
           <div className="flex items-center justify-between">
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Sugestões de conciliação</p>
           </div>
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3 md:grid-cols-2")}>
+          <div className={cn("grid inline-medium md:grid-cols-2")}>
             {sugestoes?.map((s) => (
               <div key={s.lancamentoId} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md border p-3 stack-tight")}>
                 <div className="flex items-center justify-between">

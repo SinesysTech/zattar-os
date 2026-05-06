@@ -137,7 +137,7 @@ function InputsSpecimen() {
   return (
     <SpecimenCard eyebrow="INPUTS · FORMS">
       <div className={cn("grid inline-default sm:grid-cols-2")}>
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
+        <div className={cn("flex flex-col inline-snug")}>
           <Label htmlFor="ds-processo">Nº do processo</Label>
           <Input
             id="ds-processo"
@@ -145,14 +145,14 @@ function InputsSpecimen() {
             className="font-mono"
           />
         </div>
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
+        <div className={cn("flex flex-col inline-snug")}>
           <Label htmlFor="ds-tribunal">Tribunal</Label>
           <Input
             id="ds-tribunal"
             defaultValue="TRT1 — Tribunal Regional do Trabalho 1ª Região"
           />
         </div>
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
+        <div className={cn("flex flex-col inline-snug")}>
           <Label htmlFor="ds-search">Buscar</Label>
           <div className="relative">
             <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
@@ -163,7 +163,7 @@ function InputsSpecimen() {
             />
           </div>
         </div>
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
+        <div className={cn("flex flex-col inline-snug")}>
           <Label htmlFor="ds-resp">Responsável</Label>
           <Input id="ds-resp" defaultValue="Dra. Ana Ribeiro" />
           <span className="text-[11px] text-muted-foreground">
@@ -217,7 +217,7 @@ function CardsSpecimen() {
           {/* Process card */}
           <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex flex-col gap-2.5 rounded-2xl border border-border bg-card inset-card-compact shadow-sm transition-all hover:shadow-md")}>
             <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-start justify-between gap-2.5")}>
-              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+              <div className={cn("flex flex-col inline-micro")}>
                 <Text variant="micro-caption" className="font-mono">
                   0001234-56.2024.5.01.0001
                 </Text>
@@ -273,7 +273,7 @@ function CardsSpecimen() {
 
           {/* KPI cards */}
           <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex flex-col justify-between gap-2.5")}>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "glass-kpi flex flex-col gap-1.5 rounded-2xl border border-border/30 inset-card-compact")}>
+            <div className={cn("glass-kpi flex flex-col inline-snug rounded-2xl border border-border/30 inset-card-compact")}>
               <div className="flex items-center justify-between">
                 <Text variant="meta-label">Processos ativos</Text>
                 <IconContainer
@@ -284,12 +284,12 @@ function CardsSpecimen() {
                 </IconContainer>
               </div>
               <Text variant="kpi-value">128</Text>
-              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 text-[11px] text-muted-foreground")}>
+              <div className={cn("flex items-center inline-snug text-[11px] text-muted-foreground")}>
                 <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-success")}>+4</span>
                 desde a última semana
               </div>
             </div>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "glass-kpi flex flex-col gap-1.5 rounded-2xl border border-border/30 inset-card-compact")}>
+            <div className={cn("glass-kpi flex flex-col inline-snug rounded-2xl border border-border/30 inset-card-compact")}>
               <Text variant="meta-label">Prazos em 7 dias</Text>
               <Text
                 variant="kpi-value"

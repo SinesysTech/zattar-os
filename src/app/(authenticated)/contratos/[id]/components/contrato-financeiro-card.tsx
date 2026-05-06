@@ -65,7 +65,7 @@ function KpiTile({
   tone?: 'success' | 'warning';
 }) {
   return (
-    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex flex-col gap-1.5 px-4 py-3 rounded-xl bg-muted/30 border border-border/40")}>
+    <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex flex-col inline-snug px-4 py-3 rounded-xl bg-muted/30 border border-border/40")}>
       <Text variant="meta-label">{label}</Text>
       <Text
         variant="kpi-value"
@@ -110,7 +110,7 @@ function ProgressBar({ pct }: { pct: number }) {
 
 function LancamentoRow({ lancamento }: { lancamento: Lancamento }) {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "grid grid-cols-[2.2fr_1fr_1fr_1fr] gap-3 items-center px-3 py-2.5 rounded-xl bg-muted/30 border border-border/40 transition-colors hover:bg-muted/50")}>
+    <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "grid grid-cols-[2.2fr_1fr_1fr_1fr] inline-medium items-center px-3 py-2.5 rounded-xl bg-muted/30 border border-border/40 transition-colors hover:bg-muted/50")}>
       <Text variant="label" className="truncate block">
         {lancamento.descricao}
       </Text>
@@ -163,7 +163,7 @@ export function ContratoFinanceiroCard({
             </Text>
           ) : (
             <>
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-3 gap-3 mb-4")}>
+              <div className={cn("grid grid-cols-3 inline-medium mb-4")}>
                 <KpiTile label="Valor total" value={formatCurrency(valorTotal)} />
                 <KpiTile label="Recebido" value={formatCurrency(totalReceitas)} tone="success" />
                 <KpiTile label="Pendente" value={formatCurrency(totalPendente)} tone="warning" />
@@ -184,13 +184,13 @@ export function ContratoFinanceiroCard({
               </Text>
             ) : (
               <>
-                <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "grid grid-cols-[2.2fr_1fr_1fr_1fr] gap-3 items-center px-3 pb-2")}>
+                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "grid grid-cols-[2.2fr_1fr_1fr_1fr] inline-medium items-center px-3 pb-2")}>
                   <Text variant="meta-label">Descrição</Text>
                   <Text variant="meta-label">Valor</Text>
                   <Text variant="meta-label">Vencimento</Text>
                   <Text variant="meta-label">Status</Text>
                 </div>
-                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
+                <div className={cn("flex flex-col inline-snug")}>
                   {lancamentos.slice(0, 10).map((l) => (
                     <LancamentoRow key={l.id} lancamento={l} />
                   ))}

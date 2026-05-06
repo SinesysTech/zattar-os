@@ -330,14 +330,14 @@ export function FormularioCreateDialog({
               />
               {/* Preview dos templates selecionados */}
               {templateIds.length > 0 && (
-                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; pt-1 padding direcional sem Inset equiv. */ "flex flex-wrap gap-1.5 pt-1")}>
+                <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "flex flex-wrap inline-snug pt-1")}>
                   {templateIds.map((templateUuid) => {
                     const template = templates.find(t => t.template_uuid === templateUuid);
                     return (
                       <Badge
                         key={templateUuid}
                         variant="secondary"
-                        className={cn(/* design-system-escape: gap-1 gap sem token DS; pr-1 padding direcional sem Inset equiv. */ "gap-1 pr-1")}
+                        className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "inline-micro pr-1")}
                       >
                         <span className="truncate max-w-37.5">
                           {template?.nome || templateUuid}

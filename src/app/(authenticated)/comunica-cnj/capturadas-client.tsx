@@ -213,7 +213,7 @@ export function CapturadasClient() {
         action={
           <GazetteSyncDialog
             trigger={
-              <Button variant="outline" size="sm" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5 rounded-xl")}>
+              <Button variant="outline" size="sm" className={cn("inline-snug rounded-xl")}>
                 <RefreshCw className="size-3.5" aria-hidden />
                 Sincronizar
               </Button>
@@ -238,7 +238,7 @@ export function CapturadasClient() {
       />
 
       {/* Toolbar unificada: FilterBar + Search + ViewToggle */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
+      <div className={cn("flex flex-col sm:flex-row items-start sm:items-center inline-medium")}>
         <CapturadasFilterBar
           filtros={filtros}
           onChange={setFiltros}
@@ -265,7 +265,7 @@ export function CapturadasClient() {
 
       {/* Content */}
       {isLoading ? (
-        <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+        <div className={cn("stack-medium")}>
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}

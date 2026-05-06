@@ -108,9 +108,9 @@ function TypeMeta() {
           <span className="text-mono-num">0001234-56.2024.5.01.0001</span>
         </TypeRow>
       </div>
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-3.5 → usar <Inset> */ "mt-4 grid grid-cols-2 gap-3 rounded-xl border border-border bg-card p-3.5 sm:grid-cols-4")}>
+      <div className={cn(/* design-system-escape: p-3.5 → usar <Inset> */ "mt-4 grid grid-cols-2 inline-medium rounded-xl border border-border bg-card p-3.5 sm:grid-cols-4")}>
         {metas.map((m) => (
-          <div key={m.label} className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+          <div key={m.label} className={cn("flex flex-col inline-micro")}>
             <Text variant="meta-label">{m.label}</Text>
             <span
               className={`text-[13px] font-semibold ${

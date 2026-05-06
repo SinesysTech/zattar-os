@@ -96,7 +96,7 @@ export function DocumentCard({ doc, onSelect }: DocumentCardProps) {
       className={`p-4 cursor-pointer hover:scale-[1.01] ${hasPendingLong ? "ring-1 ring-warning/15" : ""}`}
     >
       <div onClick={() => onSelect(doc)}>
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3")}>
+        <div className={cn("flex items-start inline-medium")}>
           <div
             className={`size-9 rounded-xl ${cfg.bg} flex items-center justify-center shrink-0`}
           >
@@ -125,7 +125,7 @@ export function DocumentCard({ doc, onSelect }: DocumentCardProps) {
         </div>
 
         {doc.assinantes.length > 0 && (
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "mt-3 flex items-center gap-3")}>
+          <div className={cn("mt-3 flex items-center inline-medium")}>
             <ProgressRing
               percent={progress.percent}
               size={36}
@@ -136,7 +136,7 @@ export function DocumentCard({ doc, onSelect }: DocumentCardProps) {
               }
             />
             <div className="flex-1 min-w-0">
-              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-wrap gap-1")}>
+              <div className={cn("flex flex-wrap inline-micro")}>
                 {doc.assinantes.map((a, i) => (
                   <SignerPill key={i} assinante={a} />
                 ))}
@@ -156,7 +156,7 @@ export function DocumentCard({ doc, onSelect }: DocumentCardProps) {
           <span className="text-[9px] text-muted-foreground/55">
             {doc.criadoPor}
           </span>
-          <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-[9px] text-muted-foreground/70 flex items-center gap-1")}>
+          <span className={cn("text-[9px] text-muted-foreground/70 flex items-center inline-micro")}>
             <Clock className="size-2.5" />
             {timeAgo(doc.atualizadoEm)}
           </span>

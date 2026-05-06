@@ -54,7 +54,7 @@ export function ChatSidebar({
           </div>
           <button
             onClick={() => onNovoChatOpenChange(true)}
-            className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "flex items-center gap-1.5 px-4 py-1 rounded-xl bg-primary text-primary-foreground text-[0.7rem] font-semibold shadow-sm hover:bg-primary/90 hover:-translate-y-px transition-all cursor-pointer")}
+            className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "flex items-center inline-snug px-4 py-1 rounded-xl bg-primary text-primary-foreground text-[0.7rem] font-semibold shadow-sm hover:bg-primary/90 hover:-translate-y-px transition-all cursor-pointer")}
           >
             <Plus className="size-3" />
             Nova

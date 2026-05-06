@@ -62,7 +62,7 @@ export function WidgetInadimplencia() {
           size={72}
           color={ringColor}
         />
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+        <div className={cn("flex flex-col inline-micro")}>
           <div>
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider mb-0.5")}>
               Em atraso
@@ -95,7 +95,7 @@ export function WidgetInadimplencia() {
 
       {!isAlert && totalAReceber > 0 && (
         <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-4 pt-3 border-t border-border/10")}>
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 text-success/60")}>
+          <div className={cn("flex items-center inline-snug text-success/60")}>
             <TrendingDown className="size-3.5" />
             <span className="text-[10px]">Dentro da meta de 10%</span>
           </div>

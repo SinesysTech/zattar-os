@@ -235,7 +235,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
       cell: ({ row }) => {
         const count = row.original.participantes.length;
         return (
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+          <div className={cn("flex items-center inline-micro")}>
             <span className={cn("text-body-sm")}>{count}</span>
             <Text variant="caption">participantes</Text>
           </div>
@@ -303,7 +303,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
         if (!hasTranscript && !hasSummary) return <Text variant="caption">-</Text>;
 
         return (
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+          <div className={cn("flex items-center inline-micro")}>
             {hasTranscript && (
               <TooltipProvider>
                 <Tooltip>

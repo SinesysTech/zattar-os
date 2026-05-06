@@ -80,8 +80,8 @@ export function TimelineSidebarItem({
       </div>
 
       {/* Conteúdo */}
-      <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "flex-1 min-w-0 space-y-0.5")}>
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+      <div className={cn("flex-1 min-w-0 stack-nano")}>
+        <div className={cn("flex items-center inline-micro")}>
           <Text variant="caption" className="shrink-0">
             {formatarHora(item.data)}
           </Text>

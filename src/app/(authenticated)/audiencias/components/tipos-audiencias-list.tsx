@@ -136,7 +136,7 @@ export function TiposAudienciasList() {
                     <AppBadge
                       variant="outline"
                       className={cn(
-                        /* design-system-escape: gap-1 gap sem token DS */ 'gap-1',
+                        'inline-micro',
                         tipo.is_virtual
                           ? 'border-info/15 bg-info/5 text-info'
                           : 'border-warning/15 bg-warning/5 text-warning'

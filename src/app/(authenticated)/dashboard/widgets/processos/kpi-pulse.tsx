@@ -113,7 +113,7 @@ export function WidgetKpiPulse() {
       </div>
 
       <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex items-center inline-default pt-3 border-t border-border/10")}>
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+        <div className={cn("flex items-center inline-medium")}>
           <ProgressRing
             percent={taxaResolucao}
             size={48}
@@ -129,7 +129,7 @@ export function WidgetKpiPulse() {
           </div>
         </div>
         {tendenciaData.length >= 2 && (
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex-1 flex flex-col items-end gap-1")}>
+          <div className={cn("flex-1 flex flex-col items-end inline-micro")}>
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Tendencia {tendenciaData.length}m
             </p>

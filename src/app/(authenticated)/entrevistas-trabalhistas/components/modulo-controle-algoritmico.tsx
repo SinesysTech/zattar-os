@@ -96,7 +96,7 @@ export function ModuloControleAlgoritmico({ data, onChange }: ModuloControleAlgo
       </div>
 
       {/* B.1.3: Definição de preço */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>A plataforma define o preço do serviço (você não pode negociar com o cliente)?</Label>
         <SimNaoRadio
           id="define-preco"
@@ -131,7 +131,7 @@ export function ModuloControleAlgoritmico({ data, onChange }: ModuloControleAlgo
       </div>
 
       {/* B.1.5: Sistema de avaliação */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>Existe um sistema de nota/avaliação que afeta seu trabalho?</Label>
         <SimNaoRadio
           id="sistema-avaliacao"
@@ -142,7 +142,7 @@ export function ModuloControleAlgoritmico({ data, onChange }: ModuloControleAlgo
 
       {/* B.1.6: Punição por nota baixa (condicional) */}
       {data.sistema_avaliacao === true && (
-        <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+        <div className={cn("stack-medium")}>
           <Label>Já foi punido por nota baixa?</Label>
           <SimNaoRadio
             id="punicao-nota"
@@ -165,7 +165,7 @@ export function ModuloControleAlgoritmico({ data, onChange }: ModuloControleAlgo
       )}
 
       {/* B.1.7: GPS */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>A plataforma monitora sua localização por GPS em tempo real?</Label>
         <SimNaoRadio
           id="monitoramento-gps"
@@ -175,7 +175,7 @@ export function ModuloControleAlgoritmico({ data, onChange }: ModuloControleAlgo
       </div>
 
       {/* B.1.8: Meta de aceitação */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>Existe meta ou taxa mínima de aceitação de corridas/serviços?</Label>
         <SimNaoRadio
           id="meta-aceitacao"

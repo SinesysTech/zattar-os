@@ -190,10 +190,10 @@ export function ProcessoHeader({
   const tituloPartes = parteRe && parteRe !== '-' ? `${parteAutora} vs ${parteRe}` : parteAutora;
 
   return (
-    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+    <div className={cn("stack-medium")}>
       <div className={cn("flex items-start justify-between inline-default")}>
-        <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "min-w-0 space-y-1.5")}>
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+        <div className={cn("min-w-0 stack-snug")}>
+          <div className={cn("flex items-center inline-medium")}>
             {onVoltar && (
               <Button
                 variant="ghost"
@@ -240,7 +240,7 @@ export function ProcessoHeader({
 
                 {classeJudicial && <span className="text-muted-foreground">{classeJudicial}</span>}
 
-                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 min-w-0")}>
+                <div className={cn("flex items-center inline-snug min-w-0")}>
                   <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>{numeroProcesso}</span>
                   <CopyButton text={numeroProcesso} label="Copiar número do processo" />
                 </div>
@@ -258,11 +258,11 @@ export function ProcessoHeader({
           </div>
         </div>
 
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3 shrink-0")}>
+        <div className={cn("flex items-start inline-medium shrink-0")}>
           <Text variant="caption" className="hidden sm:flex items-center gap-2">
             {dataProximaAudiencia && <ProximaAudienciaPopover dataAudiencia={dataProximaAudiencia} />}
             {instancias && instancias.length > 1 && (
-              <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "inline-flex items-center gap-1 rounded-full border bg-muted/20 px-2 py-1")}>
+              <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "inline-flex items-center inline-micro rounded-full border bg-muted/20 px-2 py-1")}>
                 <Layers className="h-3 w-3" />
                 {instancias.length} instâncias
               </span>
@@ -305,7 +305,7 @@ export function ProcessoHeader({
       {instancias && instancias.length > 1 && (
         <div className={cn("flex items-center inline-tight flex-wrap text-body-sm")}>
           {instancias.map((inst) => (
-            <div key={inst.id} className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "flex items-center gap-1.5 rounded-full border bg-muted/20 px-2.5 py-1")}>
+            <div key={inst.id} className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "flex items-center inline-snug rounded-full border bg-muted/20 px-2.5 py-1")}>
               <SemanticBadge category="grau" value={inst.grau} className="text-[10px]">
                 {formatarGrauComOrdinal(inst.grau)}
               </SemanticBadge>

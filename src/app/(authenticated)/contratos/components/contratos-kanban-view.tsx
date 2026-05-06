@@ -65,13 +65,13 @@ function ContratoCard({ contrato, stageCor }: { contrato: KanbanContrato; stageC
   return (
     <GlassPanel
       depth={2}
-      className={cn(/* design-system-escape: p-3 → usar <Inset>; gap-1.5 gap sem token DS */ "p-3 flex flex-col gap-1.5 text-body-sm")}
+      className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3 flex flex-col inline-snug text-body-sm")}
       style={{ borderLeft: `3px solid ${stageCor}` }}
     >
       <p className="text-[13px] font-semibold text-foreground line-clamp-2">
         {contrato.clienteNome}
       </p>
-      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-wrap gap-1 mt-0.5")}>
+      <div className={cn("flex flex-wrap inline-micro mt-0.5")}>
         <SemanticBadge category="tipo_contrato" value={contrato.tipoContrato}>
           {TIPO_CONTRATO_LABELS[contrato.tipoContrato as TipoContrato] ?? contrato.tipoContrato}
         </SemanticBadge>
@@ -162,7 +162,7 @@ function KanbanColumnContent({
 
 function KanbanBoardSkeleton() {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; pb-4 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv. */ "flex gap-3 overflow-x-auto pb-4 pt-2")}>
+    <div className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv. */ "flex inline-medium overflow-x-auto pb-4 pt-2")}>
       {Array.from({ length: 4 }).map((_, i) => (
         <div
           key={i}

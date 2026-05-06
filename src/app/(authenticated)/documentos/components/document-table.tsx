@@ -76,7 +76,7 @@ export function DocumentTable({ documentos, onDocumentoClick }: DocumentTablePro
               </TableCell>
               <TableCell>
                 {doc.tags && doc.tags.length > 0 ? (
-                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-wrap gap-1")}>
+                  <div className={cn("flex flex-wrap inline-micro")}>
                     {doc.tags.slice(0, 2).map((tag: string) => (
                       <Badge key={tag} variant="secondary" className={cn("text-caption")}>
                         {tag}

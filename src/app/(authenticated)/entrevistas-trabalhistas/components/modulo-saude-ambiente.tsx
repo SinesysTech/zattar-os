@@ -36,7 +36,7 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
       </div>
 
       {/* A.3.1: Exposição a riscos */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>
           No dia a dia, lidava com situações perigosas ou prejudiciais à saúde?
           <Text variant="caption" className="ml-1">
@@ -61,7 +61,7 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
       {/* Condicional: Tipificação de riscos */}
       {data.exposicao_riscos && (
         <>
-          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+          <div className={cn("stack-medium")}>
             <Label>Tipo de risco (selecione todos aplicáveis)</Label>
             <div className={cn("grid grid-cols-2 inline-tight sm:grid-cols-3")}>
               {TIPO_RISCO_OPTIONS.map((opt) => (
@@ -93,7 +93,7 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
       )}
 
       {/* A.3.2: Assédio e danos morais */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>
           Sofria xingamentos, humilhações constantes do chefe/colegas ou cobranças de metas abusivas?
         </Label>

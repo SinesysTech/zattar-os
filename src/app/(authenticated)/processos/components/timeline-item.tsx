@@ -161,7 +161,7 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <AppBadge variant="outline" className={cn(/* design-system-escape: gap-1 gap sem token DS */ "gap-1")}>
+                    <AppBadge variant="outline" className={cn("inline-micro")}>
                       <Lock className="h-3 w-3" />
                       Sigiloso
                     </AppBadge>
@@ -178,7 +178,7 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
           </p>
 
           {/* Informações adicionais */}
-          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "text-body-sm text-muted-foreground space-y-1")}>
+          <div className={cn("text-body-sm text-muted-foreground stack-micro")}>
             {item.nomeResponsavel && (
               <p>
                 <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Responsável:</span>{' '}

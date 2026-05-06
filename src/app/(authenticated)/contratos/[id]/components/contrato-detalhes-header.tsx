@@ -102,7 +102,7 @@ interface HeroStatFieldProps {
 
 function HeroStatField({ label, icon: Icon, value, muted }: HeroStatFieldProps) {
   return (
-    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5 min-w-0")}>
+    <div className={cn("flex flex-col inline-snug min-w-0")}>
       <Text variant="meta-label" className="text-muted-foreground/70">
         {label}
       </Text>
@@ -168,7 +168,7 @@ export function ContratoDetalhesHeader({
       <button
         type="button"
         onClick={() => router.push('/app/contratos')}
-        className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1.5 self-start -ml-1 px-2 py-1 rounded-lg text-caption font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors cursor-pointer")}
+        className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-snug self-start -ml-1 px-2 py-1 rounded-lg text-caption font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors cursor-pointer")}
       >
         <ArrowLeft className="size-3.5" />
         Voltar para contratos
@@ -178,7 +178,7 @@ export function ContratoDetalhesHeader({
         {/* ── Linha 1: identidade + ações ────────────────────────── */}
         <div className={cn("flex items-start justify-between inline-default")}>
           <div className={cn("flex-1 min-w-0 flex flex-col inline-tight")}>
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 flex-wrap")}>
+            <div className={cn("flex items-center inline-medium flex-wrap")}>
               <Heading
                 level="section"
                 className={cn("min-w-0 truncate flex items-center inline-tight flex-wrap")}

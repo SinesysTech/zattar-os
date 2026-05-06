@@ -75,7 +75,7 @@ export function WidgetLembretesAtivos() {
           Todos os lembretes foram concluídos. Bom trabalho!
         </InsightBanner>
       ) : (
-        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+        <div className={cn("flex flex-col inline-nano")}>
           {ativos.slice(0, 5).map((lembrete) => (
             <ListItem key={lembrete.id}>
               <UrgencyDot level={prioridadeParaNivel(lembrete.prioridade)} />

@@ -189,8 +189,8 @@ export function ProcessosClient({
 
       <ProcessosPulseStrip stats={stats} />
 
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
+      <div className={cn("flex flex-col inline-medium")}>
+        <div className={cn("flex flex-col sm:flex-row items-start sm:items-center inline-medium")}>
           <ProcessosFilterBar
             filters={filters}
             onChange={handleFiltersChange}
@@ -215,7 +215,7 @@ export function ProcessosClient({
 
       <div className={isPending ? 'opacity-60 pointer-events-none transition-opacity' : 'transition-opacity'}>
         {viewMode === 'cards' && (
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3")}>
+          <div className={cn("grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 inline-medium")}>
             {processos.map((processo) => (
               <ProcessoCard
                 key={processo.id}
@@ -230,7 +230,7 @@ export function ProcessosClient({
         )}
 
         {viewMode === 'lista' && (
-          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+          <div className={cn("stack-micro")}>
             {processos.map((processo) => (
               <ProcessoListRow
                 key={processo.id}

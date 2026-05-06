@@ -66,7 +66,7 @@ export function PrestacaoContasSection({ parcelaId }: Props) {
 
   if (status.estado === 'assinado') {
     return (
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <div className={cn("flex items-start inline-tight")}>
           <CheckCircle2 className="size-4 text-success mt-0.5 shrink-0" />
           <div>
@@ -82,7 +82,7 @@ export function PrestacaoContasSection({ parcelaId }: Props) {
           size="sm"
           variant="outline"
           onClick={() => setVerDialog(true)}
-          className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "rounded-xl gap-1.5")}
+          className={cn("rounded-xl inline-snug")}
         >
           <FileText className="size-3.5" />
           Ver declaração assinada
@@ -100,7 +100,7 @@ export function PrestacaoContasSection({ parcelaId }: Props) {
 
   if (status.estado === 'link_ativo') {
     return (
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <div className={cn("flex items-start inline-tight")}>
           <Clock className="size-4 text-warning mt-0.5 shrink-0" />
           <div>
@@ -123,7 +123,7 @@ export function PrestacaoContasSection({ parcelaId }: Props) {
                 expiresAt: status.expiresAt ?? '',
               })
             }
-            className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "rounded-xl gap-1.5")}
+            className={cn("rounded-xl inline-snug")}
           >
             <LinkIcon className="size-3.5" />
             Ver link / reenviar
@@ -145,7 +145,7 @@ export function PrestacaoContasSection({ parcelaId }: Props) {
 
   if (status.estado === 'cancelado') {
     return (
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <div className={cn("flex items-start inline-tight")}>
           <Ban className="size-4 text-muted-foreground mt-0.5 shrink-0" />
           <p className={cn("text-body-sm")}>Link anterior foi cancelado. Gere um novo se necessário.</p>
@@ -156,7 +156,7 @@ export function PrestacaoContasSection({ parcelaId }: Props) {
   }
 
   return (
-    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+    <div className={cn("stack-medium")}>
       <Text variant="caption">
         Gere um link público para o cliente assinar digitalmente a declaração e informar os dados bancários.
       </Text>

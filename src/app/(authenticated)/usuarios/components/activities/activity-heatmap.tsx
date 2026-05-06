@@ -206,7 +206,7 @@ export function ActivityHeatmap({ data, weeks = 26 }: ActivityHeatmapProps) {
           </div>
 
           {/* Legend */}
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mt-3")}>
+          <div className={cn("flex items-center inline-snug mt-3")}>
             <span className="text-[10px] text-muted-foreground/40">Menos</span>
             {LEGEND_LEVELS.map((level) => (
               <svg key={level} width={CELL_SIZE} height={CELL_SIZE} aria-hidden="true">

@@ -50,7 +50,7 @@ export function TemplateCard({
         <div className="flex items-start justify-between">
           <div className={cn("flex items-center inline-tight")}>
             <FileText className="h-5 w-5 text-muted-foreground" />
-            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+            <div className={cn("stack-micro")}>
               <CardTitle className={cn("text-body line-clamp-1")}>{template.titulo}</CardTitle>
               {template.categoria && (
                 <Badge variant="secondary" className={cn("text-caption")}>
@@ -93,10 +93,10 @@ export function TemplateCard({
         )}
       </CardContent>
 
-      <CardFooter className={cn(/* design-system-escape: gap-3 gap sem token DS; pt-0 padding direcional sem Inset equiv. */ "flex flex-col items-stretch gap-3 pt-0")}>
+      <CardFooter className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv. */ "flex flex-col items-stretch inline-medium pt-0")}>
         {/* Meta info */}
         <div className={cn("flex items-center justify-between text-caption text-muted-foreground")}>
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+          <div className={cn("flex items-center inline-micro")}>
             {template.visibilidade === 'publico' ? (
               <>
                 <Globe className="h-3 w-3" />
@@ -109,7 +109,7 @@ export function TemplateCard({
               </>
             )}
           </div>
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+          <div className={cn("flex items-center inline-micro")}>
             <User className="h-3 w-3" />
             <span>{template.criador?.nomeCompleto || 'Usuário'}</span>
           </div>
@@ -117,7 +117,7 @@ export function TemplateCard({
 
         {/* Stats */}
         <Text variant="caption" className="flex items-center justify-between border-t pt-2">
-          <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+          <span className={cn("flex items-center inline-micro")}>
             <Clock className="h-3 w-3" />
             {formatDate(template.updated_at)}
           </span>

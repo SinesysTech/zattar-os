@@ -184,7 +184,7 @@ export function Mail({
                     {selectedUids.size} selecionado{selectedUids.size > 1 ? "s" : ""}
                   </Text>
 
-                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "ml-auto flex items-center gap-1")}>
+                  <div className={cn("ml-auto flex items-center inline-micro")}>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Button

@@ -27,10 +27,10 @@ export function EventSignatureInfo({
 
   return (
     <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "px-6 py-5 border-b bg-muted/30")}>
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
+      <div className={cn("flex flex-col inline-medium")}>
         {/* Assinatura digital */}
         {signatario && (
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+          <div className={cn("flex items-center inline-medium")}>
             {/* Ícone com círculo verde */}
             <div
               className={cn(
@@ -56,7 +56,7 @@ export function EventSignatureInfo({
 
         {/* Aviso de sigilo */}
         {isSigiloso && (
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+          <div className={cn("flex items-center inline-medium")}>
             {/* Ícone com círculo âmbar */}
             <div
               className={cn(

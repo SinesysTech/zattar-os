@@ -45,7 +45,7 @@ function ObrigacaoItem({
   colorClass: string;
 }) {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ "flex items-start gap-3 rounded-lg border p-3")}>
+    <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-start inline-medium rounded-lg border p-3")}>
       <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ 'rounded-md p-2 shrink-0', colorClass)}>
         <Icon className="h-4 w-4" />
       </div>
@@ -72,11 +72,11 @@ export function ObrigacoesWidget({ resumo, isLoading }: ObrigacoesWidgetProps) {
           <Skeleton className="h-5 w-36" />
         </CardHeader>
         <CardContent>
-          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+          <div className={cn("stack-medium")}>
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className={cn(/* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ "flex gap-3 rounded-lg border p-3")}>
+              <div key={i} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex inline-medium rounded-lg border p-3")}>
                 <Skeleton className="h-8 w-8 rounded-md" />
-                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5 flex-1")}>
+                <div className={cn("stack-snug flex-1")}>
                   <Skeleton className="h-3 w-16" />
                   <Skeleton className="h-5 w-24" />
                 </div>
@@ -109,7 +109,7 @@ export function ObrigacoesWidget({ resumo, isLoading }: ObrigacoesWidgetProps) {
             </div>
           </div>
         ) : (
-          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+          <div className={cn("stack-medium")}>
             <ObrigacaoItem
               label="Vencidas"
               valor={resumo.valorTotalVencido}

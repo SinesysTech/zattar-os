@@ -197,7 +197,7 @@ export function WidgetMeuDia() {
           aria-hidden="true"
         />
 
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+        <div className={cn("flex flex-col inline-micro")}>
           {eventos.map((evento, i) => {
             const isNext = i === proximoIdx;
             const minutos = evento.hora ? horaParaMinutos(evento.hora) : null;
@@ -236,7 +236,7 @@ export function WidgetMeuDia() {
                   )}
                 </div>
 
-                <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex-1 min-w-0 flex items-start justify-between gap-3")}>
+                <div className={cn("flex-1 min-w-0 flex items-start justify-between inline-medium")}>
                   {/* Informações à esquerda */}
                   <div className="flex-1 min-w-0">
                     <span

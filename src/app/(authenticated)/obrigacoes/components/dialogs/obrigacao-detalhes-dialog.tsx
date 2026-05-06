@@ -422,7 +422,7 @@ export function ObrigacaoDetalhesDialog({
 
         {/* ══════════ BLOCO PRINCIPAL · Tipo, valor e vencimento ══════════ */}
         <div className={cn(/* design-system-escape: mx-6 margin sem primitiva DS */ "shrink-0 mx-6 mt-4 inset-card-compact rounded-xl bg-primary/5 border border-primary/15")}>
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3 mb-3.5")}>
+          <div className={cn("flex items-start inline-medium mb-3.5")}>
             <div className="flex-1 min-w-0">
               <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[14.5px] font-semibold text-foreground leading-tight")}>
                 {TIPO_LABELS[obrigacao.tipo] || obrigacao.tipo}
@@ -434,7 +434,7 @@ export function ObrigacaoDetalhesDialog({
             {obrigacao.direcao && (
               <span
                 className={cn(
-                  /* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10.5px] font-semibold border shrink-0',
+                  /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center inline-micro rounded-full px-2 py-0.5 text-[10.5px] font-semibold border shrink-0',
                   isRecebimento
                     ? 'bg-success/10 text-success border-success/25'
                     : 'bg-destructive/10 text-destructive border-destructive/25',
@@ -452,7 +452,7 @@ export function ObrigacaoDetalhesDialog({
 
           <div className={cn(/* design-system-escape: gap-5 gap sem token DS; pb-3.5 padding direcional sem Inset equiv. */ "grid grid-cols-2 gap-5 pb-3.5 mb-3.5 border-b border-border/40")}>
             {/* ──────── Valor (editável) ──────── */}
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+            <div className={cn("flex flex-col inline-micro")}>
               <div className={cn("flex items-center justify-between inline-tight")}>
                 <Text variant="label" className="text-muted-foreground/80">
                   Valor
@@ -461,7 +461,7 @@ export function ObrigacaoDetalhesDialog({
                   <button
                     type="button"
                     onClick={handleStartEditValor}
-                    className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; gap-1 gap sem token DS */ "text-[10px] font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center gap-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded")}
+                    className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center inline-micro focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded")}
                     aria-label="Editar valor"
                   >
                     <Pencil className="size-2.5" />
@@ -471,7 +471,7 @@ export function ObrigacaoDetalhesDialog({
               </div>
 
               {editingValor ? (
-                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 min-w-0")}>
+                <div className={cn("flex items-center inline-snug min-w-0")}>
                   <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[13px] font-medium text-muted-foreground shrink-0")}>
                     R$
                   </span>
@@ -525,7 +525,7 @@ export function ObrigacaoDetalhesDialog({
             </div>
 
             {/* ──────── Vencimento (editável) ──────── */}
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+            <div className={cn("flex flex-col inline-micro")}>
               <div className={cn("flex items-center justify-between inline-tight")}>
                 <Text variant="label" className="text-muted-foreground/80">
                   Vencimento
@@ -534,7 +534,7 @@ export function ObrigacaoDetalhesDialog({
                   <button
                     type="button"
                     onClick={handleStartEditVencimento}
-                    className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; gap-1 gap sem token DS */ "text-[10px] font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center gap-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded")}
+                    className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center inline-micro focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded")}
                     aria-label="Editar vencimento"
                   >
                     <Pencil className="size-2.5" />
@@ -544,7 +544,7 @@ export function ObrigacaoDetalhesDialog({
               </div>
 
               {editingVencimento ? (
-                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 min-w-0")}>
+                <div className={cn("flex items-center inline-snug min-w-0")}>
                   <Input
                     type="date"
                     value={vencimentoDraft}
@@ -609,13 +609,13 @@ export function ObrigacaoDetalhesDialog({
           </div>
 
           {/* Ações rápidas */}
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-wrap gap-1.5")}>
+          <div className={cn("flex flex-wrap inline-snug")}>
             {temAcordo && (
               <Button
                 asChild
                 size="sm"
                 variant="default"
-                className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; gap-1.5 gap sem token DS */ "h-7 px-2.5 rounded-lg text-[11.5px] gap-1.5")}
+                className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv. */ "h-7 px-2.5 rounded-lg text-[11.5px] inline-snug")}
               >
                 <Link
                   href={`/obrigacoes/${obrigacao.acordoId}`}
@@ -631,7 +631,7 @@ export function ObrigacaoDetalhesDialog({
                 asChild
                 size="sm"
                 variant="outline"
-                className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; gap-1.5 gap sem token DS */ "h-7 px-2.5 rounded-lg text-[11.5px] gap-1.5")}
+                className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv. */ "h-7 px-2.5 rounded-lg text-[11.5px] inline-snug")}
               >
                 <Link
                   href={`/processos/${obrigacao.processoId}`}
@@ -647,7 +647,7 @@ export function ObrigacaoDetalhesDialog({
                 size="sm"
                 variant="outline"
                 onClick={() => onVerLancamento?.(obrigacao)}
-                className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; gap-1.5 gap sem token DS */ "h-7 px-2.5 rounded-lg text-[11.5px] gap-1.5")}
+                className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv. */ "h-7 px-2.5 rounded-lg text-[11.5px] inline-snug")}
               >
                 <LinkIcon className="size-3" />
                 Ver lançamento
@@ -658,7 +658,7 @@ export function ObrigacaoDetalhesDialog({
                 size="sm"
                 variant="outline"
                 onClick={() => onSincronizar?.(obrigacao)}
-                className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; gap-1.5 gap sem token DS */ "h-7 px-2.5 rounded-lg text-[11.5px] gap-1.5")}
+                className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv. */ "h-7 px-2.5 rounded-lg text-[11.5px] inline-snug")}
               >
                 <RefreshCw className="size-3" />
                 Sincronizar
@@ -705,7 +705,7 @@ export function ObrigacaoDetalhesDialog({
                           }}
                         />
                       </div>
-                      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex justify-end gap-1.5")}>
+                      <div className={cn("flex justify-end inline-snug")}>
                         <Button
                           size="sm"
                           variant="ghost"
@@ -731,7 +731,7 @@ export function ObrigacaoDetalhesDialog({
                       </div>
                     </div>
                   ) : (
-                    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
+                    <div className={cn("flex items-center justify-between inline-medium")}>
                       <Text variant="caption" className="text-foreground/80">
                         {isRecebimento
                           ? 'Esta parcela ainda não foi recebida.'
@@ -740,7 +740,7 @@ export function ObrigacaoDetalhesDialog({
                       <Button
                         size="sm"
                         onClick={handleStartEfetivacao}
-                        className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; gap-1.5 gap sem token DS */ "h-7 px-3 rounded-lg text-[11.5px] gap-1.5 bg-success hover:bg-success/90 text-success-foreground")}
+                        className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "h-7 px-3 rounded-lg text-[11.5px] inline-snug bg-success hover:bg-success/90 text-success-foreground")}
                       >
                         <CheckCircle2 className="size-3" />
                         {isRecebimento

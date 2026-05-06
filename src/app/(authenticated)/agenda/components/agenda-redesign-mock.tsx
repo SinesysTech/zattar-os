@@ -166,7 +166,7 @@ export function AgendaRedesignMock() {
             {label} · {eventCount} eventos
           </p>
         </div>
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+        <div className={cn("flex items-center inline-medium")}>
           <ViewToggle
             mode={view}
             onChange={(m) => setView(m as AgendaView)}

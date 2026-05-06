@@ -70,7 +70,7 @@ export function ProximaParcelaCard({
         atrasada && 'border-destructive/20',
       )}
     >
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3 mb-4")}>
+      <div className={cn("flex items-start justify-between inline-medium mb-4")}>
         <div className="min-w-0">
           <Text variant="meta-label" className="text-muted-foreground/60">
             Próxima parcela
@@ -86,7 +86,7 @@ export function ProximaParcelaCard({
         </IconContainer>
       </div>
 
-      <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1 mb-5")}>
+      <div className={cn("stack-micro mb-5")}>
         <div className={cn("flex items-baseline inline-tight")}>
           <Text
             variant="kpi-value"

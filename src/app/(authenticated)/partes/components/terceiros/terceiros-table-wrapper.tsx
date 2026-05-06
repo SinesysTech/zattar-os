@@ -182,20 +182,20 @@ export function TerceirosTableWrapper() {
           const tipoParteTerceiro = terceiro.tipo_parte;
 
           return (
-            <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-start gap-0.5 max-w-full overflow-hidden")}>
+            <div className={cn("flex flex-col items-start inline-nano max-w-full overflow-hidden")}>
               {/* Badge do tipo de parte */}
               {tipoParteTerceiro && (
                 <Badge variant={getSemanticBadgeVariant('parte', tipoParteTerceiro)} className="w-fit mb-1">
                   {getParteTipoLabel(tipoParteTerceiro)}
                 </Badge>
               )}
-              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 max-w-full")}>
+              <div className={cn("flex items-center inline-micro max-w-full")}>
                 <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium wrap-break-word whitespace-normal")}>
                   {formatarNome(terceiro.nome)}
                 </span>
                 <CopyButton text={terceiro.nome} label="Copiar nome" />
               </div>
-              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+              <div className={cn("flex items-center inline-micro")}>
                 <Text variant="caption" as="span" className="text-muted-foreground">
                   {documento}
                 </Text>
@@ -244,7 +244,7 @@ export function TerceirosTableWrapper() {
           const hasEndereco = enderecoFormatado && enderecoFormatado !== '-';
 
           return (
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-start gap-1 max-w-full overflow-hidden")}>
+            <div className={cn("flex items-start inline-micro max-w-full overflow-hidden")}>
               <span
                 className={cn("text-body-sm whitespace-normal wrap-break-word flex-1")}
                 title={enderecoFormatado}

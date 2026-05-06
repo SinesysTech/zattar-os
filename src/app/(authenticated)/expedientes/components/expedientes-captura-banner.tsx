@@ -30,7 +30,7 @@ export function ExpedientesCapturaBanner({
 
   return (
     <div
-      className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "rounded-xl border border-info/20 bg-info/5 px-4 py-3 flex items-start gap-3")}
+      className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "rounded-xl border border-info/20 bg-info/5 px-4 py-3 flex items-start inline-medium")}
       role="status"
       aria-label={`Filtrando expedientes da captura #${capturaId}`}
     >

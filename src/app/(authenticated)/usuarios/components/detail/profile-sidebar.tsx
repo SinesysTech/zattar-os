@@ -80,7 +80,7 @@ export function ProfileSidebar({
           size="sm"
           variant="outline"
           onClick={onEditCover}
-          className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; gap-1 gap sem token DS */ "absolute top-2 right-2 h-7 px-2 gap-1 text-[11px] bg-black/30 backdrop-blur-sm border-foreground/10 text-white/70 hover:bg-black/50 hover:text-white/90")}
+          className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "absolute top-2 right-2 h-7 px-2 inline-micro text-[11px] bg-black/30 backdrop-blur-sm border-foreground/10 text-white/70 hover:bg-black/50 hover:text-white/90")}
         >
           <Camera className="size-3" />
           Editar
@@ -126,7 +126,7 @@ export function ProfileSidebar({
         )}
 
         {/* 4. Badges row */}
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex gap-1.5 mt-2.5 flex-wrap justify-center")}>
+        <div className={cn("flex inline-snug mt-2.5 flex-wrap justify-center")}>
           <Badge variant={usuario.ativo ? 'success' : 'outline'} tone="soft">
             {usuario.ativo ? 'Ativo' : 'Inativo'}
           </Badge>
@@ -201,7 +201,7 @@ export function ProfileSidebar({
       </div>
 
       {/* 7. Quick Actions */}
-      <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv.; gap-1.5 gap sem token DS */ "px-5 py-4 border-t border-border/10 flex flex-col gap-1.5")}>
+      <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "px-5 py-4 border-t border-border/10 flex flex-col inline-snug")}>
         <Button
           variant="outline"
           size="sm"

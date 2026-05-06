@@ -220,7 +220,7 @@ export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
                     <div className={cn(/* design-system-escape: pb-6 padding direcional sem Inset equiv. */ "flex-1 pb-6")}>
                       <div className={cn("rounded-lg border bg-card inset-card-compact")}>
                         <div className={cn("flex items-start justify-between inline-default")}>
-                          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+                          <div className={cn("stack-micro")}>
                             <div className={cn("flex items-center inline-tight")}>
                               <p className={`font-medium ${colorClass}`}>{label}</p>
                               <AppBadge variant="outline" className={cn("text-caption")}>

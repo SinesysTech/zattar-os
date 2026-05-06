@@ -41,7 +41,7 @@ export function ModuloExclusividadePessoalidade({ data, onChange }: ModuloExclus
       </div>
 
       {/* C.3.1: Exclusividade */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>Atendia exclusivamente esta empresa (não tinha outros clientes PJ)?</Label>
         <SimNaoRadio
           id="atende-exclusivamente"
@@ -53,7 +53,7 @@ export function ModuloExclusividadePessoalidade({ data, onChange }: ModuloExclus
       </div>
 
       {/* C.3.2: Pessoalidade */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>Poderia enviar outra pessoa no seu lugar para fazer o trabalho?</Label>
         <SimNaoRadio
           id="pode-enviar-substituto"
@@ -91,7 +91,7 @@ export function ModuloExclusividadePessoalidade({ data, onChange }: ModuloExclus
       </div>
 
       {/* C.3.4: Liberdade de recusar tarefas */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>Tinha liberdade para recusar tarefas ou projetos da empresa?</Label>
         <SimNaoRadio
           id="liberdade-recusar"

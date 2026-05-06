@@ -162,7 +162,7 @@ export function PangeaResults({ data }: { data: PangeaBuscaResponse }) {
                       </div>
                     </AccordionTrigger>
                     <AccordionContent>
-                      <div className={cn(/* design-system-escape: space-y-3 sem token DS; pt-2 padding direcional sem Inset equiv. */ "space-y-3 pt-2")}>
+                      <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "stack-medium pt-2")}>
                         {g.resultados.map((r) => {
                           const { titulo, subtitulo } = getResumoTexto(r);
 
@@ -190,7 +190,7 @@ export function PangeaResults({ data }: { data: PangeaBuscaResponse }) {
                               {r.processosParadigma?.length ? (
                                 <CardContent className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv. */ "pt-0")}>
                                   <p className="text-sm text-muted-foreground mb-2">Processos paradigma</p>
-                                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+                                  <div className={cn("flex flex-col inline-micro")}>
                                     {r.processosParadigma.map((p) => (
                                       p.link ? (
                                         <Link

@@ -162,7 +162,7 @@ function getPecasModelosColumns(
       cell: ({ row }) => {
         const modelo = row.original;
         return (
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center justify-end gap-1")}>
+          <div className={cn("flex items-center justify-end inline-micro")}>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>

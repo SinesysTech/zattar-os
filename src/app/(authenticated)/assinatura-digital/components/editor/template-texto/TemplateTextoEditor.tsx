@@ -142,7 +142,7 @@ export function TemplateTextoEditor({
               <Text variant="caption" className="font-medium">
                 {CATEGORY_LABELS[category]}:
               </Text>
-              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "ml-2 flex flex-wrap gap-1")}>
+              <div className={cn("ml-2 flex flex-wrap inline-micro")}>
                 {variables.slice(0, 3).map((v) => (
                   <span
                     key={v.key}

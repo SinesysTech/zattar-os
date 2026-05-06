@@ -95,7 +95,7 @@ export function DespesasCategoriaChart({ data, isLoading }: DespesasCategoriaCha
                 </div>
               }
             />
-            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5 flex-1")}>
+            <div className={cn("stack-snug flex-1")}>
               {chartData.map((item, idx) => {
                 const percentual = data[idx].percentual ?? (total > 0 ? (item.value / total) * 100 : 0);
                 return (
@@ -110,7 +110,7 @@ export function DespesasCategoriaChart({ data, isLoading }: DespesasCategoriaCha
                       />
                       <span className="truncate text-muted-foreground">{item.name}</span>
                     </div>
-                    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 shrink-0")}>
+                    <div className={cn("flex items-center inline-medium shrink-0")}>
                       <Text variant="caption" className="tabular-nums">
                         {formatarPercentual(percentual)}
                       </Text>

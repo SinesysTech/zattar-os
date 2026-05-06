@@ -75,7 +75,7 @@ export function WidgetTendenciaNovos() {
       subtitle="Tendencia -- ultimos 8 meses"
       depth={1}
     >
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-end justify-between gap-3 mb-3")}>
+      <div className={cn("flex items-end justify-between inline-medium mb-3")}>
         <Stat
           label="Este mes"
           value={fmtNum(current)}
@@ -91,7 +91,7 @@ export function WidgetTendenciaNovos() {
       </div>
       <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-end justify-between pt-2 border-t border-border/10")}>
         {tendencia.map((t, i) => (
-          <div key={i} className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-center gap-0.5")}>
+          <div key={i} className={cn("flex flex-col items-center inline-nano")}>
             <span className="text-[9px] text-muted-foreground/60 tabular-nums">{t.novos}</span>
             <span className="text-[8px] text-muted-foreground/55">{labels[i]}</span>
           </div>

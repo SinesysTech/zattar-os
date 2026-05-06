@@ -58,10 +58,10 @@ function YearGridSkeleton() {
       {Array.from({ length: 12 }).map((_, i) => (
         <div
           key={i}
-          className={cn(/* design-system-escape: space-y-3 sem token DS */ "rounded-xl border border-border/30 bg-card/30 inset-card-compact space-y-3")}
+          className={cn("rounded-xl border border-border/30 bg-card/30 inset-card-compact stack-medium")}
         >
           <Skeleton className="h-4 w-24" />
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "grid grid-cols-7 gap-1.5")}>
+          <div className={cn("grid grid-cols-7 inline-snug")}>
             {Array.from({ length: 35 }).map((_, j) => (
               <Skeleton key={j} className="aspect-square rounded-sm" />
             ))}
@@ -85,11 +85,11 @@ export function ObrigacoesLoading({ view = 'lista' }: { view?: ObrigacoesView })
       </div>
 
       {/* Pulse Strip — 4 KPIs */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3 grid-cols-2 lg:grid-cols-4")}>
+      <div className={cn("grid inline-medium grid-cols-2 lg:grid-cols-4")}>
         {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}
-            className={cn(/* design-system-escape: space-y-3 sem token DS */ "rounded-xl border border-border/30 bg-card/40 inset-card-compact space-y-3")}
+            className={cn("rounded-xl border border-border/30 bg-card/40 inset-card-compact stack-medium")}
           >
             <Skeleton className="h-3 w-20" />
             <Skeleton className="h-8 w-16" />
@@ -99,7 +99,7 @@ export function ObrigacoesLoading({ view = 'lista' }: { view?: ObrigacoesView })
       </div>
 
       {/* Filter bar + search + view toggle */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 flex-wrap")}>
+      <div className={cn("flex items-center inline-medium flex-wrap")}>
         <Skeleton className="h-9 w-28 rounded-lg" />
         <Skeleton className="h-9 w-28 rounded-lg" />
         <Skeleton className="h-9 w-28 rounded-lg" />

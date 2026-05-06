@@ -160,7 +160,7 @@ export function ContratosContent({
       </div>
 
       {/* ── View Controls (FilterBar + Search + ViewToggle + Settings) ─────── */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
+      <div className={cn("flex flex-col sm:flex-row items-start sm:items-center inline-medium")}>
         <ContratosFilterBar
           filters={filters}
           onChange={setFilters}
@@ -177,7 +177,7 @@ export function ContratosContent({
                 : 'Buscar cliente, parte, processo...'
             }
           />
-          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS; p-0.5 → usar <Inset> */ "flex items-center gap-0.5 p-0.5 rounded-lg bg-border/6")}>
+          <div className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "flex items-center inline-nano p-0.5 rounded-lg bg-border/6")}>
             {VIEW_OPTIONS.map((opt) => (
               <button
                 key={opt.id}

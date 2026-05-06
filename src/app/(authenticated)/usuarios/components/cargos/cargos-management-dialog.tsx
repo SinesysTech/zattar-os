@@ -192,8 +192,8 @@ export function CargosManagementDialog({
         <div className={cn("inset-dialog stack-default")}>
           <div className={cn("grid inline-loose lg:grid-cols-2")}>
             {/* Lista */}
-            <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
+            <div className={cn("stack-medium")}>
+              <div className={cn("flex items-center justify-between inline-medium")}>
                 <h3 className="scroll-m-20 text-sm font-semibold tracking-tight">Cargos</h3>
                 <Button
                   type="button"
@@ -225,7 +225,7 @@ export function CargosManagementDialog({
                   </EmptyHeader>
                 </Empty>
               ) : (
-                <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1 rounded-lg border bg-card")}>
+                <div className={cn("stack-micro rounded-lg border bg-card")}>
                   {cargos.map((cargo) => (
                     <div
                       key={cargo.id}
@@ -255,7 +255,7 @@ export function CargosManagementDialog({
                         )}
                       </div>
 
-                      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 ml-4")}>
+                      <div className={cn("flex items-center inline-micro ml-4")}>
                         <Button
                           type="button"
                           variant="ghost"
@@ -291,8 +291,8 @@ export function CargosManagementDialog({
             </div>
 
             {/* Form */}
-            <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
+            <div className={cn("stack-medium")}>
+              <div className={cn("flex items-center justify-between inline-medium")}>
                 <h3 className="scroll-m-20 text-sm font-semibold tracking-tight">
                   {editingId ? 'Editar cargo' : isCreating ? 'Novo cargo' : 'Detalhes'}
                 </h3>

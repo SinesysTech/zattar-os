@@ -158,10 +158,10 @@ export default function PropertiesPopover({
               </div>
               <ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
             </CollapsibleTrigger>
-            <CollapsibleContent className={cn(/* design-system-escape: space-y-3 sem token DS; px-2 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv. */ "space-y-3 px-2 pt-2")}>
+            <CollapsibleContent className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv. */ "stack-medium px-2 pt-2")}>
               {/* Variavel selector (ocultar para texto_composto) */}
               {selectedField.tipo !== 'texto_composto' && (
-                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+                <div className={cn("stack-snug")}>
                   <Label htmlFor="field-variavel" className={cn("text-caption text-muted-foreground")}>Variável</Label>
                   <Popover modal>
                     <PopoverTrigger asChild>
@@ -217,7 +217,7 @@ export default function PropertiesPopover({
                   </p>
                 </div>
               )}
-              <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+              <div className={cn("stack-snug")}>
                 <Label htmlFor="field-ordem" className={cn("text-caption text-muted-foreground")}>Ordem de Exibição</Label>
                 <Input
                   id="field-ordem"
@@ -246,9 +246,9 @@ export default function PropertiesPopover({
               </div>
               <ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
             </CollapsibleTrigger>
-            <CollapsibleContent className={cn(/* design-system-escape: space-y-3 sem token DS; px-2 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv. */ "space-y-3 px-2 pt-2")}>
+            <CollapsibleContent className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv. */ "stack-medium px-2 pt-2")}>
               <div className={cn("grid grid-cols-2 inline-tight")}>
-                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+                <div className={cn("stack-snug")}>
                   <Label htmlFor="field-pos-x" className={cn("text-caption text-muted-foreground")}>Posição X</Label>
                   <Input
                     id="field-pos-x"
@@ -265,7 +265,7 @@ export default function PropertiesPopover({
                     className={cn("h-8 text-caption")}
                   />
                 </div>
-                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+                <div className={cn("stack-snug")}>
                   <Label htmlFor="field-pos-y" className={cn("text-caption text-muted-foreground")}>Posição Y</Label>
                   <Input
                     id="field-pos-y"
@@ -284,7 +284,7 @@ export default function PropertiesPopover({
                 </div>
               </div>
               <div className={cn("grid grid-cols-2 inline-tight")}>
-                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+                <div className={cn("stack-snug")}>
                   <Label htmlFor="field-width" className={cn("text-caption text-muted-foreground")}>Largura</Label>
                   <Input
                     id="field-width"
@@ -301,7 +301,7 @@ export default function PropertiesPopover({
                     className={cn("h-8 text-caption")}
                   />
                 </div>
-                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+                <div className={cn("stack-snug")}>
                   <Label htmlFor="field-height" className={cn("text-caption text-muted-foreground")}>Altura</Label>
                   <Input
                     id="field-height"
@@ -332,8 +332,8 @@ export default function PropertiesPopover({
                 </div>
                 <ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
               </CollapsibleTrigger>
-              <CollapsibleContent className={cn(/* design-system-escape: space-y-3 sem token DS; px-2 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv. */ "space-y-3 px-2 pt-2")}>
-                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+              <CollapsibleContent className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv. */ "stack-medium px-2 pt-2")}>
+                <div className={cn("stack-snug")}>
                   <Label htmlFor="field-font-size" className={cn("text-caption text-muted-foreground")}>Tamanho da fonte</Label>
                   <Input
                     id="field-font-size"
@@ -351,7 +351,7 @@ export default function PropertiesPopover({
                   />
                 </div>
 
-                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+                <div className={cn("stack-snug")}>
                   <Label htmlFor="font-family-select" className={cn("text-caption text-muted-foreground")}>
                     Família da fonte
                   </Label>

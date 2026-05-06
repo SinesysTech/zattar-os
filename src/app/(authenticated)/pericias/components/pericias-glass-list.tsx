@@ -217,8 +217,8 @@ function GlassRow({ pericia, usuarios, onViewDetail }: GlassRowProps) {
       )}
     >
       {/* ── Linha 1: Partes (título) · Perito · Especialidade · Situação ── */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3 flex-wrap")}>
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex-1 min-w-0 flex items-baseline gap-3 flex-wrap")}>
+      <div className={cn("flex items-start justify-between inline-medium flex-wrap")}>
+        <div className={cn("flex-1 min-w-0 flex items-baseline inline-medium flex-wrap")}>
           <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-snug sem token DS */ "text-body-sm font-semibold text-foreground leading-snug wrap-break-word")}>
             {parteAutora || 'Autor não informado'}
             <span className={cn(/* design-system-escape: mx-2 margin sem primitiva DS; font-medium → className de <Text>/<Heading> */ "mx-2 text-muted-foreground/50 font-medium")}>×</span>
@@ -226,7 +226,7 @@ function GlassRow({ pericia, usuarios, onViewDetail }: GlassRowProps) {
           </h3>
 
           {perito && (
-            <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "inline-flex items-baseline gap-1.5 text-[12px] text-foreground/70 wrap-break-word")}>
+            <span className={cn("inline-flex items-baseline inline-snug text-[12px] text-foreground/70 wrap-break-word")}>
               <Briefcase className="size-3 text-muted-foreground/50 translate-y-0.5 shrink-0" />
               <span className="wrap-break-word">{perito}</span>
             </span>
@@ -252,7 +252,7 @@ function GlassRow({ pericia, usuarios, onViewDetail }: GlassRowProps) {
       </div>
 
       {/* ── Linha 2: # Processo + TRT badge + Grau badge ───────── */}
-      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "mt-2 flex flex-wrap items-center gap-1.5")}>
+      <div className={cn("mt-2 flex flex-wrap items-center inline-snug")}>
         <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[12px] font-medium tabular-nums text-muted-foreground")}>
           {pericia.numeroProcesso}
         </span>
@@ -269,10 +269,10 @@ function GlassRow({ pericia, usuarios, onViewDetail }: GlassRowProps) {
       </div>
 
       {/* ── Footer: Prazo · Responsável · Countdown ── */}
-      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "mt-3 pt-3 border-t border-border/40 flex items-center justify-between gap-3 flex-wrap")}>
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 pt-3 border-t border-border/40 flex items-center justify-between inline-medium flex-wrap")}>
         <div className={cn("flex items-center inline-default min-w-0 flex-wrap")}>
           {prazoFormatted && (
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+            <div className={cn("flex items-center inline-snug")}>
               <span className={cn(/* design-system-escape: tracking-wider sem token DS; font-medium → className de <Text>/<Heading> */ "text-[10px] uppercase tracking-wider text-muted-foreground/55 font-medium")}>
                 Prazo
               </span>
@@ -283,7 +283,7 @@ function GlassRow({ pericia, usuarios, onViewDetail }: GlassRowProps) {
           )}
         </div>
 
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 shrink-0")}>
+        <div className={cn("flex items-center inline-medium shrink-0")}>
           <ResponsavelCell
             responsavelId={pericia.responsavelId}
             usuarios={usuarios}

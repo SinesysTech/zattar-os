@@ -78,7 +78,7 @@ export function WidgetStatusContratos() {
           centerLabel={`${fmtNum(total)}`}
         />
 
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5 flex-1 min-w-0")}>
+        <div className={cn("flex flex-col inline-snug flex-1 min-w-0")}>
           {porStatus.map((s) => {
             const pct = total > 0 ? ((s.count / total) * 100).toFixed(0) : '0';
             return (

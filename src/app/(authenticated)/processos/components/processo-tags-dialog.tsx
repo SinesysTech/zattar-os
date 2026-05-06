@@ -205,7 +205,7 @@ export function ProcessoTagsDialog({
 
           {/* Formulário para criar nova tag */}
           {showNewTagForm && (
-            <div className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-3 sem token DS */ "mb-3 p-3 border rounded-md bg-muted/30 space-y-3")}>
+            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "mb-3 p-3 border rounded-md bg-muted/30 stack-medium")}>
               <div className={cn("flex inline-tight")}>
                 <Input
                   variant="glass"

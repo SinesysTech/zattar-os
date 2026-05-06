@@ -243,7 +243,7 @@ export function ObrigacoesSemanaView({
       </div>
 
       {/* Week Grid — 5 colunas (seg-sex) */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-start")}>
+      <div className={cn("grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 inline-medium items-start")}>
         {weekDays.map((day) => {
           const key = format(day, 'yyyy-MM-dd');
           const dayItems = parcelasByDay.get(key) ?? [];
@@ -346,11 +346,11 @@ function WeekDayCard({
       )}
     >
       {/* Row 1: Valor + urgency */}
-      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center justify-between gap-1")}>
+      <div className={cn("flex items-center justify-between inline-micro")}>
         <Text variant="caption" className="tabular-nums font-semibold text-foreground/90">
           {CURRENCY.format(parcela.valorBrutoCreditoPrincipal)}
         </Text>
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+        <div className={cn("flex items-center inline-snug")}>
           {!finalizada && urgency !== 'ok' && (
             <span className={cn('size-2 rounded-full', URGENCY_DOT[urgency])} />
           )}
@@ -368,7 +368,7 @@ function WeekDayCard({
       </div>
 
       {/* Row 2: Tipo + Direção */}
-      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mt-1.5 flex-wrap")}>
+      <div className={cn("flex items-center inline-snug mt-1.5 flex-wrap")}>
         <SemanticBadge
           category="obrigacao_tipo"
           value={acordo.tipo}
@@ -378,7 +378,7 @@ function WeekDayCard({
         </SemanticBadge>
         <span
           className={cn(
-            /* design-system-escape: gap-0.5 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[9px] font-semibold border',
+            /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center inline-nano rounded px-1.5 py-0.5 text-[9px] font-semibold border',
             isRecebimento
               ? 'bg-success/10 text-success border-success/20'
               : 'bg-destructive/10 text-destructive border-destructive/20',

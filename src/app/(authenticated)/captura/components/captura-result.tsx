@@ -81,7 +81,7 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
 
   if (!success) {
     return (
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/6 inset-card-compact")}>
+      <div className={cn("flex items-start inline-medium rounded-lg border border-destructive/30 bg-destructive/6 inset-card-compact")}>
         <XCircle className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
         <div>
           <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold text-destructive")}>Erro na Captura</p>
@@ -276,7 +276,7 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
           <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-semibold text-destructive uppercase tracking-wider mb-2")}>
             Erros em processos ({data.erros.length})
           </p>
-          <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+          <div className={cn("stack-snug")}>
             {data.erros.slice(0, 5).map((e, i) => (
               <div key={i} className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex items-start inline-tight rounded-lg border border-destructive/30 bg-destructive/6 p-2.5 text-caption")}>
                 <XCircle className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />

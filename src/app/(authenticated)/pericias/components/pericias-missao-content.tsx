@@ -222,9 +222,9 @@ function PericiaMissionCard({
           isCritical && 'border-destructive/20',
         )}
       >
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "inset-card-compact flex flex-col gap-3")}>
+        <div className={cn("inset-card-compact flex flex-col inline-medium")}>
           {/* ── 1. Header: identidade (overline + heading) + Prazo ── */}
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
+          <div className={cn("flex items-start justify-between inline-medium")}>
             <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5 min-w-0")}>
               <IconContainer
                 size="md"
@@ -256,7 +256,7 @@ function PericiaMissionCard({
             {/* Prazo (substituindo countdown "Atrasado Xd") */}
             <div
               className={cn(
-                /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg shrink-0 text-[11px] font-semibold tabular-nums',
+                /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center inline-snug px-2.5 py-1.5 rounded-lg shrink-0 text-[11px] font-semibold tabular-nums',
                 URGENCY_BADGE[urgency],
               )}
             >
@@ -270,8 +270,8 @@ function PericiaMissionCard({
           </div>
 
           {/* ── 2. Info grid: Tribunal | Processo ─────────────────── */}
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "grid grid-cols-3 gap-3 rounded-lg bg-border/5 px-3 py-2.5")}>
-            <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5 min-w-0")}>
+          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "grid grid-cols-3 inline-medium rounded-lg bg-border/5 px-3 py-2.5")}>
+            <div className={cn("flex flex-col inline-nano min-w-0")}>
               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[9px] font-medium text-muted-foreground/55 uppercase tracking-wider")}>
                 Tribunal
               </span>
@@ -282,7 +282,7 @@ function PericiaMissionCard({
                 </span>
               </span>
             </div>
-            <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5 min-w-0 col-span-2")}>
+            <div className={cn("flex flex-col inline-nano min-w-0 col-span-2")}>
               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[9px] font-medium text-muted-foreground/55 uppercase tracking-wider")}>
                 Processo
               </span>
@@ -319,7 +319,7 @@ function PericiaMissionCard({
 
           {/* ── 4. Perito (corpo, sem truncate) ─────────────────── */}
           {perito && (
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-start gap-1.5 text-[12px] text-foreground/75 wrap-break-word")}>
+            <div className={cn("flex items-start inline-snug text-[12px] text-foreground/75 wrap-break-word")}>
               <Briefcase className="size-3 text-muted-foreground/50 shrink-0 mt-0.5" />
               <span className={cn(/* design-system-escape: leading-snug sem token DS */ "wrap-break-word leading-snug")}>
                 <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[9px] font-medium uppercase tracking-wider text-muted-foreground/55 mr-1.5")}>
@@ -354,7 +354,7 @@ interface GroupHeaderProps {
 function GroupHeader({ group }: GroupHeaderProps) {
   const Icon = group.icon;
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+    <div className={cn("flex items-center inline-medium")}>
       <IconContainer size="md" className={group.iconBg}>
         <Icon className={cn('size-4', group.iconColor)} />
       </IconContainer>
@@ -539,7 +539,7 @@ export function PericiasMissaoContent({
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className={cn("stack-tight")}>
               <Skeleton className="h-10 w-64 rounded-lg" />
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3")}>
+              <div className={cn("grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 inline-medium")}>
                 {Array.from({ length: 3 }).map((_, j) => (
                   <Skeleton key={j} className="h-40 rounded-2xl" />
                 ))}
@@ -562,9 +562,9 @@ export function PericiasMissaoContent({
           {groups
             .filter((g) => g.pericias.length > 0)
             .map((group) => (
-              <section key={group.key} className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+              <section key={group.key} className={cn("stack-medium")}>
                 <GroupHeader group={group} />
-                <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3")}>
+                <div className={cn("grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 inline-medium")}>
                   {group.pericias.map((p) => (
                     <PericiaMissionCard
                       key={p.id}

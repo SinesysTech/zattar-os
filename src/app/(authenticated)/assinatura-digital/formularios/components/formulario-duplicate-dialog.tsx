@@ -118,7 +118,7 @@ export function FormularioDuplicateDialog({
           <DialogTitle>Duplicar Formulário</DialogTitle>
           <DialogDescription>
             Crie uma cópia do formulário &ldquo;{formulario.nome}&rdquo;.
-            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "mt-2 space-y-1")}>
+            <div className={cn("mt-2 stack-micro")}>
               <div className={cn("flex items-center inline-tight")}>
                 <Label className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Segmento:</Label>
                 <Badge variant="outline">{formulario.segmento?.nome || "N/A"}</Badge>

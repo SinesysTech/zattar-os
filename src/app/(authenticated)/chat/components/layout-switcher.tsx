@@ -34,7 +34,7 @@ export function LayoutSwitcher({ currentLayout, onLayoutChange }: LayoutSwitcher
   };
 
   return (
-    <div className={cn(/* design-system-escape: gap-1 gap sem token DS; p-1 → usar <Inset> */ "absolute top-4 left-4 z-50 flex gap-1 bg-video-surface/80 backdrop-blur-md rounded-lg p-1 border border-video-border")}>
+    <div className={cn(/* design-system-escape: p-1 → usar <Inset> */ "absolute top-4 left-4 z-50 flex inline-micro bg-video-surface/80 backdrop-blur-md rounded-lg p-1 border border-video-border")}>
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>

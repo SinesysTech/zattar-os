@@ -37,7 +37,7 @@ export function ModuloSubordinacaoReal({ data, onChange }: ModuloSubordinacaoRea
       </div>
 
       {/* C.2.1: Horário fixo */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>Cumpria horário fixo definido pela empresa?</Label>
         <SimNaoRadio
           id="cumpre-horario"
@@ -47,7 +47,7 @@ export function ModuloSubordinacaoReal({ data, onChange }: ModuloSubordinacaoRea
       </div>
 
       {/* C.2.2: Ordens de superior */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>Recebia ordens de um superior/gestor na empresa?</Label>
         <SimNaoRadio
           id="recebe-ordens"
@@ -57,7 +57,7 @@ export function ModuloSubordinacaoReal({ data, onChange }: ModuloSubordinacaoRea
       </div>
 
       {/* C.2.3: Reuniões obrigatórias */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>Participava de reuniões obrigatórias da empresa?</Label>
         <SimNaoRadio
           id="reunioes-obrigatorias"
@@ -73,7 +73,7 @@ export function ModuloSubordinacaoReal({ data, onChange }: ModuloSubordinacaoRea
       )}
 
       {/* C.2.4: Autorização para faltar */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>Tinha que pedir autorização para faltar ou tirar folga?</Label>
         <SimNaoRadio
           id="autorizacao-falta"
@@ -83,7 +83,7 @@ export function ModuloSubordinacaoReal({ data, onChange }: ModuloSubordinacaoRea
       </div>
 
       {/* C.2.5: Crachá/e-mail/uniforme */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>Usava crachá, e-mail corporativo ou uniforme da empresa?</Label>
         <SimNaoRadio
           id="cracha-email-uniforme"

@@ -154,7 +154,7 @@ export function TimelineSearchModal({
         {/* Lista de resultados */}
         <div
           ref={resultsRef}
-          className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-1 sem token DS */ "max-h-[70vh] overflow-y-auto p-2 space-y-1")}
+          className={cn(/* design-system-escape: p-2 → usar <Inset> */ "max-h-[70vh] overflow-y-auto p-2 stack-micro")}
           role="listbox"
           aria-label="Resultados da busca"
         >
@@ -185,13 +185,13 @@ export function TimelineSearchModal({
             <strong className="text-foreground">{results.length}</strong>{' '}
             {results.length === 1 ? 'resultado' : 'resultados'}
           </span>
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
-            <span className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "inline-flex items-center gap-0.5")}>
+          <div className={cn("flex items-center inline-medium")}>
+            <span className={cn("inline-flex items-center inline-nano")}>
               <ArrowUp className="size-3" />
               <ArrowDown className="size-3" />
               <span className="ml-0.5">Navegar</span>
             </span>
-            <span className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "inline-flex items-center gap-0.5")}>
+            <span className={cn("inline-flex items-center inline-nano")}>
               <CornerDownLeft className="size-3" />
               <span className="ml-0.5">Selecionar</span>
             </span>

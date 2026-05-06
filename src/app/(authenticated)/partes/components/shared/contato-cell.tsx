@@ -78,9 +78,9 @@ export function ContatoCell({
   }
 
   return (
-    <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1 max-w-full overflow-hidden group")}>
+    <div className={cn("flex flex-col inline-micro max-w-full overflow-hidden group")}>
       {/* Linha 1: Telefone */}
-      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 min-w-0")}>
+      <div className={cn("flex items-center inline-snug min-w-0")}>
         {showIcons && (
           <Phone
             className={cn(
@@ -104,7 +104,7 @@ export function ContatoCell({
         )}
       </div>
       {/* Linha 2: E-mail */}
-      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 min-w-0 w-full")}>
+      <div className={cn("flex items-center inline-snug min-w-0 w-full")}>
         {showIcons && (
           <Mail
             className={cn(

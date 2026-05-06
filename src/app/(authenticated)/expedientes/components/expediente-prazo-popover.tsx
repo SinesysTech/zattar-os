@@ -88,7 +88,7 @@ export function ExpedientePrazoPopover({
           type="button"
           onClick={(e) => e.stopPropagation()}
           className={cn(
-            /* design-system-escape: gap-1.5 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; -mx-1.5 sem equivalente DS; -my-0.5 sem equivalente DS */ 'inline-flex items-center gap-1.5 rounded-md px-1.5 py-0.5 -mx-1.5 -my-0.5',
+            /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; -mx-1.5 sem equivalente DS; -my-0.5 sem equivalente DS */ 'inline-flex items-center inline-snug rounded-md px-1.5 py-0.5 -mx-1.5 -my-0.5',
             'transition-colors hover:bg-muted/50 cursor-pointer',
             'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
             isPending && 'opacity-60 pointer-events-none',

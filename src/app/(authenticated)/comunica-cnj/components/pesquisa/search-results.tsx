@@ -44,9 +44,9 @@ function ResultadoCard({
         'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40',
       )}
     >
-      <GlassPanel className={cn(/* design-system-escape: gap-3 gap sem token DS */ "gap-3 inset-card-compact group-hover:border-primary/30 group-hover:shadow-[0_4px_24px_color-mix(in_oklch,var(--primary)_6%,transparent)]")}>
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex min-w-0 flex-1 flex-col gap-1.5")}>
+      <GlassPanel className={cn("inline-medium inset-card-compact group-hover:border-primary/30 group-hover:shadow-[0_4px_24px_color-mix(in_oklch,var(--primary)_6%,transparent)]")}>
+        <div className={cn("flex items-start justify-between inline-medium")}>
+          <div className={cn("flex min-w-0 flex-1 flex-col inline-snug")}>
             <div className={cn("flex flex-wrap items-center inline-tight")}>
               <TribunalBadge codigo={item.siglaTribunal} />
               {item.tipoComunicacao && (
@@ -110,7 +110,7 @@ export function SearchResults() {
   if (isBuscando) {
     return (
       <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "mx-auto w-full max-w-3xl py-8")}>
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col items-center gap-3")}>
+        <div className={cn("flex flex-col items-center inline-medium")}>
           <LoadingSpinner className="size-6" />
           <Text variant="caption" className="text-muted-foreground">
             Consultando Comunica CNJ...
@@ -152,7 +152,7 @@ export function SearchResults() {
   }
 
   return (
-    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "mx-auto w-full max-w-3xl space-y-3")}>
+    <div className={cn("mx-auto w-full max-w-3xl stack-medium")}>
       <div className="flex items-center justify-between">
         <Text variant="overline" className="text-muted-foreground/70">
           {total.toLocaleString('pt-BR')} resultado{total === 1 ? '' : 's'}
@@ -169,7 +169,7 @@ export function SearchResults() {
         </Button>
       </div>
 
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
+      <div className={cn("flex flex-col inline-medium")}>
         {resultados.map((item) => (
           <ResultadoCard
             key={item.hash}

@@ -434,7 +434,7 @@ export function ClienteFormDialog({
           type="button"
           onClick={() => setFormData(prev => ({ ...prev, tipo_pessoa: 'pf' }))}
           className={cn(
-            /* design-system-escape: gap-3 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ 'flex items-center gap-3 px-4 py-3 rounded-md border transition-all text-left',
+            /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ 'flex items-center inline-medium px-4 py-3 rounded-md border transition-all text-left',
             isPF
               ? 'border-primary bg-primary/5'
               : 'border-border hover:border-muted-foreground/30 hover:bg-muted/30'
@@ -463,7 +463,7 @@ export function ClienteFormDialog({
           type="button"
           onClick={() => setFormData(prev => ({ ...prev, tipo_pessoa: 'pj' }))}
           className={cn(
-            /* design-system-escape: gap-3 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ 'flex items-center gap-3 px-4 py-3 rounded-md border transition-all text-left',
+            /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ 'flex items-center inline-medium px-4 py-3 rounded-md border transition-all text-left',
             isPJ
               ? 'border-primary bg-primary/5'
               : 'border-border hover:border-muted-foreground/30 hover:bg-muted/30'
@@ -712,7 +712,7 @@ export function ClienteFormDialog({
               <Badge
                 key={index}
                 variant="secondary"
-                className={cn(/* design-system-escape: gap-1 gap sem token DS; pr-1 padding direcional sem Inset equiv. */ "gap-1 pr-1")}
+                className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "inline-micro pr-1")}
               >
                 {email}
                 <button

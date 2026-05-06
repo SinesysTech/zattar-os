@@ -113,7 +113,7 @@ export function CallTranscriptViewer({ chamada }: CallTranscriptViewerProps) {
              <div className="h-full flex flex-col">
               <div className={cn(/* design-system-escape: p-2 → usar <Inset>; px-4 padding direcional sem Inset equiv. */ "flex items-center justify-between p-2 border-b text-caption text-muted-foreground bg-muted/20 px-4")}>
                  <span>{chamada.transcricao.length} caracteres</span>
-                 <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1")}>
+                 <div className={cn("flex inline-micro")}>
                     <Button variant="ghost" size="icon" className="h-6 w-6" onClick={handleCopyTranscript} title="Copiar">
                       <Copy className="w-3.5 h-3.5" />
                     </Button>

@@ -187,9 +187,9 @@ export function TipoDescricaoCell({
 
   return (
     <>
-      <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-start gap-0.5 w-full")}>
+      <div className={cn("flex flex-col items-start inline-nano w-full")}>
         {/* Badge de tipo (clicável - abre popover) + ícone de documento */}
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+        <div className={cn("flex items-center inline-snug")}>
           <Popover open={isTipoPopoverOpen} onOpenChange={setIsTipoPopoverOpen}>
             <PopoverTrigger asChild>
               <button type="button" className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded">
@@ -329,7 +329,7 @@ function PrazoBadge({ dataInicio, dataFim, baixado }: {
   const opacityClass = baixado ? 'opacity-50' : '';
 
   return (
-    <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; gap-0.5 gap sem token DS */ "inline-flex flex-col items-center text-caption font-medium shrink-0 gap-0.5", opacityClass)}>
+    <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "inline-flex flex-col items-center text-caption font-medium shrink-0 inline-nano", opacityClass)}>
       {/* Data Início (verde - arredondado) */}
       <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "bg-success/15 text-success px-2 py-0.5 rounded-full")}>
         {formatDate(dataInicio)}
@@ -346,7 +346,7 @@ export function PrazoCell({ expediente }: { expediente: Expediente }) {
   const baixado = !!expediente.baixadoEm;
 
   return (
-    <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-center gap-0.5")}>
+    <div className={cn("flex flex-col items-center inline-nano")}>
       <PrazoBadge
         dataInicio={expediente.dataCienciaParte}
         dataFim={expediente.dataPrazoLegalParte}
@@ -568,9 +568,9 @@ export const columns: ColumnDef<Expediente>[] = [
     cell: ({ row }) => {
       const e = row.original;
       return (
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex flex-col gap-1.5 items-start py-2 max-w-[min(92vw,20rem)] min-w-0")}>
+        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex flex-col inline-snug items-start py-2 max-w-[min(92vw,20rem)] min-w-0")}>
           {/* Linha 1: Badge Tribunal + Grau */}
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 flex-wrap")}>
+          <div className={cn("flex items-center inline-snug flex-wrap")}>
             <TribunalGrauBadge trt={e.trt} grau={e.grau} />
           </div>
 
@@ -580,7 +580,7 @@ export const columns: ColumnDef<Expediente>[] = [
           </span>
 
           {/* Partes com badges de polo */}
-          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+          <div className={cn("flex flex-col inline-nano")}>
             <ParteBadge
               polo="ATIVO"
               className={cn("flex whitespace-normal wrap-break-word text-left font-normal text-caption")}

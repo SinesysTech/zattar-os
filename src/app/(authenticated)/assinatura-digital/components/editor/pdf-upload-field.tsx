@@ -163,7 +163,7 @@ export function PdfUploadField({
       ) : (
         <div className={cn("border rounded-lg inset-card-compact bg-muted/50")}>
           <div className="flex items-center justify-between">
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+            <div className={cn("flex items-center inline-medium")}>
               <FileText className="h-8 w-8 text-destructive" />
               <div>
                 <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{value?.nome}</p>

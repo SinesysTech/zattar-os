@@ -377,7 +377,7 @@ export default function CredenciaisPage() {
 
         {/* Filter Bar */}
         <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "px-4 py-2.5")}>
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
+          <div className={cn("flex flex-col sm:flex-row items-start sm:items-center inline-medium")}>
             <div className={cn("flex items-center inline-tight flex-wrap")}>
               <AdvogadosFilter
                 title="Advogado"
@@ -441,7 +441,7 @@ export default function CredenciaisPage() {
 
               {/* Sticky Bulk Actions Bar */}
               {selectedCount > 0 && (
-                <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-5 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "sticky bottom-0 left-0 right-0 flex items-center gap-3 bg-primary/95 backdrop-blur-sm border-t border-primary-foreground/12 px-5 py-2.5 text-primary-foreground rounded-b-2xl")}>
+                <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "sticky bottom-0 left-0 right-0 flex items-center inline-medium bg-primary/95 backdrop-blur-sm border-t border-primary-foreground/12 px-5 py-2.5 text-primary-foreground rounded-b-2xl")}>
                   <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold flex-1")}>{selectedCount} selecionada(s)</span>
                   <Button
                     variant="secondary"
@@ -467,7 +467,7 @@ export default function CredenciaisPage() {
 
         {/* Card View */}
         {viewMode === 'cards' && (
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3")}>
+          <div className={cn("grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 inline-medium")}>
             {isLoading ? (
               Array.from({ length: 6 }).map((_, i) => (
                 <GlassPanel key={i} depth={1} className="h-40 animate-pulse" />
@@ -484,7 +484,7 @@ export default function CredenciaisPage() {
               credenciaisFiltradas.map((credencial) => (
                 <GlassPanel key={credencial.id} depth={2} className={cn("inset-card-compact transition-all duration-300 ease-out hover:shadow-md hover:-translate-y-px")}>
                   {/* Tribunal + Grau header */}
-                  <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mb-3")}>
+                  <div className={cn("flex items-center inline-medium mb-3")}>
                     <div className="w-9 h-9 rounded-[0.625rem] bg-primary/8 flex items-center justify-center shrink-0">
                       <Landmark className="w-4 h-4 text-primary" />
                     </div>
@@ -495,7 +495,7 @@ export default function CredenciaisPage() {
                       </Text>
                     </div>
                     {/* Status dot */}
-                    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "ml-auto flex items-center gap-1.5")}>
+                    <div className={cn("ml-auto flex items-center inline-snug")}>
                       <div className={cn('size-2 rounded-full', credencial.active ? 'bg-success' : 'bg-muted-foreground/40')} />
                       <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[11px] font-medium', credencial.active ? 'text-success' : 'text-muted-foreground/50')}>
                         {credencial.active ? 'Ativa' : 'Inativa'}
@@ -506,7 +506,7 @@ export default function CredenciaisPage() {
                   <div className={cn(/* design-system-escape: my-2 margin sem primitiva DS */ "border-t border-border/10 my-2")} />
 
                   {/* Advogado info */}
-                  <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+                  <div className={cn("stack-micro")}>
                     <Text variant="caption" className="flex items-center gap-2 text-muted-foreground/60">
                       <Users className="size-3 shrink-0" />
                       <span className="truncate">{credencial.advogado_nome}</span>

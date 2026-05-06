@@ -455,7 +455,7 @@ export function ContratosListWrapper({
   // ── Render ───────────────────────────────────────────────────────────────
   return (
     <>
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         {selectedCount > 0 && (
           <ContratosBulkActionsBar
             selectedCount={selectedCount}

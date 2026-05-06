@@ -21,7 +21,7 @@ import {
 
 export default function FinanceiroVisaoGeral() {
   return (
-    <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
+    <div className={cn("stack-extra-loose")}>
       <div>
         <Heading level="page">Financeiro — Visão Geral</Heading>
         <p className="text-muted-foreground mt-2">

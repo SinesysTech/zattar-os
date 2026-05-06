@@ -43,7 +43,7 @@ export default function ContratoDetalhesLoading() {
                 <Skeleton className="h-16" />
                 <Skeleton className="h-16" />
               </div>
-              <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+              <div className={cn("stack-medium")}>
                 <Skeleton className="h-4 w-full" />
                 <Skeleton className="h-4 w-3/4" />
                 <Skeleton className="h-4 w-1/2" />
@@ -97,7 +97,7 @@ export default function ContratoDetalhesLoading() {
           {/* Processos card */}
           <GlassPanel className={cn("inset-dialog")}>
             <Skeleton className="h-5 w-48 mb-4" />
-            <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+            <div className={cn("stack-medium")}>
               {[1, 2].map((i) => (
                 <Skeleton key={i} className="h-20 w-full" />
               ))}

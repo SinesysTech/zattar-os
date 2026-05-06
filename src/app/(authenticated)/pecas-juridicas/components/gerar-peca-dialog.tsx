@@ -245,7 +245,7 @@ export function GerarPecaDialog({
             {/* Lista de modelos */}
             <ScrollArea className="h-75 border rounded-md">
               {loadingModelos ? (
-                <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "inset-card-compact space-y-3")}>
+                <div className={cn("inset-card-compact stack-medium")}>
                   {[1, 2, 3].map((i) => (
                     <Skeleton key={i} className="h-16 w-full" />
                   ))}

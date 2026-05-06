@@ -66,7 +66,7 @@ export function UsuariosListView({
                 />
               </div>
               <div className="flex flex-col min-w-0">
-                <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+                <div className={cn("flex items-center inline-micro")}>
                   <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold truncate")}>
                     {usuario.nomeCompleto}
                   </span>
@@ -216,7 +216,7 @@ export function UsuariosListView({
         cell: ({ row }) => {
           const usuario = row.original;
           return (
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 justify-end")}>
+            <div className={cn("flex items-center inline-micro justify-end")}>
               <Button
                 variant="ghost"
                 size="icon"

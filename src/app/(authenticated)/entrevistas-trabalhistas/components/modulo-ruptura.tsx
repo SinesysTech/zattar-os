@@ -82,7 +82,7 @@ export function ModuloRuptura({ data, onChange }: ModuloRupturaProps) {
       </div>
 
       {/* A.4.2: Verbas rescisórias */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>Recebeu o acerto rescisório e guias do FGTS e Seguro-Desemprego?</Label>
         <div className={cn("stack-tight")}>
           {VERBAS_RECEBIDAS_OPTIONS.map((opt) => (

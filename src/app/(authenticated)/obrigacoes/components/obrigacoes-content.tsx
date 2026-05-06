@@ -171,7 +171,7 @@ export function ObrigacoesContent({
       <ObrigacoesPulseStrip resumo={resumo} isLoading={isResumoLoading} />
 
       {/* 3. Controls Row: filters (esquerda) + search + view toggle (direita) */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
+      <div className={cn("flex flex-col sm:flex-row items-start sm:items-center inline-medium")}>
         <ObrigacoesFilterBar filters={filters} onChange={setFilters} />
         <div className={cn("flex items-center inline-tight flex-1 justify-end")}>
           <SearchInput

@@ -43,7 +43,7 @@ export function DocumentListRow({ doc, onSelect, selected }: DocumentListRowProp
       </div>
 
       {doc.assinantes.length > 0 && (
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 shrink-0")}>
+        <div className={cn("flex items-center inline-snug shrink-0")}>
           <ProgressRing
             percent={progress.percent}
             size={24}
@@ -65,7 +65,7 @@ export function DocumentListRow({ doc, onSelect, selected }: DocumentListRowProp
         {cfg.label}
       </span>
 
-      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "items-center gap-1 shrink-0 hidden md:flex")}>
+      <div className={cn("items-center inline-micro shrink-0 hidden md:flex")}>
         {doc.selfieHabilitada && (
           <Camera className="size-3 text-muted-foreground/65" />
         )}

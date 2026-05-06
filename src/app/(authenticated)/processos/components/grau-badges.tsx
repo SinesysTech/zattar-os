@@ -45,7 +45,7 @@ export function GrauBadges({ instances }: GrauBadgesProps) {
   });
 
   return (
-    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 flex-wrap")}>
+    <div className={cn("flex items-center inline-snug flex-wrap")}>
       {instancesOrdenadas.map((instance) => {
         const label = GRAU_LABELS_MAP[instance.grau];
 
@@ -58,7 +58,7 @@ export function GrauBadges({ instances }: GrauBadgesProps) {
                 </SemanticBadge>
               </TooltipTrigger>
               <TooltipContent>
-                <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "text-caption space-y-1")}>
+                <div className={cn("text-caption stack-micro")}>
                   <div>
                     <strong>Grau:</strong> {label}
                   </div>
@@ -98,7 +98,7 @@ export function GrauBadgesSimple({ grausAtivos }: { grausAtivos?: GrauProcesso[]
   });
 
   return (
-    <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 flex-wrap")}>
+    <div className={cn("flex items-center inline-micro flex-wrap")}>
       {grausOrdenados.map((grau) => {
         const label = GRAU_LABELS_MAP[grau];
 

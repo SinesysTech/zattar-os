@@ -48,7 +48,7 @@ export function DataTableFacetedFilter<TData, TValue>({
               <Badge variant="secondary" className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv. */ "rounded-sm px-1 font-normal lg:hidden")}>
                 {selectedValues.size}
               </Badge>
-              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "hidden gap-1 lg:flex")}>
+              <div className={cn("hidden inline-micro lg:flex")}>
                 {selectedValues.size > 2 ? (
                   <Badge variant="secondary" className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv. */ "rounded-sm px-1 font-normal")}>
                     {selectedValues.size} selecionados

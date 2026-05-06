@@ -187,7 +187,7 @@ export function DocumentoVerificacaoClient({
       <Card className={cn(/* design-system-escape: py-0 padding direcional sem Inset equiv. */ "flex min-h-0 flex-1 flex-col overflow-hidden py-0 shadow-sm")}>
         <CardHeader className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv.; lg:px-6 sem equivalente DS */ "border-b border-border/60 px-5 py-4 lg:px-6")}>
           <div className={cn("flex flex-col inline-default lg:flex-row lg:items-center lg:justify-between")}>
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex min-w-0 items-start gap-3 md:items-center")}>
+            <div className={cn("flex min-w-0 items-start inline-medium md:items-center")}>
               <Button
                 variant="outline"
                 size="icon" aria-label="Voltar"
@@ -204,7 +204,7 @@ export function DocumentoVerificacaoClient({
                   {displayTitle}
                 </Heading>
                 <div className={cn("mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-body-sm text-muted-foreground")}>
-                  <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "inline-flex items-center gap-1.5")}>
+                  <span className={cn("inline-flex items-center inline-snug")}>
                     <Calendar className="h-3.5 w-3.5" />
                     Criado em {createdAtLabel}
                   </span>
@@ -276,7 +276,7 @@ export function DocumentoVerificacaoClient({
         <CardContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "min-h-0 flex-1 p-0")}>
           <div className="grid h-full min-h-0 grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(22rem,0.85fr)]">
             <section className="relative min-h-0 border-b border-border/60 lg:border-b-0 lg:border-r">
-              <div className={cn(/* design-system-escape: gap-1 gap sem token DS; p-1 → usar <Inset> */ "absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 rounded-full border border-border/60 bg-background/95 p-1 shadow-sm backdrop-blur")}>
+              <div className={cn(/* design-system-escape: p-1 → usar <Inset> */ "absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center inline-micro rounded-full border border-border/60 bg-background/95 p-1 shadow-sm backdrop-blur")}>
                     <Button
                       variant="ghost"
                       size="icon" aria-label="Reduzir"
@@ -323,7 +323,7 @@ export function DocumentoVerificacaoClient({
                 </div>
               ) : (
                 <div className="flex h-full items-center justify-center text-muted-foreground">
-                  <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col items-center gap-3 text-center")}>
+                  <div className={cn("flex flex-col items-center inline-medium text-center")}>
                     <div className={cn("rounded-full border border-border/60 bg-muted/40 inset-card-compact")}>
                       <FileText className="h-8 w-8" />
                     </div>
@@ -350,7 +350,7 @@ export function DocumentoVerificacaoClient({
                   Resumo de verificação
                 </CardTitle>
 
-                <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3")}>
+                <div className={cn("grid grid-cols-2 inline-medium")}>
                   <SummaryMetric
                     label="Assinantes"
                     value={`${data.signatarios.length}`}
@@ -362,7 +362,7 @@ export function DocumentoVerificacaoClient({
                 </div>
               </section>
 
-              <section className={cn(/* design-system-escape: space-y-3 sem token DS */ "mt-6 space-y-3")}>
+              <section className={cn("mt-6 stack-medium")}>
                 <div className={cn("flex items-center inline-tight")}>
                   <Info className="h-4 w-4 text-muted-foreground" />
                   <Heading level="section" className={cn("text-body-sm uppercase tracking-[0.14em] text-foreground/90")}>
@@ -370,7 +370,7 @@ export function DocumentoVerificacaoClient({
                   </Heading>
                 </div>
 
-                <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 gap-3 sm:grid-cols-2")}>
+                <div className={cn("grid grid-cols-1 inline-medium sm:grid-cols-2")}>
                   <MetadataItem
                     label="Identificador"
                     value={data.protocolo || data.uuid}
@@ -402,7 +402,7 @@ export function DocumentoVerificacaoClient({
               {(data.hashOriginal || data.hashFinal) && (
                 <>
                   <Separator className={cn(/* design-system-escape: my-6 margin sem primitiva DS */ "my-6")} />
-                  <section className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+                  <section className={cn("stack-medium")}>
                     <div className={cn("flex items-center inline-tight")}>
                       <ShieldCheck className="h-4 w-4 text-muted-foreground" />
                       <Heading level="section" className={cn("text-body-sm uppercase tracking-[0.14em] text-foreground/90")}>
@@ -410,7 +410,7 @@ export function DocumentoVerificacaoClient({
                       </Heading>
                     </div>
 
-                    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "rounded-lg border border-border/60 bg-muted/20 inset-card-compact space-y-3")}>
+                    <div className={cn("rounded-lg border border-border/60 bg-muted/20 inset-card-compact stack-medium")}>
                       <HashDisplay
                         label="Hash Original (SHA-256)"
                         hash={data.hashOriginal}
@@ -435,15 +435,15 @@ export function DocumentoVerificacaoClient({
 
               <Separator className={cn(/* design-system-escape: my-6 margin sem primitiva DS */ "my-6")} />
 
-              <section className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
-                <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
+              <section className={cn("stack-medium")}>
+                <div className={cn("flex items-center justify-between inline-medium")}>
                   <Heading level="section" className={cn("text-body-lg flex items-center inline-tight")}>
                     <Users className="h-5 w-5" />
                     Assinantes ({data.signatarios.length})
                   </Heading>
                 </div>
 
-                <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+                <div className={cn("stack-medium")}>
                   {data.signatarios.map((signatario, index) => (
                     <AssinanteCard
                       key={signatario.id}

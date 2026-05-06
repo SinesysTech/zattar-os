@@ -112,10 +112,10 @@ export function PecaModeloViewSheet({
         <ScrollArea className="flex-1">
           <div className={cn("stack-loose inset-dialog")}>
             {/* Cabeçalho do Modelo */}
-            <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3")}>
+            <div className={cn("stack-medium")}>
+              <div className={cn("flex items-start inline-medium")}>
                 <FileText className="h-6 w-6 text-muted-foreground shrink-0 mt-0.5" />
-                <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1 flex-1 min-w-0")}>
+                <div className={cn("stack-micro flex-1 min-w-0")}>
                   <Heading level="card">{modelo.titulo}</Heading>
                   {modelo.descricao && (
                     <p className={cn("text-body-sm text-muted-foreground")}>
@@ -155,7 +155,7 @@ export function PecaModeloViewSheet({
             <Separator />
 
             {/* Preview do Conteúdo */}
-            <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+            <div className={cn("stack-medium")}>
               <Text variant="label" as="h4" className="text-muted-foreground">
                 Preview do Conteúdo
               </Text>

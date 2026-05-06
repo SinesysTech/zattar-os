@@ -101,7 +101,7 @@ export function PermissoesMatriz({
       <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset>; space-y-5 sem token DS */ "p-5 space-y-5")}>
         {/* Header */}
         <div className="flex items-center justify-between">
-          <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
+          <div className={cn("stack-nano")}>
             <div className={cn("flex items-center inline-tight")}>
               <Shield className="size-4 text-muted-foreground/50" />
               <Heading level="card">Permissões do Usuário</Heading>
@@ -195,7 +195,7 @@ export function PermissoesMatriz({
                   : 'bg-info/12 text-info';
 
                 return (
-                  <GlassPanel key={grupo.chave} depth={1} className={cn(/* design-system-escape: space-y-3 sem token DS */ "inset-card-compact space-y-3")}>
+                  <GlassPanel key={grupo.chave} depth={1} className={cn("inset-card-compact stack-medium")}>
                     {/* Group header */}
                     <div className="flex items-center justify-between">
                       <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold text-foreground")}>
@@ -223,7 +223,7 @@ export function PermissoesMatriz({
                           : 'bg-info/12 text-info';
 
                         return (
-                          <div key={item.recurso} className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+                          <div key={item.recurso} className={cn("stack-snug")}>
                             <div className={cn("flex items-center inline-tight")}>
                               <Text variant="caption" className="font-medium">
                                 {formatarNomeRecurso(item.recurso)}
@@ -234,7 +234,7 @@ export function PermissoesMatriz({
                                 {permissoesAtivas}/{totalOperacoes}
                               </span>
                             </div>
-                            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-1.5")}>
+                            <div className={cn("grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 inline-snug")}>
                               {Object.entries(item.operacoes).map(([operacao, permitido]) => {
                                 const initialValue = getInitialValue(item.recurso, operacao);
                                 const isChanged = Boolean(permitido) !== initialValue;

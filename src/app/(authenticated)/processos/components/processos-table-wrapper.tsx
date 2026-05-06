@@ -161,8 +161,8 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoUnificado> }) {
   const dataProximaAudiencia = processo.dataProximaAudiencia;
 
   return (
-    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex flex-col items-start justify-center gap-1.5 py-2 min-w-0 group")}>
-      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 flex-wrap")}>
+    <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex flex-col items-start justify-center inline-snug py-2 min-w-0 group")}>
+      <div className={cn("flex items-center inline-snug flex-wrap")}>
         <SemanticBadge category="tribunal" value={trt} className={cn("w-fit text-caption")}>
           {trt}
         </SemanticBadge>
@@ -174,7 +174,7 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoUnificado> }) {
           </SemanticBadge>
         )}
       </div>
-      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+      <div className={cn("flex items-center inline-snug")}>
         <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium whitespace-nowrap")}>
           {classeJudicial && `${classeJudicial} `}
           {numeroProcesso}
@@ -191,11 +191,11 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoUnificado> }) {
           </TooltipProvider>
         )}
       </div>
-      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+      <div className={cn("flex items-center inline-snug")}>
         <Text variant="caption" className="max-w-full truncate">{orgaoJulgador}</Text>
         <ProximaAudienciaPopover dataAudiencia={dataProximaAudiencia} />
       </div>
-      <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+      <div className={cn("flex flex-col inline-nano")}>
         <ParteBadge
           polo="ATIVO"
           className={cn("flex whitespace-normal wrap-break-word text-left font-normal text-caption")}

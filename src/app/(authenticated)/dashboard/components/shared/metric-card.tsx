@@ -81,7 +81,7 @@ function MetricCardContent({
       <div className="flex flex-col flex-1">
         <div>{formatValue(value)}</div>
         {trend && TrendIcon && (
-          <p className={cn(/* design-system-escape: gap-1 gap sem token DS */ 'text-caption mt-2 flex items-center gap-1', trendDirection ? trendColors[trendDirection] : 'text-muted-foreground')}>
+          <p className={cn('text-caption mt-2 flex items-center inline-micro', trendDirection ? trendColors[trendDirection] : 'text-muted-foreground')}>
             <TrendIcon className="h-3.5 w-3.5" />
             {trend}
           </p>

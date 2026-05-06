@@ -38,7 +38,7 @@ export function ProcessoVinculadoCard({ processo }: ProcessoVinculadoCardProps) 
 
   return (
     <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3 mb-4")}>
+      <div className={cn("flex items-start justify-between inline-medium mb-4")}>
         <div className="min-w-0">
           <Text variant="meta-label" className="text-muted-foreground/60">
             Processo vinculado
@@ -55,7 +55,7 @@ export function ProcessoVinculadoCard({ processo }: ProcessoVinculadoCardProps) 
         </IconContainer>
       </div>
 
-      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-wrap items-center gap-1.5 mb-4")}>
+      <div className={cn("flex flex-wrap items-center inline-snug mb-4")}>
         {processo.trt && (
           <SemanticBadge
             category="tribunal"
@@ -84,7 +84,7 @@ export function ProcessoVinculadoCard({ processo }: ProcessoVinculadoCardProps) 
         )}
       </div>
 
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3 mb-5")}>
+      <div className={cn("stack-medium mb-5")}>
         {processo.descricao_orgao_julgador && (
           <div className={cn("flex items-start inline-tight")}>
             <Building2 className="size-3.5 text-muted-foreground/50 mt-0.5 shrink-0" />
@@ -98,7 +98,7 @@ export function ProcessoVinculadoCard({ processo }: ProcessoVinculadoCardProps) 
         )}
 
         {(parteAutora || parteRe) && (
-          <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; space-y-1.5 sem token DS */ "pt-3 border-t border-border/15 space-y-1.5")}>
+          <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "pt-3 border-t border-border/15 stack-snug")}>
             {parteAutora && (
               <PartesRow polo="Autor" nome={parteAutora} />
             )}

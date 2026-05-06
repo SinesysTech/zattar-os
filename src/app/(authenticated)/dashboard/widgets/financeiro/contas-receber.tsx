@@ -54,7 +54,7 @@ export function WidgetContasReceber() {
     >
       <div className={cn("flex flex-col inline-tight")}>
         {aging.map((item) => (
-          <div key={item.faixa} className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+          <div key={item.faixa} className={cn("flex items-center inline-medium")}>
             <span className="text-[10px] text-muted-foreground/60 w-20 shrink-0 truncate">
               {item.faixa}
             </span>

@@ -82,7 +82,7 @@ function FilterChip({
   return (
     <div
       className={cn(
-        /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'group flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
+        /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'group flex items-center inline-snug rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
         hasValue
           ? 'border-primary/20 bg-primary/5 text-primary'
           : 'border-border/15 text-muted-foreground/60 hover:bg-muted/30',
@@ -201,8 +201,8 @@ export function SearchQuickFilters() {
           </button>
         </PopoverTrigger>
         <PopoverContent className={cn(POPOVER_CLASSES, 'w-64 inset-card-compact')} align="start">
-          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
-            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+          <div className={cn("stack-medium")}>
+            <div className={cn("stack-snug")}>
               <Label htmlFor="pesquisa-oab-num">
                 <Text variant="meta-label">Número</Text>
               </Label>
@@ -215,7 +215,7 @@ export function SearchQuickFilters() {
                 className="tabular-nums"
               />
             </div>
-            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+            <div className={cn("stack-snug")}>
               <Label htmlFor="pesquisa-oab-uf">
                 <Text variant="meta-label">UF</Text>
               </Label>
@@ -265,7 +265,7 @@ export function SearchQuickFilters() {
           </button>
         </PopoverTrigger>
         <PopoverContent className={cn(POPOVER_CLASSES, /* design-system-escape: p-2 → usar <Inset> */ 'w-56 p-2')} align="start">
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+          <div className={cn("flex flex-col inline-micro")}>
             {MEIO_OPTIONS.map((opt) => (
               <button
                 key={opt.value}
@@ -310,8 +310,8 @@ export function SearchQuickFilters() {
           </button>
         </PopoverTrigger>
         <PopoverContent className={cn(POPOVER_CLASSES, 'w-72 inset-card-compact')} align="start">
-          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
-            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+          <div className={cn("stack-medium")}>
+            <div className={cn("stack-snug")}>
               <Label htmlFor="pesquisa-data-inicio">
                 <Text variant="meta-label">Data início</Text>
               </Label>
@@ -324,7 +324,7 @@ export function SearchQuickFilters() {
                 }
               />
             </div>
-            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+            <div className={cn("stack-snug")}>
               <Label htmlFor="pesquisa-data-fim">
                 <Text variant="meta-label">Data fim</Text>
               </Label>

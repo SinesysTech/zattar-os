@@ -97,7 +97,7 @@ export function WidgetProdutividadeSemanal() {
       depth={1}
     >
       <div className={cn("flex items-end justify-between inline-tight mb-3")}>
-        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+        <div className={cn("flex flex-col inline-nano")}>
           <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Total semana
           </span>
@@ -105,7 +105,7 @@ export function WidgetProdutividadeSemanal() {
             {fmtNum(baixasSemana || total)}
           </span>
         </div>
-        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-end gap-0.5")}>
+        <div className={cn("flex flex-col items-end inline-nano")}>
           <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Média diária
           </span>

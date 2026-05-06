@@ -117,7 +117,7 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
     <button
       onClick={() => onClick?.(audiencia)}
       className={cn(
-        /* design-system-escape: gap-3 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ 'w-full flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer transition-all outline-none text-left',
+        /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ 'w-full flex items-center inline-medium px-4 py-2.5 rounded-xl cursor-pointer transition-all outline-none text-left',
         'focus-visible:ring-1 focus-visible:ring-primary/55 hover:bg-foreground/4',
         selected && 'bg-primary/6',
         (isPast || isFinalizada || isCancelada) && 'opacity-55',
@@ -163,14 +163,14 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
       </div>
 
       {/* Modalidade */}
-      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 shrink-0 md:flex w-20")}>
+      <div className={cn("flex items-center inline-micro shrink-0 md:flex w-20")}>
         <ModalIcon className="size-2.5 text-muted-foreground/65" />
         <span className="text-micro-caption text-muted-foreground/75">{modalidadeLabel}</span>
       </div>
 
       {/* TRT + Grau */}
       {audiencia.trt && (
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 shrink-0 md:flex")}>
+        <div className={cn("flex items-center inline-micro shrink-0 md:flex")}>
           <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-caption font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/65")}>
             {audiencia.trt}
           </span>

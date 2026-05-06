@@ -102,7 +102,7 @@ export function ContratosPipelineStepper({
   const maxCount = Math.max(...stages.map((s) => s.count), 1);
 
   const body = (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-stretch gap-3")}>
+    <div className={cn("flex items-stretch inline-medium")}>
       {stages.map((stage) => {
         const cfg = STAGE_CONFIG[stage.status];
         const Icon = cfg.icon;
@@ -113,7 +113,7 @@ export function ContratosPipelineStepper({
 
         const inner = (
           <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; px-1 padding direcional sem Inset equiv. */ "flex flex-col items-center inline-tight py-2 px-1 w-full")}>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+            <div className={cn("flex items-center inline-snug")}>
               <Icon className={cn('size-3.5', cfg.textColor)} />
               <span
                 className={cn(
@@ -202,7 +202,7 @@ export function ContratosPipelineStepper({
           <GitBranch className="size-3.5 text-primary/70" />
         </span>
         <Heading level="widget">Pipeline de Contratos</Heading>
-        <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "ml-auto inline-flex items-center gap-1 rounded-full bg-primary/10 border border-primary/20 text-primary px-2 py-0.5 text-micro-caption font-medium tabular-nums")}>
+        <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "ml-auto inline-flex items-center inline-micro rounded-full bg-primary/10 border border-primary/20 text-primary px-2 py-0.5 text-micro-caption font-medium tabular-nums")}>
           {total.toLocaleString('pt-BR')} total
         </span>
       </div>

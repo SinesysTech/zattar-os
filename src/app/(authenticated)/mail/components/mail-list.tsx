@@ -68,7 +68,7 @@ export function MailList({ items }: MailListProps) {
 
   if (error) {
     return (
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-8 → usar <Inset> */ "flex h-full flex-col items-center justify-center gap-3 p-8 text-center")}>
+      <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex h-full flex-col items-center justify-center inline-medium p-8 text-center")}>
         <AlertCircle className="text-destructive h-8 w-8" />
         <p className={cn("text-muted-foreground text-body-sm")}>{error}</p>
         <Button
@@ -145,7 +145,7 @@ export function MailList({ items }: MailListProps) {
               aria-label={`${!item.read ? "Não lido: " : ""}${getMailPrimaryName(item)} — ${item.subject}`}
               data-mail-index={index}
               tabIndex={selectedMail?.uid === item.uid ? 0 : -1}
-              className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex min-w-0 flex-1 flex-col items-start gap-1.5 text-left")}
+              className={cn("flex min-w-0 flex-1 flex-col items-start inline-snug text-left")}
               onClick={() => setSelectedMail(item)}
               onKeyDown={(e) => handleKeyDown(e, index)}>
               <div className="flex w-full flex-wrap items-start gap-x-3 gap-y-1">
@@ -175,7 +175,7 @@ export function MailList({ items }: MailListProps) {
                   })}
                 </div>
               </div>
-              <div className={cn(/* design-system-escape: gap-1 gap sem token DS; leading-5 sem token DS */ "grid w-full gap-1 text-caption leading-5")}>
+              <div className={cn(/* design-system-escape: leading-5 sem token DS */ "grid w-full inline-micro text-caption leading-5")}>
                 <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground whitespace-normal wrap-break-word")}>
                   {item.subject}
                 </div>

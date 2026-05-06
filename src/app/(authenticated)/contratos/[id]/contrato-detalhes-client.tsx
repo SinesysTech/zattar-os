@@ -124,8 +124,8 @@ function FinanceiroResumoSection({ lancamentos }: { lancamentos: Lancamento[] })
   return (
     <DetailSection icon={DollarSign} label="Financeiro">
       <DetailSectionCard>
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3 mb-4")}>
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+        <div className={cn("grid grid-cols-2 inline-medium mb-4")}>
+          <div className={cn("flex flex-col inline-micro")}>
             <Text variant="meta-label">Recebido</Text>
             <Text
               variant="label"
@@ -134,7 +134,7 @@ function FinanceiroResumoSection({ lancamentos }: { lancamentos: Lancamento[] })
               {formatCurrency(totalReceitas)}
             </Text>
           </div>
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+          <div className={cn("flex flex-col inline-micro")}>
             <Text variant="meta-label">Pendente</Text>
             <Text
               variant="label"
@@ -190,8 +190,8 @@ function AtividadeRecenteSection({ historico }: { historico: ContratoStatusHisto
               : null;
 
             return (
-              <div key={item.id} className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
-                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "inline-flex items-center gap-1.5 min-w-0")}>
+              <div key={item.id} className={cn("flex items-center justify-between inline-medium")}>
+                <div className={cn("inline-flex items-center inline-snug min-w-0")}>
                   {fromLabel ? (
                     <>
                       <Text
@@ -309,23 +309,23 @@ export function ContratoDetalhesClient({
         className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex flex-col gap-5")}
       >
         <TabsList className="flex w-full max-w-full overflow-x-auto">
-          <TabsTrigger value="resumo" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5")}>
+          <TabsTrigger value="resumo" className={cn("inline-snug")}>
             <LayoutDashboard className="size-3.5" />
             Resumo
           </TabsTrigger>
-          <TabsTrigger value="financeiro" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5")}>
+          <TabsTrigger value="financeiro" className={cn("inline-snug")}>
             <Wallet className="size-3.5" />
             Financeiro
           </TabsTrigger>
-          <TabsTrigger value="documentos" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5")}>
+          <TabsTrigger value="documentos" className={cn("inline-snug")}>
             <FileText className="size-3.5" />
             Documentos
           </TabsTrigger>
-          <TabsTrigger value="historico" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5")}>
+          <TabsTrigger value="historico" className={cn("inline-snug")}>
             <History className="size-3.5" />
             Histórico
           </TabsTrigger>
-          <TabsTrigger value="entrevista" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5")}>
+          <TabsTrigger value="entrevista" className={cn("inline-snug")}>
             <ClipboardList className="size-3.5" />
             Entrevista
           </TabsTrigger>

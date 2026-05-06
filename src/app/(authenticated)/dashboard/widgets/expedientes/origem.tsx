@@ -73,7 +73,7 @@ export function OrigemDistribution() {
           centerLabel={fmtNum(total)}
         />
 
-        <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "flex-1 space-y-1.5")}>
+        <div className={cn("flex-1 stack-snug")}>
           {porOrigem.map((o) => (
             <div key={o.origem} className={cn("flex items-center inline-tight")}>
               <div

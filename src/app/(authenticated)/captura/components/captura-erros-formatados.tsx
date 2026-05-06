@@ -110,27 +110,27 @@ export function CapturaErrosFormatados({ erro }: CapturaErrosFormatadosProps) {
   return (
     <div className={cn("stack-default")}>
       {/* Cabeçalho de erros */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/[0.06] inset-card-compact")}>
+      <div className={cn("flex items-start inline-medium rounded-lg border border-destructive/30 bg-destructive/[0.06] inset-card-compact")}>
         <XCircle className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
         <div className={cn("stack-tight min-w-0 w-full")}>
           <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold text-destructive")}>
             {errosParsed.length} erro{errosParsed.length !== 1 ? 's' : ''} na captura
           </p>
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-wrap gap-1.5")}>
+          <div className={cn("flex flex-wrap inline-snug")}>
             {contagemPorTipo.timeout && (
-              <Badge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv.; gap-1 gap sem token DS */ "text-[10px] px-1.5 py-0 gap-1 border-warning/30 bg-warning/5 text-warning-foreground")}>
+              <Badge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0 inline-micro border-warning/30 bg-warning/5 text-warning-foreground")}>
                 <Clock className="h-3 w-3 text-warning" />
                 {contagemPorTipo.timeout} timeout{contagemPorTipo.timeout !== 1 ? 's' : ''}
               </Badge>
             )}
             {contagemPorTipo.auth && (
-              <Badge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv.; gap-1 gap sem token DS */ "text-[10px] px-1.5 py-0 gap-1 border-destructive/30 bg-destructive/5")}>
+              <Badge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0 inline-micro border-destructive/30 bg-destructive/5")}>
                 <AlertTriangle className="h-3 w-3 text-destructive" />
                 {contagemPorTipo.auth} autenticação
               </Badge>
             )}
             {contagemPorTipo.network && (
-              <Badge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv.; gap-1 gap sem token DS */ "text-[10px] px-1.5 py-0 gap-1 border-warning/30 bg-warning/5")}>
+              <Badge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0 inline-micro border-warning/30 bg-warning/5")}>
                 <Wifi className="h-3 w-3 text-warning" />
                 {contagemPorTipo.network} conexão de rede
               </Badge>
@@ -154,7 +154,7 @@ export function CapturaErrosFormatados({ erro }: CapturaErrosFormatadosProps) {
                 <div key={i} className={cn("flex items-start inline-tight text-caption")}>
                   <IconeErro tipo={e.tipo} />
                   <div className="min-w-0 flex-1">
-                    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-wrap items-center gap-1.5 mb-1")}>
+                    <div className={cn("flex flex-wrap items-center inline-snug mb-1")}>
                       {e.grau && (
                         <Badge variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0 font-normal")}>
                           {formatarGrau(e.grau)}

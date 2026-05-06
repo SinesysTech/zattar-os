@@ -108,7 +108,7 @@ export function MiniCalendar({
         <Text variant="caption" className="font-semibold text-foreground">
           {MONTH_NAMES[month]} {year}
         </Text>
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1")}>
+        <div className={cn("flex inline-micro")}>
           <button
             onClick={onPrevMonth}
             className="size-5 flex items-center justify-center rounded hover:bg-muted/30 text-muted-foreground/55 transition-colors cursor-pointer"

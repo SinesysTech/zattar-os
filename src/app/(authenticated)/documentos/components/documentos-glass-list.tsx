@@ -172,7 +172,7 @@ function GlassRow({
       )}
     >
       {/* ── Mobile (<lg): stacked ───────────────────────────── */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 lg:hidden")}>
+      <div className={cn("flex items-center inline-medium lg:hidden")}>
         <IconContainer size="md" className={cn('rounded-xl', ACCENT_BG[accent])}>
           <Icon className={cn('size-4', ACCENT_TEXT[accent])} />
         </IconContainer>
@@ -183,7 +183,7 @@ function GlassRow({
             {createdRelative}
           </div>
         </div>
-        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center gap-0.5 shrink-0")}>
+        <div className={cn("flex items-center inline-nano shrink-0")}>
           {item.tipo === 'arquivo' && (
             <Button
               variant="ghost"
@@ -217,7 +217,7 @@ function GlassRow({
       </div>
 
       {/* ── Desktop (lg+): grid colunas ─────────────────────── */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ 'hidden lg:grid gap-3 items-center', GRID_COLS)}>
+      <div className={cn('hidden lg:grid inline-medium items-center', GRID_COLS)}>
         {/* 1. Ícone */}
         <IconContainer size="md" className={cn('rounded-xl size-10', ACCENT_BG[accent])}>
           <Icon className={cn('size-5', ACCENT_TEXT[accent])} />
@@ -251,7 +251,7 @@ function GlassRow({
         </div>
 
         {/* 5. Ações */}
-        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center justify-end gap-0.5")}>
+        <div className={cn("flex items-center justify-end inline-nano")}>
           {item.tipo === 'arquivo' && (
             <Button
               variant="ghost"
@@ -299,13 +299,13 @@ function ListSkeleton() {
     <div className={cn("flex flex-col inline-tight")}>
       {Array.from({ length: 6 }, (_, i) => (
         <div key={i} className={cn("rounded-2xl border border-border/40 bg-card inset-card-compact")}>
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ 'hidden lg:grid gap-3 items-center', GRID_COLS)}>
+          <div className={cn('hidden lg:grid inline-medium items-center', GRID_COLS)}>
             <Skeleton className="size-10 rounded-xl" />
-            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+            <div className={cn("stack-snug")}>
               <Skeleton className="h-3.5 w-52" />
               <Skeleton className="h-2.5 w-24" />
             </div>
-            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+            <div className={cn("stack-micro")}>
               <Skeleton className="h-3 w-20" />
               <Skeleton className="h-2.5 w-16" />
             </div>
@@ -313,14 +313,14 @@ function ListSkeleton() {
               <Skeleton className="size-6 rounded-full" />
               <Skeleton className="h-3 w-20" />
             </div>
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center justify-end gap-1")}>
+            <div className={cn("flex items-center justify-end inline-micro")}>
               <Skeleton className="size-7 rounded-md" />
               <Skeleton className="size-7 rounded-md" />
             </div>
           </div>
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 lg:hidden")}>
+          <div className={cn("flex items-center inline-medium lg:hidden")}>
             <Skeleton className="size-10 rounded-xl" />
-            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "flex-1 space-y-1.5")}>
+            <div className={cn("flex-1 stack-snug")}>
               <Skeleton className="h-3.5 w-44" />
               <Skeleton className="h-2.5 w-28" />
             </div>

@@ -58,7 +58,7 @@ export function CommandHeader({ summary, weekPulse }: CommandHeaderProps) {
           <div key={s.label} className={cn("flex items-center inline-tight min-w-max")}>
             {i > 0 && <div className="w-px h-6 bg-border/8 shrink-0 hidden sm:block" />}
             <s.icon className={cn("size-3 opacity-40 shrink-0", s.color)} />
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5")}>
+            <div className={cn("flex items-baseline inline-snug")}>
               <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-sm font-bold tabular-nums")}>{s.value}</span>
               <span className="text-[9px] text-muted-foreground/55 hidden sm:inline">{s.label}</span>
             </div>
@@ -67,11 +67,11 @@ export function CommandHeader({ summary, weekPulse }: CommandHeaderProps) {
       </div>
 
       {/* Week pulse row */}
-      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; sm:gap-2 sem equivalente DS; pt-3 padding direcional sem Inset equiv. */ "flex items-end justify-between gap-1.5 sm:gap-2 pt-3")}>
+      <div className={cn(/* design-system-escape: sm:gap-2 sem equivalente DS; pt-3 padding direcional sem Inset equiv. */ "flex items-end justify-between inline-snug sm:gap-2 pt-3")}>
         {weekPulse.map((day) => {
           const h = day.horas > 0 ? Math.max(14, (day.horas / maxH) * 100) : 6;
           return (
-            <div key={day.dia} className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col items-center gap-1 flex-1")}>
+            <div key={day.dia} className={cn("flex flex-col items-center inline-micro flex-1")}>
               <span className={cn(
                 /* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[9px] tabular-nums font-medium",
                 day.hoje ? "text-primary" : day.eventos > 0 ? "text-muted-foreground/60" : "text-muted-foreground/60",

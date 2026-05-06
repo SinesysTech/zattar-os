@@ -288,7 +288,7 @@ function ComparacaoCards({
                     </TableCell>
                     <TableCell className="text-center">{dados.quantidadeItens}</TableCell>
                     <TableCell className="text-center">
-                      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center justify-center gap-1")}>
+                      <div className={cn("flex items-center justify-center inline-micro")}>
                         {getVariacaoIcon(variacaoVsMedia)}
                         <span className={getVariacaoColor(variacaoVsMedia)}>
                           {formatarPercentual(variacaoVsMedia)}
@@ -313,7 +313,7 @@ function ComparacaoCards({
             {dadosComparacao.map((dados) => {
               const percentual = (dados.totalOrcado / maiorValor) * 100;
               return (
-                <div key={dados.id} className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+                <div key={dados.id} className={cn("stack-micro")}>
                   <div className={cn("flex justify-between text-body-sm")}>
                     <span>{dados.nome}</span>
                     <span className="font-mono">{formatarValor(dados.totalOrcado)}</span>

@@ -76,8 +76,8 @@ export function HearingCountdown({ targetDate, className, compact = false }: Hea
   }
 
   return (
-    <div className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "inline-flex items-center gap-1 px-2 py-1 rounded-lg", urgencyBg, className)}>
-      <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center gap-0.5 tabular-nums")}>
+    <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "inline-flex items-center inline-micro px-2 py-1 rounded-lg", urgencyBg, className)}>
+      <div className={cn("flex items-center inline-nano tabular-nums")}>
         {timeLeft.hours > 0 && (
           <>
             <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-sm font-bold", urgencyColor)}>{pad(timeLeft.hours)}</span>

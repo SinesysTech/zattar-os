@@ -83,7 +83,7 @@ function InfoRow({
   value: React.ReactNode;
 }) {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
+    <div className={cn("flex items-start justify-between inline-medium")}>
       <span className="shrink-0 text-overline">{label}</span>
       <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-right text-caption font-medium")}>{value}</span>
     </div>
@@ -98,7 +98,7 @@ function EditableInfoRow({
   children: React.ReactNode;
 }) {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
+    <div className={cn("flex items-start justify-between inline-medium")}>
       <span className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "shrink-0 text-overline pt-1")}>
         {label}
       </span>
@@ -153,7 +153,7 @@ function DetailPanel({
   return (
     <GlassPanel depth={2} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
       {/* Header */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
+      <div className={cn("flex items-start justify-between inline-medium")}>
         <div className="min-w-0">
           <ExpedienteTipoPopover
             expedienteId={expediente.id}
@@ -182,7 +182,7 @@ function DetailPanel({
       </div>
 
       {/* Info rows */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "mt-4 space-y-3")}>
+      <div className={cn("mt-4 stack-medium")}>
         {expediente.trt && (
           <InfoRow
             label="Tribunal"

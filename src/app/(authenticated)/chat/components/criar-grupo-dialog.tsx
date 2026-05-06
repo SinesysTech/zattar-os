@@ -214,7 +214,7 @@ export function CriarGrupoDialog({ open, onOpenChange, onGrupoCreated }: CriarGr
             {membrosSelecionados.length > 0 && (
               <div className={cn("flex flex-wrap inline-tight mt-3")}>
                 {membrosSelecionados.map((membro) => (
-                  <Badge key={membro.id} variant="secondary" className={cn(/* design-system-escape: gap-1 gap sem token DS; pr-1 padding direcional sem Inset equiv. */ "flex items-center gap-1 pr-1")}>
+                  <Badge key={membro.id} variant="secondary" className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "flex items-center inline-micro pr-1")}>
                     {membro.nome}
                     <button
                       type="button"

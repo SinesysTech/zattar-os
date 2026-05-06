@@ -100,7 +100,7 @@ export function TeamView({ projeto, membros, usuarios }: TeamViewProps) {
   return (
     <div className={cn("stack-default")}>
       <div className="flex items-center justify-between">
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+        <div className={cn("flex items-center inline-medium")}>
           <Button variant="ghost" size="icon" aria-label="Voltar" asChild>
             <Link href={`/app/project-management/projects/${projeto.id}`}>
               <ArrowLeft className="size-4" />
@@ -144,7 +144,7 @@ export function TeamView({ projeto, membros, usuarios }: TeamViewProps) {
                       key={membro.id}
                       className={cn(/* design-system-escape: py-3 padding direcional sem Inset equiv. */ "flex items-center justify-between py-3")}
                     >
-                      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+                      <div className={cn("flex items-center inline-medium")}>
                         <Avatar size="lg">
                           {membro.usuarioAvatar && (
                             <AvatarImage src={membro.usuarioAvatar} />

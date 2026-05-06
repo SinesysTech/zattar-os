@@ -71,7 +71,7 @@ export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
       onClick={disabled ? undefined : onClick}
     >
       <CardHeader className={cn(/* design-system-escape: p-3 → usar <Inset>; pb-1 padding direcional sem Inset equiv. */ "p-3 pb-1")}>
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 flex-wrap")}>
+        <div className={cn("flex items-center inline-snug flex-wrap")}>
           {/* Label badge */}
           <AppBadge variant="outline" className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1 py-0 capitalize")}>
             {tarefa.label}
@@ -144,7 +144,7 @@ export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
           <div className={cn("flex items-center inline-tight")}>
             {/* Due date */}
             {dueDate && (
-              <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+              <span className={cn("flex items-center inline-micro")}>
                 <Calendar className="h-3 w-3" />
                 {dueDate}
               </span>
@@ -152,7 +152,7 @@ export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
 
             {/* Responsible (for virtual events) */}
             {tarefa.responsavelNome && (
-              <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+              <span className={cn("flex items-center inline-micro")}>
                 <User className="h-3 w-3" />
                 {tarefa.responsavelNome}
               </span>
@@ -164,7 +164,7 @@ export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
             {totalSubtasks > 0 && (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+                  <span className={cn("flex items-center inline-micro")}>
                     <CheckSquare className="h-3 w-3" />
                     {completedSubtasks}/{totalSubtasks}
                   </span>
@@ -177,7 +177,7 @@ export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
             {tarefa.comments.length > 0 && (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+                  <span className={cn("flex items-center inline-micro")}>
                     <MessageSquare className="h-3 w-3" />
                     {tarefa.comments.length}
                   </span>
@@ -190,7 +190,7 @@ export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
             {tarefa.files.length > 0 && (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+                  <span className={cn("flex items-center inline-micro")}>
                     <Paperclip className="h-3 w-3" />
                     {tarefa.files.length}
                   </span>

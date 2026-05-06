@@ -8,7 +8,7 @@ export const revalidate = 0;
 
 function ContasReceberLoading() {
   return (
-    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+    <div className={cn("stack-medium")}>
       <div className={cn("grid grid-cols-2 sm:grid-cols-4 inline-default")}>
         <Skeleton className="h-20 w-full" />
         <Skeleton className="h-20 w-full" />

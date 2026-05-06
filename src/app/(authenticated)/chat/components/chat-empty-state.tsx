@@ -37,11 +37,11 @@ export function ChatEmptyState() {
     <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "hidden md:flex h-full w-full items-center justify-center p-8")}>
       <div className={cn("flex flex-col items-center inline-loose max-w-105 w-full")}>
         {/* Icon + Copy */}
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col items-center gap-3")}>
+        <div className={cn("flex flex-col items-center inline-medium")}>
           <div className="size-16 rounded-[1.25rem] bg-primary/8 flex items-center justify-center mb-2">
             <MessageSquare className="size-7 text-primary/70" />
           </div>
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col items-center gap-1.5")}>
+          <div className={cn("flex flex-col items-center inline-snug")}>
             <Heading level="section" className="text-foreground">
               Suas conversas
             </Heading>

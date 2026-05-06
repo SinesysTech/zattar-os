@@ -190,7 +190,7 @@ export function AdvogadoDialog({
             </div>
 
             {/* Seção de OABs */}
-            <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+            <div className={cn("stack-medium")}>
               <div className="flex items-center justify-between">
                 <Label>OABs *</Label>
                 <Text variant="caption">

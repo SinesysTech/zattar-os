@@ -131,7 +131,7 @@ const MonthGrid = React.memo(function MonthGrid({
           {monthTotal}
         </span>
       </div>
-      <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "grid grid-cols-7 gap-0.5 mb-0.5")}>
+      <div className={cn("grid grid-cols-7 inline-nano mb-0.5")}>
         {WEEKDAY_LABELS.map((d, i) => (
           <span
             key={i}
@@ -141,7 +141,7 @@ const MonthGrid = React.memo(function MonthGrid({
           </span>
         ))}
       </div>
-      <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "grid grid-cols-7 gap-0.5")}>
+      <div className={cn("grid grid-cols-7 inline-nano")}>
         {Array.from({ length: offset }).map((_, i) => (
           <div key={`e${i}`} className="aspect-square" />
         ))}
@@ -260,12 +260,12 @@ function DayDetailDialog({
                     onEventClick?.(evt);
                     onOpenChange(false);
                   }}
-                  className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-1.5 sem token DS */ "w-full text-left rounded-xl border border-border/40 bg-muted/30 p-3 space-y-1.5 transition-colors hover:bg-muted/50 cursor-pointer")}
+                  className={cn(/* design-system-escape: p-3 → usar <Inset> */ "w-full text-left rounded-xl border border-border/40 bg-muted/30 p-3 stack-snug transition-colors hover:bg-muted/50 cursor-pointer")}
                 >
                   <div className={cn("flex items-center inline-tight")}>
                     <span
                       className={cn(
-                        /* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium border",
+                        /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-snug px-2 py-0.5 rounded-md text-[10px] font-medium border",
                         colors.bg,
                         colors.text,
                         colors.border,
@@ -435,7 +435,7 @@ export function AnoView({
           {/* Stats Sidebar */}
           <GlassPanel
             depth={2}
-            className={cn(/* design-system-escape: p-5 → usar <Inset>; space-y-3 sem token DS */ "w-full xl:w-64 shrink-0 p-5 space-y-3")}
+            className={cn(/* design-system-escape: p-5 → usar <Inset> */ "w-full xl:w-64 shrink-0 p-5 stack-medium")}
           >
             {/* Total no Ano */}
             <StatCard
@@ -458,7 +458,7 @@ export function AnoView({
                 iconColor="text-info"
                 label="Por Tipo"
               >
-                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5 mt-1")}>
+                <div className={cn("stack-snug mt-1")}>
                   {BREAKDOWN_ORDER.filter(
                     (src) => stats.breakdown[src] > 0,
                   ).map((src) => {
@@ -544,7 +544,7 @@ export function AnoView({
                 <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/40")}>
                   Ranking por Volume
                 </span>
-                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "mt-2 space-y-1.5")}>
+                <div className={cn("mt-2 stack-snug")}>
                   {topMonths.map((m, i) => (
                     <div key={m.idx} className={cn("flex items-center inline-tight")}>
                       <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[9px] font-bold text-muted-foreground/40 w-3 text-right")}>
@@ -588,7 +588,7 @@ export function AnoView({
             </div>
 
             {/* Legend */}
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 justify-end mt-6 flex-wrap")}>
+            <div className={cn("flex items-center inline-micro justify-end mt-6 flex-wrap")}>
               <span className="text-[9px] text-muted-foreground/40 mr-1">
                 Menos
               </span>
@@ -601,7 +601,7 @@ export function AnoView({
                 Mais
               </span>
               <span className={cn(/* design-system-escape: mx-2 margin sem primitiva DS */ "text-muted-foreground/40 mx-2 text-[9px]")}>·</span>
-              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+              <div className={cn("flex items-center inline-snug")}>
                 <div className="size-3 rounded-[2px] bg-muted/50 ring-[1.5px] ring-primary ring-offset-1 ring-offset-transparent" />
                 <span className="text-[9px] text-muted-foreground/50">Hoje</span>
               </div>

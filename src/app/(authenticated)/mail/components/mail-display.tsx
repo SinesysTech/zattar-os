@@ -152,7 +152,7 @@ function MailBody({ mail }: { mail: MailMessagePreview }) {
 
   if (isLoadingBody && !isLoaded) {
     return (
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
+      <div className={cn("flex flex-col inline-medium")}>
         <Skeleton className="h-4 w-full" />
         <Skeleton className="h-4 w-5/6" />
         <Skeleton className="h-4 w-4/6" />
@@ -226,7 +226,7 @@ function ForwardDialog({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
       <PopoverContent className="w-[calc(100vw-2rem)] sm:w-96" align="end">
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3")}>
+        <div className={cn("grid inline-medium")}>
           <Text variant="label">Encaminhar e-mail</Text>
           <div className={cn("grid inline-tight")}>
             <Label htmlFor="forward-to" className={cn("text-caption")}>
@@ -374,7 +374,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "flex w-[calc(100vw-2rem)] sm:w-133.75 p-0")}>
               <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "flex flex-col inline-tight border-r px-2 py-4")}>
                 <Text variant="label" className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "px-4")}>Adiar até</Text>
-                <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "grid min-w-62.5 gap-1")}>
+                <div className={cn("grid min-w-62.5 inline-micro")}>
                   <Button
                     variant="ghost"
                     className="justify-start font-normal"
@@ -519,12 +519,12 @@ export function MailDisplay({ mail }: MailDisplayProps) {
 
       {mail ? (
         <div className="flex min-h-0 flex-1 flex-col">
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex shrink-0 flex-wrap items-start gap-3 inset-card-compact")}>
+          <div className={cn("flex shrink-0 flex-wrap items-start inline-medium inset-card-compact")}>
             <div className={cn("flex min-w-0 flex-1 items-start inline-default text-body-sm")}>
               <Avatar>
                 <AvatarFallback>{participantInitials}</AvatarFallback>
               </Avatar>
-              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "min-w-0 grid flex-1 gap-1")}>
+              <div className={cn("min-w-0 grid flex-1 inline-micro")}>
                 <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "whitespace-normal wrap-break-word font-semibold")}>{participantName}</div>
                 <Text variant="caption" className="whitespace-normal wrap-break-word">{mail.subject}</Text>
                 <Text variant="caption" className="whitespace-normal wrap-break-word">
@@ -548,7 +548,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
           {replyMode ? (
             <div ref={replyAreaRef} className={cn("shrink-0 inset-card-compact")}>
               <form onSubmit={handleReply}>
-                <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3")}>
+                <div className={cn("grid inline-medium")}>
                   <div className={cn("text-body-sm text-muted-foreground")}>
                     {replyMode === "reply-all"
                       ? "Responder a todos"

@@ -117,7 +117,7 @@ export function UrgencyList() {
       {expedientes.length === 0 ? (
         <EmptyState />
       ) : (
-        <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
+        <div className={cn("stack-nano")}>
           {expedientes.map((item) => (
             <ExpedienteItem key={item.id} item={item} />
           ))}

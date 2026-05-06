@@ -250,7 +250,7 @@ export function WidgetDashboard({ currentUserId, currentUserName, initialData }:
 
       {/* ── Grid de widgets ─────────────────────────────────────── */}
       {visibleWidgets.length > 0 ? (
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3 auto-rows-auto grid-flow-row-dense")}>
+        <div className={cn("grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 inline-medium auto-rows-auto grid-flow-row-dense")}>
           {visibleWidgets.map((widget) => {
             const WidgetComponent = widget.component;
             return (

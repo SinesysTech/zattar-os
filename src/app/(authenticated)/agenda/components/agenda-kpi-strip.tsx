@@ -61,7 +61,7 @@ function prepLabel(pct: number) {
 
 export function AgendaKpiStrip({ data, className }: AgendaKpiStripProps) {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3", className)}>
+    <div className={cn("grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 inline-medium", className)}>
 
       {/* ── Eventos ────────────────────────────────────── */}
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
@@ -70,7 +70,7 @@ export function AgendaKpiStrip({ data, className }: AgendaKpiStripProps) {
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Eventos
             </p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+            <div className={cn("flex items-baseline inline-snug mt-1")}>
               <Text variant="kpi-value">
                 {data.totalEventos}
               </Text>
@@ -90,7 +90,7 @@ export function AgendaKpiStrip({ data, className }: AgendaKpiStripProps) {
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Audiências Hoje
             </p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+            <div className={cn("flex items-baseline inline-snug mt-1")}>
               <Text variant="kpi-value">
                 {data.audienciasHoje}
               </Text>
@@ -109,7 +109,7 @@ export function AgendaKpiStrip({ data, className }: AgendaKpiStripProps) {
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Prazos 7d
             </p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+            <div className={cn("flex items-baseline inline-snug mt-1")}>
               <Text variant="kpi-value">
                 {data.prazos7d}
               </Text>
@@ -129,7 +129,7 @@ export function AgendaKpiStrip({ data, className }: AgendaKpiStripProps) {
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Horas Ocupadas
             </p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+            <div className={cn("flex items-baseline inline-snug mt-1")}>
               <Text variant="kpi-value">
                 {data.horasOcupadas}
               </Text>
@@ -161,7 +161,7 @@ export function AgendaKpiStrip({ data, className }: AgendaKpiStripProps) {
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Preparo
             </p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+            <div className={cn("flex items-baseline inline-snug mt-1")}>
               <Text variant="kpi-value">
                 {data.prepPercent}%
               </Text>
@@ -197,7 +197,7 @@ export function AgendaKpiStrip({ data, className }: AgendaKpiStripProps) {
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Conflitos
             </p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+            <div className={cn("flex items-baseline inline-snug mt-1")}>
               <Text variant="kpi-value" className={cn(
                 data.conflitos > 0 && "text-warning",
               )}>

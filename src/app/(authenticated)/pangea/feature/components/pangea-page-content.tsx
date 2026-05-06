@@ -273,7 +273,7 @@ export function PangeaPageContent() {
     <div className={cn("stack-loose")}>
       <form onSubmit={form.handleSubmit(onSubmit)} className={cn("stack-default")}>
         {/* Hero minimalista */}
-        <div className={cn(/* design-system-escape: gap-8 gap sem token DS; py-10 padding direcional sem Inset equiv. */ "flex flex-col items-center text-center gap-8 py-10")}>
+        <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv. */ "flex flex-col items-center text-center inline-extra-loose py-10")}>
           <Image
             src="/assets/pangea.png"
             alt="Pangea — Banco Nacional de Precedentes"
@@ -308,10 +308,10 @@ export function PangeaPageContent() {
               </Button>
             </div>
 
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "mt-3 flex items-center justify-center gap-3")}>
+            <div className={cn("mt-3 flex items-center justify-center inline-medium")}>
               <button
                 type="button"
-                className={cn(/* design-system-escape: gap-1 gap sem token DS */ "inline-flex items-center gap-1 text-body-sm text-muted-foreground hover:text-foreground underline underline-offset-4")}
+                className={cn("inline-flex items-center inline-micro text-body-sm text-muted-foreground hover:text-foreground underline underline-offset-4")}
                 aria-controls="pangea-advanced-filters"
                 aria-expanded={advancedOpen}
                 onClick={() => setAdvancedOpen((v) => !v)}
@@ -360,26 +360,26 @@ export function PangeaPageContent() {
               </div>
 
               <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
-                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+                <div className={cn("stack-snug")}>
                   <Label>Trecho exato</Label>
                   <Input
                     placeholder='Use aspas ou ";" para múltiplos trechos'
                     {...form.register('trechoExato')}
                   />
                 </div>
-                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+                <div className={cn("stack-snug")}>
                   <Label>Número (nr)</Label>
                   <Input {...form.register('nr')} />
                 </div>
-                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+                <div className={cn("stack-snug")}>
                   <Label>Todas as palavras</Label>
                   <Input {...form.register('todasPalavras')} />
                 </div>
-                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+                <div className={cn("stack-snug")}>
                   <Label>Quaisquer palavras</Label>
                   <Input {...form.register('quaisquerPalavras')} />
                 </div>
-                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+                <div className={cn("stack-snug")}>
                   <Label>Sem as palavras</Label>
                   <Input {...form.register('semPalavras')} />
                 </div>
@@ -388,7 +388,7 @@ export function PangeaPageContent() {
               <Separator />
 
               <div className={cn("grid grid-cols-1 md:grid-cols-12 inline-default")}>
-                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5 md:col-span-4")}>
+                <div className={cn("stack-snug md:col-span-4")}>
                   <Label>Órgãos</Label>
                   <Popover open={orgaosOpen} onOpenChange={setOrgaosOpen}>
                     <PopoverTrigger asChild>
@@ -452,7 +452,7 @@ export function PangeaPageContent() {
                   </Popover>
                 </div>
 
-                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5 md:col-span-4")}>
+                <div className={cn("stack-snug md:col-span-4")}>
                   <Label>Espécies</Label>
                   <Popover>
                     <PopoverTrigger asChild>
@@ -504,7 +504,7 @@ export function PangeaPageContent() {
                   </Popover>
                 </div>
 
-                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5 md:col-span-4")}>
+                <div className={cn("stack-snug md:col-span-4")}>
                   <Label>Data de atualização</Label>
                   <DateRangePicker
                     value={dateRange}
@@ -513,7 +513,7 @@ export function PangeaPageContent() {
                   />
                 </div>
 
-                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5 md:col-span-4")}>
+                <div className={cn("stack-snug md:col-span-4")}>
                   <Label>Ordenação</Label>
                   <Select
                     value={form.watch('ordenacao') ?? 'Text'}

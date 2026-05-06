@@ -12,7 +12,7 @@ export function WidgetSkeleton({ size = 'sm' }: WidgetSkeletonProps) {
 
   return (
     <GlassPanel depth={1} className={`p-5 ${heightClass}`}>
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "animate-pulse flex flex-col gap-3 h-full")}>
+      <div className={cn("animate-pulse flex flex-col inline-medium h-full")}>
         <div className={cn("flex items-center inline-tight")}>
           <div className="size-4 rounded bg-border/15" />
           <div className="h-3.5 w-28 rounded bg-border/15" />

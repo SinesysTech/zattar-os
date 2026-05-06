@@ -75,7 +75,7 @@ export function WidgetTiposContrato() {
         {porTipo.map((t) => {
           const pct = (t.count / maxCount) * 100;
           return (
-            <div key={t.tipo} className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+            <div key={t.tipo} className={cn("flex flex-col inline-micro")}>
               <div className="flex items-center justify-between">
                 <span className="text-[10px] text-muted-foreground/70 capitalize truncate">
                   {t.tipo.replace(/_/g, ' ')}

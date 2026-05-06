@@ -103,11 +103,11 @@ function DetalheItem({
   value: React.ReactNode;
 }) {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3")}>
+    <div className={cn("flex items-start inline-medium")}>
       <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted shrink-0">
         <Icon className="h-4 w-4 text-muted-foreground" />
       </div>
-      <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5 min-w-0")}>
+      <div className={cn("stack-nano min-w-0")}>
         <Text variant="caption">{label}</Text>
         <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{value}</div>
       </div>

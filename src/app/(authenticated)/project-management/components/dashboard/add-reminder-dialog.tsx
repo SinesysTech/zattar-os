@@ -69,7 +69,7 @@ export function AddReminderDialog() {
             <Label>Data e Hora</Label>
             <DateTimePicker date={date} setDate={setDate} />
           </div>
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3")}>
+          <div className={cn("grid inline-medium")}>
             <Label>Prioridade</Label>
             <RadioGroup
               value={prioridade}

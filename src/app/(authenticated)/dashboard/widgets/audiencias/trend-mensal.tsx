@@ -136,7 +136,7 @@ export function TrendMensal() {
       icon={TrendingUp}
       subtitle="Evolucao de audiencias (12 meses)"
     >
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         {/* Stats row */}
         <div className={cn("flex items-baseline inline-default")}>
           <div>

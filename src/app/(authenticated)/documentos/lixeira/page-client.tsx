@@ -130,7 +130,7 @@ function LixeiraEmptyState({ onVoltar }: { onVoltar: () => void }) {
 function AvisoExclusaoCard() {
   return (
     <Card className="border-warning/15 bg-warning/5">
-      <CardContent className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 inset-card-compact")}>
+      <CardContent className={cn("flex items-center inline-medium inset-card-compact")}>
         <AlertTriangle className="h-5 w-5 text-warning" />
         <p className={cn("text-body-sm text-warning")}>
           Documentos na lixeira serão deletados permanentemente após 30 dias.
@@ -157,7 +157,7 @@ function DocumentoCard({
     <Card>
       <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
         <div className="flex items-start justify-between">
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+          <div className={cn("flex items-center inline-medium")}>
             <FileText className="h-5 w-5 text-muted-foreground" />
             <div>
               <CardTitle className={cn("text-body")}>
@@ -339,7 +339,7 @@ export default function LixeiraClient() {
   return (
     <>
       <div className={cn("flex flex-col inline-default sm:flex-row sm:items-start sm:justify-between")}>
-        <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+        <div className={cn("stack-snug")}>
           <Heading level="page">Lixeira</Heading>
           <p className={cn("text-body-sm text-muted-foreground/50 mt-0.5")}>
             Documentos excluídos que serão deletados permanentemente após 30 dias

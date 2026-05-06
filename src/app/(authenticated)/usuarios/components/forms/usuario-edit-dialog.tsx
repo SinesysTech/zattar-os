@@ -615,7 +615,7 @@ export function UsuarioEditDialog({
           {/* Status */}
           <GlassPanel depth={1} className={cn("inset-card-compact grid inline-default")}>
             <small className="text-sm font-medium leading-none text-muted-foreground">Status do Usuário</small>
-            <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+            <div className={cn("stack-medium")}>
               <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
                 <Checkbox
                   id="ativo"

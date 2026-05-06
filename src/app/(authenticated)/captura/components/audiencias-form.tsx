@@ -134,7 +134,7 @@ export const AudienciasForm = forwardRef<CapturaFormHandle, AudienciasFormProps>
                 {STATUS_AUDIENCIA_OPTIONS.map((opcao) => (
                   <label
                     key={opcao.value}
-                    className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-3 rounded-md border px-3 py-2 text-body-sm")}
+                    className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center inline-medium rounded-md border px-3 py-2 text-body-sm")}
                   >
                     <Checkbox
                       id={`status-${opcao.value}`}

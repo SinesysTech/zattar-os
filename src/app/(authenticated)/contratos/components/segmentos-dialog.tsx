@@ -382,7 +382,7 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
                 </EmptyHeader>
               </Empty>
             ) : (
-              <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+              <div className={cn("stack-micro")}>
                 {segmentos.map((segmento) => (
                   <div
                     key={segmento.id}
@@ -402,7 +402,7 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
                       )}
                     </div>
 
-                    <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 ml-4")}>
+                    <div className={cn("flex items-center inline-micro ml-4")}>
                       <Button
                         variant="ghost"
                         size="icon" aria-label="Editar"

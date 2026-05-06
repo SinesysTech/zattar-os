@@ -240,7 +240,7 @@ function GlassCard({
 
       {/* Footer: criador + data */}
       <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "relative mt-4 pt-3 border-t border-border/30 flex items-center justify-between inline-tight")}>
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 min-w-0")}>
+        <div className={cn("flex items-center inline-snug min-w-0")}>
           <Avatar className="size-5">
             {criadorAvatar && <AvatarImage src={criadorAvatar} alt={criador.nome} />}
             <AvatarFallback className="text-[8px] bg-primary/10 text-primary">
@@ -265,13 +265,13 @@ function GlassCard({
 
 function CardsSkeleton() {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3")}>
+    <div className={cn("grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 inline-medium")}>
       {Array.from({ length: 10 }, (_, i) => (
         <div key={i} className={cn("rounded-2xl border border-border/40 bg-card inset-card-compact")}>
           <Skeleton className="size-10 rounded-2xl" />
           <Skeleton className="h-3.5 w-full mt-3.5" />
           <Skeleton className="h-3 w-20 mt-2" />
-          <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; gap-1.5 gap sem token DS */ "mt-4 pt-3 border-t border-border/30 flex items-center gap-1.5")}>
+          <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-4 pt-3 border-t border-border/30 flex items-center inline-snug")}>
             <Skeleton className="size-5 rounded-full" />
             <Skeleton className="h-2.5 w-16" />
           </div>
@@ -314,7 +314,7 @@ export function DocumentosGlassCards({
   if (items.length === 0) return <CardsEmptyState />;
 
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3")}>
+    <div className={cn("grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 inline-medium")}>
       {items.map((item) => {
         const key = `${item.tipo}-${item.dados.id}`;
         return (

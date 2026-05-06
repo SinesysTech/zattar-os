@@ -21,7 +21,7 @@ import {
 
 export default function PecasJuridicasDoc() {
   return (
-    <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
+    <div className={cn("stack-extra-loose")}>
       <div>
         <Heading level="page">Peças Jurídicas</Heading>
         <p className={cn("text-muted-foreground text-body-lg")}>

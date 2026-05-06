@@ -70,7 +70,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
               Captura #{captura.id}
             </p>
             {isInProgress && (
-              <span className={cn(/* design-system-escape: gap-1 gap sem token DS; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "inline-flex items-center gap-1 text-[10px] font-medium text-info uppercase tracking-wider")}>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "inline-flex items-center inline-micro text-[10px] font-medium text-info uppercase tracking-wider")}>
                 <span className="h-1.5 w-1.5 rounded-full bg-info animate-pulse" />
                 em andamento
               </span>
@@ -89,8 +89,8 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
       <GlassPanel depth={1} className={cn("inset-card-compact")}>
         <div className={cn("grid grid-cols-2 inline-default sm:grid-cols-4")}>
           {/* Status */}
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+          <div className={cn("flex flex-col inline-snug")}>
+            <div className={cn("flex items-center inline-snug")}>
               <Activity className="size-3 text-muted-foreground/70" />
               <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
                 Status
@@ -105,8 +105,8 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
           </div>
 
           {/* Iniciado em */}
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+          <div className={cn("flex flex-col inline-snug")}>
+            <div className={cn("flex items-center inline-snug")}>
               <CalendarClock className="size-3 text-muted-foreground/70" />
               <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
                 Iniciado em
@@ -118,8 +118,8 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
           </div>
 
           {/* Concluído em */}
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+          <div className={cn("flex flex-col inline-snug")}>
+            <div className={cn("flex items-center inline-snug")}>
               <CalendarCheck className="size-3 text-muted-foreground/70" />
               <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
                 Concluído em
@@ -133,8 +133,8 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
           </div>
 
           {/* Duração */}
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+          <div className={cn("flex flex-col inline-snug")}>
+            <div className={cn("flex items-center inline-snug")}>
               <Timer className="size-3 text-muted-foreground/70" />
               <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
                 Duração
@@ -191,7 +191,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
       {/* Tabs: Logs Detalhados + Dados Brutos */}
       <Tabs defaultValue="logs" className="w-full">
         <TabsList>
-          <TabsTrigger value="logs" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5")}>
+          <TabsTrigger value="logs" className={cn("inline-snug")}>
             <ScrollText className="size-3.5" />
             Logs por tribunal
             {rawLogs.length > 0 && (
@@ -200,7 +200,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
               </Badge>
             )}
           </TabsTrigger>
-          <TabsTrigger value="dados-brutos" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5")}>
+          <TabsTrigger value="dados-brutos" className={cn("inline-snug")}>
             <FileJson className="size-3.5" />
             Payload bruto
           </TabsTrigger>

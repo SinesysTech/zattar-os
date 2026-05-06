@@ -18,7 +18,7 @@ export function GazetteAlertBanner({ count, descricao, onVerPrazos }: GazetteAle
   if (dismissed || count === 0) return null;
 
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-3 border-b border-destructive/15 bg-destructive/5 px-4 py-2.5")}>
+    <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center inline-medium border-b border-destructive/15 bg-destructive/5 px-4 py-2.5")}>
       {/* Icon */}
       <div className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "flex shrink-0 items-center justify-center rounded-lg bg-destructive/10 p-1.5")}>
         <AlertTriangle className="size-3.5 text-destructive" aria-hidden />

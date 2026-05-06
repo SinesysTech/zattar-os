@@ -127,7 +127,7 @@ export function ParcelasTable({
               isAtrasada && 'border-destructive/20',
             )}
           >
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 flex-wrap")}>
+            <div className={cn("flex items-center inline-medium flex-wrap")}>
               {/* Numero da parcela */}
               <div className="size-8 rounded-lg bg-primary/8 text-primary/80 flex items-center justify-center shrink-0">
                 <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[11px] font-bold tabular-nums")}>
@@ -202,7 +202,7 @@ export function ParcelasTable({
               )}
 
               {/* Ações */}
-              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 shrink-0")}>
+              <div className={cn("flex items-center inline-micro shrink-0")}>
                 {onEdit && isPendente && (
                   <Button
                     size="sm"

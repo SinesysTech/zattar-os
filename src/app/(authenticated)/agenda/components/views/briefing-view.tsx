@@ -105,7 +105,7 @@ export function BriefingView({ events, currentDate, onEventClick }: BriefingView
       {/* Briefing text */}
       <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv.; sm:px-5 sem equivalente DS */ "relative overflow-hidden rounded-2xl border border-primary/8 bg-primary/2 px-4 py-3.5 sm:px-5")}>
         <div className="absolute top-0 right-0 w-24 h-24 bg-primary/3 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "relative flex items-start gap-3")}>
+        <div className={cn("relative flex items-start inline-medium")}>
           <div className="size-1.5 rounded-full bg-primary animate-pulse mt-2 shrink-0" />
           <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[13px] text-foreground/70 leading-relaxed")}>{briefingText}</p>
         </div>
@@ -123,7 +123,7 @@ export function BriefingView({ events, currentDate, onEventClick }: BriefingView
               </div>
               <div className={cn("flex items-center inline-tight")}>
                 {(["audiencias", "agenda", "expedientes"] as const).map((s) => (
-                  <div key={s} className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+                  <div key={s} className={cn("flex items-center inline-micro")}>
                     <div className={cn("size-1.5 rounded-full", COLOR_MAP[SOURCE_CONFIG[s].defaultColor].dot)} />
                     <span className="text-[8px] text-muted-foreground/50">{SOURCE_CONFIG[s].label}</span>
                   </div>
@@ -136,7 +136,7 @@ export function BriefingView({ events, currentDate, onEventClick }: BriefingView
               {allDay.length > 0 && (
                 <div className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "mb-3 pb-2 border-b border-border/8")}>
                   <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[8px] uppercase tracking-[0.15em] text-muted-foreground/45 font-semibold")}>Dia inteiro</span>
-                  <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "mt-1 space-y-1")}>
+                  <div className={cn("mt-1 stack-micro")}>
                     {allDay.map((ev) => (
                       <EventChip key={ev.id} title={ev.title} color={ev.color} past={ev.end < new Date()} onClick={() => onEventClick(ev)} />
                     ))}
@@ -245,7 +245,7 @@ export function BriefingView({ events, currentDate, onEventClick }: BriefingView
               <Zap className="size-3 text-primary/40" />
               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-muted-foreground/50")}>Ações</span>
             </div>
-            <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
+            <div className={cn("stack-nano")}>
               {[
                 { label: "Abrir PJe", icon: ExternalLink },
                 { label: "Preparar peça", icon: FileText },
@@ -282,7 +282,7 @@ function BriefingEventCard({ event, onClick }: { event: AgendaEvent; onClick: ()
     (event.start.getTime() - Date.now()) < 2 * 60 * 60 * 1000;
 
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-1 padding direcional sem Inset equiv. */ "flex items-stretch gap-3 py-1 group")}>
+    <div className={cn(/* design-system-escape: py-1 padding direcional sem Inset equiv. */ "flex items-stretch inline-medium py-1 group")}>
       <div className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "w-11 shrink-0 flex flex-col items-end pt-2.5")}>
         <span className={cn(
           /* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] tabular-nums font-medium",
@@ -316,7 +316,7 @@ function BriefingEventCard({ event, onClick }: { event: AgendaEvent; onClick: ()
               )}
               {prep && (
                 <span className={cn(
-                  /* design-system-escape: gap-0.5 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "flex items-center gap-0.5 px-1.5 py-px rounded-full text-[8px] font-semibold shrink-0",
+                  /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "flex items-center inline-nano px-1.5 py-px rounded-full text-[8px] font-semibold shrink-0",
                   prep === "preparado" ? "bg-success/10 text-success" : prep === "parcial" ? "bg-warning/10 text-warning" : "bg-destructive/10 text-destructive",
                 )}>
                   {prep === "preparado" ? <CheckCircle2 className="size-2" /> : prep === "parcial" ? <Circle className="size-2" /> : <AlertTriangle className="size-2" />}
@@ -334,7 +334,7 @@ function BriefingEventCard({ event, onClick }: { event: AgendaEvent; onClick: ()
         {event.meta.descricao && <p className="text-[10px] text-muted-foreground/60 mt-1 truncate ml-8">{event.meta.descricao}</p>}
         <div className={cn("flex items-center inline-tight mt-2 ml-8 flex-wrap")}>
           {event.meta.local && (
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+            <div className={cn("flex items-center inline-micro")}>
               <ModalIcon className="size-2 text-muted-foreground/50" />
               <span className="text-[9px] text-muted-foreground/55 truncate max-w-40">{event.meta.local}</span>
             </div>
@@ -370,7 +370,7 @@ function BriefingEventCard({ event, onClick }: { event: AgendaEvent; onClick: ()
         </div>
         {/* Post-hearing nudge */}
         {isAudiencia && isPast && !prep && (
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "mt-2 ml-8 flex items-center gap-1.5 px-2 py-1 rounded-md bg-warning/5 border border-warning/10")}>
+          <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "mt-2 ml-8 flex items-center inline-snug px-2 py-1 rounded-md bg-warning/5 border border-warning/10")}>
             <Clock className="size-2.5 text-warning/40" />
             <span className="text-[9px] text-warning/50">Registrar resultado da audiência</span>
           </div>

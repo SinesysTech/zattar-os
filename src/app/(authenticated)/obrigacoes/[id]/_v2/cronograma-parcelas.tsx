@@ -75,7 +75,7 @@ export function CronogramaParcelas({ parcelas, onSelecionar }: CronogramaParcela
 
   return (
     <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3 mb-5")}>
+      <div className={cn("flex items-start justify-between inline-medium mb-5")}>
         <div>
           <Text variant="meta-label" className="text-muted-foreground/60">
             Cronograma
@@ -147,7 +147,7 @@ export function CronogramaParcelas({ parcelas, onSelecionar }: CronogramaParcela
                     )}
                   />
                 </span>
-                <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "text-center space-y-0.5")}>
+                <div className={cn("text-center stack-nano")}>
                   <Text
                     variant="meta-label"
                     className="text-muted-foreground/60"

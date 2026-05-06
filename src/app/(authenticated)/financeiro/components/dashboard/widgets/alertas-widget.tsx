@@ -65,7 +65,7 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
           </div>
         </CardHeader>
         <CardContent>
-          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+          <div className={cn("stack-medium")}>
             {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="h-12 rounded-lg bg-muted animate-pulse" />
             ))}

@@ -44,7 +44,7 @@ export function RecordingConsentDialog({
             <AlertCircle className="h-5 w-5 text-warning" />
             Consentimento para Gravação
           </DialogTitle>
-          <DialogDescription className={cn(/* design-system-escape: space-y-3 sem token DS; pt-2 padding direcional sem Inset equiv. */ "text-left space-y-3 pt-2")}>
+          <DialogDescription className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "text-left stack-medium pt-2")}>
             <p>
               Você está prestes a iniciar a gravação desta chamada. De acordo com a{" "}
               <strong>Lei Geral de Proteção de Dados (LGPD)</strong>, é necessário o

@@ -79,7 +79,7 @@ export function ViewerToolbar({
 
       {/* Ações */}
       <TooltipProvider>
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "pointer-events-auto flex items-center gap-1 rounded-full bg-card/90 backdrop-blur-sm border shadow-sm px-1 py-0.5 ml-auto shrink-0")}>
+        <div className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "pointer-events-auto flex items-center inline-micro rounded-full bg-card/90 backdrop-blur-sm border shadow-sm px-1 py-0.5 ml-auto shrink-0")}>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button

@@ -218,7 +218,7 @@ export function AudienciaTimeline({
     return (
       <div className={cn('stack-default', className)}>
         {[60, 80, 50].map((w, i) => (
-          <div key={i} className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex gap-3")}>
+          <div key={i} className={cn("flex inline-medium")}>
             <div className="size-10 shrink-0 animate-pulse rounded-full bg-muted" />
             <div className={cn("flex-1 stack-tight")}>
               <div className="h-3 animate-pulse rounded bg-muted" style={{ width: `${w}%` }} />
@@ -246,7 +246,7 @@ export function AudienciaTimeline({
       <div className="absolute left-4 top-8 bottom-0 w-px bg-border/30" />
 
       {entries.map((entry) => (
-        <div key={entry.id} className={cn(/* design-system-escape: gap-3 gap sem token DS; pb-5 padding direcional sem Inset equiv. */ "relative flex gap-3 pb-5")}>
+        <div key={entry.id} className={cn(/* design-system-escape: pb-5 padding direcional sem Inset equiv. */ "relative flex inline-medium pb-5")}>
           {/* Avatar / icon */}
           {entry.type === 'manual' && entry.usuario ? (
             <Avatar size="lg" className="shrink-0">
@@ -285,7 +285,7 @@ export function AudienciaTimeline({
 
             {/* Changes list */}
             {entry.changes.length > 0 && (
-              <ul className={cn(/* design-system-escape: space-y-1 sem token DS */ "mt-1.5 space-y-1")}>
+              <ul className={cn("mt-1.5 stack-micro")}>
                 {entry.changes.map((change, i) => (
                   <li key={i} className={cn("text-body-sm")}>
                     <span className="text-muted-foreground">{change.campo}:</span>{' '}

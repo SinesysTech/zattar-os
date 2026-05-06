@@ -257,7 +257,7 @@ export function AudienciasSemanaView({
                 <div className={cn("stack-default")}>
                   {groupedAudiencias.map((group) => (
                     <section key={group.key} className={cn("stack-tight")}>
-                      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
+                      <div className={cn("flex items-center justify-between inline-medium")}>
                         <div className={cn("flex items-center inline-tight")}>
                           <span className={cn(
                             'size-2 rounded-full',
@@ -355,7 +355,7 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
       <div className={cn("flex items-center inline-default")}>
 
         {/* TEMPORAL: hora + prep score (coluna fixa à esquerda) */}
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; pt-0.5 padding direcional sem Inset equiv. */ "flex flex-col items-center gap-1.5 w-22 shrink-0 pt-0.5")}>
+        <div className={cn(/* design-system-escape: pt-0.5 padding direcional sem Inset equiv. */ "flex flex-col items-center inline-snug w-22 shrink-0 pt-0.5")}>
           {isOngoing && <span className="size-2 rounded-full bg-success animate-pulse" />}
           <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-caption font-semibold text-foreground leading-tight whitespace-nowrap tabular-nums")}>
             {fmtTime(audiencia.dataInicio)}<span className="text-[10px] font-normal ml-px">h</span>
@@ -380,7 +380,7 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
             <h3 className="text-card-title text-foreground truncate">
               {audiencia.tipoDescricao || 'Audiência'}
             </h3>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "ml-auto flex items-center gap-1.5 shrink-0")}>
+            <div className={cn("ml-auto flex items-center inline-snug shrink-0")}>
               {modalidade && (
                 <span className={cn(
                   'inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-medium',
@@ -416,7 +416,7 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
 
           {/* Identidade Processual */}
           {(audiencia.poloAtivoNome || audiencia.poloPassivoNome || audiencia.trt || audiencia.numeroProcesso) && (
-            <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; space-y-1 sem token DS */ "mt-3 border-t border-border/40 pt-3 space-y-1")}>
+            <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 border-t border-border/40 pt-3 stack-micro")}>
               {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
                 <p className="text-caption font-semibold text-foreground leading-snug">
                   {audiencia.poloAtivoNome || '—'}
@@ -446,15 +446,15 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
 
           {/* Footer */}
           <div
-            className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; gap-1.5 gap sem token DS */ "mt-3 border-t border-border/40 pt-3 flex items-center gap-1.5")}
+            className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 border-t border-border/40 pt-3 flex items-center inline-snug")}
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => e.stopPropagation()}
           >
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+            <div className={cn("flex items-center inline-micro")}>
               <button
                 type="button"
                 onClick={onClick}
-                className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex h-6 cursor-pointer items-center gap-1 rounded-md border border-border/40 px-2 text-[10px] font-medium text-muted-foreground/60 transition-colors hover:border-border/40 hover:text-muted-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
+                className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex h-6 cursor-pointer items-center inline-micro rounded-md border border-border/40 px-2 text-[10px] font-medium text-muted-foreground/60 transition-colors hover:border-border/40 hover:text-muted-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
               >
                 <ExternalLink className="size-3" />
                 Detalhes
@@ -465,7 +465,7 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}
-                  className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex h-6 items-center gap-1 rounded-md border border-info/25 bg-info/10 px-2 text-[10px] font-medium text-info transition-colors hover:bg-info/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
+                  className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex h-6 items-center inline-micro rounded-md border border-info/25 bg-info/10 px-2 text-[10px] font-medium text-info transition-colors hover:bg-info/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
                 >
                   <ExternalLink className="size-3" />
                   Entrar na sala

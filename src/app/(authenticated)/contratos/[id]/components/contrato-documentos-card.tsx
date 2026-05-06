@@ -34,7 +34,7 @@ export function ContratoDocumentosCard({
         icon={FileText}
         label="Peças jurídicas e anexos"
         action={
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+          <div className={cn("flex items-center inline-snug")}>
             <Button
               variant="outline"
               size="sm"

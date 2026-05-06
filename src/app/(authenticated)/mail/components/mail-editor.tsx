@@ -117,7 +117,7 @@ const MailEditorKit = [
 
 function MailToolbarButtons() {
   return (
-    <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center gap-0.5")}>
+    <div className={cn("flex items-center inline-nano")}>
       <ToolbarGroup>
         <UndoToolbarButton />
         <RedoToolbarButton />

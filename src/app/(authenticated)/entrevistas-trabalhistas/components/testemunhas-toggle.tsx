@@ -13,7 +13,7 @@ interface TestemunhasToggleProps {
 
 export function TestemunhasToggle({ checked, onCheckedChange }: TestemunhasToggleProps) {
   return (
-    <GlassPanel className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 inset-card-compact")}>
+    <GlassPanel className={cn("flex items-center inline-medium inset-card-compact")}>
       <Users className="h-5 w-5 text-muted-foreground" />
       <div className={cn("flex flex-1 items-center inline-tight")}>
         <Checkbox

@@ -45,7 +45,7 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
             <Skeleton className="h-6 w-full" />
             <Skeleton className="h-4 w-full" />
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+              <div key={i} className={cn("stack-snug")}>
                 <Skeleton className="h-3 w-32" />
                 <Skeleton className="h-2.5 w-full rounded-full" />
               </div>
@@ -115,15 +115,15 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
 
         {/* Status badges */}
         <div className={cn("flex inline-tight flex-wrap")}>
-          <SemanticBadge category="status" value="acima" variantOverride="outline" className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-caption gap-1")}>
+          <SemanticBadge category="status" value="acima" variantOverride="outline" className={cn("text-caption inline-micro")}>
             <TrendingUp className="h-3 w-3 text-destructive" />
             {resumo.itensAcimaMeta} acima
           </SemanticBadge>
-          <SemanticBadge category="status" value="alvo" variantOverride="outline" className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-caption gap-1")}>
+          <SemanticBadge category="status" value="alvo" variantOverride="outline" className={cn("text-caption inline-micro")}>
             <Minus className="h-3 w-3 text-success" />
             {resumo.itensDentroMeta} no alvo
           </SemanticBadge>
-          <SemanticBadge category="status" value="abaixo" variantOverride="outline" className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-caption gap-1")}>
+          <SemanticBadge category="status" value="abaixo" variantOverride="outline" className={cn("text-caption inline-micro")}>
             <TrendingDown className="h-3 w-3 text-info" />
             {resumo.itensAbaixoMeta} abaixo
           </SemanticBadge>
@@ -143,7 +143,7 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
                 : item.descricao || String(item.contaContabil);
 
               return (
-                <div key={item.id} className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+                <div key={item.id} className={cn("stack-micro")}>
                   <Text variant="caption" className="flex items-center justify-between">
                     <span className="truncate max-w-[60%] text-muted-foreground">{descricao}</span>
                     <span className={cn(

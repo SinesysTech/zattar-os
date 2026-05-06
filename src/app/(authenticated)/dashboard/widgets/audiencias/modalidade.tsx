@@ -80,7 +80,7 @@ export function ModalidadeDistribution() {
         />
 
         {/* Legend */}
-        <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "w-full space-y-1.5")}>
+        <div className={cn("w-full stack-snug")}>
           {porModalidade.map((m) => {
             const pct = total > 0 ? ((m.count / total) * 100).toFixed(1) : '0';
             return (

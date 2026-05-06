@@ -75,7 +75,7 @@ export function AnexoUploadZone({ entrevistaId, contratoId, modulo }: AnexoUploa
         </div>
       </div>
 
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3 sm:grid-cols-2")}>
+      <div className={cn("grid inline-medium sm:grid-cols-2")}>
         <div className={cn("stack-tight")}>
           <Label htmlFor={`tipo-anexo-${modulo}`}>Tipo de anexo</Label>
           <Select value={tipoAnexo} onValueChange={setTipoAnexo}>
@@ -114,7 +114,7 @@ export function AnexoUploadZone({ entrevistaId, contratoId, modulo }: AnexoUploa
         />
       </div>
 
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
+      <div className={cn("flex items-center justify-between inline-medium")}>
         <Text variant="caption">
           Limite de 25MB por arquivo.
         </Text>

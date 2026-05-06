@@ -123,7 +123,7 @@ export function ConflictAlert({ audiencias, dailyAverage = 2.5, className }: Con
           </Text>
         </div>
 
-        <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+        <div className={cn("stack-medium")}>
           {conflicts.map((conflict, i) => {
             const allAudiencias = conflict.audiencias;
             const times = allAudiencias.flatMap((a) => [
@@ -134,7 +134,7 @@ export function ConflictAlert({ audiencias, dailyAverage = 2.5, className }: Con
             const maxTime = Math.max(...times);
 
             return (
-              <div key={i} className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+              <div key={i} className={cn("stack-snug")}>
                 <div className={cn("flex items-center inline-tight")}>
                   {conflict.type === "overlap" ? (
                     <Clock className="size-2.5 text-destructive/40" />
@@ -156,7 +156,7 @@ export function ConflictAlert({ audiencias, dailyAverage = 2.5, className }: Con
                       <TimelineBar key={a.id} audiencia={a} minStart={minTime} maxEnd={maxTime} />
                     ))}
                     {conflict.overlapMinutes && conflict.overlapMinutes > 0 && (
-                      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 mt-1")}>
+                      <div className={cn("flex items-center inline-micro mt-1")}>
                         <div className="flex-1 h-px bg-destructive/15" />
                         <span className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv. */ "text-micro-badge text-destructive/50 tabular-nums px-1")}>
                           ▲ {conflict.overlapMinutes}min sobreposição
@@ -168,7 +168,7 @@ export function ConflictAlert({ audiencias, dailyAverage = 2.5, className }: Con
                 )}
 
                 {conflict.suggestion && (
-                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 ml-4")}>
+                  <div className={cn("flex items-center inline-micro ml-4")}>
                     <ArrowRight className="size-2 text-muted-foreground/65" />
                     <span className="text-micro-caption text-muted-foreground/75 italic">{conflict.suggestion}</span>
                   </div>

@@ -103,7 +103,7 @@ function MailBodyMobile({ mail }: { mail: MailMessagePreview }) {
 
   if (isLoadingBody && !isLoaded) {
     return (
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
+      <div className={cn("flex flex-col inline-medium")}>
         <Skeleton className="h-4 w-full" />
         <Skeleton className="h-4 w-5/6" />
         <Skeleton className="h-4 w-4/6" />
@@ -276,12 +276,12 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
 
           {mail && (
             <div className="flex flex-1 flex-col overflow-hidden">
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-wrap items-start gap-3 inset-card-compact")}>
+              <div className={cn("flex flex-wrap items-start inline-medium inset-card-compact")}>
                 <div className={cn("flex min-w-0 flex-1 items-start inline-default text-body-sm")}>
                   <Avatar>
                     <AvatarFallback>{participantInitials}</AvatarFallback>
                   </Avatar>
-                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "min-w-0 grid flex-1 gap-1")}>
+                  <div className={cn("min-w-0 grid flex-1 inline-micro")}>
                     <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "whitespace-normal wrap-break-word font-semibold")}>{participantName}</div>
                     <Text variant="caption" className="whitespace-normal wrap-break-word">{mail.subject}</Text>
                     <Text variant="caption" className="whitespace-normal wrap-break-word">
@@ -305,7 +305,7 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
               {replyMode ? (
                 <div ref={replyAreaRef} className={cn("inset-card-compact")}>
                   <form onSubmit={handleReply}>
-                    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3")}>
+                    <div className={cn("grid inline-medium")}>
                       <div className={cn("text-body-sm text-muted-foreground")}>
                         {replyMode === "reply-all"
                           ? "Responder a todos"

@@ -108,7 +108,7 @@ function InfoRow({
   children: React.ReactNode;
 }) {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-1.5 padding direcional sem Inset equiv. */ "grid grid-cols-[120px_1fr] gap-3 py-1.5 text-body-sm")}>
+    <div className={cn(/* design-system-escape: py-1.5 padding direcional sem Inset equiv. */ "grid grid-cols-[120px_1fr] inline-medium py-1.5 text-body-sm")}>
       <dt className="text-[12px] text-muted-foreground/60">{label}</dt>
       <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/90")}>{children}</dd>
     </div>
@@ -123,11 +123,11 @@ function MetaItem({
   children: React.ReactNode;
 }) {
   return (
-    <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1 min-w-0")}>
+    <div className={cn("flex flex-col inline-micro min-w-0")}>
       <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/55")}>
         {label}
       </span>
-      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 text-body-sm")}>{children}</div>
+      <div className={cn("flex items-center inline-snug text-body-sm")}>{children}</div>
     </div>
   );
 }
@@ -152,7 +152,7 @@ function PericiaListItem({ pericia }: { pericia: Pericia }) {
         </TabsList>
 
         <TabsContent value="detalhes" className={cn("stack-default mt-0")}>
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
+          <div className={cn("flex items-start justify-between inline-medium")}>
             <div className="min-w-0">
               <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-body-sm font-semibold tabular-nums tracking-tight text-foreground truncate")}>
                 {pericia.numeroProcesso}
@@ -245,7 +245,7 @@ function PericiaSingleDetails({ pericia }: { pericia: Pericia }) {
     <div className={cn(/* design-system-escape: pb-6 padding direcional sem Inset equiv. */ "stack-loose pb-6")}>
       {/* Meta Grid */}
       <GlassPanel depth={1} className={cn("inset-card-compact bg-muted/20")}>
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-3 gap-3")}>
+        <div className={cn("grid grid-cols-3 inline-medium")}>
           <MetaItem label="Prazo">
             <CalendarIcon className="size-3.5 text-muted-foreground/50" />
             <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "tabular-nums font-medium text-foreground/90")}>
@@ -286,7 +286,7 @@ function PericiaSingleDetails({ pericia }: { pericia: Pericia }) {
         icon={<Building2 className="size-3.5 text-muted-foreground/50" />}
         title="Processo"
       >
-        <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
+        <div className={cn("stack-nano")}>
           <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "block text-body-sm font-semibold tabular-nums tracking-tight text-foreground")}>
             {pericia.numeroProcesso}
           </span>
@@ -339,7 +339,7 @@ export function PericiaDetalhesDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className=" max-w-3xl max-h-[90vh] flex flex-col">
         <DialogHeader>
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3")}>
+          <div className={cn("flex items-start inline-medium")}>
             <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
               <ClipboardList className="size-4.5 text-primary" />
             </div>
@@ -375,7 +375,7 @@ export function PericiaDetalhesDialog({
         {/* Scrollable content */}
         <div className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv. */ "flex-1 overflow-y-auto px-1 pt-2")}>
           {exibirLista ? (
-            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+            <div className={cn("stack-micro")}>
               {pericias!.map((p) => (
                 <PericiaListItem key={p.id} pericia={p} />
               ))}

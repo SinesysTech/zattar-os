@@ -156,14 +156,14 @@ export function ContratoDocumentosAssinaturaCard({
       icon={FileSignature}
       label="Documentos para assinatura"
       action={
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+        <div className={cn("flex items-center inline-snug")}>
           {pacote ? (
             <>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={handleCopyLink}
-                className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading>; gap-1.5 gap sem token DS */ "h-7 px-2.5 rounded-lg text-[11.5px] font-medium gap-1.5")}
+                className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "h-7 px-2.5 rounded-lg text-[11.5px] font-medium inline-snug")}
               >
                 <Copy className="size-3" />
                 Copiar link
@@ -178,7 +178,7 @@ export function ContratoDocumentosAssinaturaCard({
             size="sm"
             onClick={handleRefresh}
             disabled={refreshing}
-            className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading>; gap-1.5 gap sem token DS */ "h-7 px-2 rounded-lg text-[11.5px] font-medium gap-1.5")}
+            className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "h-7 px-2 rounded-lg text-[11.5px] font-medium inline-snug")}
           >
             <RefreshCw className={`size-3 ${refreshing ? 'animate-spin' : ''}`} />
             Atualizar
@@ -201,7 +201,7 @@ export function ContratoDocumentosAssinaturaCard({
           </div>
         ) : (
           <div className={cn("stack-tight")}>
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-1 padding direcional sem Inset equiv.; pb-1 padding direcional sem Inset equiv. */ "flex items-center gap-3 px-1 pb-1")}>
+            <div className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; pb-1 padding direcional sem Inset equiv. */ "flex items-center inline-medium px-1 pb-1")}>
               <p className="text-[11px] text-muted-foreground">
                 <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>{totalAssinados}</span>{' '}
                 assinado{totalAssinados === 1 ? '' : 's'}
@@ -257,7 +257,7 @@ function DocumentoRow({ doc, downloading, onDownload }: DocumentoRowProps) {
   const podeBaixar = doc.pdf_final_url !== null || doc.pdf_original_url !== null;
 
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-3 px-3 py-2.5 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors")}>
+    <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center inline-medium px-3 py-2.5 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors")}>
       <div className="inline-flex size-8 items-center justify-center rounded-[10px] bg-background shrink-0">
         {statusIcon}
       </div>
@@ -286,14 +286,14 @@ function DocumentoRow({ doc, downloading, onDownload }: DocumentoRowProps) {
           </p>
         ) : null}
       </div>
-      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 shrink-0")}>
+      <div className={cn("flex items-center inline-micro shrink-0")}>
         <Button
           variant="ghost"
           size="sm"
           onClick={onDownload}
           disabled={!podeBaixar || downloading}
           title={isAssinado ? 'Baixar PDF assinado' : 'Baixar PDF original'}
-          className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading>; gap-1.5 gap sem token DS */ "h-7 px-2 rounded-lg text-[11px] font-medium gap-1.5")}
+          className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "h-7 px-2 rounded-lg text-[11px] font-medium inline-snug")}
         >
           <Download className={`size-3 ${downloading ? 'animate-pulse' : ''}`} />
           {downloading ? 'Abrindo…' : 'Baixar'}

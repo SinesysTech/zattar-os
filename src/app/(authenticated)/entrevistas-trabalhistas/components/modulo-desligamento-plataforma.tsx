@@ -78,7 +78,7 @@ export function ModuloDesligamentoPlataforma({ data, onChange }: ModuloDesligame
       {foiBloqueado && (
         <>
           {/* B.4.2: Aviso prévio */}
-          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+          <div className={cn("stack-medium")}>
             <Label>Recebeu aviso prévio antes do bloqueio/desativação?</Label>
             <SimNaoRadio
               id="aviso-previo"
@@ -88,7 +88,7 @@ export function ModuloDesligamentoPlataforma({ data, onChange }: ModuloDesligame
           </div>
 
           {/* B.4.3: Direito de defesa */}
-          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+          <div className={cn("stack-medium")}>
             <Label>Teve direito a defesa ou contestação antes do desligamento?</Label>
             <SimNaoRadio
               id="direito-defesa"
@@ -116,7 +116,7 @@ export function ModuloDesligamentoPlataforma({ data, onChange }: ModuloDesligame
       )}
 
       {/* B.4.5: Saldo retido */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>Havia saldo/ganhos retidos pela plataforma no momento do desligamento?</Label>
         <SimNaoRadio
           id="saldo-retido"

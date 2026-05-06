@@ -318,7 +318,7 @@ function AlertasDesvioList({ alertas }: { alertas: AlertaDesvio[] }) {
   };
 
   return (
-    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+    <div className={cn("stack-medium")}>
       {alertas.map((alerta, index) => (
         <Card key={index}>
           <CardContent className={cn("flex items-start inline-default inset-card-compact")}>
@@ -431,7 +431,7 @@ function ProjecaoTable({ itens }: { itens: ProjecaoItem[] }) {
                   {formatarPercentual(variacao)}
                 </td>
                 <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3")}>
-                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center justify-center gap-1")}>
+                  <div className={cn("flex items-center justify-center inline-micro")}>
                     {getTendenciaIcon(tendencia)}
                     <span className={cn("text-body-sm")}>{getTendenciaLabel(tendencia)}</span>
                   </div>

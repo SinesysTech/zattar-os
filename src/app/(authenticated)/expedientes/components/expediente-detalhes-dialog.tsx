@@ -134,7 +134,7 @@ function ExpedienteListItem({
           <TabsTrigger value="historico">Histórico</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="detalhes" className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3 mt-0")}>
+        <TabsContent value="detalhes" className={cn("stack-medium mt-0")}>
           <div className="flex items-center justify-between">
             <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-body-lg flex items-center inline-tight")}>
               {exp.classeJudicial && <span className={cn("text-muted-foreground text-body-sm uppercase")}>{exp.classeJudicial}</span>}
@@ -150,7 +150,7 @@ function ExpedienteListItem({
             </div>
           </div>
 
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3 text-body-sm")}>
+          <div className={cn("grid grid-cols-2 inline-medium text-body-sm")}>
             <div>
               <Text variant="caption">Data de Ciência</Text>
               <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formatarData(exp.dataCienciaParte)}</div>

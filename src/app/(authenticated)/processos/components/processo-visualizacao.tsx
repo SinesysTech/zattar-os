@@ -296,16 +296,16 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
           </div>
 
           <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv.; sm:px-6 sem equivalente DS */ "border-t bg-muted/20 px-5 py-4 sm:px-6")}>
-            <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+            <div className={cn("stack-medium")}>
               <div className={cn("flex items-center inline-default")}>
                 <Skeleton className="h-7 w-28" />
                 <Skeleton className="h-7 w-24" />
                 <Skeleton className="h-7 w-20" />
               </div>
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-3 sem token DS */ "rounded-xl border bg-background/70 p-3 space-y-3")}>
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-xl border bg-background/70 p-3 stack-medium")}>
                 {[...Array(3)].map((_, index) => (
                   <div key={index} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg border p-3 stack-tight")}>
-                    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
+                    <div className={cn("flex items-center justify-between inline-medium")}>
                       <Skeleton className="h-4 w-32" />
                       <Skeleton className="h-6 w-28" />
                     </div>
@@ -321,7 +321,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
 
           <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv.; sm:px-6 sem equivalente DS */ "border-t px-5 py-5 sm:px-6")}>
             <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "rounded-xl border bg-card px-4 py-3 mb-5")}>
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
+              <div className={cn("flex items-center justify-between inline-medium")}>
                 <div className={cn("stack-tight")}>
                   <Skeleton className="h-4 w-36" />
                   <Skeleton className="h-3 w-72" />

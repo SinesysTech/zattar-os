@@ -48,7 +48,7 @@ export function UsuariosToolbar({
   ];
 
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
+    <div className={cn("flex flex-col sm:flex-row items-start sm:items-center inline-medium")}>
       {/* Left: tabs + filter */}
       <div className={cn("flex items-center inline-tight flex-wrap")}>
         <TabPills tabs={tabs} active={activeTab} onChange={onTabChange} />

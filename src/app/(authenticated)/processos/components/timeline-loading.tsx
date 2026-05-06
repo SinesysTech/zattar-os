@@ -28,7 +28,7 @@ export function TimelineLoading({
     return (
       <div className={cn("stack-default")}>
         <div className={cn("grid inline-default lg:grid-cols-[minmax(280px,0.36fr)_minmax(0,1fr)]")}>
-          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "rounded-2xl border bg-muted/20 inset-card-compact space-y-3")}>
+          <div className={cn("rounded-2xl border bg-muted/20 inset-card-compact stack-medium")}>
             <Skeleton className="h-5 w-28" />
             <div className={cn("stack-tight")}>
               {[...Array(5)].map((_, index) => (
@@ -55,7 +55,7 @@ export function TimelineLoading({
         </div>
 
         <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-8 padding direcional sem Inset equiv. */ "rounded-2xl border bg-card px-6 py-8")}>
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-center gap-3")}>
+          <div className={cn("flex items-center justify-center inline-medium")}>
             <LoadingSpinner size="lg" className="text-primary" />
             <div className={cn("text-center stack-tight")}>
               <Text variant="label" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body font-medium")}>{message}</Text>
@@ -101,7 +101,7 @@ export function TimelineLoading({
 
       {/* Timeline Loading Message */}
       <Card className={cn("inset-dialog stack-default")}>
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-8 padding direcional sem Inset equiv. */ "flex items-center justify-center gap-3 py-8")}>
+        <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex items-center justify-center inline-medium py-8")}>
           <LoadingSpinner className="size-6 text-primary" />
           <div className={cn("text-center stack-tight")}>
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body font-medium")}>{message}</p>
@@ -127,7 +127,7 @@ export function TimelineLoading({
                 <Skeleton className="w-10 h-10 rounded-full" />
                 <div className="w-0.5 h-20 bg-border" />
               </div>
-              <Card className={cn(/* design-system-escape: space-y-3 sem token DS */ "flex-1 inset-card-compact space-y-3")}>
+              <Card className={cn("flex-1 inset-card-compact stack-medium")}>
                 <Skeleton className="h-5 w-3/4" />
                 <Skeleton className="h-4 w-1/2" />
                 <Skeleton className="h-4 w-2/3" />

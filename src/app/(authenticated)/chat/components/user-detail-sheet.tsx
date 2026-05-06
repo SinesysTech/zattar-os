@@ -89,25 +89,25 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
 
           <div className={cn("stack-tight divide-y divide-border/20")}>
             {user.about && (
-              <div className={cn(/* design-system-escape: space-y-3 sem token DS; py-4 padding direcional sem Inset equiv. */ "space-y-3 py-4")}>
+              <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-medium py-4")}>
                 <Text variant="overline" as="h5">Sobre</Text>
                 <div className="text-muted-foreground">{user.about}</div>
               </div>
             )}
             {user.phone && (
-              <div className={cn(/* design-system-escape: space-y-3 sem token DS; py-4 padding direcional sem Inset equiv. */ "space-y-3 py-4")}>
+              <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-medium py-4")}>
                 <Text variant="overline" as="h5">Telefone</Text>
                 <div className="text-muted-foreground">{user.phone}</div>
               </div>
             )}
             {user.country && (
-              <div className={cn(/* design-system-escape: space-y-3 sem token DS; py-4 padding direcional sem Inset equiv. */ "space-y-3 py-4")}>
+              <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-medium py-4")}>
                 <Text variant="overline" as="h5">País</Text>
                 <div className="text-muted-foreground">{user.country}</div>
               </div>
             )}
             {user.medias?.length && (
-              <div className={cn(/* design-system-escape: space-y-3 sem token DS; py-4 padding direcional sem Inset equiv. */ "space-y-3 py-4")}>
+              <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-medium py-4")}>
                 <Text variant="overline" as="h5">Mídia</Text>
                 <div>
                   <ScrollArea className="w-full">
@@ -135,7 +135,7 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
               </div>
             )}
             {user.website && (
-              <div className={cn(/* design-system-escape: space-y-3 sem token DS; py-4 padding direcional sem Inset equiv. */ "space-y-3 py-4")}>
+              <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-medium py-4")}>
                 <Text variant="overline" as="h5">Website</Text>
                 <div>
                   <a
@@ -150,7 +150,7 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
               </div>
             )}
             {user.socialLinks?.length && (
-              <div className={cn(/* design-system-escape: space-y-3 sem token DS; py-4 padding direcional sem Inset equiv. */ "space-y-3 py-4")}>
+              <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-medium py-4")}>
                 <Text variant="overline" as="h5">
                   Redes Sociais
                 </Text>

@@ -292,7 +292,7 @@ function criarColunas(
         }
 
         return (
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-wrap gap-1")}>
+          <div className={cn("flex flex-wrap inline-micro")}>
             {tribunaisUnicos.slice(0, 3).map((info, idx) => {
               const grau = info.grau || 'primeiro_grau';
               return (
@@ -440,7 +440,7 @@ function criarColunas(
         });
 
         return (
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-wrap gap-1")}>
+          <div className={cn("flex flex-wrap inline-micro")}>
             {Array.from(contagem.values()).slice(0, 2).map((info, idx) => {
               const grau = info.grau || 'primeiro_grau';
               return (

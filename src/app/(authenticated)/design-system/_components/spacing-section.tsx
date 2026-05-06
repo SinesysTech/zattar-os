@@ -35,11 +35,11 @@ function SpacingScale() {
           </div>
         ))}
       </div>
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "mt-4 grid gap-3 sm:grid-cols-2")}>
+      <div className={cn("mt-4 grid inline-medium sm:grid-cols-2")}>
         {usage.map((u) => (
           <div
             key={u.lbl}
-            className={cn(/* design-system-escape: gap-1 gap sem token DS; px-3.5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex flex-col gap-1 rounded-xl border border-border bg-card px-3.5 py-3")}
+            className={cn(/* design-system-escape: px-3.5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex flex-col inline-micro rounded-xl border border-border bg-card px-3.5 py-3")}
           >
             <span className="font-mono text-[10px] text-muted-foreground">
               {u.lbl}
@@ -63,7 +63,7 @@ function RadiusScale() {
   ];
   return (
     <SpecimenCard eyebrow="RADIUS · HIERARQUIA">
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-3 gap-3 sm:grid-cols-6")}>
+      <div className={cn("grid grid-cols-3 inline-medium sm:grid-cols-6")}>
         {tiles.map((t) => (
           <div
             key={t.lbl}

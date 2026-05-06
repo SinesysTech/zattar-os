@@ -55,7 +55,7 @@ export function WidgetDespesasCategoria() {
         />
 
         {/* Legend */}
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex-1 flex flex-col gap-1.5 min-w-0")}>
+        <div className={cn("flex-1 flex flex-col inline-snug min-w-0")}>
           {categorias.map((c) => (
             <div key={c.categoria} className={cn("flex items-center inline-tight")}>
               <ToneDot tone={c.tone} aria-label={c.categoria} />

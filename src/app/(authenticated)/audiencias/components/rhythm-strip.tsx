@@ -66,7 +66,7 @@ export function RhythmStrip({ audiencias, className }: RhythmStripProps) {
       <CalendarHeatmap data={heatmapData} colorScale={hasOverload ? 'warning' : 'primary'} />
       <div className="flex items-center justify-between mt-2">
         <span className="text-micro-badge text-muted-foreground/65">Menos</span>
-        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex gap-0.5")}>
+        <div className={cn("flex inline-nano")}>
           {['bg-border/10', 'bg-primary/15', 'bg-primary/30', 'bg-primary/50', 'bg-primary/80'].map((c, i) => (
             <div key={i} className={cn('size-2.5 rounded-xs', c)} />
           ))}

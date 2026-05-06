@@ -233,7 +233,7 @@ function GlassRow({
     >
       <div className={cn("flex items-start inline-default")}>
         {/* DATA + HORA + PREP RING (coluna fixa à esquerda) */}
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; pt-0.5 padding direcional sem Inset equiv. */ "flex flex-col items-center gap-1.5 w-22 shrink-0 pt-0.5")}>
+        <div className={cn(/* design-system-escape: pt-0.5 padding direcional sem Inset equiv. */ "flex flex-col items-center inline-snug w-22 shrink-0 pt-0.5")}>
           <div className="text-center">
             <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-caption font-semibold text-foreground leading-tight whitespace-nowrap")}>
               {format(dataInicio, 'dd MMM yyyy', { locale: ptBR })}
@@ -260,7 +260,7 @@ function GlassRow({
             <h3 className="text-card-title text-foreground truncate">
               {audiencia.tipoDescricao || 'Audiência'}
             </h3>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "ml-auto flex items-center gap-1.5 shrink-0")}>
+            <div className={cn("ml-auto flex items-center inline-snug shrink-0")}>
               {audiencia.modalidade && (
                 <span className="inline-flex items-center gap-1 rounded-md bg-primary/10 border border-primary/20 px-1.5 py-0.5 text-[10px] font-medium text-primary">
                   <ModalidadeIcon className="w-2 h-2" />
@@ -269,7 +269,7 @@ function GlassRow({
               )}
               {countdown ? (
                 <span className={cn(
-                  /* design-system-escape: gap-1 gap sem token DS; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center gap-1 text-micro-caption font-semibold',
+                  /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center inline-micro text-micro-caption font-semibold',
                   countdown.isUrgent ? 'text-warning' : 'text-success'
                 )}>
                   <Clock className="w-3 h-3" />
@@ -312,7 +312,7 @@ function GlassRow({
           </div>
 
           {/* Identidade Processual */}
-          <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; space-y-1 sem token DS */ "mt-3 border-t border-border/40 pt-3 space-y-1")}>
+          <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 border-t border-border/40 pt-3 stack-micro")}>
             <p className="text-sm font-semibold text-foreground leading-snug">
               {poloAtivo}
               {poloAtivo !== '—' && poloPassivo !== '—' && (
@@ -337,7 +337,7 @@ function GlassRow({
             onKeyDown={(e) => e.stopPropagation()}
           >
             {editingObs ? (
-              <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+              <div className={cn("stack-snug")}>
                 <Textarea
                   value={obsDraft}
                   onChange={(e) => setObsDraft(e.target.value)}
@@ -346,7 +346,7 @@ function GlassRow({
                   className="text-caption"
                   autoFocus
                 />
-                <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center justify-end gap-1")}>
+                <div className={cn("flex items-center justify-end inline-micro")}>
                   <Button
                     size="sm"
                     variant="ghost"
@@ -378,7 +378,7 @@ function GlassRow({
                   type="button"
                   onClick={handleStartObs}
                   className={cn(
-                    /* design-system-escape: gap-1.5 gap sem token DS; px-1.5 py-1 padding direcional sem Inset equiv. */ 'flex items-center gap-1.5 rounded-md px-1.5 py-1 -mx-1.5 -my-1 w-full text-left',
+                    /* design-system-escape: px-1.5 py-1 padding direcional sem Inset equiv. */ 'flex items-center inline-snug rounded-md px-1.5 py-1 -mx-1.5 -my-1 w-full text-left',
                     'transition-colors cursor-pointer hover:bg-muted/60',
                     obsValue ? 'text-foreground/75' : 'text-muted-foreground/60'
                   )}
@@ -395,15 +395,15 @@ function GlassRow({
           {/* Footer */}
           {!editingObs && (
             <div
-              className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; gap-1.5 gap sem token DS */ "mt-3 border-t border-border/40 pt-3 flex items-center gap-1.5")}
+              className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 border-t border-border/40 pt-3 flex items-center inline-snug")}
               onClick={(e) => e.stopPropagation()}
               onKeyDown={(e) => e.stopPropagation()}
             >
-              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+              <div className={cn("flex items-center inline-micro")}>
                 <button
                   type="button"
                   onClick={onView}
-                  className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex h-6 cursor-pointer items-center gap-1 rounded-md border border-border/40 px-2 text-[10px] font-medium text-muted-foreground/75 transition-colors hover:border-border/60 hover:text-muted-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
+                  className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex h-6 cursor-pointer items-center inline-micro rounded-md border border-border/40 px-2 text-[10px] font-medium text-muted-foreground/75 transition-colors hover:border-border/60 hover:text-muted-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
                 >
                   <ExternalLink className="size-3" />
                   Detalhes
@@ -414,7 +414,7 @@ function GlassRow({
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex h-6 items-center gap-1 rounded-md border border-info/25 bg-info/10 px-2 text-[10px] font-medium text-info transition-colors hover:bg-info/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
+                    className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex h-6 items-center inline-micro rounded-md border border-info/25 bg-info/10 px-2 text-[10px] font-medium text-info transition-colors hover:bg-info/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
                   >
                     <ExternalLink className="size-3" />
                     Entrar na sala

@@ -36,7 +36,7 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
     stats.ativas > 0 ? Math.round((stats.semResponsavel / stats.ativas) * 100) : 0;
 
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 lg:grid-cols-4 gap-3")}>
+    <div className={cn("grid grid-cols-2 lg:grid-cols-4 inline-medium")}>
       {/* ── Ativas ─────────────────────────────────────────────────── */}
       <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
@@ -44,7 +44,7 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
               Perícias Ativas
             </p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+            <div className={cn("flex items-baseline inline-snug mt-1")}>
               <Text variant="kpi-value">
                 <AnimatedNumber value={stats.ativas} />
               </Text>
@@ -74,7 +74,7 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
               Aguardando Laudo
             </p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+            <div className={cn("flex items-baseline inline-snug mt-1")}>
               <Text variant="kpi-value">
                 <AnimatedNumber value={stats.aguardandoLaudo} />
               </Text>
@@ -111,7 +111,7 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
               Prazos em 7d
             </p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+            <div className={cn("flex items-baseline inline-snug mt-1")}>
               <Text
                 variant="kpi-value"
                 className={cn(
@@ -159,7 +159,7 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
               Sem Responsável
             </p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+            <div className={cn("flex items-baseline inline-snug mt-1")}>
               <Text
                 variant="kpi-value"
                 className={cn(

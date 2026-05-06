@@ -35,7 +35,7 @@ export function PrepProgress({
   const colors = progressColor(percent);
 
   return (
-    <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1", className)}>
+    <div className={cn("stack-micro", className)}>
       {/* Header: label + percentage */}
       {(label || size === "md") && (
         <div className="flex items-center justify-between">

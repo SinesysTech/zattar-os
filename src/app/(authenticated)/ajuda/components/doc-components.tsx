@@ -91,9 +91,9 @@ export type ActionDef = {
 
 export function DocActionList({ actions }: { actions: ActionDef[] }) {
   return (
-    <ul className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+    <ul className={cn("stack-medium")}>
       {actions.map((a) => (
-        <li key={a.nome} className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3")}>
+        <li key={a.nome} className={cn("flex items-start inline-medium")}>
           {a.icon && <a.icon className="h-5 w-5 text-primary mt-0.5 shrink-0" />}
           <div>
             <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{a.nome}</span>

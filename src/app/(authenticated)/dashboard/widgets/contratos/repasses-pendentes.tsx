@@ -93,7 +93,7 @@ export function WidgetRepassesPendentes() {
       subtitle="Divisão cliente/escritório"
       depth={1}
     >
-      <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
+      <div className={cn("stack-nano")}>
         {repassesPendentes.map((r, i) => {
           const valorCliente = r.total * (r.pctCliente / 100);
           const valorEscritorio = r.total - valorCliente;
@@ -101,7 +101,7 @@ export function WidgetRepassesPendentes() {
           return (
             <ListItem key={`${r.processo}-${i}`} className="items-start">
               <div className="flex-1 min-w-0">
-                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+                <div className={cn("flex items-center inline-snug")}>
                   <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[12px] font-medium leading-tight truncate")}>
                     {r.cliente}
                   </p>
@@ -110,15 +110,15 @@ export function WidgetRepassesPendentes() {
                 <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[10px] text-muted-foreground/60 font-mono break-all leading-relaxed mt-0.5")}>
                   {r.processo}
                 </p>
-                <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mt-1")}>
-                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+                <div className={cn("flex items-center inline-medium mt-1")}>
+                  <div className={cn("flex items-center inline-micro")}>
                     <span className="text-[9px] text-muted-foreground/50">Cliente ({r.pctCliente}%):</span>
                     <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums")}>
                       {fmtMoeda(valorCliente)}
                     </span>
                   </div>
                   <div className="w-px h-3 bg-border/15" aria-hidden="true" />
-                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+                  <div className={cn("flex items-center inline-micro")}>
                     <span className="text-[9px] text-muted-foreground/50">Escritório:</span>
                     <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums")}>
                       {fmtMoeda(valorEscritorio)}

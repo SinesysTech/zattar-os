@@ -82,7 +82,7 @@ export function ModuloDependenciaEconomica({ data, onChange }: ModuloDependencia
       </div>
 
       {/* B.2.3: Investimento específico */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>Fez algum investimento específico para trabalhar na plataforma? (moto, bag, celular, carro)</Label>
         <SimNaoRadio
           id="investimento"
@@ -105,7 +105,7 @@ export function ModuloDependenciaEconomica({ data, onChange }: ModuloDependencia
       </div>
 
       {/* B.2.4: Única fonte de renda */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>A plataforma era sua única fonte de renda?</Label>
         <SimNaoRadio
           id="unica-fonte-renda"
@@ -115,7 +115,7 @@ export function ModuloDependenciaEconomica({ data, onChange }: ModuloDependencia
       </div>
 
       {/* B.2.5: Exclusividade */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>Havia cláusula de exclusividade (formal ou informal) com a plataforma?</Label>
         <SimNaoRadio
           id="clausula-exclusividade"

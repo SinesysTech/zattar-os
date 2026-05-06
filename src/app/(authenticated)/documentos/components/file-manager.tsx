@@ -142,7 +142,7 @@ function NovoPopover({
         sideOffset={8}
         className={cn(/* design-system-escape: p-2 → usar <Inset> */ "rounded-2xl glass-dropdown overflow-hidden p-2 w-56")}
       >
-        <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
+        <div className={cn("stack-nano")}>
           <button
             type="button"
             onClick={wrap(onCreateFolder)}
@@ -435,7 +435,7 @@ export function FileManager() {
       {error && <InsightBanner type="alert">{error}</InsightBanner>}
 
       {/* ── Filter + Search + ViewToggle ───────────────────── */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
+      <div className={cn("flex flex-col sm:flex-row items-start sm:items-center inline-medium")}>
         <DocumentosFilterBar
           filters={filters}
           onChange={setFilters}
@@ -459,11 +459,11 @@ export function FileManager() {
       {/* ── Breadcrumbs (dentro de pasta) ──────────────────── */}
       {currentPastaId && (
         <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "px-4 py-2.5")}>
-          <nav className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 text-caption")} aria-label="Breadcrumb">
+          <nav className={cn("flex items-center inline-snug text-caption")} aria-label="Breadcrumb">
             <button
               type="button"
               onClick={() => router.push('/documentos')}
-              className={cn(/* design-system-escape: gap-1 gap sem token DS */ "inline-flex items-center gap-1 text-muted-foreground/70 hover:text-primary transition-colors cursor-pointer")}
+              className={cn("inline-flex items-center inline-micro text-muted-foreground/70 hover:text-primary transition-colors cursor-pointer")}
             >
               <Home className="size-3.5" />
               <span>Raiz</span>
@@ -471,7 +471,7 @@ export function FileManager() {
             {breadcrumbs.map((bc, i) => {
               const isLast = i === breadcrumbs.length - 1;
               return (
-                <div key={bc.id ?? `bc-${i}`} className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+                <div key={bc.id ?? `bc-${i}`} className={cn("flex items-center inline-snug")}>
                   <ChevronRight className="size-3 text-muted-foreground/40" />
                   <button
                     type="button"

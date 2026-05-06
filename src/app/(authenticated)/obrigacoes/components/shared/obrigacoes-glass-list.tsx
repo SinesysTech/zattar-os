@@ -131,7 +131,7 @@ function GlassRow({
         URGENCY_BORDER[urgency],
       )}
     >
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-[32px_2.5fr_1fr_1fr_1fr_96px_40px] gap-3 items-center")}>
+      <div className={cn("grid grid-cols-[32px_2.5fr_1fr_1fr_1fr_96px_40px] inline-medium items-center")}>
         {/* 1. Urgency dot */}
         <div className="flex items-center justify-center">
           <div className={cn('w-2 h-2 rounded-full shrink-0', URGENCY_DOT[urgency])} />
@@ -153,7 +153,7 @@ function GlassRow({
           </div>
 
           {/* Linha 2: [TRT] [Grau] Número do processo */}
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mt-0.5 flex-wrap")}>
+          <div className={cn("flex items-center inline-snug mt-0.5 flex-wrap")}>
             {trt && (
               <SemanticBadge
                 category="tribunal"
@@ -234,7 +234,7 @@ function GlassRow({
           >
             {tipoLabel}
           </SemanticBadge>
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 mt-1")}>
+          <div className={cn("flex items-center inline-micro mt-1")}>
             {isRecebimento ? (
               <ArrowDown className="size-3 text-success/70 shrink-0" />
             ) : (
@@ -297,18 +297,18 @@ function ListSkeleton() {
           key={i}
           className={cn("rounded-2xl border border-border/40 bg-card inset-card-compact")}
         >
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-[32px_2.5fr_1fr_1fr_1fr_96px_40px] gap-3 items-center")}>
+          <div className={cn("grid grid-cols-[32px_2.5fr_1fr_1fr_1fr_96px_40px] inline-medium items-center")}>
             <Skeleton className="w-2 h-2 rounded-full" />
-            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+            <div className={cn("stack-snug")}>
               <Skeleton className="h-3.5 w-48" />
               <Skeleton className="h-2.5 w-36" />
             </div>
-            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+            <div className={cn("stack-micro")}>
               <Skeleton className="h-3 w-20" />
               <Skeleton className="h-2 w-14" />
             </div>
             <Skeleton className="h-3 w-20" />
-            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+            <div className={cn("stack-micro")}>
               <Skeleton className="h-2.5 w-16" />
               <Skeleton className="h-1 w-full rounded-full" />
             </div>

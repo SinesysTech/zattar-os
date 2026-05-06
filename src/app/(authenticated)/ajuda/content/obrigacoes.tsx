@@ -159,7 +159,7 @@ const actions: ActionDef[] = [
 
 export default function ObrigacoesDoc() {
   return (
-    <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
+    <div className={cn("stack-extra-loose")}>
       <div className={cn("stack-tight")}>
         <Heading level="page">Obrigações</Heading>
         <p className={cn("text-muted-foreground text-body-lg")}>
@@ -198,7 +198,7 @@ export default function ObrigacoesDoc() {
           Após cadastrar uma obrigação parcelada, o sistema gera automaticamente todas as parcelas
           com as respectivas datas de vencimento. Cada parcela pode ter um dos seguintes status:
         </p>
-        <ul className={cn(/* design-system-escape: space-y-1 sem token DS */ "list-disc list-inside space-y-1 text-muted-foreground text-body-sm mt-2")}>
+        <ul className={cn("list-disc list-inside stack-micro text-muted-foreground text-body-sm mt-2")}>
           <li><strong>Pendente:</strong> não venceu e ainda não foi paga.</li>
           <li><strong>Paga:</strong> pagamento confirmado e registrado.</li>
           <li><strong>Vencida:</strong> prazo ultrapassado sem registro de pagamento.</li>

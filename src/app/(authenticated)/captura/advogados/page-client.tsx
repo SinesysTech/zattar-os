@@ -189,7 +189,7 @@ export default function AdvogadosPage() {
     <>
       <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
         {/* Breadcrumb */}
-        <nav className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 text-caption text-muted-foreground/75")}>
+        <nav className={cn("flex items-center inline-snug text-caption text-muted-foreground/75")}>
           <a href="/captura" className="hover:text-foreground transition-colors">Captura</a>
           <ChevronRight className="size-3" />
           <a href="/captura?tab=credenciais" className="hover:text-foreground transition-colors">Credenciais</a>
@@ -219,7 +219,7 @@ export default function AdvogadosPage() {
         <PulseStrip items={kpiItems} />
 
         {/* Filter Bar */}
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
+        <div className={cn("flex flex-col sm:flex-row items-start sm:items-center inline-medium")}>
           <AdvogadosFilter
             title="UF"
             options={ufOptions}
@@ -243,7 +243,7 @@ export default function AdvogadosPage() {
 
         {/* Loading skeleton */}
         {isLoading && (
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3")}>
+          <div className={cn("grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 inline-medium")}>
             {Array.from({ length: 6 }).map((_, i) => (
               <GlassPanel key={i} depth={1} className="h-48 animate-pulse" />
             ))}
@@ -252,7 +252,7 @@ export default function AdvogadosPage() {
 
         {/* Card Grid */}
         {!isLoading && advogados.length > 0 && (
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3")}>
+          <div className={cn("grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 inline-medium")}>
             {advogados.map((advogado) => {
               const creds = credenciaisPorAdvogado.get(advogado.id);
               const ativas = creds?.ativas ?? 0;
@@ -262,7 +262,7 @@ export default function AdvogadosPage() {
               return (
                 <GlassPanel key={advogado.id} depth={2} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
                   {/* Header: Avatar + Name + Status badge */}
-                  <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mb-3")}>
+                  <div className={cn("flex items-center inline-medium mb-3")}>
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                       <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-sm font-bold text-primary font-heading")}>
                         {advogado.nome_completo.split(' ').map((n: string) => n[0]).slice(0, 2).join('').toUpperCase()}
@@ -275,12 +275,12 @@ export default function AdvogadosPage() {
                       </Text>
                     </div>
                     {temCredenciais ? (
-                      <span className={cn(/* design-system-escape: gap-1 gap sem token DS; font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center gap-1 text-[10px] font-medium text-success bg-success/8 border border-success/15 px-1.5 py-0.5 rounded-md shrink-0")}>
+                      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center inline-micro text-[10px] font-medium text-success bg-success/8 border border-success/15 px-1.5 py-0.5 rounded-md shrink-0")}>
                         <ShieldCheck className="size-2.5" />
                         Ativo
                       </span>
                     ) : (
-                      <span className={cn(/* design-system-escape: gap-1 gap sem token DS; font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center gap-1 text-[10px] font-medium text-warning bg-warning/8 border border-warning/15 px-1.5 py-0.5 rounded-md shrink-0")}>
+                      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center inline-micro text-[10px] font-medium text-warning bg-warning/8 border border-warning/15 px-1.5 py-0.5 rounded-md shrink-0")}>
                         <ShieldAlert className="size-2.5" />
                         Pendente
                       </span>

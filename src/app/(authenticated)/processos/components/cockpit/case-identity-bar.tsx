@@ -91,7 +91,7 @@ export function CaseIdentityBar({
   if (isReadingFocused) {
     return (
       <GlassPanel
-        className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "rounded-none border-0 border-b border-border/20 px-4 py-1.5 flex-row items-center gap-3 shrink-0")}
+        className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "rounded-none border-0 border-b border-border/20 px-4 py-1.5 flex-row items-center inline-medium shrink-0")}
       >
         <Text variant="caption" className="font-mono">{numeroProcesso}</Text>
         <span className="w-px h-4 bg-border/10" />
@@ -102,7 +102,7 @@ export function CaseIdentityBar({
 
   return (
     <GlassPanel
-      className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "rounded-none border-0 border-b border-border/20 px-4 py-2.5 flex-row items-center gap-3 shrink-0")}
+      className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "rounded-none border-0 border-b border-border/20 px-4 py-2.5 flex-row items-center inline-medium shrink-0")}
     >
       <Button variant="ghost" size="icon-sm" onClick={onVoltar} title="Voltar">
         <ArrowLeft className="size-4" />
@@ -125,7 +125,7 @@ export function CaseIdentityBar({
 
       <span className="w-px h-5 bg-border/10 shrink-0" />
 
-      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 shrink-0")}>
+      <div className={cn("flex items-center inline-micro shrink-0")}>
         <span className={cn("font-mono text-body-sm text-foreground/80")}>{numeroProcesso}</span>
         <CopyButton text={numeroProcesso} label="Copiar número" />
       </div>
@@ -151,7 +151,7 @@ export function CaseIdentityBar({
       )}
 
       {instancias && instancias.length > 1 && (
-        <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center gap-1 rounded-full border bg-muted/20 px-2 py-0.5 text-[10px] text-muted-foreground shrink-0")}>
+        <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center inline-micro rounded-full border bg-muted/20 px-2 py-0.5 text-[10px] text-muted-foreground shrink-0")}>
           <Layers className="size-3" />
           {instancias.length}
         </span>

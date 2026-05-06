@@ -58,7 +58,7 @@ export function DomainSection({
   return (
     <section className={cn('stack-default', className)}>
       {/* Header da seção */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+      <div className={cn("flex items-center inline-medium")}>
         {Icon && (
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
             <Icon className="h-5 w-5 text-primary" />

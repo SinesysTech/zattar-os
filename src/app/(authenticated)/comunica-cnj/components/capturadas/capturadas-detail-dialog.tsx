@@ -117,7 +117,7 @@ export function CapturadasDetailDialog({
           </div>
 
           <Section title="Processo">
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 gap-3 sm:grid-cols-2")}>
+            <div className={cn("grid grid-cols-1 inline-medium sm:grid-cols-2")}>
               <Field label="Número" span={2}>
                 <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "break-all font-medium tabular-nums")}>
                   {processoNumero}
@@ -130,7 +130,7 @@ export function CapturadasDetailDialog({
 
           {(partesAutor || partesReu) && (
             <Section title="Partes">
-              <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+              <div className={cn("stack-medium")}>
                 {partesAutor && (
                   <div>
                     <Text variant="meta-label" className="text-muted-foreground">

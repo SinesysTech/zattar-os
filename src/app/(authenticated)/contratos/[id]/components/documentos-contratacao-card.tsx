@@ -166,7 +166,7 @@ export function DocumentosContratacaoCard({
 
   return (
     <>
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "flex items-center gap-3 px-4 py-3.5 rounded-[14px] bg-primary/5 border border-primary/15")}>
+      <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "flex items-center inline-medium px-4 py-3.5 rounded-[14px] bg-primary/5 border border-primary/15")}>
         <div className="inline-flex size-9 items-center justify-center rounded-[10px] bg-primary/10 text-primary shrink-0">
           <FileDown className="size-4" aria-hidden="true" />
         </div>
@@ -180,7 +180,7 @@ export function DocumentosContratacaoCard({
             complete antes do download ou envio.
           </Text>
         </div>
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 shrink-0")}>
+        <div className={cn("flex items-center inline-snug shrink-0")}>
           <Button
             variant="outline"
             size="sm"

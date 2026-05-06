@@ -134,7 +134,7 @@ function OabsBadges({ oabs }: { oabs: InscricaoOAB[] }) {
   const oabsRestantes = oabs.length - 2;
 
   return (
-    <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-wrap gap-1 items-center")}>
+    <div className={cn("flex flex-wrap inline-micro items-center")}>
       {oabsVisiveis.map((oab, index) => (
         <OabSituacaoBadge
           key={index}
@@ -256,7 +256,7 @@ export function RepresentantesTableWrapper() {
           const cpfRaw = representante.cpf;
 
           return (
-            <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-start gap-0.5 max-w-full overflow-hidden")}>
+            <div className={cn("flex flex-col items-start inline-nano max-w-full overflow-hidden")}>
               {/* Linha 1: Badges de OABs */}
               {representante.oabs && representante.oabs.length > 0 && (
                 <div className="mb-1">
@@ -264,7 +264,7 @@ export function RepresentantesTableWrapper() {
                 </div>
               )}
               {/* Linha 2: Nome */}
-              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+              <div className={cn("flex items-center inline-micro")}>
                 <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-body-sm")} title={nome}>
                   {nome}
                 </span>
@@ -272,7 +272,7 @@ export function RepresentantesTableWrapper() {
               </div>
               {/* Linha 3: CPF */}
               {cpf && (
-                <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+                <div className={cn("flex items-center inline-micro")}>
                   <Text variant="caption">{cpf}</Text>
                   {cpfRaw && <CopyButton text={cpfRaw} label="Copiar CPF" />}
                 </div>

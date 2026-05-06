@@ -84,24 +84,24 @@ export function MesView({ currentDate, events, onPrev, onNext, onToday, onEventC
   return (
     <GlassPanel className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5", className)}>
       <div className="flex items-center justify-between mb-4">
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+        <div className={cn("flex items-center inline-medium")}>
           <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center">
             <Calendar className="size-4 text-primary" />
           </div>
           <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold text-foreground")}>{MONTH_NAMES[month]} {year}</span>
         </div>
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+        <div className={cn("flex items-center inline-micro")}>
           <button onClick={onPrev} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground/50 cursor-pointer")} aria-label="Mês anterior"><ChevronLeft className="size-3.5" /></button>
           <button onClick={onToday} className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "px-3 py-1.5 rounded-lg text-caption font-medium bg-primary/8 text-primary hover:bg-primary/12 transition-colors cursor-pointer")}>Hoje</button>
           <button onClick={onNext} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground/50 cursor-pointer")} aria-label="Próximo mês"><ChevronRight className="size-3.5" /></button>
         </div>
       </div>
-      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "grid grid-cols-7 gap-1 mb-1")}>
+      <div className={cn("grid grid-cols-7 inline-micro mb-1")}>
         {WEEKDAYS.map((d) => (
           <div key={d} className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS; py-2 padding direcional sem Inset equiv. */ "text-center text-[10px] font-semibold text-muted-foreground/35 uppercase tracking-wider py-2")}>{d}</div>
         ))}
       </div>
-      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "grid grid-cols-7 gap-1")}>
+      <div className={cn("grid grid-cols-7 inline-micro")}>
         {cells.map((cell, i) => (
           <div key={i} className={cn("min-h-22 rounded-xl border border-transparent transition-all cursor-pointer hover:bg-muted/8 hover:border-border/10", !cell.currentMonth && "opacity-30")}>
             <div className="mb-1">
@@ -109,7 +109,7 @@ export function MesView({ currentDate, events, onPrev, onNext, onToday, onEventC
                 {cell.day}
               </span>
             </div>
-            <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
+            <div className={cn("stack-nano")}>
               {cell.events.slice(0, 3).map((evt) => {
                 const colors = getSourceColors(evt.source);
                 return (

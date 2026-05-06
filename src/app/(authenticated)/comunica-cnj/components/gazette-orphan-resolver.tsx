@@ -75,15 +75,15 @@ function formatDate(dateStr: string) {
 function ConfidenceLegend() {
   return (
     <div className={cn("flex items-center inline-default")}>
-      <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+      <span className={cn("flex items-center inline-snug")}>
         <span className="size-2 rounded-full bg-success" aria-hidden />
         <Text variant="micro-caption">Alta (&gt;85%)</Text>
       </span>
-      <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+      <span className={cn("flex items-center inline-snug")}>
         <span className="size-2 rounded-full bg-warning" aria-hidden />
         <Text variant="micro-caption">Média (50-85%)</Text>
       </span>
-      <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+      <span className={cn("flex items-center inline-snug")}>
         <span className="size-2 rounded-full bg-muted-foreground" aria-hidden />
         <Text variant="micro-caption">Sem match</Text>
       </span>
@@ -102,7 +102,7 @@ function ProgressSegment({
   const pctPending = total > 0 ? ((total - resolved) / total) * 100 : 0;
 
   return (
-    <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+    <div className={cn("stack-snug")}>
       <div className="flex h-1.5 w-full overflow-hidden rounded-full bg-border/20">
         <div
           className="rounded-full bg-success transition-all duration-500"
@@ -156,7 +156,7 @@ function NoMatchState({
       <div className="flex size-14 items-center justify-center rounded-full bg-muted/40">
         <AlertCircle className="size-6 text-muted-foreground" />
       </div>
-      <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+      <div className={cn("stack-micro")}>
         <Heading level="widget">Nenhum match encontrado</Heading>
         <Text variant="caption" className="text-muted-foreground">
           Não encontramos um expediente compatível
@@ -197,7 +197,7 @@ function AllResolvedState() {
       <div className="flex size-16 items-center justify-center rounded-full bg-success/10">
         <CheckCircle2 className="size-8 text-success" />
       </div>
-      <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+      <div className={cn("stack-micro")}>
         <Heading level="section">Tudo resolvido!</Heading>
         <Text variant="caption" className="text-muted-foreground">
           Todas as comunicações órfãs foram processadas
@@ -399,9 +399,9 @@ export function GazetteOrphanResolver() {
   return (
     <GlassPanel depth={1} className="flex h-full flex-col overflow-hidden">
       {/* ── Header ── */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3 border-b border-border/40 inset-card-compact")}>
+      <div className={cn("stack-medium border-b border-border/40 inset-card-compact")}>
         {/* Title row */}
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
+        <div className={cn("flex items-center justify-between inline-medium")}>
           <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
             <Heading level="section">Comunicações Órfãs</Heading>
             <Text
@@ -416,7 +416,7 @@ export function GazetteOrphanResolver() {
               <Button
                 variant="outline"
                 size="sm"
-                className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv. */ "h-7 gap-1.5 border-success/20 bg-success/10 px-3 text-caption text-success hover:bg-success/15")}
+                className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "h-7 inline-snug border-success/20 bg-success/10 px-3 text-caption text-success hover:bg-success/15")}
                 onClick={handleAcceptHighConfidence}
               >
                 <Check className="size-3" aria-hidden />
@@ -447,7 +447,7 @@ export function GazetteOrphanResolver() {
           <Button
             variant="ghost"
             size="sm"
-            className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv. */ "h-7 gap-1 px-2 text-caption")}
+            className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-7 inline-micro px-2 text-caption")}
             disabled={currentIndex === 0}
             onClick={goPrev}
           >
@@ -457,7 +457,7 @@ export function GazetteOrphanResolver() {
           <Button
             variant="ghost"
             size="sm"
-            className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv. */ "h-7 gap-1 px-2 text-caption")}
+            className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-7 inline-micro px-2 text-caption")}
             disabled={currentIndex === orphans.length - 1}
             onClick={goNext}
           >
@@ -501,7 +501,7 @@ export function GazetteOrphanResolver() {
           </div>
 
           {/* Processo */}
-          <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "mt-4 space-y-0.5")}>
+          <div className={cn("mt-4 stack-nano")}>
             <Text variant="overline" className="text-muted-foreground/70">
               Processo
             </Text>
@@ -514,7 +514,7 @@ export function GazetteOrphanResolver() {
           </div>
 
           {/* Partes */}
-          <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "mt-3 space-y-1.5")}>
+          <div className={cn("mt-3 stack-snug")}>
             {current.partesAutor.length > 0 && (
               <div>
                 <Text variant="micro-caption">Autor: </Text>
@@ -535,7 +535,7 @@ export function GazetteOrphanResolver() {
 
           {/* Órgão */}
           {current.nomeOrgao && (
-            <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "mt-3 space-y-0.5")}>
+            <div className={cn("mt-3 stack-nano")}>
               <Text variant="overline" className="text-muted-foreground/70">
                 Órgão
               </Text>
@@ -547,7 +547,7 @@ export function GazetteOrphanResolver() {
 
           {/* Texto excerpt */}
           {current.texto && (
-            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "mt-4 space-y-1")}>
+            <div className={cn("mt-4 stack-micro")}>
               <Text variant="overline" className="text-muted-foreground/70">
                 Trecho
               </Text>
@@ -645,7 +645,7 @@ export function GazetteOrphanResolver() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "h-9 gap-1.5 text-caption")}
+                    className={cn("h-9 inline-snug text-caption")}
                     onClick={() => handleBuscarManualmente(current)}
                   >
                     <Search className="size-3" aria-hidden />
@@ -654,7 +654,7 @@ export function GazetteOrphanResolver() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "h-9 gap-1.5 text-caption")}
+                    className={cn("h-9 inline-snug text-caption")}
                     onClick={() => setIsExpedienteDialogOpen(true)}
                   >
                     <Plus className="size-3" aria-hidden />

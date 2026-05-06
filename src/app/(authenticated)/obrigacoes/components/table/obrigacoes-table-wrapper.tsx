@@ -138,7 +138,7 @@ export function ObrigacoesTableWrapper({
   );
 
   return (
-    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+    <div className={cn("stack-medium")}>
       {weekNavigatorProps && (
         <WeekNavigator
           weekDays={weekNavigatorProps.weekDays}

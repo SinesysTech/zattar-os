@@ -177,7 +177,7 @@ export function CapturaClient() {
           )}
 
           {/* Filter Bar + Search + View Toggle */}
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
+          <div className={cn("flex flex-col sm:flex-row items-start sm:items-center inline-medium")}>
             <CapturaFilterBar filters={filters} onChange={setFilters} />
             <div className={cn("flex items-center inline-tight flex-1 justify-end")}>
               <SearchInput

@@ -186,7 +186,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col h-full">
         <div className={cn("flex-1 stack-default")}>
           {/* Datas e Horários - Grid 4 colunas em telas grandes */}
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 lg:grid-cols-4 gap-3")}>
+          <div className={cn("grid grid-cols-2 lg:grid-cols-4 inline-medium")}>
             <FormField
               control={form.control}
               name="dataInicioDate"
@@ -463,7 +463,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
         </div>
 
         {/* Footer fixo na parte inferior do dialog */}
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS; pt-4 padding direcional sem Inset equiv. */ "flex justify-end gap-3 pt-4 mt-4 border-t")}>
+        <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "flex justify-end inline-medium pt-4 mt-4 border-t")}>
           <Button
             type="button"
             variant="outline"

@@ -128,7 +128,7 @@ export function WidgetHeatmapProdutividade() {
       <CalendarHeatmap data={heatmapData} colorScale="success" />
 
       {/* Legenda de intensidade */}
-      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "mt-3 flex items-center justify-end gap-1")}>
+      <div className={cn("mt-3 flex items-center justify-end inline-micro")}>
         <span className="text-[8px] text-muted-foreground/50 mr-1">Menos</span>
         {legendColors.map((color, i) => (
           <div
@@ -146,7 +146,7 @@ export function WidgetHeatmapProdutividade() {
           current={semanaAtual}
           previous={semanaAnterior}
         />
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1 items-end")}>
+        <div className={cn("flex flex-col inline-micro items-end")}>
           <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Melhor dia
           </p>

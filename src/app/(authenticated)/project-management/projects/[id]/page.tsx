@@ -75,9 +75,9 @@ export default async function ProjectDetailPage({ params }: Props) {
   return (
     <div className={cn("stack-loose")}>
       <div className="flex items-center justify-between">
-        <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+        <div className={cn("stack-micro")}>
           <Heading level="page">{projeto.nome}</Heading>
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+          <div className={cn("flex items-center inline-medium")}>
             <ProjectStatusBadge status={projeto.status} />
             <PriorityIndicator prioridade={projeto.prioridade} />
             {projeto.clienteNome && (
@@ -244,7 +244,7 @@ export default async function ProjectDetailPage({ params }: Props) {
               {projeto.tags.length > 0 && (
                 <div className="col-span-full">
                   <dt className="text-muted-foreground">Tags</dt>
-                  <dd className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1 flex-wrap mt-1")}>
+                  <dd className={cn("flex inline-micro flex-wrap mt-1")}>
                     {projeto.tags.map((tag) => (
                       <span
                         key={tag}

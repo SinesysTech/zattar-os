@@ -103,7 +103,7 @@ export function MaisFiltrosPlanoContasPopover({
           </div>
 
           {/* Natureza */}
-          <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+          <div className={cn("stack-snug")}>
             <Label className={cn("text-caption text-muted-foreground")}>Natureza</Label>
             <Select
               value={natureza || 'all'}
@@ -124,7 +124,7 @@ export function MaisFiltrosPlanoContasPopover({
           </div>
 
           {/* Conta Pai */}
-          <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+          <div className={cn("stack-snug")}>
             <Label className={cn("text-caption text-muted-foreground")}>Conta Pai</Label>
             <FiltroContaContabil
               value={contaPaiId}

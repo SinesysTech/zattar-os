@@ -51,7 +51,7 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
       </div>
 
       {/* A.2.1: Controle de ponto */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>Como era registrado o horário de entrada e saída?</Label>
         <div className={cn("stack-tight")}>
           {CONTROLE_PONTO_OPTIONS.map((opt) => (
@@ -102,7 +102,7 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
       )}
 
       {/* A.2.2: Intervalo */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>Conseguia tirar 1 hora inteira de almoço/descanso?</Label>
         <SimNaoRadio
           id="intervalo"
@@ -136,7 +136,7 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
       )}
 
       {/* Horas extras */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>Recebia pelas horas a mais que trabalhava?</Label>
         <div className={cn("stack-tight")}>
           <div className={cn("flex items-center inline-tight")}>

@@ -74,7 +74,7 @@ export function ResultadoDecisao() {
         {resultados.map((r) => {
           const percent = total > 0 ? Math.round((r.count / total) * 100) : 0;
           return (
-            <div key={r.resultado} className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+            <div key={r.resultado} className={cn("flex items-center inline-medium")}>
               <ProgressRing
                 percent={percent}
                 size={32}

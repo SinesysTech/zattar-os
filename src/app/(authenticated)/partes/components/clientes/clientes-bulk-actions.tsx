@@ -49,7 +49,7 @@ export function ClientesBulkActionsBar({
         {selectedCount} selecionado{selectedCount > 1 ? 's' : ''}
       </Text>
 
-      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 ml-2")}>
+      <div className={cn("flex items-center inline-micro ml-2")}>
         <Button
           variant="outline"
           size="sm"

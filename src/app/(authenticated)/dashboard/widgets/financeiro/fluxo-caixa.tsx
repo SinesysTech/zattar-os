@@ -46,7 +46,7 @@ export function WidgetFluxoCaixa() {
 
   return (
     <WidgetContainer title="Fluxo de Caixa" icon={TrendingUp} subtitle="Receita vs Despesa">
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
+      <div className={cn("flex flex-col inline-medium")}>
         <MiniBar
           data={barData}
           height={56}
@@ -56,11 +56,11 @@ export function WidgetFluxoCaixa() {
 
         {/* Legend */}
         <div className={cn("flex items-center inline-default text-[10px] text-muted-foreground/60")}>
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+          <div className={cn("flex items-center inline-snug")}>
             <div className="size-2 rounded-sm bg-success/50" />
             <span>Receita</span>
           </div>
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+          <div className={cn("flex items-center inline-snug")}>
             <div className="size-2 rounded-sm bg-destructive/40" />
             <span>Despesa</span>
           </div>
@@ -70,7 +70,7 @@ export function WidgetFluxoCaixa() {
         {lastMonth && (
           <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "flex items-center justify-between text-[11px] pt-1 border-t border-border/10")}>
             <span className="text-muted-foreground/50">{fmtMes(lastMonth.mes)}</span>
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+            <div className={cn("flex items-center inline-medium")}>
               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-success/70 font-medium")}>{fmtMoeda(lastMonth.receita)}</span>
               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-destructive/60 font-medium")}>{fmtMoeda(lastMonth.despesa)}</span>
             </div>

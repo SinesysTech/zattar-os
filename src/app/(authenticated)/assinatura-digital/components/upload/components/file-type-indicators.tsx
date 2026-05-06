@@ -42,7 +42,7 @@ export function FileTypeIndicators({
     <div
       className={cn(
         'flex items-center justify-center inline-default',
-        compact ? /* design-system-escape: gap-3 gap sem token DS */ 'gap-3' : 'inline-loose',
+        compact ? 'inline-medium' : 'inline-loose',
         className
       )}
     >

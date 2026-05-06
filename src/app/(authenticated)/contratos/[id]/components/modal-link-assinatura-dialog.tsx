@@ -60,7 +60,7 @@ export function ModalLinkAssinaturaDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+        <div className={cn("stack-medium")}>
           <div className={cn("flex inline-tight")}>
             <Input readOnly value={urlAbsoluta} />
             <Button size="sm" onClick={handleCopy}>

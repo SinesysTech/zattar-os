@@ -71,7 +71,7 @@ function formatarValor(valor: unknown): string {
 
 function ValoresDiff({ valores }: { valores: ValorAlteradoLog[] }) {
   return (
-    <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "mt-2 space-y-1.5")}>
+    <div className={cn("mt-2 stack-snug")}>
       {valores.map((v, i) => (
         <div
           key={i}
@@ -80,7 +80,7 @@ function ValoresDiff({ valores }: { valores: ValorAlteradoLog[] }) {
           <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; min-w arbitrária para alinhar diff lado a lado */ "text-[11px] font-medium text-foreground/70 shrink-0 min-w-30")}>
             {formatarCampoAlterado(v.campo)}
           </span>
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 flex-wrap")}>
+          <div className={cn("flex items-center inline-snug flex-wrap")}>
             <span className="text-[11px] text-muted-foreground line-through decoration-muted-foreground/40">
               {formatarValor(v.antes)}
             </span>
@@ -155,7 +155,7 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
           <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-semibold text-destructive uppercase tracking-wider mb-2")}>
             Erros ({erros.length})
           </p>
-          <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+          <div className={cn("stack-snug")}>
             {erros.map((log, i) => (
               <div
                 key={i}
@@ -177,7 +177,7 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
           <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-semibold text-success uppercase tracking-wider mb-2")}>
             Processos incluídos ({inseridos.length})
           </p>
-          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+          <div className={cn("stack-micro")}>
             {inseridos.slice(0, 30).map((log, i) => (
               <div
                 key={i}
@@ -261,7 +261,7 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
         {totalSucesso > 0 && (
           <Badge
             variant="outline"
-            className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-caption gap-1 border-success/30 bg-success/5 text-success")}
+            className={cn("text-caption inline-micro border-success/30 bg-success/5 text-success")}
           >
             <CheckCircle2 className="h-3 w-3" />
             {totalSucesso} com sucesso
@@ -270,7 +270,7 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
         {totalErro > 0 && (
           <Badge
             variant="outline"
-            className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-caption gap-1 border-destructive/30 bg-destructive/5 text-destructive")}
+            className={cn("text-caption inline-micro border-destructive/30 bg-destructive/5 text-destructive")}
           >
             <XCircle className="h-3 w-3" />
             {totalErro} com erro{totalErro !== 1 ? 's' : ''}
@@ -327,7 +327,7 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
                 </div>
               </AccordionTrigger>
               <AccordionContent>
-                <div className={cn(/* design-system-escape: space-y-3 sem token DS; pb-3 padding direcional sem Inset equiv. */ "space-y-3 pb-3")}>
+                <div className={cn(/* design-system-escape: pb-3 padding direcional sem Inset equiv. */ "stack-medium pb-3")}>
                   {/* Erro principal do raw log */}
                   {rawLog.erro && (
                     <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-start inline-tight rounded-lg border border-destructive/30 bg-destructive/6 p-3")}>

@@ -360,14 +360,14 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                   </div>
                 ) : (
                   <ScrollArea className={cn(/* design-system-escape: pr-4 padding direcional sem Inset equiv. */ "h-75 pr-4")}>
-                    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+                    <div className={cn("stack-medium")}>
                       {credenciais.map((credencial) => (
                         <div
                           key={credencial.id}
                           className={`flex items-center justify-between p-3 rounded-xl border ${credencial.active ? 'bg-muted/30 border-border/40' : 'bg-muted/10 border-border/20 opacity-60'
                             }`}
                         >
-                          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+                          <div className={cn("flex items-center inline-medium")}>
                             <TribunalBadge codigo={credencial.tribunal} />
                             <Badge variant="outline">
                               {GRAU_LABELS[credencial.grau] || credencial.grau}
@@ -378,7 +378,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                               </Text>
                             )}
                           </div>
-                          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+                          <div className={cn("flex items-center inline-micro")}>
                             <Badge
                               variant={credencial.active ? 'default' : 'secondary'}
                               className="mr-2"

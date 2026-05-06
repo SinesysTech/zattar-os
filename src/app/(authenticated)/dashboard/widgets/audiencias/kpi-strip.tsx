@@ -53,7 +53,7 @@ export function KpiStrip() {
       icon={Calendar}
       subtitle="Indicadores-chave"
     >
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-4 gap-3 items-center")}>
+      <div className={cn("grid grid-cols-4 inline-medium items-center")}>
         <Stat
           label="Este Mes"
           value={fmtNum(audiencias.proximos30dias)}
@@ -72,7 +72,7 @@ export function KpiStrip() {
           deltaType={audiencias.hoje > 0 ? 'alert' : 'neutral'}
         />
 
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col items-center gap-1")}>
+        <div className={cn("flex flex-col items-center inline-micro")}>
           <ProgressRing
             percent={comparecimento}
             size={44}
@@ -83,8 +83,8 @@ export function KpiStrip() {
           </p>
         </div>
 
-        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-center gap-0.5")}>
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+        <div className={cn("flex flex-col items-center inline-nano")}>
+          <div className={cn("flex items-center inline-micro")}>
             <Clock className="size-3 text-muted-foreground/50" />
             <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-lg font-bold tabular-nums")}>
               {duracaoMedia > 0 ? `${duracaoMedia}` : '--'}

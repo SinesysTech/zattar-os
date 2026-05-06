@@ -42,7 +42,7 @@ export function AccountSwitcher({ isCollapsed, accounts }: AccountSwitcherProps)
       <SelectContent>
         {accounts.map((account) => (
           <SelectItem key={account.email} value={account.email}>
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "[&_svg]:text-foreground flex items-center gap-3 [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0")}>
+            <div className={cn("[&_svg]:text-foreground flex items-center inline-medium [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0")}>
               {account.icon}
               {account.email}
             </div>

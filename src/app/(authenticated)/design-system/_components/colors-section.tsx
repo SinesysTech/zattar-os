@@ -26,7 +26,7 @@ function PalettePrimary() {
           <Text variant="meta-label" className="text-white/80">
             --primary
           </Text>
-          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+          <div className={cn("stack-micro")}>
             <div className="text-kpi-value">#5523EB</div>
             <div className="font-mono text-[10px] opacity-80">oklch(.48 .26 281)</div>
           </div>
@@ -49,7 +49,7 @@ function PalettePrimary() {
           ))}
         </div>
       </div>
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "mt-4 grid gap-3 sm:grid-cols-2")}>
+      <div className={cn("mt-4 grid inline-medium sm:grid-cols-2")}>
         <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-3.5 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-2.5 rounded-xl border border-border bg-card px-3.5 py-2.5")}>
           <span
             className="size-6 rounded-md"
@@ -104,15 +104,15 @@ function PaletteNeutrals() {
         ))}
       </div>
       <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "mt-4 grid gap-2.5 sm:grid-cols-3")}>
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex flex-col gap-1 rounded-xl border border-border bg-card px-4 py-3")}>
+        <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex flex-col inline-micro rounded-xl border border-border bg-card px-4 py-3")}>
           <span className="font-mono text-[10px] text-muted-foreground">--card</span>
           <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[13px] font-semibold")}>Card surface</span>
         </div>
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex flex-col gap-1 rounded-xl border border-border bg-muted px-4 py-3")}>
+        <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex flex-col inline-micro rounded-xl border border-border bg-muted px-4 py-3")}>
           <span className="font-mono text-[10px] text-muted-foreground">--muted</span>
           <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[13px] font-semibold")}>Muted</span>
         </div>
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex flex-col gap-1 rounded-xl border border-transparent bg-sidebar px-4 py-3 text-sidebar-foreground")}>
+        <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex flex-col inline-micro rounded-xl border border-transparent bg-sidebar px-4 py-3 text-sidebar-foreground")}>
           <span className="font-mono text-[10px] opacity-70">--sidebar</span>
           <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[13px] font-semibold")}>Sidebar (always dark)</span>
         </div>
@@ -138,7 +138,7 @@ function PaletteStatus() {
   ];
   return (
     <SpecimenCard eyebrow="SEMANTIC · STATUS">
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3 lg:grid-cols-4")}>
+      <div className={cn("grid grid-cols-2 inline-medium lg:grid-cols-4")}>
         {tiles.map((t) => (
           <div
             key={t.title}
@@ -186,7 +186,7 @@ function PaletteUser() {
         L ≈ 0.65, C ≈ 0.18. Usada em tags, labels, cores de evento, seletores.
       </Text>
       <div
-        className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "grid gap-1.5")}
+        className={cn("grid inline-snug")}
         style={{ gridTemplateColumns: "repeat(auto-fit, minmax(28px, 1fr))" }}
       >
         {Array.from({ length: 18 }, (_, i) => i + 1).map((n) => (
@@ -201,7 +201,7 @@ function PaletteUser() {
         {labels.map((l) => (
           <div
             key={l.n}
-            className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground")}
+            className={cn("flex items-center inline-snug font-mono text-[10px] text-muted-foreground")}
           >
             <span
               className="size-2.5 rounded-full"
@@ -242,7 +242,7 @@ function PaletteEvent() {
             >
               {e.code}
             </span>
-            <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+            <div className={cn("flex flex-col inline-nano")}>
               <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[13px] font-semibold text-foreground")}>{e.label}</span>
               <span className="font-mono text-[10px] text-muted-foreground">
                 {e.token}

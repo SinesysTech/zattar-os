@@ -166,10 +166,10 @@ export function ExpedienteDetalhesClient({
   ];
 
   return (
-    <div className={cn(/* design-system-escape: gap-8 gap sem token DS; pb-12 padding direcional sem Inset equiv. */ "relative flex flex-col gap-8 pb-12")}>
+    <div className={cn(/* design-system-escape: pb-12 padding direcional sem Inset equiv. */ "relative flex flex-col inline-extra-loose pb-12")}>
       <AmbientBackdrop blurIntensity={18} grid baseGradient />
 
-      <div className={cn(/* design-system-escape: gap-8 gap sem token DS */ "relative z-10 flex flex-col gap-8")}>
+      <div className={cn("relative z-10 flex flex-col inline-extra-loose")}>
         {/* ============================= BREADCRUMB ============================ */}
         <div className={cn("flex items-center justify-between inline-default flex-wrap")}>
           <Text
@@ -179,7 +179,7 @@ export function ExpedienteDetalhesClient({
           >
             <Link
               href="/expedientes"
-              className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "inline-flex items-center gap-1.5 hover:text-foreground transition-colors")}
+              className={cn("inline-flex items-center inline-snug hover:text-foreground transition-colors")}
             >
               <ArrowLeft className="size-3" />
               Expedientes
@@ -189,12 +189,12 @@ export function ExpedienteDetalhesClient({
               #{expedienteId.toString().padStart(6, '0')}
             </span>
           </Text>
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
-            <Button variant="outline" size="sm" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; gap-1.5 gap sem token DS */ "rounded-full h-8 px-3 text-caption gap-1.5")}>
+          <div className={cn("flex items-center inline-snug")}>
+            <Button variant="outline" size="sm" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "rounded-full h-8 px-3 text-caption inline-snug")}>
               <Download className="size-3" />
               PDF
             </Button>
-            <Button size="sm" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; gap-1.5 gap sem token DS */ "rounded-full h-8 px-3 text-caption gap-1.5")}>
+            <Button size="sm" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "rounded-full h-8 px-3 text-caption inline-snug")}>
               <Edit3 className="size-3" />
               Editar
             </Button>
@@ -301,16 +301,16 @@ function HeroBlock({
           )}
         />
 
-        <div className={cn(/* design-system-escape: gap-8 gap sem token DS; lg:gap-10 sem equivalente DS */ "relative grid grid-cols-1 lg:grid-cols-[auto_1px_1fr] gap-8 lg:gap-10")}>
+        <div className={cn(/* design-system-escape: lg:gap-10 sem equivalente DS */ "relative grid grid-cols-1 lg:grid-cols-[auto_1px_1fr] inline-extra-loose lg:gap-10")}>
           {/* Countdown editorial */}
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
+          <div className={cn("flex flex-col inline-medium")}>
             <Text
               variant="overline"
               className={cn('tracking-[0.22em]', style.accent)}
             >
               {style.label}
             </Text>
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-baseline gap-3")}>
+            <div className={cn("flex items-baseline inline-medium")}>
               <span
                 className={cn(
                   /* design-system-escape: tracking-tighter sem token DS */ 'font-black leading-[0.85] tracking-tighter tabular-nums',
@@ -369,14 +369,14 @@ function HeroBlock({
               )}
             </div>
 
-            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+            <div className={cn("stack-snug")}>
               <Heading
                 level="page"
                 className={cn(/* design-system-escape: tracking-tight sem token DS; text-3xl → migrar para <Heading level="display-*"> */ /* design-system-escape: tracking-tight sem token DS; text-3xl → migrar para <Heading level="display-*"> */ "font-black tracking-tight text-foreground leading-[1.05] text-3xl md:text-4xl lg:text-[2.75rem]")}
               >
                 {partyNames.autora || 'Parte autora ausente'}
               </Heading>
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-0.5 padding direcional sem Inset equiv. */ "flex items-center gap-3 py-0.5")}>
+              <div className={cn(/* design-system-escape: py-0.5 padding direcional sem Inset equiv. */ "flex items-center inline-medium py-0.5")}>
                 <Text
                   variant="micro-caption"
                   className="uppercase tracking-[0.3em] text-muted-foreground/70"
@@ -422,7 +422,7 @@ function HeroBlock({
               <Text
                 variant="micro-caption"
                 as="div"
-                className={cn(/* design-system-escape: space-y-0.5 sem token DS; pt-1 padding direcional sem Inset equiv. */ "text-muted-foreground/70 space-y-0.5 pt-1")}
+                className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "text-muted-foreground/70 stack-nano pt-1")}
               >
                 {expediente.classeJudicial && (
                   <div>{expediente.classeJudicial}</div>
@@ -454,7 +454,7 @@ function EditorialTabs({
 }) {
   return (
     <div className="relative border-b border-border/30">
-      <div className={cn(/* design-system-escape: gap-8 gap sem token DS */ "flex gap-8 overflow-x-auto -mb-px")}>
+      <div className={cn("flex inline-extra-loose overflow-x-auto -mb-px")}>
         {tabs.map((tab) => {
           const isActive = active === tab.id;
           return (
@@ -709,7 +709,7 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
   };
 
   return (
-    <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+    <div className={cn("stack-micro")}>
       <div className={cn(/* design-system-escape: pb-3 padding direcional sem Inset equiv. */ "flex items-end justify-between pb-3 border-b border-border/20")}>
         <div>
           <Text
@@ -728,7 +728,7 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
             <span className="text-muted-foreground/70 font-normal">documentos</span>
           </Heading>
         </div>
-        <Button variant="outline" size="sm" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; gap-1.5 gap sem token DS */ "rounded-full h-8 px-3 text-caption gap-1.5")}>
+        <Button variant="outline" size="sm" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "rounded-full h-8 px-3 text-caption inline-snug")}>
           <Plus className="size-3" />
           Adicionar
         </Button>
@@ -828,7 +828,7 @@ function HistoricoTab({
                 meta.dot,
               )}
             />
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mb-1")}>
+            <div className={cn("flex items-center inline-medium mb-1")}>
               <Text
                 variant="micro-badge"
                 className="uppercase tracking-[0.22em] text-muted-foreground/60"
@@ -910,7 +910,7 @@ function EditorialBlock({
         {hint && (
           <Text
             variant="micro-badge"
-            className={cn(/* design-system-escape: gap-1.5 gap sem token DS; tracking-wider sem token DS */ "inline-flex items-center gap-1.5 uppercase tracking-wider text-muted-foreground/70 shrink-0")}
+            className={cn(/* design-system-escape: tracking-wider sem token DS */ "inline-flex items-center inline-snug uppercase tracking-wider text-muted-foreground/70 shrink-0")}
           >
             <Pencil className="size-2.5" />
             {hint}
@@ -941,7 +941,7 @@ function StatusChip({
     <Text
       variant="micro-badge"
       className={cn(
-        /* design-system-escape: gap-1 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'inline-flex items-center gap-1 rounded-full px-2.5 py-1',
+        /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'inline-flex items-center inline-micro rounded-full px-2.5 py-1',
         /* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ 'font-semibold uppercase tracking-wider',
         'ring-1 ring-inset',
         tones[tone],
@@ -1050,7 +1050,7 @@ function ResponsavelCard({
         align="start"
       >
         {usuario ? (
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 w-full text-left")}>
+          <div className={cn("flex items-center inline-medium w-full text-left")}>
             <Avatar className="size-12 ring-2 ring-primary/20">
               <AvatarImage src={usuario.avatarUrl || undefined} alt={usuario.nomeExibicao} />
               <AvatarFallback className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold bg-primary/10 text-primary")}>
@@ -1073,7 +1073,7 @@ function ResponsavelCard({
             </div>
           </div>
         ) : (
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-1 padding direcional sem Inset equiv. */ "flex items-center gap-3 w-full text-left py-1")}>
+          <div className={cn(/* design-system-escape: py-1 padding direcional sem Inset equiv. */ "flex items-center inline-medium w-full text-left py-1")}>
             <div className="size-12 rounded-full bg-muted/40 flex items-center justify-center ring-2 ring-dashed ring-border/40">
               <User className="size-5 text-muted-foreground/65" />
             </div>
@@ -1111,7 +1111,7 @@ function SidebarSection({
       >
         {label}
       </Heading>
-      <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>{children}</div>
+      <div className={cn("stack-snug")}>{children}</div>
     </section>
   );
 }
@@ -1128,7 +1128,7 @@ function CronologiaRow({
   muted?: boolean;
 }) {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-1 padding direcional sem Inset equiv. */ "flex items-baseline justify-between gap-3 py-1")}>
+    <div className={cn(/* design-system-escape: py-1 padding direcional sem Inset equiv. */ "flex items-baseline justify-between inline-medium py-1")}>
       <Text variant="caption" as="span" className="text-muted-foreground/65 shrink-0">
         {label}
       </Text>

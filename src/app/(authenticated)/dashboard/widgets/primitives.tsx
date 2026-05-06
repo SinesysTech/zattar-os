@@ -133,8 +133,8 @@ export function MiniBar({
   return (
     <div className={cn("flex items-end inline-tight w-full")} style={{ height }}>
       {data.map((d, i) => (
-        <div key={`${i}-${d.label}`} className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex-1 flex flex-col items-center gap-0.5")}>
-          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex gap-0.5 items-end w-full")} style={{ height: height - 14 }}>
+        <div key={`${i}-${d.label}`} className={cn("flex-1 flex flex-col items-center inline-nano")}>
+          <div className={cn("flex inline-nano items-end w-full")} style={{ height: height - 14 }}>
             <div
               className={`flex-1 rounded-t-sm ${barColor} transition-all duration-500`}
               style={{ height: `${(d.value / maxVal) * 100}%` }}
@@ -453,8 +453,8 @@ export function CalendarHeatmap({
   }
 
   return (
-    <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1")}>
-      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1 mr-0.5")}>
+    <div className={cn("flex inline-micro")}>
+      <div className={cn("flex flex-col inline-micro mr-0.5")}>
         {days.map((d, i) => (
           <div key={i} className="h-5 flex items-center text-[8px] text-muted-foreground/55">
             {i % 2 === 0 ? d : ''}
@@ -462,7 +462,7 @@ export function CalendarHeatmap({
         ))}
       </div>
       {Array.from({ length: weeks }).map((_, week) => (
-        <div key={week} className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1 flex-1")}>
+        <div key={week} className={cn("flex flex-col inline-micro flex-1")}>
           {Array.from({ length: 7 }).map((_, day) => {
             const idx = week * 7 + day;
             const val = data[idx] ?? 0;
@@ -583,7 +583,7 @@ export function TabToggle({
   onChangeAction: (id: string) => void;
 }) {
   return (
-    <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS; p-0.5 → usar <Inset> */ "flex gap-0.5 p-0.5 rounded-lg bg-border/10")}>
+    <div className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "flex inline-nano p-0.5 rounded-lg bg-border/10")}>
       {tabs.map((tab) => (
         <button
           key={tab.id}
@@ -616,7 +616,7 @@ export function Treemap({
   if (total === 0) return null;
 
   return (
-    <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex gap-0.5 rounded-lg overflow-hidden")} style={{ height }}>
+    <div className={cn("flex inline-nano rounded-lg overflow-hidden")} style={{ height }}>
       {segments.map((seg, i) => (
         <div
           key={i}
@@ -668,7 +668,7 @@ export function ComparisonStat({
   };
 
   return (
-    <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+    <div className={cn("flex flex-col inline-micro")}>
       <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>{label}</p>
       <div className={cn("flex items-baseline inline-tight")}>
         <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-lg font-bold")}>{fmt(current)}</span>

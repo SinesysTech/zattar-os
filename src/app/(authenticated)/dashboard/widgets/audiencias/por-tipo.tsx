@@ -68,12 +68,12 @@ export function AudienciasPorTipo() {
         {porTipo.map((item) => {
           const pct = total > 0 ? ((item.count / total) * 100).toFixed(1) : '0';
           return (
-            <div key={item.tipo} className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+            <div key={item.tipo} className={cn("stack-micro")}>
               <div className="flex items-center justify-between text-[11px]">
                 <span className="text-muted-foreground/70 truncate">
                   {item.tipo}
                 </span>
-                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 shrink-0")}>
+                <div className={cn("flex items-center inline-snug shrink-0")}>
                   <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium tabular-nums")}>
                     {fmtNum(item.count)}
                   </span>

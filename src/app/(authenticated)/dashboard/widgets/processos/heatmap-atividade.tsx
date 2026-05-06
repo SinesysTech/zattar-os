@@ -90,14 +90,14 @@ export function WidgetHeatmapAtividade() {
       subtitle="Baixas por dia — últimas 5 semanas"
       depth={1}
     >
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
+      <div className={cn("flex flex-col inline-medium")}>
         <CalendarHeatmap data={heatmapData} colorScale="primary" />
 
         {/* Legenda + Stats */}
         <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex items-center justify-between pt-3 border-t border-border/10")}>
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+          <div className={cn("flex items-center inline-snug")}>
             <span className="text-[8px] text-muted-foreground/50">Menos</span>
-            <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center gap-0.5")}>
+            <div className={cn("flex items-center inline-nano")}>
               <div className="size-2.5 rounded-sm bg-border/10" />
               <div className="size-2.5 rounded-sm bg-primary/15" />
               <div className="size-2.5 rounded-sm bg-primary/30" />
@@ -107,11 +107,11 @@ export function WidgetHeatmapAtividade() {
             <span className="text-[8px] text-muted-foreground/50">Mais</span>
           </div>
           <div className={cn("flex items-center inline-default")}>
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-baseline gap-1")}>
+            <div className={cn("flex items-baseline inline-micro")}>
               <Text variant="caption" className="font-semibold tabular-nums">{mediaFmt}</Text>
               <span className="text-[8px] text-muted-foreground/50">média/dia</span>
             </div>
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-baseline gap-1")}>
+            <div className={cn("flex items-baseline inline-micro")}>
               <Text variant="caption" className="font-semibold tabular-nums">{fmtNum(pico)}</Text>
               <span className="text-[8px] text-muted-foreground/50">pico</span>
             </div>

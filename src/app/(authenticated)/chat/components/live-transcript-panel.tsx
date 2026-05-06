@@ -43,14 +43,14 @@ export function LiveTranscriptPanel({ transcripts, isVisible, onClose }: LiveTra
       </div>
 
       <ScrollArea className={cn("flex-1 inset-card-compact")} ref={scrollRef}>
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
+        <div className={cn("flex flex-col inline-medium")}>
           {transcripts.length === 0 ? (
             <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "text-center text-video-muted text-body-sm py-8")}>
               Aguardando fala...
             </div>
           ) : (
             transcripts.map((segment) => (
-              <div key={segment.id} className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+              <div key={segment.id} className={cn("flex flex-col inline-micro")}>
                 <div className={cn("flex items-center justify-between inline-tight")}>
                   <Text variant="caption" className="font-bold text-info truncate max-w-37.5">
                     {segment.participantName}

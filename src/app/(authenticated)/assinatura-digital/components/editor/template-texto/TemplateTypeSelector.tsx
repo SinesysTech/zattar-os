@@ -55,7 +55,7 @@ export function TemplateTypeSelector({
             onClick={() => !disabled && onChange(option.type)}
             disabled={disabled}
             className={cn(
-              /* design-system-escape: gap-3 gap sem token DS */ 'relative flex flex-col items-start gap-3 rounded-lg border-2 inset-card-compact text-left transition-all',
+              'relative flex flex-col items-start inline-medium rounded-lg border-2 inset-card-compact text-left transition-all',
               'hover:border-primary/50 hover:bg-accent/50',
               'focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
               isSelected
@@ -91,7 +91,7 @@ export function TemplateTypeSelector({
             </div>
 
             {/* Content */}
-            <div className={cn(/* design-system-escape: space-y-1 sem token DS; pr-6 padding direcional sem Inset equiv. */ "space-y-1 pr-6")}>
+            <div className={cn(/* design-system-escape: pr-6 padding direcional sem Inset equiv. */ "stack-micro pr-6")}>
               <Heading level="subsection">{option.title}</Heading>
               <p className={cn("text-body-sm text-muted-foreground")}>{option.description}</p>
             </div>

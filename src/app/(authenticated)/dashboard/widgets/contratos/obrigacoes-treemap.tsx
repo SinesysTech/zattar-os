@@ -68,7 +68,7 @@ export function WidgetObrigacoesTreemap() {
         ) : (
           <>
             {/* Visual treemap simplificado — barras proporcionais */}
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1 rounded-lg overflow-hidden")} style={{ height: 80 }}>
+            <div className={cn("flex inline-micro rounded-lg overflow-hidden")} style={{ height: 80 }}>
               {data.map((item) => {
                 const pct = totalValor > 0 ? (item.valor / totalValor) * 100 : 0;
                 return (
@@ -89,7 +89,7 @@ export function WidgetObrigacoesTreemap() {
             </div>
 
             {/* Legenda com valores reais */}
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
+            <div className={cn("flex flex-col inline-snug")}>
               {data.map((item) => (
                 <div key={item.label} className={cn("flex items-center inline-tight")}>
                   <div

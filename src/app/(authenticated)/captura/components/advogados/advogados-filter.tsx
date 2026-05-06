@@ -35,7 +35,7 @@ export function AdvogadosFilter({
       <PopoverTrigger asChild>
         <div
           className={cn(
-            /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
+            /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center inline-snug rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
             isActive
               ? 'border-primary/20 bg-primary/5 text-primary'
               : 'border-border/15 text-muted-foreground/60 hover:bg-muted/30'
@@ -60,7 +60,7 @@ export function AdvogadosFilter({
         className={cn(/* design-system-escape: p-0 → usar <Inset> */ "rounded-2xl glass-dropdown overflow-hidden p-0 w-48")}
         align="start"
       >
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-0.5 sem token DS */ "p-2 space-y-0.5")}>
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-nano")}>
           {options.map((opt) => (
             <button
               key={opt.value}

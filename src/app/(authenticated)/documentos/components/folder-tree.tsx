@@ -75,7 +75,7 @@ export function FolderTree({ onFolderSelect, selectedFolderId }: FolderTreeProps
           variant="ghost"
           size="sm"
           className={cn(
-            /* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ 'w-full justify-start gap-1 px-2 py-1.5 font-normal',
+            /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ 'w-full justify-start inline-micro px-2 py-1.5 font-normal',
             isSelected && 'bg-accent'
           )}
           style={{ paddingLeft: `${level * 12 + 8}px` }}
@@ -123,7 +123,7 @@ export function FolderTree({ onFolderSelect, selectedFolderId }: FolderTreeProps
   }
 
   return (
-    <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+    <div className={cn("stack-micro")}>
       {/* Raiz (Todos os documentos) */}
       <Button
         variant="ghost"

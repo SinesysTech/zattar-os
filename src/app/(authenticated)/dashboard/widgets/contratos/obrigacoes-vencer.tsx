@@ -107,12 +107,12 @@ export function WidgetObrigacoesVencer() {
       subtitle="Próximos 30 dias"
       depth={1}
     >
-      <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
+      <div className={cn("stack-nano")}>
         {obrigacoesVencer.map((ob, i) => (
           <ListItem key={`${ob.descricao}-${i}`} className="items-start">
             <UrgencyDot level={mapUrgencia(ob.urgencia)} />
             <div className="flex-1 min-w-0">
-              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+              <div className={cn("flex items-center inline-snug")}>
                 <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[12px] font-medium leading-tight truncate")}>
                   {ob.descricao}
                 </p>

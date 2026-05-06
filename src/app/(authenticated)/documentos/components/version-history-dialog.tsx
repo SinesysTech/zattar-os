@@ -116,7 +116,7 @@ export function VersionHistoryDialog({
                 </p>
               </div>
             ) : (
-              <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+              <div className={cn("stack-medium")}>
                 {versions.map((version, index) => (
                   <div
                     key={version.id}
@@ -141,13 +141,13 @@ export function VersionHistoryDialog({
                           <Heading level="subsection" className="truncate">
                             {version.titulo || 'Sem título'}
                           </Heading>
-                          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mt-1 text-body-sm text-muted-foreground")}>
-                            <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+                          <div className={cn("flex items-center inline-medium mt-1 text-body-sm text-muted-foreground")}>
+                            <span className={cn("flex items-center inline-micro")}>
                               <Clock className="h-3.5 w-3.5" />
                               {formatRelative(version.created_at)}
                             </span>
                             {version.criador && (
-                              <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+                              <span className={cn("flex items-center inline-micro")}>
                                 <User className="h-3.5 w-3.5" />
                                 {version.criador.nomeCompleto}
                               </span>

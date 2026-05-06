@@ -85,7 +85,7 @@ function WeekEventChip({ event, onClick }: { event: AgendaEvent; onClick?: () =>
       {/* Accent bar (cor sólida do tipo) */}
       <span className={cn("absolute left-0 top-0 bottom-0 w-0.75", colors.accent)} aria-hidden />
       <div className={cn(/* design-system-escape: pl-2 padding direcional sem Inset equiv.; pr-1.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "pl-2 pr-1.5 py-1")}>
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5")}>
+        <div className={cn("flex items-baseline inline-snug")}>
           <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold tabular-nums", colors.text)}>
             {fmtTime(event.start)}
           </span>

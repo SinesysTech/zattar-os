@@ -35,7 +35,7 @@ const CURRENCY = new Intl.NumberFormat('pt-BR', {
 
 function PulseSkeleton() {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 lg:grid-cols-4 gap-3")}>
+    <div className={cn("grid grid-cols-2 lg:grid-cols-4 inline-medium")}>
       {Array.from({ length: 4 }).map((_, i) => (
         <GlassPanel key={i} depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
           <div className={cn("flex items-start justify-between inline-tight")}>
@@ -102,7 +102,7 @@ export function ObrigacoesPulseStrip({ resumo, isLoading }: ObrigacoesPulseStrip
   const totalPendente = resumo.pendentesTotal.quantidade;
 
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 lg:grid-cols-4 gap-3")}>
+    <div className={cn("grid grid-cols-2 lg:grid-cols-4 inline-medium")}>
       {metrics.map((metric) => {
         const Icon = metric.icon;
         const pct =
@@ -125,7 +125,7 @@ export function ObrigacoesPulseStrip({ resumo, isLoading }: ObrigacoesPulseStrip
                 <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
                   {metric.label}
                 </p>
-                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+                <div className={cn("flex items-baseline inline-snug mt-1")}>
                   <Text
                     variant="kpi-value"
                     className={cn(

@@ -42,7 +42,7 @@ export function MessageGroup({ messages, isOwn, isGroupChat }: MessageGroupProps
       </div>
 
       {/* Messages column */}
-      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+      <div className={cn("flex flex-col inline-micro")}>
         {/* Sender name — only for group chats, only on first bubble */}
         {isGroupChat && !isOwn && (
           <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[0.625rem] font-semibold text-primary opacity-60 mb-1 pl-[0.125rem]")}>

@@ -108,9 +108,9 @@ export const PericiasForm = forwardRef<CapturaFormHandle, PericiasFormProps>(
           onAdvogadoChange={setAdvogadoId}
           onCredenciaisChange={setCredenciaisSelecionadas}
         >
-          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+          <div className={cn("stack-medium")}>
             <Label>Situações das Perícias</Label>
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 md:grid-cols-2 gap-3")}>
+            <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-medium")}>
               {SITUACAO_PERICIA_OPTIONS.map((option) => (
                 <div key={option.value} className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
                   <Checkbox

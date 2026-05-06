@@ -68,16 +68,16 @@ export function TimelineSidebar({
       <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex-none border-b px-3 py-2.5")}>
         <div className={cn("flex items-center justify-between inline-tight")}>
           <Text variant="caption" className="flex items-center gap-3">
-            <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "inline-flex items-center gap-1")}>
+            <span className={cn("inline-flex items-center inline-micro")}>
               <FileText className="h-3 w-3" />
               {totalDocumentos} {totalDocumentos === 1 ? 'doc' : 'docs'}
             </span>
-            <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "inline-flex items-center gap-1")}>
+            <span className={cn("inline-flex items-center inline-micro")}>
               <GitCommitHorizontal className="h-3 w-3" />
               {totalMovimentos} {totalMovimentos === 1 ? 'mov' : 'movs'}
             </span>
           </Text>
-          <kbd className={cn(/* design-system-escape: gap-0.5 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex items-center gap-0.5 rounded border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground")}>
+          <kbd className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex items-center inline-nano rounded border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground")}>
             <span className="text-[9px]">&#x2318;</span>K
           </kbd>
         </div>
@@ -106,7 +106,7 @@ export function TimelineSidebar({
 
             {/* Marcador de início do processo */}
             <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; pb-6 padding direcional sem Inset equiv.; pt-4 padding direcional sem Inset equiv. */ "grid grid-cols-[48px_1fr] px-2 pb-6 pt-4 opacity-70")}>
-              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col items-center gap-1")}>
+              <div className={cn("flex flex-col items-center inline-micro")}>
                 <div className="h-2 w-px bg-border" aria-hidden="true" />
                 <div
                   className="size-3 rounded-full border border-border bg-muted"

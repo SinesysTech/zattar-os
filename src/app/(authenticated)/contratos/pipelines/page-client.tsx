@@ -444,7 +444,7 @@ function EstagioDialog({ open, onOpenChange, pipelineId, estagio, onSuccess }: E
                   <FormItem>
                     <FormLabel>Cor</FormLabel>
                     <FormControl>
-                      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+                      <div className={cn("flex items-center inline-medium")}>
                         <input
                           type="color"
                           className={cn(/* design-system-escape: p-1 → usar <Inset> */ "h-9 w-12 cursor-pointer rounded-md border border-input p-1")}
@@ -469,7 +469,7 @@ function EstagioDialog({ open, onOpenChange, pipelineId, estagio, onSuccess }: E
                 name="isDefault"
                 render={({ field }) => (
                   <FormItem>
-                    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+                    <div className={cn("flex items-center inline-medium")}>
                       <FormControl>
                         <Switch
                           checked={field.value}
@@ -654,7 +654,7 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
             <SheetTitle>Estágios — {pipeline.nome}</SheetTitle>
           </SheetHeader>
 
-          <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv.; space-y-3 sem token DS */ "flex-1 overflow-y-auto px-4 pb-4 space-y-3")}>
+          <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv. */ "flex-1 overflow-y-auto px-4 pb-4 stack-medium")}>
             {isLoadingEstagios ? (
               <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "stack-tight pt-2")}>
                 {Array.from({ length: 3 }).map((_, i) => (
@@ -674,7 +674,7 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
                     onDragStart={(e) => handleDragStart(e, index)}
                     onDragOver={(e) => handleDragOver(e, index)}
                     onDragEnd={handleDragEnd}
-                    className={cn(/* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ "flex items-center gap-3 rounded-md border bg-card p-3 cursor-grab active:cursor-grabbing select-none")}
+                    className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center inline-medium rounded-md border bg-card p-3 cursor-grab active:cursor-grabbing select-none")}
                   >
                     <GripVertical className="h-4 w-4 shrink-0 text-muted-foreground" />
 
@@ -686,7 +686,7 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
                     />
 
                     <div className="flex-1 min-w-0">
-                      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+                      <div className={cn("flex items-center inline-snug")}>
                         <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium truncate")}>{estagio.nome}</span>
                         {estagio.isDefault && (
                           <Star className="h-3.5 w-3.5 shrink-0 fill-warning text-warning" />
@@ -695,7 +695,7 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
                       <Text variant="caption" className="font-mono">{estagio.slug}</Text>
                     </div>
 
-                    <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 shrink-0")}>
+                    <div className={cn("flex items-center inline-micro shrink-0")}>
                       <Button
                         variant="ghost"
                         size="icon"
@@ -930,7 +930,7 @@ export function PipelinesPageClient() {
                   <span className={cn("text-body-sm text-muted-foreground truncate")}>
                     {segmentoNomeMap[pipeline.segmentoId] ?? `Segmento #${pipeline.segmentoId}`}
                   </span>
-                  <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+                  <div className={cn("flex items-center inline-snug")}>
                     <span className={cn("text-body-sm text-muted-foreground")}>
                       {pipeline.estagios?.length ?? 0} estágio(s)
                     </span>
@@ -956,7 +956,7 @@ export function PipelinesPageClient() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "h-8 gap-1.5 cursor-pointer")}
+                      className={cn("h-8 inline-snug cursor-pointer")}
                       onClick={() => handleGerenciarEstagios(pipeline)}
                     >
                       <Settings className="h-3.5 w-3.5" />

@@ -35,7 +35,7 @@ export function SplitFinanceiro({ acordo }: SplitFinanceiroProps) {
 
   return (
     <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3 mb-4")}>
+      <div className={cn("flex items-start justify-between inline-medium mb-4")}>
         <div>
           <Text variant="meta-label" className="text-muted-foreground/60">
             Split financeiro
@@ -128,9 +128,9 @@ function SplitRow({
 }) {
   const pct = valorTotal > 0 ? (valor / valorTotal) * 100 : 0;
   return (
-    <li className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+    <li className={cn("flex items-center inline-medium")}>
       <span className={cn('size-2 rounded-full shrink-0', dotClass)} />
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex-1 min-w-0 flex items-baseline justify-between gap-3")}>
+      <div className={cn("flex-1 min-w-0 flex items-baseline justify-between inline-medium")}>
         <div className="min-w-0">
           <Text variant="caption" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/85")}>
             {label}

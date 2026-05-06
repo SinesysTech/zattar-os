@@ -184,7 +184,7 @@ const captureSteps: StepDef[] = [
 
 export default function ProcessosDoc() {
   return (
-    <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
+    <div className={cn("stack-extra-loose")}>
       <div className={cn("stack-tight")}>
         <Heading level="page">Processos</Heading>
         <p className={cn("text-muted-foreground text-body-lg")}>
@@ -229,7 +229,7 @@ export default function ProcessosDoc() {
         <p className="text-muted-foreground">
           A lista de processos pode ser filtrada e ordenada por múltiplos critérios simultaneamente:
         </p>
-        <ul className={cn(/* design-system-escape: space-y-1 sem token DS */ "list-disc list-inside space-y-1 text-muted-foreground text-body-sm mt-2")}>
+        <ul className={cn("list-disc list-inside stack-micro text-muted-foreground text-body-sm mt-2")}>
           <li>Tribunal (TJSP, TRT, STJ, STF, TRF, etc.)</li>
           <li>Status do processo (Em Andamento, Arquivado, Encerrado)</li>
           <li>Área do direito (Cível, Trabalhista, Criminal, etc.)</li>

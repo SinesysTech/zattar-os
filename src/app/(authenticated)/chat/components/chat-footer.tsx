@@ -221,8 +221,8 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
     <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv. */ "px-5 pb-4 pt-3 bg-chat-thread")}>
       {/* Typing Indicator */}
       {typingIndicatorText && !isRecording && (
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv. */ "flex items-center gap-1.5 text-[0.65rem] text-muted-foreground/70 px-2 mb-1.5")}>
-          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex gap-0.5")}>
+        <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "flex items-center inline-snug text-[0.65rem] text-muted-foreground/70 px-2 mb-1.5")}>
+          <div className={cn("flex inline-nano")}>
             {[0, 1, 2].map((i) => (
               <span
                 key={i}
@@ -256,7 +256,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
           {isRecording ? (
             // Recording UI — unchanged
             <div className="flex-1 flex items-center justify-between h-9 w-full">
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+              <div className={cn("flex items-center inline-medium")}>
                 <div className="relative flex h-3 w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive dark:bg-destructive opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-destructive dark:bg-destructive"></span>
@@ -318,7 +318,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
                   </DropdownMenu>
                 </div>
                 {/* Desktop: inline icon buttons */}
-                <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "hidden lg:flex items-center gap-0.5")}>
+                <div className={cn("hidden lg:flex items-center inline-nano")}>
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>

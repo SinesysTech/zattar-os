@@ -77,14 +77,14 @@ export function VolumeSemanal() {
       </div>
 
       <div className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "mt-3 flex items-center justify-between border-t border-border/10 pt-2.5")}>
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+        <div className={cn("flex items-center inline-medium")}>
+          <div className={cn("flex items-center inline-snug")}>
             <div className="size-2 rounded-full bg-primary/60" />
             <span className="text-[9px] text-muted-foreground/60">
               Recebidos: {fmtNum(totalRecebidos)}
             </span>
           </div>
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+          <div className={cn("flex items-center inline-snug")}>
             <div className="size-2 rounded-full bg-success/50" />
             <span className="text-[9px] text-muted-foreground/60">
               Baixados: {fmtNum(totalBaixados)}

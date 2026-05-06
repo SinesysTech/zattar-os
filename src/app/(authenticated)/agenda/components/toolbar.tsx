@@ -89,7 +89,7 @@ export function AgendaToolbar({
   const activeFilters = sourceFilter.size;
 
   return (
-    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+    <div className={cn("stack-medium")}>
       {/* Row 1: Title + New Event */}
       <div className={cn("flex items-end justify-between inline-default")}>
         <div>
@@ -117,7 +117,7 @@ export function AgendaToolbar({
           <button
             onClick={() => setFilterOpen(!filterOpen)}
             className={cn(
-              /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-caption border transition-colors cursor-pointer",
+              /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center inline-snug px-2.5 py-1.5 rounded-lg text-caption border transition-colors cursor-pointer",
               activeFilters > 0
                 ? "border-primary/20 bg-primary/6 text-primary"
                 : "border-border/15 text-muted-foreground/50 hover:text-muted-foreground/70",
@@ -159,7 +159,7 @@ export function AgendaToolbar({
         <div className="flex-1" />
 
         {/* Date Nav */}
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+        <div className={cn("flex items-center inline-micro")}>
           <button onClick={onPrev} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer")}>
             <ChevronLeft className="size-4" />
           </button>

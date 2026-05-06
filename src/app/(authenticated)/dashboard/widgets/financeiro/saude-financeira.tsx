@@ -129,7 +129,7 @@ export function WidgetSaúdeFinanceira() {
         {/* Stats horizontais */}
         <div className={cn("flex flex-wrap sm:flex-nowrap items-center inline-loose flex-1 min-w-0")}>
 
-          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+          <div className={cn("flex flex-col inline-nano")}>
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Saldo
             </p>
@@ -145,7 +145,7 @@ export function WidgetSaúdeFinanceira() {
 
           <div className="w-px self-stretch bg-border/10" aria-hidden="true" />
 
-          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+          <div className={cn("flex flex-col inline-nano")}>
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               A receber
             </p>
@@ -163,7 +163,7 @@ export function WidgetSaúdeFinanceira() {
 
           <div className="w-px self-stretch bg-border/10" aria-hidden="true" />
 
-          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+          <div className={cn("flex flex-col inline-nano")}>
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               A pagar
             </p>
@@ -181,7 +181,7 @@ export function WidgetSaúdeFinanceira() {
 
           <div className="w-px self-stretch bg-border/10" aria-hidden="true" />
 
-          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+          <div className={cn("flex flex-col inline-nano")}>
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Resultado
             </p>

@@ -73,7 +73,7 @@ export function SignatureStatsStrip({ stats }: SignatureStatsStripProps) {
         <div className="w-px h-8 bg-border/10 shrink-0" />
 
         {/* Tendência */}
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 shrink-0")}>
+        <div className={cn("flex items-center inline-medium shrink-0")}>
           <div>
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Tendência 6m

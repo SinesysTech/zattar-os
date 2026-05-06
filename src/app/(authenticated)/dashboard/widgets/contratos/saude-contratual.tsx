@@ -75,7 +75,7 @@ export function WidgetSaudeContratual() {
       className="md:col-span-2"
     >
       <div className={cn("flex flex-col items-center inline-default mt-1")}>
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col items-center gap-1")}>
+        <div className={cn("flex flex-col items-center inline-micro")}>
           <GaugeMeter
             value={score}
             max={100}
@@ -91,7 +91,7 @@ export function WidgetSaudeContratual() {
             { label: 'Novos no Mês', value: fmtNum(novosMes) },
             { label: 'Em Contratação', value: fmtNum(emContratacao) },
           ].map((item) => (
-            <div key={item.label} className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-center gap-0.5")}>
+            <div key={item.label} className={cn("flex flex-col items-center inline-nano")}>
               <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider text-center")}>
                 {item.label}
               </span>

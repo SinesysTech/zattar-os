@@ -48,7 +48,7 @@ export function PriorityIndicator({
   const color = VARIANT_TEXT_COLORS[variant] ?? "text-foreground";
 
   return (
-    <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "inline-flex items-center gap-1", color, className)}>
+    <span className={cn("inline-flex items-center inline-micro", color, className)}>
       <Icon className="size-4" />
       {showLabel && (
         <Text variant="label" as="span">{PRIORIDADE_LABELS[prioridade]}</Text>

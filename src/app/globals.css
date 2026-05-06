@@ -1882,17 +1882,30 @@
   /* Inline — gap horizontal em flex-row.
      Minimalista: NÃO aplica items-/justify- defaults para não sobrepor
      classes do caller. Use o componente <Inline> quando precisar de
-     defaults opinativos (align="center", justify="start"). */
-  .inline-tight    { @apply flex flex-row gap-2; }
-  .inline-default  { @apply flex flex-row gap-4; }
-  .inline-loose    { @apply flex flex-row gap-6; }
+     defaults opinativos (align="center", justify="start").
 
-  /* Stack — gap vertical em flex-col */
-  .stack-tight    { @apply flex flex-col gap-2; }
-  .stack-default  { @apply flex flex-col gap-4; }
-  .stack-loose    { @apply flex flex-col gap-6; }
-  .stack-section  { @apply flex flex-col gap-8; }
-  .stack-field    { @apply flex flex-col gap-4; }
+     Escala expandida (Wave 8): 5 níveis intermediários para densidade
+     fina em UI legal/financeira (KPI strips, badges densos, toolbars). */
+  .inline-nano        { @apply flex flex-row gap-0.5; }  /* 2px  — micro */
+  .inline-micro       { @apply flex flex-row gap-1; }    /* 4px  — KPI baseline */
+  .inline-snug        { @apply flex flex-row gap-1.5; }  /* 6px  — sub-tight */
+  .inline-tight       { @apply flex flex-row gap-2; }    /* 8px */
+  .inline-medium      { @apply flex flex-row gap-3; }    /* 12px — entre tight/default */
+  .inline-default     { @apply flex flex-row gap-4; }    /* 16px */
+  .inline-loose       { @apply flex flex-row gap-6; }    /* 24px */
+  .inline-extra-loose { @apply flex flex-row gap-8; }    /* 32px — section */
+
+  /* Stack — gap vertical em flex-col. Mesma escala expandida do Inline. */
+  .stack-nano        { @apply flex flex-col gap-0.5; }   /* 2px */
+  .stack-micro       { @apply flex flex-col gap-1; }     /* 4px */
+  .stack-snug        { @apply flex flex-col gap-1.5; }   /* 6px */
+  .stack-tight       { @apply flex flex-col gap-2; }     /* 8px */
+  .stack-medium      { @apply flex flex-col gap-3; }     /* 12px */
+  .stack-default     { @apply flex flex-col gap-4; }     /* 16px */
+  .stack-loose       { @apply flex flex-col gap-6; }     /* 24px */
+  .stack-section     { @apply flex flex-col gap-8; }     /* 32px */
+  .stack-extra-loose { @apply flex flex-col gap-10; }    /* 40px — entre seções grandes */
+  .stack-field       { @apply flex flex-col gap-4; }     /* alias semântico */
 
   /* Inset — padding semântico */
   .inset-card          { @apply p-4 sm:p-6; }

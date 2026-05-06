@@ -130,7 +130,7 @@ export default function TribunaisPage() {
         <PulseStrip items={kpiItems} />
 
         {/* Filter Bar */}
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
+        <div className={cn("flex flex-col sm:flex-row items-start sm:items-center inline-medium")}>
           <div className={cn("flex items-center inline-tight flex-wrap")}>
             <AdvogadosFilter
               title="Tribunal"
@@ -152,7 +152,7 @@ export default function TribunaisPage() {
 
         {/* Loading skeleton */}
         {isLoading && (
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3")}>
+          <div className={cn("grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 inline-medium")}>
             {Array.from({ length: 8 }).map((_, i) => (
               <GlassPanel key={i} depth={1} className="h-44 animate-pulse" />
             ))}
@@ -161,7 +161,7 @@ export default function TribunaisPage() {
 
         {/* Card Grid */}
         {!isLoading && (
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3")}>
+          <div className={cn("grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 inline-medium")}>
             {tribunaisFiltrados.map((tribunal) => (
               <div
                 key={tribunal.id}
@@ -191,9 +191,9 @@ export default function TribunaisPage() {
                 <div className={cn(/* design-system-escape: my-2 margin sem primitiva DS */ "border-t border-border/10 my-2")} />
 
                 {/* Meta rows */}
-                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+                <div className={cn("stack-snug")}>
                   {/* Status */}
-                  <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 text-[11px]")}>
+                  <div className={cn("flex items-center inline-snug text-[11px]")}>
                     <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${(credenciaisPorTribunal.get(tribunal.tribunal_codigo) ?? 0) > 0 ? 'bg-success' : 'bg-warning'}`} />
                     <span className="text-muted-foreground/70">
                       {(credenciaisPorTribunal.get(tribunal.tribunal_codigo) ?? 0) > 0 ? 'Ativo' : 'Sem cobertura'}
@@ -201,13 +201,13 @@ export default function TribunaisPage() {
                   </div>
 
                   {/* Credenciais count */}
-                  <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 text-[11px] text-muted-foreground/70")}>
+                  <div className={cn("flex items-center inline-snug text-[11px] text-muted-foreground/70")}>
                     <Lock className="size-3 opacity-50 shrink-0" />
                     <span>Credenciais: <strong className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-foreground font-medium")}>{credenciaisPorTribunal.get(tribunal.tribunal_codigo) ?? 0}</strong></span>
                   </div>
 
                   {/* URL base (truncated) */}
-                  <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 text-[11px] text-muted-foreground/70")}>
+                  <div className={cn("flex items-center inline-snug text-[11px] text-muted-foreground/70")}>
                     <Clock className="size-3 opacity-50 shrink-0" />
                     <span className="truncate max-w-40" title={tribunal.url_base}>
                       {tribunal.url_base.replace(/^https?:\/\//, '')}

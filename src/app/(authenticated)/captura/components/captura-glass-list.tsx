@@ -217,7 +217,7 @@ function GlassRow({
             : 'border-border/40 hover:border-border/40',
       )}
     >
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-[90px_1fr_200px_120px_80px_56px] gap-3 items-center")}>
+      <div className={cn("grid grid-cols-[90px_1fr_200px_120px_80px_56px] inline-medium items-center")}>
         {/* Data + hora (ancoragem temporal) */}
         <div className={cn(/* design-system-escape: leading-tight sem token DS */ "flex flex-col leading-tight")}>
           <Text variant="caption" className="font-medium text-foreground/80 tabular-nums">{data}</Text>
@@ -225,7 +225,7 @@ function GlassRow({
         </div>
 
         {/* Ícone + tipo */}
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 min-w-0")}>
+        <div className={cn("flex items-center inline-medium min-w-0")}>
           <div className={cn('w-9 h-9 rounded-[0.625rem] flex items-center justify-center shrink-0', getTipoIconBg(captura.tipo_captura))}>
             <TipoIcon className={cn('w-4 h-4', getTipoIconColor(captura.tipo_captura))} />
           </div>
@@ -257,7 +257,7 @@ function GlassRow({
         </div>
 
         {/* Actions */}
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center justify-end gap-1")}>
+        <div className={cn("flex items-center justify-end inline-micro")}>
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); onView(); }}
@@ -291,12 +291,12 @@ function ListSkeleton() {
     <div className={cn("flex flex-col inline-tight")}>
       {Array.from({ length: 5 }, (_, i) => (
         <GlassPanel key={i} depth={1} className={cn("inset-card-compact")}>
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-[90px_1fr_200px_120px_80px_56px] gap-3 items-center")}>
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+          <div className={cn("grid grid-cols-[90px_1fr_200px_120px_80px_56px] inline-medium items-center")}>
+            <div className={cn("flex flex-col inline-micro")}>
               <Skeleton className="h-3 w-10" />
               <Skeleton className="h-3 w-10" />
             </div>
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+            <div className={cn("flex items-center inline-medium")}>
               <Skeleton className="w-9 h-9 rounded-[0.625rem]" />
               <Skeleton className="h-4 w-40" />
             </div>
@@ -342,7 +342,7 @@ function PaginationBar({
           onClick={onPrev}
           disabled={pagina <= 1}
           className={cn(
-            /* design-system-escape: gap-1 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-caption font-medium',
+            /* design-system-escape: gap-1 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'inline-flex items-center inline-micro px-3 py-1.5 rounded-lg text-caption font-medium',
             'border border-foreground/8 transition-all duration-150',
             'disabled:opacity-30 disabled:cursor-not-allowed',
             'hover:bg-foreground/6 hover:border-foreground/14',
@@ -356,7 +356,7 @@ function PaginationBar({
           onClick={onNext}
           disabled={pagina >= paginacao.totalPaginas}
           className={cn(
-            /* design-system-escape: gap-1 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-caption font-medium',
+            /* design-system-escape: gap-1 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'inline-flex items-center inline-micro px-3 py-1.5 rounded-lg text-caption font-medium',
             'border border-foreground/8 transition-all duration-150',
             'disabled:opacity-30 disabled:cursor-not-allowed',
             'hover:bg-foreground/6 hover:border-foreground/14',

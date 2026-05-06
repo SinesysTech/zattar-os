@@ -270,13 +270,13 @@ export function AssistentesTiposConfig({
               </p>
             </div>
           ) : (
-            <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+            <div className={cn("stack-medium")}>
               {relacoes.map((relacao) => (
                 <div
                   key={relacao.id}
                   className={cn("flex items-center justify-between inset-card-compact border rounded-lg")}
                 >
-                  <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "flex-1 space-y-1")}>
+                  <div className={cn("flex-1 stack-micro")}>
                     <div className={cn("flex items-center inline-tight")}>
                       <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{relacao.assistente_nome}</span>
                       {relacao.ativo ? (

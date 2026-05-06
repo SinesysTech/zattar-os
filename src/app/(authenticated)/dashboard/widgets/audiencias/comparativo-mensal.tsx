@@ -81,14 +81,14 @@ export function WidgetComparativoMensal() {
       <div className={cn("stack-default")}>
         {/* Header: month labels */}
         <div className="flex items-center justify-between">
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+          <div className={cn("flex items-center inline-medium")}>
+            <div className={cn("flex items-center inline-snug")}>
               <div className="size-2 rounded-sm bg-muted-foreground/30" />
               <span className="text-[9px] text-muted-foreground/60">
                 {previous.mes}
               </span>
             </div>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+            <div className={cn("flex items-center inline-snug")}>
               <div className="size-2 rounded-sm bg-primary/60" />
               <span className="text-[9px] text-muted-foreground/60">
                 {current.mes}
@@ -129,9 +129,9 @@ export function WidgetComparativoMensal() {
 
         {/* Visual comparison bars */}
         <div className={cn("stack-tight")}>
-          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+          <div className={cn("stack-micro")}>
             <p className="text-[9px] text-muted-foreground/50">Marcadas</p>
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1")}>
+            <div className={cn("flex inline-micro")}>
               <div className="h-3 rounded-full bg-muted-foreground/20 transition-all duration-500" style={{
                 width: `${Math.max(
                   (previous.marcadas / Math.max(current.marcadas, previous.marcadas, 1)) * 100,
@@ -139,7 +139,7 @@ export function WidgetComparativoMensal() {
                 )}%`,
               }} />
             </div>
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1")}>
+            <div className={cn("flex inline-micro")}>
               <div className="h-3 rounded-full bg-primary/60 transition-all duration-500" style={{
                 width: `${Math.max(
                   (current.marcadas / Math.max(current.marcadas, previous.marcadas, 1)) * 100,
@@ -149,9 +149,9 @@ export function WidgetComparativoMensal() {
             </div>
           </div>
 
-          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+          <div className={cn("stack-micro")}>
             <p className="text-[9px] text-muted-foreground/50">Realizadas</p>
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1")}>
+            <div className={cn("flex inline-micro")}>
               <div className="h-3 rounded-full bg-muted-foreground/20 transition-all duration-500" style={{
                 width: `${Math.max(
                   (previous.realizadas / Math.max(current.realizadas, previous.realizadas, 1)) * 100,
@@ -159,7 +159,7 @@ export function WidgetComparativoMensal() {
                 )}%`,
               }} />
             </div>
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1")}>
+            <div className={cn("flex inline-micro")}>
               <div className="h-3 rounded-full bg-success/60 transition-all duration-500" style={{
                 width: `${Math.max(
                   (current.realizadas / Math.max(current.realizadas, previous.realizadas, 1)) * 100,

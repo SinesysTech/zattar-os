@@ -216,7 +216,7 @@ export const columns: ColumnDef<Pericia>[] = [
       const vencido = prazo && isVencido(prazo) && !p.laudoJuntado;
 
       return (
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex flex-col gap-1 items-start py-2")}>
+        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex flex-col inline-micro items-start py-2")}>
           {/* Data do prazo */}
           <span className={cn(
             /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-body-sm font-medium',
@@ -251,9 +251,9 @@ export const columns: ColumnDef<Pericia>[] = [
       const nomeParteRe = p.processo?.nomeParteRe || '-';
 
       return (
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex flex-col gap-1.5 items-start py-2 max-w-[min(92vw,20rem)] min-w-0")}>
+        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex flex-col inline-snug items-start py-2 max-w-[min(92vw,20rem)] min-w-0")}>
           {/* Linha 1: Badge Tribunal + Grau */}
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 flex-wrap")}>
+          <div className={cn("flex items-center inline-snug flex-wrap")}>
             <TribunalGrauBadge trt={p.trt} grau={p.grau} />
           </div>
 
@@ -263,7 +263,7 @@ export const columns: ColumnDef<Pericia>[] = [
           </span>
 
           {/* Partes com badges de polo */}
-          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+          <div className={cn("flex flex-col inline-nano")}>
             <ParteBadge
               polo="ATIVO"
               className={cn("flex whitespace-normal wrap-break-word text-left font-normal text-caption")}

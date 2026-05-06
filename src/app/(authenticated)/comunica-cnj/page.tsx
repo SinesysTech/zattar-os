@@ -15,7 +15,7 @@ function PesquisaLoading() {
         <Skeleton className="h-4 w-96 rounded" />
         <Skeleton className="h-14 w-full rounded-2xl" />
       </div>
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "mx-auto grid w-full max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4")}>
+      <div className={cn("mx-auto grid w-full max-w-3xl grid-cols-2 inline-medium sm:grid-cols-4")}>
         {Array.from({ length: 4 }).map((_, i) => (
           <Skeleton key={i} className="h-24 rounded-2xl" />
         ))}

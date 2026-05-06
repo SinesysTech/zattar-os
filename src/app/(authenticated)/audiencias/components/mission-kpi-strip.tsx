@@ -134,7 +134,7 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className="text-meta-label">Semana</p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+            <div className={cn("flex items-baseline inline-snug mt-1")}>
               <p className={cn(/* design-system-escape: leading-none/tracking-tight para apertar o KPI numérico junto ao caption */ "text-kpi-value leading-none tracking-tight")}>
                 <AnimatedNumber value={stats.totalSemana} />
               </p>
@@ -163,7 +163,7 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className="text-meta-label">Próxima</p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+            <div className={cn("flex items-baseline inline-snug mt-1")}>
               <p className={cn(/* design-system-escape: leading-none/tracking-tight para apertar o KPI numérico junto ao caption */ "text-kpi-value leading-none tracking-tight tabular-nums")}>
                 {stats.nextLabel}
               </p>
@@ -190,7 +190,7 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className="text-meta-label">Realizadas</p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+            <div className={cn("flex items-baseline inline-snug mt-1")}>
               <p className={cn(/* design-system-escape: leading-none/tracking-tight para apertar o KPI numérico junto ao caption */ "text-kpi-value leading-none tracking-tight")}>
                 <AnimatedNumber value={stats.realizadasMes} />
               </p>
@@ -220,7 +220,7 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className="text-meta-label">Preparo</p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+            <div className={cn("flex items-baseline inline-snug mt-1")}>
               <p className={cn(/* design-system-escape: leading-none/tracking-tight para apertar o KPI numérico junto ao caption */ "text-kpi-value leading-none tracking-tight tabular-nums")}>
                 {stats.avgPrep}%
               </p>

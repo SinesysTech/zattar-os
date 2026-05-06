@@ -398,7 +398,7 @@ export function PecaModeloFormSheet({
                   <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground")}>
                     Placeholders detectados:
                   </p>
-                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-wrap gap-1")}>
+                  <div className={cn("flex flex-wrap inline-micro")}>
                     {extractPlaceholdersFromText(form.watch('conteudo') || '').map(
                       (p, i) => (
                         <AppBadge key={i} variant="secondary" className={cn("font-mono text-caption")}>

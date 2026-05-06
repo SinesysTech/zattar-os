@@ -250,7 +250,7 @@ export function DocumentList() {
             <div className={cn("mt-3 flex flex-wrap inline-tight")}>
               <span className={cn("text-body-sm text-muted-foreground")}>Tags:</span>
               {tagsAtivas.map((tag) => (
-                <Badge key={tag} variant="secondary" className={cn(/* design-system-escape: gap-1 gap sem token DS */ "gap-1")}>
+                <Badge key={tag} variant="secondary" className={cn("inline-micro")}>
                   {tag}
                   <button
                     type="button"

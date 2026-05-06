@@ -37,11 +37,11 @@ export function HorasExtrasCalculator() {
         </p>
       </div>
 
-      <div className={cn(/* design-system-escape: gap-8 gap sem token DS */ "grid grid-cols-1 lg:grid-cols-12 gap-8 items-start")}>
+      <div className={cn("grid grid-cols-1 lg:grid-cols-12 inline-extra-loose items-start")}>
         {/* Formulário / Inputs */}
         <div className={cn("lg:col-span-7 stack-loose")}>
           <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "bg-surface-container-high/60 backdrop-blur-xl rounded-2xl p-8 border border-foreground/5 shadow-lg")}>
-            <div className={cn(/* design-system-escape: gap-8 gap sem token DS */ "grid grid-cols-1 md:grid-cols-2 gap-8")}>
+            <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-extra-loose")}>
               <div className={cn("stack-tight")}>
                 <Text variant="caption" className="uppercase tracking-widest text-on-surface-variant font-bold">Salário Bruto (R$)</Text>
                 <input 
@@ -92,7 +92,7 @@ export function HorasExtrasCalculator() {
             </div>
 
             <div className={cn(/* design-system-escape: pt-8 padding direcional sem Inset equiv. */ "mt-10 pt-8 border-t border-foreground/5")}>
-              <button className={cn(/* design-system-escape: py-5 padding direcional sem Inset equiv.; tracking-widest sem token DS; gap-3 gap sem token DS */ "w-full py-5 bg-linear-to-r from-primary to-primary-dim text-on-primary-fixed rounded-lg font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:shadow-[0_0_30px_rgba(204,151,255,0.3)] transition-all active:scale-95")}>
+              <button className={cn(/* design-system-escape: py-5 padding direcional sem Inset equiv.; tracking-widest sem token DS */ "w-full py-5 bg-linear-to-r from-primary to-primary-dim text-on-primary-fixed rounded-lg font-black uppercase tracking-widest flex items-center justify-center inline-medium hover:shadow-[0_0_30px_rgba(204,151,255,0.3)] transition-all active:scale-95")}>
                 <Calculator className="w-5 h-5" />
                 Recalcular
               </button>

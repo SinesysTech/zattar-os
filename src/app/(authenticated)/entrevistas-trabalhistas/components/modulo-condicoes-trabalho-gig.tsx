@@ -88,7 +88,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
       )}
 
       {/* B.3.3: Acesso a banheiro/descanso */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>Tinha acesso a banheiro e local de descanso durante o trabalho?</Label>
         <SimNaoRadio
           id="acesso-banheiro"
@@ -98,7 +98,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
       </div>
 
       {/* B.3.4: Acidente de trabalho */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>Já sofreu acidente durante o trabalho na plataforma?</Label>
         <SimNaoRadio
           id="acidente"
@@ -107,7 +107,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
         />
 
         {mostrarAssistencia && (
-          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+          <div className={cn("stack-medium")}>
             <Label>A plataforma prestou alguma assistência após o acidente?</Label>
             <SimNaoRadio
               id="assistencia-acidente"
@@ -119,7 +119,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
       </div>
 
       {/* B.3.5: EPI */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>A plataforma fornecia equipamento de segurança (capacete, colete, etc.)?</Label>
         <SimNaoRadio
           id="fornece-epi"
@@ -129,7 +129,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
       </div>
 
       {/* B.3.6: Seguro */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>Existia algum seguro oferecido pela plataforma?</Label>
         <SimNaoRadio
           id="seguro"

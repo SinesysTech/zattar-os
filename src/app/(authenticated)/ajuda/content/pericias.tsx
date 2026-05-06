@@ -147,7 +147,7 @@ const actions: ActionDef[] = [
 
 export default function PericiasDoc() {
   return (
-    <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
+    <div className={cn("stack-extra-loose")}>
       <div className={cn("stack-tight")}>
         <Heading level="page">Perícias</Heading>
         <p className={cn("text-muted-foreground text-body-lg")}>
@@ -184,7 +184,7 @@ export default function PericiasDoc() {
         <p className="text-muted-foreground">
           Uma perícia judicial tipicamente passa pelas seguintes etapas no sistema:
         </p>
-        <ul className={cn(/* design-system-escape: space-y-1 sem token DS */ "list-disc list-inside space-y-1 text-muted-foreground text-body-sm mt-2")}>
+        <ul className={cn("list-disc list-inside stack-micro text-muted-foreground text-body-sm mt-2")}>
           <li><strong>Aguardando Nomeação:</strong> perícia determinada, mas perito ainda não nomeado.</li>
           <li><strong>Agendada:</strong> perito nomeado e data definida.</li>
           <li><strong>Em Andamento:</strong> perícia em execução.</li>

@@ -32,7 +32,7 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
   );
 
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 lg:grid-cols-4 gap-3")}>
+    <div className={cn("grid grid-cols-2 lg:grid-cols-4 inline-medium")}>
       {/* Total Capturas */}
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
@@ -40,7 +40,7 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
               Total Capturas
             </p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+            <div className={cn("flex items-baseline inline-snug mt-1")}>
               <Text variant="kpi-value">
                 <AnimatedNumber value={data.total} />
               </Text>
@@ -68,7 +68,7 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
               Taxa de Sucesso
             </p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+            <div className={cn("flex items-baseline inline-snug mt-1")}>
               <Text variant="kpi-value">
                 <AnimatedNumber value={data.taxaSucesso} />
               </Text>
@@ -99,7 +99,7 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
               Em Andamento
             </p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+            <div className={cn("flex items-baseline inline-snug mt-1")}>
               <Text variant="kpi-value">
                 <AnimatedNumber value={data.emAndamento} />
               </Text>
@@ -129,7 +129,7 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
               Falhas (7d)
             </p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+            <div className={cn("flex items-baseline inline-snug mt-1")}>
               <Text variant="kpi-value">
                 <AnimatedNumber value={data.falhas} />
               </Text>

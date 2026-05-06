@@ -119,7 +119,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
   // Estado vazio — nenhum documento selecionado
   if (!item) {
     return (
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full text-center gap-3 p-8")}>
+      <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full text-center inline-medium p-8")}>
         <div className={cn("rounded-full bg-muted inset-card-compact")}>
           <MousePointerClick className="h-8 w-8 text-muted-foreground" />
         </div>
@@ -133,11 +133,11 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
   // Documento sigiloso sem Backblaze
   if (item.documentoSigiloso && !item.backblaze) {
     return (
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full text-center gap-3 p-8")}>
+      <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full text-center inline-medium p-8")}>
         <div className={cn("rounded-full bg-destructive/10 inset-card-compact")}>
           <Lock className="h-8 w-8 text-destructive" />
         </div>
-        <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+        <div className={cn("stack-micro")}>
           <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{item.titulo}</p>
           <p className={cn("text-body-sm text-muted-foreground")}>
             Documento sigiloso — visualização restrita
@@ -154,7 +154,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
         <div className={cn("rounded-full bg-muted inset-card-compact")}>
           <FileText className="h-8 w-8 text-muted-foreground" />
         </div>
-        <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+        <div className={cn("stack-micro")}>
           <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{item.titulo}</p>
           <p className={cn("text-body-sm text-muted-foreground")}>
             Documento não foi capturado ou enviado para armazenamento
@@ -194,7 +194,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
   return (
     <div className="flex flex-col h-full">
       {/* Header do documento */}
-      <div className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-1.5 sem token DS */ "flex-none border-b p-3 space-y-1.5")}>
+      <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex-none border-b p-3 stack-snug")}>
         <div className={cn("flex items-center justify-between inline-tight")}>
           <div className={cn("flex items-center inline-tight min-w-0 flex-1")}>
             {item.grauOrigem && (
@@ -211,7 +211,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
               <Lock className="h-3.5 w-3.5 text-destructive shrink-0" />
             )}
           </div>
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 shrink-0")}>
+          <div className={cn("flex items-center inline-micro shrink-0")}>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -265,7 +265,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
         )}
 
         {error ? (
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full gap-3 p-8")}>
+          <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full inline-medium p-8")}>
             <FileText className="h-12 w-12 text-destructive" />
             <p className={cn("text-body-sm text-destructive text-center")}>{error}</p>
           </div>

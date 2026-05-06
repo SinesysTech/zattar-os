@@ -115,7 +115,7 @@ function GlassRow({
         </div>
 
         {/* Main info */}
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 min-w-0")}>
+        <div className={cn("flex items-center inline-medium min-w-0")}>
           <div className="w-9 h-9 rounded-[0.625rem] bg-primary/8 flex items-center justify-center shrink-0">
             <ClipboardList className="w-4 h-4 text-primary" />
           </div>
@@ -123,7 +123,7 @@ function GlassRow({
             <div className={cn("flex items-center inline-tight flex-wrap")}>
               <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold truncate")}>{displayName}</span>
               {segmentoNome && (
-                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-primary/10 border border-primary/20 text-primary/80 rounded px-1.5 py-0.5 text-[10px] font-semibold")}>
+                <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center inline-micro bg-primary/10 border border-primary/20 text-primary/80 rounded px-1.5 py-0.5 text-[10px] font-semibold")}>
                   {segmentoNome}
                 </span>
               )}
@@ -140,11 +140,11 @@ function GlassRow({
         </div>
 
         {/* Captura badges */}
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+        <div className={cn("flex items-center inline-snug")}>
           {formulario.foto_necessaria && (
             <Tooltip>
               <TooltipTrigger asChild>
-                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-info/10 border border-info/25 text-info rounded px-1.5 py-0.5 text-[10px] font-semibold")}>
+                <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center inline-micro bg-info/10 border border-info/25 text-info rounded px-1.5 py-0.5 text-[10px] font-semibold")}>
                   <Camera className="w-2.5 h-2.5" />
                   Foto
                 </span>
@@ -155,7 +155,7 @@ function GlassRow({
           {formulario.geolocation_necessaria && (
             <Tooltip>
               <TooltipTrigger asChild>
-                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-warning/10 border border-warning/25 text-warning rounded px-1.5 py-0.5 text-[10px] font-semibold")}>
+                <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center inline-micro bg-warning/10 border border-warning/25 text-warning rounded px-1.5 py-0.5 text-[10px] font-semibold")}>
                   <MapPin className="w-2.5 h-2.5" />
                   Geo
                 </span>
@@ -169,7 +169,7 @@ function GlassRow({
         <div className="flex justify-start">
           <span
             className={cn(
-              /* design-system-escape: gap-1.5 gap sem token DS; font-semibold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'inline-flex items-center gap-1.5 backdrop-blur-sm rounded-lg text-[10px] font-semibold tracking-[0.04em] px-2 py-1 border whitespace-nowrap',
+              /* design-system-escape: font-semibold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'inline-flex items-center inline-snug backdrop-blur-sm rounded-lg text-[10px] font-semibold tracking-[0.04em] px-2 py-1 border whitespace-nowrap',
               formulario.ativo
                 ? 'bg-success/10 border-success/25 text-success'
                 : 'bg-muted-foreground/10 border-muted-foreground/25 text-muted-foreground',
@@ -180,7 +180,7 @@ function GlassRow({
         </div>
 
         {/* Actions */}
-        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center justify-end gap-0.5")} data-row-action>
+        <div className={cn("flex items-center justify-end inline-nano")} data-row-action>
           <FormularioActions
             formulario={formulario}
             onEdit={onEdit}
@@ -237,7 +237,7 @@ function GlassCard({
         }
       }}
       className={cn(
-        /* design-system-escape: gap-3 gap sem token DS */ 'relative flex flex-col gap-3 rounded-2xl border border-border/40 bg-card inset-card-compact cursor-pointer',
+        'relative flex flex-col inline-medium rounded-2xl border border-border/40 bg-card inset-card-compact cursor-pointer',
         'transition-all duration-180 ease-out',
         'hover:bg-accent/40 hover:border-border/60 hover:-translate-y-px hover:shadow-lg',
       )}
@@ -247,7 +247,7 @@ function GlassCard({
         <div className="w-10 h-10 rounded-[0.625rem] bg-primary/8 flex items-center justify-center">
           <ClipboardList className="w-4 h-4 text-primary" />
         </div>
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")} data-row-action>
+        <div className={cn("flex items-center inline-snug")} data-row-action>
           <div className={cn('w-2 h-2 rounded-full', getAtivoDotColor(formulario.ativo))} />
           <FormularioActions
             formulario={formulario}
@@ -283,15 +283,15 @@ function GlassCard({
 
       {/* Footer: captura + status */}
       <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between inline-tight pt-2 border-t border-border/40")}>
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+        <div className={cn("flex items-center inline-snug")}>
           {formulario.foto_necessaria && (
-            <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-info/10 border border-info/25 text-info rounded px-1.5 py-0.5 text-[10px] font-semibold")}>
+            <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center inline-micro bg-info/10 border border-info/25 text-info rounded px-1.5 py-0.5 text-[10px] font-semibold")}>
               <Camera className="w-2.5 h-2.5" />
               Foto
             </span>
           )}
           {formulario.geolocation_necessaria && (
-            <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-warning/10 border border-warning/25 text-warning rounded px-1.5 py-0.5 text-[10px] font-semibold")}>
+            <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center inline-micro bg-warning/10 border border-warning/25 text-warning rounded px-1.5 py-0.5 text-[10px] font-semibold")}>
               <MapPin className="w-2.5 h-2.5" />
               Geo
             </span>
@@ -302,7 +302,7 @@ function GlassCard({
         </div>
         <span
           className={cn(
-            /* design-system-escape: gap-1.5 gap sem token DS; font-semibold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'inline-flex items-center gap-1.5 rounded-lg text-[10px] font-semibold tracking-[0.04em] px-2 py-1 border',
+            /* design-system-escape: font-semibold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'inline-flex items-center inline-snug rounded-lg text-[10px] font-semibold tracking-[0.04em] px-2 py-1 border',
             formulario.ativo
               ? 'bg-success/10 border-success/25 text-success'
               : 'bg-muted-foreground/10 border-muted-foreground/25 text-muted-foreground',
@@ -467,7 +467,7 @@ function ListSkeleton() {
 
 function CardsSkeleton() {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3")}>
+    <div className={cn("grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 inline-medium")}>
       {Array.from({ length: 6 }, (_, i) => (
         <div key={i} className="h-44 rounded-2xl border border-border/40 bg-card animate-pulse" />
       ))}
@@ -506,7 +506,7 @@ export function FormulariosGlassList({
   return (
     <TooltipProvider>
       {mode === 'cards' ? (
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3")}>
+        <div className={cn("grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 inline-medium")}>
           {formularios.map((f) => (
             <GlassCard
               key={f.id}

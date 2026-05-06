@@ -229,7 +229,7 @@ function ResumoCards({
 }) {
   if (isLoading) {
     return (
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3 md:grid-cols-2 lg:grid-cols-4")}>
+      <div className={cn("grid inline-medium md:grid-cols-2 lg:grid-cols-4")}>
         {Array.from({ length: 4 }).map((_, i) => (
           <Card key={i}>
             <CardContent className={cn("inset-card-compact")}>
@@ -250,7 +250,7 @@ function ResumoCards({
   }
 
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3 md:grid-cols-2 lg:grid-cols-4")}>
+    <div className={cn("grid inline-medium md:grid-cols-2 lg:grid-cols-4")}>
       {KPI_CONFIG.map((kpi) => {
         const valor = resumo[kpi.key];
         const Icon = kpi.icon;
@@ -261,7 +261,7 @@ function ResumoCards({
           <Card key={kpi.key} className={`border-l-4 ${kpi.borderColor}`}>
             <CardContent className={cn("inset-card-compact")}>
               <div className="flex items-start justify-between">
-                <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+                <div className={cn("stack-micro")}>
                   <Text variant="caption" className="font-medium">{kpi.label}</Text>
                   <p className={`text-xl font-semibold font-mono tracking-tight ${showColor ? getLucroColor(valor) : ''}`}>
                     {formatarValor(valor)}
@@ -495,7 +495,7 @@ function CategoriaTab({
         ) : categorias && categorias.length > 0 ? (
           <div className={cn("grid inline-default lg:grid-cols-2")}>
             <CategoriaPieChart categorias={categorias} />
-            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+            <div className={cn("stack-snug")}>
               <Text variant="caption" className="font-medium uppercase tracking-wider mb-2">Detalhamento</Text>
               {categorias.map((cat: CategoriaDRE, i: number) => (
                 <div key={cat.categoria} className={cn(/* design-system-escape: py-1.5 padding direcional sem Inset equiv.; px-2 padding direcional sem Inset equiv. */ "flex items-center justify-between py-1.5 px-2 rounded transition-colors hover:bg-muted/50")}>
@@ -807,7 +807,7 @@ export default function DREClient() {
                   defaultValue="nenhuma"
                 />
 
-                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 text-body-sm text-muted-foreground")}>
+                <div className={cn("flex items-center inline-snug text-body-sm text-muted-foreground")}>
                   <Calendar className="h-3.5 w-3.5" />
                   <span>
                     {format(new Date(periodo.dataInicio), "dd MMM", { locale: ptBR })} — {format(new Date(periodo.dataFim), "dd MMM yyyy", { locale: ptBR })}
@@ -853,21 +853,21 @@ export default function DREClient() {
         />
 
         {/* Tabs */}
-        <Tabs defaultValue="estrutura" className={cn(/* design-system-escape: space-y-3 sem token DS */ "mt-4 space-y-3")}>
+        <Tabs defaultValue="estrutura" className={cn("mt-4 stack-medium")}>
           <TabsList>
-            <TabsTrigger value="estrutura" className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv. */ "gap-1.5 px-3")}>
+            <TabsTrigger value="estrutura" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "inline-snug px-3")}>
               <List className="h-3.5 w-3.5" />
               Estrutura
             </TabsTrigger>
-            <TabsTrigger value="receitas" className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv. */ "gap-1.5 px-3")}>
+            <TabsTrigger value="receitas" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "inline-snug px-3")}>
               <TrendingUp className="h-3.5 w-3.5" />
               Receitas
             </TabsTrigger>
-            <TabsTrigger value="despesas" className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv. */ "gap-1.5 px-3")}>
+            <TabsTrigger value="despesas" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "inline-snug px-3")}>
               <TrendingDown className="h-3.5 w-3.5" />
               Despesas
             </TabsTrigger>
-            <TabsTrigger value="evolucao" className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv. */ "gap-1.5 px-3")}>
+            <TabsTrigger value="evolucao" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "inline-snug px-3")}>
               <BarChart3 className="h-3.5 w-3.5" />
               Evolução
             </TabsTrigger>
@@ -887,7 +887,7 @@ export default function DREClient() {
               </CardHeader>
               <CardContent>
                 {isLoading ? (
-                  <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+                  <div className={cn("stack-snug")}>
                     {Array.from({ length: 15 }).map((_, i) => (
                       <Skeleton key={i} className="h-7" />
                     ))}

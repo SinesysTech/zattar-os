@@ -32,7 +32,7 @@ export function DiarioOficialPageNav({
   action,
 }: DiarioOficialPageNavProps) {
   return (
-    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+    <div className={cn("stack-medium")}>
       <div className={cn("flex items-end justify-between inline-default")}>
         <div>
           <Heading level="page">Diário Oficial</Heading>
@@ -46,7 +46,7 @@ export function DiarioOficialPageNav({
       <nav
         aria-label="Navegação do Diário Oficial"
         className={cn(
-          /* design-system-escape: gap-1 gap sem token DS; p-1 → usar <Inset> */ 'inline-flex items-center gap-1 rounded-2xl border border-border/40 bg-card/60 p-1',
+          /* design-system-escape: p-1 → usar <Inset> */ 'inline-flex items-center inline-micro rounded-2xl border border-border/40 bg-card/60 p-1',
           'backdrop-blur-xl',
         )}
       >
@@ -58,7 +58,7 @@ export function DiarioOficialPageNav({
               href={href}
               aria-current={isActive ? 'page' : undefined}
               className={cn(
-                /* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-caption font-medium transition-colors',
+                /* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center inline-snug rounded-xl px-3 py-1.5 text-caption font-medium transition-colors',
                 isActive
                   ? 'bg-foreground text-background shadow-sm'
                   : 'text-muted-foreground hover:bg-foreground/5 hover:text-foreground',

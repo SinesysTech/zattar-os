@@ -87,7 +87,7 @@ export const CombinadaForm = forwardRef<CapturaFormHandle, CombinadaFormProps>(
           <Info className="h-4 w-4" />
           <AlertDescription>
             A captura unificada executa múltiplas capturas em uma única sessão autenticada:
-            <ul className={cn(/* design-system-escape: space-y-1 sem token DS */ "list-disc list-inside mt-2 space-y-1 text-body-sm")}>
+            <ul className={cn("list-disc list-inside mt-2 stack-micro text-body-sm")}>
               <li>Audiências Designadas (hoje até +1 ano)</li>
               <li>Audiências Realizadas (dia anterior)</li>
               <li>Audiências Canceladas (hoje até +1 ano)</li>

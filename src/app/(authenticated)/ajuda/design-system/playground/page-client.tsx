@@ -54,7 +54,7 @@ export default function PlaygroundPage() {
                   Teste e explore os componentes do ZattarOS
                 </p>
               </div>
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+              <div className={cn("flex items-center inline-medium")}>
                 <Badge variant="outline" className="font-mono">
                   v1.0.0
                 </Badge>
@@ -116,7 +116,7 @@ export default function PlaygroundPage() {
                 {/* Variants */}
                 <div>
                   <Label className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold mb-3 block")}>Variantes</Label>
-                  <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-wrap gap-3")}>
+                  <div className={cn("flex flex-wrap inline-medium")}>
                     <Button variant="default">Default</Button>
                     <Button variant="secondary">Secondary</Button>
                     <Button variant="outline">Outline</Button>
@@ -129,7 +129,7 @@ export default function PlaygroundPage() {
                 {/* Sizes */}
                 <div>
                   <Label className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold mb-3 block")}>Tamanhos</Label>
-                  <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-wrap items-center gap-3")}>
+                  <div className={cn("flex flex-wrap items-center inline-medium")}>
                     <Button size="sm">Small</Button>
                     <Button size="default">Default</Button>
                     <Button size="lg">Large</Button>
@@ -142,7 +142,7 @@ export default function PlaygroundPage() {
                 {/* States */}
                 <div>
                   <Label className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold mb-3 block")}>Estados</Label>
-                  <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-wrap gap-3")}>
+                  <div className={cn("flex flex-wrap inline-medium")}>
                     <Button>Normal</Button>
                     <Button disabled>Disabled</Button>
                     <Button onClick={simulateLoading}>
@@ -164,7 +164,7 @@ export default function PlaygroundPage() {
                 {/* With Icons */}
                 <div>
                   <Label className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold mb-3 block")}>Com Ícones</Label>
-                  <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-wrap gap-3")}>
+                  <div className={cn("flex flex-wrap inline-medium")}>
                     <Button variant="default">
                       <Check />
                       Confirmar
@@ -196,7 +196,7 @@ export default function PlaygroundPage() {
                 {/* Variants */}
                 <div>
                   <Label className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold mb-3 block")}>Variantes</Label>
-                  <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-wrap gap-3")}>
+                  <div className={cn("flex flex-wrap inline-medium")}>
                     <Badge variant="default">Default</Badge>
                     <Badge variant="secondary">Secondary</Badge>
                     <Badge variant="outline">Outline</Badge>
@@ -212,7 +212,7 @@ export default function PlaygroundPage() {
                 {/* With Icons */}
                 <div>
                   <Label className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold mb-3 block")}>Com Ícones</Label>
-                  <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-wrap gap-3")}>
+                  <div className={cn("flex flex-wrap inline-medium")}>
                     <Badge variant="success">
                       <Check />
                       Aprovado
@@ -231,7 +231,7 @@ export default function PlaygroundPage() {
                 {/* Use Cases */}
                 <div>
                   <Label className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold mb-3 block")}>Casos de Uso</Label>
-                  <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-wrap gap-3")}>
+                  <div className={cn("flex flex-wrap inline-medium")}>
                     <Badge variant="outline">23 Processos</Badge>
                     <Badge variant="default">Urgente</Badge>
                     <Badge variant="success">Ativo</Badge>

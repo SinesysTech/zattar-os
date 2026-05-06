@@ -24,14 +24,14 @@ function ExpedientesLoading() {
       </div>
 
       {/* PulseStrip skeleton */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 lg:grid-cols-4 gap-3")}>
+      <div className={cn("grid grid-cols-2 lg:grid-cols-4 inline-medium")}>
         {Array.from({ length: 4 }).map((_, i) => (
           <Skeleton key={i} className="h-24 rounded-2xl" />
         ))}
       </div>
 
       {/* Controls skeleton */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+      <div className={cn("flex items-center inline-medium")}>
         <Skeleton className="h-9 w-72 rounded-xl" />
         <div className="flex-1" />
         <Skeleton className="h-9 w-56 rounded-lg" />
@@ -39,7 +39,7 @@ function ExpedientesLoading() {
       </div>
 
       {/* Content skeleton */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         {Array.from({ length: 5 }).map((_, i) => (
           <Skeleton key={i} className="h-20 w-full rounded-2xl" />
         ))}

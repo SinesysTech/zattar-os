@@ -136,7 +136,7 @@ export function ImportarExtratoDialog({ open, onOpenChange, onSuccess }: Props) 
           >
             <input {...getInputProps()} />
             {file ? (
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
+              <div className={cn("flex items-center justify-between inline-medium")}>
                 <div className="text-left">
                   <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{file.name}</p>
                   <Text variant="caption">

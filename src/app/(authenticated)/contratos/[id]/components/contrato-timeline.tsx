@@ -139,7 +139,7 @@ export function ContratoTimeline({ historico }: ContratoTimelineProps) {
                     <div
                       key={item.id}
                       className={cn(
-                        /* design-system-escape: gap-3 gap sem token DS */ 'flex gap-3 relative',
+                        'flex inline-medium relative',
                         idx === items.length - 1 ? /* design-system-escape: pb-4 padding direcional sem Inset equiv. */ 'pb-4' : /* design-system-escape: pb-4 padding direcional sem Inset equiv. */ 'pb-4',
                       )}
                     >
@@ -160,7 +160,7 @@ export function ContratoTimeline({ historico }: ContratoTimelineProps) {
                       </div>
 
                       <div className={cn(/* design-system-escape: pt-0.5 padding direcional sem Inset equiv. */ "flex-1 min-w-0 pt-0.5")}>
-                        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center flex-wrap gap-1.5")}>
+                        <div className={cn("flex items-center flex-wrap inline-snug")}>
                           <Text variant="label" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
                             {isCreation
                               ? 'Contrato criado com status'

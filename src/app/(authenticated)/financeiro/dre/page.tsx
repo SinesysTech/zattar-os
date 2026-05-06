@@ -22,7 +22,7 @@ function DRELoading() {
           <Skeleton className="h-6 w-px" />
           <Skeleton className="h-5 w-40" />
         </div>
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+        <div className={cn("flex items-center inline-medium")}>
           <Skeleton className="h-6 w-28" />
           <Skeleton className="h-6 w-24" />
           <Skeleton className="h-6 w-px" />
@@ -32,7 +32,7 @@ function DRELoading() {
       </div>
 
       {/* KPI cards */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3 md:grid-cols-2 lg:grid-cols-4")}>
+      <div className={cn("grid inline-medium md:grid-cols-2 lg:grid-cols-4")}>
         {Array.from({ length: 4 }).map((_, i) => (
           <Card key={i} className="border-l-4 border-l-muted">
             <CardContent className={cn("inset-card-compact")}>
@@ -43,11 +43,11 @@ function DRELoading() {
       </div>
 
       {/* Tabs + content */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "mt-4 space-y-3")}>
+      <div className={cn("mt-4 stack-medium")}>
         <Skeleton className="h-10 w-80" />
         <Card>
           <CardContent className={cn(/* design-system-escape: pt-6 padding direcional sem Inset equiv. */ "pt-6")}>
-            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+            <div className={cn("stack-snug")}>
               {Array.from({ length: 12 }).map((_, i) => (
                 <Skeleton key={i} className="h-7" />
               ))}

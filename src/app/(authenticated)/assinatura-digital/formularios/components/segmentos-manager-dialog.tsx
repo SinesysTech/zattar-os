@@ -114,7 +114,7 @@ export function SegmentosManagerDialog({
                   {state.segmentos.map((segmento) => (
                     <div
                       key={segmento.id}
-                      className={cn(/* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ "flex items-center justify-between gap-3 p-3")}
+                      className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between inline-medium p-3")}
                     >
                       <div className="min-w-0">
                         <div className={cn("flex items-center inline-tight")}>
@@ -132,7 +132,7 @@ export function SegmentosManagerDialog({
                         ) : null}
                       </div>
 
-                      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+                      <div className={cn("flex items-center inline-micro")}>
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Button

@@ -79,7 +79,7 @@ function ContextPanel() {
         {FLOW_STEPS_INFO.map((step, idx) => {
           const Icon = step.icon;
           return (
-            <div key={idx} className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex gap-3")}>
+            <div key={idx} className={cn("flex inline-medium")}>
               <span
                 className={`inline-flex size-8 shrink-0 items-center justify-center rounded-lg ${step.tile}`}
               >
@@ -104,7 +104,7 @@ function ContextPanel() {
       />
 
       <div className={cn("flex items-center inline-tight")}>
-        <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1 rounded-full bg-info/12 text-info px-2 py-0.5 text-[11px] font-medium")}>
+        <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-micro rounded-full bg-info/12 text-info px-2 py-0.5 text-[11px] font-medium")}>
           <Info className="size-3" />
           MP 2.200-2/2001
         </span>

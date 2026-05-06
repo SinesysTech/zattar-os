@@ -133,7 +133,7 @@ function RowActions({
 }) {
   return (
     <div
-      className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center justify-end gap-0.5")}
+      className={cn("flex items-center justify-end inline-nano")}
       onClick={(e) => e.stopPropagation()}
       onKeyDown={(e) => e.stopPropagation()}
     >
@@ -222,7 +222,7 @@ function ResponsavelCell({
             e.stopPropagation();
             setDialogOpen(true);
           }}
-          className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-1 padding direcional sem Inset equiv.; -mx-1 sem equivalente DS; py-1 padding direcional sem Inset equiv. */ "flex items-center gap-1.5 min-w-0 rounded-lg px-1 -mx-1 py-1 text-left transition-colors hover:bg-muted/40 focus:outline-none focus-visible:ring-1 focus-visible:ring-ring cursor-pointer")}
+          className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; -mx-1 sem equivalente DS; py-1 padding direcional sem Inset equiv. */ "flex items-center inline-snug min-w-0 rounded-lg px-1 -mx-1 py-1 text-left transition-colors hover:bg-muted/40 focus:outline-none focus-visible:ring-1 focus-visible:ring-ring cursor-pointer")}
           title={`Alterar responsável: ${nome}`}
         >
           <Avatar className="size-5">
@@ -293,7 +293,7 @@ function ResponsavelAssignPopover({
           onClick={(e) => e.stopPropagation()}
           aria-label="Adicionar responsável"
           disabled={isPending}
-          className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "inline-flex items-center gap-1.5 rounded-lg border border-dashed border-border/50 px-2 py-1 text-muted-foreground/60 hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-colors cursor-pointer disabled:opacity-50 w-fit")}
+          className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "inline-flex items-center inline-snug rounded-lg border border-dashed border-border/50 px-2 py-1 text-muted-foreground/60 hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-colors cursor-pointer disabled:opacity-50 w-fit")}
         >
           <Plus className="size-3" aria-hidden="true" />
           <span className="text-micro-caption font-medium">Adicionar responsável</span>
@@ -487,7 +487,7 @@ function GlassRow({
         </div>
 
         {/* 4. Tipo / Cobrança — oculto em mobile, visível a partir de sm */}
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "hidden sm:flex flex-col gap-1 min-w-0")}>
+        <div className={cn("hidden sm:flex flex-col inline-micro min-w-0")}>
           <SemanticBadge category="tipo_contrato" value={contrato.tipoContrato} className="w-fit">
             {TIPO_CONTRATO_LABELS[contrato.tipoContrato]}
           </SemanticBadge>
@@ -497,13 +497,13 @@ function GlassRow({
         </div>
 
         {/* 5. Processos vinculados — oculto até lg */}
-        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "hidden lg:flex flex-col gap-0.5 min-w-0")}>
+        <div className={cn("hidden lg:flex flex-col inline-nano min-w-0")}>
           {firstProcesso ? (
             <>
               <Link
                 href={`/app/processos/${firstProcesso.processoId}`}
                 onClick={(e) => e.stopPropagation()}
-                className={cn(/* design-system-escape: gap-1 gap sem token DS */ "inline-flex items-center gap-1 min-w-0 text-primary hover:underline")}
+                className={cn("inline-flex items-center inline-micro min-w-0 text-primary hover:underline")}
               >
                 <Scale className="size-2.5 shrink-0" />
                 <span className="text-micro-caption font-mono font-medium tabular-nums truncate text-primary">
@@ -556,12 +556,12 @@ function ListSkeleton() {
               <Skeleton className="h-2.5 w-14 rounded" />
             </div>
             {/* 3. Cliente/Parte */}
-            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+            <div className={cn("stack-snug")}>
               <Skeleton className="h-3.5 w-44" />
               <Skeleton className="h-2.5 w-32" />
             </div>
             {/* 4. Tipo/Cobrança — espelha visibilidade sm */}
-            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "hidden sm:block space-y-1")}>
+            <div className={cn("hidden sm:block stack-micro")}>
               <Skeleton className="h-4 w-16 rounded-md" />
               <Skeleton className="h-4 w-14 rounded-md" />
             </div>
@@ -573,7 +573,7 @@ function ListSkeleton() {
               <Skeleton className="h-2.5 w-16" />
             </div>
             {/* 7. Ações */}
-            <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center justify-end gap-0.5")}>
+            <div className={cn("flex items-center justify-end inline-nano")}>
               {[0, 1, 2, 3].map((j) => (
                 <Skeleton key={j} className="size-7 rounded-md" />
               ))}

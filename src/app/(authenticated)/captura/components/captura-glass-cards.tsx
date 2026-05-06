@@ -184,7 +184,7 @@ function CapturaCard({
       className={cn("inset-card-compact h-full")}
     >
       {/* Header: Icon + Tipo */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mb-3 min-w-0")}>
+      <div className={cn("flex items-center inline-medium mb-3 min-w-0")}>
         <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center shrink-0', getTipoIconBg(captura.tipo_captura))}>
           <TipoIcon className={cn('w-5 h-5', getTipoIconColor(captura.tipo_captura))} />
         </div>
@@ -196,7 +196,7 @@ function CapturaCard({
       <div className={cn(/* design-system-escape: my-2 margin sem primitiva DS */ "border-t border-border/10 my-2")} />
 
       {/* Details */}
-      <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+      <div className={cn("stack-snug")}>
         {/* Escopo (tribunais + graus agregados) */}
         <div className="flex items-center justify-between">
           <span className="text-[11px] text-muted-foreground/60">Escopo</span>
@@ -236,7 +236,7 @@ function CapturaCard({
         <button
           type="button"
           onClick={(e) => { e.stopPropagation(); onView(); }}
-          className={cn(/* design-system-escape: gap-1.5 gap sem token DS; font-medium → className de <Text>/<Heading>; py-1.5 padding direcional sem Inset equiv. */ "w-full flex items-center justify-center gap-1.5 text-caption font-medium text-primary hover:bg-primary/5 rounded-lg py-1.5 transition-colors")}
+          className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; py-1.5 padding direcional sem Inset equiv. */ "w-full flex items-center justify-center inline-snug text-caption font-medium text-primary hover:bg-primary/5 rounded-lg py-1.5 transition-colors")}
         >
           <Eye className="size-3.5" />
           Ver Detalhes
@@ -253,7 +253,7 @@ function CapturaCard({
 
 function CardsSkeleton() {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3")}>
+    <div className={cn("grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 inline-medium")}>
       {Array.from({ length: 6 }, (_, i) => (
         <GlassPanel key={i} depth={1} className="h-52 animate-pulse" />
       ))}
@@ -345,7 +345,7 @@ export function CapturaGlassCards({
   }
 
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3")}>
+    <div className={cn("grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 inline-medium")}>
       {filtered.map((captura) => (
         <CapturaCard
           key={captura.id}

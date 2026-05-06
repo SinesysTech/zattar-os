@@ -141,7 +141,7 @@ function SectionDivider({ urgencia, count }: { urgencia: Urgencia; count: number
 
   return (
     <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; py-1.5 padding direcional sem Inset equiv. */ "flex items-center gap-2.5 py-1.5")}>
-      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'flex items-center gap-1.5 rounded-md px-2 py-1', config.bgColor)}>
+      <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'flex items-center inline-snug rounded-md px-2 py-1', config.bgColor)}>
         <Icon className={cn('size-3.5', config.color)} />
         <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ 'text-[11px] font-semibold uppercase tracking-wider', config.color)}>
           {config.label}
@@ -184,7 +184,7 @@ function MissionItem({
       type="button"
       onClick={onSelect}
       className={cn(
-        /* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ 'flex w-full cursor-pointer items-center gap-3 rounded-xl border bg-card px-3 py-2.5 text-left shadow-sm transition-all duration-150',
+        /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ 'flex w-full cursor-pointer items-center inline-medium rounded-xl border bg-card px-3 py-2.5 text-left shadow-sm transition-all duration-150',
         'border-border/40 hover:border-primary/30 hover:bg-accent/50 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
         'border-l-[3px]',
         borderColor,
@@ -192,8 +192,8 @@ function MissionItem({
       )}
     >
       <UrgencyDot level={urgencyLevel} />
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex min-w-0 flex-1 items-start gap-3")}>
-        <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "min-w-0 flex-1 space-y-1")}>
+      <div className={cn("flex min-w-0 flex-1 items-start inline-medium")}>
+        <div className={cn("min-w-0 flex-1 stack-micro")}>
           {/* Tipo de expediente */}
           <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-body-sm font-medium', isBaixado && 'line-through')}>
             {tipoExpedienteNome || 'Sem tipo'}
@@ -423,7 +423,7 @@ export function ExpedientesWeekMission({
       ) : null}
 
       {/* Day Mission KPIs */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 lg:grid-cols-4 gap-3")}>
+      <div className={cn("grid grid-cols-2 lg:grid-cols-4 inline-medium")}>
         {[
           { label: 'Total', value: kpis.total, icon: FileText, color: 'text-muted-foreground/60' },
           { label: 'Vencidos', value: kpis.vencidos, icon: AlertTriangle, color: 'text-destructive/60', highlight: kpis.vencidos > 0 },
@@ -464,7 +464,7 @@ export function ExpedientesWeekMission({
             {grupos.urgente.length > 0 && (
               <>
                 <SectionDivider urgencia="urgente" count={grupos.urgente.length} />
-                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
+                <div className={cn("flex flex-col inline-snug")}>
                   {grupos.urgente.map((exp) => (
                     <MissionItem
                       key={exp.id}
@@ -481,7 +481,7 @@ export function ExpedientesWeekMission({
             {grupos.no_prazo.length > 0 && (
               <>
                 <SectionDivider urgencia="no_prazo" count={grupos.no_prazo.length} />
-                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
+                <div className={cn("flex flex-col inline-snug")}>
                   {grupos.no_prazo.map((exp) => (
                     <MissionItem
                       key={exp.id}
@@ -498,7 +498,7 @@ export function ExpedientesWeekMission({
             {grupos.sem_prazo.length > 0 && (
               <>
                 <SectionDivider urgencia="sem_prazo" count={grupos.sem_prazo.length} />
-                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
+                <div className={cn("flex flex-col inline-snug")}>
                   {grupos.sem_prazo.map((exp) => (
                     <MissionItem
                       key={exp.id}
@@ -515,7 +515,7 @@ export function ExpedientesWeekMission({
             {grupos.baixado.length > 0 && (
               <>
                 <SectionDivider urgencia="baixado" count={grupos.baixado.length} />
-                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
+                <div className={cn("flex flex-col inline-snug")}>
                   {grupos.baixado.map((exp) => (
                     <MissionItem
                       key={exp.id}

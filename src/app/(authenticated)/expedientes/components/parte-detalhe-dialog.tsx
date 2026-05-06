@@ -210,10 +210,10 @@ export function ParteDetalheDialog({
           <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "stack-default py-2")}>
             {/* Loading state */}
             {isLoading && (
-              <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+              <div className={cn("stack-medium")}>
                 <div className={cn("flex items-center inline-tight")}>
                   <Skeleton className="h-5 w-5 rounded-full" />
-                  <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1 flex-1")}>
+                  <div className={cn("stack-micro flex-1")}>
                     <Skeleton className="h-4 w-3/4" />
                     <Skeleton className="h-3 w-1/2" />
                   </div>

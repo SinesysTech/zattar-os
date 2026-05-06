@@ -83,7 +83,7 @@ export function RepassesPendentesList({ onAnexarDeclaracao, onRealizarRepasse, r
                                        onGerado={() => refetch()}
                                     />
                                     {onAnexarDeclaracao && (
-                                       <Button size="sm" variant="outline" onClick={() => onAnexarDeclaracao(r.parcelaId)} className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "rounded-xl gap-1.5")}>
+                                       <Button size="sm" variant="outline" onClick={() => onAnexarDeclaracao(r.parcelaId)} className={cn("rounded-xl inline-snug")}>
                                           <Upload className="size-3.5" /> Anexar manual
                                        </Button>
                                     )}

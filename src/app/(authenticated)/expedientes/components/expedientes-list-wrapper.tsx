@@ -85,7 +85,7 @@ export function ExpedientesListWrapper({
   // ─── Render ──────────────────────────────────────────────────────────────
 
   return (
-    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+    <div className={cn("stack-medium")}>
       <ExpedientesGlassList
         expedientes={expedientes}
         isLoading={isLoading}

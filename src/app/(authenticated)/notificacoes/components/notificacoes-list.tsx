@@ -158,7 +158,7 @@ function criarColunas(
       enableSorting: true,
       size: 150,
       cell: ({ row }) => (
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center justify-center gap-1 text-body-sm text-muted-foreground")}>
+        <div className={cn("flex items-center justify-center inline-micro text-body-sm text-muted-foreground")}>
           <ClockIcon className="size-3" />
           {formatarData(row.original.created_at)}
         </div>

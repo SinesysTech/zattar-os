@@ -210,7 +210,7 @@ export function DocumentViewer({
           </div>
         ) : error ? (
           // Estado de erro com retry
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full gap-3 p-8 text-center")}>
+          <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full inline-medium p-8 text-center")}>
             <FileText className="h-12 w-12 text-destructive" aria-hidden="true" />
             <Text variant="caption" className="text-destructive">{error}</Text>
             <button
@@ -232,7 +232,7 @@ export function DocumentViewer({
                   })
                   .finally(() => setIsLoading(false));
               }}
-              className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1.5 text-caption font-medium text-foreground transition-colors hover:bg-accent cursor-pointer")}
+              className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-snug rounded-full border bg-card px-3 py-1.5 text-caption font-medium text-foreground transition-colors hover:bg-accent cursor-pointer")}
             >
               <RefreshCw className="h-3 w-3" />
               Tentar novamente
@@ -240,7 +240,7 @@ export function DocumentViewer({
           </div>
         ) : !item ? (
           // Estado vazio — nenhum item selecionado
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full gap-3 p-8 text-center")}>
+          <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full inline-medium p-8 text-center")}>
             <FileText
               className="h-12 w-12 text-muted-foreground/55"
               aria-hidden="true"
@@ -270,7 +270,7 @@ export function DocumentViewer({
           </div>
         ) : (
           // Item selecionado mas sem presigned URL (ex: sem backblaze)
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full gap-3 p-8 text-center")}>
+          <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full inline-medium p-8 text-center")}>
             <FileText
               className="h-12 w-12 text-muted-foreground/55"
               aria-hidden="true"

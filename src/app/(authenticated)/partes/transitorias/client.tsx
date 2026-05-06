@@ -134,12 +134,12 @@ export function TransitoriasListClient() {
                 </Text>
               </div>
             ) : (
-              <ul className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+              <ul className={cn("stack-snug")}>
                 {rows.map((t) => (
                   <li
                     key={t.id}
                     className={cn(
-                      /* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ 'flex items-center justify-between gap-3 rounded-xl border px-3 py-2.5',
+                      /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ 'flex items-center justify-between inline-medium rounded-xl border px-3 py-2.5',
                       'transition-colors hover:bg-muted/40'
                     )}
                   >
@@ -147,7 +147,7 @@ export function TransitoriasListClient() {
                       <Text variant="label" className="truncate text-foreground">
                         {t.nome}
                       </Text>
-                      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "mt-0.5 flex items-center gap-3")}>
+                      <div className={cn("mt-0.5 flex items-center inline-medium")}>
                         {t.criado_em_contrato_id && (
                           <Text variant="micro-caption" className="text-muted-foreground">
                             <Clock className="inline size-3 -mt-0.5" aria-hidden="true" /> Contrato #

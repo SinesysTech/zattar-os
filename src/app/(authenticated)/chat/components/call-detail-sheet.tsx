@@ -142,7 +142,7 @@ export function CallDetailSheet({
               value="geral"
               className={cn("stack-default mt-4 flex-1 overflow-auto")}
             >
-              <GlassPanel depth={1} className={cn(/* design-system-escape: space-y-3 sem token DS */ "inset-card-compact space-y-3")}>
+              <GlassPanel depth={1} className={cn("inset-card-compact stack-medium")}>
                 <div className="flex justify-between items-center">
                   <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Status</span>
                   <Badge
@@ -207,7 +207,7 @@ export function CallDetailSheet({
               </GlassPanel>
 
               {/* Integração Dyte */}
-              <GlassPanel depth={1} className={cn(/* design-system-escape: space-y-3 sem token DS */ "inset-card-compact space-y-3 bg-muted/30")}>
+              <GlassPanel depth={1} className={cn("inset-card-compact stack-medium bg-muted/30")}>
                 <div className="flex items-center justify-between">
                   <Heading level="widget" as="h4">Status no Dyte</Heading>
                   <Button
@@ -256,7 +256,7 @@ export function CallDetailSheet({
                       depth={1}
                       className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between p-3")}
                     >
-                      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+                      <div className={cn("flex items-center inline-medium")}>
                         <Avatar>
                           <AvatarFallback>U</AvatarFallback>
                         </Avatar>

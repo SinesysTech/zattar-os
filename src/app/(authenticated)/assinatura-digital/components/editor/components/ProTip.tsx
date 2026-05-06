@@ -15,7 +15,7 @@ export function ProTip({ children, className }: ProTipProps) {
   return (
     <div
       className={cn(
-        /* design-system-escape: gap-3 gap sem token DS */ 'flex items-start gap-3 inset-card-compact rounded-lg',
+        'flex items-start inline-medium inset-card-compact rounded-lg',
         'bg-chart-2/10', // Using chart-2 (highlight/orange) with opacity
         className
       )}

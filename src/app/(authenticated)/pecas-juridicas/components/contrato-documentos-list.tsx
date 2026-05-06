@@ -192,7 +192,7 @@ export function ContratoDocumentosList({ contratoId }: ContratoDocumentosListPro
   // Loading state
   if (loading) {
     return (
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         {[1, 2, 3].map((i) => (
           <Skeleton key={i} className="h-16 w-full" />
         ))}

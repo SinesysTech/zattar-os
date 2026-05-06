@@ -98,7 +98,7 @@ export function WidgetSaudeProcessual() {
       subtitle={`Score composto — ${subtitleExtra}`}
       depth={2}
     >
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+      <div className={cn("flex items-center inline-medium")}>
         <GaugeMeter
           value={score}
           max={100}
@@ -106,7 +106,7 @@ export function WidgetSaudeProcessual() {
           status={status}
           size={72}
         />
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-3 gap-3 flex-1 min-w-0")}>
+        <div className={cn("grid grid-cols-3 inline-medium flex-1 min-w-0")}>
           <ComparisonStat
             label="Ativos"
             current={stats.ativos}
@@ -120,11 +120,11 @@ export function WidgetSaudeProcessual() {
             format="number"
           />
           {stats.taxaResolucao !== undefined && (
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+            <div className={cn("flex flex-col inline-micro")}>
               <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
                 Taxa resolução
               </p>
-              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-baseline gap-1")}>
+              <div className={cn("flex items-baseline inline-micro")}>
                 <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-lg font-bold")}>
                   {stats.taxaResolucao}%
                 </span>

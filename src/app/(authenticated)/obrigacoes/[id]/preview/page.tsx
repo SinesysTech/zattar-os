@@ -36,7 +36,7 @@ export default async function ObrigacaoDetalhesPreviewPage({
 
 function PreviewBanner() {
   return (
-    <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "mb-3 rounded-xl border border-primary/20 bg-primary/5 px-4 py-2.5 flex items-center justify-between gap-3 flex-wrap")}>
+    <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "mb-3 rounded-xl border border-primary/20 bg-primary/5 px-4 py-2.5 flex items-center justify-between inline-medium flex-wrap")}>
       <div className={cn("flex items-center inline-tight min-w-0")}>
         <span className="size-1.5 rounded-full bg-primary animate-pulse shrink-0" />
         <Text variant="overline" as="p" className="text-primary/80 shrink-0">

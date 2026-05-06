@@ -247,7 +247,7 @@ const MonthGrid = React.memo(function MonthGrid({
       <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5")}>
         {MONTH_NAMES[monthIndex]}
       </div>
-      <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "grid grid-cols-7 gap-0.5 mb-1")}>
+      <div className={cn("grid grid-cols-7 inline-nano mb-1")}>
         {WEEKDAY_LABELS.map((lbl, i) => (
           <div
             key={i}
@@ -257,7 +257,7 @@ const MonthGrid = React.memo(function MonthGrid({
           </div>
         ))}
       </div>
-      <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "grid grid-cols-7 gap-0.5")}>{cells}</div>
+      <div className={cn("grid grid-cols-7 inline-nano")}>{cells}</div>
     </div>
   );
 });
@@ -383,11 +383,11 @@ export function PericiasYearHeatmap({
             </div>
 
             {/* Legend */}
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "mt-8 flex items-center gap-3 flex-wrap")}>
+            <div className={cn("mt-8 flex items-center inline-medium flex-wrap")}>
               <span className="text-[10px] text-muted-foreground/60">
                 Menos
               </span>
-              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+              <div className={cn("flex items-center inline-micro")}>
                 <div className="w-2.5 h-2.5 rounded-[2px] bg-muted/30" />
                 <div className="w-2.5 h-2.5 rounded-[2px] bg-primary/30" />
                 <div className="w-2.5 h-2.5 rounded-[2px] bg-primary/55" />
@@ -395,7 +395,7 @@ export function PericiasYearHeatmap({
               </div>
               <span className="text-[10px] text-muted-foreground/60">Mais</span>
               <span className={cn(/* design-system-escape: mx-2 margin sem primitiva DS */ "text-muted-foreground/40 mx-2 text-[10px]")}>·</span>
-              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+              <div className={cn("flex items-center inline-snug")}>
                 <div className="w-2.5 h-2.5 rounded-[2px] bg-muted/30 ring-[1.5px] ring-primary ring-offset-1 ring-offset-transparent" />
                 <span className="text-[10px] text-muted-foreground/60">Hoje</span>
               </div>
@@ -403,7 +403,7 @@ export function PericiasYearHeatmap({
           </GlassPanel>
 
           {/* Stats Sidebar */}
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3 w-full xl:w-64 shrink-0")}>
+          <div className={cn("flex flex-col inline-medium w-full xl:w-64 shrink-0")}>
             <StatCard
               icon={CalendarDays}
               iconBg="bg-primary/15"

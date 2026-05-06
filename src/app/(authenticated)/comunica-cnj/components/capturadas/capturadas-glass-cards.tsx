@@ -46,7 +46,7 @@ export function CapturadasGlassCards({
   }
 
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3")}>
+    <div className={cn("grid grid-cols-1 inline-medium md:grid-cols-2 xl:grid-cols-3")}>
       {comunicacoes.map((c) => {
         const partesAutor = c.partesAutor.slice(0, 2).join(' · ');
         const partesReu = c.partesReu.slice(0, 2).join(' · ');
@@ -80,7 +80,7 @@ export function CapturadasGlassCards({
                     {c.tipoComunicacao}
                   </Badge>
                 )}
-                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "ml-auto flex items-center gap-1.5")}>
+                <div className={cn("ml-auto flex items-center inline-snug")}>
                   <StatusIcon
                     status={c.statusVinculacao}
                     diasParaPrazo={c.diasParaPrazo}

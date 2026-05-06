@@ -143,7 +143,7 @@ export function ObrigacoesYearWrapper({
                     item.parcela.status === 'atrasada' && 'border-destructive/20',
                   )}
                 >
-                  <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
+                  <div className={cn("flex items-center justify-between inline-medium")}>
                     <div className="flex-1 min-w-0">
                       <Text variant="caption" className="font-medium truncate">
                         Parcela {item.parcela.numeroParcela} ·{' '}

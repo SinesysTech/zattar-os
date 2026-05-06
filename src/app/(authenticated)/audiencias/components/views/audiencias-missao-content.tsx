@@ -286,7 +286,7 @@ function TimelineCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: (
   const prepStatus = prepScore >= 80 ? 'good' : prepScore >= 50 ? 'warning' : 'danger';
 
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-1 padding direcional sem Inset equiv. */ "flex items-stretch gap-3 py-1 group")}>
+    <div className={cn(/* design-system-escape: py-1 padding direcional sem Inset equiv. */ "flex items-stretch inline-medium py-1 group")}>
       <div className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "w-12 shrink-0 flex flex-col items-end pt-2.5")}>
         <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-caption tabular-nums font-medium', isPast ? 'text-muted-foreground/55' : 'text-foreground/60')}>
           {fmtTime(audiencia.dataInicio)}
@@ -315,7 +315,7 @@ function TimelineCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: (
               <span className="text-subsection-title text-foreground truncate">{audiencia.tipoDescricao || 'Audiência'}</span>
               {isOngoing && <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-badge font-semibold text-success px-1.5 py-px rounded-full bg-success/10")}>Agora</span>}
               <Text variant="micro-badge" as="span" className={cn(
-                /* design-system-escape: gap-0.5 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center gap-0.5 px-1.5 py-px rounded-full font-semibold tabular-nums shrink-0',
+                /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center inline-nano px-1.5 py-px rounded-full font-semibold tabular-nums shrink-0',
                 prepStatus === 'good' ? 'bg-success/10 text-success' : prepStatus === 'warning' ? 'bg-warning/10 text-warning' : 'bg-destructive/10 text-destructive',
               )}>
                 {prepStatus === 'good' ? <CheckCircle2 className="size-2" /> : <AlertTriangle className="size-2" />}
@@ -331,7 +331,7 @@ function TimelineCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: (
         </div>
 
         {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
-          <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "mt-1 space-y-0.5")}>
+          <div className={cn("mt-1 stack-nano")}>
             <Text variant="caption" className="truncate font-semibold text-foreground">
               {audiencia.poloAtivoNome || '—'}
             </Text>
@@ -343,7 +343,7 @@ function TimelineCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: (
         )}
 
         <div className={cn("flex items-center inline-tight mt-2 flex-wrap")}>
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+          <div className={cn("flex items-center inline-micro")}>
             <ModalIcon className="size-2 text-muted-foreground/70" />
             <span className="text-micro-caption text-muted-foreground/60">
               {audiencia.modalidade === 'presencial' ? 'Presencial' : audiencia.modalidade === 'hibrida' ? 'Híbrida' : 'Virtual'}

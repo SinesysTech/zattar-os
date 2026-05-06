@@ -291,7 +291,7 @@ export function PericiaCriarDialog({
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
       <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
         {/* Número do Processo (col span 2) */}
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "md:col-span-2 grid gap-1.5")}>
+        <div className={cn("md:col-span-2 grid inline-snug")}>
           <FieldLabel required>Número do Processo</FieldLabel>
           <Input
             value={numeroProcesso}
@@ -308,7 +308,7 @@ export function PericiaCriarDialog({
         </div>
 
         {/* TRT */}
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "grid gap-1.5")}>
+        <div className={cn("grid inline-snug")}>
           <FieldLabel required>Tribunal</FieldLabel>
           <Select
             value={trt || '_none'}
@@ -329,7 +329,7 @@ export function PericiaCriarDialog({
         </div>
 
         {/* Grau */}
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "grid gap-1.5")}>
+        <div className={cn("grid inline-snug")}>
           <FieldLabel required>Grau</FieldLabel>
           <Select
             value={grau || '_none'}
@@ -350,7 +350,7 @@ export function PericiaCriarDialog({
         </div>
 
         {/* Prazo de Entrega */}
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "grid gap-1.5")}>
+        <div className={cn("grid inline-snug")}>
           <FieldLabel>Prazo de Entrega</FieldLabel>
           <DatePicker
             value={prazoEntrega}
@@ -360,7 +360,7 @@ export function PericiaCriarDialog({
         </div>
 
         {/* Situação */}
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "grid gap-1.5")}>
+        <div className={cn("grid inline-snug")}>
           <FieldLabel>Situação inicial</FieldLabel>
           <Select value={situacaoCodigo} onValueChange={setSituacaoCodigo}>
             <SelectTrigger className="bg-card h-9">
@@ -377,7 +377,7 @@ export function PericiaCriarDialog({
         </div>
 
         {/* Especialidade (Combobox com busca) */}
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "grid gap-1.5")}>
+        <div className={cn("grid inline-snug")}>
           <FieldLabel>Especialidade</FieldLabel>
           <SearchableCombobox
             value={especialidadeId}
@@ -391,7 +391,7 @@ export function PericiaCriarDialog({
         </div>
 
         {/* Perito (Combobox com busca) */}
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "grid gap-1.5")}>
+        <div className={cn("grid inline-snug")}>
           <FieldLabel>Perito</FieldLabel>
           <SearchableCombobox
             value={peritoId}
@@ -405,7 +405,7 @@ export function PericiaCriarDialog({
         </div>
 
         {/* Observações */}
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "md:col-span-2 grid gap-1.5")}>
+        <div className={cn("md:col-span-2 grid inline-snug")}>
           <FieldLabel>Observações</FieldLabel>
           <Textarea
             value={observacoes}

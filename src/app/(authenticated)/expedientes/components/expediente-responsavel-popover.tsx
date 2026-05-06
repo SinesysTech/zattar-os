@@ -111,7 +111,7 @@ export function ExpedienteResponsavelPopover({
           type="button"
           onClick={(e) => e.stopPropagation()}
           className={cn(
-            /* design-system-escape: gap-1.5 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; -mx-1.5 sem equivalente DS; -my-0.5 sem equivalente DS */ 'flex items-center gap-1.5 rounded-md px-1.5 py-0.5 -mx-1.5 -my-0.5',
+            /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; -mx-1.5 sem equivalente DS; -my-0.5 sem equivalente DS */ 'flex items-center inline-snug rounded-md px-1.5 py-0.5 -mx-1.5 -my-0.5',
             'transition-colors hover:bg-muted/50 cursor-pointer',
             'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
             isPending && 'opacity-60 pointer-events-none',
@@ -139,7 +139,7 @@ export function ExpedienteResponsavelPopover({
           </div>
           <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-52 px-1.5 pb-1.5")}>
             <CommandEmpty>
-              <div className={cn(/* design-system-escape: gap-1 gap sem token DS; py-3 padding direcional sem Inset equiv. */ "flex flex-col items-center gap-1 py-3")}>
+              <div className={cn(/* design-system-escape: py-3 padding direcional sem Inset equiv. */ "flex flex-col items-center inline-micro py-3")}>
                 <Search className="size-4 text-muted-foreground/55" />
                 <span className="text-[11px] text-muted-foreground/65">Nenhum usuário encontrado</span>
               </div>

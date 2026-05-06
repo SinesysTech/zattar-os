@@ -161,7 +161,7 @@ function StatsRow({ documento }: { documento: DocumentoRevisar }) {
   const paginas = new Set(documento.ancoras.map((a) => a.pagina)).size;
 
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 sm:grid-cols-4 gap-3")}>
+    <div className={cn("grid grid-cols-2 sm:grid-cols-4 inline-medium")}>
       <KpiCard
         label="Assinantes"
         value={documento.assinantes.length}
@@ -256,7 +256,7 @@ function SignerLinkCard({
           : `${color.bg} ${color.border}`,
       )}
     >
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 min-w-0")}>
+      <div className={cn("flex items-center inline-medium min-w-0")}>
         <div
           className={cn(
             /* design-system-escape: font-semibold → className de <Text>/<Heading> */ "flex size-10 shrink-0 items-center justify-center rounded-full text-body-sm font-semibold text-primary-foreground",
@@ -279,7 +279,7 @@ function SignerLinkCard({
         </div>
       </div>
 
-      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 shrink-0")}>
+      <div className={cn("flex items-center inline-micro shrink-0")}>
         <Button
           variant="ghost"
           size="icon"
@@ -351,7 +351,7 @@ function PdfPreviewSection({
               >
                 <div
                   className={cn(
-                    /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading>; gap-1 gap sem token DS */ /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading>; gap-1 gap sem token DS */ "absolute -top-6 left-0 px-2 py-0.5 rounded text-caption font-medium text-primary-foreground flex items-center gap-1",
+                    /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading>; gap-1 gap sem token DS */ /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "absolute -top-6 left-0 px-2 py-0.5 rounded text-caption font-medium text-primary-foreground flex items-center inline-micro",
                     color.solid,
                   )}
                 >
@@ -520,7 +520,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
       onClick={handleFinalize}
       disabled={isFinalizing}
       size="sm"
-      className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5")}
+      className={cn("inline-snug")}
     >
       {isFinalizing ? (
         <>
@@ -562,7 +562,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
               </h1>
               <span
                 className={cn(
-                  /* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium",
+                  /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-micro rounded-full px-2 py-0.5 text-[11px] font-medium",
                   documento.status === "pronto"
                     ? "bg-success/12 text-success"
                     : "bg-foreground/8 text-muted-foreground",
@@ -572,7 +572,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
                 {STATUS_LABELS[documento.status] ?? documento.status}
               </span>
               {documento.selfie_habilitada && (
-                <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1 rounded-full bg-info/12 text-info px-2 py-0.5 text-[11px] font-medium")}>
+                <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-micro rounded-full bg-info/12 text-info px-2 py-0.5 text-[11px] font-medium")}>
                   <Camera className="size-3" />
                   Selfie ativa
                 </span>
@@ -642,7 +642,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
             </div>
 
             {/* Segurança */}
-            <GlassPanel depth={2} className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3 inset-card-compact mt-2")}>
+            <GlassPanel depth={2} className={cn("flex items-start inline-medium inset-card-compact mt-2")}>
               <span className="inline-flex size-8 items-center justify-center rounded-lg bg-success/10 shrink-0">
                 <Shield className="size-4 text-success/70" />
               </span>

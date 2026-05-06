@@ -109,7 +109,7 @@ function ResponsavelChip({
           e.stopPropagation();
           setDialogOpen(true);
         }}
-        className={cn(/* design-system-escape: gap-1.5 gap sem token DS; -mx-1 sem equivalente DS; px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center gap-1.5 min-w-0 rounded-lg -mx-1 px-1 py-0.5 transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring cursor-pointer")}
+        className={cn(/* design-system-escape: -mx-1 sem equivalente DS; px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center inline-snug min-w-0 rounded-lg -mx-1 px-1 py-0.5 transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring cursor-pointer")}
         title={nome ? `Alterar responsável: ${nome}` : 'Atribuir responsável'}
       >
         {nome ? (
@@ -158,7 +158,7 @@ function CardActions({
 }) {
   return (
     <div
-      className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center gap-0.5")}
+      className={cn("flex items-center inline-nano")}
       onClick={(e) => e.stopPropagation()}
       onKeyDown={(e) => e.stopPropagation()}
     >
@@ -355,7 +355,7 @@ function GlassCard({
 
       {/* Processos vinculados */}
       <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "relative mt-3 pt-3 border-t border-border/20")}>
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mb-1.5")}>
+        <div className={cn("flex items-center inline-snug mb-1.5")}>
           <Scale className="size-3 text-muted-foreground/70" />
           <Text variant="micro-caption" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground/70")}>
             {processos.length === 0
@@ -364,11 +364,11 @@ function GlassCard({
           </Text>
         </div>
         {firstProcesso && firstProcesso.processo && (
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-wrap items-center gap-1")}>
+          <div className={cn("flex flex-wrap items-center inline-micro")}>
             <Link
               href={`/app/processos/${firstProcesso.processoId}`}
               onClick={(e) => e.stopPropagation()}
-              className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-primary/5 text-primary border border-primary/15 hover:bg-primary/10 transition-colors")}
+              className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center inline-micro px-1.5 py-0.5 rounded bg-primary/5 text-primary border border-primary/15 hover:bg-primary/10 transition-colors")}
             >
               <Text variant="micro-caption" className="tabular-nums text-primary">
                 {firstProcesso.processo.numeroProcesso ??
@@ -390,8 +390,8 @@ function GlassCard({
           usuarios={usuarios}
           onChanged={onResponsavelChanged}
         />
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "inline-flex items-center gap-1 text-muted-foreground/60")}>
+        <div className={cn("flex items-center inline-snug")}>
+          <div className={cn("inline-flex items-center inline-micro text-muted-foreground/60")}>
             <Clock className="size-2.5" />
             <Text variant="micro-caption">{timeAgo(contrato.cadastradoEm)}</Text>
           </div>
@@ -425,7 +425,7 @@ function CardSkeleton() {
           <Skeleton className="h-4 w-24 rounded" />
         </div>
       </div>
-      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1 mt-3")}>
+      <div className={cn("flex inline-micro mt-3")}>
         <Skeleton className="h-4 w-16 rounded" />
         <Skeleton className="h-4 w-14 rounded" />
         <Skeleton className="h-4 w-20 rounded" />
@@ -481,7 +481,7 @@ export function ContratosGlassCards({
 }: ContratosGlassCardsProps) {
   if (isLoading) {
     return (
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3")}>
+      <div className={cn("grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 inline-medium")}>
         {Array.from({ length: 6 }, (_, i) => (
           <CardSkeleton key={i} />
         ))}
@@ -499,7 +499,7 @@ export function ContratosGlassCards({
 
   return (
     <TooltipProvider>
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3")}>
+      <div className={cn("grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 inline-medium")}>
         {contratos.map((contrato) => (
           <GlassCard
             key={contrato.id}

@@ -29,7 +29,7 @@ function DocumentosLoading() {
         <Skeleton className="h-9 w-64" />
         <Skeleton className="h-9 w-48 ml-auto" />
       </div>
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3")}>
+      <div className={cn("grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 inline-medium")}>
         {Array.from({ length: 6 }).map((_, i) => (
           <Skeleton key={i} className="h-40 w-full rounded-2xl" />
         ))}

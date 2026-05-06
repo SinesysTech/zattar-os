@@ -324,21 +324,21 @@ export function TaskDetailSheet() {
                             <div className={cn("inset-dialog")}>
                                 {/* Status & Details Grid */}
                                 <div className={cn("grid grid-cols-2 inline-loose sm:grid-cols-3")}>
-                                    <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+                                    <div className={cn("stack-micro")}>
                                         <Text variant="caption" className="font-medium uppercase tracking-wider">Status</Text>
                                         <div className={cn("flex items-center inline-tight")}>
                                             {statusInfo?.icon && <statusInfo.icon className="h-4 w-4 text-muted-foreground" />}
                                             <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{statusInfo?.label || tarefa.status}</span>
                                         </div>
                                     </div>
-                                    <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+                                    <div className={cn("stack-micro")}>
                                         <Text variant="caption" className="font-medium uppercase tracking-wider">Prioridade</Text>
                                         <div className={cn("flex items-center inline-tight")}>
                                             {priorityInfo?.icon && <priorityInfo.icon className="h-4 w-4 text-muted-foreground" />}
                                             <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{priorityInfo?.label || tarefa.priority}</span>
                                         </div>
                                     </div>
-                                    <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1 col-span-2 sm:col-span-1")}>
+                                    <div className={cn("stack-micro col-span-2 sm:col-span-1")}>
                                         <Text variant="caption" className="font-medium uppercase tracking-wider">Prazo</Text>
                                         <div className={cn("flex items-center inline-tight text-body-sm")}>
                                             <CalendarIcon className="h-4 w-4 text-muted-foreground" />
@@ -377,8 +377,8 @@ export function TaskDetailSheet() {
 
                                     <div className={cn("stack-tight")}>
                                         {tarefa.subTasks?.map((st) => (
-                                            <div key={st.id} className={cn(/* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ "group flex items-center justify-between gap-3 rounded-lg border p-3 hover:bg-accent/50 transition-colors")}>
-                                                <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+                                            <div key={st.id} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "group flex items-center justify-between inline-medium rounded-lg border p-3 hover:bg-accent/50 transition-colors")}>
+                                                <div className={cn("flex items-center inline-medium")}>
                                                     <Checkbox
                                                         checked={st.completed}
                                                         onCheckedChange={(checked) => handleToggleSubtask(st.id, !!checked)}
@@ -424,7 +424,7 @@ export function TaskDetailSheet() {
                                         <Button
                                             variant="ghost"
                                             size="sm"
-                                            className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "h-8 gap-1.5 text-caption")}
+                                            className={cn("h-8 inline-snug text-caption")}
                                             disabled={isPending}
                                             onClick={() => fileInputRef.current?.click()}
                                         >
@@ -443,13 +443,13 @@ export function TaskDetailSheet() {
                                         {tarefa.files?.map((file) => (
                                             <div
                                                 key={file.id}
-                                                className={cn(/* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ "group flex items-center gap-3 rounded-lg border p-3 hover:bg-accent/50 transition-colors")}
+                                                className={cn(/* design-system-escape: p-3 → usar <Inset> */ "group flex items-center inline-medium rounded-lg border p-3 hover:bg-accent/50 transition-colors")}
                                             >
                                                 <a
                                                     href={file.url}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 flex-1 min-w-0")}
+                                                    className={cn("flex items-center inline-medium flex-1 min-w-0")}
                                                 >
                                                     <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "rounded bg-primary/10 p-2 shrink-0")}>
                                                         <Paperclip className="h-4 w-4 text-primary" />
@@ -507,7 +507,7 @@ export function TaskDetailSheet() {
                                                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted">
                                                         <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[10px] font-bold")}>U</span>
                                                     </div>
-                                                    <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "flex-1 space-y-1")}>
+                                                    <div className={cn("flex-1 stack-micro")}>
                                                         <div className="flex items-center justify-between">
                                                             <Text variant="caption" className="font-semibold">Você</Text>
                                                             <span className="text-[10px] text-muted-foreground">

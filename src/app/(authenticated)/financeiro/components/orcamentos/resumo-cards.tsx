@@ -94,9 +94,9 @@ export function ResumoCards({
         {[...Array(4)].map((_, i) => (
           <Card key={i}>
             <CardContent className={cn("inset-card-compact")}>
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+              <div className={cn("flex items-center inline-medium")}>
                 <Skeleton className="h-10 w-10 rounded-lg" />
-                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+                <div className={cn("stack-snug")}>
                   <Skeleton className="h-4 w-20" />
                   <Skeleton className="h-6 w-8" />
                 </div>
@@ -117,7 +117,7 @@ export function ResumoCards({
           onClick={item.onClick}
         >
           <CardContent className={cn("inset-card-compact")}>
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+            <div className={cn("flex items-center inline-medium")}>
               <div className={`p-2 rounded-lg ${item.corFundo}`}>
                 <span className={item.corIcone}>{item.icone}</span>
               </div>

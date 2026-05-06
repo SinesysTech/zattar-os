@@ -62,12 +62,12 @@ export function AssistenteCard({
           {/* Badge de tipo */}
           <div className="mt-1">
             {isDify && typeConfig ? (
-              <Badge variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv.; gap-1 gap sem token DS */ "text-[10px] px-1.5 py-0 h-4 gap-1")}>
+              <Badge variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0 h-4 inline-micro")}>
                 {typeConfig.icon}
                 {typeConfig.label}
               </Badge>
             ) : (
-              <Badge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv.; gap-1 gap sem token DS */ "text-[10px] px-1.5 py-0 h-4 gap-1")}>
+              <Badge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0 h-4 inline-micro")}>
                 <Globe className="h-3 w-3" />
                 Iframe
               </Badge>

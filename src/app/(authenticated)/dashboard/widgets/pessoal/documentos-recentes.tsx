@@ -35,7 +35,7 @@ export function WidgetDocumentosRecentes() {
       depth={1}
     >
       {documentos.length > 0 ? (
-        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS; -mx-1 sem equivalente DS */ "flex flex-col gap-0.5 -mx-1")}>
+        <div className={cn(/* design-system-escape: -mx-1 sem equivalente DS */ "flex flex-col inline-nano -mx-1")}>
           {documentos.slice(0, 5).map((doc) => {
             const config = TIPO_CONFIG[doc.tipo];
             const Icon = config.icon;

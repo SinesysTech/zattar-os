@@ -146,7 +146,7 @@ const actions: ActionDef[] = [
 
 export default function ExpedientesDoc() {
   return (
-    <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
+    <div className={cn("stack-extra-loose")}>
       <div className={cn("stack-tight")}>
         <Heading level="page">Expedientes</Heading>
         <p className={cn("text-muted-foreground text-body-lg")}>
@@ -183,7 +183,7 @@ export default function ExpedientesDoc() {
         <p className="text-muted-foreground">
           O sistema calcula automaticamente a data de vencimento do prazo levando em consideração:
         </p>
-        <ul className={cn(/* design-system-escape: space-y-1 sem token DS */ "list-disc list-inside space-y-1 text-muted-foreground text-body-sm mt-2")}>
+        <ul className={cn("list-disc list-inside stack-micro text-muted-foreground text-body-sm mt-2")}>
           <li>Apenas dias úteis (exclui sábados e domingos).</li>
           <li>Feriados nacionais e estaduais configurados no sistema.</li>
           <li>Suspensões de prazo (férias forenses, recesso do judiciário).</li>

@@ -107,7 +107,7 @@ function EmptyState({ isDragActive }: { isDragActive: boolean }) {
         )} />
       </div>
 
-      <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5 max-w-sm")}>
+      <div className={cn("stack-snug max-w-sm")}>
         <Heading level="section" as="h3">
           {isDragActive ? 'Solte o arquivo aqui' : 'Arraste o PDF aqui'}
         </Heading>
@@ -121,7 +121,7 @@ function EmptyState({ isDragActive }: { isDragActive: boolean }) {
         <Button
           type="button"
           size="sm"
-          className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "pointer-events-none gap-1.5 mt-1")}
+          className={cn("pointer-events-none inline-snug mt-1")}
         >
           <Upload className="size-3.5" />
           Selecionar arquivo
@@ -130,17 +130,17 @@ function EmptyState({ isDragActive }: { isDragActive: boolean }) {
 
       {/* Meta restrictions — row inline com icon-tiles discretos */}
       <div className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[11px] text-muted-foreground">
-        <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "inline-flex items-center gap-1.5")}>
+        <span className={cn("inline-flex items-center inline-snug")}>
           <FileText className="size-3" />
           PDF apenas
         </span>
         <span className="h-3 w-px bg-border" aria-hidden />
-        <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "inline-flex items-center gap-1.5")}>
+        <span className={cn("inline-flex items-center inline-snug")}>
           <Layers className="size-3" />
           Até 100 páginas
         </span>
         <span className="h-3 w-px bg-border" aria-hidden />
-        <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "inline-flex items-center gap-1.5")}>
+        <span className={cn("inline-flex items-center inline-snug")}>
           <Lock className="size-3" />
           Upload criptografado
         </span>
@@ -157,7 +157,7 @@ function ErrorState({ message }: { message?: string }) {
       <div className="inline-flex size-14 items-center justify-center rounded-2xl bg-destructive/10">
         <AlertCircle className="size-7 text-destructive" />
       </div>
-      <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5 max-w-sm")}>
+      <div className={cn("stack-snug max-w-sm")}>
         <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-heading text-body-lg font-semibold text-destructive")}>
           Erro no upload
         </p>
@@ -205,7 +205,7 @@ function FilePreviewCard({
       )}
       onClick={(e) => e.stopPropagation()}
     >
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3")}>
+      <div className={cn("flex items-start inline-medium")}>
         <div
           className={cn(
             'flex size-11 shrink-0 items-center justify-center rounded-xl',
@@ -222,7 +222,7 @@ function FilePreviewCard({
           </Text>
 
           {isUploading && (
-            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "mt-3 space-y-1")}>
+            <div className={cn("mt-3 stack-micro")}>
               <Progress value={progress} className="h-1.5" />
               <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wide sem token DS */ "text-[11px] font-medium uppercase tracking-wide text-muted-foreground tabular-nums")}>
                 Enviando · {progress}%
@@ -231,7 +231,7 @@ function FilePreviewCard({
           )}
 
           {isCompleted && (
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "mt-2 flex items-center gap-1.5 text-success")}>
+            <div className={cn("mt-2 flex items-center inline-snug text-success")}>
               <CheckCircle2 className="size-4" strokeWidth={2.5} />
               <Text variant="caption" className="font-medium">Upload concluído</Text>
             </div>

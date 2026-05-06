@@ -89,7 +89,7 @@ export function DocumentAnnotationOverlay({
             <Button
               type="button"
               size="sm"
-              className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv. */ "h-8 gap-1.5 px-3")}
+              className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "h-8 inline-snug px-3")}
               onClick={() => {
                 const trimmedDraft = draft.trim();
                 if (!trimmedDraft) return;

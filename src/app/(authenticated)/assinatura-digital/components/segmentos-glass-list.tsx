@@ -224,7 +224,7 @@ function GlassRow({
         </div>
 
         {/* Main info */}
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 min-w-0")}>
+        <div className={cn("flex items-center inline-medium min-w-0")}>
           <div
             className="w-9 h-9 rounded-[0.625rem] flex items-center justify-center shrink-0"
             style={{ background: `color-mix(in oklch, var(${token}) 14%, transparent)` }}
@@ -256,7 +256,7 @@ function GlassRow({
         <div className="flex justify-start">
           <span
             className={cn(
-              /* design-system-escape: gap-1.5 gap sem token DS; font-semibold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'inline-flex items-center gap-1.5 backdrop-blur-sm rounded-lg text-[10px] font-semibold tracking-[0.04em] px-2 py-1 border whitespace-nowrap',
+              /* design-system-escape: font-semibold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'inline-flex items-center inline-snug backdrop-blur-sm rounded-lg text-[10px] font-semibold tracking-[0.04em] px-2 py-1 border whitespace-nowrap',
               segmento.ativo
                 ? 'bg-success/10 border-success/25 text-success'
                 : 'bg-muted-foreground/10 border-muted-foreground/25 text-muted-foreground',
@@ -267,7 +267,7 @@ function GlassRow({
         </div>
 
         {/* Actions */}
-        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center justify-end gap-0.5")} data-row-action>
+        <div className={cn("flex items-center justify-end inline-nano")} data-row-action>
           <SegmentoActions
             segmento={segmento}
             onEdit={onEdit}
@@ -323,7 +323,7 @@ function GlassCard({
         }
       }}
       className={cn(
-        /* design-system-escape: gap-3 gap sem token DS */ 'relative flex flex-col gap-3 rounded-2xl border border-border/40 bg-card inset-card-compact cursor-pointer',
+        'relative flex flex-col inline-medium rounded-2xl border border-border/40 bg-card inset-card-compact cursor-pointer',
         'transition-all duration-180 ease-out',
         'hover:bg-accent/40 hover:border-border/60 hover:-translate-y-px hover:shadow-lg',
       )}
@@ -335,7 +335,7 @@ function GlassCard({
         >
           <Tags className="w-4 h-4" style={{ color: `var(${token})` }} />
         </div>
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")} data-row-action>
+        <div className={cn("flex items-center inline-snug")} data-row-action>
           <div className={cn('w-2 h-2 rounded-full', getAtivoDotColor(segmento.ativo))} />
           <SegmentoActions
             segmento={segmento}
@@ -374,7 +374,7 @@ function GlassCard({
         </span>
         <span
           className={cn(
-            /* design-system-escape: gap-1.5 gap sem token DS; font-semibold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'inline-flex items-center gap-1.5 rounded-lg text-[10px] font-semibold tracking-[0.04em] px-2 py-1 border',
+            /* design-system-escape: font-semibold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'inline-flex items-center inline-snug rounded-lg text-[10px] font-semibold tracking-[0.04em] px-2 py-1 border',
             segmento.ativo
               ? 'bg-success/10 border-success/25 text-success'
               : 'bg-muted-foreground/10 border-muted-foreground/25 text-muted-foreground',
@@ -403,7 +403,7 @@ function ListSkeleton() {
 
 function CardsSkeleton() {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3")}>
+    <div className={cn("grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 inline-medium")}>
       {Array.from({ length: 6 }, (_, i) => (
         <div key={i} className="h-44 rounded-2xl border border-border/40 bg-card animate-pulse" />
       ))}
@@ -442,7 +442,7 @@ export function SegmentosGlassList({
   return (
     <TooltipProvider>
       {mode === 'cards' ? (
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3")}>
+        <div className={cn("grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 inline-medium")}>
           {segmentos.map((s) => (
             <GlassCard
               key={s.id}

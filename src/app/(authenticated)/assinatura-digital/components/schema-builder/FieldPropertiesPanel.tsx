@@ -310,7 +310,7 @@ export default function FieldPropertiesPanel({
                   )}
                 />
               </CollapsibleTrigger>
-              <CollapsibleContent className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv.; space-y-3 sem token DS */ "pt-2 space-y-3")}>
+              <CollapsibleContent className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "pt-2 stack-medium")}>
                 <FormField
                   control={form.control}
                   name="label"
@@ -488,7 +488,7 @@ export default function FieldPropertiesPanel({
                           onCheckedChange={formField.onChange}
                         />
                       </FormControl>
-                      <div className={cn(/* design-system-escape: space-y-1 sem token DS; leading-none sem token DS */ "space-y-1 leading-none")}>
+                      <div className={cn(/* design-system-escape: leading-none sem token DS */ "stack-micro leading-none")}>
                         <FormLabel>Campo Oculto</FormLabel>
                         <FormDescription className={cn("text-caption")}>
                           Campo não será exibido no formulário público, mas estará no schema
@@ -516,7 +516,7 @@ export default function FieldPropertiesPanel({
                   )}
                 />
               </CollapsibleTrigger>
-              <CollapsibleContent className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv.; space-y-3 sem token DS */ "pt-2 space-y-3")}>
+              <CollapsibleContent className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "pt-2 stack-medium")}>
                 <FormField
                   control={form.control}
                   name="required"
@@ -528,7 +528,7 @@ export default function FieldPropertiesPanel({
                           onCheckedChange={field.onChange}
                         />
                       </FormControl>
-                      <div className={cn(/* design-system-escape: space-y-1 sem token DS; leading-none sem token DS */ "space-y-1 leading-none")}>
+                      <div className={cn(/* design-system-escape: leading-none sem token DS */ "stack-micro leading-none")}>
                         <FormLabel>Campo Obrigatório</FormLabel>
                       </div>
                     </FormItem>
@@ -661,7 +661,7 @@ export default function FieldPropertiesPanel({
                       )}
                     />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv.; space-y-3 sem token DS */ "pt-2 space-y-3")}>
+                  <CollapsibleContent className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "pt-2 stack-medium")}>
                     <FormField
                       control={form.control}
                       name="conditionalField"
@@ -773,7 +773,7 @@ export default function FieldPropertiesPanel({
                   <CollapsibleContent className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "pt-2 stack-tight")}>
                     {options.map((option, index) => (
                       <div key={index} className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-start inline-tight p-2 border rounded-lg")}>
-                        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1 shrink-0")}>
+                        <div className={cn("flex flex-col inline-micro shrink-0")}>
                           <Button
                             type="button"
                             variant="ghost"
@@ -863,7 +863,7 @@ export default function FieldPropertiesPanel({
                       )}
                     />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv.; space-y-3 sem token DS */ "pt-2 space-y-3")}>
+                  <CollapsibleContent className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "pt-2 stack-medium")}>
                     <div className={cn("stack-tight")}>
                       <Label className={cn("text-caption text-muted-foreground")}>Buscar por</Label>
                       <div className={cn("stack-tight")}>

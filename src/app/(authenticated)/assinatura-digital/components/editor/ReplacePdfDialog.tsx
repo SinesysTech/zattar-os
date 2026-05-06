@@ -204,7 +204,7 @@ export default function ReplacePdfDialog({
           <DialogDescription className="sr-only">Faça upload de um novo arquivo PDF para substituir o atual.</DialogDescription>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
+          <div className={cn("flex flex-col inline-medium")}>
             <p className={cn("text-body-sm text-muted-foreground")}>
               Faça upload de um novo arquivo PDF. O arquivo atual será substituído permanentemente.
             </p>
@@ -232,7 +232,7 @@ export default function ReplacePdfDialog({
               <>
                 {/* Indicador de arquivo selecionado */}
                 <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "border rounded-lg p-3 bg-card")}>
-                  <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
+                  <div className={cn("flex items-center justify-between inline-medium")}>
                     <div className={cn("flex items-center inline-tight min-w-0 flex-1")}>
                       <div className={`shrink-0 p-1.5 rounded-full ${
                         uploadedFile.isValid

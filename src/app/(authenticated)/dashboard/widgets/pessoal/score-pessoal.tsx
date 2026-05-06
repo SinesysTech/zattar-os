@@ -58,7 +58,7 @@ export function WidgetScorePessoal() {
         depth={2}
       >
         <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5 flex-wrap")}>
-          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+          <div className={cn("flex flex-col inline-nano")}>
             <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Lembretes pendentes
             </span>
@@ -124,7 +124,7 @@ export function WidgetScorePessoal() {
 
         {/* Stats em linha */}
         <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5 flex-1 min-w-0 flex-wrap")}>
-          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+          <div className={cn("flex flex-col inline-nano")}>
             <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Baixas hoje
             </span>
@@ -134,7 +134,7 @@ export function WidgetScorePessoal() {
             <span className="text-[9px] text-muted-foreground/55">concluídas</span>
           </div>
 
-          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+          <div className={cn("flex flex-col inline-nano")}>
             <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Lembretes
             </span>
@@ -144,7 +144,7 @@ export function WidgetScorePessoal() {
             <span className="text-[9px] text-muted-foreground/55">pendentes</span>
           </div>
 
-          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+          <div className={cn("flex flex-col inline-nano")}>
             <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Audiências
             </span>
@@ -154,7 +154,7 @@ export function WidgetScorePessoal() {
             <span className="text-[9px] text-muted-foreground/55">hoje</span>
           </div>
 
-          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+          <div className={cn("flex flex-col inline-nano")}>
             <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Documentos
             </span>

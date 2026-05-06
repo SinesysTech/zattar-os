@@ -356,7 +356,7 @@ export function ProjectForm({
               />
             </div>
 
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex justify-end gap-3")}>
+            <div className={cn("flex justify-end inline-medium")}>
               <Button
                 type="button"
                 variant="outline"

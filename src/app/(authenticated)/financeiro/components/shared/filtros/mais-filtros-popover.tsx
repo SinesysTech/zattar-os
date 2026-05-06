@@ -128,7 +128,7 @@ export function MaisFiltrosPopover({
           </div>
 
           {/* Tipo (Recorrente/Avulsa) */}
-          <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+          <div className={cn("stack-snug")}>
             <Label className={cn("text-caption text-muted-foreground")}>Tipo</Label>
             <Select
               value={tipoRecorrente || 'all'}
@@ -149,7 +149,7 @@ export function MaisFiltrosPopover({
           </div>
 
           {/* Forma de Pagamento */}
-          <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+          <div className={cn("stack-snug")}>
             <Label className={cn("text-caption text-muted-foreground")}>Forma de Pagamento</Label>
             <Select
               value={formaPagamento || 'all'}
@@ -170,7 +170,7 @@ export function MaisFiltrosPopover({
           </div>
 
           {/* Conta Contábil */}
-          <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+          <div className={cn("stack-snug")}>
             <Label className={cn("text-caption text-muted-foreground")}>Conta Contábil</Label>
             <FiltroContaContabil
               value={contaContabilId}
@@ -182,7 +182,7 @@ export function MaisFiltrosPopover({
           </div>
 
           {/* Centro de Custo */}
-          <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+          <div className={cn("stack-snug")}>
             <Label className={cn("text-caption text-muted-foreground")}>Centro de Custo</Label>
             <FiltroCentroCusto
               value={centroCustoId}

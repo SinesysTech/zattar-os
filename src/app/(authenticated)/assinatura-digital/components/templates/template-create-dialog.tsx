@@ -271,7 +271,7 @@ export function TemplateCreateDialog({
               {step === 2 && (
                 <>
                   {tipoTemplate === 'markdown' && (
-                    <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+                    <div className={cn("stack-snug")}>
                       <Label htmlFor="conteudo_markdown">
                         Conteúdo Markdown <span className="text-destructive">*</span>
                       </Label>

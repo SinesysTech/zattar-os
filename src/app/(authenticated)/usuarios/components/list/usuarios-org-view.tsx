@@ -145,7 +145,7 @@ export function UsuariosOrgView({ usuarios, onView }: UsuariosOrgViewProps) {
   return (
     <GlassPanel depth={1} className={cn("inset-dialog overflow-x-auto relative")}>
       {/* Zoom controls */}
-      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "absolute top-4 right-4 flex items-center gap-1 z-10")}>
+      <div className={cn("absolute top-4 right-4 flex items-center inline-micro z-10")}>
         <Button
           variant="ghost"
           size="icon"

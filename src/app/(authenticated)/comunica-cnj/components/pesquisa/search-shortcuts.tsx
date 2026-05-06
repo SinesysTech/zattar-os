@@ -89,7 +89,7 @@ export function SearchShortcuts({ onAfterApply }: SearchShortcutsProps) {
       <Text variant="overline" className="mb-3 block text-center text-muted-foreground/70">
         Atalhos populares
       </Text>
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3 sm:grid-cols-4")}>
+      <div className={cn("grid grid-cols-2 inline-medium sm:grid-cols-4")}>
         {SHORTCUTS.map((s) => {
           const tone = toneStyles[s.tone];
           return (
@@ -109,8 +109,8 @@ export function SearchShortcuts({ onAfterApply }: SearchShortcutsProps) {
                 >
                   <s.icon className="size-4" aria-hidden />
                 </IconContainer>
-                <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "mt-2 flex flex-col gap-0.5")}>
-                  <Heading level="widget" className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 text-body-sm")}>
+                <div className={cn("mt-2 flex flex-col inline-nano")}>
+                  <Heading level="widget" className={cn("flex items-center inline-micro text-body-sm")}>
                     {s.label}
                     <ArrowRight className="size-3 opacity-0 transition-opacity group-hover:opacity-60" aria-hidden />
                   </Heading>

@@ -65,9 +65,9 @@ export function CalendarioPrazos() {
         />
       </div>
 
-      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "mt-3 flex items-center gap-1.5 justify-end")}>
+      <div className={cn("mt-3 flex items-center inline-snug justify-end")}>
         <span className="text-[8px] text-muted-foreground/50">Menos</span>
-        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex gap-0.5")}>
+        <div className={cn("flex inline-nano")}>
           <div className="size-3 rounded-[2px] bg-border/10" />
           <div className="size-3 rounded-[2px] bg-destructive/15" />
           <div className="size-3 rounded-[2px] bg-destructive/30" />

@@ -54,7 +54,7 @@ export function CancelarLinkButton({
         <Button
           size="sm"
           variant="outline"
-          className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "rounded-xl gap-1.5")}
+          className={cn("rounded-xl inline-snug")}
           disabled={loading}
         >
           <Ban className="size-3.5" />

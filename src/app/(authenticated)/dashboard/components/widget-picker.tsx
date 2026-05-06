@@ -102,7 +102,7 @@ export function WidgetPicker({
             variant="ghost"
             size="sm"
             onClick={onResetDefaults}
-            className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv. */ "gap-1.5 text-caption text-muted-foreground/60 hover:text-foreground h-7 px-2")}
+            className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "inline-snug text-caption text-muted-foreground/60 hover:text-foreground h-7 px-2")}
             aria-label="Restaurar configuração padrão"
           >
             <RotateCcw className="size-3" />

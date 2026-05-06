@@ -100,7 +100,7 @@ export function TimelineSidebarItem({
       <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "grid grid-cols-[48px_1fr] w-full px-2 py-3")}>
 
         {/* Coluna esquerda: linha superior + ícone + linha inferior */}
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col items-center gap-1")}>
+        <div className={cn("flex flex-col items-center inline-micro")}>
           {/* Linha conectora superior (transparente no primeiro item — topo da cadeia temporal) */}
           <div
             className={cn('w-px h-2', isFirst ? 'bg-transparent' : 'bg-border')}

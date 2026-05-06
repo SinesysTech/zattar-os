@@ -164,7 +164,7 @@ export function MissionCard({
 
       <div className={cn(/* design-system-escape: sm:p-5 sem equivalente DS */ "relative inset-card-compact sm:p-5")}>
         {/* Header: Status + Countdown */}
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3 mb-4")}>
+        <div className={cn("flex items-start justify-between inline-medium mb-4")}>
           <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
             <IconContainer size="md" className="bg-primary/10">
               <Gavel className="size-4 text-primary" />
@@ -184,8 +184,8 @@ export function MissionCard({
 
           {/* Countdown */}
           {!isPast && diff > 0 && (
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ 'inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg', urgency.bg)}>
-              <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center gap-0.5 tabular-nums")}>
+            <div className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ 'inline-flex items-center inline-micro px-2.5 py-1.5 rounded-lg', urgency.bg)}>
+              <div className={cn("flex items-center inline-nano tabular-nums")}>
                 {hours > 0 && (
                   <>
                     <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ 'text-body-sm font-bold', urgency.text)}>{pad(hours)}</span>
@@ -201,16 +201,16 @@ export function MissionCard({
         </div>
 
         {/* Info grid */}
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4")}>
-          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+        <div className={cn("grid grid-cols-2 sm:grid-cols-4 inline-medium mb-4")}>
+          <div className={cn("flex flex-col inline-nano")}>
             <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Horário</span>
             <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium tabular-nums")}>
               {format(dataInicio, 'HH:mm', { locale: ptBR })} – {format(dataFim, 'HH:mm', { locale: ptBR })}
             </span>
           </div>
-          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+          <div className={cn("flex flex-col inline-nano")}>
             <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Tribunal</span>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+            <div className={cn("flex items-center inline-snug")}>
               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{audiencia.trt || '–'}</span>
               {audiencia.grau && (
                 <span className="text-micro-caption text-muted-foreground/60">
@@ -219,15 +219,15 @@ export function MissionCard({
               )}
             </div>
           </div>
-          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+          <div className={cn("flex flex-col inline-nano")}>
             <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Processo</span>
             <span className="text-mono-num text-foreground/70 truncate">
               {audiencia.numeroProcesso}
             </span>
           </div>
-          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+          <div className={cn("flex flex-col inline-nano")}>
             <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Modalidade</span>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+            <div className={cn("flex items-center inline-snug")}>
               <ModalIcon className="size-3 text-muted-foreground/60" />
               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{modalidadeLabel || '–'}</span>
             </div>
@@ -262,7 +262,7 @@ export function MissionCard({
         {/* Bottom: Prep Score + Actions */}
         <div className={cn("flex items-end justify-between inline-default")}>
           {/* Prep Score */}
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+          <div className={cn("flex items-center inline-medium")}>
             <div className="relative shrink-0" style={{ width: ringSize, height: ringSize }}>
               <svg width={ringSize} height={ringSize} className="-rotate-90">
                 <circle cx={ringSize / 2} cy={ringSize / 2} r={radius} fill="none" stroke="currentColor" strokeWidth={strokeWidth} className="text-border/15" />
@@ -280,9 +280,9 @@ export function MissionCard({
                 <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ 'font-bold tabular-nums text-caption', prepStatus)}>{prepScore}%</span>
               </div>
             </div>
-            <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
+            <div className={cn("stack-nano")}>
               {prepItems.slice(0, 3).map((item) => (
-                <div key={item.label} className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+                <div key={item.label} className={cn("flex items-center inline-snug")}>
                   {item.done ? (
                     <CheckCircle2 className="size-2.5 text-success/60 shrink-0" />
                   ) : (
@@ -303,13 +303,13 @@ export function MissionCard({
           </div>
 
           {/* Quick Actions */}
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+          <div className={cn("flex items-center inline-micro")}>
             {actions.map((action) => (
               <button
                 key={action.label}
                 onClick={action.onClick}
                 className={cn(
-                  /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-micro-caption font-medium transition-all cursor-pointer group',
+                  /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center inline-snug px-2.5 py-1.5 rounded-lg text-micro-caption font-medium transition-all cursor-pointer group',
                   action.primary
                     ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm'
                     : 'text-muted-foreground/70 hover:text-foreground/70 hover:bg-foreground/4',

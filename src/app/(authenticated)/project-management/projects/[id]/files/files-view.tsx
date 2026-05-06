@@ -113,7 +113,7 @@ export function FilesView({
   return (
     <div className={cn("stack-default")}>
       <div className="flex items-center justify-between">
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+        <div className={cn("flex items-center inline-medium")}>
           <Button variant="ghost" size="icon" aria-label="Voltar" asChild>
             <Link href={`/app/project-management/projects/${projeto.id}`}>
               <ArrowLeft className="size-4" />
@@ -167,7 +167,7 @@ export function FilesView({
                   key={anexo.id}
                   className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-center justify-between px-4 py-3")}
                 >
-                  <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 min-w-0")}>
+                  <div className={cn("flex items-center inline-medium min-w-0")}>
                     <FileIcon className="size-5 text-muted-foreground shrink-0" />
                     <div className="min-w-0">
                       <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium truncate")}>
@@ -182,7 +182,7 @@ export function FilesView({
                     </div>
                   </div>
 
-                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+                  <div className={cn("flex items-center inline-micro")}>
                     <Button variant="ghost" size="icon" aria-label="Baixar" asChild>
                       <a
                         href={anexo.url}

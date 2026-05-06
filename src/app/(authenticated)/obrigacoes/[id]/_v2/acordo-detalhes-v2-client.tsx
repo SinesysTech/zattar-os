@@ -142,7 +142,7 @@ export function AcordoDetalhesV2Client({
     <div className={cn("flex flex-col inline-default h-full")}>
       {/* ==================== HEADER ==================== */}
       <div className={cn("flex items-start justify-between inline-default flex-wrap")}>
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3 min-w-0 flex-1")}>
+        <div className={cn("flex items-start inline-medium min-w-0 flex-1")}>
           <Button
             variant="ghost"
             size="icon"
@@ -168,7 +168,7 @@ export function AcordoDetalhesV2Client({
               </SemanticBadge>
               <span
                 className={cn(
-                  /* design-system-escape: gap-0.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-[10px] font-semibold border',
+                  /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center inline-nano rounded-full px-2 py-0.5 text-[10px] font-semibold border',
                   isRecebimento
                     ? 'bg-success/10 text-success border-success/25'
                     : 'bg-destructive/10 text-destructive border-destructive/25',
@@ -497,7 +497,7 @@ function RepassesTab({
 
         return (
           <GlassPanel key={parcela.id} depth={1} className={cn("inset-card-compact")}>
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3 flex-wrap")}>
+            <div className={cn("flex items-center justify-between inline-medium flex-wrap")}>
               <div className="min-w-0">
                 <div className={cn("flex items-center inline-tight")}>
                   <Text

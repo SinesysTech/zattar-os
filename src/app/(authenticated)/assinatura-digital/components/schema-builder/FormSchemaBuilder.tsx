@@ -517,7 +517,7 @@ export function FormSchemaBuilder({
         </div>
 
         <TooltipProvider delayDuration={0}>
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+          <div className={cn("flex items-center inline-micro")}>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button

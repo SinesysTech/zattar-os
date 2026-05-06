@@ -216,7 +216,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
                 Endereço
               </small>
 
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 md:grid-cols-7 gap-3")}>
+              <div className={cn("grid grid-cols-2 md:grid-cols-7 inline-medium")}>
                 {usuario.endereco.cep && (
                   <div>
                     <p className="text-sm text-muted-foreground font-medium mb-1">

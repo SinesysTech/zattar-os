@@ -94,7 +94,7 @@ export function TimelineError({ error, onRetry, message }: TimelineErrorProps) {
         </Alert>
 
         {/* Ações */}
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex gap-3 mt-6")}>
+        <div className={cn("flex inline-medium mt-6")}>
           {canRetry && (
             <Button onClick={onRetry} className={cn("inline-tight")}>
               <RotateCw className="h-4 w-4" />

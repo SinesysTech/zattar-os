@@ -32,7 +32,7 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare: _onS
     <div
       className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "relative z-10 flex items-center justify-between px-5 py-3 border-b border-border/40 dark:border-white/6 backdrop-blur-[20px] bg-white/85 dark:bg-[rgba(22,18,34,0.8)]")}
     >
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex gap-3 items-center")}>
+      <div className={cn("flex inline-medium items-center")}>
         <Button
           size="icon"
           variant="ghost"
@@ -44,7 +44,7 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare: _onS
         <button
           type="button"
           onClick={() => toggleProfileSheet(!showProfileSheet)}
-          className={cn(/* design-system-escape: gap-3 gap sem token DS; px-1 padding direcional sem Inset equiv.; -mx-1 sem equivalente DS */ "flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity duration-150 rounded-lg px-1 -mx-1")}
+          className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; -mx-1 sem equivalente DS */ "flex items-center inline-medium cursor-pointer hover:opacity-80 transition-opacity duration-150 rounded-lg px-1 -mx-1")}
           aria-label="Ver perfil"
         >
           <Avatar className="size-8 rounded-full overflow-visible shrink-0">
@@ -54,7 +54,7 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare: _onS
             </AvatarFallback>
             {!isGroup && <AvatarIndicator variant={onlineStatus} />}
           </Avatar>
-          <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+          <div className={cn("flex flex-col inline-nano")}>
             <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[0.8125rem] font-semibold text-foreground leading-[1.2]")}>{name}</span>
             {!isGroup && (
               onlineStatus === "online" ? (
@@ -75,7 +75,7 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare: _onS
           </div>
         </button>
       </div>
-      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1 items-center")}>
+      <div className={cn("flex inline-micro items-center")}>
         <div className={cn(/* design-system-escape: lg:gap-1 sem equivalente DS */ "hidden lg:flex lg:gap-1")}>
           <TooltipProvider>
             <Tooltip>

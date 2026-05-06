@@ -129,7 +129,7 @@ export default function FieldPalette() {
       </div>
 
       <ScrollArea className="flex-1">
-        <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pb-3 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv.; space-y-0.5 sem token DS */ "px-3 pb-3 pt-2 space-y-0.5")}>
+        <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pb-3 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv. */ "px-3 pb-3 pt-2 stack-nano")}>
           {filteredCategories.length === 0 ? (
             <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "text-center py-8 text-muted-foreground")}>
               <Search className="size-6 mx-auto mb-2 opacity-50" />
@@ -156,7 +156,7 @@ export default function FieldPalette() {
                       )}
                     />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className={cn(/* design-system-escape: pt-0.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv.; space-y-0.5 sem token DS */ "pt-0.5 pb-1.5 space-y-0.5")}>
+                  <CollapsibleContent className={cn(/* design-system-escape: pt-0.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "pt-0.5 pb-1.5 stack-nano")}>
                     {category.fields.map(field => (
                       <DraggableFieldItem key={`${category.id}-${field.fieldName}`} field={field} />
                     ))}

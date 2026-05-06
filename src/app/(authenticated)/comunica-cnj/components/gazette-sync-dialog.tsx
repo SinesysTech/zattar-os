@@ -67,7 +67,7 @@ function buildTimelineItems(logs: SyncLogEntry[]): TimelineItem[] {
           : 'Em andamento';
 
     const badge = (
-      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+      <div className={cn("flex items-center inline-micro")}>
         <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "text-[9px] px-1.5 py-0.5 rounded bg-muted/40 text-muted-foreground border border-border/50 font-medium")}>
           {tipoLabel}
         </span>
@@ -105,9 +105,9 @@ function SyncResultGrid({ result }: { result: MockSyncResult }) {
   ] as const;
 
   return (
-    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; p-3 → usar <Inset> */ "grid grid-cols-5 gap-1.5 rounded-lg bg-muted/20 border border-border/30 p-3")}>
+    <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "grid grid-cols-5 inline-snug rounded-lg bg-muted/20 border border-border/30 p-3")}>
       {items.map(({ label, value, color }) => (
-        <div key={label} className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-center gap-0.5")}>
+        <div key={label} className={cn("flex flex-col items-center inline-nano")}>
           <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-body font-semibold tabular-nums', color)}>
             {value}
           </span>
@@ -227,7 +227,7 @@ export function GazetteSyncDialog({ trigger }: GazetteSyncDialogProps) {
 
         {/* ── Section: Histórico ── */}
         {section === 'historico' && (
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS; pt-1 padding direcional sem Inset equiv. */ "flex flex-col gap-3 pt-1")}>
+          <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "flex flex-col inline-medium pt-1")}>
             {syncLogs.length === 0 ? (
               <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-body-sm text-muted-foreground py-4 text-center")}>
                 Nenhuma sincronização registrada

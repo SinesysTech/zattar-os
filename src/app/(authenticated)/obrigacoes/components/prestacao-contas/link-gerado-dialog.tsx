@@ -105,7 +105,7 @@ export function LinkGeradoDialog({
               variant="outline"
               onClick={() => handleEnviar('email')}
               disabled={enviando !== null}
-              className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "rounded-xl gap-1.5 justify-start")}
+              className={cn("rounded-xl inline-snug justify-start")}
             >
               <Mail className="size-3.5" />
               {enviando === 'email' ? 'Enviando...' : 'Enviar por e-mail'}
@@ -115,7 +115,7 @@ export function LinkGeradoDialog({
               variant="outline"
               onClick={() => handleEnviar('whatsapp')}
               disabled={enviando !== null}
-              className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "rounded-xl gap-1.5 justify-start")}
+              className={cn("rounded-xl inline-snug justify-start")}
             >
               <MessageCircle className="size-3.5" />
               {enviando === 'whatsapp' ? 'Enviando...' : 'Enviar por WhatsApp'}

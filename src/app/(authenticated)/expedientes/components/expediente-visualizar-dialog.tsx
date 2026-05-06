@@ -109,7 +109,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+    <section className={cn("stack-snug")}>
       <header className={cn("flex items-center inline-tight")}>
         <span className="text-muted-foreground/70">{icon}</span>
         <Text
@@ -137,7 +137,7 @@ function DataRow({
   editable?: boolean;
 }) {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-start justify-between gap-3 px-3 py-2")}>
+    <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-start justify-between inline-medium px-3 py-2")}>
       <Text
         variant="caption"
         as="dt"
@@ -176,7 +176,7 @@ function Separator() {
 
 function MetaGrid({ children }: { children: React.ReactNode }) {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-3 gap-3 rounded-xl border border-border/30 bg-muted/20 inset-card-compact")}>
+    <div className={cn("grid grid-cols-3 inline-medium rounded-xl border border-border/30 bg-muted/20 inset-card-compact")}>
       {children}
     </div>
   );
@@ -190,11 +190,11 @@ function MetaItem({
   children: React.ReactNode;
 }) {
   return (
-    <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1 min-w-0")}>
+    <div className={cn("flex flex-col inline-micro min-w-0")}>
       <Text variant="micro-caption" className={cn(/* design-system-escape: tracking-wider sem token DS */ "uppercase tracking-wider text-muted-foreground/55")}>
         {label}
       </Text>
-      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 text-body-sm")}>{children}</div>
+      <div className={cn("flex items-center inline-snug text-body-sm")}>{children}</div>
     </div>
   );
 }
@@ -207,7 +207,7 @@ function Audit({
   updatedAt: string | null;
 }) {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; pt-3 padding direcional sem Inset equiv. */ "flex items-center justify-between gap-3 pt-3 text-muted-foreground/55")}>
+    <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex items-center justify-between inline-medium pt-3 text-muted-foreground/55")}>
       <Text variant="micro-caption">Criado em {formatarDataHora(createdAt)}</Text>
       <Text variant="micro-caption">Atualizado em {formatarDataHora(updatedAt)}</Text>
     </div>
@@ -260,7 +260,7 @@ export function ExpedienteVisualizarDialog({
             <DialogTitle>Expediente</DialogTitle>
           </DialogHeader>
           <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-6 padding direcional sem Inset equiv.; py-12 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center gap-3 px-6 py-12 text-center")}>
+            <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-12 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center inline-medium px-6 py-12 text-center")}>
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted/40">
                 <AlertTriangle className="h-6 w-6 text-muted-foreground/60" />
               </div>
@@ -280,7 +280,7 @@ export function ExpedienteVisualizarDialog({
   const partes = getExpedientePartyNames(displayExpediente);
 
   const statusBadge = (
-    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+    <div className={cn("flex items-center inline-snug")}>
       <SemanticBadge
         category="status"
         value={displayExpediente.baixadoEm ? 'BAIXADO' : 'PENDENTE'}
@@ -303,14 +303,14 @@ export function ExpedienteVisualizarDialog({
   );
 
   const dialogTitle = (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
+    <div className={cn("flex items-start justify-between inline-medium")}>
       <div className="flex-1 min-w-0">
         <Heading level="card" as="h2" className="truncate">
           {displayExpediente.classeJudicial
             ? `${displayExpediente.classeJudicial} ${displayExpediente.numeroProcesso}`
             : displayExpediente.numeroProcesso}
         </Heading>
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mt-1 flex-wrap text-muted-foreground/65")}>
+        <div className={cn("flex items-center inline-snug mt-1 flex-wrap text-muted-foreground/65")}>
           <Scale className="h-3.5 w-3.5" />
           <Text variant="caption">{displayExpediente.trt}</Text>
           <Text variant="caption">·</Text>

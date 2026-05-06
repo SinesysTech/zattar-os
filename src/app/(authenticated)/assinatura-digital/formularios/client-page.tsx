@@ -268,7 +268,7 @@ export function FormulariosClient() {
       />
 
       {/* Stats Cards */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3 lg:grid-cols-4")}>
+      <div className={cn("grid grid-cols-2 inline-medium lg:grid-cols-4")}>
         {statCards.map(({ label, value, Icon, tint, iconColor }) => (
           <GlassPanel key={label} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
             <div className={cn("flex items-start justify-between inline-tight")}>
@@ -289,7 +289,7 @@ export function FormulariosClient() {
       </div>
 
       {/* Toolbar */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
+      <div className={cn("flex flex-col sm:flex-row items-start sm:items-center inline-medium")}>
         <div className={cn("flex items-center inline-tight flex-wrap")}>
           <FilterChipMulti label="Status" options={ATIVO_OPTIONS} value={ativoFiltro} onValueChange={setAtivoFiltro} />
           <FilterChipMulti label="Segmento" options={segmentoOptions} value={segmentoFiltro} onValueChange={setSegmentoFiltro} popoverWidth="w-56" />

@@ -408,7 +408,7 @@ export default function EventCalendarApp({
           onValueChange={setSourceFilter}
         />
 
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "ml-auto flex items-center gap-1")}>
+        <div className={cn("ml-auto flex items-center inline-micro")}>
           {/* Navigation: [<] Title [>] */}
           <Button
             variant="outline"
@@ -502,7 +502,7 @@ function CalendarViewPopover({
         <TooltipContent>Visualização: {currentOption?.label || "Selecionar"}</TooltipContent>
       </Tooltip>
       <PopoverContent align="end" className={cn(/* design-system-escape: p-1 → usar <Inset> */ "w-44 p-1")}>
-        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+        <div className={cn("flex flex-col inline-nano")}>
           {CALENDAR_VIEW_OPTIONS.map((option) => {
             const Icon = option.icon;
             const isSelected = value === option.value;

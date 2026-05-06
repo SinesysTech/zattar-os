@@ -79,7 +79,7 @@ export function WidgetAging() {
       depth={1}
     >
       <StackedBar segments={segments} height={12} />
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3 mt-4")}>
+      <div className={cn("flex flex-col inline-medium mt-4")}>
         {segments.map((seg) => {
           const pct = total > 0 ? Math.round((seg.value / total) * 100) : 0;
           return (
@@ -88,7 +88,7 @@ export function WidgetAging() {
               <span className="text-[10px] text-muted-foreground/60 flex-1 truncate">
                 {seg.label}
               </span>
-              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+              <div className={cn("flex items-center inline-snug")}>
                 <div className="w-14 h-1.5 rounded-full bg-border/15 overflow-hidden">
                   <div
                     className="h-full rounded-full transition-all duration-500"

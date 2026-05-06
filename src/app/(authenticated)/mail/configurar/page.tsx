@@ -191,7 +191,7 @@ export default function ConfigurarEmailPage() {
 
   return (
     <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "mx-auto max-w-xl stack-loose py-6")}>
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+      <div className={cn("flex items-center inline-medium")}>
         <Button variant="ghost" size="icon" aria-label="Voltar" onClick={() => router.push("/app/mail")}>
           <ArrowLeft className="h-4 w-4" />
         </Button>

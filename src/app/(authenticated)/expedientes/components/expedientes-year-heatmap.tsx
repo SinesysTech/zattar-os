@@ -148,7 +148,7 @@ const MonthGrid = React.memo(function MonthGrid({
           {monthTotal}
         </span>
       </div>
-      <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "grid grid-cols-7 gap-0.5 mb-0.5")}>
+      <div className={cn("grid grid-cols-7 inline-nano mb-0.5")}>
         {WEEKDAY_LABELS.map((d, i) => (
           <span
             key={i}
@@ -158,7 +158,7 @@ const MonthGrid = React.memo(function MonthGrid({
           </span>
         ))}
       </div>
-      <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "grid grid-cols-7 gap-0.5")}>
+      <div className={cn("grid grid-cols-7 inline-nano")}>
         {Array.from({ length: offset }).map((_, i) => (
           <div key={`e${i}`} className="aspect-square" />
         ))}
@@ -235,7 +235,7 @@ function ExpedientesDayDialog({
             {expedientes.map((exp) => (
               <div
                 key={exp.id}
-                className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-1.5 sem token DS */ "rounded-xl border border-border/40 bg-muted/30 p-3 space-y-1.5")}
+                className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-xl border border-border/40 bg-muted/30 p-3 stack-snug")}
               >
                 <div className={cn("flex items-center inline-tight")}>
                   <IconContainer size="sm" className="bg-primary/15">
@@ -434,7 +434,7 @@ export function ExpedientesYearHeatmap({
           {/* Stats Sidebar */}
           <GlassPanel
             depth={2}
-            className={cn(/* design-system-escape: p-5 → usar <Inset>; space-y-3 sem token DS */ "w-full xl:w-64 shrink-0 p-5 space-y-3")}
+            className={cn(/* design-system-escape: p-5 → usar <Inset> */ "w-full xl:w-64 shrink-0 p-5 stack-medium")}
           >
             {/* Total no Ano */}
             <StatCard
@@ -478,9 +478,9 @@ export function ExpedientesYearHeatmap({
               <Text variant="kpi-value" className="text-warning">
                 {stats.pendentes}
               </Text>
-              <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "mt-2 space-y-1")}>
+              <div className={cn("mt-2 stack-micro")}>
                 {stats.vencidos > 0 && (
-                  <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+                  <div className={cn("flex items-center inline-snug")}>
                     <div className="size-1.5 rounded-full bg-destructive" />
                     <span className="text-[10px] text-muted-foreground/60">
                       {stats.vencidos} vencido{stats.vencidos !== 1 ? 's' : ''}
@@ -488,7 +488,7 @@ export function ExpedientesYearHeatmap({
                   </div>
                 )}
                 {stats.hoje > 0 && (
-                  <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+                  <div className={cn("flex items-center inline-snug")}>
                     <div className="size-1.5 rounded-full bg-warning" />
                     <span className="text-[10px] text-muted-foreground/60">
                       {stats.hoje} hoje
@@ -496,7 +496,7 @@ export function ExpedientesYearHeatmap({
                   </div>
                 )}
                 {stats.proximos > 0 && (
-                  <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+                  <div className={cn("flex items-center inline-snug")}>
                     <div className="size-1.5 rounded-full bg-info" />
                     <span className="text-[10px] text-muted-foreground/60">
                       {stats.proximos} proximos 3 dias
@@ -525,7 +525,7 @@ export function ExpedientesYearHeatmap({
                 <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/65")}>
                   Ranking por Volume
                 </span>
-                <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "mt-2 space-y-1.5")}>
+                <div className={cn("mt-2 stack-snug")}>
                   {topMonths.map((m, i) => (
                     <div key={m.idx} className={cn("flex items-center inline-tight")}>
                       <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[9px] font-bold text-muted-foreground/65 w-3 text-right")}>
@@ -569,7 +569,7 @@ export function ExpedientesYearHeatmap({
             </div>
 
             {/* Legend */}
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 justify-end mt-4")}>
+            <div className={cn("flex items-center inline-micro justify-end mt-4")}>
               <span className="text-[9px] text-muted-foreground/65 mr-1">
                 Menos
               </span>

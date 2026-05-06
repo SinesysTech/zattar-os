@@ -104,7 +104,7 @@ export function TipoCapturaSelect({
           const TipoIcon = tipo.icon;
           return (
             <SelectItem key={tipo.value} value={tipo.value}>
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+              <div className={cn("flex items-center inline-medium")}>
                 <TipoIcon className="h-4 w-4" />
                 <div className="flex flex-col">
                   <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{tipo.label}</span>

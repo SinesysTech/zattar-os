@@ -94,8 +94,8 @@ export function StatusMensal() {
           {statusMensal.map((item) => {
             const maxCanc = Math.max(...statusMensal.map((s) => s.canceladas), 1);
             return (
-              <div key={`canc-${item.mes}`} className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex-1 flex flex-col items-center gap-0.5")}>
-                <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex gap-0.5 items-end w-full")} style={{ height: 16 }}>
+              <div key={`canc-${item.mes}`} className={cn("flex-1 flex flex-col items-center inline-nano")}>
+                <div className={cn("flex inline-nano items-end w-full")} style={{ height: 16 }}>
                   <div
                     className="flex-1 rounded-t-sm bg-destructive/50 transition-all duration-500"
                     style={{ height: `${(item.canceladas / maxCanc) * 100}%` }}
@@ -109,7 +109,7 @@ export function StatusMensal() {
         {/* Legend */}
         <div className={cn("flex items-center inline-default justify-center")}>
           {LEGEND_ITEMS.map((item) => (
-            <div key={item.label} className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+            <div key={item.label} className={cn("flex items-center inline-snug")}>
               <div className={`size-2 rounded-sm ${item.color}`} />
               <span className="text-[9px] text-muted-foreground/60">
                 {item.label}

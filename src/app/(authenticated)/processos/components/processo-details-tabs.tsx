@@ -180,8 +180,8 @@ function AudienciasTable({ audiencias }: { audiencias: Audiencia[] }) {
           key={aud.id}
           className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "rounded-lg border px-3 py-2.5 transition-colors hover:bg-muted/40")}
         >
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
-            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "min-w-0 space-y-1")}>
+          <div className={cn("flex items-start justify-between inline-medium")}>
+            <div className={cn("min-w-0 stack-micro")}>
               <div className={cn("flex items-center inline-tight flex-wrap")}>
                 <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground")}>
                   {aud.tipoDescricao || 'Audiência'}
@@ -198,7 +198,7 @@ function AudienciasTable({ audiencias }: { audiencias: Audiencia[] }) {
               </Text>
             </div>
 
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 shrink-0")}>
+            <div className={cn("flex items-center inline-snug shrink-0")}>
               <StatusAudienciaBadge status={aud.status} />
               {aud.urlAudienciaVirtual && (
                 <TooltipProvider>
@@ -288,7 +288,7 @@ function ExpedientesTable({
             key={exp.id}
             className={`rounded-lg border p-3 transition-colors hover:bg-muted/50 ${vencido ? 'border-destructive/30 bg-destructive/5' : ''}`}
           >
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
+            <div className={cn("flex items-start justify-between inline-medium")}>
               <div className={cn("min-w-0 flex-1 stack-tight")}>
                 <div className={cn("flex items-center inline-tight flex-wrap")}>
                   <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground")}>{tipoLabel}</p>
@@ -306,7 +306,7 @@ function ExpedientesTable({
                   ) : null}
                 </Text>
 
-                <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 flex-wrap")}>
+                <div className={cn("flex items-center inline-medium flex-wrap")}>
                   <div className={cn("flex items-center inline-tight")}>
                     <Text variant="meta-label">
                       Responsável
@@ -393,8 +393,8 @@ function PericiasTable({ pericias }: { pericias: Pericia[] }) {
           key={per.id}
           className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "rounded-lg border px-3 py-2.5 transition-colors hover:bg-muted/40")}
         >
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
-            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "min-w-0 space-y-1")}>
+          <div className={cn("flex items-start justify-between inline-medium")}>
+            <div className={cn("min-w-0 stack-micro")}>
               <div className={cn("flex items-center inline-tight flex-wrap")}>
                 <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground")}>
                   {per.especialidade?.descricao || 'Perícia'}
@@ -407,7 +407,7 @@ function PericiasTable({ pericias }: { pericias: Pericia[] }) {
               </Text>
             </div>
 
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 shrink-0")}>
+            <div className={cn("flex items-center inline-snug shrink-0")}>
               {per.laudoJuntado ? (
                 <SemanticBadge category="status" value="juntado" variantOverride="success" toneOverride="soft" className={cn("text-caption")}>
                   Laudo Juntado
@@ -522,10 +522,10 @@ export function ProcessoDetailsTabs({
   }
 
   const loadingContent = (
-    <div className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-3 sem token DS */ "rounded-xl border bg-background/70 p-3 space-y-3")}>
+    <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-xl border bg-background/70 p-3 stack-medium")}>
       {[...Array(4)].map((_, index) => (
         <div key={index} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg border p-3 stack-tight")}>
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
+          <div className={cn("flex items-center justify-between inline-medium")}>
             <Skeleton className="h-4 w-32" />
             <Skeleton className="h-6 w-28" />
           </div>
@@ -539,18 +539,18 @@ export function ProcessoDetailsTabs({
   );
 
   return (
-    <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-background/70 px-3 py-2.5")}>
+    <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className={cn("stack-medium")}>
+      <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex flex-wrap items-center justify-between inline-medium rounded-xl border bg-background/70 px-3 py-2.5")}>
         <div className={cn("flex flex-wrap items-center inline-tight text-body-sm text-muted-foreground")}>
-          <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1.5 rounded-full border bg-muted/20 px-2.5 py-1 text-caption font-medium text-foreground")}>
+          <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-snug rounded-full border bg-muted/20 px-2.5 py-1 text-caption font-medium text-foreground")}>
             <FileText className="h-3.5 w-3.5" />
             Expedientes {isLoading ? '...' : totalExpedientes}
           </span>
-          <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1.5 rounded-full border bg-muted/20 px-2.5 py-1 text-caption font-medium text-foreground")}>
+          <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-snug rounded-full border bg-muted/20 px-2.5 py-1 text-caption font-medium text-foreground")}>
             <Calendar className="h-3.5 w-3.5" />
             Audiências {isLoading ? '...' : totalAudiencias}
           </span>
-          <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1.5 rounded-full border bg-muted/20 px-2.5 py-1 text-caption font-medium text-foreground")}>
+          <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-snug rounded-full border bg-muted/20 px-2.5 py-1 text-caption font-medium text-foreground")}>
             <Microscope className="h-3.5 w-3.5" />
             Perícias {isLoading ? '...' : totalPericias}
           </span>
@@ -565,7 +565,7 @@ export function ProcessoDetailsTabs({
       <CollapsibleContent>
         <Tabs defaultValue="expedientes">
           <TabsList variant="line" className="w-full justify-start">
-            <TabsTrigger value="expedientes" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5 text-body-sm")}>
+            <TabsTrigger value="expedientes" className={cn("inline-snug text-body-sm")}>
               <FileText className="h-3.5 w-3.5" />
               Expedientes
               {!isLoading && totalExpedientes > 0 && (
@@ -574,7 +574,7 @@ export function ProcessoDetailsTabs({
                 </SemanticBadge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="audiencias" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5 text-body-sm")}>
+            <TabsTrigger value="audiencias" className={cn("inline-snug text-body-sm")}>
               <Calendar className="h-3.5 w-3.5" />
               Audiências
               {!isLoading && totalAudiencias > 0 && (
@@ -583,7 +583,7 @@ export function ProcessoDetailsTabs({
                 </SemanticBadge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="pericias" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5 text-body-sm")}>
+            <TabsTrigger value="pericias" className={cn("inline-snug text-body-sm")}>
               <Microscope className="h-3.5 w-3.5" />
               Perícias
               {!isLoading && totalPericias > 0 && (

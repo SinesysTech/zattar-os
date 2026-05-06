@@ -41,7 +41,7 @@ export default function DesignSystemPage() {
         aria-label="Navegação do design system"
         className={cn(/* design-system-escape: -mx-1 sem equivalente DS; px-1 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "sticky top-0 z-20 -mx-1 overflow-x-auto rounded-xl border border-border/20 bg-background/80 px-1 py-2 backdrop-blur")}
       >
-        <ul className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex gap-1.5")}>
+        <ul className={cn("flex inline-snug")}>
           {SECTIONS.map((s) => (
             <li key={s.id}>
               <a

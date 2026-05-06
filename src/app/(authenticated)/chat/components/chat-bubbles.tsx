@@ -150,7 +150,7 @@ function FileChatBubble({
       {/* File bubble container */}
       <div
         className={cn(
-          /* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset>; pr-4 padding direcional sem Inset equiv. */ "flex items-center gap-3 p-3 pr-4 min-w-60",
+          /* design-system-escape: p-3 → usar <Inset>; pr-4 padding direcional sem Inset equiv. */ "flex items-center inline-medium p-3 pr-4 min-w-60",
           bubbleCornerClass(isOwn, isFirstInGroup),
           // Received
           !isOwn && "bg-foreground/3 border border-foreground/6",
@@ -306,7 +306,7 @@ function AudioChatBubble({
         </button>
 
         {/* Waveform bars */}
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex-1 h-6 flex items-center gap-1")} aria-hidden="true">
+        <div className={cn("flex-1 h-6 flex items-center inline-micro")} aria-hidden="true">
           {barHeights.map((height, i) => (
             <div
               key={i}

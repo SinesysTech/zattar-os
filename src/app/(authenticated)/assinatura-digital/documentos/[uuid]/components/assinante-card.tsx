@@ -150,7 +150,7 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
   return (
     <Card className={cn(/* design-system-escape: py-0 padding direcional sem Inset equiv. */ "overflow-hidden rounded-3xl border-border/60 bg-muted/15 py-0 shadow-none hover:shadow-sm")}>
       <CardHeader className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "border-b border-border/60 px-5 py-4")}>
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between")}>
+        <div className={cn("flex flex-col inline-medium sm:flex-row sm:items-start sm:justify-between")}>
           <div className={cn("stack-tight")}>
             <div className={cn("flex flex-wrap items-center inline-tight")}>
               <CardTitle className={cn("text-body")}>
@@ -178,7 +178,7 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
       </CardHeader>
       <CardContent className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "stack-default px-5 py-4")}>
         {/* Dados pessoais */}
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 gap-3 sm:grid-cols-2")}>
+        <div className={cn("grid grid-cols-1 inline-medium sm:grid-cols-2")}>
           {signatario.cpf && (
             <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "rounded-2xl border border-border/50 bg-background/80 px-4 py-3 text-body-sm")}>
               <div className={cn("flex items-center inline-tight text-muted-foreground")}>
@@ -228,11 +228,11 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
           <>
             <Separator />
             <div className={cn("rounded-2xl border border-border/60 bg-background/70 inset-card-compact")}>
-              <Heading level="subsection" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "mb-3 flex items-center gap-1.5 text-body-sm")}>
+              <Heading level="subsection" className={cn("mb-3 flex items-center inline-snug text-body-sm")}>
                 <ImageIcon className="h-3.5 w-3.5" />
                 Evidências Visuais
               </Heading>
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-wrap gap-3")}>
+              <div className={cn("flex flex-wrap inline-medium")}>
                 <ImagePreview
                   originalUrl={signatario.assinaturaUrl}
                   label="Assinatura"
@@ -258,7 +258,7 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
           <>
             <Separator />
             <div className={cn("rounded-2xl border border-border/60 bg-background/70 inset-card-compact")}>
-              <Heading level="subsection" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "mb-3 flex items-center gap-1.5 text-body-sm")}>
+              <Heading level="subsection" className={cn("mb-3 flex items-center inline-snug text-body-sm")}>
                 <Shield className="h-3.5 w-3.5" />
                 Dados de Segurança
               </Heading>

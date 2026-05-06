@@ -458,7 +458,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
         <SectionCard>
           <SectionHeader icon={Landmark} label="Jurisdição e Processo" />
           <div className={cn("stack-default")}>
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3")}>
+            <div className={cn("grid grid-cols-2 inline-medium")}>
               <div>
                 <FieldLabel htmlFor="trt">Tribunal (TRT) *</FieldLabel>
                 <Select value={trt} onValueChange={setTrt}>
@@ -517,8 +517,8 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
         {/* ── Seção 2: Data e Horário ───────────────────────────────────── */}
         <SectionCard>
           <SectionHeader icon={CalendarDays} label="Data e Horário" />
-          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3")}>
+          <div className={cn("stack-medium")}>
+            <div className={cn("grid grid-cols-2 inline-medium")}>
               <div>
                 <FieldLabel htmlFor="dataInicio">Data de Início *</FieldLabel>
                 <DatePicker
@@ -538,7 +538,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
                 />
               </div>
             </div>
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3")}>
+            <div className={cn("grid grid-cols-2 inline-medium")}>
               <div>
                 <FieldLabel htmlFor="dataFim">Data de Fim *</FieldLabel>
                 <DatePicker
@@ -567,7 +567,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
             icon={tipoSelecionado?.is_virtual ? Video : MapPin}
             label="Tipo e Local"
           />
-          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+          <div className={cn("stack-medium")}>
             <div>
               <FieldLabel htmlFor="tipo">Tipo de Audiência</FieldLabel>
               {loadingTipos ? (
@@ -634,12 +634,12 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
                   />
                 </div>
               ) : (
-                <div className={cn(/* design-system-escape: space-y-3 sem token DS; pt-1 padding direcional sem Inset equiv. */ "space-y-3 pt-1")}>
+                <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "stack-medium pt-1")}>
                   <Text variant="overline" as="p" className="text-muted-foreground">
                     Endereço Presencial
                   </Text>
 
-                  <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-3 gap-3")}>
+                  <div className={cn("grid grid-cols-1 sm:grid-cols-3 inline-medium")}>
                     <div className="sm:col-span-2">
                       <FieldLabel htmlFor="logradouro">Logradouro</FieldLabel>
                       <Input
@@ -660,7 +660,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
                     </div>
                   </div>
 
-                  <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3")}>
+                  <div className={cn("grid grid-cols-2 inline-medium")}>
                     <div>
                       <FieldLabel htmlFor="complemento">Complemento</FieldLabel>
                       <Input
@@ -680,7 +680,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
                     </div>
                   </div>
 
-                  <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-3 gap-3")}>
+                  <div className={cn("grid grid-cols-1 sm:grid-cols-3 inline-medium")}>
                     <div className="sm:col-span-2">
                       <FieldLabel htmlFor="cidade">Cidade</FieldLabel>
                       <Input

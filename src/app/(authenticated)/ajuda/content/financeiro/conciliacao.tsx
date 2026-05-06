@@ -22,7 +22,7 @@ import {
 
 export default function Conciliacao() {
   return (
-    <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
+    <div className={cn("stack-extra-loose")}>
       <div>
         <Heading level="page">Conciliação Bancária</Heading>
         <p className="text-muted-foreground mt-2">

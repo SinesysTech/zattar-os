@@ -109,7 +109,7 @@ export function AddMemberDialog({
             </Select>
           </div>
 
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS; pt-2 padding direcional sem Inset equiv. */ "flex justify-end gap-3 pt-2")}>
+          <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex justify-end inline-medium pt-2")}>
             <Button
               type="button"
               variant="outline"

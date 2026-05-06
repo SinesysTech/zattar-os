@@ -327,7 +327,7 @@ export default function TemplateInfoPopover({
 
           <div className={cn("stack-default")}>
             {/* Nome */}
-            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+            <div className={cn("stack-snug")}>
               <Label htmlFor="template-nome" className={cn("text-caption text-muted-foreground")}>
                 Nome do Template *
               </Label>
@@ -341,7 +341,7 @@ export default function TemplateInfoPopover({
             </div>
 
             {/* Descricao */}
-            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+            <div className={cn("stack-snug")}>
               <Label htmlFor="template-descricao" className={cn("text-caption text-muted-foreground")}>
                 Descrição
               </Label>
@@ -358,7 +358,7 @@ export default function TemplateInfoPopover({
             <Separator />
 
             {/* Conteudo Markdown */}
-            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+            <div className={cn("stack-snug")}>
               <Label htmlFor="template-markdown" className={cn("text-caption text-muted-foreground")}>
                 Conteúdo Markdown (Opcional)
               </Label>
@@ -389,7 +389,7 @@ export default function TemplateInfoPopover({
             <Separator />
 
             {/* Status */}
-            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+            <div className={cn("stack-snug")}>
               <Label htmlFor="template-status" className={cn("text-caption text-muted-foreground")}>
                 Status *
               </Label>
@@ -483,7 +483,7 @@ export default function TemplateInfoPopover({
             {desativacaoCheck.formularios.map((f) => (
               <div
                 key={f.id}
-                className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-start justify-between gap-3 rounded-lg border border-border/40 bg-muted/30 px-3 py-2")}
+                className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-start justify-between inline-medium rounded-lg border border-border/40 bg-muted/30 px-3 py-2")}
               >
                 <div className="min-w-0 flex-1">
                   <div className={cn("flex items-center inline-tight flex-wrap")}>

@@ -42,7 +42,7 @@ const SignerCard = memo(function SignerCard({
   return (
     <div
       className={cn(
-        /* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ 'group relative flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-200',
+        /* design-system-escape: p-3 → usar <Inset> */ 'group relative flex items-center inline-medium p-3 rounded-xl cursor-pointer transition-all duration-200',
         'border backdrop-blur-md',
         isActive
           ? 'glass-kpi border-primary/40 bg-primary/5 shadow-sm'
@@ -92,7 +92,7 @@ const SignerCard = memo(function SignerCard({
       {/* Actions — visíveis on hover (ou sempre no ativo) */}
       <div
         className={cn(
-          /* design-system-escape: gap-0.5 gap sem token DS */ 'flex items-center gap-0.5 transition-opacity',
+          'flex items-center inline-nano transition-opacity',
           isActive
             ? 'opacity-100'
             : 'opacity-0 group-hover:opacity-100 focus-within:opacity-100',

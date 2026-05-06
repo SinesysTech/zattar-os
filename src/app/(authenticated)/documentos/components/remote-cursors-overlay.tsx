@@ -38,7 +38,7 @@ function RemoteCursorIndicator({ cursor }: RemoteCursorIndicatorProps) {
 
   return (
     <div
-      className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "absolute top-2 left-2 flex items-center gap-1 rounded-full px-2 py-1 text-caption font-medium text-white shadow-md animate-pulse")}
+      className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "absolute top-2 left-2 flex items-center inline-micro rounded-full px-2 py-1 text-caption font-medium text-white shadow-md animate-pulse")}
       style={{ backgroundColor: cursor.color }}
     >
       <span className="h-2 w-2 rounded-full bg-white/80" />

@@ -36,7 +36,7 @@ export function MobileProgress({
   className,
 }: MobileProgressProps) {
   return (
-    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ 'flex flex-col gap-1.5 animate-fade-in animate-duration-300', className)}>
+    <div className={cn('flex flex-col inline-snug animate-fade-in animate-duration-300', className)}>
       {/* Label */}
       <div className="flex items-center justify-between">
         <Text variant="caption" className="font-medium">

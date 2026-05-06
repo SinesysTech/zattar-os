@@ -103,7 +103,7 @@ export function GazetteMissionKpiStrip({
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Publicações hoje
             </p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+            <div className={cn("flex items-baseline inline-snug mt-1")}>
               <Text variant="kpi-value">
                 <AnimatedNumber value={stats.publicacoesHoje} />
               </Text>
@@ -148,7 +148,7 @@ export function GazetteMissionKpiStrip({
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Próximo prazo
             </p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+            <div className={cn("flex items-baseline inline-snug mt-1")}>
               <Text variant="kpi-value">
                 {stats.proximoLabel}
               </Text>
@@ -172,7 +172,7 @@ export function GazetteMissionKpiStrip({
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Vinculadas
             </p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+            <div className={cn("flex items-baseline inline-snug mt-1")}>
               <Text variant="kpi-value">
                 <AnimatedNumber value={stats.vinculados} />
               </Text>
@@ -206,7 +206,7 @@ export function GazetteMissionKpiStrip({
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Prazos críticos
             </p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+            <div className={cn("flex items-baseline inline-snug mt-1")}>
               <Text variant="kpi-value">
                 <AnimatedNumber value={stats.prazosCriticos} />
               </Text>

@@ -77,7 +77,7 @@ export function CapturaEscopoBadge({
       <TooltipTrigger asChild>
         <span
           className={cn(
-            /* design-system-escape: gap-1 gap sem token DS */ 'inline-flex items-baseline gap-1 text-caption text-muted-foreground/80 cursor-help',
+            'inline-flex items-baseline inline-micro text-caption text-muted-foreground/80 cursor-help',
             'hover:text-foreground transition-colors',
             className,
           )}
@@ -101,7 +101,7 @@ export function CapturaEscopoBadge({
         </div>
         <ul className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "px-3 py-2 grid grid-cols-2 gap-x-3 gap-y-1 max-h-56 overflow-y-auto")}>
           {detalhes.map((d, idx) => (
-            <li key={`${d.tribunal}-${d.grau}-${idx}`} className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+            <li key={`${d.tribunal}-${d.grau}-${idx}`} className={cn("flex items-center inline-snug")}>
               <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading>; tracking-wide sem token DS */ "inline-flex items-center px-1.5 py-0.5 rounded-lg text-[9px] font-semibold tabular-nums border border-border/15 bg-muted/20 text-muted-foreground tracking-wide")}>
                 {d.tribunal}
               </span>

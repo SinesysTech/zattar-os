@@ -68,7 +68,7 @@ export function EventAttachmentsList({
               )}
             >
               {/* Lado esquerdo: ícone + nome do arquivo */}
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 min-w-0")}>
+              <div className={cn("flex items-center inline-medium min-w-0")}>
                 <FileText className="size-4.5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
                 <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[13px] font-medium truncate")}>
                   {item.backblaze.fileName}
@@ -100,7 +100,7 @@ export function EventAttachmentsList({
               )}
             >
               {/* Lado esquerdo: ícone + label */}
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 min-w-0")}>
+              <div className={cn("flex items-center inline-medium min-w-0")}>
                 <FileText className="size-4.5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
                 <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[13px] font-medium truncate text-foreground")}>
                   Visualizar no Drive

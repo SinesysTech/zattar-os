@@ -66,7 +66,7 @@ function AtaAudienciaButton({ audiencia }: { audiencia: AudienciaComResponsavel 
         <TooltipContent>Ata de Audiência</TooltipContent>
       </Tooltip>
       <PopoverContent className={cn("w-72 inset-card-compact")} align="start">
-        <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+        <div className={cn("stack-medium")}>
           <div className={cn("flex items-center inline-tight")}>
             <FileText className="h-5 w-5 text-success" />
             <Heading level="subsection" className={cn("text-body-sm")}>Ata de Audiência</Heading>
@@ -198,7 +198,7 @@ function ObservacoesCell({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn("w-80 inset-card-compact")} align="start">
-        <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+        <div className={cn("stack-medium")}>
           <div className={cn("flex items-center inline-tight")}>
             <MessageSquareText className="h-4 w-4 text-primary" />
             <Heading level="subsection" className={cn("text-body-sm")}>Observações</Heading>
@@ -333,7 +333,7 @@ function ModalidadeCell({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn("w-80 inset-card-compact")} align="start">
-        <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+        <div className={cn("stack-medium")}>
           {/* Seção Virtual */}
           {isVirtual && (
             <div className={cn("stack-tight")}>
@@ -549,7 +549,7 @@ export function getAudienciasColumns(
             {/* Botão de Ata (aparece apenas se disponível) */}
             {hasAta && <AtaAudienciaButton audiencia={audiencia} />}
 
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col items-start gap-1.5")}>
+            <div className={cn("flex flex-col items-start inline-snug")}>
               <span className={cn("text-body-sm text-muted-foreground whitespace-nowrap")}>
                 {formatarDataHora(audiencia.dataInicio)}
               </span>
@@ -577,9 +577,9 @@ export function getAudienciasColumns(
       cell: ({ row }) => {
         const a = row.original;
         return (
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex flex-col gap-1.5 items-start py-2 max-w-[min(92vw,20rem)] min-w-0")}>
+          <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex flex-col inline-snug items-start py-2 max-w-[min(92vw,20rem)] min-w-0")}>
             {/* Linha 1: Badge Tribunal + Grau */}
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 flex-wrap")}>
+            <div className={cn("flex items-center inline-snug flex-wrap")}>
               <TribunalGrauBadge trt={a.trt} grau={a.grau} />
             </div>
 
@@ -589,7 +589,7 @@ export function getAudienciasColumns(
             </span>
 
             {/* Partes com badges de polo */}
-            <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
+            <div className={cn("flex flex-col inline-nano")}>
               <ParteBadge
                 polo="ATIVO"
                 className={cn("flex whitespace-normal wrap-break-word text-left font-normal text-caption")}
@@ -624,7 +624,7 @@ export function getAudienciasColumns(
         const onSuccessAction = meta?.onSuccessAction;
 
         return (
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex flex-col gap-1.5 py-2 min-w-0")}>
+          <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex flex-col inline-snug py-2 min-w-0")}>
             {/* Modalidade - clicável com popover para link/endereço */}
             {audiencia.modalidade ? (
               <ModalidadeCell audiencia={audiencia} onSuccessAction={onSuccessAction} />

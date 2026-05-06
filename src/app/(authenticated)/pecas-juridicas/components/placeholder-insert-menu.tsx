@@ -145,7 +145,7 @@ export function PlaceholderInsertMenu({
                             key={placeholder.key}
                             value={placeholder.key}
                             onSelect={() => handleSelect(placeholder)}
-                            className={cn(/* design-system-escape: gap-1 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex flex-col items-start gap-1 py-2")}
+                            className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex flex-col items-start inline-micro py-2")}
                           >
                             <div className={cn("flex items-center inline-tight w-full")}>
                               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{placeholder.label}</span>

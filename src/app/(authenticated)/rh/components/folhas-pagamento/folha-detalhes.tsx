@@ -75,7 +75,7 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
 
   return (
     <div className={cn("stack-loose")}>
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between")}>
+      <div className={cn("flex flex-col inline-medium sm:flex-row sm:items-center sm:justify-between")}>
         <div>
           <Heading level="page">
             Folha {MESES_LABELS[folha.mesReferencia]}/{folha.anoReferencia}
@@ -203,7 +203,7 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
             </p>
           </CardHeader>
           <CardContent>
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3")}>
+            <div className={cn("grid inline-medium")}>
               {folha.itens
                 .filter((item) => item.lancamentoFinanceiroId)
                 .map((item) => (
@@ -211,7 +211,7 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
                     key={item.id}
                     className={cn("flex items-center justify-between rounded-lg border bg-card inset-card-compact hover:bg-accent/50 transition-colors")}
                   >
-                    <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+                    <div className={cn("flex flex-col inline-micro")}>
                       <div className={cn("flex items-center inline-tight")}>
                         <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
                           {item.usuario?.nomeExibicao ?? `Usuário ${item.usuarioId}`}

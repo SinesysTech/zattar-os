@@ -131,7 +131,7 @@ function DayCell({
       </div>
 
       {count > 0 && count < 3 && (
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS; pt-1.5 padding direcional sem Inset equiv. */ "flex gap-1 mt-auto pt-1.5 flex-wrap")}>
+        <div className={cn(/* design-system-escape: pt-1.5 padding direcional sem Inset equiv. */ "flex inline-micro mt-auto pt-1.5 flex-wrap")}>
           {expedientesDia.map((exp) => (
             <div
               key={exp.id}
@@ -145,7 +145,7 @@ function DayCell({
       )}
 
       {count >= 3 && (
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS; pt-1.5 padding direcional sem Inset equiv. */ "flex gap-1 mt-auto pt-1.5")}>
+        <div className={cn(/* design-system-escape: pt-1.5 padding direcional sem Inset equiv. */ "flex inline-micro mt-auto pt-1.5")}>
           <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] font-bold text-primary bg-primary/15 rounded-full px-1.5 py-0.5 inline-flex items-center justify-center min-w-4.5")}>
             {count}
           </span>
@@ -297,7 +297,7 @@ export function ExpedientesMonthWrapper({
         {/* Legend */}
         <div className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv. */ "flex items-center inline-default mb-4 px-1 flex-wrap")}>
           {(['critico', 'alto', 'medio', 'baixo'] as UrgencyLevel[]).map((level) => (
-            <div key={level} className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+            <div key={level} className={cn("flex items-center inline-snug")}>
               <div className={cn('w-1.75 h-1.75 rounded-full', URGENCY_DOT[level])} />
               <span className="text-[11px] text-foreground/65">{getUrgencyLabel(level)}</span>
             </div>
@@ -305,7 +305,7 @@ export function ExpedientesMonthWrapper({
         </div>
 
         {/* Weekday Headers */}
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "grid grid-cols-7 gap-1.5 mb-1")}>
+        <div className={cn("grid grid-cols-7 inline-snug mb-1")}>
           {WEEKDAY_HEADERS.map((label, idx) => (
             <div
               key={label}
@@ -320,7 +320,7 @@ export function ExpedientesMonthWrapper({
         </div>
 
         {/* Calendar Grid */}
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "grid grid-cols-7 gap-1.5 flex-1")} style={{ gridAutoRows: '1fr' }}>
+        <div className={cn("grid grid-cols-7 inline-snug flex-1")} style={{ gridAutoRows: '1fr' }}>
           {days.map((day) => {
             const key = format(day, 'yyyy-MM-dd');
             const exps = dayMap.get(key) || [];
@@ -351,7 +351,7 @@ export function ExpedientesMonthWrapper({
                       align="start"
                       sideOffset={6}
                     >
-                      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3 mb-3")}>
+                      <div className={cn("flex items-center justify-between inline-medium mb-3")}>
                         <div>
                           <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-sm font-bold capitalize")}>
                             {format(day, "d 'de' MMMM", { locale: ptBR })}
@@ -396,7 +396,7 @@ export function ExpedientesMonthWrapper({
         </div>
 
         {/* Summary Strip */}
-        <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "mt-5 pt-4 border-t border-border/50 flex items-center justify-between flex-wrap gap-3")}>
+        <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "mt-5 pt-4 border-t border-border/50 flex items-center justify-between flex-wrap inline-medium")}>
           <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5")}>
             <div className="text-center">
               <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-lg font-bold")}>{summary.total}</p>

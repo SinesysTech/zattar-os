@@ -34,7 +34,7 @@ export function WidgetChatAtivo() {
       depth={1}
     >
       {/* Contador de não lidas */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mb-4")}>
+      <div className={cn("flex items-center inline-medium mb-4")}>
         <div className="relative">
           <div className="size-10 rounded-2xl bg-primary/8 border border-primary/15 flex items-center justify-center">
             <MessageCircle className="size-4 text-primary/50" />
@@ -49,7 +49,7 @@ export function WidgetChatAtivo() {
           <p className="text-[10px] text-muted-foreground/50">Não lidas</p>
           <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-lg font-bold tabular-nums")}>{naoLidas}</p>
         </div>
-        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-end gap-0.5")}>
+        <div className={cn("flex flex-col items-end inline-nano")}>
           <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>salas</span>
           <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body font-bold tabular-nums")}>{salasAtivas}</span>
           <span className="text-[9px] text-muted-foreground/55">ativas</span>
@@ -59,7 +59,7 @@ export function WidgetChatAtivo() {
       {/* Preview da última mensagem */}
       {ultimaMsg ? (
         <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "px-3 py-2.5 rounded-xl bg-foreground/3 border border-border/10")}>
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mb-1")}>
+          <div className={cn("flex items-center inline-snug mb-1")}>
             <div className="size-1.5 rounded-full bg-success/60" />
             <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold text-foreground/70")}>{ultimaMsg.autor}</span>
             <span className="text-[9px] text-muted-foreground/55 ml-auto tabular-nums">{tempoRelativo}</span>

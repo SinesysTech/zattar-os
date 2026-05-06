@@ -209,7 +209,7 @@ export function PericiasCalendarMonth({
                     </div>
 
                     {hasPs && (
-                      <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+                      <div className={cn("stack-micro")}>
                         {ps.slice(0, 3).map((p) => (
                           <div
                             key={p.id}

@@ -117,7 +117,7 @@ export function AgendaEventDetail({
                     </DialogTitle>
                     {event.status && (
                       <span className={cn(
-                        /* design-system-escape: gap-1 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-caption font-medium",
+                        /* design-system-escape: gap-1 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-micro px-2.5 py-0.5 rounded-full text-caption font-medium",
                         statusClasses(event.status),
                       )}>
                         <CircleDot className="size-3" />
@@ -125,7 +125,7 @@ export function AgendaEventDetail({
                       </span>
                     )}
                   </div>
-                  <p className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "text-[13px] text-muted-foreground/60 flex items-center gap-1.5")}>
+                  <p className={cn("text-[13px] text-muted-foreground/60 flex items-center inline-snug")}>
                     <Calendar className="size-3.5" />
                     {dateStr}
                   </p>
@@ -145,7 +145,7 @@ export function AgendaEventDetail({
               {/* Horário */}
               <div className="flex-1">
 <Text variant="overline" as="span" className="text-muted-foreground/40">Horário</Text>
-                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; font-medium → className de <Text>/<Heading> */ "flex items-center gap-1.5 mt-1 text-[13.5px] font-medium text-foreground")}>
+                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "flex items-center inline-snug mt-1 text-[13.5px] font-medium text-foreground")}>
                   <Clock className="size-3.5 text-muted-foreground/40" />
                   {fmtTime(event.start)} – {fmtTime(event.end)}
                 </div>
@@ -156,7 +156,7 @@ export function AgendaEventDetail({
 <Text variant="overline" as="span" className="text-muted-foreground/40">Modalidade</Text>
                 <div className="mt-1">
                   {event.modalidade ? (
-                    <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11.5px] font-medium bg-primary/10 text-primary")}>
+                    <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-micro px-2 py-0.5 rounded-md text-[11.5px] font-medium bg-primary/10 text-primary")}>
                       {event.modalidade === "virtual" ? <Video className="size-3" /> : <MapPin className="size-3" />}
                       {event.modalidade === "virtual" ? "Virtual" : event.modalidade === "presencial" ? "Presencial" : "Híbrida"}
                     </span>
@@ -169,7 +169,7 @@ export function AgendaEventDetail({
               {/* Tribunal */}
               <div className="flex-1">
 <Text variant="overline" as="span" className="text-muted-foreground/40">Tribunal</Text>
-                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; font-medium → className de <Text>/<Heading> */ "flex items-center gap-1.5 mt-1 text-[13.5px] font-medium text-foreground")}>
+                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "flex items-center inline-snug mt-1 text-[13.5px] font-medium text-foreground")}>
                   <Landmark className="size-3.5 text-muted-foreground/40" />
                   {event.trt ?? "—"}{event.grau ? ` · ${event.grau}` : ""}
                 </div>
@@ -178,7 +178,7 @@ export function AgendaEventDetail({
               {/* Responsável */}
               <div className="flex-1">
 <Text variant="overline" as="span" className="text-muted-foreground/40">Responsável</Text>
-                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; font-medium → className de <Text>/<Heading> */ "flex items-center gap-1.5 mt-1 text-[13.5px] font-medium text-foreground")}>
+                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "flex items-center inline-snug mt-1 text-[13.5px] font-medium text-foreground")}>
                   {event.responsavel ? (
                     <>
                       <div className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "size-5 rounded-full bg-primary/10 flex items-center justify-center text-[9px] font-bold text-primary shrink-0")}>
@@ -230,7 +230,7 @@ export function AgendaEventDetail({
                         </div>
                       )}
                     </div>
-                    <button className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1.5 px-3 py-1.5 border border-border/30 text-foreground/70 rounded-lg text-caption font-medium hover:bg-muted/10 transition-colors cursor-pointer")}>
+                    <button className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-snug px-3 py-1.5 border border-border/30 text-foreground/70 rounded-lg text-caption font-medium hover:bg-muted/10 transition-colors cursor-pointer")}>
                       <ExternalLink className="size-3" /> Ver Processo
                     </button>
                   </div>
@@ -239,14 +239,14 @@ export function AgendaEventDetail({
                       <div className={cn(/* design-system-escape: my-3 margin sem primitiva DS */ "h-px bg-border/10 my-3")} />
                       <div className={cn("flex inline-loose")}>
                         <div>
-                          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mb-1")}>
+                          <div className={cn("flex items-center inline-snug mb-1")}>
                             <div className="size-1.5 rounded-full bg-info" />
                             <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-info uppercase tracking-wider")}>Reclamante</span>
                           </div>
                           <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[12px] font-medium text-foreground")}>{event.partes.reclamante}</span>
                         </div>
                         <div>
-                          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mb-1")}>
+                          <div className={cn("flex items-center inline-snug mb-1")}>
                             <div className="size-1.5 rounded-full bg-destructive" />
                             <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-destructive uppercase tracking-wider")}>Reclamada</span>
                           </div>
@@ -274,7 +274,7 @@ export function AgendaEventDetail({
                 </div>
                 <div className="rounded-xl border border-border/15 bg-muted/4 divide-y divide-border/10">
                   {checklist.map((item, i) => (
-                    <div key={i} className={cn(/* design-system-escape: gap-3 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-3 px-4 py-2.5")}>
+                    <div key={i} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center inline-medium px-4 py-2.5")}>
                       <div className={cn(
                         "size-5 rounded border-2 flex items-center justify-center shrink-0",
                         item.done

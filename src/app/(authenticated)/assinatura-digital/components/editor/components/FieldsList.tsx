@@ -107,7 +107,7 @@ const FieldsListItem = memo(function FieldsListItem({
       </div>
 
       {/* Actions */}
-      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity")}>
+      <div className={cn("flex items-center inline-micro opacity-0 group-hover:opacity-100 transition-opacity")}>
         {!isOnCurrentPage && (
           <Button
             variant="ghost"
@@ -194,7 +194,7 @@ export default function FieldsList({
             <Heading level="subsection" className={cn(/* design-system-escape: tracking-wider sem token DS; px-1 padding direcional sem Inset equiv. */ "text-caption text-muted-foreground uppercase tracking-wider mb-2 px-1")}>
               Página {page}
             </Heading>
-            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+            <div className={cn("stack-micro")}>
               {fieldsByPage[page].map((field) => (
                 <FieldsListItem
                   key={field.id}

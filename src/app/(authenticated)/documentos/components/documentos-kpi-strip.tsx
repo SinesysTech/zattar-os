@@ -87,7 +87,7 @@ export function DocumentosKpiStrip({ items, className }: DocumentosKpiStripProps
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Itens
             </p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+            <div className={cn("flex items-baseline inline-snug mt-1")}>
               <Text variant="kpi-value">
                 <AnimatedNumber value={stats.total} />
               </Text>
@@ -114,7 +114,7 @@ export function DocumentosKpiStrip({ items, className }: DocumentosKpiStripProps
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Pastas
             </p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+            <div className={cn("flex items-baseline inline-snug mt-1")}>
               <Text variant="kpi-value">
                 <AnimatedNumber value={stats.pastas} />
               </Text>
@@ -151,7 +151,7 @@ export function DocumentosKpiStrip({ items, className }: DocumentosKpiStripProps
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Documentos
             </p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+            <div className={cn("flex items-baseline inline-snug mt-1")}>
               <Text variant="kpi-value">
                 <AnimatedNumber value={stats.documentos} />
               </Text>
@@ -193,7 +193,7 @@ export function DocumentosKpiStrip({ items, className }: DocumentosKpiStripProps
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Armazenamento
             </p>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
+            <div className={cn("flex items-baseline inline-snug mt-1")}>
               <Text variant="kpi-value">
                 {stats.storageValue}
               </Text>

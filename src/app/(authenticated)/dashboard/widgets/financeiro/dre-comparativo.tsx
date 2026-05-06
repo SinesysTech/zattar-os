@@ -53,7 +53,7 @@ export function WidgetDREComparativo() {
       icon={TrendingUp}
       subtitle="12 meses"
       action={
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 text-[10px] text-muted-foreground/60")}>
+        <div className={cn("flex items-center inline-micro text-[10px] text-muted-foreground/60")}>
           <TrendingUp className="size-3" />
           <span>Margem {margem}%</span>
         </div>

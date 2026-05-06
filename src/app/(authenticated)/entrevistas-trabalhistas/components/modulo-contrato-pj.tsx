@@ -121,7 +121,7 @@ export function ModuloContratoPJ({ data, onChange }: ModuloContratoPJProps) {
       </div>
 
       {/* C.1.3: Contrato formal */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>Existia contrato formal de prestação de serviços assinado?</Label>
         <SimNaoRadio
           id="contrato"
@@ -131,7 +131,7 @@ export function ModuloContratoPJ({ data, onChange }: ModuloContratoPJProps) {
       </div>
 
       {/* C.1.4: Empresa paga custos CNPJ */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>A empresa pagava os custos do CNPJ (contador, impostos, DAS)?</Label>
         <SimNaoRadio
           id="custos-cnpj"
@@ -146,7 +146,7 @@ export function ModuloContratoPJ({ data, onChange }: ModuloContratoPJProps) {
       </div>
 
       {/* C.1.5: Emissão de NF */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>Emitia nota fiscal mensal para a empresa?</Label>
         <SimNaoRadio
           id="nota-fiscal"

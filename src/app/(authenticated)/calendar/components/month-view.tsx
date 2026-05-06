@@ -208,7 +208,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                             }>
                             <div className={cn("stack-tight")}>
                               <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{capitalizeFirst(format(day, "EEE d", { locale: ptBR }))}</div>
-                              <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+                              <div className={cn("stack-micro")}>
                                 {sortEvents(allEvents).map((event) => {
                                   const eventStart = new Date(event.start);
                                   const eventEnd = new Date(event.end);

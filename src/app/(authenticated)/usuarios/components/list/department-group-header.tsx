@@ -46,7 +46,7 @@ export function DepartmentGroupHeader({
         <button
           type="button"
           onClick={() => setOpen((prev) => !prev)}
-          className={cn(/* design-system-escape: gap-3 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "w-full flex items-center gap-3 px-4 py-2.5 cursor-pointer hover:bg-white/[0.02] transition-colors duration-150")}
+          className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "w-full flex items-center inline-medium px-4 py-2.5 cursor-pointer hover:bg-white/[0.02] transition-colors duration-150")}
         >
           {/* Color bar */}
           <div

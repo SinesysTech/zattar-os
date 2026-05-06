@@ -31,7 +31,7 @@ export function SearchHero({ onBuscar }: SearchHeroProps) {
   };
 
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "mx-auto flex w-full max-w-3xl flex-col items-center gap-3")}>
+    <div className={cn("mx-auto flex w-full max-w-3xl flex-col items-center inline-medium")}>
       <Text variant="caption" className="text-center text-muted-foreground/60">
         Consulte comunicações processuais na base pública do Comunica CNJ.
       </Text>
@@ -62,7 +62,7 @@ export function SearchHero({ onBuscar }: SearchHeroProps) {
           size="sm"
           onClick={onBuscar}
           disabled={isBuscando}
-          className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5 rounded-xl")}
+          className={cn("inline-snug rounded-xl")}
         >
           {isBuscando ? (
             <LoadingSpinner />

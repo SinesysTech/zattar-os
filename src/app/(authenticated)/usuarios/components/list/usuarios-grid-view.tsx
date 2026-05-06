@@ -23,7 +23,7 @@ interface CardGridProps {
 
 function CardGrid({ usuarios, lastLoginMap, onView }: CardGridProps) {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3")}>
+    <div className={cn("grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 inline-medium")}>
       {usuarios.map((usuario) => (
         <UsuarioCard
           key={usuario.id}

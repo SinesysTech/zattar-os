@@ -63,7 +63,7 @@ export function ListaView({ events, onEventClick, className }: ListaViewProps) {
           const colors = sourceColors(evt.source);
           return (
             <button key={evt.id} onClick={() => onEventClick?.(evt)} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "w-full grid grid-cols-[minmax(180px,1.5fr)_minmax(140px,2fr)_100px_100px_90px_40px] inline-default items-center px-4 py-3.5 text-left border-b border-border/6 transition-all cursor-pointer hover:bg-muted/6")}>
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 min-w-0")}>
+              <div className={cn("flex items-center inline-medium min-w-0")}>
                 <div className={cn("w-1 h-10 rounded-full shrink-0", colors.dot)} />
                 <div className="min-w-0">
                   <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[12px] font-semibold text-foreground truncate")}>{evt.title}</div>
@@ -95,7 +95,7 @@ export function ListaView({ events, onEventClick, className }: ListaViewProps) {
       {totalPages > 1 && (
         <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-center justify-between px-4 py-3 border-t border-border/10")}>
           <span className="text-[11px] text-muted-foreground/40">Exibindo {page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, sorted.length)} de {sorted.length}</span>
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+          <div className={cn("flex items-center inline-micro")}>
             <button onClick={() => setPage(Math.max(0, page - 1))} disabled={page === 0} className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "px-2 py-1 rounded-lg text-[10px] text-muted-foreground/40 hover:bg-muted/15 disabled:opacity-30 cursor-pointer disabled:cursor-default transition-colors")}>Anterior</button>
             {Array.from({ length: totalPages }, (_, i) => (
               <button key={i} onClick={() => setPage(i)} className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "px-2.5 py-1 rounded-lg text-[10px] cursor-pointer transition-colors", i === page ? /* design-system-escape: font-semibold → className de <Text>/<Heading> */ "bg-primary/10 text-primary font-semibold" : "text-muted-foreground/40 hover:bg-muted/15")}>{i + 1}</button>

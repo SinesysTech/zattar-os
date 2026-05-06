@@ -102,9 +102,9 @@ export function WidgetDespesasTreemap() {
           previous={totalAtual}
           format="currency"
         />
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-wrap gap-1.5 justify-end")}>
+        <div className={cn("flex flex-wrap inline-snug justify-end")}>
           {segments.map((seg) => (
-            <div key={seg.label} className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+            <div key={seg.label} className={cn("flex items-center inline-micro")}>
               <span
                 className="size-1.5 rounded-full shrink-0"
                 style={{ backgroundColor: seg.color }}

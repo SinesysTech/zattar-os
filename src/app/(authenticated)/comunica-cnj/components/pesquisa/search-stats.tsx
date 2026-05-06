@@ -69,19 +69,19 @@ export function SearchStats() {
 
   return (
     <div className="mx-auto w-full max-w-3xl">
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3 mb-2")}>
+      <div className={cn("flex items-center justify-between inline-medium mb-2")}>
         <Text variant="overline" className="text-muted-foreground/70">
           Sua base capturada
         </Text>
         <Link
           href="/comunica-cnj/capturadas"
-          className={cn(/* design-system-escape: gap-1 gap sem token DS; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1 text-caption font-medium text-primary hover:underline")}
+          className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-micro text-caption font-medium text-primary hover:underline")}
         >
           Ver gestão completa
           <ArrowRight className="size-3" aria-hidden />
         </Link>
       </div>
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-3 gap-3")}>
+      <div className={cn("grid grid-cols-3 inline-medium")}>
         {items.map((item) => (
           <GlassPanel key={item.label} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
             <div className={cn("flex items-start justify-between inline-tight")}>

@@ -60,7 +60,7 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
       </div>
 
       {/* C.4.1: Valor mensal fixo */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>Recebia um valor mensal fixo (como um salário)?</Label>
         <SimNaoRadio
           id="fixo"
@@ -83,7 +83,7 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
       </div>
 
       {/* C.4.2: Benefícios recebidos */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>Recebia algum desses benefícios da empresa?</Label>
         <div className={cn("stack-tight")}>
           {BENEFICIO_RECEBIDO_OPTIONS.map((opt) => (
@@ -104,7 +104,7 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
       </div>
 
       {/* C.4.3: 13° disfarçado */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>Havia algum &quot;bônus de fim de ano&quot; que funcionava como 13° salário?</Label>
         <SimNaoRadio
           id="decimo-terceiro"
@@ -134,7 +134,7 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
       </div>
 
       {/* C.4.5: Verbas rescisórias */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>Ao sair da empresa, recebeu alguma verba rescisória?</Label>
         <SimNaoRadio
           id="rescisao"
@@ -144,7 +144,7 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
       </div>
 
       {/* C.4.6: Controle como CLT */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+      <div className={cn("stack-medium")}>
         <Label>O pagamento era feito na PJ, mas o controle do trabalho era como CLT?</Label>
         <SimNaoRadio
           id="controle-clt"

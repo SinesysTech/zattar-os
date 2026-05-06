@@ -270,7 +270,7 @@ export function PromoverTransitoriaDialog({
               <Text variant="caption" className="text-muted-foreground">
                 Selecione uma abaixo para vincular em vez de criar duplicata.
               </Text>
-              <ul className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")} role="listbox">
+              <ul className={cn("stack-snug")} role="listbox">
                 {sugestoes.map((sug) => {
                   const isSelected =
                     mode === 'merge' &&
@@ -286,7 +286,7 @@ export function PromoverTransitoriaDialog({
                         onClick={() => handleSelectSugestao(sug)}
                         disabled={!isOficial || isBusy}
                         className={cn(
-                          /* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ 'flex w-full items-start gap-3 rounded-xl px-3 py-2.5 text-left ring-1 transition-colors',
+                          /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ 'flex w-full items-start inline-medium rounded-xl px-3 py-2.5 text-left ring-1 transition-colors',
                           isSelected
                             ? 'bg-primary/10 ring-primary/30'
                             : isOficial
@@ -338,7 +338,7 @@ export function PromoverTransitoriaDialog({
           )}
 
           {mode === 'criar' && (
-            <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+            <div className={cn("stack-medium")}>
               <Heading level="card">
                 {sugestoes.length > 0 ? 'Ou criar uma nova parte contrária' : 'Dados da parte contrária'}
               </Heading>
@@ -355,7 +355,7 @@ export function PromoverTransitoriaDialog({
                 />
               </div>
 
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3")}>
+              <div className={cn("grid grid-cols-2 inline-medium")}>
                 <div className={cn("stack-tight")}>
                   <Label htmlFor="promover-tipo-pessoa">Tipo</Label>
                   <Select
@@ -385,7 +385,7 @@ export function PromoverTransitoriaDialog({
                 </div>
               </div>
 
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3")}>
+              <div className={cn("grid grid-cols-2 inline-medium")}>
                 <div className={cn("stack-tight")}>
                   <Label htmlFor="promover-email">Email</Label>
                   <Input

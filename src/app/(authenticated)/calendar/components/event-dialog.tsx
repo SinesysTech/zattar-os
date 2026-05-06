@@ -449,7 +449,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
           <fieldset className={cn("stack-default")}>
             <legend className={cn(/* design-system-escape: leading-none sem token DS; font-medium → className de <Text>/<Heading> */ "text-foreground text-body-sm leading-none font-medium")}>Cor</legend>
             <RadioGroup
-              className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex gap-1.5")}
+              className={cn("flex inline-snug")}
               disabled={readOnly}
               defaultValue={colorOptions[0]?.value}
               value={color}

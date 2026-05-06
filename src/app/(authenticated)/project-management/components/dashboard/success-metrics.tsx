@@ -32,7 +32,7 @@ function TrendIndicator({
   const isPositive = variacao >= 0;
   const Icon = isPositive ? ArrowUpRight : ArrowDownRight;
   return (
-    <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+    <span className={cn("flex items-center inline-micro")}>
       <Icon className={cn("size-4", isPositive ? "text-success" : "text-destructive")} />
       {value}
     </span>

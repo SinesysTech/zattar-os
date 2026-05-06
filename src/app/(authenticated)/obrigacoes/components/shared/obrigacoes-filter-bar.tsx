@@ -45,7 +45,7 @@ function FilterDropdownTrigger({
   return (
     <div
       className={cn(
-        /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
+        /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center inline-snug rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
         active
           ? 'border-primary/40 bg-primary/15 text-primary'
           : 'border-border/50 bg-muted/50 text-foreground/70 hover:bg-muted/80 hover:border-border/70',
@@ -102,7 +102,7 @@ function StatusFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-48')} align="start" side="bottom">
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-0.5 sem token DS */ "p-2 space-y-0.5")}>
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-nano")}>
           {STATUS_OPTIONS.map((opt) => (
             <button
               key={opt.value}
@@ -158,7 +158,7 @@ function SimpleFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-48')} align="start" side="bottom">
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-0.5 sem token DS */ "p-2 space-y-0.5 max-h-56 overflow-y-auto")}>
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-nano max-h-56 overflow-y-auto")}>
           {options.map((opt) => (
             <button
               key={opt.value}

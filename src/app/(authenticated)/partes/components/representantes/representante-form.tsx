@@ -573,7 +573,7 @@ export function RepresentanteFormDialog({
               <Badge
                 key={index}
                 variant="secondary"
-                className={cn(/* design-system-escape: gap-1 gap sem token DS; pr-1 padding direcional sem Inset equiv. */ "gap-1 pr-1")}
+                className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "inline-micro pr-1")}
               >
                 {oab.numero}/{oab.uf} ({SITUACOES_OAB.find(s => s.value === oab.situacao)?.label || oab.situacao})
                 <button
@@ -634,7 +634,7 @@ export function RepresentanteFormDialog({
               <Badge
                 key={index}
                 variant="secondary"
-                className={cn(/* design-system-escape: gap-1 gap sem token DS; pr-1 padding direcional sem Inset equiv. */ "gap-1 pr-1")}
+                className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "inline-micro pr-1")}
               >
                 {email}
                 <button

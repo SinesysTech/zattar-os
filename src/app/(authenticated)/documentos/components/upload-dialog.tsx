@@ -163,7 +163,7 @@ export function UploadDialog({
                 />
               </div>
             ) : (
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset>; sm:p-4 sem equivalente DS; space-y-3 sem token DS */ "border rounded-lg p-3 sm:p-4 space-y-3")}>
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset>; sm:p-4 sem equivalente DS */ "border rounded-lg p-3 sm:p-4 stack-medium")}>
                 {previewUrl && (
                   <div className="relative w-full aspect-video rounded-md overflow-hidden bg-muted">
                     { }

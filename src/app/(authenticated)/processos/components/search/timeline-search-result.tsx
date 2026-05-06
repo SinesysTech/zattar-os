@@ -166,7 +166,7 @@ export function TimelineSearchResult({
         </div>
 
         {/* Textos */}
-        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col min-w-0 gap-0.5")}>
+        <div className={cn("flex flex-col min-w-0 inline-nano")}>
           {/* Título com destaque */}
           <Text variant="label" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-snug sem token DS */ "font-medium truncate leading-snug text-foreground")}>
             {partesTitulo.map((parte, i) =>
@@ -181,7 +181,7 @@ export function TimelineSearchResult({
           </Text>
 
           {/* Linha secundária: badge + anexo */}
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+          <div className={cn("flex items-center inline-snug")}>
             <span
               className={cn(
                 /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'inline-flex items-center px-1.5 py-0.5 rounded-sm text-[11px] font-medium border',
@@ -192,7 +192,7 @@ export function TimelineSearchResult({
             </span>
 
             {temAnexo && (
-              <span className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "inline-flex items-center gap-0.5 text-[11px] text-muted-foreground font-mono")}>
+              <span className={cn("inline-flex items-center inline-nano text-[11px] text-muted-foreground font-mono")}>
                 <Paperclip className="size-2.5" aria-hidden="true" />
                 1 anexo
               </span>

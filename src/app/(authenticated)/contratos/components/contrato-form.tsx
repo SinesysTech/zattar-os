@@ -276,7 +276,7 @@ export function ContratoForm({
             </Select>
             <input type="hidden" name="tipoContrato" value={formData.tipoContrato} />
             {getFieldError('tipoContrato') && (
-              <Text variant="caption" className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-destructive flex items-center gap-1")}>
+              <Text variant="caption" className={cn("text-destructive flex items-center inline-micro")}>
                 <AlertCircle className="h-3 w-3" />
                 {getFieldError('tipoContrato')}
               </Text>
@@ -304,7 +304,7 @@ export function ContratoForm({
             </Select>
             <input type="hidden" name="tipoCobranca" value={formData.tipoCobranca} />
             {getFieldError('tipoCobranca') && (
-              <Text variant="caption" className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-destructive flex items-center gap-1")}>
+              <Text variant="caption" className={cn("text-destructive flex items-center inline-micro")}>
                 <AlertCircle className="h-3 w-3" />
                 {getFieldError('tipoCobranca')}
               </Text>
@@ -335,7 +335,7 @@ export function ContratoForm({
             </Select>
             <input type="hidden" name="segmentoId" value={formData.segmentoId} />
             {getFieldError('segmentoId') && (
-              <Text variant="caption" className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-destructive flex items-center gap-1")}>
+              <Text variant="caption" className={cn("text-destructive flex items-center inline-micro")}>
                 <AlertCircle className="h-3 w-3" />
                 {getFieldError('segmentoId')}
               </Text>
@@ -393,7 +393,7 @@ export function ContratoForm({
             />
             <input type="hidden" name="clienteId" value={formData.clienteId} />
             {getFieldError('clienteId') && (
-              <Text variant="caption" className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-destructive flex items-center gap-1")}>
+              <Text variant="caption" className={cn("text-destructive flex items-center inline-micro")}>
                 <AlertCircle className="h-3 w-3" />
                 {getFieldError('clienteId')}
               </Text>
@@ -421,7 +421,7 @@ export function ContratoForm({
             </Select>
             <input type="hidden" name="papelClienteNoContrato" value={formData.papelClienteNoContrato} />
             {getFieldError('papelClienteNoContrato') && (
-              <Text variant="caption" className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-destructive flex items-center gap-1")}>
+              <Text variant="caption" className={cn("text-destructive flex items-center inline-micro")}>
                 <AlertCircle className="h-3 w-3" />
                 {getFieldError('papelClienteNoContrato')}
               </Text>

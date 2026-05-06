@@ -162,7 +162,7 @@ export function ClienteDocumentosViewer({
       </div>
 
       <ScrollArea className="h-100">
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3")}>
+        <div className={cn("grid inline-medium")}>
           {documentos.map((doc) => (
             <Card
               key={doc.key}
@@ -170,7 +170,7 @@ export function ClienteDocumentosViewer({
               onClick={() => handlePreview(doc)}
             >
               <CardContent className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3")}>
-                <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+                <div className={cn("flex items-center inline-medium")}>
                   <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "rounded-lg bg-muted p-2")}>
                     {getFileIcon(doc.contentType)}
                   </div>
@@ -191,7 +191,7 @@ export function ClienteDocumentosViewer({
                     </Text>
                   </div>
 
-                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity")}>
+                  <div className={cn("flex items-center inline-micro opacity-0 group-hover:opacity-100 transition-opacity")}>
                     <Button
                       variant="ghost"
                       size="icon" aria-label="Baixar"

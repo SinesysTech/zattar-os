@@ -129,7 +129,7 @@ export function ExpedientesReverterBaixaDialog({
         {/* Informações do expediente */}
         <div className={cn("stack-tight rounded-lg border inset-card-compact bg-muted/50")}>
           <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Expediente</div>
-          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "text-body-sm space-y-1")}>
+          <div className={cn("text-body-sm stack-micro")}>
             <div>
               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Processo:</span> {expediente.numeroProcesso}
             </div>
@@ -160,7 +160,7 @@ export function ExpedientesReverterBaixaDialog({
         </div>
 
         {/* Aviso */}
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3 rounded-lg border border-warning bg-warning/10 inset-card-compact")}>
+        <div className={cn("flex items-start inline-medium rounded-lg border border-warning bg-warning/10 inset-card-compact")}>
           <AlertTriangle className="h-5 w-5 text-warning shrink-0 mt-0.5" />
           <div className={cn("text-body-sm")}>
             <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-warning mb-1")}>Atenção</div>

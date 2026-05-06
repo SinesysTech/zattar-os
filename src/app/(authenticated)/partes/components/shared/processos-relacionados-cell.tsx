@@ -58,7 +58,7 @@ export function ProcessosRelacionadosCell({
   const processosRestantes = processos.slice(maxExibidos);
 
   return (
-    <div className={cn(/* design-system-escape: gap-1 gap sem token DS; py-1 padding direcional sem Inset equiv. */ "min-h-10 flex flex-col gap-1 py-1 min-w-0")}>
+    <div className={cn(/* design-system-escape: py-1 padding direcional sem Inset equiv. */ "min-h-10 flex flex-col inline-micro py-1 min-w-0")}>
       {processosExibidos.map((processo) => (
         <ProcessoItem key={processo.processo_id} processo={processo} />
       ))}
@@ -75,7 +75,7 @@ export function ProcessosRelacionadosCell({
             </Button>
           </PopoverTrigger>
           <PopoverContent className={cn(/* design-system-escape: p-2 → usar <Inset> */ "w-80 p-2")} align="start">
-            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5 max-h-60 overflow-y-auto")}>
+            <div className={cn("stack-snug max-h-60 overflow-y-auto")}>
               <Text variant="caption" className="font-medium mb-2">
                 Todos os processos ({processos.length})
               </Text>
@@ -120,7 +120,7 @@ function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
       : processo.nome_parte_autora;
 
   return (
-    <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-start gap-1 min-w-0 max-w-full")}>
+    <div className={cn("flex items-start inline-micro min-w-0 max-w-full")}>
       <HoverCard openDelay={200} closeDelay={100}>
         <HoverCardTrigger asChild>
           <Link
@@ -136,7 +136,7 @@ function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
           </Link>
         </HoverCardTrigger>
         <HoverCardContent align="start" className={cn(/* design-system-escape: p-3 → usar <Inset> */ "w-80 p-3")}>
-          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+          <div className={cn("stack-medium")}>
             {/* Header: Grau e Status */}
             <div className={cn("flex items-center justify-between inline-tight")}>
               <SemanticBadge category="grau" value={processo.grau} className={cn("text-caption")}>
@@ -150,7 +150,7 @@ function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
             </div>
 
             {/* Parte Contrária */}
-            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+            <div className={cn("stack-micro")}>
               <Text variant="caption" className="flex items-center gap-1.5">
                 <User className="h-3 w-3" />
                 <span>Parte contrária</span>
@@ -162,7 +162,7 @@ function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
 
             {/* Classe Judicial */}
             {processo.classe_judicial && (
-              <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+              <div className={cn("stack-micro")}>
                 <Text variant="caption" className="flex items-center gap-1.5">
                   <Scale className="h-3 w-3" />
                   <span>Classe</span>

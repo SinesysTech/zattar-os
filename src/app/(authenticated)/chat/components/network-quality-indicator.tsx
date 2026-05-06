@@ -83,7 +83,7 @@ export function NetworkQualityIndicator({
           </div>
         </TooltipTrigger>
         <TooltipContent side="top">
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+          <div className={cn("flex flex-col inline-micro")}>
             <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>{config.label}</p>
             <Text variant="caption">{config.description}</Text>
             {score >= 0 && <Text variant="caption" className="opacity-70">Score: {score}/5</Text>}

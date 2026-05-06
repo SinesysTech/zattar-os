@@ -354,7 +354,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
 
       {/* ── Pulse Strip (KPIs reais) ────────────────────────── */}
       {isStatsLoading ? (
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 lg:grid-cols-4 gap-3")}>
+        <div className={cn("grid grid-cols-2 lg:grid-cols-4 inline-medium")}>
           {Array.from({ length: 4 }).map((_, i) => (
             <Skeleton key={i} className="h-24 rounded-xl" />
           ))}
@@ -430,7 +430,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
           placeholder="Buscar processo, perito..."
         />
 
-        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS; p-0.5 → usar <Inset> */ "flex items-center gap-0.5 p-0.5 rounded-lg bg-border/6")}>
+        <div className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "flex items-center inline-nano p-0.5 rounded-lg bg-border/6")}>
           {VIEW_OPTIONS.map((opt) => (
             <button
               key={opt.id}
@@ -492,7 +492,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
             <AppBadge
               key={chip.key}
               variant="secondary"
-              className={cn(/* design-system-escape: gap-1 gap sem token DS; pr-1 padding direcional sem Inset equiv. */ "gap-1 pr-1 cursor-pointer hover:bg-secondary/80")}
+              className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "inline-micro pr-1 cursor-pointer hover:bg-secondary/80")}
               onClick={() => chip.onRemove()}
             >
               {chip.label}

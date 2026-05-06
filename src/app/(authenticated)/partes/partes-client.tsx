@@ -94,14 +94,14 @@ export interface PartesClientProps {
 function CardSkeleton() {
   return (
     <GlassPanel className={cn("inset-card-compact animate-pulse")}>
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3")}>
+      <div className={cn("flex items-start inline-medium")}>
         <div className="size-10 rounded-xl bg-muted-foreground/10 shrink-0" />
         <div className={cn("flex-1 stack-tight")}>
           <div className="h-3 bg-muted-foreground/10 rounded w-3/4" />
           <div className="h-2.5 bg-muted-foreground/8 rounded w-1/2" />
         </div>
       </div>
-      <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5 mt-3")}>
+      <div className={cn("stack-snug mt-3")}>
         <div className="h-2 bg-muted-foreground/8 rounded w-full" />
         <div className="h-2 bg-muted-foreground/8 rounded w-2/3" />
       </div>
@@ -137,7 +137,7 @@ function StatusFilterPills({
     <div
       role="radiogroup"
       aria-label="Filtrar por status"
-      className={cn(/* design-system-escape: gap-0.5 gap sem token DS; p-0.5 → usar <Inset> */ "inline-flex items-center gap-0.5 rounded-xl border border-border/40 bg-muted/30 p-0.5")}
+      className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "inline-flex items-center inline-nano rounded-xl border border-border/40 bg-muted/30 p-0.5")}
     >
       {STATUS_OPTIONS.map((opt) => {
         const selected = value === opt.value;
@@ -164,9 +164,9 @@ function StatusFilterPills({
 
 function ListRowSkeleton() {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-3 px-4 py-2.5 rounded-xl animate-pulse")}>
+    <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center inline-medium px-4 py-2.5 rounded-xl animate-pulse")}>
       <div className="size-8 rounded-lg bg-muted-foreground/10 shrink-0" />
-      <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "flex-1 space-y-1.5")}>
+      <div className={cn("flex-1 stack-snug")}>
         <div className="h-2.5 bg-muted-foreground/10 rounded w-48" />
         <div className="h-2 bg-muted-foreground/8 rounded w-28" />
       </div>
@@ -204,7 +204,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
     <GlassPanel className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
       {/* Header */}
       <div className="flex items-start justify-between mb-5">
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+        <div className={cn("flex items-center inline-medium")}>
           <div className={`size-12 rounded-xl ${config.bg} flex items-center justify-center shrink-0`}>
             {data.tipo === 'pj' ? (
               <Building2 className={`size-5 ${config.color}`} />
@@ -239,7 +239,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
       </div>
 
       {/* Info grid */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3 mb-5")}>
+      <div className={cn("grid grid-cols-2 inline-medium mb-5")}>
         <InfoRow icon={FileText} label="Documento" value={data.documentoMasked} />
         {data.localizacao && data.localizacao !== '—' && (
           <InfoRow icon={MapPin} label="Localidade" value={data.localizacao} />
@@ -275,7 +275,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
 
       {/* Tags */}
       {data.tags && data.tags.length > 0 && (
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-wrap gap-1.5 mb-5")}>
+        <div className={cn("flex flex-wrap inline-snug mb-5")}>
           {data.tags.map((tag) => (
             <span key={tag} className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] px-2 py-0.5 rounded-full bg-primary/6 text-primary/60 border border-primary/10")}>
               {tag}
@@ -296,7 +296,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
       <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "flex inline-tight mt-5 pt-4 border-t border-border/10")}>
         <Link
           href={perfilHref}
-          className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary/10 text-primary/70 text-caption font-medium hover:bg-primary/15 transition-colors cursor-pointer")}
+          className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex-1 flex items-center justify-center inline-snug py-2 rounded-lg bg-primary/10 text-primary/70 text-caption font-medium hover:bg-primary/15 transition-colors cursor-pointer")}
         >
           <ExternalLink className="size-3" />
           Ver perfil completo
@@ -304,7 +304,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
         <button
           onClick={handleCopy}
           aria-label="Copiar nome"
-          className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/70 text-caption font-medium hover:bg-foreground/6 transition-colors cursor-pointer")}
+          className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex items-center justify-center inline-snug px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/70 text-caption font-medium hover:bg-foreground/6 transition-colors cursor-pointer")}
         >
           <Copy className="size-3" />
         </button>
@@ -638,7 +638,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
       </div>
 
       {/* ── Tabs + Status Filter + Search + View Toggle ─────────── */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
+      <div className={cn("flex flex-col sm:flex-row items-start sm:items-center inline-medium")}>
         <TabPills tabs={tabs} active={activeTab} onChange={handleTabChange} />
         <div className={cn("flex items-center inline-tight flex-1 justify-end")}>
           {activeTab !== 'representantes' && (
@@ -671,7 +671,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
           className={
             viewMode === 'cards'
               ? `grid grid-cols-1 sm:grid-cols-2 ${selectedParte ? '' : 'lg:grid-cols-3'} auto-rows-fr gap-3`
-              : /* design-system-escape: gap-1.5 gap sem token DS */ 'flex flex-col gap-1.5'
+              : 'flex flex-col inline-snug'
           }
         >
           {isLoading
@@ -728,7 +728,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
           <Text variant="caption" className="text-muted-foreground/70">
             {((pagina - 1) * PAGE_SIZE) + 1}–{Math.min(pagina * PAGE_SIZE, total)} de {total.toLocaleString('pt-BR')}
           </Text>
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+          <div className={cn("flex items-center inline-micro")}>
             <button
               onClick={() => setPagina((p) => Math.max(1, p - 1))}
               disabled={pagina <= 1}

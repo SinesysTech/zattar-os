@@ -90,7 +90,7 @@ function SortableFieldItem({ field, sectionId, isSelected, onSelect, onDuplicate
       <div className="flex-1 min-w-0">
         <Text variant="caption" className="font-medium truncate">{field.label}</Text>
         {(field.validation?.required || field.conditional || (field.options && field.options.length > 0)) && (
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1 mt-1 flex-wrap")}>
+          <div className={cn("flex inline-micro mt-1 flex-wrap")}>
             {field.validation?.required && (
               <Badge variant="destructive" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0")}>
                 Obrigatório
@@ -110,7 +110,7 @@ function SortableFieldItem({ field, sectionId, isSelected, onSelect, onDuplicate
         )}
       </div>
 
-      <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity")}>
+      <div className={cn("flex items-center inline-nano opacity-0 group-hover:opacity-100 transition-opacity")}>
         <TooltipProvider delayDuration={0}>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -195,7 +195,7 @@ function DroppableSectionCard({
             <p className="text-[11px] text-muted-foreground mt-0.5">{section.description}</p>
           )}
         </div>
-        <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center gap-0.5 shrink-0")}>
+        <div className={cn("flex items-center inline-nano shrink-0")}>
           <TooltipProvider delayDuration={0}>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -229,7 +229,7 @@ function DroppableSectionCard({
         </div>
       </div>
 
-      <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pb-3 padding direcional sem Inset equiv.; space-y-1 sem token DS */ "px-3 pb-3 space-y-1")}>
+      <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pb-3 padding direcional sem Inset equiv. */ "px-3 pb-3 stack-micro")}>
         {fields.length === 0 ? (
           <div className={cn("border border-dashed rounded-lg inset-card-compact text-center")}>
             <AlertCircle className="size-5 text-muted-foreground/50 mx-auto mb-1" />
@@ -268,11 +268,11 @@ export default function SchemaCanvas({
   onSectionDelete
 }: SchemaCanvasProps) {
   return (
-    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+    <div className={cn("stack-medium")}>
       {schema.sections.length === 0 ? (
-        <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "flex flex-col items-center justify-center rounded-xl border border-dashed py-12 gap-3")}>
+        <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center rounded-xl border border-dashed py-12 inline-medium")}>
           <AlertCircle className="size-8 text-muted-foreground/60" />
-          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "text-center space-y-1")}>
+          <div className={cn("text-center stack-micro")}>
             <Text variant="caption" className="font-medium">Nenhuma seção criada</Text>
             <p className="text-[11px] text-muted-foreground/70">
               Clique abaixo para começar a construir o formulário

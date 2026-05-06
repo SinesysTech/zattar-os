@@ -84,7 +84,7 @@ export function PeritosPageClient() {
       {/* ── Info banner ───────────────────────────────────── */}
       <GlassPanel
         depth={1}
-        className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "px-4 py-3 flex items-start gap-3 border-info/20")}
+        className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3 flex items-start inline-medium border-info/20")}
       >
         <IconContainer size="md" className="bg-info/10">
           <User className="size-4 text-info/70" />
@@ -109,7 +109,7 @@ export function PeritosPageClient() {
 
       {/* ── Lista ───────────────────────────────────────────── */}
       {isLoading ? (
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3")}>
+        <div className={cn("grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 inline-medium")}>
           {Array.from({ length: 6 }).map((_, i) => (
             <Skeleton key={i} className="h-20 rounded-2xl" />
           ))}
@@ -128,12 +128,12 @@ export function PeritosPageClient() {
           </p>
         </GlassPanel>
       ) : (
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3")}>
+        <div className={cn("grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 inline-medium")}>
           {filtered.map((p) => (
             <GlassPanel
               key={p.id}
               depth={2}
-              className={cn(/* design-system-escape: gap-3 gap sem token DS */ "inset-card-compact flex items-center gap-3")}
+              className={cn("inset-card-compact flex items-center inline-medium")}
             >
               <div className="size-9 rounded-full bg-muted/40 border border-border/30 flex items-center justify-center shrink-0">
                 <User className="size-4 text-muted-foreground/60" />

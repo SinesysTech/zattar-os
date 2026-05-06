@@ -93,7 +93,7 @@ function AudienciaItem({
     >
       <div className={cn("flex items-start justify-between inline-tight")}>
         <div className="min-w-0">
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 flex-wrap")}>
+          <div className={cn("flex items-center inline-snug flex-wrap")}>
             <span
               className={`text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full ${styles.pillColor}`}
             >
@@ -116,12 +116,12 @@ function AudienciaItem({
           </p>
         </div>
         <div className="text-right shrink-0">
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 justify-end text-[10px] text-muted-foreground/60")}>
+          <div className={cn("flex items-center inline-micro justify-end text-[10px] text-muted-foreground/60")}>
             <Calendar className="size-2.5" />
             <span>{fmtDataAudiencia(audiencia.data_audiencia)}</span>
           </div>
           {audiencia.hora_audiencia && (
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 justify-end text-[10px] text-muted-foreground/50 mt-0.5")}>
+            <div className={cn("flex items-center inline-micro justify-end text-[10px] text-muted-foreground/50 mt-0.5")}>
               <Clock className="size-2.5" />
               <span>{audiencia.hora_audiencia}</span>
             </div>
@@ -134,7 +134,7 @@ function AudienciaItem({
             href={audiencia.url_audiencia_virtual}
             target="_blank"
             rel="noopener noreferrer"
-            className={cn(/* design-system-escape: gap-1 gap sem token DS; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1 text-[9px] font-medium text-primary/80 hover:text-primary transition-colors shrink-0 cursor-pointer")}
+            className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-micro text-[9px] font-medium text-primary/80 hover:text-primary transition-colors shrink-0 cursor-pointer")}
           >
             <Video className="size-2.5" />
             <span>Entrar</span>

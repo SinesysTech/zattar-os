@@ -94,7 +94,7 @@ export function LoadHeatmap({ audiencias, responsavelNomes, className }: LoadHea
             <div key={item.tipo}>
               <div className="flex items-baseline justify-between mb-0.5">
                 <span className="text-micro-caption text-foreground/70 truncate max-w-[60%]">{item.tipo}</span>
-                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5")}>
+                <div className={cn("flex items-baseline inline-snug")}>
                   <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-micro-caption font-bold tabular-nums")}>{item.count}</span>
                   <span className="text-micro-badge text-muted-foreground/55 tabular-nums">{item.percent}%</span>
                 </div>

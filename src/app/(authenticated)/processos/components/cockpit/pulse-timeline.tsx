@@ -146,7 +146,7 @@ export function PulseTimeline({
                   className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "group flex w-full cursor-pointer hover:bg-foreground/4 px-4 py-2")}
                 >
                   <div className="grid grid-cols-[48px_1fr] w-full">
-                    <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col items-center gap-1")}>
+                    <div className={cn("flex flex-col items-center inline-micro")}>
                       <div className="w-px h-2 bg-border/30" />
                       <div className="size-5 rounded-full border-2 border-primary/30 flex items-center justify-center">
                         <div className="size-1.5 rounded-full bg-primary/30" />
@@ -192,7 +192,7 @@ export function PulseTimeline({
 
         {pastItems.length > 0 && (
           <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; pb-6 padding direcional sem Inset equiv.; pt-4 padding direcional sem Inset equiv. */ "grid grid-cols-[48px_1fr] px-2 pb-6 pt-4 opacity-70")}>
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col items-center gap-1")}>
+            <div className={cn("flex flex-col items-center inline-micro")}>
               <div className="h-2 w-px bg-border" />
               <div className="size-3 rounded-full border border-border bg-muted" />
               <div className="h-8 w-px bg-transparent" />

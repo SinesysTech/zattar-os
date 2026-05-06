@@ -51,7 +51,7 @@ export function VisualizarDeclaracaoDialog({
             variant="outline"
             size="sm"
             asChild
-            className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "rounded-xl gap-1.5")}
+            className={cn("rounded-xl inline-snug")}
           >
             <a href={pdfUrl} download target="_blank" rel="noopener noreferrer">
               <Download className="size-3.5" />
@@ -62,7 +62,7 @@ export function VisualizarDeclaracaoDialog({
             variant="outline"
             size="sm"
             asChild
-            className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "rounded-xl gap-1.5")}
+            className={cn("rounded-xl inline-snug")}
           >
             <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
               <ExternalLink className="size-3.5" />

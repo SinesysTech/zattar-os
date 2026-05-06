@@ -43,7 +43,7 @@ import { Heading, Text } from '@/components/ui/typography';
 // renderizados condicionalmente e lazy-loaded para não entrarem no first paint.
 
 const ViewSkeleton = () => (
-  <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")} aria-busy="true" aria-label="Carregando visualização">
+  <div className={cn("stack-medium")} aria-busy="true" aria-label="Carregando visualização">
     {Array.from({ length: 4 }).map((_, i) => (
       <Skeleton key={i} className="h-20 rounded-2xl" />
     ))}
@@ -469,7 +469,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
       </div>
 
       {/* 5. View Controls — sempre visível conforme Glass Briefing */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
+      <div className={cn("flex flex-col sm:flex-row items-start sm:items-center inline-medium")}>
         <ExpedientesFilterBar
           filters={filters}
           onChange={setFilters}
@@ -494,7 +494,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
       {/* 6. Content Switcher */}
       <main className="min-h-0 transition-opacity duration-300">
         {isLoading && (
-          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")} aria-busy="true" aria-label="Carregando expedientes">
+          <div className={cn("stack-medium")} aria-busy="true" aria-label="Carregando expedientes">
             {Array.from({ length: 4 }).map((_, i) => (
               <Skeleton key={i} className="h-20 rounded-2xl" />
             ))}

@@ -73,7 +73,7 @@ export function PericiaObservacoesDialog({
           <DialogTitle>Observações</DialogTitle>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 gap-3")}>
+          <div className={cn("grid grid-cols-1 inline-medium")}>
             <Textarea
               value={observacoes}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>

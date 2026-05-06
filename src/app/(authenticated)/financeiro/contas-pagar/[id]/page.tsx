@@ -107,11 +107,11 @@ function DetalheItem({
   className?: string;
 }) {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ 'flex items-start gap-3', className)}>
+    <div className={cn('flex items-start inline-medium', className)}>
       <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted">
         <Icon className="h-4 w-4 text-muted-foreground" />
       </div>
-      <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+      <div className={cn("stack-micro")}>
         <p className={cn("text-body-sm text-muted-foreground")}>{label}</p>
         <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{value}</div>
       </div>
@@ -272,7 +272,7 @@ export default function ContaPagarDetalhesPage() {
 
       {/* Alert Vencida */}
       {isVencida && (
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 rounded-lg border border-destructive/50 bg-destructive/10 inset-card-compact")}>
+        <div className={cn("flex items-center inline-medium rounded-lg border border-destructive/50 bg-destructive/10 inset-card-compact")}>
           <AlertTriangle className="h-5 w-5 text-destructive" />
           <div>
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-destructive")}>Conta Vencida</p>
@@ -435,7 +435,7 @@ export default function ContaPagarDetalhesPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3 sm:grid-cols-2 lg:grid-cols-3")}>
+              <div className={cn("grid inline-medium sm:grid-cols-2 lg:grid-cols-3")}>
                 {contaPagar.anexos.map((anexo: AnexoLancamento, index: number) => {
                   const isImage = anexo.tipo?.startsWith('image/');
                   const isPdf = anexo.tipo === 'application/pdf';
@@ -447,7 +447,7 @@ export default function ContaPagarDetalhesPage() {
                       href={anexo.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={cn(/* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ "flex items-center gap-3 rounded-lg border p-3 transition-colors hover:bg-muted/50")}
+                      className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center inline-medium rounded-lg border p-3 transition-colors hover:bg-muted/50")}
                     >
                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-muted">
                         <FileIcon className="h-5 w-5 text-muted-foreground" />

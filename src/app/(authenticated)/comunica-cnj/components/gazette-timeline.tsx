@@ -25,7 +25,7 @@ export function GazetteTimeline({ items }: GazetteTimelineProps) {
   if (items.length === 0) return null;
 
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "relative flex flex-col gap-3")}>
+    <div className={cn("relative flex flex-col inline-medium")}>
       {/* Vertical line */}
       <div
         className="absolute bottom-2 left-1 top-2 w-px bg-border/50"
@@ -33,7 +33,7 @@ export function GazetteTimeline({ items }: GazetteTimelineProps) {
       />
 
       {items.map((item) => (
-        <div key={item.id} className={cn(/* design-system-escape: gap-3 gap sem token DS; pl-5 padding direcional sem Inset equiv. */ "relative flex items-start gap-3 pl-5")}>
+        <div key={item.id} className={cn(/* design-system-escape: pl-5 padding direcional sem Inset equiv. */ "relative flex items-start inline-medium pl-5")}>
           {/* Dot */}
           <div
             className={cn(

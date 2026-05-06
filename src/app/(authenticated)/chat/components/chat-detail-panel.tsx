@@ -51,7 +51,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
       {/* Scrollable body */}
       <ScrollArea className="flex-1">
         {/* Profile section — 72px avatar centered per mock */}
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-6 padding direcional sem Inset equiv.; px-5 padding direcional sem Inset equiv. */ "flex flex-col items-center gap-3 py-6 px-5")}>
+        <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv.; px-5 padding direcional sem Inset equiv. */ "flex flex-col items-center inline-medium py-6 px-5")}>
           <Avatar className="size-18 rounded-2xl overflow-visible">
             <AvatarImage src={user.avatar} alt={displayName} className="rounded-2xl" />
             <AvatarFallback className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-semibold → className de <Text>/<Heading> */ "bg-primary/10 text-primary text-xl font-semibold rounded-2xl")}>
@@ -125,7 +125,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
             <Text variant="overline" as="h5" className="text-muted-foreground/55 mb-3">
               Midia Compartilhada
             </Text>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "grid grid-cols-3 gap-1.5")}>
+            <div className={cn("grid grid-cols-3 inline-snug")}>
               {user.medias.map(
                 (item, i) =>
                   item.type === "image" && (

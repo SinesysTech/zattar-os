@@ -139,7 +139,7 @@ export function PostHearingFlow({
               {audiencia.tipoDescricao} · {format(dataFim, "HH:mm", { locale: ptBR })}
             </span>
           </div>
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+          <div className={cn("flex items-center inline-micro")}>
             <Clock className={cn("size-2.5", urgencyColor)} />
             <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-micro-caption tabular-nums font-medium", urgencyColor)}>
               há {elapsedLabel}
@@ -166,13 +166,13 @@ export function PostHearingFlow({
         {!isFinalized && (
           <div className="mb-4">
             <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/75 uppercase tracking-wider")}>Resultado</span>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mt-1.5")}>
+            <div className={cn("flex items-center inline-snug mt-1.5")}>
               {RESULT_OPTIONS.map((opt) => (
                 <button
                   key={opt.value}
                   onClick={() => handleSelectResult(opt.value)}
                   className={cn(
-                    /* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-micro-caption font-medium border transition-all cursor-pointer",
+                    /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex items-center inline-snug px-3 py-1.5 rounded-lg text-micro-caption font-medium border transition-all cursor-pointer",
                     selectedResult === opt.value
                       ? "border-primary/30 bg-primary/8 text-primary"
                       : "border-border/15 text-muted-foreground/70 hover:text-foreground/75 hover:border-border/25",
@@ -201,7 +201,7 @@ export function PostHearingFlow({
             />
           </div>
 
-          <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
+          <div className={cn("stack-nano")}>
             {postActions.map((action) => (
               <button
                 key={action.id}

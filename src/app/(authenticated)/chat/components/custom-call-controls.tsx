@@ -195,7 +195,7 @@ export function CustomCallControls({
                 <RadioGroup
                   value={activeEffect}
                   onValueChange={(val) => onApplyEffect?.(val as 'none' | 'blur' | 'image')}
-                  className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 gap-3")}
+                  className={cn("grid grid-cols-1 inline-medium")}
                 >
                   <div className={cn(/* design-system-escape: space-x-3 sem token DS; p-2 → usar <Inset> */ "flex items-center space-x-3 p-2 rounded-lg hover:bg-video-surface-hover/50 transition-colors cursor-pointer")} onClick={() => onApplyEffect?.('none')}>
                     <RadioGroupItem value="none" id="effect-none" className="border-video-muted text-info" />

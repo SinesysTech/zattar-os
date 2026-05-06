@@ -77,7 +77,7 @@ export function ComunicacaoDetalhesDialog({
           {/* Processo */}
           <div>
             <SectionHeading>Processo</SectionHeading>
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 gap-3 sm:grid-cols-2")}>
+            <div className={cn("grid grid-cols-1 inline-medium sm:grid-cols-2")}>
               <DetailRow label="Número">
                 <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "break-all font-medium tabular-nums")}>
                   {comunicacao.numeroProcessoComMascara}
@@ -94,7 +94,7 @@ export function ComunicacaoDetalhesDialog({
           {/* Comunicação */}
           <div>
             <SectionHeading>Comunicação</SectionHeading>
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 gap-3 sm:grid-cols-2")}>
+            <div className={cn("grid grid-cols-1 inline-medium sm:grid-cols-2")}>
               <DetailRow label="Tipo">
                 <Badge variant="outline">{comunicacao.tipoComunicacao}</Badge>
               </DetailRow>
@@ -124,7 +124,7 @@ export function ComunicacaoDetalhesDialog({
           {/* Partes */}
           <div>
             <SectionHeading>Partes</SectionHeading>
-            <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3 text-body-sm")}>
+            <div className={cn("stack-medium text-body-sm")}>
               {comunicacao.partesAutoras && comunicacao.partesAutoras.length > 0 && (
                 <div>
                   <Text variant="meta-label" className="text-muted-foreground">

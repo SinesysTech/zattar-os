@@ -123,7 +123,7 @@ export function AttentionStrip({
               </span>
             </div>
             {expedientesUrgentes.vencidos.length > 0 && (
-              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mb-1")}>
+              <div className={cn("flex items-center inline-snug mb-1")}>
                 <AlertTriangle className="size-3 text-destructive/70" />
                 <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium text-destructive/70")}>
                   {expedientesUrgentes.vencidos.length} vencido{expedientesUrgentes.vencidos.length > 1 ? 's' : ''}
@@ -131,7 +131,7 @@ export function AttentionStrip({
               </div>
             )}
             {expedientesUrgentes.vencendo.length > 0 && (
-              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+              <div className={cn("flex items-center inline-snug")}>
                 <Clock className="size-3 text-warning/70" />
                 <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium text-warning/70")}>
                   {expedientesUrgentes.vencendo.length} vencendo

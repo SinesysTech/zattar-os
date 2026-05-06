@@ -55,7 +55,7 @@ function FilterDropdownTrigger({
   return (
     <div
       className={cn(
-        /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
+        /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center inline-snug rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
         active
           ? 'border-primary/20 bg-primary/5 text-primary'
           : 'border-border/15 text-muted-foreground/60 hover:bg-muted/30',
@@ -136,7 +136,7 @@ function StatusFilter({
         align="start"
         side="bottom"
       >
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-0.5 sem token DS */ "p-2 space-y-0.5")}>
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-nano")}>
           {STATUS_OPTIONS.map((opt) => (
             <button
               key={opt.value}
@@ -375,7 +375,7 @@ function MeioFilter({
         align="start"
         side="bottom"
       >
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-0.5 sem token DS */ "p-2 space-y-0.5")}>
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-nano")}>
           {MEIO_OPTIONS.map((opt) => (
             <button
               key={opt.value}
@@ -437,8 +437,8 @@ function PeriodoFilter({
         align="start"
         side="bottom"
       >
-        <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
-          <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+        <div className={cn("stack-medium")}>
+          <div className={cn("stack-snug")}>
             <Label htmlFor="cap-data-inicio">
               <Text variant="meta-label">Data início</Text>
             </Label>
@@ -454,7 +454,7 @@ function PeriodoFilter({
               }
             />
           </div>
-          <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+          <div className={cn("stack-snug")}>
             <Label htmlFor="cap-data-fim">
               <Text variant="meta-label">Data fim</Text>
             </Label>

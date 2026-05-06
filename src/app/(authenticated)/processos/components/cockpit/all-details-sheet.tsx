@@ -97,7 +97,7 @@ export function AllDetailsSheet({
         ) : (
           <Tabs defaultValue="expedientes">
             <TabsList variant="line" className="w-full justify-start">
-              <TabsTrigger value="expedientes" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5 text-body-sm")}>
+              <TabsTrigger value="expedientes" className={cn("inline-snug text-body-sm")}>
                 <FileText className="size-3.5" />
                 Expedientes
                 {totalExpedientes > 0 && (
@@ -112,7 +112,7 @@ export function AllDetailsSheet({
                   </SemanticBadge>
                 )}
               </TabsTrigger>
-              <TabsTrigger value="audiencias" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5 text-body-sm")}>
+              <TabsTrigger value="audiencias" className={cn("inline-snug text-body-sm")}>
                 <Calendar className="size-3.5" />
                 Audiências
                 {totalAudiencias > 0 && (
@@ -127,7 +127,7 @@ export function AllDetailsSheet({
                   </SemanticBadge>
                 )}
               </TabsTrigger>
-              <TabsTrigger value="pericias" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5 text-body-sm")}>
+              <TabsTrigger value="pericias" className={cn("inline-snug text-body-sm")}>
                 <Microscope className="size-3.5" />
                 Perícias
                 {totalPericias > 0 && (

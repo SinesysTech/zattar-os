@@ -113,7 +113,7 @@ export function PerfilView() {
 
           {/* Informações */}
           <div>
-            <Heading level="page" className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+            <Heading level="page" className={cn("flex items-center inline-medium")}>
               {usuario.nomeExibicao}
               <Badge variant={usuario.ativo ? 'success' : 'outline'}>
                 {usuario.ativo ? 'Ativo' : 'Inativo'}
@@ -172,7 +172,7 @@ export function PerfilView() {
             )}
             {usuario.dataNascimento && (
               <div>
-                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; gap-1 gap sem token DS */ "text-body-sm font-medium text-muted-foreground mb-1 flex items-center gap-1")}>
+                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1 flex items-center inline-micro")}>
                   <Calendar className="h-4 w-4" />
                   Data de Nascimento
                 </div>
@@ -219,7 +219,7 @@ export function PerfilView() {
             )}
             {usuario.telefone && (
               <div>
-                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; gap-1 gap sem token DS */ "text-body-sm font-medium text-muted-foreground mb-1 flex items-center gap-1")}>
+                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1 flex items-center inline-micro")}>
                   <Phone className="h-4 w-4" />
                   Telefone
                 </div>

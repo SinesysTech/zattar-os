@@ -211,7 +211,7 @@ export function ExpedientesSemanaView({
       </div>
 
       {/* Week Grid — 5 colunas (seg-sex) */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-start")}>
+      <div className={cn("grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 inline-medium items-start")}>
         {weekDays.map((day) => {
           const key = format(day, 'yyyy-MM-dd');
           const dayExps = expedientesByDay.get(key) ?? [];
@@ -323,11 +323,11 @@ function WeekDayCard({
       )}
     >
       {/* Row 1: Prazo date + Urgency indicators */}
-      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center justify-between gap-1")}>
+      <div className={cn("flex items-center justify-between inline-micro")}>
         <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-caption tabular-nums font-semibold text-foreground/80")}>
           {prazoLabel ?? <span className="italic text-muted-foreground/65">Sem prazo</span>}
         </span>
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+        <div className={cn("flex items-center inline-snug")}>
           {!isBaixado && urgency !== 'ok' && (
             <span className={cn('size-2 rounded-full', URGENCY_DOT[urgency])} />
           )}
@@ -370,7 +370,7 @@ function WeekDayCard({
       )}
 
       {/* Row 4: TRT + Grau + Processo */}
-      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mt-1 min-w-0")}>
+      <div className={cn("flex items-center inline-snug mt-1 min-w-0")}>
         {expediente.trt && (
           <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary/70 shrink-0")}>
             {expediente.trt}
@@ -398,7 +398,7 @@ function WeekDayCard({
 
       {/* Row 6: Descrição + Observações editáveis */}
       <div
-        className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "mt-2 space-y-1.5")}
+        className={cn("mt-2 stack-snug")}
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}
       >

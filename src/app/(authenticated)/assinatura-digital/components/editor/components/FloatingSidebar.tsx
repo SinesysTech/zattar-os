@@ -84,7 +84,7 @@ function FieldPaletteCard({
       }}
       onDragEnd={onDragEnd}
       className={cn(
-        /* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ 'flex items-center gap-3 p-3 rounded-xl border backdrop-blur-md select-none',
+        /* design-system-escape: p-3 → usar <Inset> */ 'flex items-center inline-medium p-3 rounded-xl border backdrop-blur-md select-none',
         'glass-kpi border-border/40 bg-card/55',
         'cursor-grab active:cursor-grabbing',
         'hover:border-primary/40 hover:-translate-y-px hover:shadow-sm',
@@ -153,12 +153,12 @@ function SidebarContent(props: FloatingSidebarProps) {
       {/* Scrollable content */}
       <div className={cn(/* design-system-escape: space-y-5 sem token DS; px-5 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "flex-1 min-h-0 space-y-5 overflow-y-auto px-5 py-5")}>
         {/* ── Configurações ───────────────────────── */}
-        <section className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+        <section className={cn("stack-medium")}>
           <SectionHeader title="Configurações" />
 
           <div className={cn(/* design-system-escape: space-y-2.5 sem token DS */ "space-y-2.5")}>
-            <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
-              <Label htmlFor="doc-titulo" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 text-caption")}>
+            <div className={cn("stack-snug")}>
+              <Label htmlFor="doc-titulo" className={cn("flex items-center inline-snug text-caption")}>
                 <FileText className="size-3.5" />
                 Título
               </Label>
@@ -171,7 +171,7 @@ function SidebarContent(props: FloatingSidebarProps) {
               />
             </div>
 
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ "flex items-center justify-between gap-3 rounded-xl border border-border/40 bg-card/55 backdrop-blur-md p-3 glass-kpi")}>
+            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between inline-medium rounded-xl border border-border/40 bg-card/55 backdrop-blur-md p-3 glass-kpi")}>
               <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5 min-w-0")}>
                 <span className="inline-flex size-7 items-center justify-center rounded-lg bg-info/10 shrink-0">
                   <Camera className="size-3.5 text-info/70" />
@@ -197,7 +197,7 @@ function SidebarContent(props: FloatingSidebarProps) {
         <AmbientDivider />
 
         {/* ── Signatários ─────────────────────────── */}
-        <section className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+        <section className={cn("stack-medium")}>
           <SectionHeader
             title="Quem vai assinar?"
             action={
@@ -224,7 +224,7 @@ function SidebarContent(props: FloatingSidebarProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "w-full mt-1 gap-1.5")}
+                  className={cn("w-full mt-1 inline-snug")}
                   onClick={() => setIsAddSignerOpen(true)}
                 >
                   <Plus className="size-3.5" />
@@ -247,7 +247,7 @@ function SidebarContent(props: FloatingSidebarProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "w-full border-dashed gap-1.5")}
+                  className={cn("w-full border-dashed inline-snug")}
                   onClick={() => setIsAddSignerOpen(true)}
                 >
                   <Plus className="size-3.5" />
@@ -261,8 +261,8 @@ function SidebarContent(props: FloatingSidebarProps) {
         <AmbientDivider />
 
         {/* ── Campos ─────────────────────────────── */}
-        <section className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
+        <section className={cn("stack-medium")}>
+          <div className={cn("flex flex-col inline-micro")}>
             <SectionHeader title="Campos" />
             <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[11px] text-muted-foreground leading-relaxed")}>
               Arraste para o documento e solte onde deseja que o assinante

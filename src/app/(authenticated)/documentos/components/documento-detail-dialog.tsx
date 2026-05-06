@@ -141,7 +141,7 @@ function MetaRow({
   value: React.ReactNode;
 }) {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-1 padding direcional sem Inset equiv. */ "flex items-center justify-between gap-3 py-1")}>
+    <div className={cn(/* design-system-escape: py-1 padding direcional sem Inset equiv. */ "flex items-center justify-between inline-medium py-1")}>
       <span className="text-[11.5px] text-muted-foreground/70">{label}</span>
       <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[12px] font-medium text-foreground text-right truncate")}>{value}</span>
     </div>
@@ -240,7 +240,7 @@ export function DocumentoDetailDialog({
           {/* Informações gerais */}
           <div>
             <SectionHeader icon={Info} label="Informações" />
-            <SectionCard className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
+            <SectionCard className={cn("stack-nano")}>
               <MetaRow label="Tipo" value={tipoLabel} />
               {item.tipo === 'arquivo' && (
                 <MetaRow label="Tamanho" value={formatFileSize(item.dados.tamanho_bytes)} />
@@ -267,7 +267,7 @@ export function DocumentoDetailDialog({
           {/* Timeline */}
           <div>
             <SectionHeader icon={Calendar} label="Datas" />
-            <SectionCard className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
+            <SectionCard className={cn("stack-nano")}>
               <MetaRow
                 label="Criado em"
                 value={format(parseISO(item.dados.created_at), "dd 'de' MMM 'de' yyyy", {
@@ -289,7 +289,7 @@ export function DocumentoDetailDialog({
           <div>
             <SectionHeader icon={UserIcon} label="Criado por" />
             <SectionCard>
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+              <div className={cn("flex items-center inline-medium")}>
                 <Avatar className="size-8">
                   {criadorAvatar && <AvatarImage src={criadorAvatar} alt={criadorNome} />}
                   <AvatarFallback className={cn("text-caption bg-primary/10 text-primary")}>
@@ -312,7 +312,7 @@ export function DocumentoDetailDialog({
           {item.tipo === 'arquivo' && (
             <div>
               <SectionHeader icon={HardDrive} label="Armazenamento" />
-              <SectionCard className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
+              <SectionCard className={cn("stack-nano")}>
                 <MetaRow
                   label="Chave"
                   value={

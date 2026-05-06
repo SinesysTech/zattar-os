@@ -56,7 +56,7 @@ export function SourceLegend({
         <Layers className="size-3.5 text-muted-foreground/55" />
         <Text variant="caption" className="font-semibold text-foreground">Calendários</Text>
       </div>
-      <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+      <div className={cn("stack-snug")}>
         {SOURCE_ORDER.map((source) => {
           const cfg = SOURCE_CONFIGS[source];
           const colors = sourceColorToken(source);

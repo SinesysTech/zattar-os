@@ -468,7 +468,7 @@ export function TerceiroFormDialog({
           type="button"
           onClick={() => setFormData(prev => ({ ...prev, tipo_pessoa: 'pf' }))}
           className={cn(
-            /* design-system-escape: gap-3 gap sem token DS */ 'flex flex-col items-center justify-center gap-3 inset-dialog rounded-lg border-2 transition-all hover:border-primary/50',
+            'flex flex-col items-center justify-center inline-medium inset-dialog rounded-lg border-2 transition-all hover:border-primary/50',
             isPF
               ? 'border-primary bg-primary/5'
               : 'border-border bg-background hover:bg-muted/50'
@@ -489,7 +489,7 @@ export function TerceiroFormDialog({
             </p>
           </div>
           {isPF && (
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 text-primary text-body-sm")}>
+            <div className={cn("flex items-center inline-micro text-primary text-body-sm")}>
               <Check className="h-4 w-4" />
               Selecionado
             </div>
@@ -500,7 +500,7 @@ export function TerceiroFormDialog({
           type="button"
           onClick={() => setFormData(prev => ({ ...prev, tipo_pessoa: 'pj' }))}
           className={cn(
-            /* design-system-escape: gap-3 gap sem token DS */ 'flex flex-col items-center justify-center gap-3 inset-dialog rounded-lg border-2 transition-all hover:border-primary/50',
+            'flex flex-col items-center justify-center inline-medium inset-dialog rounded-lg border-2 transition-all hover:border-primary/50',
             isPJ
               ? 'border-primary bg-primary/5'
               : 'border-border bg-background hover:bg-muted/50'
@@ -521,7 +521,7 @@ export function TerceiroFormDialog({
             </p>
           </div>
           {isPJ && (
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 text-primary text-body-sm")}>
+            <div className={cn("flex items-center inline-micro text-primary text-body-sm")}>
               <Check className="h-4 w-4" />
               Selecionado
             </div>
@@ -810,7 +810,7 @@ export function TerceiroFormDialog({
               <Badge
                 key={index}
                 variant="secondary"
-                className={cn(/* design-system-escape: gap-1 gap sem token DS; pr-1 padding direcional sem Inset equiv. */ "gap-1 pr-1")}
+                className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "inline-micro pr-1")}
               >
                 {email}
                 <button

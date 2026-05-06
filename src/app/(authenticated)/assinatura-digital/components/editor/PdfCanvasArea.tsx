@@ -249,13 +249,13 @@ export default function PdfCanvasArea({
           )}>{displayText}</span>
         </div>
         {signer && (
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "pointer-events-none absolute -top-6 left-0 flex items-center gap-1 rounded-sm px-2 py-0.5 text-[10px] font-medium text-white shadow-sm")} style={{ backgroundColor: signerColor }}>
+          <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "pointer-events-none absolute -top-6 left-0 flex items-center inline-micro rounded-sm px-2 py-0.5 text-[10px] font-medium text-white shadow-sm")} style={{ backgroundColor: signerColor }}>
             {signer.nome}
           </div>
         )}
         {field.isSelected && (
           <>
-            <AppBadge variant="secondary" className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "pointer-events-none absolute flex items-center gap-1 rounded-full px-2 py-0 text-[11px] shadow-sm", signer ? "-top-12 left-0" : "-top-6 left-0")}>
+            <AppBadge variant="secondary" className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "pointer-events-none absolute flex items-center inline-micro rounded-full px-2 py-0 text-[11px] shadow-sm", signer ? "-top-12 left-0" : "-top-6 left-0")}>
               {isImageField ? <ImageIcon className="h-3 w-3" aria-hidden="true" /> : isRichTextField ? <AlignLeft className="h-3 w-3" aria-hidden="true" /> : <Type className="h-3 w-3" aria-hidden="true" />}
               {typeLabel}
             </AppBadge>

@@ -80,12 +80,12 @@ export function WidgetFluxoComTabs() {
     >
       {tab === 'mensal' && (
         <div>
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mb-3")}>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+          <div className={cn("flex items-center inline-medium mb-3")}>
+            <div className={cn("flex items-center inline-snug")}>
               <span className="inline-block size-2 rounded-sm bg-primary/60" />
               <span className="text-[10px] text-muted-foreground/50">Receita</span>
             </div>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+            <div className={cn("flex items-center inline-snug")}>
               <span className="inline-block size-2 rounded-sm bg-chart-2/60" />
               <span className="text-[10px] text-muted-foreground/50">Despesa</span>
             </div>

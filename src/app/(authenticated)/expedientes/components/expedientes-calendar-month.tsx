@@ -207,7 +207,7 @@ export function ExpedientesCalendarMonth({
                                     </div>
                                     
                                     {hasExps && (
-                                        <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
+                                        <div className={cn("stack-micro")}>
                                             {exps.slice(0, 3).map(e => (
                                                 <div 
                                                     key={e.id}

@@ -65,7 +65,7 @@ export function TimelineSidebarHeader({
           onClick={onOpenSearch}
           className={cn(
             'absolute right-2 top-1/2 -translate-y-1/2',
-            /* design-system-escape: gap-0.5 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'flex items-center gap-0.5 px-1.5 py-0.5 rounded',
+            /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'flex items-center inline-nano px-1.5 py-0.5 rounded',
             'bg-muted border border-border',
             /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[10px] font-medium text-muted-foreground',
             'hover:bg-accent hover:text-accent-foreground transition-colors',

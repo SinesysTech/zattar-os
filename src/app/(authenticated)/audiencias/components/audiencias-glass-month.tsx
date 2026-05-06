@@ -135,7 +135,7 @@ function DayCell({
       </div>
 
       {count > 0 && count < 3 && (
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS; pt-1.5 padding direcional sem Inset equiv. */ "flex gap-1 mt-auto pt-1.5 flex-wrap")}>
+        <div className={cn(/* design-system-escape: pt-1.5 padding direcional sem Inset equiv. */ "flex inline-micro mt-auto pt-1.5 flex-wrap")}>
           {audienciasDia.map((aud) => (
             <div
               key={aud.id}
@@ -146,7 +146,7 @@ function DayCell({
       )}
 
       {count >= 3 && (
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS; pt-1.5 padding direcional sem Inset equiv. */ "flex gap-1 mt-auto pt-1.5")}>
+        <div className={cn(/* design-system-escape: pt-1.5 padding direcional sem Inset equiv. */ "flex inline-micro mt-auto pt-1.5")}>
           <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-micro-caption font-bold text-primary bg-primary/15 rounded-full px-1.5 py-0.5 inline-flex items-center justify-center min-w-4.5")}>
             {count}
           </span>
@@ -190,7 +190,7 @@ function HearingItem({ audiencia }: { audiencia: Audiencia }) {
     >
       {/* Linha principal: hora + tipo + badge */}
       <div className={cn("flex items-center justify-between inline-tight")}>
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 min-w-0")}>
+        <div className={cn("flex items-center inline-snug min-w-0")}>
           <Clock className="w-3 h-3 text-foreground/60 shrink-0" />
           <Text variant="caption" className="font-semibold text-foreground/85 truncate">
             {audiencia.horaInicio || '—'} · {audiencia.tipoDescricao || 'Audiência'}
@@ -205,7 +205,7 @@ function HearingItem({ audiencia }: { audiencia: Audiencia }) {
       </div>
 
       {/* Processo + grau */}
-      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mt-1.5 ml-4.5 min-w-0")}>
+      <div className={cn("flex items-center inline-snug mt-1.5 ml-4.5 min-w-0")}>
         {audiencia.grau && (
           <span className="text-micro-caption text-foreground/60 shrink-0">
             {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
@@ -217,8 +217,8 @@ function HearingItem({ audiencia }: { audiencia: Audiencia }) {
       </div>
 
       {/* Meta: modalidade + órgão */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mt-1.5 ml-4.5 text-foreground/55")}>
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+      <div className={cn("flex items-center inline-medium mt-1.5 ml-4.5 text-foreground/55")}>
+        <div className={cn("flex items-center inline-micro")}>
           <ModalidadeIcon className="w-3 h-3" />
           <span className="text-caption">{modalidadeLabel}</span>
         </div>
@@ -320,7 +320,7 @@ export function AudienciasGlassMonth({
               { color: 'bg-info', label: 'Finalizada' },
               { color: 'bg-destructive', label: 'Cancelada' },
             ].map(({ color, label }) => (
-              <div key={label} className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+              <div key={label} className={cn("flex items-center inline-snug")}>
                 <div className={cn('w-1.75 h-1.75 rounded-full', color)} />
                 <Text variant="caption" as="span" className="text-foreground/55">{label}</Text>
               </div>
@@ -328,7 +328,7 @@ export function AudienciasGlassMonth({
           </div>
 
           {/* Weekday Headers */}
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "grid grid-cols-7 gap-1.5 mb-1")}>
+          <div className={cn("grid grid-cols-7 inline-snug mb-1")}>
             {WEEKDAY_HEADERS.map((label, idx) => (
               <div
                 key={label}
@@ -343,7 +343,7 @@ export function AudienciasGlassMonth({
           </div>
 
           {/* Calendar Grid */}
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "grid grid-cols-7 gap-1.5 flex-1")} style={{ gridAutoRows: '1fr' }}>
+          <div className={cn("grid grid-cols-7 inline-snug flex-1")} style={{ gridAutoRows: '1fr' }}>
             {days.map((day) => {
               const key = format(day, 'yyyy-MM-dd');
               const auds = dayMap.get(key) || [];
@@ -374,7 +374,7 @@ export function AudienciasGlassMonth({
                         align="start"
                         sideOffset={6}
                       >
-                        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3 mb-3")}>
+                        <div className={cn("flex items-center justify-between inline-medium mb-3")}>
                           <div>
                             <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-sm font-bold capitalize")}>
                               {format(day, "d 'de' MMMM", { locale: ptBR })}
@@ -419,7 +419,7 @@ export function AudienciasGlassMonth({
           </div>
 
           {/* Summary Strip */}
-          <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "mt-5 pt-4 border-t border-border/50 flex items-center justify-between flex-wrap gap-3")}>
+          <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "mt-5 pt-4 border-t border-border/50 flex items-center justify-between flex-wrap inline-medium")}>
             <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5")}>
               <div className="text-center">
                 <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-lg font-bold")}>{summary.total}</p>

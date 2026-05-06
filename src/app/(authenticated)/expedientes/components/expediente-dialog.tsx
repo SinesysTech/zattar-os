@@ -638,7 +638,7 @@ export function ExpedienteDialog({
               ) : processosError ? (
                 <Alert variant="destructive">
                   <AlertCircle className="h-4 w-4" />
-                  <AlertDescription className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
+                  <AlertDescription className={cn("flex items-center justify-between inline-medium")}>
                     <span>Falha ao carregar processos. {processosError}</span>
                     <Button
                       type="button"
@@ -698,8 +698,8 @@ export function ExpedienteDialog({
             <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold tabular-nums")}>
               {processoSelecionado.numeroProcesso}
             </p>
-            <dl className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 gap-3 sm:grid-cols-2")}>
-              <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1 min-w-0")}>
+            <dl className={cn("grid grid-cols-1 inline-medium sm:grid-cols-2")}>
+              <div className={cn("stack-micro min-w-0")}>
                 <Text
                   variant="meta-label"
                   as="dt"
@@ -711,7 +711,7 @@ export function ExpedienteDialog({
                   {processoSelecionado.nomeParteAutora || '—'}
                 </dd>
               </div>
-              <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1 min-w-0")}>
+              <div className={cn("stack-micro min-w-0")}>
                 <Text
                   variant="meta-label"
                   as="dt"

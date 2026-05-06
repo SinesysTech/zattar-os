@@ -99,7 +99,7 @@ export function ClienteSelect({
         <button
           type="button"
           onClick={() => fetchOptions()}
-          className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-primary hover:underline inline-flex items-center gap-1")}
+          className={cn("text-primary hover:underline inline-flex items-center inline-micro")}
         >
           <RefreshCw className="h-3 w-3" />
           Tentar novamente

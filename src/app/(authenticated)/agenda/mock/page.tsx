@@ -128,7 +128,7 @@ function Toolbar({
   const activeFilters = sourceFilter.size;
 
   return (
-    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+    <div className={cn("stack-medium")}>
       {/* Row 1: Title + New Event */}
       <div className={cn("flex items-end justify-between inline-default")}>
         <div>
@@ -165,7 +165,7 @@ function Toolbar({
           <button
             onClick={() => setFilterOpen(!filterOpen)}
             className={cn(
-              /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-caption border transition-colors cursor-pointer",
+              /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center inline-snug px-2.5 py-1.5 rounded-lg text-caption border transition-colors cursor-pointer",
               activeFilters > 0
                 ? "border-primary/20 bg-primary/6 text-primary"
                 : "border-border/15 text-muted-foreground/50 hover:text-muted-foreground/70",
@@ -205,7 +205,7 @@ function Toolbar({
         <div className="flex-1" />
 
         {/* Date Nav */}
-        <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+        <div className={cn("flex items-center inline-micro")}>
           <button onClick={onPrev} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer")}>
             <ChevronLeft className="size-4" />
           </button>
@@ -239,7 +239,7 @@ function Toolbar({
                     )}
                   >
                     <span>{opt.label}</span>
-                    <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
+                    <div className={cn("flex items-center inline-snug")}>
                       <span className="text-[9px] text-muted-foreground/50">{opt.shortcut}</span>
                       {view === opt.id && <Check className="size-3" />}
                     </div>
@@ -285,7 +285,7 @@ function CommandHeader({ events, currentDate }: { events: MockCalendarEvent[]; c
           <div key={s.l} className={cn("flex items-center inline-tight min-w-max")}>
             {i > 0 && <div className="w-px h-6 bg-border/8 shrink-0 hidden sm:block" />}
             <s.icon className={cn("size-3 opacity-40 shrink-0", s.c)} />
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5")}>
+            <div className={cn("flex items-baseline inline-snug")}>
               <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-sm font-bold tabular-nums")}>{s.v}</span>
               <span className="text-[9px] text-muted-foreground/55 hidden sm:inline">{s.l}</span>
             </div>
@@ -294,11 +294,11 @@ function CommandHeader({ events, currentDate }: { events: MockCalendarEvent[]; c
       </div>
 
       {/* Week pulse row */}
-      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; sm:gap-2 sem equivalente DS; pt-3 padding direcional sem Inset equiv. */ "flex items-end justify-between gap-1.5 sm:gap-2 pt-3")}>
+      <div className={cn(/* design-system-escape: sm:gap-2 sem equivalente DS; pt-3 padding direcional sem Inset equiv. */ "flex items-end justify-between inline-snug sm:gap-2 pt-3")}>
         {pulse.map((day) => {
           const h = day.horas > 0 ? Math.max(14, (day.horas / maxH) * 100) : 6;
           return (
-            <div key={day.dia} className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col items-center gap-1 flex-1")}>
+            <div key={day.dia} className={cn("flex flex-col items-center inline-micro flex-1")}>
               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[9px] tabular-nums font-medium", day.hoje ? "text-primary" : day.eventos > 0 ? "text-muted-foreground/60" : "text-muted-foreground/60")}>
                 {day.eventos || "–"}
               </span>
@@ -388,7 +388,7 @@ function MonthView({ events, currentDate, onEventClick }: { events: MockCalendar
               </div>
 
               {/* Events */}
-              <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
+              <div className={cn("stack-nano")}>
                 {dayEvents.slice(0, maxVisible).map((ev) => (
                   <EventChip key={ev.id} event={ev} compact onClick={() => onEventClick(ev)} />
                 ))}
@@ -442,7 +442,7 @@ function WeekView({ events, currentDate, onEventClick }: { events: MockCalendarE
           <div className={cn(/* design-system-escape: pb-1 padding direcional sem Inset equiv. */ "grid grid-cols-8 border-b border-border/10 pb-1 mb-1")}>
             <div className={cn(/* design-system-escape: pr-2 padding direcional sem Inset equiv. */ "text-[8px] text-muted-foreground/45 flex items-center justify-end pr-2")}>dia inteiro</div>
             {allDayByDay.map((dayEvents, i) => (
-              <div key={i} className={cn(/* design-system-escape: px-0.5 padding direcional sem Inset equiv.; space-y-0.5 sem token DS */ "px-0.5 space-y-0.5")}>
+              <div key={i} className={cn(/* design-system-escape: px-0.5 padding direcional sem Inset equiv. */ "px-0.5 stack-nano")}>
                 {dayEvents.map((ev) => (
                   <EventChip key={ev.id} event={ev} compact onClick={() => onEventClick(ev)} />
                 ))}
@@ -509,7 +509,7 @@ function DayView({ events, currentDate, onEventClick }: { events: MockCalendarEv
   return (
     <GlassPanel className={cn(/* design-system-escape: p-3 → usar <Inset>; sm:p-4 sem equivalente DS */ "p-3 sm:p-4")}>
       {/* Day header */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex items-center gap-3 mb-3 pb-2 border-b border-border/10")}>
+      <div className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "flex items-center inline-medium mb-3 pb-2 border-b border-border/10")}>
         <div className={cn(
           "size-10 rounded-xl flex items-center justify-center",
           isViewToday ? "bg-primary text-primary-foreground" : "bg-border/10 text-foreground/70",
@@ -526,7 +526,7 @@ function DayView({ events, currentDate, onEventClick }: { events: MockCalendarEv
       {allDay.length > 0 && (
         <div className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "mb-3 pb-2 border-b border-border/10")}>
           <span className={cn(/* design-system-escape: tracking-wider sem token DS; font-medium → className de <Text>/<Heading> */ "text-[9px] text-muted-foreground/50 uppercase tracking-wider font-medium")}>Dia inteiro</span>
-          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "mt-1 space-y-1")}>
+          <div className={cn("mt-1 stack-micro")}>
             {allDay.map((ev) => (
               <EventChip key={ev.id} event={ev} compact onClick={() => onEventClick(ev)} />
             ))}
@@ -541,13 +541,13 @@ function DayView({ events, currentDate, onEventClick }: { events: MockCalendarEv
           const isNowHour = isViewToday && now.getHours() === hour;
 
           return (
-            <div key={hour} className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex gap-3 h-16 relative")}>
+            <div key={hour} className={cn("flex inline-medium h-16 relative")}>
               {/* Time label */}
               <div className={cn(/* design-system-escape: pr-2 padding direcional sem Inset equiv. */ "w-12 shrink-0 text-right text-[10px] tabular-nums text-muted-foreground/50 -mt-1.5 pr-2")}>
                 {String(hour).padStart(2, "0")}:00
               </div>
               {/* Events area */}
-              <div className={cn(/* design-system-escape: py-0.5 padding direcional sem Inset equiv.; space-y-0.5 sem token DS */ "flex-1 border-t border-border/6 py-0.5 space-y-0.5 relative")}>
+              <div className={cn(/* design-system-escape: py-0.5 padding direcional sem Inset equiv. */ "flex-1 border-t border-border/6 py-0.5 stack-nano relative")}>
                 {isNowHour && (
                   <div
                     className="absolute left-0 right-0 z-10 flex items-center"
@@ -606,7 +606,7 @@ function AgendaListView({ events, currentDate, onEventClick }: { events: MockCal
           return (
             <div key={date.toISOString()} className="border-b border-border/6 last:border-b-0">
               {/* Day header */}
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-3 py-2.5 sticky top-0 bg-background/80 backdrop-blur-sm z-10")}>
+              <div className={cn(/* design-system-escape: py-2.5 padding direcional sem Inset equiv. */ "flex items-center inline-medium py-2.5 sticky top-0 bg-background/80 backdrop-blur-sm z-10")}>
                 <div className={cn(
                   "size-8 rounded-lg flex items-center justify-center shrink-0",
                   isDateToday ? "bg-primary text-primary-foreground" : "bg-border/8",
@@ -621,7 +621,7 @@ function AgendaListView({ events, currentDate, onEventClick }: { events: MockCal
               </div>
 
               {/* Events */}
-              <div className={cn(/* design-system-escape: pl-11 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv.; space-y-1 sem token DS */ "pl-11 pb-2 space-y-1")}>
+              <div className={cn(/* design-system-escape: pl-11 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "pl-11 pb-2 stack-micro")}>
                 {dayEvents.map((ev) => {
                   const c = COLOR_MAP[ev.color];
                   const srcCfg = SOURCE_CONFIG[ev.source];
@@ -633,7 +633,7 @@ function AgendaListView({ events, currentDate, onEventClick }: { events: MockCal
                       key={ev.id}
                       onClick={() => onEventClick(ev)}
                       className={cn(
-                        /* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "w-full text-left flex items-center gap-3 px-3 py-2 rounded-xl transition-all cursor-pointer",
+                        /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "w-full text-left flex items-center inline-medium px-3 py-2 rounded-xl transition-all cursor-pointer",
                         c.bg, "border", c.border,
                         past && "opacity-60",
                         "hover:opacity-80",
@@ -691,7 +691,7 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
       {/* Briefing */}
       <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv.; sm:px-5 sem equivalente DS */ "relative overflow-hidden rounded-2xl border border-primary/8 bg-primary/2 px-4 py-3.5 sm:px-5")}>
         <div className="absolute top-0 right-0 w-24 h-24 bg-primary/3 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "relative flex items-start gap-3")}>
+        <div className={cn("relative flex items-start inline-medium")}>
           <div className="size-1.5 rounded-full bg-primary animate-pulse mt-2 shrink-0" />
           <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[13px] text-foreground/70 leading-relaxed")}>
             <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>{saudacao}.</span>{" "}
@@ -718,7 +718,7 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
               </div>
               <div className={cn("flex items-center inline-tight")}>
                 {(["audiencias", "agenda", "expedientes"] as EventSource[]).map((s) => (
-                  <div key={s} className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+                  <div key={s} className={cn("flex items-center inline-micro")}>
                     <div className={cn("size-1.5 rounded-full", COLOR_MAP[SOURCE_CONFIG[s].defaultColor].dot)} />
                     <span className="text-[8px] text-muted-foreground/50">{SOURCE_CONFIG[s].label}</span>
                   </div>
@@ -731,7 +731,7 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
               {allDay.length > 0 && (
                 <div className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "mb-3 pb-2 border-b border-border/8")}>
                   <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[8px] uppercase tracking-[0.15em] text-muted-foreground/45 font-semibold")}>Dia inteiro</span>
-                  <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "mt-1 space-y-1")}>
+                  <div className={cn("mt-1 stack-micro")}>
                     {allDay.map((ev) => <EventChip key={ev.id} event={ev} compact onClick={() => onEventClick(ev)} />)}
                   </div>
                 </div>
@@ -815,7 +815,7 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
               <Zap className="size-3 text-primary/40" />
               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-muted-foreground/50")}>Ações</span>
             </div>
-            <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
+            <div className={cn("stack-nano")}>
               {[
                 { label: "Abrir PJe", icon: ExternalLink },
                 { label: "Preparar peça", icon: FileText },
@@ -846,7 +846,7 @@ function BriefingEventCard({ event, onClick }: { event: MockCalendarEvent; onCli
   const prep = event.prepStatus ? { preparado: { c: "text-success", bg: "bg-success/10", l: "Preparado" }, parcial: { c: "text-warning", bg: "bg-warning/10", l: "Parcial" }, pendente: { c: "text-destructive", bg: "bg-destructive/10", l: "Pendente" } }[event.prepStatus] : null;
 
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-1 padding direcional sem Inset equiv. */ "flex items-stretch gap-3 py-1 group")}>
+    <div className={cn(/* design-system-escape: py-1 padding direcional sem Inset equiv. */ "flex items-stretch inline-medium py-1 group")}>
       <div className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "w-11 shrink-0 flex flex-col items-end pt-2.5")}>
         <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] tabular-nums font-medium text-foreground/60")}>{fmtTime(event.start)}</span>
         <span className="text-[9px] tabular-nums text-muted-foreground/50">{fmtTime(event.end)}</span>
@@ -864,7 +864,7 @@ function BriefingEventCard({ event, onClick }: { event: MockCalendarEvent; onCli
             <div className={cn("flex items-center inline-tight")}>
               <h3 className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[13px] font-medium text-foreground truncate")}>{event.title}</h3>
               {prep && (
-                <span className={cn(/* design-system-escape: gap-0.5 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "flex items-center gap-0.5 px-1.5 py-px rounded-full text-[8px] font-semibold shrink-0", prep.bg, prep.c)}>
+                <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "flex items-center inline-nano px-1.5 py-px rounded-full text-[8px] font-semibold shrink-0", prep.bg, prep.c)}>
                   {event.prepStatus === "preparado" ? <CheckCircle2 className="size-2" /> : event.prepStatus === "parcial" ? <Circle className="size-2" /> : <AlertTriangle className="size-2" />}
                   {prep.l}
                 </span>
@@ -876,7 +876,7 @@ function BriefingEventCard({ event, onClick }: { event: MockCalendarEvent; onCli
         {event.description && <p className="text-[10px] text-muted-foreground/60 mt-1 truncate ml-8">{event.description}</p>}
         <div className={cn("flex items-center inline-tight mt-2 ml-8 flex-wrap")}>
           {event.location && (
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+            <div className={cn("flex items-center inline-micro")}>
               <ModalIcon className="size-2 text-muted-foreground/50" />
               <span className="text-[9px] text-muted-foreground/55 truncate max-w-40">{event.location}</span>
             </div>
@@ -890,12 +890,12 @@ function BriefingEventCard({ event, onClick }: { event: MockCalendarEvent; onCli
           {event.prepDocs !== undefined && (
             <>
               <div className={cn(/* design-system-escape: mx-0.5 margin sem primitiva DS */ "w-px h-3 bg-border/8 mx-0.5")} />
-              <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center gap-0.5")}>
+              <div className={cn("flex items-center inline-nano")}>
                 <FileText className="size-2 text-muted-foreground/45" />
                 <span className={cn("text-[9px] tabular-nums", event.prepDocsOk === event.prepDocs ? "text-success/50" : "text-warning/50")}>{event.prepDocsOk ?? 0}/{event.prepDocs}</span>
               </div>
               {event.prepTestemunhas !== undefined && event.prepTestemunhas > 0 && (
-                <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center gap-0.5")}>
+                <div className={cn("flex items-center inline-nano")}>
                   <Users className="size-2 text-muted-foreground/45" />
                   <span className={cn("text-[9px] tabular-nums", event.prepTestemunhasOk === event.prepTestemunhas ? "text-success/50" : "text-warning/50")}>{event.prepTestemunhasOk ?? 0}/{event.prepTestemunhas}</span>
                 </div>
@@ -920,7 +920,7 @@ function PhaseLabel({ label, icon: Icon }: { label: string; icon: LucideIcon }) 
 
 function FocusSlot({ inicio, fim, label }: { inicio: string; fim: string; label?: string }) {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-1 padding direcional sem Inset equiv. */ "flex items-center gap-3 py-1")}>
+    <div className={cn(/* design-system-escape: py-1 padding direcional sem Inset equiv. */ "flex items-center inline-medium py-1")}>
       <span className="w-11 text-right text-[10px] tabular-nums text-muted-foreground/45 shrink-0">{inicio}</span>
       <div className="size-1.5 rounded-full border border-dashed border-success/25 shrink-0" />
       <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex-1 flex items-center inline-tight px-3 py-1.5 rounded-lg border border-dashed border-success/10 bg-success/1.5")}>
@@ -934,10 +934,10 @@ function FocusSlot({ inicio, fim, label }: { inicio: string; fim: string; label?
 
 function TravelSlot({ minutes }: { minutes: number }) {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-0.5 padding direcional sem Inset equiv. */ "flex items-center gap-3 py-0.5")}>
+    <div className={cn(/* design-system-escape: py-0.5 padding direcional sem Inset equiv. */ "flex items-center inline-medium py-0.5")}>
       <span className="w-11 shrink-0" />
       <MapPin className="size-1.5 text-warning/30 shrink-0" />
-      <div className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "flex items-center gap-1 px-2.5 py-1 rounded-md bg-warning/3 border border-warning/8")}>
+      <div className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "flex items-center inline-micro px-2.5 py-1 rounded-md bg-warning/3 border border-warning/8")}>
         <MapPin className="size-2 text-warning/35" />
         <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[8px] text-warning/50 font-medium")}>~{minutes}min deslocamento</span>
       </div>
@@ -947,7 +947,7 @@ function TravelSlot({ minutes }: { minutes: number }) {
 
 function BreakSlot({ inicio, fim, label, icon: Icon }: { inicio: string; fim: string; label: string; icon: LucideIcon }) {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-1 padding direcional sem Inset equiv. */ "flex items-center gap-3 py-1")}>
+    <div className={cn(/* design-system-escape: py-1 padding direcional sem Inset equiv. */ "flex items-center inline-medium py-1")}>
       <span className="w-11 text-right text-[10px] tabular-nums text-muted-foreground/60 shrink-0">{inicio}</span>
       <div className="size-1.5 rounded-full border border-dashed border-muted-foreground/10 shrink-0" />
       <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex-1 flex items-center inline-tight px-3 py-1.5 rounded-lg border border-dashed border-muted-foreground/8 bg-muted/1")}>
@@ -963,7 +963,7 @@ function NowLine() {
   const now = new Date();
   const t = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-0.5 padding direcional sem Inset equiv.; -my-0.5 sem equivalente DS */ "flex items-center gap-3 py-0.5 -my-0.5 z-10 relative")}>
+    <div className={cn(/* design-system-escape: py-0.5 padding direcional sem Inset equiv.; -my-0.5 sem equivalente DS */ "flex items-center inline-medium py-0.5 -my-0.5 z-10 relative")}>
       <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "w-11 text-right text-[10px] tabular-nums text-primary font-semibold shrink-0")}>{t}</span>
       <div className="size-2 rounded-full bg-primary shadow-[0_0_6px_var(--glow-primary)] animate-pulse shrink-0" />
       <div className="flex-1 h-px bg-primary/25" />
@@ -1037,7 +1037,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
       <div className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm" onClick={onClose} />
       <div className={cn("fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md max-h-[85vh] overflow-y-auto rounded-2xl border border-border/20 bg-background shadow-lg inset-dialog stack-default")}>
         {/* Header */}
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
+        <div className={cn("flex items-start justify-between inline-medium")}>
           <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
             <div className={cn("size-8 rounded-xl flex items-center justify-center", c.bg)}>
               <SrcIcon className={cn("size-4", c.text)} />
@@ -1059,7 +1059,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
         </div>
 
         {/* Fields */}
-        <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+        <div className={cn("stack-medium")}>
           {/* Date/Time */}
           <Text variant="caption" as="div" className="flex items-center gap-3">
             <Calendar className="size-3.5 text-muted-foreground/55" />
@@ -1112,7 +1112,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
           )}
 
           {/* Color indicator */}
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 text-caption")}>
+          <div className={cn("flex items-center inline-medium text-caption")}>
             <div className={cn("size-3.5 rounded-full", c.dot)} />
             <p className="text-muted-foreground/50 capitalize">{event.color === "sky" ? "Azul" : event.color === "amber" ? "Âmbar" : event.color === "violet" ? "Violeta" : event.color === "rose" ? "Rosa" : event.color === "emerald" ? "Verde" : "Laranja"}</p>
           </div>
@@ -1123,7 +1123,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
           {isAgenda ? (
             <button className="text-[10px] text-destructive/60 hover:text-destructive/80 cursor-pointer">Excluir</button>
           ) : (
-            <button className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 text-[10px] text-primary/60 hover:text-primary/80 cursor-pointer")}>
+            <button className={cn("flex items-center inline-micro text-[10px] text-primary/60 hover:text-primary/80 cursor-pointer")}>
               <ExternalLink className="size-2.5" />
               Abrir
             </button>

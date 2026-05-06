@@ -42,7 +42,7 @@ export function PartesContrariasBulkActionsBar({
       <Text variant="caption" as="span" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium whitespace-nowrap")}>
         {selectedCount} selecionado{selectedCount > 1 ? 's' : ''}
       </Text>
-      <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 ml-2")}>
+      <div className={cn("flex items-center inline-micro ml-2")}>
         <Button variant="outline" size="sm" className="text-destructive hover:text-destructive" onClick={onDesativar}>
           <Trash2 className="mr-1.5 h-3.5 w-3.5" />
           Desativar

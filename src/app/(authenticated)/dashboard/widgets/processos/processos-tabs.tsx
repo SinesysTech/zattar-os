@@ -117,12 +117,12 @@ export function WidgetProcessosComTabs() {
         />
       }
     >
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
+      <div className={cn("flex flex-col inline-medium")}>
         <Treemap segments={treemapData} height={84} />
         {/* Legend row */}
         <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "flex flex-wrap gap-x-3 gap-y-1 pt-1")}>
           {treemapData.map((seg) => (
-            <div key={seg.label} className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+            <div key={seg.label} className={cn("flex items-center inline-micro")}>
               <span
                 className="size-1.5 rounded-full shrink-0"
                 style={{ backgroundColor: seg.color }}

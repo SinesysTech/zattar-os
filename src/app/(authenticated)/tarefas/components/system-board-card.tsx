@@ -35,7 +35,7 @@ export function SystemBoardCard({ event }: SystemBoardCardProps) {
   return (
     <Card className={cn("border-l-4 transition-colors hover:bg-accent/50", colorClass)}>
       <CardHeader className={cn(/* design-system-escape: p-3 → usar <Inset>; pb-1 padding direcional sem Inset equiv. */ "p-3 pb-1")}>
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 flex-wrap")}>
+        <div className={cn("flex items-center inline-snug flex-wrap")}>
           {sourceLabel && (
             <AppBadge variant="outline" className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1 py-0")}>
               {sourceLabel}
@@ -55,13 +55,13 @@ export function SystemBoardCard({ event }: SystemBoardCardProps) {
         <div className={cn("flex items-center justify-between text-caption text-muted-foreground")}>
           <div className={cn("flex items-center inline-tight")}>
             {dueDate && (
-              <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+              <span className={cn("flex items-center inline-micro")}>
                 <Calendar className="h-3 w-3" />
                 {dueDate}
               </span>
             )}
             {event.responsavelNome && (
-              <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
+              <span className={cn("flex items-center inline-micro")}>
                 <User className="h-3 w-3" />
                 {event.responsavelNome}
               </span>

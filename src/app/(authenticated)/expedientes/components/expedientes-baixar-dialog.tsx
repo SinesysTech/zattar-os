@@ -127,7 +127,7 @@ export function ExpedientesBaixarDialog({
         {/* Informações do expediente */}
         <div className={cn("stack-tight rounded-lg border inset-card-compact bg-muted/50")}>
           <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Expediente</div>
-          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "text-body-sm space-y-1")}>
+          <div className={cn("text-body-sm stack-micro")}>
             <div>
               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Processo:</span> {expediente.numeroProcesso}
             </div>
@@ -214,7 +214,7 @@ export function ExpedientesBaixarDialog({
 
         {/* Informações da Decisão — obrigatório para tipos recursais */}
         {requiresDecisao && (
-          <div className={cn(/* design-system-escape: space-y-3 sem token DS; pt-2 padding direcional sem Inset equiv. */ "space-y-3 pt-2 border-t")}>
+          <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "stack-medium pt-2 border-t")}>
             <Text variant="caption" className="flex items-start gap-2 pt-3 rounded-md bg-muted/40 p-3">
               <Info className="h-4 w-4 shrink-0 mt-0.5 text-primary" />
               <span>
@@ -226,7 +226,7 @@ export function ExpedientesBaixarDialog({
               </span>
             </Text>
             <Label>Resultado da Decisão *</Label>
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
+            <div className={cn("flex flex-col inline-medium")}>
               <label className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset> */ "flex items-center space-x-2 cursor-pointer border rounded-md p-3 hover:bg-muted/50 transition-colors")}>
                 <input
                   type="radio"

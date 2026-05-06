@@ -214,7 +214,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
           <div className="h-5 w-48 bg-muted/40 animate-pulse rounded" />
         </div>
         <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12")}>
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-center gap-3")}>
+          <div className={cn("flex items-center justify-center inline-medium")}>
             <LoadingSpinner size="lg" className="text-primary" />
             <p className={cn("text-body-sm text-muted-foreground")}>Carregando dados do usuário...</p>
           </div>

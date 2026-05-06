@@ -168,7 +168,7 @@ export function IncomingCallDialog({
             </div>
           </div>
 
-          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "text-center space-y-1")}>
+          <div className={cn("text-center stack-micro")}>
             <Heading level="card">
               {callData.iniciadorNome}
             </Heading>
@@ -178,7 +178,7 @@ export function IncomingCallDialog({
           </div>
         </DialogHeader>
 
-        <DialogFooter className={cn(/* design-system-escape: gap-8 gap sem token DS; pb-6 padding direcional sem Inset equiv. */ "flex flex-row justify-center gap-8 sm:justify-center pb-6")}>
+        <DialogFooter className={cn(/* design-system-escape: pb-6 padding direcional sem Inset equiv. */ "flex flex-row justify-center inline-extra-loose sm:justify-center pb-6")}>
           <div className={cn("flex flex-col items-center inline-tight")}>
             <Button
               variant="destructive"

@@ -108,7 +108,7 @@ export function WidgetCapturaStatus() {
       depth={1}
     >
       {/* Resumo compacto */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mb-3 text-[10px] text-muted-foreground/70")}>
+      <div className={cn("flex items-center inline-medium mb-3 text-[10px] text-muted-foreground/70")}>
         <span>
           <span className="inline-block size-2 rounded-full bg-success/70 mr-1" />
           {totalSucesso} ok

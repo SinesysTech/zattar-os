@@ -35,7 +35,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
     <GlassPanel className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
+        <div className={cn("flex items-center inline-medium")}>
           <IconContainer size="lg" className={cfg.bg}>
             <Icon className={`size-5 ${cfg.color}`} />
           </IconContainer>
@@ -50,12 +50,12 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
                 {cfg.label}
               </span>
               {doc.selfieHabilitada && (
-                <span className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "text-[8px] flex items-center gap-0.5 text-muted-foreground/55")}>
+                <span className={cn("text-[8px] flex items-center inline-nano text-muted-foreground/55")}>
                   <Camera className="size-2.5" /> Selfie
                 </span>
               )}
               {doc.origem === "formulario" && (
-                <span className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "text-[8px] flex items-center gap-0.5 text-info/65")}>
+                <span className={cn("text-[8px] flex items-center inline-nano text-info/65")}>
                   <FileText className="size-2.5" /> Formulário
                 </span>
               )}
@@ -72,7 +72,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
 
       {/* Progress */}
       {doc.assinantes.length > 0 && (
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ "flex items-center gap-3 p-3 rounded-xl bg-foreground/3 border border-border/10 mb-4")}>
+        <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center inline-medium p-3 rounded-xl bg-foreground/3 border border-border/10 mb-4")}>
           <ProgressRing
             percent={progress.percent}
             size={48}
@@ -97,11 +97,11 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
 
       {/* Signers list */}
       <div className="mb-4">
-        <Heading level="card" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "text-caption mb-2 flex items-center gap-1.5")}>
+        <Heading level="card" className={cn("text-caption mb-2 flex items-center inline-snug")}>
           <Users className="size-3.5 text-muted-foreground/60" />
           Assinantes
         </Heading>
-        <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
+        <div className={cn("stack-snug")}>
           {doc.assinantes.map((a, i) => {
             const isDone = a.status === "concluido";
             const isLate =
@@ -125,7 +125,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
                   <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium")}>{a.nome}</p>
                   <div className={cn("flex items-center inline-tight mt-0.5")}>
                     {a.email && (
-                      <span className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "text-[9px] text-muted-foreground/55 flex items-center gap-0.5")}>
+                      <span className={cn("text-[9px] text-muted-foreground/55 flex items-center inline-nano")}>
                         <Mail className="size-2" />
                         {a.email}
                       </span>
@@ -134,7 +134,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
                 </div>
                 <div className="text-right shrink-0">
                   {isDone ? (
-                    <span className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "text-[9px] text-success/60 flex items-center gap-0.5")}>
+                    <span className={cn("text-[9px] text-success/60 flex items-center inline-nano")}>
                       <CheckCircle2 className="size-2.5" />
                       {a.concluidoEm ? timeAgo(a.concluidoEm) : "Assinado"}
                     </span>
@@ -185,7 +185,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
           <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-muted-foreground/55 uppercase tracking-wider text-[9px]")}>
             Verificação
           </p>
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; gap-1 gap sem token DS */ "font-medium mt-0.5 flex items-center gap-1 text-success/60")}>
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mt-0.5 flex items-center inline-micro text-success/60")}>
             <Shield className="size-2.5" /> Íntegro
           </p>
         </div>
@@ -195,12 +195,12 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
       <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex inline-tight pt-3 border-t border-border/10")}>
         {doc.status === "pronto" &&
           doc.assinantes.some((a) => a.status === "pendente") && (
-            <button className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-warning/10 text-warning/70 text-caption font-medium hover:bg-warning/15 transition-colors cursor-pointer")}>
+            <button className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex-1 flex items-center justify-center inline-snug py-2 rounded-lg bg-warning/10 text-warning/70 text-caption font-medium hover:bg-warning/15 transition-colors cursor-pointer")}>
               <RotateCcw className="size-3" />
               Reenviar convites
             </button>
           )}
-        <button className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary/10 text-primary/70 text-caption font-medium hover:bg-primary/15 transition-colors cursor-pointer")}>
+        <button className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex-1 flex items-center justify-center inline-snug py-2 rounded-lg bg-primary/10 text-primary/70 text-caption font-medium hover:bg-primary/15 transition-colors cursor-pointer")}>
           <ExternalLink className="size-3" />
           Ver documento
         </button>

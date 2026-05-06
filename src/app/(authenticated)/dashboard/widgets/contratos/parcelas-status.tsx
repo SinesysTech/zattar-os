@@ -89,7 +89,7 @@ export function WidgetParcelasStatus() {
       <div className={cn("flex flex-col inline-default")}>
         <StackedBar segments={segments} height={10} />
 
-        <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
+        <div className={cn("flex flex-col inline-snug")}>
           {parcelasStatus.map((p) => {
             const pct = totalCount > 0 ? ((p.count / totalCount) * 100).toFixed(0) : '0';
             return (

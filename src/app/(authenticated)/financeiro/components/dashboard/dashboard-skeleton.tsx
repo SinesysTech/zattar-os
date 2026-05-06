@@ -12,7 +12,7 @@ export function DashboardSkeleton() {
       {/* Tier 1: KPI Strip */}
       <div className={cn("grid grid-cols-2 inline-default md:grid-cols-3 xl:grid-cols-6")}>
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className={cn(/* design-system-escape: sm:p-6 sem equivalente DS; space-y-3 sem token DS */ "rounded-xl border bg-card inset-card-compact sm:p-6 space-y-3")}>
+          <div key={i} className={cn(/* design-system-escape: sm:p-6 sem equivalente DS */ "rounded-xl border bg-card inset-card-compact sm:p-6 stack-medium")}>
             <Skeleton className="h-4 w-20" />
             <Skeleton className="h-8 w-28" />
             <Skeleton className="h-3 w-16" />
@@ -57,7 +57,7 @@ export function DashboardSkeleton() {
           <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
             <Skeleton className="h-5 w-44" />
           </CardHeader>
-          <CardContent className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+          <CardContent className={cn("stack-medium")}>
             <Skeleton className="h-6 w-full" />
             <Skeleton className="h-2.5 w-full rounded-full" />
             <Skeleton className="h-20 w-full" />
@@ -72,11 +72,11 @@ export function DashboardSkeleton() {
             <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
               <Skeleton className="h-5 w-32" />
             </CardHeader>
-            <CardContent className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
+            <CardContent className={cn("stack-medium")}>
               {Array.from({ length: 3 }).map((_, j) => (
-                <div key={j} className={cn(/* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ "flex gap-3 rounded-lg border p-3")}>
+                <div key={j} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex inline-medium rounded-lg border p-3")}>
                   <Skeleton className="h-8 w-8 rounded-md" />
-                  <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5 flex-1")}>
+                  <div className={cn("stack-snug flex-1")}>
                     <Skeleton className="h-3 w-16" />
                     <Skeleton className="h-5 w-24" />
                   </div>

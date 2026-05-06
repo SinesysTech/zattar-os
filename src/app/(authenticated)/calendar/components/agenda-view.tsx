@@ -48,7 +48,7 @@ export function AgendaView({ currentDate, events, onEventSelect, onEventCreate }
 
           return (
             <div key={day.toString()} className={cn(/* design-system-escape: my-8 margin sem primitiva DS */ "group border-border/70 relative my-8 first:mt-4 border-t")}>
-              <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "bg-background absolute -top-3 left-0 flex h-6 items-center gap-1 pe-4 sm:pe-4")}>
+              <div className={cn("bg-background absolute -top-3 left-0 flex h-6 items-center inline-micro pe-4 sm:pe-4")}>
                 <span
                   className={cn(/* design-system-escape: data-today:font-medium sem equivalente DS; sm:text-xs sem equivalente DS */ "text-[10px] uppercase data-today:font-medium sm:text-xs")}
                   data-today={isToday(day) || undefined}>

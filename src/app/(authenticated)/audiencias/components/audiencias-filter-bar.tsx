@@ -69,7 +69,7 @@ function FilterDropdownTrigger({
   return (
     <div
       className={cn(
-        /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 font-medium transition-colors cursor-pointer',
+        /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center inline-snug rounded-lg border px-2.5 py-1.5 font-medium transition-colors cursor-pointer',
         active
           ? 'border-primary/20 bg-primary/5 text-primary'
           : 'border-border/40 text-muted-foreground/75 hover:bg-muted/30',
@@ -140,7 +140,7 @@ function StatusFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-44')} align="start" side="bottom">
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-0.5 sem token DS */ "p-2 space-y-0.5")}>
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-nano")}>
           {STATUS_OPTIONS.map((opt) => {
             const isSelected = (selected ?? 'todas') === opt.value;
             return (
@@ -222,7 +222,7 @@ function ResponsavelFilter({
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-56')} align="start" side="bottom">
         <Command className="bg-transparent">
-          <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-0.5 sem token DS */ "p-2 space-y-0.5 border-b border-border/10")}>
+          <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-nano border-b border-border/10")}>
             <button
               type="button"
               onClick={() => {
@@ -408,7 +408,7 @@ function ModalidadeFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-44')} align="start" side="bottom">
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-0.5 sem token DS */ "p-2 space-y-0.5")}>
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-nano")}>
           {MODALIDADE_OPTIONS.map((opt) => (
             <button
               key={opt.value}
@@ -479,7 +479,7 @@ function GrauFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-52')} align="start" side="bottom">
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-0.5 sem token DS */ "p-2 space-y-0.5")}>
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-nano")}>
           {GRAU_OPTIONS.map((opt) => (
             <button
               key={opt.value}

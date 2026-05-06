@@ -305,7 +305,7 @@ export function EventCalendar({
       }>
       <CalendarDndProvider onEventUpdate={handleEventUpdate}>
         {!hideToolbar && <div className={cn(/* design-system-escape: p-2 → usar <Inset>; sm:p-4 sem equivalente DS */ "flex items-center justify-between p-2 sm:p-4", className)}>
-          <div className={cn(/* design-system-escape: gap-1 gap sem token DS; sm:gap-4 sem equivalente DS */ "flex items-center gap-1 sm:gap-4")}>
+          <div className={cn(/* design-system-escape: sm:gap-4 sem equivalente DS */ "flex items-center inline-micro sm:gap-4")}>
             <Button
               variant="outline"
               className={cn(/* design-system-escape: max-[479px]:p-0! sem equivalente DS */ "max-[479px]:aspect-square max-[479px]:p-0!")}
@@ -326,7 +326,7 @@ export function EventCalendar({
           <div className={cn("flex items-center inline-tight")}>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5 max-[479px]:h-8")}>
+                <Button variant="outline" className={cn("inline-snug max-[479px]:h-8")}>
                   <span>
                     <span className="xs:hidden" aria-hidden="true">
                       {{ month: "M", week: "S", day: "D", agenda: "A" }[view]}

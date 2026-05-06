@@ -171,7 +171,7 @@ export function DocumentosCommandCenter({
       )}
 
       {/* ── Controls ────────────────────────────────────── */}
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
+      <div className={cn("flex flex-col sm:flex-row items-start sm:items-center inline-medium")}>
         <TabPills
           tabs={[
             { id: "todos", label: "Todos", count: stats?.total ?? 0 },
