@@ -182,7 +182,7 @@ export function FileUploadDialogUnified({
                             {files.map((file, index) => (
                                 <li
                                     key={index}
-                                    className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; pl-4 padding direcional sem Inset equiv.; pr-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; leading-6 sem token DS */ "flex items-center justify-between py-2 pl-4 pr-2 text-body-sm leading-6")}
+                                    className={cn("flex items-center justify-between py-2 pl-4 pr-2 text-body-sm leading-6")}
                                 >
                                     <div className="flex min-w-0 flex-1 items-center">
                                         <div className={cn("flex min-w-0 flex-1 inline-tight")}>

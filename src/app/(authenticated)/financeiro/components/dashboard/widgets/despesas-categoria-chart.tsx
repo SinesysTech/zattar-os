@@ -101,7 +101,7 @@ export function DespesasCategoriaChart({ data, isLoading }: DespesasCategoriaCha
                 return (
                   <div
                     key={item.name}
-                    className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center justify-between inline-tight rounded-md px-2.5 py-1.5 text-body-sm hover:bg-muted/50 transition-colors")}
+                    className={cn("flex items-center justify-between inline-tight rounded-md px-2.5 py-1.5 text-body-sm hover:bg-muted/50 transition-colors")}
                   >
                     <div className={cn("flex items-center inline-tight min-w-0 flex-1")}>
                       <span

@@ -244,7 +244,7 @@ function GlassRow({ pericia, usuarios, onViewDetail }: GlassRowProps) {
               'pericia_situacao',
               pericia.situacaoCodigo,
             )}
-            className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; tracking-wider sem token DS */ "text-[10px] px-2 py-0.5 font-semibold uppercase tracking-wider")}
+            className={cn("text-overline px-2 py-0.5")}
           >
             {SITUACAO_PERICIA_LABELS[pericia.situacaoCodigo]}
           </AppBadge>
@@ -273,7 +273,7 @@ function GlassRow({ pericia, usuarios, onViewDetail }: GlassRowProps) {
         <div className={cn("flex items-center inline-default min-w-0 flex-wrap")}>
           {prazoFormatted && (
             <div className={cn("flex items-center inline-snug")}>
-              <span className={cn(/* design-system-escape: tracking-wider sem token DS; */ "text-[10px] uppercase tracking-wider text-muted-foreground/55 font-medium")}>
+              <span className={cn("text-overline text-muted-foreground/55")}>
                 Prazo
               </span>
               <span className={cn( "text-[12px] font-medium tabular-nums text-foreground/85")}>

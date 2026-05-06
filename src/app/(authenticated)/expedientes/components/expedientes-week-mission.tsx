@@ -143,7 +143,7 @@ function SectionDivider({ urgencia, count }: { urgencia: Urgencia; count: number
     <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; py-1.5 padding direcional sem Inset equiv. */ "flex items-center gap-2.5 py-1.5")}>
       <div className={cn('flex items-center inline-snug rounded-md px-2 py-1', config.bgColor)}>
         <Icon className={cn('size-3.5', config.color)} />
-        <span className={cn(/* design-system-escape: tracking-wider sem token DS */ 'text-[11px] font-semibold uppercase tracking-wider', config.color)}>
+        <span className={cn('text-overline', config.color)}>
           {config.label}
         </span>
       </div>
@@ -433,7 +433,7 @@ export function ExpedientesWeekMission({
           <GlassPanel key={kpi.label} depth={kpi.highlight ? 2 : 1} className={cn('px-4 py-3', kpi.highlight && 'border-destructive/15')}>
             <div className={cn("flex items-center justify-between inline-tight")}>
               <div>
-                <p className={cn("text-[10px] uppercase tracking-wider text-muted-foreground/65")}>{kpi.label}</p>
+                <p className={cn("text-overline text-muted-foreground/65")}>{kpi.label}</p>
                 <Text variant="kpi-value" className={cn('mt-1', kpi.highlight && 'text-destructive/80')}>
                   <AnimatedNumber value={kpi.value} />
                 </Text>
@@ -445,7 +445,7 @@ export function ExpedientesWeekMission({
       </div>
 
       {/* Day Label */}
-      <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[11px] font-medium uppercase tracking-wider text-muted-foreground/65")}>
+      <p className={cn("text-overline text-muted-foreground/65")}>
         {dateLabel}
       </p>
 

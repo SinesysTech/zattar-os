@@ -228,7 +228,7 @@ export function ExpedientesSemanaView({
                 <div className={cn("flex items-center inline-tight")}>
                   <span
                     className={cn(
-                      /* design-system-escape: tracking-wider sem token DS */ 'text-[10px] font-semibold uppercase tracking-wider',
+                      'text-overline',
                       today ? 'text-primary' : 'text-muted-foreground/55',
                     )}
                   >

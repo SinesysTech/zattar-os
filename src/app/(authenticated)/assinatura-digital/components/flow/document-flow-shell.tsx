@@ -131,7 +131,7 @@ function FlowMobileProgress({ currentStep }: { currentStep: number }) {
   return (
     <div className={cn("flex flex-col inline-snug")}>
       <div className="flex items-center justify-between">
-        <span className={cn(/* design-system-escape: tracking-wide sem token DS */ "text-[11px] font-medium uppercase tracking-wide text-muted-foreground")}>
+        <span className={cn("text-overline text-muted-foreground")}>
           Etapa {currentStep + 1} de {FLOW_STEPS.length}
         </span>
         {stepLabel && (
@@ -174,7 +174,7 @@ export function DocumentFlowShell({
     >
       {/* Header transparente — integrado ao AmbientBackdrop global */}
       <header className="shrink-0">
-        <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; sm:px-8 sem equivalente DS; pt-5 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv.; sm:pb-5 sem equivalente DS */ "px-6 sm:px-8 pt-5 pb-4 sm:pb-5")}>
+        <div className={cn("px-6 sm:px-8 pt-5 pb-4 sm:pb-5")}>
           <div className={cn("flex items-center justify-between inline-default")}>
             <Button
               type="button"

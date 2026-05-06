@@ -34,7 +34,7 @@ function KpiItem({
   return (
     <div className={cn("flex flex-col gap-2 p-3 rounded-xl bg-muted/40")}>
       <div className={cn("flex items-center justify-between")}>
-        <span className={cn("text-[10px] text-muted-foreground/70 uppercase tracking-wider leading-tight")}>
+        <span className={cn("text-overline text-muted-foreground/70 leading-tight")}>
           {label}
         </span>
         <Icon className="size-3.5 text-muted-foreground/50 shrink-0" />

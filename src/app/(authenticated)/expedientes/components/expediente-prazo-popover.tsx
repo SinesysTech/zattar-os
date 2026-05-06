@@ -105,7 +105,7 @@ export function ExpedientePrazoPopover({
         onKeyDown={(e) => e.stopPropagation()}
       >
         <div className={cn("px-3 pt-3 pb-1.5")}>
-          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/65 uppercase tracking-wider")}>
+          <p className={cn("text-overline text-muted-foreground/65")}>
             Prazo legal
           </p>
         </div>

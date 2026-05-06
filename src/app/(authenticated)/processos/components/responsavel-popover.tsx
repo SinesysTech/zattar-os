@@ -101,7 +101,7 @@ export function ResponsavelPopover({
       >
         <Command className="bg-transparent">
           <div className={cn("px-3 pt-3 pb-1.5")}>
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/65 uppercase tracking-wider mb-2")}>
+            <p className={cn("text-overline text-muted-foreground/65 mb-2")}>
               Responsável
             </p>
             <CommandInput

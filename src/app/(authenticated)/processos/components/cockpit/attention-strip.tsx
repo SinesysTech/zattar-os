@@ -83,7 +83,7 @@ export function AttentionStrip({
             <div className={cn("flex-1 min-w-50 px-4 py-3")}>
               <div className={cn("flex items-center inline-tight mb-1.5")}>
                 <Calendar className="size-3.5 text-primary/65" />
-                <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>
+                <span className={cn("text-overline text-muted-foreground/70")}>
                   Próxima Audiência
                 </span>
                 <span className={cn( 'text-[10px] font-bold tabular-nums ml-auto', URGENCY_STYLES[countdown.urgency])}>
@@ -118,7 +118,7 @@ export function AttentionStrip({
           <div className={cn("flex-1 min-w-45 px-4 py-3")}>
             <div className={cn("flex items-center inline-tight mb-1.5")}>
               <FileText className="size-3.5 text-warning/65" />
-              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>
+              <span className={cn("text-overline text-muted-foreground/70")}>
                 Prazos
               </span>
             </div>
@@ -149,7 +149,7 @@ export function AttentionStrip({
           <div className={cn("flex-1 min-w-40 px-4 py-3")}>
             <div className={cn("flex items-center inline-tight mb-1.5")}>
               <Microscope className="size-3.5 text-info/65" />
-              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>
+              <span className={cn("text-overline text-muted-foreground/70")}>
                 Perícias
               </span>
             </div>

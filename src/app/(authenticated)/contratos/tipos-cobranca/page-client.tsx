@@ -346,7 +346,7 @@ export function TiposCobrancaPageClient() {
           <div role="table" aria-label="Tipos de Cobrança">
             <div
               role="row"
-              className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; tracking-wide sem token DS; */ /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; tracking-wide sem token DS; */ "grid grid-cols-[1.5fr_1fr_80px_100px_120px] inline-default px-4 py-2.5 border-b border-border/40 text-[11px] uppercase tracking-wide font-medium text-muted-foreground/70")}
+              className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; tracking-wide sem token DS; */ "text-overline grid grid-cols-[1.5fr_1fr_80px_100px_120px] inline-default px-4 py-2.5 border-b border-border/40 text-muted-foreground/70")}
             >
               <span>Nome</span>
               <span>Slug</span>

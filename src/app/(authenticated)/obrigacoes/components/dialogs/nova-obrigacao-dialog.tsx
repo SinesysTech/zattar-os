@@ -105,7 +105,7 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
           <DialogDescription className="sr-only">Selecione o processo e preencha os dados da obrigação</DialogDescription>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose">; px-6 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv.; md:px-8 sem equivalente DS; md:py-6 sem equivalente DS */ "stack-loose px-6 py-5 md:px-8 md:py-6")}>
+      <div className={cn("stack-loose px-6 py-5 md:px-8 md:py-6")}>
         {!selectedProcessoId && (
           <div className={cn(/* design-system-escape: space-y-5 sem token DS; md:p-5 sem equivalente DS */ "space-y-5 rounded-lg border bg-muted/20 inset-card-compact md:p-5")}>
             <div className={cn("grid grid-cols-1 inline-default md:grid-cols-2")}>

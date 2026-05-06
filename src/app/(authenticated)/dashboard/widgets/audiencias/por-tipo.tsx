@@ -97,7 +97,7 @@ export function AudienciasPorTipo() {
 
         {/* Total */}
         <div className={cn("flex items-center justify-between pt-2 border-t border-border/10")}>
-          <span className={cn("text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
+          <span className={cn("text-overline text-muted-foreground/50")}>
             Total
           </span>
           <span className={cn( "text-[12px] font-bold tabular-nums")}>

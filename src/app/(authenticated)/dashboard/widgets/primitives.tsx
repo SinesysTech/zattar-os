@@ -267,7 +267,7 @@ export function Stat({
 
   return (
     <div>
-      <p className={cn("text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>{label}</p>
+      <p className={cn("text-overline text-muted-foreground/50")}>{label}</p>
       <Text variant="kpi-value" className="mt-0.5">{value}</Text>
       {delta && (
         <p className={`text-[11px] mt-0.5 ${deltaColors[deltaType]}`}>{delta}</p>

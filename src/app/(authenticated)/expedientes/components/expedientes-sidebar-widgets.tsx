@@ -62,7 +62,7 @@ export function RiskScoreGauge(props: RiskScoreGaugeProps) {
     <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
       <div className={cn("flex items-center justify-between inline-medium")}>
         <div>
-          <p className={cn("text-[10px] uppercase tracking-wider text-muted-foreground/65")}>Saude</p>
+          <p className={cn("text-overline text-muted-foreground/65")}>Saude</p>
           <Heading level="widget" className={cn("mt-1 text-body-sm")}>Score operacional</Heading>
         </div>
         <ShieldCheck className="size-4 text-muted-foreground/65" />
@@ -125,7 +125,7 @@ export function AgingFunnel({
     <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
       <div className={cn("flex items-center justify-between inline-medium")}>
         <div>
-          <p className={cn("text-[10px] uppercase tracking-wider text-muted-foreground/65")}>Distribuicao</p>
+          <p className={cn("text-overline text-muted-foreground/65")}>Distribuicao</p>
           <Heading level="widget" className={cn("mt-1 text-body-sm")}>Funil de prazos</Heading>
         </div>
         <TrendingDown className="size-4 text-muted-foreground/65" />
@@ -210,7 +210,7 @@ export function ActivityHeatmap({ baixasPorDia }: ActivityHeatmapProps) {
     <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
       <div className={cn("flex items-center justify-between inline-medium")}>
         <div>
-          <p className={cn("text-[10px] uppercase tracking-wider text-muted-foreground/65")}>Atividade</p>
+          <p className={cn("text-overline text-muted-foreground/65")}>Atividade</p>
           <Heading level="widget" className={cn("mt-1 text-body-sm")}>Baixas 35 dias</Heading>
         </div>
         <Activity className="size-4 text-muted-foreground/65" />

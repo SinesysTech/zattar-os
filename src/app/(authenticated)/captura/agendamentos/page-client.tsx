@@ -263,12 +263,12 @@ export default function AgendamentosPage() {
           <GlassPanel depth={1} className="overflow-hidden">
             {/* Column Headers */}
             <div className={cn("grid grid-cols-[70px_1fr_100px_140px_100px_100px_44px] inline-medium items-center px-4 py-2.5 border-b border-foreground/5")}>
-              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Status</span>
-              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Nome / Tipo</span>
-              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Frequência</span>
-              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Próxima Exec.</span>
-              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Última Exec.</span>
-              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Advogado</span>
+              <span className={cn("text-overline text-muted-foreground/70")}>Status</span>
+              <span className={cn("text-overline text-muted-foreground/70")}>Nome / Tipo</span>
+              <span className={cn("text-overline text-muted-foreground/70")}>Frequência</span>
+              <span className={cn("text-overline text-muted-foreground/70")}>Próxima Exec.</span>
+              <span className={cn("text-overline text-muted-foreground/70")}>Última Exec.</span>
+              <span className={cn("text-overline text-muted-foreground/70")}>Advogado</span>
               <div />
             </div>
 

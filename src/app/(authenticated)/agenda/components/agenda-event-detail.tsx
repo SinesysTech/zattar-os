@@ -241,14 +241,14 @@ export function AgendaEventDetail({
                         <div>
                           <div className={cn("flex items-center inline-snug mb-1")}>
                             <div className="size-1.5 rounded-full bg-info" />
-                            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-info uppercase tracking-wider")}>Reclamante</span>
+                            <span className={cn("text-overline text-info")}>Reclamante</span>
                           </div>
                           <span className={cn( "text-[12px] font-medium text-foreground")}>{event.partes.reclamante}</span>
                         </div>
                         <div>
                           <div className={cn("flex items-center inline-snug mb-1")}>
                             <div className="size-1.5 rounded-full bg-destructive" />
-                            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-destructive uppercase tracking-wider")}>Reclamada</span>
+                            <span className={cn("text-overline text-destructive")}>Reclamada</span>
                           </div>
                           <span className={cn( "text-[12px] font-medium text-foreground")}>{event.partes.reclamada}</span>
                         </div>

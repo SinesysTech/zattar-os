@@ -69,7 +69,7 @@ function StatCard({ icon, label, value, variant = 'default' }: StatCardProps) {
     <div className={`flex items-center gap-2.5 rounded-lg border p-2.5 ${variants[variant]}`}>
       <div className="text-muted-foreground shrink-0">{icon}</div>
       <div>
-        <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground uppercase tracking-wider")}>{label}</p>
+        <p className={cn("text-overline text-muted-foreground")}>{label}</p>
         <p className={cn( "text-body-sm font-semibold tabular-nums")}>{value}</p>
       </div>
     </div>
@@ -273,7 +273,7 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
       {/* Erros de processos específicos */}
       {data?.erros && data.erros.length > 0 && (
         <div>
-          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-semibold text-destructive uppercase tracking-wider mb-2")}>
+          <p className={cn("text-overline text-destructive mb-2")}>
             Erros em processos ({data.erros.length})
           </p>
           <div className={cn("stack-snug")}>

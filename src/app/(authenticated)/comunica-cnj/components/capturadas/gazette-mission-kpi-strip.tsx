@@ -100,7 +100,7 @@ export function GazetteMissionKpiStrip({
       <GlassPanel className={cn("px-4 py-3")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
+            <p className={cn("text-overline text-muted-foreground/60")}>
               Publicações hoje
             </p>
             <div className={cn("flex items-baseline inline-snug mt-1")}>
@@ -145,7 +145,7 @@ export function GazetteMissionKpiStrip({
       <GlassPanel className={cn("px-4 py-3")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
+            <p className={cn("text-overline text-muted-foreground/60")}>
               Próximo prazo
             </p>
             <div className={cn("flex items-baseline inline-snug mt-1")}>
@@ -169,7 +169,7 @@ export function GazetteMissionKpiStrip({
       <GlassPanel className={cn("px-4 py-3")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
+            <p className={cn("text-overline text-muted-foreground/60")}>
               Vinculadas
             </p>
             <div className={cn("flex items-baseline inline-snug mt-1")}>
@@ -203,7 +203,7 @@ export function GazetteMissionKpiStrip({
       <GlassPanel className={cn("px-4 py-3")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
+            <p className={cn("text-overline text-muted-foreground/60")}>
               Prazos críticos
             </p>
             <div className={cn("flex items-baseline inline-snug mt-1")}>

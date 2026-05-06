@@ -485,7 +485,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
       {/* ── Active Filter Chips ─────────────────────────────── */}
       {activeFilterChips.length > 0 && (
         <div className={cn("flex flex-wrap items-center inline-tight")}>
-          <span className={cn("text-[11px] uppercase tracking-wider text-muted-foreground/60")}>
+          <span className={cn("text-overline text-muted-foreground/60")}>
             Filtros:
           </span>
           {activeFilterChips.map((chip) => (

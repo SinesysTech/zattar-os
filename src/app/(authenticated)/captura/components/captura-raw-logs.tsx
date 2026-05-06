@@ -103,28 +103,28 @@ function LogStats({ logs }: { logs: LogEntry[] }) {
       <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-2.5 → usar <Inset> */ "flex items-center gap-2.5 rounded-lg border bg-success/5 border-success/20 p-2.5")}>
         <FilePlus className="h-4 w-4 text-success shrink-0" />
         <div>
-          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground uppercase tracking-wider")}>Inseridos</p>
+          <p className={cn("text-overline text-muted-foreground")}>Inseridos</p>
           <p className={cn( "text-body-sm font-semibold tabular-nums")}>{stats.inseridos}</p>
         </div>
       </div>
       <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-2.5 → usar <Inset> */ "flex items-center gap-2.5 rounded-lg border bg-info/5 border-info/20 p-2.5")}>
         <ArrowRight className="h-4 w-4 text-info shrink-0" />
         <div>
-          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground uppercase tracking-wider")}>Atualizados</p>
+          <p className={cn("text-overline text-muted-foreground")}>Atualizados</p>
           <p className={cn( "text-body-sm font-semibold tabular-nums")}>{stats.atualizados}</p>
         </div>
       </div>
       <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-2.5 → usar <Inset> */ "flex items-center gap-2.5 rounded-lg border bg-muted/40 p-2.5")}>
         <FileX className="h-4 w-4 text-muted-foreground shrink-0" />
         <div>
-          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground uppercase tracking-wider")}>Sem Alteração</p>
+          <p className={cn("text-overline text-muted-foreground")}>Sem Alteração</p>
           <p className={cn( "text-body-sm font-semibold tabular-nums")}>{stats.naoAtualizados}</p>
         </div>
       </div>
       <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-2.5 → usar <Inset> */ "flex items-center gap-2.5 rounded-lg border bg-destructive/5 border-destructive/20 p-2.5")}>
         <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
         <div>
-          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground uppercase tracking-wider")}>Erros</p>
+          <p className={cn("text-overline text-muted-foreground")}>Erros</p>
           <p className={cn( "text-body-sm font-semibold tabular-nums")}>{stats.erros}</p>
         </div>
       </div>
@@ -132,7 +132,7 @@ function LogStats({ logs }: { logs: LogEntry[] }) {
         <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-2.5 → usar <Inset> */ "flex items-center gap-2.5 rounded-lg border bg-warning/5 border-warning/20 p-2.5 col-span-2 sm:col-span-4")}>
           <GitMerge className="h-4 w-4 text-warning shrink-0" />
           <div>
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground uppercase tracking-wider")}>Conflitos de Concorrência</p>
+            <p className={cn("text-overline text-muted-foreground")}>Conflitos de Concorrência</p>
             <p className={cn( "text-body-sm font-semibold tabular-nums")}>{stats.conflitos}</p>
           </div>
         </div>
@@ -152,7 +152,7 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
     <div className={cn(/* design-system-escape: space-y-4 sem token DS */ "mt-3 space-y-4")}>
       {erros.length > 0 && (
         <div>
-          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-semibold text-destructive uppercase tracking-wider mb-2")}>
+          <p className={cn("text-overline text-destructive mb-2")}>
             Erros ({erros.length})
           </p>
           <div className={cn("stack-snug")}>
@@ -174,7 +174,7 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
 
       {inseridos.length > 0 && (
         <div>
-          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-semibold text-success uppercase tracking-wider mb-2")}>
+          <p className={cn("text-overline text-success mb-2")}>
             Processos incluídos ({inseridos.length})
           </p>
           <div className={cn("stack-micro")}>
@@ -200,7 +200,7 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
 
       {atualizados.length > 0 && (
         <div>
-          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-semibold text-info uppercase tracking-wider mb-2")}>
+          <p className={cn("text-overline text-info mb-2")}>
             Processos atualizados ({atualizados.length})
           </p>
           <div className={cn(/* design-system-escape: space-y-2 sem token DS */ "space-y-2")}>

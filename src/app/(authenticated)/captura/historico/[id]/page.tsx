@@ -66,11 +66,11 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
         <div>
           <Heading level="page">{tipoFormatado}</Heading>
           <div className={cn("flex items-center inline-tight mt-0.5")}>
-            <p className={cn(/* design-system-escape: tracking-wide sem token DS */ "text-[11px] font-medium text-muted-foreground uppercase tracking-wide")}>
+            <p className={cn("text-overline text-muted-foreground")}>
               Captura #{captura.id}
             </p>
             {isInProgress && (
-              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "inline-flex items-center inline-micro text-[10px] font-medium text-info uppercase tracking-wider")}>
+              <span className={cn("text-overline inline-flex items-center inline-micro text-info")}>
                 <span className="h-1.5 w-1.5 rounded-full bg-info animate-pulse" />
                 em andamento
               </span>
@@ -92,7 +92,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
           <div className={cn("flex flex-col inline-snug")}>
             <div className={cn("flex items-center inline-snug")}>
               <Activity className="size-3 text-muted-foreground/70" />
-              <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
+              <p className={cn("text-overline text-muted-foreground/75")}>
                 Status
               </p>
             </div>
@@ -108,7 +108,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
           <div className={cn("flex flex-col inline-snug")}>
             <div className={cn("flex items-center inline-snug")}>
               <CalendarClock className="size-3 text-muted-foreground/70" />
-              <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
+              <p className={cn("text-overline text-muted-foreground/75")}>
                 Iniciado em
               </p>
             </div>
@@ -121,7 +121,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
           <div className={cn("flex flex-col inline-snug")}>
             <div className={cn("flex items-center inline-snug")}>
               <CalendarCheck className="size-3 text-muted-foreground/70" />
-              <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
+              <p className={cn("text-overline text-muted-foreground/75")}>
                 Concluído em
               </p>
             </div>
@@ -136,7 +136,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
           <div className={cn("flex flex-col inline-snug")}>
             <div className={cn("flex items-center inline-snug")}>
               <Timer className="size-3 text-muted-foreground/70" />
-              <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
+              <p className={cn("text-overline text-muted-foreground/75")}>
                 Duração
               </p>
             </div>

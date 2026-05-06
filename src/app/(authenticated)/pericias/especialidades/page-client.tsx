@@ -196,7 +196,7 @@ export function EspecialidadesPageClient() {
             <GlassPanel key={trt} depth={1} className="overflow-hidden">
               <div className={cn("flex items-center justify-between px-4 py-2.5 border-b border-border/30 bg-muted/20")}>
                 <div className={cn("flex items-center inline-tight")}>
-                  <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60")}>
+                  <span className={cn("text-overline text-muted-foreground/60")}>
                     Tribunal
                   </span>
                   <AppBadge variant="outline">{trt}</AppBadge>
@@ -214,7 +214,7 @@ export function EspecialidadesPageClient() {
               >
                 <div
                   role="row"
-                  className={cn("grid grid-cols-[1fr_100px_120px_100px] inline-default px-4 py-2 text-[10px] uppercase tracking-wider text-muted-foreground/60")}
+                  className={cn("text-overline grid grid-cols-[1fr_100px_120px_100px] inline-default px-4 py-2 text-muted-foreground/60")}
                 >
                   <span>Descrição</span>
                   <span>Grau</span>

@@ -161,7 +161,7 @@ function FieldLabel({
   required?: boolean;
 }) {
   return (
-    <label className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70")}>
+    <label className={cn("text-overline text-muted-foreground/70")}>
       {children}
       {required && <span className="text-destructive ml-0.5">*</span>}
     </label>

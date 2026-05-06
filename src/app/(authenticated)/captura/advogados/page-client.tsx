@@ -291,7 +291,7 @@ export default function AdvogadosPage() {
 
                   {/* CPF */}
                   <Text variant="caption" className="flex items-center gap-2 text-muted-foreground/75 mb-1.5">
-                    <span className={cn(/* design-system-escape: tracking-wide sem token DS */ "font-medium text-muted-foreground/65 uppercase tracking-wide text-[10px]")}>CPF</span>
+                    <span className={cn("text-overline text-muted-foreground/65")}>CPF</span>
                     <span className="truncate">{advogado.cpf}</span>
                   </Text>
 

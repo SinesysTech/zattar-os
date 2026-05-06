@@ -224,7 +224,7 @@ function FilePreviewCard({
           {isUploading && (
             <div className={cn("mt-3 stack-micro")}>
               <Progress value={progress} className="h-1.5" />
-              <p className={cn(/* design-system-escape: tracking-wide sem token DS */ "text-[11px] font-medium uppercase tracking-wide text-muted-foreground tabular-nums")}>
+              <p className={cn("text-overline text-muted-foreground tabular-nums")}>
                 Enviando · {progress}%
               </p>
             </div>

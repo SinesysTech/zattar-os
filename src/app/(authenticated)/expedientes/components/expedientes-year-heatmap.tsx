@@ -97,7 +97,7 @@ function StatCard({
         <IconContainer size="sm" className={iconBg}>
           <Icon className={cn('size-3.5', iconColor)} />
         </IconContainer>
-        <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60")}>
+        <span className={cn("text-overline text-muted-foreground/60")}>
           {label}
         </span>
       </div>

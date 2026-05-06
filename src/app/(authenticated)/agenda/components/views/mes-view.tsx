@@ -98,7 +98,7 @@ export function MesView({ currentDate, events, onPrev, onNext, onToday, onEventC
       </div>
       <div className={cn("grid grid-cols-7 inline-micro mb-1")}>
         {WEEKDAYS.map((d) => (
-          <div key={d} className={cn(/* design-system-escape: tracking-wider sem token DS; py-2 padding direcional sem Inset equiv. */ "text-center text-[10px] font-semibold text-muted-foreground/35 uppercase tracking-wider py-2")}>{d}</div>
+          <div key={d} className={cn("text-overline text-center text-muted-foreground/35 py-2")}>{d}</div>
         ))}
       </div>
       <div className={cn("grid grid-cols-7 inline-micro")}>

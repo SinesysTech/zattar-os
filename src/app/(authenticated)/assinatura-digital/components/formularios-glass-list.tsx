@@ -266,7 +266,7 @@ function GlassCard({
       <div>
         <div className={cn( "text-body-sm font-semibold line-clamp-1")}>{displayName}</div>
         {segmentoNome && (
-          <div className={cn(/* design-system-escape: tracking-wider sem token DS */ "mt-1 text-[10px] font-semibold uppercase tracking-wider text-primary/70")}>
+          <div className={cn("text-overline mt-1 text-primary/70")}>
             {segmentoNome}
           </div>
         )}

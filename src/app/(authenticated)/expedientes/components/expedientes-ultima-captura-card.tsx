@@ -33,7 +33,7 @@ function MetricColumn({
 }) {
   return (
     <div className="flex-1 min-w-0">
-      <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 truncate")}>
+      <p className={cn("text-overline text-muted-foreground/70 truncate")}>
         {label}
       </p>
       <Text variant="kpi-value" className="mt-1 text-foreground">
@@ -83,7 +83,7 @@ export function ExpedientesUltimaCapturaCard({
   if (!resumo) {
     return (
       <GlassPanel depth={1} className={cn("px-4 py-3.5 opacity-50")}>
-        <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70")}>
+        <p className={cn("text-overline text-muted-foreground/70")}>
           ÚLTIMA CAPTURA
         </p>
         <p className={cn("text-body-sm text-muted-foreground/60 mt-1")}>Nenhuma captura realizada</p>
@@ -128,7 +128,7 @@ export function ExpedientesUltimaCapturaCard({
             <Radar className="size-4 text-info/70" />
           </IconContainer>
           <div className="min-w-0">
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70")}>
+            <p className={cn("text-overline text-muted-foreground/70")}>
               ÚLTIMA CAPTURA
             </p>
             <p className={cn("text-[10px] text-info/70 leading-tight")}>{tempoRelativo}</p>

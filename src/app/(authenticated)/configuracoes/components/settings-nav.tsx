@@ -23,7 +23,7 @@ export function SettingsNav({ activeTab, onTabChange }: SettingsNavProps) {
         <div className="space-y-4">
           {SETTINGS_NAV_GROUPS.map((group) => (
             <div key={group.label}>
-              <span className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-heading font-semibold px-3 py-2 block">
+              <span className="text-overline text-muted-foreground/60 font-heading px-3 py-2 block">
                 {group.label}
               </span>
               <div className="space-y-0.5">

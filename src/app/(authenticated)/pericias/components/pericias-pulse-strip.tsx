@@ -41,7 +41,7 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
       <GlassPanel depth={1} className={cn("px-4 py-3.5")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
+            <p className={cn("text-overline text-muted-foreground/50 truncate")}>
               Perícias Ativas
             </p>
             <div className={cn("flex items-baseline inline-snug mt-1")}>
@@ -71,7 +71,7 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
       <GlassPanel depth={1} className={cn("px-4 py-3.5")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
+            <p className={cn("text-overline text-muted-foreground/50 truncate")}>
               Aguardando Laudo
             </p>
             <div className={cn("flex items-baseline inline-snug mt-1")}>
@@ -108,7 +108,7 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
       >
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
+            <p className={cn("text-overline text-muted-foreground/50 truncate")}>
               Prazos em 7d
             </p>
             <div className={cn("flex items-baseline inline-snug mt-1")}>
@@ -156,7 +156,7 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
       >
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
+            <p className={cn("text-overline text-muted-foreground/50 truncate")}>
               Sem Responsável
             </p>
             <div className={cn("flex items-baseline inline-snug mt-1")}>

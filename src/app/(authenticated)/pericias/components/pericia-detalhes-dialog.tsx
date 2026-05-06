@@ -91,7 +91,7 @@ function Section({
     <section className={cn("stack-tight")}>
       <header className={cn("flex items-center inline-tight")}>
         {icon}
-        <h3 className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70")}>
+        <h3 className={cn("text-overline text-muted-foreground/70")}>
           {title}
         </h3>
       </header>
@@ -124,7 +124,7 @@ function MetaItem({
 }) {
   return (
     <div className={cn("flex flex-col inline-micro min-w-0")}>
-      <span className={cn("text-[10px] uppercase tracking-wider text-muted-foreground/55")}>
+      <span className={cn("text-overline text-muted-foreground/55")}>
         {label}
       </span>
       <div className={cn("flex items-center inline-snug text-body-sm")}>{children}</div>
@@ -208,7 +208,7 @@ function PericiaListItem({ pericia }: { pericia: Pericia }) {
 
           {pericia.observacoes && (
             <GlassPanel depth={1} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3 bg-muted/20")}>
-              <div className={cn(/* design-system-escape: tracking-wider sem token DS */ "font-semibold text-foreground/70 mb-1 text-[11px] uppercase tracking-wider")}>
+              <div className={cn("text-overline text-foreground/70 mb-1")}>
                 Observações
               </div>
               <Text variant="caption" className="whitespace-pre-wrap text-foreground/80">

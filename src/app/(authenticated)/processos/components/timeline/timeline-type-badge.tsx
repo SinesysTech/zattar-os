@@ -45,7 +45,7 @@ export function TimelineTypeBadge({
       className={cn(
         'inline-flex items-center',
         'px-1.5 py-0.5 rounded-sm',
-        /* design-system-escape: tracking-wider sem token DS */ 'text-[10px] font-semibold uppercase tracking-wider',
+        'text-overline',
         'border',
         bgClass,
         textClass,

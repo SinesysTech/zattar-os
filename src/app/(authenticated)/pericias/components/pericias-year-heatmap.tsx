@@ -244,7 +244,7 @@ const MonthGrid = React.memo(function MonthGrid({
 
   return (
     <div>
-      <div className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5")}>
+      <div className={cn("text-overline text-muted-foreground/70 mb-1.5")}>
         {MONTH_NAMES[monthIndex]}
       </div>
       <div className={cn("grid grid-cols-7 inline-nano mb-1")}>
@@ -287,7 +287,7 @@ function StatCard({
         <IconContainer size="md" className={iconBg}>
           <Icon className={cn('w-3.5 h-3.5', iconColor)} />
         </IconContainer>
-        <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70")}>
+        <span className={cn("text-overline text-muted-foreground/70")}>
           {label}
         </span>
       </div>

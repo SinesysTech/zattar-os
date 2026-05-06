@@ -142,7 +142,7 @@ export function PeritosPageClient() {
                 <p className={cn( "text-body-sm font-semibold text-foreground/90 truncate")}>
                   {p.nome}
                 </p>
-                <p className={cn("text-[10px] uppercase tracking-wider text-muted-foreground/55")}>
+                <p className={cn("text-overline text-muted-foreground/55")}>
                   Perito Judicial
                 </p>
               </div>

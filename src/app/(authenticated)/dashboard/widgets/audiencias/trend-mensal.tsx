@@ -140,7 +140,7 @@ export function TrendMensal() {
         {/* Stats row */}
         <div className={cn("flex items-baseline inline-default")}>
           <div>
-            <p className={cn("text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
+            <p className={cn("text-overline text-muted-foreground/50")}>
               Mes Atual
             </p>
             <Text variant="kpi-value">
@@ -162,7 +162,7 @@ export function TrendMensal() {
             </p>
           </div>
           <div className="ml-auto text-right">
-            <p className={cn("text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
+            <p className={cn("text-overline text-muted-foreground/50")}>
               Media
             </p>
             <p className={cn( "text-[14px] font-semibold tabular-nums")}>

@@ -120,7 +120,7 @@ export function WidgetKpiPulse() {
             color="hsl(142 60% 45%)"
           />
           <div>
-            <p className={cn("text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
+            <p className={cn("text-overline text-muted-foreground/50")}>
               Taxa de Resolucao
             </p>
             <p className="text-[10px] text-muted-foreground/60 mt-0.5">
