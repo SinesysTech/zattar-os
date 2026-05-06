@@ -110,9 +110,9 @@ export function AgendamentoDialog({ open, onOpenChange, onSuccess }: Props) {
           <DialogTitle>Novo agendamento</DialogTitle>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-      <div className={cn("inset-dialog stack-loose")}>
+      <div className={cn("flex flex-col inset-dialog stack-loose")}>
         <div className={cn("grid inline-default md:grid-cols-2")}>
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>Tipo de captura</Label>
             <TipoCapturaSelect
               value={tipoCaptura}
@@ -122,7 +122,7 @@ export function AgendamentoDialog({ open, onOpenChange, onSuccess }: Props) {
             />
           </div>
 
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>Periodicidade</Label>
             <Select value={periodicidade} onValueChange={(v) => setPeriodicidade(v as 'diario' | 'a_cada_N_dias')}>
               <SelectTrigger className="bg-background">
@@ -135,7 +135,7 @@ export function AgendamentoDialog({ open, onOpenChange, onSuccess }: Props) {
             </Select>
           </div>
 
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>Horário (HH:mm)</Label>
             <Input
               value={horario}
@@ -146,7 +146,7 @@ export function AgendamentoDialog({ open, onOpenChange, onSuccess }: Props) {
           </div>
 
           {periodicidade === 'a_cada_N_dias' && (
-            <div className={cn("stack-tight md:col-span-2")}>
+            <div className={cn("flex flex-col stack-tight md:col-span-2")}>
               <Label>Dias de intervalo</Label>
               <Input
                 value={diasIntervalo}
@@ -166,7 +166,7 @@ export function AgendamentoDialog({ open, onOpenChange, onSuccess }: Props) {
         />
 
         <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between rounded-md border p-3 bg-background")}>
-          <div className={cn("stack-micro")}>
+          <div className={cn("flex flex-col stack-micro")}>
             <small className="text-sm font-semibold leading-none">Ativo</small>
             <p className="text-muted-foreground text-xs">
               Agendamentos inativos não executam automaticamente.

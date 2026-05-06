@@ -173,7 +173,7 @@ function ResumoGeralCards({
         <CardHeader className={cn("pb-2")}>
           <CardDescription>Status dos Itens</CardDescription>
         </CardHeader>
-        <CardContent className={cn("pt-0 stack-tight")}>
+        <CardContent className={cn("flex flex-col pt-0 stack-tight")}>
           {resumo.itensAcimaMeta > 0 && (
             <div className={cn("flex items-center inline-tight")}>
               <AlertTriangle className="h-4 w-4 text-destructive" />
@@ -318,7 +318,7 @@ function AlertasDesvioList({ alertas }: { alertas: AlertaDesvio[] }) {
   };
 
   return (
-    <div className={cn("stack-medium")}>
+    <div className={cn("flex flex-col stack-medium")}>
       {alertas.map((alerta, index) => (
         <Card key={index}>
           <CardContent className={cn("flex items-start inline-default inset-card-compact")}>
@@ -597,7 +597,7 @@ export default function AnaliseOrcamentariaPage() {
   // Loading
   if (isLoading && !orcamento) {
     return (
-      <div className={cn("stack-loose")}>
+      <div className={cn("flex flex-col stack-loose")}>
         <div className={cn("flex items-center inline-default")}>
           <Skeleton className="h-10 w-10" />
           <Skeleton className="h-8 w-64" />
@@ -618,7 +618,7 @@ export default function AnaliseOrcamentariaPage() {
   // Erro
   if (error || !orcamento) {
     return (
-      <div className={cn("stack-loose")}>
+      <div className={cn("flex flex-col stack-loose")}>
         <Button variant="ghost" onClick={handleVoltar}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
@@ -634,7 +634,7 @@ export default function AnaliseOrcamentariaPage() {
   const statusConfig = STATUS_CONFIG[orcamento.status];
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       {/* Header - Botão Voltar e Badge */}
       <div className="flex items-center justify-between">
         <div className={cn("flex items-center inline-default")}>
@@ -651,7 +651,7 @@ export default function AnaliseOrcamentariaPage() {
       <ResumoGeralCards resumo={resumo} isLoading={loadingAnalise} />
 
       {/* Tabs de Conteúdo */}
-      <Tabs defaultValue="analise" className={cn("stack-default")}>
+      <Tabs defaultValue="analise" className={cn("flex flex-col stack-default")}>
         <TabsList>
           <TabsTrigger value="analise">Análise por Item</TabsTrigger>
           <TabsTrigger value="alertas">

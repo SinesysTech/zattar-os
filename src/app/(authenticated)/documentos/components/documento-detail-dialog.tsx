@@ -236,11 +236,11 @@ export function DocumentoDetailDialog({
         </div>
 
         {/* ── Body ───────────────────────────────────────────── */}
-        <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "flex-1 overflow-y-auto px-6 py-5 stack-default-plus")}>
+        <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "flex flex-col flex-1 overflow-y-auto px-6 py-5 stack-default-plus")}>
           {/* Informações gerais */}
           <div>
             <SectionHeader icon={Info} label="Informações" />
-            <SectionCard className={cn("stack-nano")}>
+            <SectionCard className={cn("flex flex-col stack-nano")}>
               <MetaRow label="Tipo" value={tipoLabel} />
               {item.tipo === 'arquivo' && (
                 <MetaRow label="Tamanho" value={formatFileSize(item.dados.tamanho_bytes)} />
@@ -267,7 +267,7 @@ export function DocumentoDetailDialog({
           {/* Timeline */}
           <div>
             <SectionHeader icon={Calendar} label="Datas" />
-            <SectionCard className={cn("stack-nano")}>
+            <SectionCard className={cn("flex flex-col stack-nano")}>
               <MetaRow
                 label="Criado em"
                 value={format(parseISO(item.dados.created_at), "dd 'de' MMM 'de' yyyy", {
@@ -312,7 +312,7 @@ export function DocumentoDetailDialog({
           {item.tipo === 'arquivo' && (
             <div>
               <SectionHeader icon={HardDrive} label="Armazenamento" />
-              <SectionCard className={cn("stack-nano")}>
+              <SectionCard className={cn("flex flex-col stack-nano")}>
                 <MetaRow
                   label="Chave"
                   value={

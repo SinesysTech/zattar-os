@@ -81,7 +81,7 @@ export function StatusMensal() {
       icon={BarChart3}
       subtitle="Marcadas vs realizadas vs canceladas"
     >
-      <div className={cn("stack-default")}>
+      <div className={cn("flex flex-col stack-default")}>
         <MiniBar
           data={barData}
           height={56}

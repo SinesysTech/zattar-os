@@ -615,7 +615,7 @@ export function ObrigacaoDetalhesDialog({
                 asChild
                 size="sm"
                 variant="default"
-                className={cn("h-7 px-2.5 rounded-lg text-[11.5px] inline-snug")}
+                className={cn("flex h-7 px-2.5 rounded-lg text-[11.5px] inline-snug")}
               >
                 <Link
                   href={`/obrigacoes/${obrigacao.acordoId}`}
@@ -631,7 +631,7 @@ export function ObrigacaoDetalhesDialog({
                 asChild
                 size="sm"
                 variant="outline"
-                className={cn("h-7 px-2.5 rounded-lg text-[11.5px] inline-snug")}
+                className={cn("flex h-7 px-2.5 rounded-lg text-[11.5px] inline-snug")}
               >
                 <Link
                   href={`/processos/${obrigacao.processoId}`}
@@ -647,7 +647,7 @@ export function ObrigacaoDetalhesDialog({
                 size="sm"
                 variant="outline"
                 onClick={() => onVerLancamento?.(obrigacao)}
-                className={cn("h-7 px-2.5 rounded-lg text-[11.5px] inline-snug")}
+                className={cn("flex h-7 px-2.5 rounded-lg text-[11.5px] inline-snug")}
               >
                 <LinkIcon className="size-3" />
                 Ver lançamento
@@ -658,7 +658,7 @@ export function ObrigacaoDetalhesDialog({
                 size="sm"
                 variant="outline"
                 onClick={() => onSincronizar?.(obrigacao)}
-                className={cn("h-7 px-2.5 rounded-lg text-[11.5px] inline-snug")}
+                className={cn("flex h-7 px-2.5 rounded-lg text-[11.5px] inline-snug")}
               >
                 <RefreshCw className="size-3" />
                 Sincronizar
@@ -669,7 +669,7 @@ export function ObrigacaoDetalhesDialog({
 
         {/* ══════════ BODY scrollável ══════════ */}
         <div className={cn("flex-1 overflow-y-auto px-6 py-4 [scrollbar-width:thin]")}>
-          <div className={cn("stack-default")}>
+          <div className={cn("flex flex-col stack-default")}>
             {/* Registrar recebimento — parcelas pendentes/vencidas */}
             {podeMarcarRecebida && (
               <div>
@@ -683,7 +683,7 @@ export function ObrigacaoDetalhesDialog({
                 />
                 <SectionCard className="bg-success/5 border-success/25">
                   {efetivando ? (
-                    <div className={cn("stack-tight")}>
+                    <div className={cn("flex flex-col stack-tight")}>
                       <div>
                         <Text variant="label" className="mb-1 block">
                           {isRecebimento
@@ -740,7 +740,7 @@ export function ObrigacaoDetalhesDialog({
                       <Button
                         size="sm"
                         onClick={handleStartEfetivacao}
-                        className={cn("h-7 px-3 rounded-lg text-[11.5px] inline-snug bg-success hover:bg-success/90 text-success-foreground")}
+                        className={cn("flex h-7 px-3 rounded-lg text-[11.5px] inline-snug bg-success hover:bg-success/90 text-success-foreground")}
                       >
                         <CheckCircle2 className="size-3" />
                         {isRecebimento

@@ -495,7 +495,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
           </DialogDescription>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-5 [scrollbar-width:thin]">
-      <form id="editar-audiencia-form" onSubmit={handleSubmit} className={cn("stack-default")}>
+      <form id="editar-audiencia-form" onSubmit={handleSubmit} className={cn("flex flex-col stack-default")}>
         {error && (
           <div className={cn(/* design-system-escape: px-3.5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-start inline-tight-plus rounded-lg border border-destructive/30 bg-destructive/8 px-3.5 py-3 text-destructive")}>
             <span className="shrink-0 mt-0.5">⚠️</span>
@@ -517,7 +517,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
           <>
             {/* TRT e Grau */}
             <div className={cn("grid grid-cols-2 inline-default")}>
-              <div className={cn("stack-tight")}>
+              <div className={cn("flex flex-col stack-tight")}>
                 <Label htmlFor="trt">
                   <Text variant="label">Tribunal (TRT) *</Text>
                 </Label>
@@ -534,7 +534,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
                   </SelectContent>
                 </Select>
               </div>
-              <div className={cn("stack-tight")}>
+              <div className={cn("flex flex-col stack-tight")}>
                 <Label htmlFor="grau">
                   <Text variant="label">Grau *</Text>
                 </Label>
@@ -554,7 +554,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
             </div>
 
             {/* Processo - Combobox com busca */}
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="processo">
                 <Text variant="label">Processo *</Text>
               </Label>
@@ -583,7 +583,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
 
             {/* Data e Hora de Início */}
             <div className={cn("grid grid-cols-2 inline-default")}>
-              <div className={cn("stack-tight")}>
+              <div className={cn("flex flex-col stack-tight")}>
                 <Label htmlFor="dataInicio">
                   <Text variant="label">Data de Início *</Text>
                 </Label>
@@ -593,7 +593,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
                   placeholder="Selecionar data"
                 />
               </div>
-              <div className={cn("stack-tight")}>
+              <div className={cn("flex flex-col stack-tight")}>
                 <Label htmlFor="horaInicio">
                   <Text variant="label">Hora de Início *</Text>
                 </Label>
@@ -609,7 +609,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
 
             {/* Data e Hora de Fim */}
             <div className={cn("grid grid-cols-2 inline-default")}>
-              <div className={cn("stack-tight")}>
+              <div className={cn("flex flex-col stack-tight")}>
                 <Label htmlFor="dataFim">
                   <Text variant="label">Data de Fim *</Text>
                 </Label>
@@ -619,7 +619,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
                   placeholder="Selecionar data"
                 />
               </div>
-              <div className={cn("stack-tight")}>
+              <div className={cn("flex flex-col stack-tight")}>
                 <Label htmlFor="horaFim">
                   <Text variant="label">Hora de Fim *</Text>
                 </Label>
@@ -634,7 +634,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
             </div>
 
             {/* Tipo de Audiência */}
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="tipo">
                 <Text variant="label">Tipo de Audiência</Text>
               </Label>
@@ -666,7 +666,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
             </div>
 
             {/* Sala de Audiência */}
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="sala">
                 <Text variant="label">Sala de Audiência</Text>
               </Label>
@@ -702,7 +702,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
               <>
                 {tipoSelecionado.is_virtual ? (
                   // Audiência Virtual - Campo URL
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="urlVirtual">
                       <Text variant="label">URL da Audiência Virtual</Text>
                     </Label>
@@ -717,14 +717,14 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
                 ) : (
                   // Audiência Presencial - Campos de Endereço
                   <>
-                    <div className={cn("stack-tight")}>
+                    <div className={cn("flex flex-col stack-tight")}>
                       <Label className={cn( "font-semibold")}>
                         <Text variant="label">Endereço da Audiência Presencial</Text>
                       </Label>
                     </div>
 
                     <div className={cn("grid grid-cols-1 sm:grid-cols-3 inline-default")}>
-                      <div className={cn("sm:col-span-2 stack-tight")}>
+                      <div className={cn("flex flex-col sm:col-span-2 stack-tight")}>
                         <Label htmlFor="logradouro">
                           <Text variant="label">Logradouro</Text>
                         </Label>
@@ -735,7 +735,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
                           onChange={(e) => setLogradouro(e.target.value)}
                         />
                       </div>
-                      <div className={cn("stack-tight")}>
+                      <div className={cn("flex flex-col stack-tight")}>
                         <Label htmlFor="numero">
                           <Text variant="label">Número</Text>
                         </Label>
@@ -749,7 +749,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
                     </div>
 
                     <div className={cn("grid grid-cols-1 sm:grid-cols-2 inline-default")}>
-                      <div className={cn("stack-tight")}>
+                      <div className={cn("flex flex-col stack-tight")}>
                         <Label htmlFor="complemento">
                           <Text variant="label">Complemento</Text>
                         </Label>
@@ -760,7 +760,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
                           onChange={(e) => setComplemento(e.target.value)}
                         />
                       </div>
-                      <div className={cn("stack-tight")}>
+                      <div className={cn("flex flex-col stack-tight")}>
                         <Label htmlFor="bairro">
                           <Text variant="label">Bairro</Text>
                         </Label>
@@ -773,7 +773,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
                     </div>
 
                     <div className={cn("grid grid-cols-1 sm:grid-cols-3 inline-default")}>
-                      <div className={cn("sm:col-span-2 stack-tight")}>
+                      <div className={cn("flex flex-col sm:col-span-2 stack-tight")}>
                         <Label htmlFor="cidade">
                           <Text variant="label">Cidade</Text>
                         </Label>
@@ -783,7 +783,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
                           onChange={(e) => setCidade(e.target.value)}
                         />
                       </div>
-                      <div className={cn("stack-tight")}>
+                      <div className={cn("flex flex-col stack-tight")}>
                         <Label htmlFor="estado">
                           <Text variant="label">Estado</Text>
                         </Label>
@@ -797,7 +797,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
                       </div>
                     </div>
 
-                    <div className={cn("stack-tight")}>
+                    <div className={cn("flex flex-col stack-tight")}>
                       <Label htmlFor="cep">
                         <Text variant="label">CEP</Text>
                       </Label>
@@ -816,7 +816,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
         )}
 
         {/* Responsável */}
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label htmlFor="responsavel">
             <Text variant="label">Responsável (opcional)</Text>
           </Label>
@@ -842,7 +842,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
         </div>
 
         {/* Observações */}
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label htmlFor="observacoes">
             <Text variant="label">Observações</Text>
           </Label>

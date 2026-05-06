@@ -109,14 +109,14 @@ export function SegmentoCreateDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div className={cn("stack-default py-4")}>
+          <div className={cn("flex flex-col stack-default py-4")}>
             {Object.keys(errors).length > 0 && (
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 p-3 text-body-sm text-destructive")}>
                 Corrija os erros no formulário antes de continuar.
               </div>
             )}
 
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="nome">
                 Nome <span className="text-destructive">*</span>
               </Label>
@@ -131,7 +131,7 @@ export function SegmentoCreateDialog({
               )}
             </div>
 
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="descricao">Descrição</Label>
               <Textarea
                 id="descricao"

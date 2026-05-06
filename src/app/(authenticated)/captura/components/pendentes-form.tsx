@@ -105,7 +105,7 @@ export const PendentesForm = forwardRef<CapturaFormHandle, PendentesFormProps>(
     }), [handleCaptura, isLoading]);
 
     return (
-      <div className={cn("stack-loose")}>
+      <div className={cn("flex flex-col stack-loose")}>
         <CapturaFormBase
           advogadoId={advogadoId}
           credenciaisSelecionadas={credenciaisSelecionadas}
@@ -113,7 +113,7 @@ export const PendentesForm = forwardRef<CapturaFormHandle, PendentesFormProps>(
           onCredenciaisChange={setCredenciaisSelecionadas}
         >
           <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-loose")}>
-            <div className={cn("stack-tight md:col-span-2")}>
+            <div className={cn("flex flex-col stack-tight md:col-span-2")}>
               <Label htmlFor="filtroPrazo">Filtros de Prazo</Label>
               <div className={cn("grid grid-cols-1 inline-tight sm:grid-cols-2")}>
                 {FILTROS_PRAZO.map((opcao) => (

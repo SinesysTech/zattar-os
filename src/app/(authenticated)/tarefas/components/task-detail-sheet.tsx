@@ -324,21 +324,21 @@ export function TaskDetailSheet() {
                             <div className={cn("inset-dialog")}>
                                 {/* Status & Details Grid */}
                                 <div className={cn("grid grid-cols-2 inline-loose sm:grid-cols-3")}>
-                                    <div className={cn("stack-micro")}>
+                                    <div className={cn("flex flex-col stack-micro")}>
                                         <Text variant="caption" className="font-medium uppercase tracking-wider">Status</Text>
                                         <div className={cn("flex items-center inline-tight")}>
                                             {statusInfo?.icon && <statusInfo.icon className="h-4 w-4 text-muted-foreground" />}
                                             <span className={cn( "text-body-sm font-medium")}>{statusInfo?.label || tarefa.status}</span>
                                         </div>
                                     </div>
-                                    <div className={cn("stack-micro")}>
+                                    <div className={cn("flex flex-col stack-micro")}>
                                         <Text variant="caption" className="font-medium uppercase tracking-wider">Prioridade</Text>
                                         <div className={cn("flex items-center inline-tight")}>
                                             {priorityInfo?.icon && <priorityInfo.icon className="h-4 w-4 text-muted-foreground" />}
                                             <span className={cn( "text-body-sm font-medium")}>{priorityInfo?.label || tarefa.priority}</span>
                                         </div>
                                     </div>
-                                    <div className={cn("stack-micro col-span-2 sm:col-span-1")}>
+                                    <div className={cn("flex flex-col stack-micro col-span-2 sm:col-span-1")}>
                                         <Text variant="caption" className="font-medium uppercase tracking-wider">Prazo</Text>
                                         <div className={cn("flex items-center inline-tight text-body-sm")}>
                                             <CalendarIcon className="h-4 w-4 text-muted-foreground" />
@@ -350,7 +350,7 @@ export function TaskDetailSheet() {
                                 {tarefa.description && (
                                     <>
                                         <Separator className={cn("my-6")} />
-                                        <div className={cn("stack-tight")}>
+                                        <div className={cn("flex flex-col stack-tight")}>
                                             <Text variant="caption" className="font-medium uppercase tracking-wider">Descrição</Text>
                                             <p className={cn("text-body-sm text-foreground whitespace-pre-wrap leading-relaxed")}>
                                                 {tarefa.description}
@@ -362,7 +362,7 @@ export function TaskDetailSheet() {
                                 <Separator className={cn("my-6")} />
 
                                 {/* Subtasks Section */}
-                                <div className={cn("stack-default")}>
+                                <div className={cn("flex flex-col stack-default")}>
                                     <div className="flex items-center justify-between">
                                         <div className={cn("flex items-center inline-tight")}>
                                             <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
@@ -375,7 +375,7 @@ export function TaskDetailSheet() {
                                         )}
                                     </div>
 
-                                    <div className={cn("stack-tight")}>
+                                    <div className={cn("flex flex-col stack-tight")}>
                                         {tarefa.subTasks?.map((st) => (
                                             <div key={st.id} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "group flex items-center justify-between inline-medium rounded-lg border p-3 hover:bg-accent/50 transition-colors")}>
                                                 <div className={cn("flex items-center inline-medium")}>
@@ -415,7 +415,7 @@ export function TaskDetailSheet() {
                                 <Separator className={cn("my-6")} />
 
                                 {/* Attachments Section */}
-                                <div className={cn("stack-default")}>
+                                <div className={cn("flex flex-col stack-default")}>
                                     <div className="flex items-center justify-between">
                                         <div className={cn("flex items-center inline-tight")}>
                                             <Paperclip className="h-4 w-4 text-muted-foreground" />
@@ -424,7 +424,7 @@ export function TaskDetailSheet() {
                                         <Button
                                             variant="ghost"
                                             size="sm"
-                                            className={cn("h-8 inline-snug text-caption")}
+                                            className={cn("flex h-8 inline-snug text-caption")}
                                             disabled={isPending}
                                             onClick={() => fileInputRef.current?.click()}
                                         >
@@ -480,14 +480,14 @@ export function TaskDetailSheet() {
                                 <Separator className={cn("my-6")} />
 
                                 {/* Comments Section */}
-                                <div className={cn("stack-default")}>
+                                <div className={cn("flex flex-col stack-default")}>
                                     <div className={cn("flex items-center inline-tight")}>
                                         <MessageSquare className="h-4 w-4 text-muted-foreground" />
                                         <Heading level="card" className={cn( "text-body-sm font-semibold")}>Comentários</Heading>
                                     </div>
 
-                                    <div className={cn("stack-default pb-4")}>
-                                        <form onSubmit={handleAddComment} className={cn("stack-tight")}>
+                                    <div className={cn("flex flex-col stack-default pb-4")}>
+                                        <form onSubmit={handleAddComment} className={cn("flex flex-col stack-tight")}>
                                             <Textarea
                                                 placeholder="Escreva um comentário..."
                                                 value={newComment}
@@ -501,13 +501,13 @@ export function TaskDetailSheet() {
                                             </div>
                                         </form>
 
-                                        <div className={cn("stack-loose pt-2")}>
+                                        <div className={cn("flex flex-col stack-loose pt-2")}>
                                             {tarefa.comments?.map((comment) => (
                                                 <div key={comment.id} className={cn("group relative flex inline-default")}>
                                                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted">
                                                         <span className={cn( "text-[10px] font-bold")}>U</span>
                                                     </div>
-                                                    <div className={cn("flex-1 stack-micro")}>
+                                                    <div className={cn("flex flex-col flex-1 stack-micro")}>
                                                         <div className="flex items-center justify-between">
                                                             <Text variant="caption" className="font-semibold">Você</Text>
                                                             <span className="text-[10px] text-muted-foreground">

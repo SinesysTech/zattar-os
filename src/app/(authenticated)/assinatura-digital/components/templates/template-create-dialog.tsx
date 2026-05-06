@@ -253,7 +253,7 @@ export function TemplateCreateDialog({
             <form
               id="template-create-form"
               onSubmit={handleSubmit(onSubmit)}
-              className={cn("stack-default")}
+              className={cn("flex flex-col stack-default")}
             >
               {/* Etapa 1: Informações do Template */}
               {step === 1 && (
@@ -271,7 +271,7 @@ export function TemplateCreateDialog({
               {step === 2 && (
                 <>
                   {tipoTemplate === 'markdown' && (
-                    <div className={cn("stack-snug")}>
+                    <div className={cn("flex flex-col stack-snug")}>
                       <Label htmlFor="conteudo_markdown">
                         Conteúdo Markdown <span className="text-destructive">*</span>
                       </Label>

@@ -130,7 +130,7 @@ export function ClienteResponsavelCell({
                             <CommandItem
                                 value="null"
                                 onSelect={() => handleSelect('null')}
-                                className={cn("inline-tight")}
+                                className={cn("flex inline-tight")}
                             >
                                 <Text variant="caption" className="flex h-6 w-6 items-center justify-center rounded-full border border-dashed">
                                     ?
@@ -144,7 +144,7 @@ export function ClienteResponsavelCell({
                                     key={usuario.id}
                                     value={usuario.nomeExibicao} // Buscando pelo nome
                                     onSelect={() => handleSelect(usuario.id.toString())}
-                                    className={cn("inline-tight")}
+                                    className={cn("flex inline-tight")}
                                 >
                                     <Avatar size="sm">
                                         <AvatarImage src={usuario.avatarUrl || undefined} alt={usuario.nomeExibicao} />

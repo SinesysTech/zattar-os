@@ -95,7 +95,7 @@ export function ContratoTransitoriasAlert({
           <AlertTriangle className="size-4 text-warning" strokeWidth={2.5} />
         </span>
 
-        <div className={cn("min-w-0 flex-1 stack-snug")}>
+        <div className={cn("flex flex-col min-w-0 flex-1 stack-snug")}>
           <Heading level="card" className="text-warning">
             {isPlural
               ? `${transitorias.length} partes contrárias com cadastro pendente`
@@ -107,7 +107,7 @@ export function ContratoTransitoriasAlert({
               : 'Essa parte foi criada no formulário público com apenas o nome. Complete o cadastro para continuar o fluxo do contrato.'}
           </Text>
 
-          <ul className={cn("mt-2 stack-micro")}>
+          <ul className={cn("flex flex-col mt-2 stack-micro")}>
             {transitorias.map((t) => (
               <li
                 key={t.id}

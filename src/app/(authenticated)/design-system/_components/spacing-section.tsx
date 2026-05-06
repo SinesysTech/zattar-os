@@ -123,7 +123,7 @@ function ShadowScale() {
 
 export function SpacingSection() {
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       <SpacingScale />
       <RadiusScale />
       <ShadowScale />

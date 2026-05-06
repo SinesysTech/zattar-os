@@ -27,7 +27,7 @@ import {
  */
 export function AparenciaContent() {
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       {/* Grid de cards com configurações */}
       <div className={cn("grid inline-loose md:grid-cols-2")}>
         {/* Card: Tema (Preset) */}

@@ -82,7 +82,7 @@ export function EntrevistaTab({ contratoId, entrevista: initialEntrevista, anexo
   // Wizard: entrevista em andamento
   if (view === 'wizard' && entrevista) {
     return (
-      <div className={cn("stack-default")}>
+      <div className={cn("flex flex-col stack-default")}>
         <div className="flex items-center justify-between">
           <div className={cn("flex items-center inline-tight")}>
             <SemanticBadge category="status" value={entrevista.status} variantOverride="outline">{STATUS_ENTREVISTA_LABELS[entrevista.status]}</SemanticBadge>

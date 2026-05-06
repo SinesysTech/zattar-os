@@ -235,7 +235,7 @@ describe('Dashboard Responsive Properties', () => {
                         const { container } = render(
                             <Card>
                                 <CardContent className={cn("pt-4 sm:pt-6")}>
-                                    <div className={cn(/* design-system-escape: sm:space-y-2 sem equivalente DS */ "stack-micro sm:space-y-2")}>
+                                    <div className={cn(/* design-system-escape: sm:space-y-2 sem equivalente DS */ "flex flex-col stack-micro sm:space-y-2")}>
                                         <p className={cn( "text-body-sm font-medium text-muted-foreground truncate")}>
                                             {title}
                                         </p>

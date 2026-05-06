@@ -84,9 +84,9 @@ export function GerarFolhaDialog({ open, onOpenChange, onSuccess }: GerarFolhaDi
           <DialogDescription>Selecione o período para gerar a folha de pagamento.</DialogDescription>
         </DialogHeader>
 
-        <form className={cn("stack-default")} onSubmit={handleSubmit}>
+        <form className={cn("flex flex-col stack-default")} onSubmit={handleSubmit}>
           <div className={cn("grid grid-cols-2 inline-default")}>
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label>Mês</Label>
               <Controller
                 name="mesReferencia"
@@ -111,7 +111,7 @@ export function GerarFolhaDialog({ open, onOpenChange, onSuccess }: GerarFolhaDi
               />
             </div>
 
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label>Ano</Label>
               <Input
                 type="number"
@@ -120,12 +120,12 @@ export function GerarFolhaDialog({ open, onOpenChange, onSuccess }: GerarFolhaDi
             </div>
           </div>
 
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>Data de Pagamento (opcional)</Label>
             <Input type="date" {...form.register('dataPagamento')} />
           </div>
 
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>Observações</Label>
             <Textarea rows={3} {...form.register('observacoes')} />
           </div>

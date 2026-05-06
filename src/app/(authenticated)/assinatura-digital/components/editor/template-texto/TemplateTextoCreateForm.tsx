@@ -112,7 +112,7 @@ export function TemplateTextoCreateForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className={cn("stack-loose")}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className={cn("flex flex-col stack-loose")}>
         {/* Header with actions */}
         <div className="flex items-center justify-between">
           <Button
@@ -213,7 +213,7 @@ export function TemplateTextoCreateForm({
         />
 
         {/* Editor section */}
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <FormLabel>Conteúdo do Template</FormLabel>
           <TemplateTextoEditor
             value={editorContent}

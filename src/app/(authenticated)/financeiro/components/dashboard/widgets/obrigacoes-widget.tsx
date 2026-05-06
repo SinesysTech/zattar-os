@@ -72,11 +72,11 @@ export function ObrigacoesWidget({ resumo, isLoading }: ObrigacoesWidgetProps) {
           <Skeleton className="h-5 w-36" />
         </CardHeader>
         <CardContent>
-          <div className={cn("stack-medium")}>
+          <div className={cn("flex flex-col stack-medium")}>
             {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex inline-medium rounded-lg border p-3")}>
                 <Skeleton className="h-8 w-8 rounded-md" />
-                <div className={cn("stack-snug flex-1")}>
+                <div className={cn("flex flex-col stack-snug flex-1")}>
                   <Skeleton className="h-3 w-16" />
                   <Skeleton className="h-5 w-24" />
                 </div>
@@ -101,7 +101,7 @@ export function ObrigacoesWidget({ resumo, isLoading }: ObrigacoesWidgetProps) {
       <CardContent className="flex-1">
         {!hasData ? (
           <div className="flex items-center justify-center h-full min-h-32">
-            <div className={cn("text-center stack-tight")}>
+            <div className={cn("flex flex-col text-center stack-tight")}>
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-full bg-muted p-3 mx-auto w-fit")}>
                 <Scale className="h-5 w-5 text-muted-foreground" />
               </div>
@@ -109,7 +109,7 @@ export function ObrigacoesWidget({ resumo, isLoading }: ObrigacoesWidgetProps) {
             </div>
           </div>
         ) : (
-          <div className={cn("stack-medium")}>
+          <div className={cn("flex flex-col stack-medium")}>
             <ObrigacaoItem
               label="Vencidas"
               valor={resumo.valorTotalVencido}

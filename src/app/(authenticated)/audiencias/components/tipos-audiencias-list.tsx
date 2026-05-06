@@ -89,7 +89,7 @@ export function TiposAudienciasList() {
   }
 
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       {/* Toolbar */}
       <div className="flex items-center justify-between">
         <SearchInput
@@ -136,7 +136,7 @@ export function TiposAudienciasList() {
                     <AppBadge
                       variant="outline"
                       className={cn(
-                        'inline-micro',
+                        'flex inline-micro',
                         tipo.is_virtual
                           ? 'border-info/15 bg-info/5 text-info'
                           : 'border-warning/15 bg-warning/5 text-warning'

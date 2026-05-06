@@ -117,7 +117,7 @@ export function SignatureFlowShell({
         className={cn(
           mode === "fullscreen"
             ? "flex-1 min-h-0 relative flex"
-            : "flex-1 inset-dialog stack-loose"
+            : "flex flex-col flex-1 inset-dialog stack-loose"
         )}
       >
         {children}

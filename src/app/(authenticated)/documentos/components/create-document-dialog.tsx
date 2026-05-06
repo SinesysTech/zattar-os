@@ -100,8 +100,8 @@ export function CreateDocumentDialog({
 
         <form onSubmit={handleSubmit} className="flex flex-col flex-1">
           <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-            <div className={cn("stack-default")}>
-              <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-default")}>
+              <div className={cn("flex flex-col stack-tight")}>
                 <Label htmlFor="titulo">Título *</Label>
                 <Input
                   id="titulo"
@@ -113,7 +113,7 @@ export function CreateDocumentDialog({
                 />
               </div>
 
-              <div className={cn("stack-tight")}>
+              <div className={cn("flex flex-col stack-tight")}>
                 <Label htmlFor="descricao">Descrição (opcional)</Label>
                 <Textarea
                   id="descricao"

@@ -87,8 +87,8 @@ const actions: ActionDef[] = [
 
 export default function TerceirosDoc() {
   return (
-    <div className={cn("stack-extra-loose")}>
-      <div className={cn("stack-tight")}>
+    <div className={cn("flex flex-col stack-extra-loose")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Heading level="page">Terceiros</Heading>
         <p className={cn("text-muted-foreground text-body-lg")}>
           Cadastro de pessoas indiretamente envolvidas nos processos, como testemunhas, peritos e assistentes técnicos.
@@ -123,7 +123,7 @@ export default function TerceirosDoc() {
         <p className="text-muted-foreground">
           O campo Tipo de Terceiro ajuda a classificar o envolvimento de cada pessoa:
         </p>
-        <ul className={cn("list-disc list-inside stack-micro text-muted-foreground text-body-sm mt-2")}>
+        <ul className={cn("flex flex-col list-disc list-inside stack-micro text-muted-foreground text-body-sm mt-2")}>
           <li><strong>Testemunha:</strong> pessoa arrolada para depor no processo.</li>
           <li><strong>Perito:</strong> especialista nomeado pelo juízo para elaborar laudo técnico.</li>
           <li><strong>Assistente Técnico:</strong> especialista indicado por uma das partes para acompanhar a perícia.</li>

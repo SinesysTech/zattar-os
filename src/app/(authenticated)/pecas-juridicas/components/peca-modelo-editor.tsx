@@ -58,7 +58,7 @@ import { LoadingSpinner } from "@/components/ui/loading-state"
 
 function PlateEditorSkeleton() {
   return (
-    <div className={cn("mx-auto w-full max-w-4xl stack-default py-8")}>
+    <div className={cn("flex flex-col mx-auto w-full max-w-4xl stack-default py-8")}>
       <Skeleton className="h-8 w-3/4" />
       <Skeleton className="h-6 w-full" />
       <Skeleton className="h-6 w-full" />

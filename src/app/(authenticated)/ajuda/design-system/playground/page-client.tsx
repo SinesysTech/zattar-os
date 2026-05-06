@@ -73,7 +73,7 @@ export default function PlaygroundPage() {
 
         {/* Content */}
         <div className={cn("container mx-auto px-6 py-8")}>
-          <div className={cn("stack-section")}>
+          <div className={cn("flex flex-col stack-section")}>
             {/* Theme Info */}
             <Card>
               <CardHeader>
@@ -112,7 +112,7 @@ export default function PlaygroundPage() {
                   Todas as variantes e tamanhos disponíveis
                 </CardDescription>
               </CardHeader>
-              <CardContent className={cn("stack-loose")}>
+              <CardContent className={cn("flex flex-col stack-loose")}>
                 {/* Variants */}
                 <div>
                   <Label className={cn( "text-body font-semibold mb-3 block")}>Variantes</Label>
@@ -192,7 +192,7 @@ export default function PlaygroundPage() {
                   Indicadores visuais de status e categorias
                 </CardDescription>
               </CardHeader>
-              <CardContent className={cn("stack-loose")}>
+              <CardContent className={cn("flex flex-col stack-loose")}>
                 {/* Variants */}
                 <div>
                   <Label className={cn( "text-body font-semibold mb-3 block")}>Variantes</Label>
@@ -251,10 +251,10 @@ export default function PlaygroundPage() {
                   Campos de entrada de dados
                 </CardDescription>
               </CardHeader>
-              <CardContent className={cn("stack-loose")}>
+              <CardContent className={cn("flex flex-col stack-loose")}>
                 {/* States */}
                 <div className={cn("grid inline-default md:grid-cols-2")}>
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="input-default">Default</Label>
                     <Input 
                       id="input-default" 
@@ -262,7 +262,7 @@ export default function PlaygroundPage() {
                     />
                   </div>
 
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="input-disabled">Disabled</Label>
                     <Input 
                       id="input-disabled" 
@@ -271,7 +271,7 @@ export default function PlaygroundPage() {
                     />
                   </div>
 
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="input-filled">Com Valor</Label>
                     <Input 
                       id="input-filled" 
@@ -279,7 +279,7 @@ export default function PlaygroundPage() {
                     />
                   </div>
 
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="input-error">Com Erro (aria-invalid)</Label>
                     <Input 
                       id="input-error" 
@@ -292,7 +292,7 @@ export default function PlaygroundPage() {
 
                 {/* Types */}
                 <div className={cn("grid inline-default md:grid-cols-2")}>
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="input-email">Email</Label>
                     <Input 
                       id="input-email" 
@@ -301,7 +301,7 @@ export default function PlaygroundPage() {
                     />
                   </div>
 
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="input-password">Password</Label>
                     <Input 
                       id="input-password" 
@@ -310,7 +310,7 @@ export default function PlaygroundPage() {
                     />
                   </div>
 
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="input-number">Number</Label>
                     <Input 
                       id="input-number" 
@@ -319,7 +319,7 @@ export default function PlaygroundPage() {
                     />
                   </div>
 
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="input-date">Date</Label>
                     <Input 
                       id="input-date" 
@@ -361,7 +361,7 @@ export default function PlaygroundPage() {
 // Helper Component
 function ColorSwatch({ name, className }: { name: string; className: string }) {
   return (
-    <div className={cn("stack-tight")}>
+    <div className={cn("flex flex-col stack-tight")}>
       <div className={cn('h-20 rounded-md', className)} />
       <p className={cn( "text-body-sm font-medium text-center")}>{name}</p>
     </div>

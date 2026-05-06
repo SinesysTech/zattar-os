@@ -32,7 +32,7 @@ export function ModuloExclusividadePessoalidade({ data, onChange }: ModuloExclus
   const forteIndicioVinculo = data.atende_exclusivamente === true && data.pode_enviar_substituto === false;
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       <div>
         <Heading level="card">Só Você Serve</Heading>
         <p className={cn("text-body-sm text-muted-foreground")}>
@@ -41,7 +41,7 @@ export function ModuloExclusividadePessoalidade({ data, onChange }: ModuloExclus
       </div>
 
       {/* C.3.1: Exclusividade */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>Atendia exclusivamente esta empresa (não tinha outros clientes PJ)?</Label>
         <SimNaoRadio
           id="atende-exclusivamente"
@@ -53,7 +53,7 @@ export function ModuloExclusividadePessoalidade({ data, onChange }: ModuloExclus
       </div>
 
       {/* C.3.2: Pessoalidade */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>Poderia enviar outra pessoa no seu lugar para fazer o trabalho?</Label>
         <SimNaoRadio
           id="pode-enviar-substituto"
@@ -71,7 +71,7 @@ export function ModuloExclusividadePessoalidade({ data, onChange }: ModuloExclus
       )}
 
       {/* C.3.3: Proibição de outros clientes */}
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Label htmlFor="proibicao">A empresa proibia (formal ou informalmente) que atendesse outros clientes?</Label>
         <Select
           value={data.proibicao_outros_clientes ?? ''}
@@ -91,7 +91,7 @@ export function ModuloExclusividadePessoalidade({ data, onChange }: ModuloExclus
       </div>
 
       {/* C.3.4: Liberdade de recusar tarefas */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>Tinha liberdade para recusar tarefas ou projetos da empresa?</Label>
         <SimNaoRadio
           id="liberdade-recusar"
@@ -101,7 +101,7 @@ export function ModuloExclusividadePessoalidade({ data, onChange }: ModuloExclus
       </div>
 
       {/* C.3.5: Duração da relação */}
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Label htmlFor="duracao">Quanto tempo durou sua relação com esta empresa?</Label>
         <Select
           value={data.duracao_relacao ?? ''}

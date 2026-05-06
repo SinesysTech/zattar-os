@@ -181,7 +181,7 @@ export function ExpedientesSemanaView({
   const weekLabel = `${format(weekStart, "d 'de' MMM", { locale: ptBR })} — ${format(friday, "d 'de' MMM", { locale: ptBR })}`;
 
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       {/* Week Navigator */}
       <div className={cn("flex items-center inline-tight")}>
         <button
@@ -258,7 +258,7 @@ export function ExpedientesSemanaView({
                   <Text variant="caption" className="text-muted-foreground/55">—</Text>
                 </div>
               ) : (
-                <div className={cn("stack-tight")}>
+                <div className={cn("flex flex-col stack-tight")}>
                   {dayExps.map((exp) => (
                     <WeekDayCard
                       key={exp.id}
@@ -398,7 +398,7 @@ function WeekDayCard({
 
       {/* Row 6: Descrição + Observações editáveis */}
       <div
-        className={cn("mt-2 stack-snug")}
+        className={cn("flex flex-col mt-2 stack-snug")}
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}
       >

@@ -111,7 +111,7 @@ export function FilesView({
   };
 
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       <div className="flex items-center justify-between">
         <div className={cn("flex items-center inline-medium")}>
           <Button variant="ghost" size="icon" aria-label="Voltar" asChild>

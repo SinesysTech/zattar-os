@@ -72,12 +72,12 @@ export function TimelineError({ error, onRetry, message }: TimelineErrorProps) {
   const { title, description, canRetry } = getErrorDetails(error);
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       <Card className={cn("inset-dialog")}>
         <Alert variant="destructive">
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>{title}</AlertTitle>
-          <AlertDescription className={cn("mt-2 stack-tight")}>
+          <AlertDescription className={cn("flex flex-col mt-2 stack-tight")}>
             {message && <p className={cn( "font-medium")}>{message}</p>}
             <p>{description}</p>
 
@@ -96,7 +96,7 @@ export function TimelineError({ error, onRetry, message }: TimelineErrorProps) {
         {/* Ações */}
         <div className={cn("flex inline-medium mt-6")}>
           {canRetry && (
-            <Button onClick={onRetry} className={cn("inline-tight")}>
+            <Button onClick={onRetry} className={cn("flex inline-tight")}>
               <RotateCw className="h-4 w-4" />
               Tentar Novamente
             </Button>
@@ -104,7 +104,7 @@ export function TimelineError({ error, onRetry, message }: TimelineErrorProps) {
           <Button
             variant="outline"
             onClick={() => router.push('/processos')}
-            className={cn("inline-tight")}
+            className={cn("flex inline-tight")}
           >
             <ArrowLeft className="h-4 w-4" />
             Voltar para Processos

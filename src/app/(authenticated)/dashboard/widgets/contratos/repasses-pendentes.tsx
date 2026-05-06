@@ -93,7 +93,7 @@ export function WidgetRepassesPendentes() {
       subtitle="Divisão cliente/escritório"
       depth={1}
     >
-      <div className={cn("stack-nano")}>
+      <div className={cn("flex flex-col stack-nano")}>
         {repassesPendentes.map((r, i) => {
           const valorCliente = r.total * (r.pctCliente / 100);
           const valorEscritorio = r.total - valorCliente;

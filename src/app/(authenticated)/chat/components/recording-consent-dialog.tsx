@@ -44,7 +44,7 @@ export function RecordingConsentDialog({
             <AlertCircle className="h-5 w-5 text-warning" />
             Consentimento para Gravação
           </DialogTitle>
-          <DialogDescription className={cn("text-left stack-medium pt-2")}>
+          <DialogDescription className={cn("flex flex-col text-left stack-medium pt-2")}>
             <p>
               Você está prestes a iniciar a gravação desta chamada. De acordo com a{" "}
               <strong>Lei Geral de Proteção de Dados (LGPD)</strong>, é necessário o
@@ -83,7 +83,7 @@ export function RecordingConsentDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <DialogFooter className={cn(/* design-system-escape: sm:gap-0 sem equivalente DS */ "inline-tight sm:gap-0")}>
+        <DialogFooter className={cn(/* design-system-escape: sm:gap-0 sem equivalente DS */ "flex inline-tight sm:gap-0")}>
           <Button
             variant="outline"
             onClick={() => {

@@ -21,7 +21,7 @@ import {
 
 export default function AssistentesDoc() {
   return (
-    <div className={cn("stack-extra-loose")}>
+    <div className={cn("flex flex-col stack-extra-loose")}>
       <div>
         <Heading level="page">Assistentes</Heading>
         <p className={cn("text-muted-foreground text-body-lg")}>

@@ -175,7 +175,7 @@ export function CriarGrupoDialog({ open, onOpenChange, onGrupoCreated }: CriarGr
         <form
           id="criar-grupo-form"
           onSubmit={form.handleSubmit(handleSubmit)}
-          className={cn("stack-default inset-dialog")}
+          className={cn("flex flex-col stack-default inset-dialog")}
         >
           <FormField
             control={form.control}
@@ -195,7 +195,7 @@ export function CriarGrupoDialog({ open, onOpenChange, onGrupoCreated }: CriarGr
             )}
           />
 
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <FormLabel>Adicionar Membros</FormLabel>
             <Select onValueChange={handleAddMembro} value="">
               <SelectTrigger>

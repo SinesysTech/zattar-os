@@ -79,7 +79,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
           <Text variant="overline" as="h5" className="text-muted-foreground/55 mb-3">
             Informacoes
           </Text>
-          <div className={cn("stack-none")}>
+          <div className={cn("flex flex-col stack-none")}>
             {/* Email */}
             <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight-plus py-2")}>
               <div className="size-7 rounded-md flex items-center justify-center bg-primary/6 shrink-0">

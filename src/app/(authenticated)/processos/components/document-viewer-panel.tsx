@@ -137,7 +137,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
         <div className={cn("rounded-full bg-destructive/10 inset-card-compact")}>
           <Lock className="h-8 w-8 text-destructive" />
         </div>
-        <div className={cn("stack-micro")}>
+        <div className={cn("flex flex-col stack-micro")}>
           <p className={cn( "text-body-sm font-medium")}>{item.titulo}</p>
           <p className={cn("text-body-sm text-muted-foreground")}>
             Documento sigiloso — visualização restrita
@@ -154,7 +154,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
         <div className={cn("rounded-full bg-muted inset-card-compact")}>
           <FileText className="h-8 w-8 text-muted-foreground" />
         </div>
-        <div className={cn("stack-micro")}>
+        <div className={cn("flex flex-col stack-micro")}>
           <p className={cn( "text-body-sm font-medium")}>{item.titulo}</p>
           <p className={cn("text-body-sm text-muted-foreground")}>
             Documento não foi capturado ou enviado para armazenamento
@@ -169,7 +169,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
             size="sm"
             onClick={onRecapture}
             disabled={isCapturing}
-            className={cn("inline-tight")}
+            className={cn("flex inline-tight")}
           >
             {isCapturing ? (
               <LoadingSpinner size="sm" />
@@ -194,7 +194,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
   return (
     <div className="flex flex-col h-full">
       {/* Header do documento */}
-      <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex-none border-b p-3 stack-snug")}>
+      <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col flex-none border-b p-3 stack-snug")}>
         <div className={cn("flex items-center justify-between inline-tight")}>
           <div className={cn("flex items-center inline-tight min-w-0 flex-1")}>
             {item.grauOrigem && (

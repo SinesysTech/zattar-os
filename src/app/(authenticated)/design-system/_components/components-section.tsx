@@ -51,7 +51,7 @@ function ButtonsSpecimen() {
 function BadgesSpecimen() {
   return (
     <SpecimenCard eyebrow="BADGES · CHIPS">
-      <div className={cn("stack-default")}>
+      <div className={cn("flex flex-col stack-default")}>
         <div className={cn("flex flex-col inline-tight")}>
           <span className="font-mono text-[9px] uppercase tracking-[0.08em] text-muted-foreground opacity-70">
             STATUS (PROCESSO)
@@ -308,7 +308,7 @@ function CardsSpecimen() {
 
 export function ComponentsSection() {
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       <ButtonsSpecimen />
       <BadgesSpecimen />
       <InputsSpecimen />

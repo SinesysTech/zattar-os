@@ -77,8 +77,8 @@ export function AddMemberDialog({
           <DialogTitle>Adicionar Membro</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className={cn("stack-default")}>
-          <div className={cn("stack-tight")}>
+        <form onSubmit={handleSubmit} className={cn("flex flex-col stack-default")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <label className={cn( "text-body-sm font-medium")}>Usuário</label>
             <Combobox
               options={usuarios}
@@ -90,7 +90,7 @@ export function AddMemberDialog({
             />
           </div>
 
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <label className={cn( "text-body-sm font-medium")}>Papel</label>
             <Select
               value={papel}

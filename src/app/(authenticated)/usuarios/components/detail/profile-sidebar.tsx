@@ -80,7 +80,7 @@ export function ProfileSidebar({
           size="sm"
           variant="outline"
           onClick={onEditCover}
-          className={cn("absolute top-2 right-2 h-7 px-2 inline-micro text-[11px] bg-black/30 backdrop-blur-sm border-foreground/10 text-white/70 hover:bg-black/50 hover:text-white/90")}
+          className={cn("flex absolute top-2 right-2 h-7 px-2 inline-micro text-[11px] bg-black/30 backdrop-blur-sm border-foreground/10 text-white/70 hover:bg-black/50 hover:text-white/90")}
         >
           <Camera className="size-3" />
           Editar
@@ -145,7 +145,7 @@ export function ProfileSidebar({
 
       {/* 5. Contacts section */}
       {contactItems.length > 0 && (
-        <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "px-5 py-4 mt-4 border-t border-border/10 stack-tight-plus")}>
+        <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "flex flex-col px-5 py-4 mt-4 border-t border-border/10 stack-tight-plus")}>
           {contactItems.map(({ icon: Icon, value, label }, idx) => (
             <div key={idx} className="flex items-center gap-2.5">
               <Icon className="size-3.5 text-muted-foreground/35 shrink-0" />
@@ -206,7 +206,7 @@ export function ProfileSidebar({
           variant="outline"
           size="sm"
           onClick={onEdit}
-          className={cn("w-full justify-start inline-tight bg-primary/8 border-primary/20 text-primary hover:bg-primary/12")}
+          className={cn("flex w-full justify-start inline-tight bg-primary/8 border-primary/20 text-primary hover:bg-primary/12")}
         >
           <Pencil className="size-3.5" />
           Editar Perfil
@@ -215,7 +215,7 @@ export function ProfileSidebar({
           variant="outline"
           size="sm"
           onClick={onResetPassword}
-          className={cn("w-full justify-start inline-tight")}
+          className={cn("flex w-full justify-start inline-tight")}
         >
           <KeyRound className="size-3.5" />
           Redefinir Senha
@@ -225,7 +225,7 @@ export function ProfileSidebar({
             variant="outline"
             size="sm"
             onClick={onDeactivate}
-            className={cn("w-full justify-start inline-tight border-destructive/15 text-destructive hover:bg-destructive/5 hover:border-destructive/30")}
+            className={cn("flex w-full justify-start inline-tight border-destructive/15 text-destructive hover:bg-destructive/5 hover:border-destructive/30")}
           >
             <Power className="size-3.5" />
             Desativar Usuário

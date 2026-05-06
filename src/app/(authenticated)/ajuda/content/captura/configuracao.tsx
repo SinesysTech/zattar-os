@@ -22,7 +22,7 @@ import {
 
 export default function CapturaConfiguracao() {
   return (
-    <div className={cn("stack-extra-loose")}>
+    <div className={cn("flex flex-col stack-extra-loose")}>
       <div>
         <Heading level="page">
           Configurações de Captura

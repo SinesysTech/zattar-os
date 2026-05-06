@@ -48,7 +48,7 @@ export function HistoricoSalarios({ usuarioId }: HistoricoSalariosProps) {
   const usuarioNome = salarios[0]?.usuario?.nomeExibicao ?? `Usuário ${usuarioId}`;
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       <div className="flex items-center justify-between">
         <div>
           <Heading level="page">Histórico Salarial - {usuarioNome}</Heading>
@@ -62,7 +62,7 @@ export function HistoricoSalarios({ usuarioId }: HistoricoSalariosProps) {
         </button>
       </div>
 
-      <div className={cn("stack-default")}>
+      <div className={cn("flex flex-col stack-default")}>
         {salarios.map((salario) => {
           const vigente = !salario.dataFimVigencia;
           const duracao = calcularDuracaoVigencia(
@@ -85,7 +85,7 @@ export function HistoricoSalarios({ usuarioId }: HistoricoSalariosProps) {
                   {vigente ? 'Vigente' : 'Encerrado'} · {duracao.texto}
                 </Badge>
               </CardHeader>
-              <CardContent className={cn("stack-tight")}>
+              <CardContent className={cn("flex flex-col stack-tight")}>
                 <p className={cn("text-body-sm text-muted-foreground")}>
                   Cargo: {salario.cargo?.nome ?? 'Não informado'}
                 </p>

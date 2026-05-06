@@ -201,7 +201,7 @@ function GlassCard({
               {item.tipo === 'arquivo' && (
                 <DropdownMenuItem
                   onClick={(e) => onOpen(item, e)}
-                  className={cn("inline-tight text-caption cursor-pointer")}
+                  className={cn("flex inline-tight text-caption cursor-pointer")}
                 >
                   <ExternalLink className="size-3.5" />
                   Abrir
@@ -209,7 +209,7 @@ function GlassCard({
               )}
               <DropdownMenuItem
                 onClick={(e) => onShare(item, e)}
-                className={cn("inline-tight text-caption cursor-pointer")}
+                className={cn("flex inline-tight text-caption cursor-pointer")}
               >
                 <Share2 className="size-3.5" />
                 Compartilhar
@@ -217,7 +217,7 @@ function GlassCard({
               {item.tipo !== 'pasta' && (
                 <DropdownMenuItem
                   onClick={(e) => onDelete(item, e)}
-                  className={cn("inline-tight text-caption cursor-pointer text-destructive focus:text-destructive")}
+                  className={cn("flex inline-tight text-caption cursor-pointer text-destructive focus:text-destructive")}
                 >
                   <Trash2 className="size-3.5" />
                   Excluir

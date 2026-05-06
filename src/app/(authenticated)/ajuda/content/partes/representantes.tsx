@@ -98,8 +98,8 @@ const actions: ActionDef[] = [
 
 export default function RepresentantesDoc() {
   return (
-    <div className={cn("stack-extra-loose")}>
-      <div className={cn("stack-tight")}>
+    <div className={cn("flex flex-col stack-extra-loose")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Heading level="page">Representantes</Heading>
         <p className={cn("text-muted-foreground text-body-lg")}>
           Cadastro de advogados e representantes legais vinculados às partes e processos do escritório.
@@ -131,7 +131,7 @@ export default function RepresentantesDoc() {
         <p className="text-muted-foreground">
           Um representante pode atuar em múltiplos papéis dentro do sistema:
         </p>
-        <ul className={cn("list-disc list-inside stack-micro text-muted-foreground text-body-sm mt-2")}>
+        <ul className={cn("flex flex-col list-disc list-inside stack-micro text-muted-foreground text-body-sm mt-2")}>
           <li>Como advogado do escritório responsável por um processo.</li>
           <li>Como representante legal de um cliente específico.</li>
           <li>Como advogado correspondente contratado para atos em outra comarca.</li>

@@ -142,7 +142,7 @@ export function ObrigacoesContent({
   // =========================================================================
 
   return (
-    <div className={cn("stack-default-plus")}>
+    <div className={cn("flex flex-col stack-default-plus")}>
       {/* 1. Header */}
       <div className={cn("flex items-end justify-between inline-default")}>
         <div>

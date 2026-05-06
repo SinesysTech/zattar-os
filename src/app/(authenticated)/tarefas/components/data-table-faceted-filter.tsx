@@ -48,7 +48,7 @@ export function DataTableFacetedFilter<TData, TValue>({
               <Badge variant="secondary" className={cn("rounded-sm px-1 font-normal lg:hidden")}>
                 {selectedValues.size}
               </Badge>
-              <div className={cn("hidden inline-micro lg:flex")}>
+              <div className={cn("flex hidden inline-micro lg:flex")}>
                 {selectedValues.size > 2 ? (
                   <Badge variant="secondary" className={cn("rounded-sm px-1 font-normal")}>
                     {selectedValues.size} selecionados

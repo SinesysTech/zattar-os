@@ -191,7 +191,7 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
     }), [handleCaptura, isLoading]);
 
     return (
-      <div className={cn("stack-loose")}>
+      <div className={cn("flex flex-col stack-loose")}>
         <CapturaFormBase
           advogadoId={advogadoId}
           credenciaisSelecionadas={credenciaisSelecionadas}
@@ -211,7 +211,7 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
             </Alert>
           )}
           <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-loose md:col-span-2")}>
-            <div className={cn("stack-medium")}>
+            <div className={cn("flex flex-col stack-medium")}>
               <Label htmlFor="processo-id">Número do Processo *</Label>
               <Input
                 id="processo-id"
@@ -247,7 +247,7 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
                   />
                   Filtros Avançados
                 </CollapsibleTrigger>
-                <CollapsibleContent className={cn("stack-default pt-4")}>
+                <CollapsibleContent className={cn("flex flex-col stack-default pt-4")}>
                   <div className={cn("flex items-center space-x-2")}>
                     <Checkbox
                       id="apenas-assinados"
@@ -278,7 +278,7 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
                     </Label>
                   </div>
 
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="tipos-documento" className={cn("text-body-sm")}>
                       Tipos de Documento (separados por vírgula)
                     </Label>
@@ -292,7 +292,7 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
                   </div>
 
                   <div className={cn("grid grid-cols-2 inline-default")}>
-                    <div className={cn("stack-tight")}>
+                    <div className={cn("flex flex-col stack-tight")}>
                       <Label htmlFor="data-inicial" className={cn("text-body-sm")}>
                         Data Inicial
                       </Label>
@@ -303,7 +303,7 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
                       />
                     </div>
 
-                    <div className={cn("stack-tight")}>
+                    <div className={cn("flex flex-col stack-tight")}>
                       <Label htmlFor="data-final" className={cn("text-body-sm")}>
                         Data Final
                       </Label>

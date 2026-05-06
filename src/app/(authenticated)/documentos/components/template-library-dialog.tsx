@@ -161,7 +161,7 @@ export function TemplateLibraryDialog({
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="todos" className={cn("mt-0 stack-default")}>
+            <TabsContent value="todos" className={cn("flex flex-col mt-0 stack-default")}>
               {/* Filtros */}
               <div className={cn("flex flex-wrap inline-tight")}>
                 <div className="relative flex-1 min-w-50">

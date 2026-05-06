@@ -142,7 +142,7 @@ export function CredenciaisLoteDialog({
           <DialogDescription className="sr-only">Selecione tribunais, graus e configure a senha para criar credenciais em lote</DialogDescription>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-      <div className={cn("px-6 py-4 stack-loose")}>
+      <div className={cn("flex flex-col px-6 py-4 stack-loose")}>
         <p className={cn("text-body-sm text-muted-foreground")}>
           Advogado: {advogado.nome_completo} (CPF: {formatCpf(advogado.cpf)})
         </p>
@@ -339,7 +339,7 @@ function ResultadoView({
   const hasErrors = resultado.erros > 0;
 
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       <Alert variant={hasErrors ? "destructive" : "default"}>
         <CheckCircle className="h-4 w-4" />
         <AlertTitle>Operação concluída</AlertTitle>

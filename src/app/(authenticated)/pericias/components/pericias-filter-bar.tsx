@@ -157,7 +157,7 @@ function SimpleSelect<TValue extends string>({
         align="start"
         side="bottom"
       >
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-nano max-h-64 overflow-y-auto")}>
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col p-2 stack-nano max-h-64 overflow-y-auto")}>
           {options.map((opt) => (
             <button
               key={opt.value}
@@ -253,7 +253,7 @@ function SearchableSelect({
                       onChange(isSelected ? '' : opt.value);
                       setOpen(false);
                     }}
-                    className={cn("inline-tight rounded-lg text-caption px-2 py-1.5")}
+                    className={cn("flex inline-tight rounded-lg text-caption px-2 py-1.5")}
                   >
                     <span className="truncate">{opt.label}</span>
                     {isSelected && (

@@ -19,7 +19,7 @@ export function ModuloConsolidacaoFinal({ data, onChange }: ModuloConsolidacaoFi
   const justificativas = data.justificativas_inconsistencias ?? {};
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       <div>
         <Heading level="card">Consolidacao Final da Entrevista</Heading>
         <p className={cn("text-body-sm text-muted-foreground")}>
@@ -27,7 +27,7 @@ export function ModuloConsolidacaoFinal({ data, onChange }: ModuloConsolidacaoFi
         </p>
       </div>
 
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Label htmlFor="relato-completo-texto">Relato completo em texto</Label>
         <Textarea
           id="relato-completo-texto"
@@ -38,7 +38,7 @@ export function ModuloConsolidacaoFinal({ data, onChange }: ModuloConsolidacaoFi
         />
       </div>
 
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Label htmlFor="observacoes-finais">Observacoes finais do operador</Label>
         <Textarea
           id="observacoes-finais"
@@ -51,7 +51,7 @@ export function ModuloConsolidacaoFinal({ data, onChange }: ModuloConsolidacaoFi
 
       {data.relato_consolidado_ia && (
         <GlassPanel className={cn("inset-card-compact")}>
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label htmlFor="relato-ia">Relato consolidado pela IA</Label>
             <Textarea
               id="relato-ia"
@@ -64,10 +64,10 @@ export function ModuloConsolidacaoFinal({ data, onChange }: ModuloConsolidacaoFi
       )}
 
       {inconsistencias.length > 0 && (
-        <div className={cn("stack-medium rounded-lg border border-warning/15 bg-warning/5 inset-card-compact")}>
+        <div className={cn("flex flex-col stack-medium rounded-lg border border-warning/15 bg-warning/5 inset-card-compact")}>
           <h4 className={cn( "text-body-sm font-semibold")}>Inconsistencias/lacunas apontadas pela IA</h4>
           {inconsistencias.map((item, index) => (
-            <div key={`${item}-${index}`} className={cn("stack-tight")}>
+            <div key={`${item}-${index}`} className={cn("flex flex-col stack-tight")}>
               <p className={cn("text-body-sm")}>{item}</p>
               <Textarea
                 value={justificativas[item] ?? ''}

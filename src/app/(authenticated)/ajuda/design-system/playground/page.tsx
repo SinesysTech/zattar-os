@@ -8,7 +8,7 @@ export const revalidate = 0;
 
 function PlaygroundLoading() {
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       <Skeleton className="h-16 w-full" />
       <Skeleton className="h-[600px] w-full" />
     </div>

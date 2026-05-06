@@ -81,7 +81,7 @@ export default function EditarObrigacaoPage({ params }: EditarObrigacaoPageProps
   }
 
   return (
-    <div className={cn("py-8 stack-loose max-w-4xl mx-auto")}>
+    <div className={cn("flex flex-col py-8 stack-loose max-w-4xl mx-auto")}>
       <div className={cn("flex items-center inline-default")}>
         <Button variant="ghost" size="icon" aria-label="Voltar" asChild>
           <Link href={`/obrigacoes/${acordoId}`}><ArrowLeft className="h-4 w-4" /></Link>

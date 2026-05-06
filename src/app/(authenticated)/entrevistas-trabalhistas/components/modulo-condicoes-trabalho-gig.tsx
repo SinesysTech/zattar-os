@@ -33,7 +33,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
   const mostrarAssistencia = data.sofreu_acidente === true;
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       <div>
         <Heading level="card">Precarização do Trabalho</Heading>
         <p className={cn("text-body-sm text-muted-foreground")}>
@@ -42,7 +42,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
       </div>
 
       {/* B.3.1: Horas por dia */}
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Label htmlFor="horas-dia">Quantas horas por dia trabalhava em média na plataforma?</Label>
         <Select
           value={data.horas_dia ?? ''}
@@ -62,7 +62,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
       </div>
 
       {/* B.3.2: Dias por semana */}
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Label htmlFor="dias-semana">Quantos dias por semana?</Label>
         <Select
           value={data.dias_semana ?? ''}
@@ -88,7 +88,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
       )}
 
       {/* B.3.3: Acesso a banheiro/descanso */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>Tinha acesso a banheiro e local de descanso durante o trabalho?</Label>
         <SimNaoRadio
           id="acesso-banheiro"
@@ -98,7 +98,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
       </div>
 
       {/* B.3.4: Acidente de trabalho */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>Já sofreu acidente durante o trabalho na plataforma?</Label>
         <SimNaoRadio
           id="acidente"
@@ -107,7 +107,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
         />
 
         {mostrarAssistencia && (
-          <div className={cn("stack-medium")}>
+          <div className={cn("flex flex-col stack-medium")}>
             <Label>A plataforma prestou alguma assistência após o acidente?</Label>
             <SimNaoRadio
               id="assistencia-acidente"
@@ -119,7 +119,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
       </div>
 
       {/* B.3.5: EPI */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>A plataforma fornecia equipamento de segurança (capacete, colete, etc.)?</Label>
         <SimNaoRadio
           id="fornece-epi"
@@ -129,7 +129,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
       </div>
 
       {/* B.3.6: Seguro */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>Existia algum seguro oferecido pela plataforma?</Label>
         <SimNaoRadio
           id="seguro"
@@ -139,7 +139,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
       </div>
 
       {/* B.3.7: Narrativa */}
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Label htmlFor="narrativa-condicoes">Descreva suas condições de trabalho na plataforma</Label>
         <Textarea
           id="narrativa-condicoes"

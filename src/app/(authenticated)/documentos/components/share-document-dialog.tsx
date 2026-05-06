@@ -213,9 +213,9 @@ export function ShareDocumentDialog({
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-          <div className={cn("stack-default")}>
+          <div className={cn("flex flex-col stack-default")}>
             {/* Busca de usuários */}
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label>Adicionar pessoas</Label>
               <div className={cn("flex inline-tight")}>
                 <div className="relative flex-1">
@@ -350,7 +350,7 @@ export function ShareDocumentDialog({
             <Separator />
 
             {/* Lista de compartilhamentos */}
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label>Pessoas com acesso</Label>
               {compartilhamentos.length === 0 ? (
                 <p className={cn("text-body-sm text-muted-foreground py-4 text-center")}>
@@ -358,7 +358,7 @@ export function ShareDocumentDialog({
                 </p>
               ) : (
                 <ScrollArea className="max-h-60">
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     {compartilhamentos.map((compartilhamento) => (
                       <div
                         key={compartilhamento.id}

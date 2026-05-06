@@ -108,7 +108,7 @@ export function DiskIOCard({ diskIO, diskIOStatus, diskIOMessage }: DiskIOCardPr
           </Badge>
         </div>
       </CardHeader>
-      <CardContent className={cn("stack-default")}>
+      <CardContent className={cn("flex flex-col stack-default")}>
         {/* Progress bar principal */}
         <div>
           <div className="flex items-center justify-between">

@@ -48,7 +48,7 @@ export default async function ProcessosPage() {
 
   return (
     <DashboardProvider initialData={initialData}>
-      <div className={cn("stack-default")}>
+      <div className={cn("flex flex-col stack-default")}>
         <Heading level="page">Processos</Heading>
         {/* Row 1: Hero + Heatmap */}
         <div className={cn("grid inline-default md:grid-cols-2 xl:grid-cols-3")}>

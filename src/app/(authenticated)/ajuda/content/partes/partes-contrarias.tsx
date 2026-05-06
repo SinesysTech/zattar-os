@@ -117,8 +117,8 @@ const actions: ActionDef[] = [
 
 export default function PartesContariasDoc() {
   return (
-    <div className={cn("stack-extra-loose")}>
-      <div className={cn("stack-tight")}>
+    <div className={cn("flex flex-col stack-extra-loose")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Heading level="page">Partes Contrárias</Heading>
         <p className={cn("text-muted-foreground text-body-lg")}>
           Cadastro de pessoas físicas ou jurídicas que figuram como adversárias nos processos do escritório.

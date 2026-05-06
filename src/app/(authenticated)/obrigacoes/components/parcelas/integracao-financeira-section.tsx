@@ -124,7 +124,7 @@ export function IntegracaoFinanceiraSection({ acordoId, onSyncComplete }: Integr
         <Heading level="section" as="h2" className={cn("flex items-center inline-tight")}>
           <RefreshCw className="h-5 w-5" /> Integração Financeira
         </Heading>
-        <Badge variant="outline" className={cn('inline-micro',
+        <Badge variant="outline" className={cn('flex inline-micro',
           statusGeral === 'sincronizado' && 'text-success border-success',
           statusGeral === 'pendente' && 'text-warning border-warning',
           statusGeral === 'inconsistente' && 'text-destructive border-destructive'

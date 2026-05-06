@@ -118,7 +118,7 @@ export function FormularioDuplicateDialog({
           <DialogTitle>Duplicar Formulário</DialogTitle>
           <DialogDescription>
             Crie uma cópia do formulário &ldquo;{formulario.nome}&rdquo;.
-            <div className={cn("mt-2 stack-micro")}>
+            <div className={cn("flex flex-col mt-2 stack-micro")}>
               <div className={cn("flex items-center inline-tight")}>
                 <Label className={cn( "text-body-sm font-medium")}>Segmento:</Label>
                 <Badge variant="outline">{formulario.segmento?.nome || "N/A"}</Badge>
@@ -143,7 +143,7 @@ export function FormularioDuplicateDialog({
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className={cn("stack-default")}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className={cn("flex flex-col stack-default")}>
             <FormField
               control={form.control}
               name="nome"

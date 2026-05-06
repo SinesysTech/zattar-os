@@ -216,11 +216,11 @@ export function AudienciaTimeline({
   // Loading skeleton
   if (isLoading) {
     return (
-      <div className={cn('stack-default', className)}>
+      <div className={cn('flex flex-col stack-default', className)}>
         {[60, 80, 50].map((w, i) => (
           <div key={i} className={cn("flex inline-medium")}>
             <div className="size-10 shrink-0 animate-pulse rounded-full bg-muted" />
-            <div className={cn("flex-1 stack-tight")}>
+            <div className={cn("flex flex-col flex-1 stack-tight")}>
               <div className="h-3 animate-pulse rounded bg-muted" style={{ width: `${w}%` }} />
               <div className="h-3 animate-pulse rounded bg-muted" style={{ width: `${w - 20}%` }} />
             </div>
@@ -285,7 +285,7 @@ export function AudienciaTimeline({
 
             {/* Changes list */}
             {entry.changes.length > 0 && (
-              <ul className={cn("mt-1.5 stack-micro")}>
+              <ul className={cn("flex flex-col mt-1.5 stack-micro")}>
                 {entry.changes.map((change, i) => (
                   <li key={i} className={cn("text-body-sm")}>
                     <span className="text-muted-foreground">{change.campo}:</span>{' '}

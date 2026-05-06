@@ -192,7 +192,7 @@ export function ContratoDocumentosList({ contratoId }: ContratoDocumentosListPro
   // Loading state
   if (loading) {
     return (
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         {[1, 2, 3].map((i) => (
           <Skeleton key={i} className="h-16 w-full" />
         ))}

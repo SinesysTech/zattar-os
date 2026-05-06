@@ -142,7 +142,7 @@ export function ProjectForm({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className={cn("stack-loose")}
+            className={cn("flex flex-col stack-loose")}
           >
             <FormField
               control={form.control}

@@ -62,7 +62,7 @@ export function AssistenteForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(onFormSubmit)} className={cn("stack-default py-4")}>
+    <form onSubmit={handleSubmit(onFormSubmit)} className={cn("flex flex-col stack-default py-4")}>
       {/* Nome */}
       <div className={cn("grid inline-tight")}>
         <Label htmlFor="nome">

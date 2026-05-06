@@ -43,11 +43,11 @@ function DRELoading() {
       </div>
 
       {/* Tabs + content */}
-      <div className={cn("mt-4 stack-medium")}>
+      <div className={cn("flex flex-col mt-4 stack-medium")}>
         <Skeleton className="h-10 w-80" />
         <Card>
           <CardContent className={cn("pt-6")}>
-            <div className={cn("stack-snug")}>
+            <div className={cn("flex flex-col stack-snug")}>
               {Array.from({ length: 12 }).map((_, i) => (
                 <Skeleton key={i} className="h-7" />
               ))}

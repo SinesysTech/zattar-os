@@ -54,7 +54,7 @@ export function CancelarLinkButton({
         <Button
           size="sm"
           variant="outline"
-          className={cn("rounded-xl inline-snug")}
+          className={cn("flex rounded-xl inline-snug")}
           disabled={loading}
         >
           <Ban className="size-3.5" />

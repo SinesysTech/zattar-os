@@ -129,8 +129,8 @@ const actions: ActionDef[] = [
 
 export default function ClientesDoc() {
   return (
-    <div className={cn("stack-extra-loose")}>
-      <div className={cn("stack-tight")}>
+    <div className={cn("flex flex-col stack-extra-loose")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Heading level="page">Clientes</Heading>
         <p className={cn("text-muted-foreground text-body-lg")}>
           Cadastro centralizado de clientes pessoas físicas e jurídicas do escritório.

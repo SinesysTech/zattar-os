@@ -184,7 +184,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col h-full">
-        <div className={cn("flex-1 stack-default")}>
+        <div className={cn("flex flex-col flex-1 stack-default")}>
           {/* Datas e Horários - Grid 4 colunas em telas grandes */}
           <div className={cn("grid grid-cols-2 lg:grid-cols-4 inline-medium")}>
             <FormField

@@ -39,7 +39,7 @@ function PulseSkeleton() {
       {Array.from({ length: 4 }).map((_, i) => (
         <GlassPanel key={i} depth={1} className={cn("px-4 py-3.5")}>
           <div className={cn("flex items-start justify-between inline-tight")}>
-            <div className={cn("min-w-0 stack-tight")}>
+            <div className={cn("flex flex-col min-w-0 stack-tight")}>
               <Skeleton className="h-2.5 w-16" />
               <Skeleton className="h-6 w-20" />
               <Skeleton className="h-2 w-14" />

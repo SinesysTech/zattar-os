@@ -21,7 +21,7 @@ import {
 
 export default function Salarios() {
   return (
-    <div className={cn("stack-extra-loose")}>
+    <div className={cn("flex flex-col stack-extra-loose")}>
       <div>
         <Heading level="page">Salários</Heading>
         <p className="text-muted-foreground mt-2">
@@ -196,7 +196,7 @@ export default function Salarios() {
         <p className="text-muted-foreground mb-4">
           O relatório de custo de pessoal consolida, por período selecionado:
         </p>
-        <ul className={cn("stack-tight text-body-sm text-muted-foreground list-disc list-inside")}>
+        <ul className={cn("flex flex-col stack-tight text-body-sm text-muted-foreground list-disc list-inside")}>
           <li>Custo total da folha (salários brutos)</li>
           <li>Total de encargos patronais (FGTS, INSS patronal)</li>
           <li>Total de benefícios (VR, VT, plano de saúde)</li>

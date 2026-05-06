@@ -58,7 +58,7 @@ export function GrauBadges({ instances }: GrauBadgesProps) {
                 </SemanticBadge>
               </TooltipTrigger>
               <TooltipContent>
-                <div className={cn("text-caption stack-micro")}>
+                <div className={cn("flex flex-col text-caption stack-micro")}>
                   <div>
                     <strong>Grau:</strong> {label}
                   </div>

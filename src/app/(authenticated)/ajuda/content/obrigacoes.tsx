@@ -159,8 +159,8 @@ const actions: ActionDef[] = [
 
 export default function ObrigacoesDoc() {
   return (
-    <div className={cn("stack-extra-loose")}>
-      <div className={cn("stack-tight")}>
+    <div className={cn("flex flex-col stack-extra-loose")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Heading level="page">Obrigações</Heading>
         <p className={cn("text-muted-foreground text-body-lg")}>
           Controle de obrigações financeiras oriundas de acordos e condenações judiciais.
@@ -198,7 +198,7 @@ export default function ObrigacoesDoc() {
           Após cadastrar uma obrigação parcelada, o sistema gera automaticamente todas as parcelas
           com as respectivas datas de vencimento. Cada parcela pode ter um dos seguintes status:
         </p>
-        <ul className={cn("list-disc list-inside stack-micro text-muted-foreground text-body-sm mt-2")}>
+        <ul className={cn("flex flex-col list-disc list-inside stack-micro text-muted-foreground text-body-sm mt-2")}>
           <li><strong>Pendente:</strong> não venceu e ainda não foi paga.</li>
           <li><strong>Paga:</strong> pagamento confirmado e registrado.</li>
           <li><strong>Vencida:</strong> prazo ultrapassado sem registro de pagamento.</li>

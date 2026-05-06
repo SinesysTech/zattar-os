@@ -115,7 +115,7 @@ export default function FieldPalette() {
 
   return (
     <div className="h-full flex flex-col border rounded-lg bg-card overflow-hidden">
-      <div className={cn("shrink-0 px-3 pt-3 pb-2 stack-tight border-b")}>
+      <div className={cn("flex flex-col shrink-0 px-3 pt-3 pb-2 stack-tight border-b")}>
         <Heading level="card" className={cn("text-caption uppercase tracking-wider text-muted-foreground")}>Campos Disponíveis</Heading>
         <div className="relative">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
@@ -129,7 +129,7 @@ export default function FieldPalette() {
       </div>
 
       <ScrollArea className="flex-1">
-        <div className={cn("px-3 pb-3 pt-2 stack-nano")}>
+        <div className={cn("flex flex-col px-3 pb-3 pt-2 stack-nano")}>
           {filteredCategories.length === 0 ? (
             <div className={cn("text-center py-8 text-muted-foreground")}>
               <Search className="size-6 mx-auto mb-2 opacity-50" />
@@ -156,7 +156,7 @@ export default function FieldPalette() {
                       )}
                     />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className={cn("pt-0.5 pb-1.5 stack-nano")}>
+                  <CollapsibleContent className={cn("flex flex-col pt-0.5 pb-1.5 stack-nano")}>
                     {category.fields.map(field => (
                       <DraggableFieldItem key={`${category.id}-${field.fieldName}`} field={field} />
                     ))}

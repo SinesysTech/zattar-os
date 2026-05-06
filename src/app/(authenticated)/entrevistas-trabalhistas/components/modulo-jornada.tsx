@@ -42,7 +42,7 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
   };
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       <div>
         <Heading level="card">Apropriação do Tempo</Heading>
         <p className={cn("text-body-sm text-muted-foreground")}>
@@ -51,9 +51,9 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
       </div>
 
       {/* A.2.1: Controle de ponto */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>Como era registrado o horário de entrada e saída?</Label>
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           {CONTROLE_PONTO_OPTIONS.map((opt) => (
             <div key={opt.value} className={cn("flex items-center inline-tight")}>
               <Checkbox
@@ -72,7 +72,7 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
       </div>
 
       <div className={cn("grid inline-default sm:grid-cols-2")}>
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label htmlFor="horario-entrada">Horário habitual de entrada</Label>
           <Input
             id="horario-entrada"
@@ -82,7 +82,7 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
             className="max-w-44"
           />
         </div>
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label htmlFor="horario-saida">Horário habitual de saída</Label>
           <Input
             id="horario-saida"
@@ -102,7 +102,7 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
       )}
 
       {/* A.2.2: Intervalo */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>Conseguia tirar 1 hora inteira de almoço/descanso?</Label>
         <SimNaoRadio
           id="intervalo"
@@ -115,7 +115,7 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
 
       {/* Campo condicional: minutos reais */}
       {intervaloReduzido && (
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label htmlFor="minutos-intervalo">Quantos minutos de intervalo realmente tinha?</Label>
           <Input
             id="minutos-intervalo"
@@ -136,9 +136,9 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
       )}
 
       {/* Horas extras */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>Recebia pelas horas a mais que trabalhava?</Label>
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <div className={cn("flex items-center inline-tight")}>
             <Checkbox
               id="he-pagas"
@@ -167,7 +167,7 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
       </div>
 
       {/* Narrativa do dia típico */}
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Label htmlFor="dia-tipico">Descreva um dia típico de trabalho</Label>
         <Textarea
           id="dia-tipico"

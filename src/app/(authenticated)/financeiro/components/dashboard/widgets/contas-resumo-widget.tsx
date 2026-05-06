@@ -58,7 +58,7 @@ function ContaSection({
   iconColorClass: string;
 }) {
   return (
-    <div className={cn("stack-tight-plus")}>
+    <div className={cn("flex flex-col stack-tight-plus")}>
       <div className="flex items-center justify-between">
         <div className={cn("flex items-center inline-tight")}>
           <div className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ 'rounded-md p-1.5', colorClass)}>
@@ -94,7 +94,7 @@ export function ContasResumoWidget({ contasPagar, contasReceber, isLoading }: Co
           <Skeleton className="h-5 w-40" />
         </CardHeader>
         <CardContent>
-          <div className={cn("stack-default")}>
+          <div className={cn("flex flex-col stack-default")}>
             <Skeleton className="h-16 w-full" />
             <Skeleton className="h-2.5 w-full rounded-full" />
             <Skeleton className="h-16 w-full" />
@@ -113,7 +113,7 @@ export function ContasResumoWidget({ contasPagar, contasReceber, isLoading }: Co
           Contas a Pagar / Receber
         </CardTitle>
       </CardHeader>
-      <CardContent className={cn("flex-1 stack-default")}>
+      <CardContent className={cn("flex flex-col flex-1 stack-default")}>
         <ContaSection
           title="A Pagar"
           icon={ArrowUpFromLine}

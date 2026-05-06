@@ -19,9 +19,9 @@ export function SpecimenCard({
   children,
 }: SpecimenCardProps) {
   return (
-    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5 inline-default", className)}>
+    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "flex p-5 inline-default", className)}>
       <div className={cn("flex items-baseline justify-between inline-default")}>
-        <div className={cn("stack-nano")}>
+        <div className={cn("flex flex-col stack-nano")}>
           <Text variant="meta-label">{eyebrow}</Text>
           {title && <Heading level="card">{title}</Heading>}
         </div>

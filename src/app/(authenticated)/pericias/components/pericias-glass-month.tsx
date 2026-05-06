@@ -486,7 +486,7 @@ export function PericiasGlassMonth({
                           <X className="w-3.5 h-3.5 text-foreground/50" />
                         </button>
                       </div>
-                      <div className={cn("stack-tight max-h-72 overflow-y-auto pr-0.5")}>
+                      <div className={cn("flex flex-col stack-tight max-h-72 overflow-y-auto pr-0.5")}>
                         {popoverPericias.map((p) => (
                           <button
                             key={p.id}

@@ -114,7 +114,7 @@ export function FilterChipMulti({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, popoverWidth)} align="start" side="bottom">
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-nano max-h-72 overflow-y-auto")}>
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col p-2 stack-nano max-h-72 overflow-y-auto")}>
           {options.length === 0 ? (
             <div className={cn("text-[11px] text-muted-foreground/50 px-2.5 py-2")}>
               Nenhuma opção disponível

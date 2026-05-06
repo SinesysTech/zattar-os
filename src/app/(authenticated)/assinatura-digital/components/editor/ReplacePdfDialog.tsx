@@ -293,7 +293,7 @@ export default function ReplacePdfDialog({
             <Button
               onClick={handleReplace}
               disabled={!uploadedFile || !uploadedFile.isValid || isUploading}
-              className={cn("inline-tight")}
+              className={cn("flex inline-tight")}
             >
               {isUploading ? (
                 <>

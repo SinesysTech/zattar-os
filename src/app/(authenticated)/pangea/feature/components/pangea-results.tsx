@@ -109,12 +109,12 @@ export function PangeaResults({ data }: { data: PangeaBuscaResponse }) {
   }, [data.resultados, aggsByOrgao]);
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       <Card>
         <CardHeader>
           <CardTitle>Resumo</CardTitle>
         </CardHeader>
-        <CardContent className={cn("stack-default")}>
+        <CardContent className={cn("flex flex-col stack-default")}>
           <div>
             <p className="text-sm text-muted-foreground">Total</p>
             <Heading level="card">{total}</Heading>
@@ -162,13 +162,13 @@ export function PangeaResults({ data }: { data: PangeaBuscaResponse }) {
                       </div>
                     </AccordionTrigger>
                     <AccordionContent>
-                      <div className={cn("stack-medium pt-2")}>
+                      <div className={cn("flex flex-col stack-medium pt-2")}>
                         {g.resultados.map((r) => {
                           const { titulo, subtitulo } = getResumoTexto(r);
 
                           return (
                             <Card key={r.id}>
-                              <CardHeader className={cn("stack-tight")}>
+                              <CardHeader className={cn("flex flex-col stack-tight")}>
                                 <div className={cn("flex flex-wrap items-center inline-tight")}>
                                   <AppBadge variant="info">{r.tipo}</AppBadge>
                                   {typeof r.nr === 'number' && <AppBadge variant="secondary">nr {r.nr}</AppBadge>}
@@ -179,7 +179,7 @@ export function PangeaResults({ data }: { data: PangeaBuscaResponse }) {
                                   {r.possuiDecisoes && <AppBadge variant="success">Com decisões</AppBadge>}
                                   {r.alertaSituacao && <AppBadge variant="warning">{r.alertaSituacao}</AppBadge>}
                                 </div>
-                                <div className={cn("stack-tight")}>
+                                <div className={cn("flex flex-col stack-tight")}>
                                   <Heading level="card" className={cn("text-body leading-6")}>{titulo}</Heading>
                                   {subtitulo && (
                                     <p className={cn(/* design-system-escape: leading-6 sem token DS */ "text-sm text-muted-foreground leading-6")}>{subtitulo}</p>

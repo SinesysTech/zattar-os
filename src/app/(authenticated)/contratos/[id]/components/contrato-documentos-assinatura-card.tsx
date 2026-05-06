@@ -163,7 +163,7 @@ export function ContratoDocumentosAssinaturaCard({
                 variant="outline"
                 size="sm"
                 onClick={handleCopyLink}
-                className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; */ "h-7 px-2.5 rounded-lg text-[11.5px] font-medium inline-snug")}
+                className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; */ "flex h-7 px-2.5 rounded-lg text-[11.5px] font-medium inline-snug")}
               >
                 <Copy className="size-3" />
                 Copiar link
@@ -178,7 +178,7 @@ export function ContratoDocumentosAssinaturaCard({
             size="sm"
             onClick={handleRefresh}
             disabled={refreshing}
-            className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; */ "h-7 px-2 rounded-lg text-[11.5px] font-medium inline-snug")}
+            className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; */ "flex h-7 px-2 rounded-lg text-[11.5px] font-medium inline-snug")}
           >
             <RefreshCw className={`size-3 ${refreshing ? 'animate-spin' : ''}`} />
             Atualizar
@@ -200,7 +200,7 @@ export function ContratoDocumentosAssinaturaCard({
             </p>
           </div>
         ) : (
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <div className={cn("flex items-center inline-medium px-1 pb-1")}>
               <p className="text-[11px] text-muted-foreground">
                 <span className={cn( "font-medium text-foreground")}>{totalAssinados}</span>{' '}
@@ -293,7 +293,7 @@ function DocumentoRow({ doc, downloading, onDownload }: DocumentoRowProps) {
           onClick={onDownload}
           disabled={!podeBaixar || downloading}
           title={isAssinado ? 'Baixar PDF assinado' : 'Baixar PDF original'}
-          className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; */ "h-7 px-2 rounded-lg text-[11px] font-medium inline-snug")}
+          className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; */ "flex h-7 px-2 rounded-lg text-[11px] font-medium inline-snug")}
         >
           <Download className={`size-3 ${downloading ? 'animate-pulse' : ''}`} />
           {downloading ? 'Abrindo…' : 'Baixar'}

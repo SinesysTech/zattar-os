@@ -200,7 +200,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
   if (isLoadingUsuario) {
     return (
-      <div className={cn("py-8 stack-default")}>
+      <div className={cn("flex flex-col py-8 stack-default")}>
         <div className={cn("flex items-center inline-tight-plus")}>
           <Button
             variant="ghost"
@@ -227,7 +227,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
   if (errorUsuario || !usuario) {
     return (
-      <div className={cn("py-8 stack-default")}>
+      <div className={cn("flex flex-col py-8 stack-default")}>
         <div className={cn("flex items-center inline-tight-plus")}>
           <Button
             variant="ghost"
@@ -240,7 +240,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
           </Button>
           <Heading level="section">Usuário</Heading>
         </div>
-        <GlassPanel depth={1} className={cn("inset-dialog stack-default")}>
+        <GlassPanel depth={1} className={cn("flex flex-col inset-dialog stack-default")}>
           <Alert variant="destructive">
             <AlertCircle className="size-4" />
             <AlertTitle>Erro ao carregar usuário</AlertTitle>
@@ -248,7 +248,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
               {errorUsuario || 'Usuário não encontrado ou você não tem permissão para acessá-lo.'}
             </AlertDescription>
           </Alert>
-          <Button onClick={() => router.push('/app/usuarios')} className={cn("inline-tight")}>
+          <Button onClick={() => router.push('/app/usuarios')} className={cn("flex inline-tight")}>
             <ArrowLeft className="size-4" />
             Voltar para Usuários
           </Button>
@@ -260,7 +260,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
   // ─── Main Layout ────────────────────────────────────────────────────────────
 
   return (
-    <div className={cn("py-8 stack-loose")}>
+    <div className={cn("flex flex-col py-8 stack-loose")}>
       {/* Two-column grid: sidebar (sticky) + content */}
       <div className={cn("grid grid-cols-1 lg:grid-cols-[300px_1fr] inline-default items-start")}>
 
@@ -276,7 +276,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
         />
 
         {/* ── Right: Breadcrumb + Tabs + Content ───────────────────────────── */}
-        <div className={cn("stack-default min-w-0")}>
+        <div className={cn("flex flex-col stack-default min-w-0")}>
 
           {/* Breadcrumb */}
           <div className={cn("flex items-center inline-tight-plus")}>
@@ -316,7 +316,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
           {/* ── Tab: Visão Geral ─────────────────────────────────────────── */}
           {activeTab === 'visao-geral' && (
-            <div className={cn("stack-default")}>
+            <div className={cn("flex flex-col stack-default")}>
               <AtividadesCards usuarioId={usuario.id} />
               <ActivityHeatmap data={[]} />
             </div>
@@ -360,7 +360,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
           {/* ── Tab: Atividades ──────────────────────────────────────────── */}
           {activeTab === 'atividades' && (
-            <div className={cn("stack-default")}>
+            <div className={cn("flex flex-col stack-default")}>
               <AtividadesCards usuarioId={usuario.id} />
               <AtividadesRecentes usuarioId={usuario.id} />
             </div>
@@ -386,7 +386,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
           {/* ── Tab: Segurança ───────────────────────────────────────────── */}
           {activeTab === 'seguranca' && (
-            <div className={cn("stack-default")}>
+            <div className={cn("flex flex-col stack-default")}>
               {/* Credentials */}
               <GlassPanel depth={1} className={cn("inset-dialog")}>
                 <Heading level="card" className="mb-4">Credenciais de Acesso</Heading>

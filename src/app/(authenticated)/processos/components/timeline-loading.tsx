@@ -26,13 +26,13 @@ export function TimelineLoading({
 }: TimelineLoadingProps) {
   if (embedded) {
     return (
-      <div className={cn("stack-default")}>
+      <div className={cn("flex flex-col stack-default")}>
         <div className={cn("grid inline-default lg:grid-cols-[minmax(280px,0.36fr)_minmax(0,1fr)]")}>
-          <div className={cn("rounded-2xl border bg-muted/20 inset-card-compact stack-medium")}>
+          <div className={cn("flex flex-col rounded-2xl border bg-muted/20 inset-card-compact stack-medium")}>
             <Skeleton className="h-5 w-28" />
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               {[...Array(5)].map((_, index) => (
-                <div key={index} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-xl border bg-background p-3 stack-tight")}>
+                <div key={index} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col rounded-xl border bg-background p-3 stack-tight")}>
                   <Skeleton className="h-4 w-24" />
                   <Skeleton className="h-3 w-full" />
                 </div>
@@ -40,12 +40,12 @@ export function TimelineLoading({
             </div>
           </div>
 
-          <div className={cn(/* design-system-escape: p-5 → usar <Inset> */ "rounded-2xl border bg-muted/10 p-5 stack-default-plus")}>
-            <div className={cn("stack-tight")}>
+          <div className={cn(/* design-system-escape: p-5 → usar <Inset> */ "flex flex-col rounded-2xl border bg-muted/10 p-5 stack-default-plus")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Skeleton className="h-6 w-1/3" />
               <Skeleton className="h-4 w-2/3" />
             </div>
-            <div className={cn(/* design-system-escape: p-5 → usar <Inset> */ "rounded-2xl border bg-background p-5 stack-default min-h-120")}>
+            <div className={cn(/* design-system-escape: p-5 → usar <Inset> */ "flex flex-col rounded-2xl border bg-background p-5 stack-default min-h-120")}>
               <Skeleton className="h-5 w-40" />
               <Skeleton className="h-4 w-full" />
               <Skeleton className="h-4 w-5/6" />
@@ -57,7 +57,7 @@ export function TimelineLoading({
         <div className={cn("rounded-2xl border bg-card px-6 py-8")}>
           <div className={cn("flex items-center justify-center inline-medium")}>
             <LoadingSpinner size="lg" className="text-primary" />
-            <div className={cn("text-center stack-tight")}>
+            <div className={cn("flex flex-col text-center stack-tight")}>
               <Text variant="label" as="p" className={cn( "text-body font-medium")}>{message}</Text>
               {isCapturing && (
                 <>
@@ -75,10 +75,10 @@ export function TimelineLoading({
   }
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       {/* Header Skeleton */}
-      <Card className={cn("inset-dialog stack-default")}>
-        <div className={cn("stack-tight")}>
+      <Card className={cn("flex flex-col inset-dialog stack-default")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Skeleton className="h-8 w-3/4" />
           <div className={cn("flex inline-tight")}>
             <Skeleton className="h-6 w-20" />
@@ -88,11 +88,11 @@ export function TimelineLoading({
         </div>
         <div className="h-px bg-border" />
         <div className={cn("grid inline-default md:grid-cols-2")}>
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Skeleton className="h-4 w-24" />
             <Skeleton className="h-4 w-full" />
           </div>
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Skeleton className="h-4 w-24" />
             <Skeleton className="h-4 w-full" />
           </div>
@@ -100,10 +100,10 @@ export function TimelineLoading({
       </Card>
 
       {/* Timeline Loading Message */}
-      <Card className={cn("inset-dialog stack-default")}>
+      <Card className={cn("flex flex-col inset-dialog stack-default")}>
         <div className={cn("flex items-center justify-center inline-medium py-8")}>
           <LoadingSpinner className="size-6 text-primary" />
-          <div className={cn("text-center stack-tight")}>
+          <div className={cn("flex flex-col text-center stack-tight")}>
             <p className={cn( "text-body font-medium")}>{message}</p>
             {isCapturing && (
               <>
@@ -120,14 +120,14 @@ export function TimelineLoading({
 
       {/* Timeline Items Skeleton (apenas se não estiver capturando) */}
       {!isCapturing && (
-        <div className={cn("stack-default")}>
+        <div className={cn("flex flex-col stack-default")}>
           {[...Array(5)].map((_, i) => (
             <div key={i} className={cn("flex inline-default")}>
               <div className="relative flex flex-col items-center">
                 <Skeleton className="w-10 h-10 rounded-full" />
                 <div className="w-0.5 h-20 bg-border" />
               </div>
-              <Card className={cn("flex-1 inset-card-compact stack-medium")}>
+              <Card className={cn("flex flex-col flex-1 inset-card-compact stack-medium")}>
                 <Skeleton className="h-5 w-3/4" />
                 <Skeleton className="h-4 w-1/2" />
                 <Skeleton className="h-4 w-2/3" />

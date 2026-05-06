@@ -70,7 +70,7 @@ export function PerfilView() {
 
   if (isLoading) {
     return (
-      <div className={cn("stack-loose")}>
+      <div className={cn("flex flex-col stack-loose")}>
         <div className="flex items-center justify-between">
           <div>
             <Skeleton className="h-8 w-48 mb-2" />
@@ -90,7 +90,7 @@ export function PerfilView() {
   const avatarUrl = getAvatarUrl(usuario.avatarUrl);
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       {/* Header com Avatar */}
       <div className={cn("flex items-start justify-between inline-loose")}>
         <div className={cn("flex items-center inline-loose")}>
@@ -147,7 +147,7 @@ export function PerfilView() {
               Informações Pessoais
             </CardTitle>
           </CardHeader>
-          <CardContent className={cn("stack-default")}>
+          <CardContent className={cn("flex flex-col stack-default")}>
             <div>
               <div className={cn( "text-body-sm font-medium text-muted-foreground mb-1")}>
                 Nome Completo
@@ -200,7 +200,7 @@ export function PerfilView() {
               Contato
             </CardTitle>
           </CardHeader>
-          <CardContent className={cn("stack-default")}>
+          <CardContent className={cn("flex flex-col stack-default")}>
             {usuario.emailCorporativo && (
               <div>
                 <div className={cn( "text-body-sm font-medium text-muted-foreground mb-1")}>
@@ -241,7 +241,7 @@ export function PerfilView() {
                 Informações Profissionais
               </CardTitle>
             </CardHeader>
-            <CardContent className={cn("stack-default")}>
+            <CardContent className={cn("flex flex-col stack-default")}>
               {usuario.oab && (
                 <div>
                   <div className={cn( "text-body-sm font-medium text-muted-foreground mb-1")}>

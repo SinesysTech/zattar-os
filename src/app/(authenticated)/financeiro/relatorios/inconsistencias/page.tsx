@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function RelatorioInconsistenciasPage() {
     return (
-        <div className={cn("stack-loose")}>
+        <div className={cn("flex flex-col stack-loose")}>
             <Card>
                 <CardHeader>
                     <CardTitle>Inconsistências de Sincronização</CardTitle>

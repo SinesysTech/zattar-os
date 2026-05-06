@@ -532,12 +532,12 @@ export function PericiasMissaoContent({
   }, []);
 
   return (
-    <div className={cn("stack-default-plus")}>
+    <div className={cn("flex flex-col stack-default-plus")}>
       {/* Grupos de urgência */}
       {isLoading ? (
-        <div className={cn("stack-default")}>
+        <div className={cn("flex flex-col stack-default")}>
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className={cn("stack-tight")}>
+            <div key={i} className={cn("flex flex-col stack-tight")}>
               <Skeleton className="h-10 w-64 rounded-lg" />
               <div className={cn("grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 inline-medium")}>
                 {Array.from({ length: 3 }).map((_, j) => (
@@ -558,11 +558,11 @@ export function PericiasMissaoContent({
           </p>
         </GlassPanel>
       ) : (
-        <div className={cn("stack-loose")}>
+        <div className={cn("flex flex-col stack-loose")}>
           {groups
             .filter((g) => g.pericias.length > 0)
             .map((group) => (
-              <section key={group.key} className={cn("stack-medium")}>
+              <section key={group.key} className={cn("flex flex-col stack-medium")}>
                 <GroupHeader group={group} />
                 <div className={cn("grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 inline-medium")}>
                   {group.pericias.map((p) => (

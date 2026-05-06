@@ -260,7 +260,7 @@ export function PecaModeloFormSheet({
 
         <ScrollArea className="flex-1">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className={cn("stack-loose inset-dialog")}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className={cn("flex flex-col stack-loose inset-dialog")}>
               {/* Título */}
               <FormField
                 control={form.control}
@@ -394,7 +394,7 @@ export function PecaModeloFormSheet({
 
               {/* Placeholders detectados */}
               {form.watch('conteudo') && (
-                <div className={cn("stack-tight")}>
+                <div className={cn("flex flex-col stack-tight")}>
                   <p className={cn( "text-body-sm font-medium text-muted-foreground")}>
                     Placeholders detectados:
                   </p>

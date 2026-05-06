@@ -126,7 +126,7 @@ export function PdfUploadField({
   const displayError = error || uploadError;
 
   return (
-    <div className={cn("stack-tight")}>
+    <div className={cn("flex flex-col stack-tight")}>
       <Label>
         {label} {required && <span className="text-destructive">*</span>}
       </Label>

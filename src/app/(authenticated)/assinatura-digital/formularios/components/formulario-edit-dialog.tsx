@@ -335,14 +335,14 @@ export function FormularioEditDialog({
           <DialogDescription className="sr-only">Edite as informações do formulário.</DialogDescription>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-          <form id="formulario-edit-form" onSubmit={handleSubmit(onSubmit)} className={cn("stack-default inset-dialog")}>
+          <form id="formulario-edit-form" onSubmit={handleSubmit(onSubmit)} className={cn("flex flex-col stack-default inset-dialog")}>
             {Object.keys(errors).length > 0 && (
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 p-3 text-body-sm text-destructive")}>
                 Corrija os erros no formulário antes de continuar.
               </div>
             )}
 
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="edit-nome">
                 Nome <span className="text-destructive">*</span>
               </Label>
@@ -355,7 +355,7 @@ export function FormularioEditDialog({
               {errors.nome && <p className={cn("text-body-sm text-destructive")}>{errors.nome.message}</p>}
             </div>
 
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="edit-slug">
                 Slug <span className="text-destructive">*</span>
               </Label>
@@ -368,7 +368,7 @@ export function FormularioEditDialog({
               {errors.slug && <p className={cn("text-body-sm text-destructive")}>{errors.slug.message}</p>}
             </div>
 
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label>
                 Segmento <span className="text-destructive">*</span>
               </Label>
@@ -385,7 +385,7 @@ export function FormularioEditDialog({
               )}
             </div>
 
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="edit-descricao">Descrição</Label>
               <Textarea
                 id="edit-descricao"
@@ -398,7 +398,7 @@ export function FormularioEditDialog({
               )}
             </div>
 
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label>Templates</Label>
               <Combobox
                 options={templateOptions}
@@ -413,7 +413,7 @@ export function FormularioEditDialog({
                   {templateIds.map((templateUuid) => {
                     const template = templates.find((t) => t.template_uuid === templateUuid);
                     return (
-                      <Badge key={templateUuid} variant="secondary" className={cn("inline-micro pr-1")}>
+                      <Badge key={templateUuid} variant="secondary" className={cn("flex inline-micro pr-1")}>
                         <span className="truncate max-w-37.5">
                           {template?.nome || templateUuid}
                         </span>
@@ -434,7 +434,7 @@ export function FormularioEditDialog({
             </div>
 
             {/* Tipo de formulário */}
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="edit-tipo_formulario">Tipo de Formulário</Label>
               <select
                 id="edit-tipo_formulario"
@@ -458,12 +458,12 @@ export function FormularioEditDialog({
 
             {/* Campos de configuração de contrato */}
             {tipoFormulario === 'contrato' && (
-              <div className={cn("stack-default rounded-md border inset-card-compact")}>
+              <div className={cn("flex flex-col stack-default rounded-md border inset-card-compact")}>
                 <p className={cn( "text-body-sm font-medium text-muted-foreground")}>
                   Configuração do Contrato
                 </p>
 
-                <div className={cn("stack-tight")}>
+                <div className={cn("flex flex-col stack-tight")}>
                   <Label htmlFor="edit-tipo_contrato_id">
                     Tipo de Contrato <span className="text-destructive">*</span>
                   </Label>
@@ -489,7 +489,7 @@ export function FormularioEditDialog({
                   )}
                 </div>
 
-                <div className={cn("stack-tight")}>
+                <div className={cn("flex flex-col stack-tight")}>
                   <Label htmlFor="edit-tipo_cobranca_id">
                     Tipo de Cobrança <span className="text-destructive">*</span>
                   </Label>
@@ -515,7 +515,7 @@ export function FormularioEditDialog({
                   )}
                 </div>
 
-                <div className={cn("stack-tight")}>
+                <div className={cn("flex flex-col stack-tight")}>
                   <Label htmlFor="edit-papel_cliente">
                     Papel do Cliente <span className="text-destructive">*</span>
                   </Label>
@@ -536,7 +536,7 @@ export function FormularioEditDialog({
                   )}
                 </div>
 
-                <div className={cn("stack-tight")}>
+                <div className={cn("flex flex-col stack-tight")}>
                   <Label htmlFor="edit-pipeline_id">
                     Pipeline <span className="text-destructive">*</span>
                   </Label>

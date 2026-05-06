@@ -43,7 +43,7 @@ export function ModuloRuptura({ data, onChange }: ModuloRupturaProps) {
   };
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       <div>
         <Heading level="card">A Ruptura e o Acerto de Contas</Heading>
         <p className={cn("text-body-sm text-muted-foreground")}>
@@ -52,7 +52,7 @@ export function ModuloRuptura({ data, onChange }: ModuloRupturaProps) {
       </div>
 
       {/* A.4.1: Motivo do término */}
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Label htmlFor="motivo">Como o trabalho terminou?</Label>
         <Select
           value={data.motivo ?? ''}
@@ -71,7 +71,7 @@ export function ModuloRuptura({ data, onChange }: ModuloRupturaProps) {
         </Select>
       </div>
 
-      <div className={cn("stack-tight sm:max-w-xs")}>
+      <div className={cn("flex flex-col stack-tight sm:max-w-xs")}>
         <Label htmlFor="data-demissao">Data do desligamento</Label>
         <Input
           id="data-demissao"
@@ -82,9 +82,9 @@ export function ModuloRuptura({ data, onChange }: ModuloRupturaProps) {
       </div>
 
       {/* A.4.2: Verbas rescisórias */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>Recebeu o acerto rescisório e guias do FGTS e Seguro-Desemprego?</Label>
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           {VERBAS_RECEBIDAS_OPTIONS.map((opt) => (
             <div key={opt.value} className={cn("flex items-center inline-tight")}>
               <Checkbox

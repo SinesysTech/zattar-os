@@ -101,7 +101,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
           <Users className="size-3.5 text-muted-foreground/60" />
           Assinantes
         </Heading>
-        <div className={cn("stack-snug")}>
+        <div className={cn("flex flex-col stack-snug")}>
           {doc.assinantes.map((a, i) => {
             const isDone = a.status === "concluido";
             const isLate =

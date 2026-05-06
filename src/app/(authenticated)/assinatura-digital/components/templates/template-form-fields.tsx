@@ -140,9 +140,9 @@ export function TemplateFormFields({
   };
 
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       {/* Seletor de Tipo de Template */}
-      <div className={cn("stack-snug")}>
+      <div className={cn("flex flex-col stack-snug")}>
         <Label>
           Tipo de Template <span className="text-destructive">*</span>
         </Label>
@@ -163,7 +163,7 @@ export function TemplateFormFields({
       {/* Grid responsivo para campos básicos */}
       <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
         {/* Nome */}
-        <div className={cn("stack-snug")}>
+        <div className={cn("flex flex-col stack-snug")}>
           <Label htmlFor="nome">
             Nome do Template <span className="text-destructive">*</span>
           </Label>
@@ -179,7 +179,7 @@ export function TemplateFormFields({
         </div>
 
         {/* Segmento */}
-        <div className={cn("stack-snug")}>
+        <div className={cn("flex flex-col stack-snug")}>
           <Label htmlFor="segmento_id">Segmento (Opcional)</Label>
           <Select
             onValueChange={(value) => setValue('segmento_id', Number(value))}
@@ -215,7 +215,7 @@ export function TemplateFormFields({
       </div>
 
       {/* Descrição - largura total */}
-      <div className={cn("stack-snug")}>
+      <div className={cn("flex flex-col stack-snug")}>
         <Label htmlFor="descricao">Descrição</Label>
         <Textarea
           id="descricao"
@@ -247,7 +247,7 @@ export function TemplateFormFields({
         <>
           {/* Editor Markdown (condicional) */}
           {tipoTemplate === 'markdown' && (
-            <div className={cn("stack-snug")}>
+            <div className={cn("flex flex-col stack-snug")}>
               <Label htmlFor="conteudo_markdown">
                 Conteúdo Markdown <span className="text-destructive">*</span>
               </Label>

@@ -201,7 +201,7 @@ export function PostHearingFlow({
             />
           </div>
 
-          <div className={cn("stack-nano")}>
+          <div className={cn("flex flex-col stack-nano")}>
             {postActions.map((action) => (
               <button
                 key={action.id}

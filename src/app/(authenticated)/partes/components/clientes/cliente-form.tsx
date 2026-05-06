@@ -712,7 +712,7 @@ export function ClienteFormDialog({
               <Badge
                 key={index}
                 variant="secondary"
-                className={cn("inline-micro pr-1")}
+                className={cn("flex inline-micro pr-1")}
               >
                 {email}
                 <button
@@ -897,7 +897,7 @@ export function ClienteFormDialog({
 
         <div className={cn("mt-4 inset-card-compact rounded-lg bg-muted/50 border")}>
           <Heading level="subsection" className="mb-3">Resumo do cadastro</Heading>
-          <dl className={cn("stack-tight text-body-sm")}>
+          <dl className={cn("flex flex-col stack-tight text-body-sm")}>
             <div className="flex justify-between">
               <dt className="text-muted-foreground">Tipo</dt>
               <dd className={cn( "font-medium text-right")}>{isPF ? 'Pessoa Física' : 'Pessoa Jurídica'}</dd>
@@ -1057,7 +1057,7 @@ export function ClienteFormDialog({
   const isLastStep = currentStep === TOTAL_STEPS;
 
   const renderEditFullView = () => (
-    <div className={cn("stack-loose pb-2")}>
+    <div className={cn("flex flex-col stack-loose pb-2")}>
       <section aria-labelledby="secao-identificacao">
         <Heading level="subsection" id="secao-identificacao" className="mb-3">
           Identificação

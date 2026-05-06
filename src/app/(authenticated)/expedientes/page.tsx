@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
  */
 function ExpedientesLoading() {
   return (
-    <div className={cn("stack-default-plus")}>
+    <div className={cn("flex flex-col stack-default-plus")}>
       {/* Header skeleton */}
       <div className={cn("flex items-end justify-between inline-default")}>
         <div>
@@ -39,7 +39,7 @@ function ExpedientesLoading() {
       </div>
 
       {/* Content skeleton */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         {Array.from({ length: 5 }).map((_, i) => (
           <Skeleton key={i} className="h-20 w-full rounded-2xl" />
         ))}

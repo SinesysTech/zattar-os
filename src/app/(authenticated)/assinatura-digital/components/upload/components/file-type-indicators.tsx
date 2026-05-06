@@ -42,7 +42,7 @@ export function FileTypeIndicators({
     <div
       className={cn(
         'flex items-center justify-center inline-default',
-        compact ? 'inline-medium' : 'inline-loose',
+        compact ? 'flex inline-medium' : 'flex inline-loose',
         className
       )}
     >

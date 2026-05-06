@@ -182,7 +182,7 @@ function DetailPanel({
       </div>
 
       {/* Info rows */}
-      <div className={cn("mt-4 stack-medium")}>
+      <div className={cn("flex flex-col mt-4 stack-medium")}>
         {expediente.trt && (
           <InfoRow
             label="Tribunal"
@@ -256,7 +256,7 @@ function DetailPanel({
       <div className={cn("mt-5 flex flex-col inline-tight")}>
         {onBaixar && (
           <Button
-            className={cn("h-9 w-full inline-tight text-caption")}
+            className={cn("flex h-9 w-full inline-tight text-caption")}
             onClick={() => onBaixar(expediente)}
           >
             <CheckCircle2 className="size-3.5" />
@@ -266,7 +266,7 @@ function DetailPanel({
         {onViewDetail && (
           <Button
             variant="outline"
-            className={cn("h-9 w-full inline-tight text-caption")}
+            className={cn("flex h-9 w-full inline-tight text-caption")}
             onClick={() => onViewDetail(expediente)}
           >
             <ExternalLink className="size-3.5" />
@@ -402,7 +402,7 @@ export function ExpedientesControlView({
   }
 
   const mainContent = (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       {sections.map(({ key, label, icon, items, accentClass }) => (
         <section key={key}>
           <SectionHeader

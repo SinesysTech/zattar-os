@@ -11,7 +11,7 @@ export function DocumentListSkeleton() {
       {/* Sidebar skeleton */}
       <div className={cn("w-64 border-r bg-muted/10 inset-card-compact")}>
         <Skeleton className="mb-4 h-6 w-24" />
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Skeleton className="h-8 w-full" />
           <Skeleton className="h-8 w-full" />
           <Skeleton className="h-8 w-full" />
@@ -32,7 +32,7 @@ export function DocumentListSkeleton() {
         </div>
 
         {/* List skeleton */}
-        <div className={cn("flex-1 stack-default inset-card-compact")}>
+        <div className={cn("flex flex-col flex-1 stack-default inset-card-compact")}>
           <Skeleton className="h-20 w-full" />
           <Skeleton className="h-20 w-full" />
           <Skeleton className="h-20 w-full" />

@@ -270,8 +270,8 @@ export function PangeaPageContent() {
   }
 
   return (
-    <div className={cn("stack-loose")}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-loose")}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className={cn("flex flex-col stack-default")}>
         {/* Hero minimalista */}
         <div className={cn("flex flex-col items-center text-center inline-extra-loose py-10")}>
           <Image
@@ -346,7 +346,7 @@ export function PangeaPageContent() {
         {/* Filtros avançados (painel) */}
         <Collapsible open={advancedOpen} onOpenChange={setAdvancedOpen}>
           <CollapsibleContent id="pangea-advanced-filters" className="mt-2">
-            <div className={cn(/* design-system-escape: md:p-6 sem equivalente DS */ "rounded-xl border bg-card inset-card-compact md:p-6 stack-loose")}>
+            <div className={cn(/* design-system-escape: md:p-6 sem equivalente DS */ "flex flex-col rounded-xl border bg-card inset-card-compact md:p-6 stack-loose")}>
               <div className="flex items-center justify-between">
                 <p className={cn("text-body-sm text-muted-foreground")}>Ajuste os filtros para refinar a busca</p>
                 <button
@@ -360,26 +360,26 @@ export function PangeaPageContent() {
               </div>
 
               <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
-                <div className={cn("stack-snug")}>
+                <div className={cn("flex flex-col stack-snug")}>
                   <Label>Trecho exato</Label>
                   <Input
                     placeholder='Use aspas ou ";" para múltiplos trechos'
                     {...form.register('trechoExato')}
                   />
                 </div>
-                <div className={cn("stack-snug")}>
+                <div className={cn("flex flex-col stack-snug")}>
                   <Label>Número (nr)</Label>
                   <Input {...form.register('nr')} />
                 </div>
-                <div className={cn("stack-snug")}>
+                <div className={cn("flex flex-col stack-snug")}>
                   <Label>Todas as palavras</Label>
                   <Input {...form.register('todasPalavras')} />
                 </div>
-                <div className={cn("stack-snug")}>
+                <div className={cn("flex flex-col stack-snug")}>
                   <Label>Quaisquer palavras</Label>
                   <Input {...form.register('quaisquerPalavras')} />
                 </div>
-                <div className={cn("stack-snug")}>
+                <div className={cn("flex flex-col stack-snug")}>
                   <Label>Sem as palavras</Label>
                   <Input {...form.register('semPalavras')} />
                 </div>
@@ -388,7 +388,7 @@ export function PangeaPageContent() {
               <Separator />
 
               <div className={cn("grid grid-cols-1 md:grid-cols-12 inline-default")}>
-                <div className={cn("stack-snug md:col-span-4")}>
+                <div className={cn("flex flex-col stack-snug md:col-span-4")}>
                   <Label>Órgãos</Label>
                   <Popover open={orgaosOpen} onOpenChange={setOrgaosOpen}>
                     <PopoverTrigger asChild>
@@ -452,7 +452,7 @@ export function PangeaPageContent() {
                   </Popover>
                 </div>
 
-                <div className={cn("stack-snug md:col-span-4")}>
+                <div className={cn("flex flex-col stack-snug md:col-span-4")}>
                   <Label>Espécies</Label>
                   <Popover>
                     <PopoverTrigger asChild>
@@ -504,7 +504,7 @@ export function PangeaPageContent() {
                   </Popover>
                 </div>
 
-                <div className={cn("stack-snug md:col-span-4")}>
+                <div className={cn("flex flex-col stack-snug md:col-span-4")}>
                   <Label>Data de atualização</Label>
                   <DateRangePicker
                     value={dateRange}
@@ -513,7 +513,7 @@ export function PangeaPageContent() {
                   />
                 </div>
 
-                <div className={cn("stack-snug md:col-span-4")}>
+                <div className={cn("flex flex-col stack-snug md:col-span-4")}>
                   <Label>Ordenação</Label>
                   <Select
                     value={form.watch('ordenacao') ?? 'Text'}

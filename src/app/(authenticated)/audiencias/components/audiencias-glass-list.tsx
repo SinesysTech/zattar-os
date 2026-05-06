@@ -312,7 +312,7 @@ function GlassRow({
           </div>
 
           {/* Identidade Processual */}
-          <div className={cn("mt-3 border-t border-border/40 pt-3 stack-micro")}>
+          <div className={cn("flex flex-col mt-3 border-t border-border/40 pt-3 stack-micro")}>
             <p className="text-sm font-semibold text-foreground leading-snug">
               {poloAtivo}
               {poloAtivo !== '—' && poloPassivo !== '—' && (
@@ -337,7 +337,7 @@ function GlassRow({
             onKeyDown={(e) => e.stopPropagation()}
           >
             {editingObs ? (
-              <div className={cn("stack-snug")}>
+              <div className={cn("flex flex-col stack-snug")}>
                 <Textarea
                   value={obsDraft}
                   onChange={(e) => setObsDraft(e.target.value)}
@@ -457,7 +457,7 @@ function ListSkeleton() {
               <Skeleton className="h-3 w-14" />
               <Skeleton className="h-3 w-12" />
             </div>
-            <div className={cn("flex-1 stack-tight")}>
+            <div className={cn("flex flex-col flex-1 stack-tight")}>
               <Skeleton className="h-4 w-64" />
               <Skeleton className="h-3.5 w-full" />
               <Skeleton className="h-3 w-48" />

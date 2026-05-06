@@ -106,13 +106,13 @@ export function AudienciasAlterarResponsavelDialog({
           <DialogTitle>Alterar Responsável</DialogTitle>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-          <form id="alterar-responsavel-audiencia-form" action={formAction} className={cn("stack-default")}>
+          <form id="alterar-responsavel-audiencia-form" action={formAction} className={cn("flex flex-col stack-default")}>
             <input
               type="hidden"
               name="responsavelId"
               value={responsavelId === 'null' ? '' : responsavelId}
             />
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="responsavelId">Responsável</Label>
               <Select
                 value={responsavelId || 'null'}

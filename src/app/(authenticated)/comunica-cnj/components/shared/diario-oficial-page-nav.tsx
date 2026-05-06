@@ -32,7 +32,7 @@ export function DiarioOficialPageNav({
   action,
 }: DiarioOficialPageNavProps) {
   return (
-    <div className={cn("stack-medium")}>
+    <div className={cn("flex flex-col stack-medium")}>
       <div className={cn("flex items-end justify-between inline-default")}>
         <div>
           <Heading level="page">Diário Oficial</Heading>

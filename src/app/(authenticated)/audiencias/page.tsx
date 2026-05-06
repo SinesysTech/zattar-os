@@ -10,7 +10,7 @@ export const revalidate = 0;
 
 function AudienciasLoading() {
   return (
-    <div className={cn("stack-default-plus")}>
+    <div className={cn("flex flex-col stack-default-plus")}>
       <div className={cn("flex items-end justify-between inline-default")}>
         <Skeleton className="h-9 w-40" />
         <Skeleton className="h-9 w-9 rounded-lg" />
@@ -22,7 +22,7 @@ function AudienciasLoading() {
         <Skeleton className="h-9 w-56 rounded-lg" />
         <Skeleton className="h-9 w-20 rounded-lg" />
       </div>
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         {Array.from({ length: 4 }).map((_, i) => (
           <Skeleton key={i} className="h-20 w-full rounded-2xl" />
         ))}

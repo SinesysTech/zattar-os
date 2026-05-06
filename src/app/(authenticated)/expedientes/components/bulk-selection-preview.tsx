@@ -23,7 +23,7 @@ export function BulkSelectionPreview({ expedientes }: BulkSelectionPreviewProps)
   if (expedientes.length === 0) return null;
 
   return (
-    <div className={cn("stack-tight")}>
+    <div className={cn("flex flex-col stack-tight")}>
       <Text variant="caption" className="font-medium uppercase tracking-wide">
         {expedientes.length === 1
           ? 'Expediente afetado'

@@ -319,7 +319,7 @@ function ResponsavelAssignPopover({
                   key={usuario.id}
                   value={usuario.nome}
                   onSelect={() => handleSelect(usuario.id)}
-                  className={cn("inline-tight rounded-lg text-caption px-2 py-1.5 cursor-pointer")}
+                  className={cn("flex inline-tight rounded-lg text-caption px-2 py-1.5 cursor-pointer")}
                 >
                   <Avatar className="size-5">
                     <AvatarImage src={usuario.avatarUrl || undefined} alt={usuario.nome} />
@@ -556,19 +556,19 @@ function ListSkeleton() {
               <Skeleton className="h-2.5 w-14 rounded" />
             </div>
             {/* 3. Cliente/Parte */}
-            <div className={cn("stack-snug")}>
+            <div className={cn("flex flex-col stack-snug")}>
               <Skeleton className="h-3.5 w-44" />
               <Skeleton className="h-2.5 w-32" />
             </div>
             {/* 4. Tipo/Cobrança — espelha visibilidade sm */}
-            <div className={cn("hidden sm:block stack-micro")}>
+            <div className={cn("flex flex-col hidden sm:block stack-micro")}>
               <Skeleton className="h-4 w-16 rounded-md" />
               <Skeleton className="h-4 w-14 rounded-md" />
             </div>
             {/* 5. Processos — espelha visibilidade lg */}
             <Skeleton className="hidden lg:block h-3 w-28" />
             {/* 6. Responsável — espelha visibilidade sm */}
-            <div className={cn("hidden sm:flex items-center inline-tight")}>
+            <div className={cn("flex hidden sm:flex items-center inline-tight")}>
               <Skeleton className="size-5 rounded-full" />
               <Skeleton className="h-2.5 w-16" />
             </div>

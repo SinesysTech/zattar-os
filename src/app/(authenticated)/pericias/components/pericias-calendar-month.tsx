@@ -209,7 +209,7 @@ export function PericiasCalendarMonth({
                     </div>
 
                     {hasPs && (
-                      <div className={cn("stack-micro")}>
+                      <div className={cn("flex flex-col stack-micro")}>
                         {ps.slice(0, 3).map((p) => (
                           <div
                             key={p.id}

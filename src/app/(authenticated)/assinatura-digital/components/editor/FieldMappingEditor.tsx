@@ -583,7 +583,7 @@ export default function FieldMappingEditor({
   if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <div className={cn("stack-default text-center")}>
+        <div className={cn("flex flex-col stack-default text-center")}>
           <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-primary" />
           <p className={cn( "font-medium text-muted-foreground")}>Carregando {template.nome}...</p>
           <p className={cn("text-body-sm text-muted-foreground/80")}>Preparando editor de campos.</p>

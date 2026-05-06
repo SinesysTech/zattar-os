@@ -125,7 +125,7 @@ export function AcordoForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className={cn("stack-loose")}>
+    <form onSubmit={handleSubmit} className={cn("flex flex-col stack-loose")}>
       {result.success !== null && (
         <Alert variant={result.success ? 'default' : 'destructive'}>
           {result.success ? <CheckCircle2 className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}
@@ -138,7 +138,7 @@ export function AcordoForm({
       )}
 
       <div className={cn("grid grid-cols-1 inline-default md:grid-cols-2")}>
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label>Tipo *</Label>
           <Select value={tipo} onValueChange={(v) => setTipo(v as TipoObrigacao)} disabled={isEditMode}>
             <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
@@ -149,7 +149,7 @@ export function AcordoForm({
             </SelectContent>
           </Select>
         </div>
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label>Direção *</Label>
           <Select value={direcao} onValueChange={(v) => setDirecao(v as DirecaoPagamento)} disabled={isEditMode || tipo === 'custas_processuais'}>
             <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
@@ -162,11 +162,11 @@ export function AcordoForm({
       </div>
 
       <div className={cn("grid grid-cols-1 inline-default md:grid-cols-2")}>
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label>Valor Total (R$) *</Label>
           <Input type="number" step="0.01" value={valorTotal} onChange={e => setValorTotal(e.target.value)} required />
         </div>
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label>Data Vencimento (1ª) *</Label>
           <FormDatePicker
             value={dataVencimento}
@@ -177,15 +177,15 @@ export function AcordoForm({
 
       {!isEditMode && (
         <div className={cn("grid grid-cols-1 inline-default md:grid-cols-3")}>
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>Parcelas *</Label>
             <Input type="number" min="1" value={numeroParcelas} onChange={e => setNumeroParcelas(Number(e.target.value))} disabled={tipo === 'custas_processuais'} />
           </div>
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>Intervalo (dias)</Label>
             <Input type="number" min="1" value={intervaloEntreParcelas} onChange={e => setIntervaloEntreParcelas(Number(e.target.value))} />
           </div>
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>Pagamento *</Label>
             <Select value={formaPagamento} onValueChange={v => setFormaPagamento(v as FormaPagamento)}>
               <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
@@ -201,7 +201,7 @@ export function AcordoForm({
 
       {direcao === 'recebimento' && tipo !== 'custas_processuais' && (
         <div className={cn("grid grid-cols-1 inline-default md:grid-cols-2")}>
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>Distribuição *</Label>
             <Select value={formaDistribuicao} onValueChange={v => setFormaDistribuicao(v as FormaDistribuicao)}>
               <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
@@ -211,7 +211,7 @@ export function AcordoForm({
               </SelectContent>
             </Select>
           </div>
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>Perc. Escritório (%)</Label>
             <Input type="number" min="0" max="100" value={percentualEscritorio} onChange={e => setPercentualEscritorio(Number(e.target.value))} />
           </div>
@@ -219,7 +219,7 @@ export function AcordoForm({
       )}
 
       {tipo !== 'custas_processuais' && (
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label>Honorários Sucumbenciais (R$)</Label>
           <Input type="number" step="0.01" value={honorariosSucumbenciais} onChange={e => setHonorariosSucumbenciais(e.target.value)} />
         </div>

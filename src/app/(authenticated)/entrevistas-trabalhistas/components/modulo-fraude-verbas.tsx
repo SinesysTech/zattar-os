@@ -51,7 +51,7 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
   };
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       <div>
         <Heading level="card">O Que Você Perdeu</Heading>
         <p className={cn("text-body-sm text-muted-foreground")}>
@@ -60,7 +60,7 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
       </div>
 
       {/* C.4.1: Valor mensal fixo */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>Recebia um valor mensal fixo (como um salário)?</Label>
         <SimNaoRadio
           id="fixo"
@@ -69,7 +69,7 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
         />
 
         {data.valor_mensal_fixo === true && (
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label htmlFor="valor-aprox">Valor aproximado</Label>
             <Input
               id="valor-aprox"
@@ -83,9 +83,9 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
       </div>
 
       {/* C.4.2: Benefícios recebidos */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>Recebia algum desses benefícios da empresa?</Label>
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           {BENEFICIO_RECEBIDO_OPTIONS.map((opt) => (
             <div key={opt.value} className={cn("flex items-center inline-tight")}>
               <Checkbox
@@ -104,7 +104,7 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
       </div>
 
       {/* C.4.3: 13° disfarçado */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>Havia algum &quot;bônus de fim de ano&quot; que funcionava como 13° salário?</Label>
         <SimNaoRadio
           id="decimo-terceiro"
@@ -114,7 +114,7 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
       </div>
 
       {/* C.4.4: Férias */}
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Label htmlFor="ferias">Como funcionavam as férias?</Label>
         <Select
           value={data.regime_ferias ?? ''}
@@ -134,7 +134,7 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
       </div>
 
       {/* C.4.5: Verbas rescisórias */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>Ao sair da empresa, recebeu alguma verba rescisória?</Label>
         <SimNaoRadio
           id="rescisao"
@@ -144,7 +144,7 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
       </div>
 
       {/* C.4.6: Controle como CLT */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>O pagamento era feito na PJ, mas o controle do trabalho era como CLT?</Label>
         <SimNaoRadio
           id="controle-clt"

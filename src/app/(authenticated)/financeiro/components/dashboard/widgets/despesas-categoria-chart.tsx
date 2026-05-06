@@ -50,7 +50,7 @@ export function DespesasCategoriaChart({ data, isLoading }: DespesasCategoriaCha
         <CardContent>
           <div className={cn("flex flex-col items-center inline-default")}>
             <Skeleton className="h-40 w-40 rounded-full" />
-            <div className={cn("stack-tight w-full")}>
+            <div className={cn("flex flex-col stack-tight w-full")}>
               {Array.from({ length: 4 }).map((_, i) => (
                 <Skeleton key={i} className="h-6 w-full" />
               ))}
@@ -95,7 +95,7 @@ export function DespesasCategoriaChart({ data, isLoading }: DespesasCategoriaCha
                 </div>
               }
             />
-            <div className={cn("stack-snug flex-1")}>
+            <div className={cn("flex flex-col stack-snug flex-1")}>
               {chartData.map((item, idx) => {
                 const percentual = data[idx].percentual ?? (total > 0 ? (item.value / total) * 100 : 0);
                 return (

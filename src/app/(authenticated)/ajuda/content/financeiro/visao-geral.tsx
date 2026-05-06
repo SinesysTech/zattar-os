@@ -21,7 +21,7 @@ import {
 
 export default function FinanceiroVisaoGeral() {
   return (
-    <div className={cn("stack-extra-loose")}>
+    <div className={cn("flex flex-col stack-extra-loose")}>
       <div>
         <Heading level="page">Financeiro — Visão Geral</Heading>
         <p className="text-muted-foreground mt-2">
@@ -36,7 +36,7 @@ export default function FinanceiroVisaoGeral() {
           O dashboard financeiro exibe os principais indicadores do período selecionado em tempo
           real. Os cards de resumo mostram:
         </p>
-        <ul className={cn("mt-3 stack-tight text-body-sm text-muted-foreground list-disc list-inside")}>
+        <ul className={cn("flex flex-col mt-3 stack-tight text-body-sm text-muted-foreground list-disc list-inside")}>
           <li>Receita total do mês corrente</li>
           <li>Despesas totais do mês corrente</li>
           <li>Resultado líquido (receitas menos despesas)</li>
@@ -148,7 +148,7 @@ export default function FinanceiroVisaoGeral() {
           Todos os dados do painel financeiro respondem ao seletor de período localizado no canto
           superior direito. Você pode filtrar por:
         </p>
-        <ul className={cn("mt-3 stack-tight text-body-sm text-muted-foreground list-disc list-inside")}>
+        <ul className={cn("flex flex-col mt-3 stack-tight text-body-sm text-muted-foreground list-disc list-inside")}>
           <li>Mês corrente</li>
           <li>Mês anterior</li>
           <li>Trimestre atual</li>

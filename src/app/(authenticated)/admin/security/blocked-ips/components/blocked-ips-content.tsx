@@ -211,7 +211,7 @@ export function BlockedIpsContent() {
   }
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       {/* Stats Cards */}
       <div className={cn("grid inline-default md:grid-cols-4")}>
         <Card>
@@ -481,8 +481,8 @@ export function BlockedIpsContent() {
               Insira o IP que deseja bloquear e o motivo.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <div className={cn("stack-default py-4")}>
-            <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-default py-4")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="ip">Endereço IP</Label>
               <Input
                 id="ip"
@@ -491,7 +491,7 @@ export function BlockedIpsContent() {
                 onChange={(e) => setBlockDialog((prev) => ({ ...prev, ip: e.target.value }))}
               />
             </div>
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="reason">Motivo</Label>
               <Input
                 id="reason"

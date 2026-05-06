@@ -126,13 +126,13 @@ export function ProximaAudienciaPopover({
         align="start"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <div className={cn("flex items-center inline-tight")}>
             <Calendar className={cn('h-4 w-4', getUrgenciaColor())} />
             <Heading level="subsection" className={cn("text-body-sm")}>Próxima Audiência</Heading>
           </div>
           {clientData && (
-            <div className={cn("stack-micro text-body-sm")}>
+            <div className={cn("flex flex-col stack-micro text-body-sm")}>
               <p className="text-muted-foreground capitalize">{clientData.data}</p>
               <p className={cn( "font-medium")}>às {clientData.hora}</p>
               <p className={cn( 'text-caption font-medium', getUrgenciaColor())}>

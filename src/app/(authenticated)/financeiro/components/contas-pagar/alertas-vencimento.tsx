@@ -127,7 +127,7 @@ export function AlertasVencimento({
             <CardContent className={cn("inset-card-compact")}>
               <div className={cn("flex items-center inline-medium")}>
                 <div className="h-9 w-9 rounded-full bg-muted" />
-                <div className={cn("flex-1 stack-tight")}>
+                <div className={cn("flex flex-col flex-1 stack-tight")}>
                   <div className="h-4 w-24 bg-muted rounded" />
                   <div className="h-3 w-32 bg-muted rounded" />
                 </div>

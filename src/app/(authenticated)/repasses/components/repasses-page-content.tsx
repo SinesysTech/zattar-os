@@ -39,7 +39,7 @@ export function RepassesPageContent() {
   };
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       <RepassesPendentesList
         refreshToken={refreshToken}
         onAnexarDeclaracao={handleAnexarDeclaracao}

@@ -48,7 +48,7 @@ export default async function AudienciasPage() {
 
   return (
     <DashboardProvider initialData={initialData}>
-      <div className={cn("stack-default")}>
+      <div className={cn("flex flex-col stack-default")}>
         <Heading level="page">Audiências</Heading>
         {/* Row 1: Próximas + Preparação */}
         <div className={cn("grid inline-default md:grid-cols-2")}>

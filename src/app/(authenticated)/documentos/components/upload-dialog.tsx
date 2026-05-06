@@ -140,7 +140,7 @@ export function UploadDialog({
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-          <div className={cn("stack-default")}>
+          <div className={cn("flex flex-col stack-default")}>
             {!selectedFile ? (
               <div
                 className={cn(/* design-system-escape: sm:p-8 sem equivalente DS */ "border-2 border-dashed rounded-lg inset-dialog sm:p-8 text-center cursor-pointer hover:bg-accent transition-colors")}
@@ -163,7 +163,7 @@ export function UploadDialog({
                 />
               </div>
             ) : (
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset>; sm:p-4 sem equivalente DS */ "border rounded-lg p-3 sm:p-4 stack-medium")}>
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset>; sm:p-4 sem equivalente DS */ "flex flex-col border rounded-lg p-3 sm:p-4 stack-medium")}>
                 {previewUrl && (
                   <div className="relative w-full aspect-video rounded-md overflow-hidden bg-muted">
                     { }
@@ -197,7 +197,7 @@ export function UploadDialog({
                 </div>
 
                 {uploading && (
-                  <div className={cn("mt-3 sm:mt-4 stack-tight")}>
+                  <div className={cn("flex flex-col mt-3 sm:mt-4 stack-tight")}>
                     <Text variant="caption" className="flex items-center justify-between">
                       <Text variant="caption" as="span" className="text-muted-foreground">Enviando...</Text>
                       <span className={cn( "font-medium")}>{progress}%</span>

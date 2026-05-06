@@ -83,26 +83,26 @@ export function WidgetHeatmapSemanal() {
       icon={Calendar}
       subtitle="Distribuicao semanal de audiencias"
     >
-      <div className={cn("stack-default")}>
+      <div className={cn("flex flex-col stack-default")}>
         <CalendarHeatmap data={heatmap} colorScale="primary" />
 
         {/* Stats */}
         <div className={cn("flex items-center justify-between pt-2 border-t border-border/10")}>
-          <div className={cn("stack-nano")}>
+          <div className={cn("flex flex-col stack-nano")}>
             <p className={cn("text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>
               Dia mais cheio
             </p>
             <p className={cn( "text-[12px] font-semibold")}>{diaMaisCheio}</p>
           </div>
 
-          <div className={cn("stack-nano text-center")}>
+          <div className={cn("flex flex-col stack-nano text-center")}>
             <p className={cn("text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>
               Horario pico
             </p>
             <p className={cn( "text-[12px] font-semibold")}>{horarioPico}</p>
           </div>
 
-          <div className={cn("stack-nano text-right")}>
+          <div className={cn("flex flex-col stack-nano text-right")}>
             <p className={cn("text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>
               Total
             </p>

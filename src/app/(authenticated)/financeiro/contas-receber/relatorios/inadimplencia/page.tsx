@@ -141,10 +141,10 @@ export default function RelatorioInadimplenciaPage() {
   // Loading state
   if (isLoading) {
     return (
-      <div className={cn("stack-loose")}>
+      <div className={cn("flex flex-col stack-loose")}>
         <div className={cn("flex items-center inline-default")}>
           <Skeleton className="h-10 w-10" />
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Skeleton className="h-8 w-64" />
             <Skeleton className="h-4 w-40" />
           </div>
@@ -162,7 +162,7 @@ export default function RelatorioInadimplenciaPage() {
   // Error state
   if (error) {
     return (
-      <div className={cn("stack-default")}>
+      <div className={cn("flex flex-col stack-default")}>
         <Button variant="ghost" onClick={handleVoltar}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
@@ -176,7 +176,7 @@ export default function RelatorioInadimplenciaPage() {
   }
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <Button variant="ghost" size="icon" aria-label="Voltar" onClick={handleVoltar}>
@@ -364,9 +364,9 @@ export default function RelatorioInadimplenciaPage() {
           </CardHeader>
           <CardContent>
             {relatorio?.faixasAtraso && relatorio.faixasAtraso.length > 0 ? (
-              <div className={cn("stack-default")}>
+              <div className={cn("flex flex-col stack-default")}>
                 {relatorio.faixasAtraso.map((faixa) => (
-                  <div key={faixa.faixa} className={cn("stack-tight")}>
+                  <div key={faixa.faixa} className={cn("flex flex-col stack-tight")}>
                     <div className={cn("flex items-center justify-between text-body-sm")}>
                       <span className={cn( "font-medium")}>{faixa.faixa}</span>
                       <div className={cn("flex items-center inline-default")}>

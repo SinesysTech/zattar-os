@@ -66,9 +66,9 @@ export function ModalCamposFaltantesDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className={cn("stack-default max-h-100rflow-y-auto pr-2")}>
+        <form onSubmit={handleSubmit} className={cn("flex flex-col stack-default max-h-100rflow-y-auto pr-2")}>
           {camposFaltantes.map((campo) => (
-            <div key={campo.chave} className={cn("stack-micro")}>
+            <div key={campo.chave} className={cn("flex flex-col stack-micro")}>
               <Label htmlFor={campo.chave}>{campo.label}</Label>
               <Input
                 id={campo.chave}

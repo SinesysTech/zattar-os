@@ -129,7 +129,7 @@ export function WidgetTarefasStatus() {
       </div>
 
       {/* Barra de progresso */}
-      <div className={cn("mt-4 pt-3 border-t border-border/10 stack-snug")}>
+      <div className={cn("flex flex-col mt-4 pt-3 border-t border-border/10 stack-snug")}>
         <div className="flex items-center justify-between">
           <span className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Taxa de conclusão

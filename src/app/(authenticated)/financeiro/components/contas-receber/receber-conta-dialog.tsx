@@ -264,9 +264,9 @@ export function ReceberContaDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div className={cn("stack-default py-4")}>
+          <div className={cn("flex flex-col stack-default py-4")}>
             {/* Resumo da conta */}
-            <div className={cn("rounded-lg border bg-muted/50 inset-card-compact stack-tight")}>
+            <div className={cn("flex flex-col rounded-lg border bg-muted/50 inset-card-compact stack-tight")}>
               <div className="flex justify-between items-start">
                 <div>
                   <p className={cn( "font-medium text-body-sm")}>{conta.descricao}</p>
@@ -304,7 +304,7 @@ export function ReceberContaDialog({
             <Separator />
 
             {/* Forma de Recebimento */}
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="formaRecebimento">
                 Forma de Recebimento <span className="text-destructive">*</span>
               </Label>
@@ -326,7 +326,7 @@ export function ReceberContaDialog({
             </div>
 
             {/* Conta Bancária */}
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="contaBancaria">
                 Conta Bancária <span className="text-destructive">*</span>
               </Label>
@@ -351,7 +351,7 @@ export function ReceberContaDialog({
             </div>
 
             {/* Data de Efetivação */}
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label>Data de Efetivação</Label>
               <Popover>
                 <PopoverTrigger asChild>
@@ -382,7 +382,7 @@ export function ReceberContaDialog({
             </div>
 
             {/* Observações */}
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="observacoes">Observações</Label>
               <Textarea
                 id="observacoes"
@@ -394,7 +394,7 @@ export function ReceberContaDialog({
             </div>
 
             {/* Comprovante de Recebimento */}
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="comprovante">Comprovante de Recebimento</Label>
 
               {comprovanteFile ? (

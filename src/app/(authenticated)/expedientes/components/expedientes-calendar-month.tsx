@@ -207,7 +207,7 @@ export function ExpedientesCalendarMonth({
                                     </div>
                                     
                                     {hasExps && (
-                                        <div className={cn("stack-micro")}>
+                                        <div className={cn("flex flex-col stack-micro")}>
                                             {exps.slice(0, 3).map(e => (
                                                 <div 
                                                     key={e.id}

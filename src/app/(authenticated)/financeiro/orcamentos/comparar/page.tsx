@@ -204,7 +204,7 @@ function ComparacaoCards({
   const mediaValor = dadosComparacao.reduce((sum, d) => sum + d.totalOrcado, 0) / dadosComparacao.length;
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       {/* Cards de resumo */}
       <div className={cn("grid inline-default md:grid-cols-3")}>
         <Card>
@@ -309,11 +309,11 @@ function ComparacaoCards({
           <CardTitle>Visualização Comparativa</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className={cn("stack-default")}>
+          <div className={cn("flex flex-col stack-default")}>
             {dadosComparacao.map((dados) => {
               const percentual = (dados.totalOrcado / maiorValor) * 100;
               return (
-                <div key={dados.id} className={cn("stack-micro")}>
+                <div key={dados.id} className={cn("flex flex-col stack-micro")}>
                   <div className={cn("flex justify-between text-body-sm")}>
                     <span>{dados.nome}</span>
                     <span className="font-mono">{formatarValor(dados.totalOrcado)}</span>
@@ -489,7 +489,7 @@ function CompararOrcamentosContent() {
   // Loading
   if (isLoading) {
     return (
-      <div className={cn("stack-loose")}>
+      <div className={cn("flex flex-col stack-loose")}>
         <div className={cn("flex items-center inline-default")}>
           <Skeleton className="h-10 w-10" />
           <Skeleton className="h-8 w-64" />
@@ -510,7 +510,7 @@ function CompararOrcamentosContent() {
   // Erro
   if (error) {
     return (
-      <div className={cn("stack-loose")}>
+      <div className={cn("flex flex-col stack-loose")}>
         <Button variant="ghost" onClick={handleVoltar}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
@@ -524,7 +524,7 @@ function CompararOrcamentosContent() {
   }
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <Button variant="ghost" size="icon" aria-label="Voltar" onClick={handleVoltar}>
@@ -608,7 +608,7 @@ function CompararOrcamentosContent() {
 export default function CompararOrcamentosPage() {
   return (
     <React.Suspense fallback={
-      <div className={cn("stack-loose")}>
+      <div className={cn("flex flex-col stack-loose")}>
         <div className={cn("flex items-center inline-default")}>
           <Skeleton className="h-10 w-10" />
           <Skeleton className="h-8 w-64" />

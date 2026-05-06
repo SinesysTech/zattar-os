@@ -45,13 +45,13 @@ export function NavDesktop({ isCollapsed }: NavDesktopProps) {
         </div>
       )}
       <div className={cn(/* design-system-escape: p-1 → usar <Inset> */ "p-1")}>
-        <Button variant="ghost" size="sm" className={cn("w-full justify-start inline-tight")} asChild>
+        <Button variant="ghost" size="sm" className={cn("flex w-full justify-start inline-tight")} asChild>
           <Link href="/app/mail/configurar">
             <Settings className="h-4 w-4" />
             Configurar conta
           </Link>
         </Button>
-        <Button variant="ghost" size="sm" className={cn("text-muted-foreground w-full justify-start inline-tight")} asChild>
+        <Button variant="ghost" size="sm" className={cn("flex text-muted-foreground w-full justify-start inline-tight")} asChild>
           <Link href="/app/mail/configurar">
             <Plus className="h-4 w-4" />
             Adicionar conta
@@ -108,7 +108,7 @@ export function NavDesktop({ isCollapsed }: NavDesktopProps) {
             <TooltipContent side="right">Novo E-mail</TooltipContent>
           </Tooltip>
         ) : (
-          <Button variant="default" className={cn("w-full inline-tight")} onClick={() => setIsComposing(true)}>
+          <Button variant="default" className={cn("flex w-full inline-tight")} onClick={() => setIsComposing(true)}>
             <Pencil className="h-4 w-4" />
             Novo E-mail
           </Button>

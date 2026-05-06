@@ -128,7 +128,7 @@ export function AudienciasMissaoContent({
   const dateLabel = format(currentDate, "EEEE, d 'de' MMMM", { locale: ptBR });
 
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       {/* Date Navigator */}
       <div className={cn("flex items-center inline-tight")}>
         <button onClick={handlePrev} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/70 cursor-pointer")}>
@@ -180,7 +180,7 @@ export function AudienciasMissaoContent({
                 <Text variant="caption" as="p" className="text-muted-foreground/60">Nenhuma audiência neste dia</Text>
               </div>
             ) : (
-              <div className={cn("stack-none")}>
+              <div className={cn("flex flex-col stack-none")}>
                 {morning.length > 0 && (
                   <>
                     <SectionHeader label="Manhã" icon={Sun} />
@@ -240,7 +240,7 @@ export function AudienciasMissaoContent({
         </div>
 
         {/* Sidebar (1/3) */}
-        <div className={cn("stack-default")}>
+        <div className={cn("flex flex-col stack-default")}>
           <RhythmStrip audiencias={audiencias} />
           <LoadHeatmap audiencias={audiencias} responsavelNomes={responsavelNomes} />
         </div>
@@ -331,7 +331,7 @@ function TimelineCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: (
         </div>
 
         {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
-          <div className={cn("mt-1 stack-nano")}>
+          <div className={cn("flex flex-col mt-1 stack-nano")}>
             <Text variant="caption" className="truncate font-semibold text-foreground">
               {audiencia.poloAtivoNome || '—'}
             </Text>

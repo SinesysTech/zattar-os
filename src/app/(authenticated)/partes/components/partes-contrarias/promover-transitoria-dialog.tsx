@@ -247,7 +247,7 @@ export function PromoverTransitoriaDialog({
           <LoadingSpinner />
         </div>
       ) : (
-        <div className={cn("stack-default-plus")}>
+        <div className={cn("flex flex-col stack-default-plus")}>
           {transitoria && (
             <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-xl bg-surface-container-low/50 p-3 ring-1 ring-outline-variant/30")}>
               <Text variant="caption" className="text-muted-foreground">
@@ -265,12 +265,12 @@ export function PromoverTransitoriaDialog({
           )}
 
           {sugestoes.length > 0 && (
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Heading level="card">Partes similares encontradas</Heading>
               <Text variant="caption" className="text-muted-foreground">
                 Selecione uma abaixo para vincular em vez de criar duplicata.
               </Text>
-              <ul className={cn("stack-snug")} role="listbox">
+              <ul className={cn("flex flex-col stack-snug")} role="listbox">
                 {sugestoes.map((sug) => {
                   const isSelected =
                     mode === 'merge' &&
@@ -338,12 +338,12 @@ export function PromoverTransitoriaDialog({
           )}
 
           {mode === 'criar' && (
-            <div className={cn("stack-medium")}>
+            <div className={cn("flex flex-col stack-medium")}>
               <Heading level="card">
                 {sugestoes.length > 0 ? 'Ou criar uma nova parte contrária' : 'Dados da parte contrária'}
               </Heading>
 
-              <div className={cn("stack-tight")}>
+              <div className={cn("flex flex-col stack-tight")}>
                 <Label htmlFor="promover-nome">Nome / Razão social</Label>
                 <Input
                   id="promover-nome"
@@ -356,7 +356,7 @@ export function PromoverTransitoriaDialog({
               </div>
 
               <div className={cn("grid grid-cols-2 inline-medium")}>
-                <div className={cn("stack-tight")}>
+                <div className={cn("flex flex-col stack-tight")}>
                   <Label htmlFor="promover-tipo-pessoa">Tipo</Label>
                   <Select
                     value={tipoPessoa}
@@ -372,7 +372,7 @@ export function PromoverTransitoriaDialog({
                     </SelectContent>
                   </Select>
                 </div>
-                <div className={cn("stack-tight")}>
+                <div className={cn("flex flex-col stack-tight")}>
                   <Label htmlFor="promover-doc">{tipoPessoa === 'pf' ? 'CPF' : 'CNPJ'}</Label>
                   <Input
                     id="promover-doc"
@@ -386,7 +386,7 @@ export function PromoverTransitoriaDialog({
               </div>
 
               <div className={cn("grid grid-cols-2 inline-medium")}>
-                <div className={cn("stack-tight")}>
+                <div className={cn("flex flex-col stack-tight")}>
                   <Label htmlFor="promover-email">Email</Label>
                   <Input
                     id="promover-email"
@@ -397,7 +397,7 @@ export function PromoverTransitoriaDialog({
                     disabled={isBusy}
                   />
                 </div>
-                <div className={cn("stack-tight")}>
+                <div className={cn("flex flex-col stack-tight")}>
                   <Label htmlFor="promover-telefone">Telefone</Label>
                   <Input
                     id="promover-telefone"

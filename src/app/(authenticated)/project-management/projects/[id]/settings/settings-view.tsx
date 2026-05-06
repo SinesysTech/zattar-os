@@ -45,7 +45,7 @@ export function SettingsView({ projetoId }: SettingsViewProps) {
   };
 
   return (
-    <div className={cn("mx-auto max-w-3xl stack-loose")}>
+    <div className={cn("flex flex-col mx-auto max-w-3xl stack-loose")}>
       <Heading level="page">
         Configurações do Projeto
       </Heading>

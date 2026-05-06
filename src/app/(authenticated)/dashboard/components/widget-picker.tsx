@@ -69,7 +69,7 @@ export function WidgetPicker({
         <Button
           variant="outline"
           size="sm"
-          className={cn( "inline-tight text-caption font-medium border-border/30 bg-transparent hover:bg-foreground/5 backdrop-blur-sm")}
+          className={cn( "flex inline-tight text-caption font-medium border-border/30 bg-transparent hover:bg-foreground/5 backdrop-blur-sm")}
           aria-label="Personalizar dashboard"
         >
           <LayoutGrid className="size-3.5" />
@@ -102,7 +102,7 @@ export function WidgetPicker({
             variant="ghost"
             size="sm"
             onClick={onResetDefaults}
-            className={cn("inline-snug text-caption text-muted-foreground/60 hover:text-foreground h-7 px-2")}
+            className={cn("flex inline-snug text-caption text-muted-foreground/60 hover:text-foreground h-7 px-2")}
             aria-label="Restaurar configuração padrão"
           >
             <RotateCcw className="size-3" />

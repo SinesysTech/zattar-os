@@ -153,7 +153,7 @@ export function UsuariosClient() {
   // ─── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div className={cn("stack-default-plus")}>
+    <div className={cn("flex flex-col stack-default-plus")}>
       {/* Header */}
       <div className={cn("flex items-start justify-between inline-default")}>
         <div className="min-w-0">

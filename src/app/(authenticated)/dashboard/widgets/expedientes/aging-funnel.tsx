@@ -97,7 +97,7 @@ export function AgingFunnel() {
       depth={1}
       className={cn(/* design-system-escape: p-4! → usar <Inset> */ "h-auto! self-start p-4!")}
     >
-      <div className={cn("mt-1 stack-tight")}>
+      <div className={cn("flex flex-col mt-1 stack-tight")}>
         {faixas.map((row) => (
           <div key={row.label} className={cn("flex items-center inline-tight-plus")}>
             <UrgencyDot level={row.level} />

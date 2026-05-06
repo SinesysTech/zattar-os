@@ -109,7 +109,7 @@ export function DocsSidebar() {
         </div>
       </div>
       <ScrollArea className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex-1 p-3")}>
-        <nav className={cn("stack-micro")}>
+        <nav className={cn("flex flex-col stack-micro")}>
           {filteredEntries.map((entry) => (
             <SidebarItem key={entry.slug} entry={entry} />
           ))}

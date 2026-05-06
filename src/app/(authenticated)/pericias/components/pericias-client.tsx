@@ -335,7 +335,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
   const hideFilterBarAdvanced = viewMode === 'semana';
 
   return (
-    <div className={cn("stack-default-plus")}>
+    <div className={cn("flex flex-col stack-default-plus")}>
       {/* ── Header ──────────────────────────────────────────── */}
       <div className={cn("flex items-end justify-between inline-default")}>
         <div>
@@ -364,7 +364,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
       ) : null}
 
       {/* ── Insight Banners ─────────────────────────────────── */}
-      <div role="status" aria-live="polite" className={cn("stack-tight empty:hidden")}>
+      <div role="status" aria-live="polite" className={cn("flex flex-col stack-tight empty:hidden")}>
         {!isStatsLoading && stats && stats.prazosCriticos7d > 0 && (
           <InsightBanner type="warning">
             {stats.prazosCriticos7d} perícia
@@ -492,7 +492,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
             <AppBadge
               key={chip.key}
               variant="secondary"
-              className={cn("inline-micro pr-1 cursor-pointer hover:bg-secondary/80")}
+              className={cn("flex inline-micro pr-1 cursor-pointer hover:bg-secondary/80")}
               onClick={() => chip.onRemove()}
             >
               {chip.label}

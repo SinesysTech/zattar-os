@@ -73,9 +73,9 @@ export default async function ProjectDetailPage({ params }: Props) {
   ];
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       <div className="flex items-center justify-between">
-        <div className={cn("stack-micro")}>
+        <div className={cn("flex flex-col stack-micro")}>
           <Heading level="page">{projeto.nome}</Heading>
           <div className={cn("flex items-center inline-medium")}>
             <ProjectStatusBadge status={projeto.status} />
@@ -120,7 +120,7 @@ export default async function ProjectDetailPage({ params }: Props) {
       </nav>
 
       {/* Visão Geral — conteúdo principal */}
-      <div className={cn("stack-default")}>
+      <div className={cn("flex flex-col stack-default")}>
         <div className={cn("grid inline-default md:grid-cols-2 lg:grid-cols-4")}>
           <Card>
             <CardHeader>

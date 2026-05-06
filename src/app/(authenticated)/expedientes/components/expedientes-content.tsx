@@ -43,7 +43,7 @@ import { Heading, Text } from '@/components/ui/typography';
 // renderizados condicionalmente e lazy-loaded para não entrarem no first paint.
 
 const ViewSkeleton = () => (
-  <div className={cn("stack-medium")} aria-busy="true" aria-label="Carregando visualização">
+  <div className={cn("flex flex-col stack-medium")} aria-busy="true" aria-label="Carregando visualização">
     {Array.from({ length: 4 }).map((_, i) => (
       <Skeleton key={i} className="h-20 rounded-2xl" />
     ))}
@@ -416,7 +416,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
   }, [router]);
 
   return (
-    <div className={cn("stack-default-plus")}>
+    <div className={cn("flex flex-col stack-default-plus")}>
 
       {/* 1. Header */}
       <div className={cn("flex items-end justify-between inline-default")}>
@@ -454,7 +454,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
       />
 
       {/* 4. Insight Banners */}
-      <div role="status" aria-live="polite" aria-atomic="true" className={cn("stack-tight empty:hidden")}>
+      <div role="status" aria-live="polite" aria-atomic="true" className={cn("flex flex-col stack-tight empty:hidden")}>
         {!isLoading && showVencidosBanner && (
           <InsightBanner type="alert">
             {vencidos.length} expediente{vencidos.length !== 1 ? 's' : ''} com prazo vencido —
@@ -494,7 +494,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
       {/* 6. Content Switcher */}
       <main className="min-h-0 transition-opacity duration-300">
         {isLoading && (
-          <div className={cn("stack-medium")} aria-busy="true" aria-label="Carregando expedientes">
+          <div className={cn("flex flex-col stack-medium")} aria-busy="true" aria-label="Carregando expedientes">
             {Array.from({ length: 4 }).map((_, i) => (
               <Skeleton key={i} className="h-20 rounded-2xl" />
             ))}

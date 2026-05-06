@@ -280,7 +280,7 @@ export function MissionCard({
                 <span className={cn( 'font-bold tabular-nums text-caption', prepStatus)}>{prepScore}%</span>
               </div>
             </div>
-            <div className={cn("stack-nano")}>
+            <div className={cn("flex flex-col stack-nano")}>
               {prepItems.slice(0, 3).map((item) => (
                 <div key={item.label} className={cn("flex items-center inline-snug")}>
                   {item.done ? (

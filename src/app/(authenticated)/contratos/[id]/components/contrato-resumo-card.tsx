@@ -47,7 +47,7 @@ export function ContratoResumoCard({
 
   return (
     <WidgetContainer title="Resumo" icon={ClipboardList}>
-      <div className={cn("stack-loose")}>
+      <div className={cn("flex flex-col stack-loose")}>
         {/* Estatisticas */}
         <div className={cn("grid grid-cols-3 inline-tight")}>
           <GlassPanel depth={2} className={cn("px-3 py-3 text-center")}>

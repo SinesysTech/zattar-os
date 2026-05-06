@@ -645,7 +645,7 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
                       <Button
                         variant="outline"
                         size="sm"
-                        className={cn("h-9 inline-tight bg-card text-destructive hover:text-destructive")}
+                        className={cn("flex h-9 inline-tight bg-card text-destructive hover:text-destructive")}
                         disabled={isDeletingBulk}
                       >
                         <Trash2 className="h-4 w-4" />

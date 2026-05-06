@@ -184,8 +184,8 @@ const captureSteps: StepDef[] = [
 
 export default function ProcessosDoc() {
   return (
-    <div className={cn("stack-extra-loose")}>
-      <div className={cn("stack-tight")}>
+    <div className={cn("flex flex-col stack-extra-loose")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Heading level="page">Processos</Heading>
         <p className={cn("text-muted-foreground text-body-lg")}>
           Gestão completa dos processos judiciais do escritório com captura automática do PJe.
@@ -229,7 +229,7 @@ export default function ProcessosDoc() {
         <p className="text-muted-foreground">
           A lista de processos pode ser filtrada e ordenada por múltiplos critérios simultaneamente:
         </p>
-        <ul className={cn("list-disc list-inside stack-micro text-muted-foreground text-body-sm mt-2")}>
+        <ul className={cn("flex flex-col list-disc list-inside stack-micro text-muted-foreground text-body-sm mt-2")}>
           <li>Tribunal (TJSP, TRT, STJ, STF, TRF, etc.)</li>
           <li>Status do processo (Em Andamento, Arquivado, Encerrado)</li>
           <li>Área do direito (Cível, Trabalhista, Criminal, etc.)</li>

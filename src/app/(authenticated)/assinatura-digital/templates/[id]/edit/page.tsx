@@ -134,13 +134,13 @@ export default function EditTemplatePage({ params }: PageProps) {
     return (
       <PageShell>
         <div className={cn("h-full flex flex-col inline-loose")}>
-          <div className={cn("shrink-0 stack-tight")}>
+          <div className={cn("flex flex-col shrink-0 stack-tight")}>
             <Skeleton className="h-9 w-64" />
             <Skeleton className="h-4 w-96" />
           </div>
 
           <div className={cn("flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[320px_1fr] inline-loose")}>
-            <div className={cn("stack-default")}>
+            <div className={cn("flex flex-col stack-default")}>
               <Skeleton className="h-32 w-full" />
               <Skeleton className="h-32 w-full" />
               <Skeleton className="h-48 w-full" />
@@ -157,13 +157,13 @@ export default function EditTemplatePage({ params }: PageProps) {
     return (
       <PageShell>
         <div className="h-full flex items-center justify-center">
-          <div className={cn("text-center stack-default max-w-md")}>
+          <div className={cn("flex flex-col text-center stack-default max-w-md")}>
             <div className="flex justify-center">
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-full bg-destructive/10 p-3")}>
                 <AlertCircle className="h-10 w-10 text-destructive" />
               </div>
             </div>
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Heading level="card" className={cn("text-body-lg text-foreground")}>
                 Acesso negado
               </Heading>
@@ -184,19 +184,19 @@ export default function EditTemplatePage({ params }: PageProps) {
     return (
       <PageShell>
         <div className="h-full flex items-center justify-center">
-          <div className={cn("text-center stack-default max-w-md")}>
+          <div className={cn("flex flex-col text-center stack-default max-w-md")}>
             <div className="flex justify-center">
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-full bg-destructive/10 p-3")}>
                 <AlertCircle className="h-10 w-10 text-destructive" />
               </div>
             </div>
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Heading level="card" className={cn("text-body-lg text-foreground")}>
                 Erro ao carregar template
               </Heading>
               <p className={cn("text-body-sm text-muted-foreground")}>{error}</p>
             </div>
-            <Button onClick={handleRetry} variant="outline" className={cn("inline-tight")}>
+            <Button onClick={handleRetry} variant="outline" className={cn("flex inline-tight")}>
               <RefreshCw className="h-4 w-4" />
               Tentar novamente
             </Button>

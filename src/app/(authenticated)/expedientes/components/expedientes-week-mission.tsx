@@ -193,7 +193,7 @@ function MissionItem({
     >
       <UrgencyDot level={urgencyLevel} />
       <div className={cn("flex min-w-0 flex-1 items-start inline-medium")}>
-        <div className={cn("min-w-0 flex-1 stack-micro")}>
+        <div className={cn("flex flex-col min-w-0 flex-1 stack-micro")}>
           {/* Tipo de expediente */}
           <p className={cn( 'text-body-sm font-medium', isBaixado && 'line-through')}>
             {tipoExpedienteNome || 'Sem tipo'}
@@ -234,7 +234,7 @@ function MissionItem({
             </p>
           )}
         </div>
-        <div className={cn("hidden items-center inline-tight sm:flex")}>
+        <div className={cn("flex hidden items-center inline-tight sm:flex")}>
           {expediente.trt && (
             <AppBadge variant="outline" className={cn("px-1.5 text-[10px]")}>{expediente.trt}</AppBadge>
           )}

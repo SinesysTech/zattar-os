@@ -30,7 +30,7 @@ export function DocSection({
 }) {
   const anchor = id ?? title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
   return (
-    <section id={anchor} className={cn('stack-default', className)}>
+    <section id={anchor} className={cn('flex flex-col stack-default', className)}>
       <Heading level="section" className="scroll-mt-20">
         <a href={`#${anchor}`} className="hover:underline underline-offset-4">
           {title}
@@ -91,7 +91,7 @@ export type ActionDef = {
 
 export function DocActionList({ actions }: { actions: ActionDef[] }) {
   return (
-    <ul className={cn("stack-medium")}>
+    <ul className={cn("flex flex-col stack-medium")}>
       {actions.map((a) => (
         <li key={a.nome} className={cn("flex items-start inline-medium")}>
           {a.icon && <a.icon className="h-5 w-5 text-primary mt-0.5 shrink-0" />}
@@ -129,7 +129,7 @@ export type StepDef = {
 
 export function DocSteps({ steps }: { steps: StepDef[] }) {
   return (
-    <ol className={cn("stack-default")}>
+    <ol className={cn("flex flex-col stack-default")}>
       {steps.map((s, i) => (
         <li key={i} className={cn("flex inline-default")}>
           <span className={cn( "flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-body-sm font-bold")}>

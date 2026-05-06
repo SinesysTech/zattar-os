@@ -111,7 +111,7 @@ function DetalheItem({
       <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted">
         <Icon className="h-4 w-4 text-muted-foreground" />
       </div>
-      <div className={cn("stack-micro")}>
+      <div className={cn("flex flex-col stack-micro")}>
         <p className={cn("text-body-sm text-muted-foreground")}>{label}</p>
         <div className={cn( "font-medium")}>{value}</div>
       </div>
@@ -179,10 +179,10 @@ export default function ContaPagarDetalhesPage() {
   // Loading state
   if (isLoading) {
     return (
-      <div className={cn("stack-loose")}>
+      <div className={cn("flex flex-col stack-loose")}>
         <div className={cn("flex items-center inline-default")}>
           <Skeleton className="h-10 w-10" />
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Skeleton className="h-8 w-64" />
             <Skeleton className="h-4 w-40" />
           </div>
@@ -198,7 +198,7 @@ export default function ContaPagarDetalhesPage() {
   // Error state
   if (error) {
     return (
-      <div className={cn("stack-default")}>
+      <div className={cn("flex flex-col stack-default")}>
         <Button variant="ghost" onClick={handleVoltar}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
@@ -214,7 +214,7 @@ export default function ContaPagarDetalhesPage() {
   // Not found state
   if (!contaPagar) {
     return (
-      <div className={cn("stack-default")}>
+      <div className={cn("flex flex-col stack-default")}>
         <Button variant="ghost" onClick={handleVoltar}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
@@ -233,7 +233,7 @@ export default function ContaPagarDetalhesPage() {
   const isPendente = contaPagar.status === 'pendente';
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className={cn("flex items-center inline-default")}>
@@ -300,7 +300,7 @@ export default function ContaPagarDetalhesPage() {
               Informações Financeiras
             </CardTitle>
           </CardHeader>
-          <CardContent className={cn("stack-default")}>
+          <CardContent className={cn("flex flex-col stack-default")}>
             <DetalheItem
               icon={DollarSign}
               label="Valor"
@@ -355,7 +355,7 @@ export default function ContaPagarDetalhesPage() {
               Vinculações
             </CardTitle>
           </CardHeader>
-          <CardContent className={cn("stack-default")}>
+          <CardContent className={cn("flex flex-col stack-default")}>
             {contaPagar.fornecedor ? (
               <DetalheItem
                 icon={Building2}

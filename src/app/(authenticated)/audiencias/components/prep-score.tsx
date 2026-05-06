@@ -159,7 +159,7 @@ export function PrepScore({ audiencia, className, showBreakdown = false, size = 
 
       {/* Breakdown */}
       {showBreakdown && (
-        <div className={cn("flex-1 min-w-0 stack-micro")}>
+        <div className={cn("flex flex-col flex-1 min-w-0 stack-micro")}>
           {items.map((item) => (
             <div key={item.label} className={cn("flex items-center inline-snug")}>
               {item.done ? (

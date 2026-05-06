@@ -154,7 +154,7 @@ export function AcordoDetalhesV2Client({
               <ArrowLeft className="h-4 w-4" />
             </Link>
           </Button>
-          <div className={cn("min-w-0 stack-tight")}>
+          <div className={cn("flex flex-col min-w-0 stack-tight")}>
             <div className={cn("flex items-center inline-tight flex-wrap")}>
               <Heading level="page" className="min-w-0 truncate">
                 {tituloPartes}
@@ -338,7 +338,7 @@ function ResumoTab({
   const parcelas = acordo.parcelas ?? [];
 
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       {/* Row 1 — Ação + Split */}
       <div className={cn("grid grid-cols-1 lg:grid-cols-5 inline-default")}>
         <div className="lg:col-span-2">
@@ -485,7 +485,7 @@ function RepassesTab({
   }
 
   return (
-    <div className={cn("stack-tight")}>
+    <div className={cn("flex flex-col stack-tight")}>
       {parcelas.map((parcela) => {
         const valorRepasse = parcela.valorRepasseCliente ?? 0;
         const toneClass =
@@ -587,7 +587,7 @@ function TimelineTab({ acordo }: { acordo: AcordoComParcelas }) {
 
   return (
     <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
-      <ol className={cn("relative border-l border-border/20 ml-2 stack-default-plus")}>
+      <ol className={cn("flex flex-col relative border-l border-border/20 ml-2 stack-default-plus")}>
         {events.map((event, idx) => {
           const Icon = event.icon;
           const dotClass =

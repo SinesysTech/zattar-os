@@ -39,7 +39,7 @@ export function ProjectListView({ projetos }: ProjectListViewProps) {
 
   if (viewMode === "cards") {
     return (
-      <div className={cn("stack-default")}>
+      <div className={cn("flex flex-col stack-default")}>
         <div className={cn("flex items-center justify-between py-4")}>
           <Heading level="page">
             Projetos

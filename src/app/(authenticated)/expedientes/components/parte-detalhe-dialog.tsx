@@ -207,13 +207,13 @@ export function ParteDetalheDialog({
           </DialogTitle>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-          <div className={cn("stack-default py-2")}>
+          <div className={cn("flex flex-col stack-default py-2")}>
             {/* Loading state */}
             {isLoading && (
-              <div className={cn("stack-medium")}>
+              <div className={cn("flex flex-col stack-medium")}>
                 <div className={cn("flex items-center inline-tight")}>
                   <Skeleton className="h-5 w-5 rounded-full" />
-                  <div className={cn("stack-micro flex-1")}>
+                  <div className={cn("flex flex-col stack-micro flex-1")}>
                     <Skeleton className="h-4 w-3/4" />
                     <Skeleton className="h-3 w-1/2" />
                   </div>

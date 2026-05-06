@@ -68,11 +68,11 @@ export function CallTranscriptViewer({ chamada }: CallTranscriptViewerProps) {
       <Tabs defaultValue={resumo ? "resumo" : "transcricao"} className="flex flex-col h-full">
         <div className={cn("inset-card-compact border-b bg-muted/30")}>
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="resumo" className={cn("inline-tight")}>
+            <TabsTrigger value="resumo" className={cn("flex inline-tight")}>
               <ListVideo className="w-4 h-4" />
               Resumo IA
             </TabsTrigger>
-            <TabsTrigger value="transcricao" className={cn("inline-tight")}>
+            <TabsTrigger value="transcricao" className={cn("flex inline-tight")}>
               <FileText className="w-4 h-4" />
               Transcrição Completa
             </TabsTrigger>
@@ -100,7 +100,7 @@ export function CallTranscriptViewer({ chamada }: CallTranscriptViewerProps) {
                   disabled={isGenerating}
                   variant={resumo ? "outline" : "default"}
                   size="sm"
-                  className={cn("inline-tight")}
+                  className={cn("flex inline-tight")}
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${isGenerating ? 'animate-spin' : ''}`} />
                   {resumo ? "Regenerar Resumo" : "Gerar Resumo com IA"}

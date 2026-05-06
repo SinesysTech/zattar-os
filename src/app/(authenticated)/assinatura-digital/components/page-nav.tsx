@@ -57,7 +57,7 @@ export function AssinaturaDigitalPageNav({ action }: AssinaturaDigitalPageNavPro
   const pathname = usePathname() ?? '';
 
   return (
-    <div className={cn("stack-medium")}>
+    <div className={cn("flex flex-col stack-medium")}>
       <div className={cn("flex items-end justify-between inline-default")}>
         <Heading level="page">Assinatura Digital</Heading>
         {action}

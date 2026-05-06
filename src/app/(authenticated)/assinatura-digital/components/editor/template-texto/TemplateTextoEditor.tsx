@@ -136,7 +136,7 @@ export function TemplateTextoEditor({
           Digite <kbd className={cn("rounded bg-muted px-1.5 py-0.5 font-mono text-caption")}>@</kbd> no editor para inserir variáveis dinâmicas.
         </Text>
 
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           {Array.from(variablesByCategory.entries()).map(([category, variables]) => (
             <div key={category}>
               <Text variant="caption" className="font-medium">

@@ -43,7 +43,7 @@ export function ChatSidebar({
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className={cn("px-5 pt-5 stack-default")}>
+      <div className={cn("flex flex-col px-5 pt-5 stack-default")}>
         {/* Title row */}
         <div className="flex items-center justify-between">
           <div>

@@ -315,7 +315,7 @@ export default function ConciliacaoBancariaPage() {
 
   return (
     <>
-      <div className={cn("stack-default")}>
+      <div className={cn("flex flex-col stack-default")}>
         {/* Linha 1: Título + Botão Importar Extrato */}
         <div className="flex items-center justify-between">
           <Heading level="page">Conciliação Bancária</Heading>

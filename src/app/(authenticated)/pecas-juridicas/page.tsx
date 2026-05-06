@@ -12,7 +12,7 @@ import { listarPecasModelos } from './service';
 
 function PecasModelosLoading() {
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       <Skeleton className="h-10 w-full max-w-3xl" />
       <Skeleton className="h-100 w-full" />
     </div>

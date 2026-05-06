@@ -247,7 +247,7 @@ function DayDetailDialog({
           </DialogDescription>
         </DialogHeader>
         <ScrollArea className="max-h-[60vh]">
-          <div className={cn("stack-tight pr-2")}>
+          <div className={cn("flex flex-col stack-tight pr-2")}>
             {sorted.map((evt) => {
               const colors = getSourceColors(evt.source);
               const cfg = SOURCE_CONFIGS[evt.source as AgendaSource];
@@ -260,7 +260,7 @@ function DayDetailDialog({
                     onEventClick?.(evt);
                     onOpenChange(false);
                   }}
-                  className={cn(/* design-system-escape: p-3 → usar <Inset> */ "w-full text-left rounded-xl border border-border/40 bg-muted/30 p-3 stack-snug transition-colors hover:bg-muted/50 cursor-pointer")}
+                  className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col w-full text-left rounded-xl border border-border/40 bg-muted/30 p-3 stack-snug transition-colors hover:bg-muted/50 cursor-pointer")}
                 >
                   <div className={cn("flex items-center inline-tight")}>
                     <span
@@ -435,7 +435,7 @@ export function AnoView({
           {/* Stats Sidebar */}
           <GlassPanel
             depth={2}
-            className={cn(/* design-system-escape: p-5 → usar <Inset> */ "w-full xl:w-64 shrink-0 p-5 stack-medium")}
+            className={cn(/* design-system-escape: p-5 → usar <Inset> */ "flex flex-col w-full xl:w-64 shrink-0 p-5 stack-medium")}
           >
             {/* Total no Ano */}
             <StatCard
@@ -458,7 +458,7 @@ export function AnoView({
                 iconColor="text-info"
                 label="Por Tipo"
               >
-                <div className={cn("stack-snug mt-1")}>
+                <div className={cn("flex flex-col stack-snug mt-1")}>
                   {BREAKDOWN_ORDER.filter(
                     (src) => stats.breakdown[src] > 0,
                   ).map((src) => {
@@ -544,7 +544,7 @@ export function AnoView({
                 <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/40")}>
                   Ranking por Volume
                 </span>
-                <div className={cn("mt-2 stack-snug")}>
+                <div className={cn("flex flex-col mt-2 stack-snug")}>
                   {topMonths.map((m, i) => (
                     <div key={m.idx} className={cn("flex items-center inline-tight")}>
                       <span className={cn( "text-[9px] font-bold text-muted-foreground/40 w-3 text-right")}>

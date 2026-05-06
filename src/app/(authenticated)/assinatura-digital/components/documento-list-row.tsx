@@ -65,7 +65,7 @@ export function DocumentListRow({ doc, onSelect, selected }: DocumentListRowProp
         {cfg.label}
       </span>
 
-      <div className={cn("items-center inline-micro shrink-0 hidden md:flex")}>
+      <div className={cn("flex items-center inline-micro shrink-0 hidden md:flex")}>
         {doc.selfieHabilitada && (
           <Camera className="size-3 text-muted-foreground/65" />
         )}

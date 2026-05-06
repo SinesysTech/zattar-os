@@ -89,7 +89,7 @@ export function PesquisaClient() {
   }, [isBuscando, jaBuscou, total]);
 
   return (
-    <div className={cn("stack-default-plus")}>
+    <div className={cn("flex flex-col stack-default-plus")}>
       <DiarioOficialPageNav active="pesquisa" subtitle={subtitle} />
 
       {/* Busca centralizada — hero de consulta à API pública */}

@@ -136,7 +136,7 @@ function AudienciaContent({
       />
 
       {activeTab === 'detalhes' && (
-        <div className={cn("mt-5 stack-default-plus")}>
+        <div className={cn("flex flex-col mt-5 stack-default-plus")}>
           {/* Tipo */}
           {audiencia.tipoDescricao && (
             <div>

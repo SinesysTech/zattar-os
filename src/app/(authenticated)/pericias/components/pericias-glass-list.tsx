@@ -316,7 +316,7 @@ export function PericiasGlassList({
 }: PericiasGlassListProps) {
   if (isLoading) {
     return (
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         {Array.from({ length: 6 }).map((_, i) => (
           <Skeleton key={i} className="h-28 w-full rounded-2xl" />
         ))}
@@ -337,7 +337,7 @@ export function PericiasGlassList({
   }
 
   return (
-    <div className={cn("stack-tight")}>
+    <div className={cn("flex flex-col stack-tight")}>
       {pericias.map((pericia) => (
         <GlassRow
           key={pericia.id}

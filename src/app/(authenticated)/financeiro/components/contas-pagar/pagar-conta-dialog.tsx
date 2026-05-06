@@ -262,9 +262,9 @@ export function PagarContaDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div className={cn("stack-default py-4")}>
+          <div className={cn("flex flex-col stack-default py-4")}>
             {/* Resumo da conta */}
-            <div className={cn("rounded-lg border bg-muted/50 inset-card-compact stack-tight")}>
+            <div className={cn("flex flex-col rounded-lg border bg-muted/50 inset-card-compact stack-tight")}>
               <div className="flex justify-between items-start">
                 <div>
                   <p className={cn( "font-medium text-body-sm")}>{conta.descricao}</p>
@@ -297,7 +297,7 @@ export function PagarContaDialog({
             <Separator />
 
             {/* Forma de Pagamento */}
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="formaPagamento">
                 Forma de Pagamento <span className="text-destructive">*</span>
               </Label>
@@ -319,7 +319,7 @@ export function PagarContaDialog({
             </div>
 
             {/* Conta Bancária */}
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="contaBancaria">
                 Conta Bancária <span className="text-destructive">*</span>
               </Label>
@@ -344,7 +344,7 @@ export function PagarContaDialog({
             </div>
 
             {/* Data de Efetivação */}
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label>Data de Efetivação</Label>
               <Popover>
                 <PopoverTrigger asChild>
@@ -375,7 +375,7 @@ export function PagarContaDialog({
             </div>
 
             {/* Observações */}
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="observacoes">Observações</Label>
               <Textarea
                 id="observacoes"
@@ -387,7 +387,7 @@ export function PagarContaDialog({
             </div>
 
             {/* Comprovante de Pagamento */}
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="comprovante">Comprovante de Pagamento</Label>
 
               {comprovanteFile ? (

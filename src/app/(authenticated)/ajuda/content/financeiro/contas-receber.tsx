@@ -22,7 +22,7 @@ import {
 
 export default function ContasReceber() {
   return (
-    <div className={cn("stack-extra-loose")}>
+    <div className={cn("flex flex-col stack-extra-loose")}>
       <div>
         <Heading level="page">Contas a Receber</Heading>
         <p className="text-muted-foreground mt-2">
@@ -209,7 +209,7 @@ export default function ContasReceber() {
           O relatório de inadimplência consolida todos os títulos vencidos e não recebidos. Ele
           exibe:
         </p>
-        <ul className={cn("stack-tight text-body-sm text-muted-foreground list-disc list-inside")}>
+        <ul className={cn("flex flex-col stack-tight text-body-sm text-muted-foreground list-disc list-inside")}>
           <li>Nome do cliente</li>
           <li>Valor original e valor atualizado (se configurado)</li>
           <li>Dias de atraso</li>

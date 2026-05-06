@@ -261,7 +261,7 @@ function ResumoCards({
           <Card key={kpi.key} className={`border-l-4 ${kpi.borderColor}`}>
             <CardContent className={cn("inset-card-compact")}>
               <div className="flex items-start justify-between">
-                <div className={cn("stack-micro")}>
+                <div className={cn("flex flex-col stack-micro")}>
                   <Text variant="caption" className="font-medium">{kpi.label}</Text>
                   <p className={`text-xl font-semibold font-mono tracking-tight ${showColor ? getLucroColor(valor) : ''}`}>
                     {formatarValor(valor)}
@@ -495,7 +495,7 @@ function CategoriaTab({
         ) : categorias && categorias.length > 0 ? (
           <div className={cn("grid inline-default lg:grid-cols-2")}>
             <CategoriaPieChart categorias={categorias} />
-            <div className={cn("stack-snug")}>
+            <div className={cn("flex flex-col stack-snug")}>
               <Text variant="caption" className="font-medium uppercase tracking-wider mb-2">Detalhamento</Text>
               {categorias.map((cat: CategoriaDRE, i: number) => (
                 <div key={cat.categoria} className={cn("flex items-center justify-between py-1.5 px-2 rounded transition-colors hover:bg-muted/50")}>
@@ -853,21 +853,21 @@ export default function DREClient() {
         />
 
         {/* Tabs */}
-        <Tabs defaultValue="estrutura" className={cn("mt-4 stack-medium")}>
+        <Tabs defaultValue="estrutura" className={cn("flex flex-col mt-4 stack-medium")}>
           <TabsList>
-            <TabsTrigger value="estrutura" className={cn("inline-snug px-3")}>
+            <TabsTrigger value="estrutura" className={cn("flex inline-snug px-3")}>
               <List className="h-3.5 w-3.5" />
               Estrutura
             </TabsTrigger>
-            <TabsTrigger value="receitas" className={cn("inline-snug px-3")}>
+            <TabsTrigger value="receitas" className={cn("flex inline-snug px-3")}>
               <TrendingUp className="h-3.5 w-3.5" />
               Receitas
             </TabsTrigger>
-            <TabsTrigger value="despesas" className={cn("inline-snug px-3")}>
+            <TabsTrigger value="despesas" className={cn("flex inline-snug px-3")}>
               <TrendingDown className="h-3.5 w-3.5" />
               Despesas
             </TabsTrigger>
-            <TabsTrigger value="evolucao" className={cn("inline-snug px-3")}>
+            <TabsTrigger value="evolucao" className={cn("flex inline-snug px-3")}>
               <BarChart3 className="h-3.5 w-3.5" />
               Evolução
             </TabsTrigger>
@@ -887,7 +887,7 @@ export default function DREClient() {
               </CardHeader>
               <CardContent>
                 {isLoading ? (
-                  <div className={cn("stack-snug")}>
+                  <div className={cn("flex flex-col stack-snug")}>
                     {Array.from({ length: 15 }).map((_, i) => (
                       <Skeleton key={i} className="h-7" />
                     ))}

@@ -101,7 +101,7 @@ export function BriefingView({ events, currentDate, onEventClick }: BriefingView
   const briefingText = buildBriefingText(rawEvents, currentDate);
 
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       {/* Briefing text */}
       <div className={cn("relative overflow-hidden rounded-2xl border border-primary/8 bg-primary/2 px-4 py-3.5 sm:px-5")}>
         <div className="absolute top-0 right-0 w-24 h-24 bg-primary/3 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
@@ -131,12 +131,12 @@ export function BriefingView({ events, currentDate, onEventClick }: BriefingView
               </div>
             </div>
 
-            <div className={cn("stack-none")}>
+            <div className={cn("flex flex-col stack-none")}>
               {/* All-day events */}
               {allDay.length > 0 && (
                 <div className={cn("mb-3 pb-2 border-b border-border/8")}>
                   <span className={cn( "text-[8px] uppercase tracking-[0.15em] text-muted-foreground/45 font-semibold")}>Dia inteiro</span>
-                  <div className={cn("mt-1 stack-micro")}>
+                  <div className={cn("flex flex-col mt-1 stack-micro")}>
                     {allDay.map((ev) => (
                       <EventChip key={ev.id} title={ev.title} color={ev.color} past={ev.end < new Date()} onClick={() => onEventClick(ev)} />
                     ))}
@@ -183,7 +183,7 @@ export function BriefingView({ events, currentDate, onEventClick }: BriefingView
         </div>
 
         {/* Sidebar (2/7) */}
-        <div className={cn("lg:col-span-2 stack-default")}>
+        <div className={cn("flex flex-col lg:col-span-2 stack-default")}>
           {/* Prep Radar */}
           <GlassPanel className={cn("inset-card-compact")}>
             <div className={cn("flex items-center inline-tight mb-3")}>
@@ -193,7 +193,7 @@ export function BriefingView({ events, currentDate, onEventClick }: BriefingView
                 <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "text-[9px] tabular-nums px-1.5 py-0.5 rounded-full bg-warning/8 text-warning/50 font-semibold ml-auto")}>{needsPrep.length}</span>
               )}
             </div>
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               {needsPrep.length > 0 ? needsPrep.map((ev) => {
                 const SrcIcon = SOURCE_ICONS[ev.source] ?? Calendar;
                 const _docs = ev.meta.prepStatus ? 1 : 0;
@@ -225,7 +225,7 @@ export function BriefingView({ events, currentDate, onEventClick }: BriefingView
                 <AlertTriangle className="size-3 text-destructive/40" />
                 <span className={cn( "text-[11px] font-medium text-muted-foreground/50")}>Alertas</span>
               </div>
-              <div className={cn("stack-tight")}>
+              <div className={cn("flex flex-col stack-tight")}>
                 {dayEvents.filter((e) => e.meta.prepStatus === "pendente").map((ev) => (
                   <AlertCard key={ev.id} icon={Timer} title={ev.title} description={ev.meta.descricao ?? "Preparação pendente"} variant="destructive" />
                 ))}
@@ -245,7 +245,7 @@ export function BriefingView({ events, currentDate, onEventClick }: BriefingView
               <Zap className="size-3 text-primary/40" />
               <span className={cn( "text-[11px] font-medium text-muted-foreground/50")}>Ações</span>
             </div>
-            <div className={cn("stack-nano")}>
+            <div className={cn("flex flex-col stack-nano")}>
               {[
                 { label: "Abrir PJe", icon: ExternalLink },
                 { label: "Preparar peça", icon: FileText },

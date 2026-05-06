@@ -29,7 +29,7 @@ export default function ContratoDetalhesError({
           </div>
           <Heading level="card" className="mb-4">Erro ao carregar contrato</Heading>
         </div>
-        <div className={cn("stack-default")}>
+        <div className={cn("flex flex-col stack-default")}>
           <p className="text-center text-muted-foreground">
             Ocorreu um erro ao tentar carregar os detalhes do contrato.
             Por favor, tente novamente.

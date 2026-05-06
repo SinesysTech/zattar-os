@@ -46,12 +46,12 @@ export function VisualizarDeclaracaoDialog({
           />
         </div>
 
-        <DialogFooter className={cn("inset-dialog pt-3 shrink-0 inline-tight")}>
+        <DialogFooter className={cn("flex inset-dialog pt-3 shrink-0 inline-tight")}>
           <Button
             variant="outline"
             size="sm"
             asChild
-            className={cn("rounded-xl inline-snug")}
+            className={cn("flex rounded-xl inline-snug")}
           >
             <a href={pdfUrl} download target="_blank" rel="noopener noreferrer">
               <Download className="size-3.5" />
@@ -62,7 +62,7 @@ export function VisualizarDeclaracaoDialog({
             variant="outline"
             size="sm"
             asChild
-            className={cn("rounded-xl inline-snug")}
+            className={cn("flex rounded-xl inline-snug")}
           >
             <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
               <ExternalLink className="size-3.5" />

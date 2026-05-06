@@ -230,7 +230,7 @@ export function ProcessosClient({
         )}
 
         {viewMode === 'lista' && (
-          <div className={cn("stack-micro")}>
+          <div className={cn("flex flex-col stack-micro")}>
             {processos.map((processo) => (
               <ProcessoListRow
                 key={processo.id}

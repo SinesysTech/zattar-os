@@ -23,7 +23,7 @@ import {
 
 export default function DocumentosDoc() {
   return (
-    <div className={cn("stack-extra-loose")}>
+    <div className={cn("flex flex-col stack-extra-loose")}>
       <div>
         <Heading level="page">Documentos</Heading>
         <p className={cn("text-muted-foreground text-body-lg")}>

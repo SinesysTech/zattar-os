@@ -20,7 +20,7 @@ import {
 
 export default function Dre() {
   return (
-    <div className={cn("stack-extra-loose")}>
+    <div className={cn("flex flex-col stack-extra-loose")}>
       <div>
         <Heading level="page">
           Demonstração de Resultado do Exercício
@@ -36,7 +36,7 @@ export default function Dre() {
           O DRE é gerado para qualquer período de sua escolha. Use o seletor de período no topo
           da tela para definir o intervalo de análise:
         </p>
-        <ul className={cn("stack-tight text-body-sm text-muted-foreground list-disc list-inside")}>
+        <ul className={cn("flex flex-col stack-tight text-body-sm text-muted-foreground list-disc list-inside")}>
           <li>Mês específico</li>
           <li>Trimestre</li>
           <li>Semestre</li>
@@ -122,7 +122,7 @@ export default function Dre() {
         <p className="text-muted-foreground mb-4">
           Ao habilitar o comparativo orçado, o DRE exibe colunas adicionais para cada linha:
         </p>
-        <ul className={cn("stack-tight text-body-sm text-muted-foreground list-disc list-inside")}>
+        <ul className={cn("flex flex-col stack-tight text-body-sm text-muted-foreground list-disc list-inside")}>
           <li>
             <strong>Orçado:</strong> valor planejado no orçamento aprovado do período
           </li>

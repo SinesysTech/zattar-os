@@ -198,7 +198,7 @@ export function EntrevistaWizard({ entrevista, contratoId, onFinish }: Entrevist
   };
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       {/* Stepper horizontal */}
       <nav className={cn("flex items-center justify-between inline-tight")}>
         {modulos.map((modulo, index) => {

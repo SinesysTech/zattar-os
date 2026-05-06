@@ -20,7 +20,7 @@ export function RecordingPlayer({ recordingUrl, chamadaId, titulo }: RecordingPl
   };
 
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       <div className="flex items-center justify-between">
         <Heading level="card">
           {titulo || `Gravação da Chamada #${chamadaId}`}
@@ -29,7 +29,7 @@ export function RecordingPlayer({ recordingUrl, chamadaId, titulo }: RecordingPl
           variant="outline"
           size="sm"
           onClick={handleDownload}
-          className={cn("inline-tight")}
+          className={cn("flex inline-tight")}
         >
           <Download className="h-4 w-4" />
           Baixar

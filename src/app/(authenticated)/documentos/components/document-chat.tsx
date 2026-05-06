@@ -76,7 +76,7 @@ export function DocumentChat({ documentoId, currentUserName, currentUserId }: Do
         <div className={cn("border-b inset-card-compact")}>
           <Skeleton className="h-5 w-32" />
         </div>
-        <div className={cn("flex-1 inset-card-compact stack-default")}>
+        <div className={cn("flex flex-col flex-1 inset-card-compact stack-default")}>
           <Skeleton className="h-12 w-3/4" />
           <Skeleton className="h-12 w-1/2 ml-auto" />
           <Skeleton className="h-12 w-2/3" />

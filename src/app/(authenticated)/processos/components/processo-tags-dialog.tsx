@@ -163,7 +163,7 @@ export function ProcessoTagsDialog({
           <DialogTitle>Gerenciar Etiquetas</DialogTitle>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-      <div className={cn("stack-default")}>
+      <div className={cn("flex flex-col stack-default")}>
         {/* Tags selecionadas */}
         <div>
           <Label className={cn( "text-body-sm font-medium")}>Etiquetas selecionadas</Label>
@@ -205,7 +205,7 @@ export function ProcessoTagsDialog({
 
           {/* Formulário para criar nova tag */}
           {showNewTagForm && (
-            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "mb-3 p-3 border rounded-md bg-muted/30 stack-medium")}>
+            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col mb-3 p-3 border rounded-md bg-muted/30 stack-medium")}>
               <div className={cn("flex inline-tight")}>
                 <Input
                   variant="glass"

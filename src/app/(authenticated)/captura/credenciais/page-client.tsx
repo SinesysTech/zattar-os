@@ -371,7 +371,7 @@ export default function CredenciaisPage() {
 
   return (
     <>
-      <div className={cn("stack-default-plus")}>
+      <div className={cn("flex flex-col stack-default-plus")}>
         {/* KPI Strip */}
         <PulseStrip items={kpiItems} />
 
@@ -506,7 +506,7 @@ export default function CredenciaisPage() {
                   <div className={cn("border-t border-border/10 my-2")} />
 
                   {/* Advogado info */}
-                  <div className={cn("stack-micro")}>
+                  <div className={cn("flex flex-col stack-micro")}>
                     <Text variant="caption" className="flex items-center gap-2 text-muted-foreground/60">
                       <Users className="size-3 shrink-0" />
                       <span className="truncate">{credencial.advogado_nome}</span>

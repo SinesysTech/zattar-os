@@ -190,11 +190,11 @@ export function ExpedienteDetalhesClient({
             </span>
           </Text>
           <div className={cn("flex items-center inline-snug")}>
-            <Button variant="outline" size="sm" className={cn("rounded-full h-8 px-3 text-caption inline-snug")}>
+            <Button variant="outline" size="sm" className={cn("flex rounded-full h-8 px-3 text-caption inline-snug")}>
               <Download className="size-3" />
               PDF
             </Button>
-            <Button size="sm" className={cn("rounded-full h-8 px-3 text-caption inline-snug")}>
+            <Button size="sm" className={cn("flex rounded-full h-8 px-3 text-caption inline-snug")}>
               <Edit3 className="size-3" />
               Editar
             </Button>
@@ -369,7 +369,7 @@ function HeroBlock({
               )}
             </div>
 
-            <div className={cn("stack-snug")}>
+            <div className={cn("flex flex-col stack-snug")}>
               <Heading
                 level="page"
                 className={cn(/* design-system-escape: tracking-tight sem token DS; text-3xl → migrar para <Heading level="display-*"> */ /* design-system-escape: tracking-tight sem token DS; text-3xl → migrar para <Heading level="display-*"> */ "font-black tracking-tight text-foreground leading-[1.05] text-3xl md:text-4xl lg:text-[2.75rem]")}
@@ -422,7 +422,7 @@ function HeroBlock({
               <Text
                 variant="micro-caption"
                 as="div"
-                className={cn("text-muted-foreground/70 stack-nano pt-1")}
+                className={cn("flex flex-col text-muted-foreground/70 stack-nano pt-1")}
               >
                 {expediente.classeJudicial && (
                   <div>{expediente.classeJudicial}</div>
@@ -614,7 +614,7 @@ function DadosTab({
       </div>
 
       {/* =============================== SIDEBAR =============================== */}
-      <aside className={cn("stack-loose lg:sticky lg:top-6 lg:self-start")}>
+      <aside className={cn("flex flex-col stack-loose lg:sticky lg:top-6 lg:self-start")}>
         <ResponsavelCard
           expedienteId={expediente.id}
           responsavelId={expediente.responsavelId}
@@ -709,7 +709,7 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
   };
 
   return (
-    <div className={cn("stack-micro")}>
+    <div className={cn("flex flex-col stack-micro")}>
       <div className={cn("flex items-end justify-between pb-3 border-b border-border/20")}>
         <div>
           <Text
@@ -728,7 +728,7 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
             <span className="text-muted-foreground/70 font-normal">documentos</span>
           </Heading>
         </div>
-        <Button variant="outline" size="sm" className={cn("rounded-full h-8 px-3 text-caption inline-snug")}>
+        <Button variant="outline" size="sm" className={cn("flex rounded-full h-8 px-3 text-caption inline-snug")}>
           <Plus className="size-3" />
           Adicionar
         </Button>
@@ -1111,7 +1111,7 @@ function SidebarSection({
       >
         {label}
       </Heading>
-      <div className={cn("stack-snug")}>{children}</div>
+      <div className={cn("flex flex-col stack-snug")}>{children}</div>
     </section>
   );
 }
@@ -1253,7 +1253,7 @@ function InlineTipoEditor({
               <CommandItem
                 value="sem-tipo"
                 onSelect={() => handleSelect(null)}
-                className={cn("inline-tight rounded-lg text-caption px-2 py-2")}
+                className={cn("flex inline-tight rounded-lg text-caption px-2 py-2")}
               >
                 <span className="italic text-muted-foreground/60 font-headline">Sem tipo</span>
               </CommandItem>
@@ -1262,7 +1262,7 @@ function InlineTipoEditor({
                   key={tipo.id}
                   value={tipo.tipo_expediente}
                   onSelect={() => handleSelect(tipo.id)}
-                  className={cn("inline-tight rounded-lg text-caption px-2 py-2")}
+                  className={cn("flex inline-tight rounded-lg text-caption px-2 py-2")}
                 >
                   <span className={cn( "font-headline text-[13px] font-medium")}>
                     {tipo.tipo_expediente}

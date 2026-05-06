@@ -134,7 +134,7 @@ function ExpedienteListItem({
           <TabsTrigger value="historico">Histórico</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="detalhes" className={cn("stack-medium mt-0")}>
+        <TabsContent value="detalhes" className={cn("flex flex-col stack-medium mt-0")}>
           <div className="flex items-center justify-between">
             <div className={cn( "font-semibold text-body-lg flex items-center inline-tight")}>
               {exp.classeJudicial && <span className={cn("text-muted-foreground text-body-sm uppercase")}>{exp.classeJudicial}</span>}
@@ -203,14 +203,14 @@ function ExpedienteSingleDetails({
   const { logs, isLoading: loadingLogs } = useAuditLogs('expedientes', expediente.id);
 
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       <Tabs defaultValue="detalhes" className="w-full">
         <TabsList className="grid w-full grid-cols-2 mb-4">
           <TabsTrigger value="detalhes">Detalhes</TabsTrigger>
           <TabsTrigger value="historico">Histórico</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="detalhes" className={cn("stack-default mt-0")}>
+        <TabsContent value="detalhes" className={cn("flex flex-col stack-default mt-0")}>
           <div className="flex items-center justify-between">
             <div>
               <Text variant="caption" className="uppercase font-bold tracking-wider mb-1">Status</Text>
@@ -225,7 +225,7 @@ function ExpedienteSingleDetails({
             </div>
           </div>
 
-          <div className={cn("border-t pt-4 stack-default")}>
+          <div className={cn("flex flex-col border-t pt-4 stack-default")}>
             <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
               <div>
                 <Text variant="caption">Número do Processo</Text>
@@ -330,7 +330,7 @@ export function ExpedienteDetalhesDialog({
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
           <ScrollArea className={cn("max-h-[60vh] pr-4")}>
             {exibirLista ? (
-              <div className={cn("stack-default")}>
+              <div className={cn("flex flex-col stack-default")}>
                 {listaLocal.map((exp) => (
                   <ExpedienteListItem
                     key={exp.id}

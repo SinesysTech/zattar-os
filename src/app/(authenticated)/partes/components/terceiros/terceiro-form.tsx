@@ -810,7 +810,7 @@ export function TerceiroFormDialog({
               <Badge
                 key={index}
                 variant="secondary"
-                className={cn("inline-micro pr-1")}
+                className={cn("flex inline-micro pr-1")}
               >
                 {email}
                 <button

@@ -97,8 +97,8 @@ export function ProcessosBulkActions({
             </DialogDescription>
           </DialogHeader>
 
-          <div className={cn("stack-default py-4")}>
-            <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-default py-4")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="responsavel-lote">Responsável</Label>
               <Select
                 value={responsavelId || 'null'}

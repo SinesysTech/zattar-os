@@ -88,7 +88,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className={cn("stack-tight")}>
+    <section className={cn("flex flex-col stack-tight")}>
       <header className={cn("flex items-center inline-tight")}>
         {icon}
         <h3 className={cn("text-overline text-muted-foreground/70")}>
@@ -151,7 +151,7 @@ function PericiaListItem({ pericia }: { pericia: Pericia }) {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="detalhes" className={cn("stack-default mt-0")}>
+        <TabsContent value="detalhes" className={cn("flex flex-col stack-default mt-0")}>
           <div className={cn("flex items-start justify-between inline-medium")}>
             <div className="min-w-0">
               <div className={cn(/* design-system-escape: tracking-tight sem token DS */ "text-body-sm font-semibold tabular-nums tracking-tight text-foreground truncate")}>
@@ -242,7 +242,7 @@ function PericiaSingleDetails({ pericia }: { pericia: Pericia }) {
     ?.avatarUrl;
 
   return (
-    <div className={cn("stack-loose pb-6")}>
+    <div className={cn("flex flex-col stack-loose pb-6")}>
       {/* Meta Grid */}
       <GlassPanel depth={1} className={cn("inset-card-compact bg-muted/20")}>
         <div className={cn("grid grid-cols-3 inline-medium")}>
@@ -286,7 +286,7 @@ function PericiaSingleDetails({ pericia }: { pericia: Pericia }) {
         icon={<Building2 className="size-3.5 text-muted-foreground/50" />}
         title="Processo"
       >
-        <div className={cn("stack-nano")}>
+        <div className={cn("flex flex-col stack-nano")}>
           <span className={cn(/* design-system-escape: tracking-tight sem token DS */ "block text-body-sm font-semibold tabular-nums tracking-tight text-foreground")}>
             {pericia.numeroProcesso}
           </span>
@@ -375,7 +375,7 @@ export function PericiaDetalhesDialog({
         {/* Scrollable content */}
         <div className={cn("flex-1 overflow-y-auto px-1 pt-2")}>
           {exibirLista ? (
-            <div className={cn("stack-micro")}>
+            <div className={cn("flex flex-col stack-micro")}>
               {pericias!.map((p) => (
                 <PericiaListItem key={p.id} pericia={p} />
               ))}

@@ -188,13 +188,13 @@ export default function FieldsList({
 
   return (
     <ScrollArea className="h-full">
-      <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3 stack-default")}>
+      <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col p-3 stack-default")}>
         {pages.map((page) => (
           <div key={page}>
             <Heading level="subsection" className={cn("text-caption text-muted-foreground uppercase tracking-wider mb-2 px-1")}>
               Página {page}
             </Heading>
-            <div className={cn("stack-micro")}>
+            <div className={cn("flex flex-col stack-micro")}>
               {fieldsByPage[page].map((field) => (
                 <FieldsListItem
                   key={field.id}

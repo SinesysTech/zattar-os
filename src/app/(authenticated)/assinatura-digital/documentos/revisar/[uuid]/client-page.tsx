@@ -520,7 +520,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
       onClick={handleFinalize}
       disabled={isFinalizing}
       size="sm"
-      className={cn("inline-snug")}
+      className={cn("flex inline-snug")}
     >
       {isFinalizing ? (
         <>
@@ -552,7 +552,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
   // ── Main ────────────────────────────────────────────────────────────
   return (
     <DocumentFlowShell primaryAction={primaryAction}>
-      <div className={cn("w-full max-w-7xl mx-auto stack-loose")}>
+      <div className={cn("flex flex-col w-full max-w-7xl mx-auto stack-loose")}>
         {/* ── Header ─────────────────────────────────── */}
         <div className={cn("flex items-end justify-between inline-default")}>
           <div className="min-w-0">
@@ -608,7 +608,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
         {/* ── Grid: Links + PDF Preview ──────────────── */}
         <div className={cn("grid grid-cols-1 lg:grid-cols-[1fr_420px] inline-loose")}>
           {/* Links */}
-          <section className={cn("stack-default")}>
+          <section className={cn("flex flex-col stack-default")}>
             <SectionHeader
               icon={LinkIcon}
               title="Links de Assinatura"
@@ -630,7 +630,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
               Compartilhe o link com cada assinante. Cada link é único e seguro.
             </Text>
 
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               {documento.assinantes.map((assinante, idx) => (
                 <SignerLinkCard
                   key={assinante.id}
@@ -658,7 +658,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
           </section>
 
           {/* Preview */}
-          <section className={cn("stack-default")}>
+          <section className={cn("flex flex-col stack-default")}>
             <SectionHeader
               icon={FileText}
               title="Preview do Documento"

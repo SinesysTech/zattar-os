@@ -344,7 +344,7 @@ export function DocumentoVerificacaoClient({
               className="h-full min-h-0"
               viewportClassName="px-5 pb-5 pt-6 lg:px-6 lg:pb-6 lg:pt-6"
             >
-              <section className={cn("stack-default")}>
+              <section className={cn("flex flex-col stack-default")}>
                 <CardTitle className={cn("flex items-center inline-tight text-body-lg")}>
                   <Info className="h-4 w-4" />
                   Resumo de verificação
@@ -362,7 +362,7 @@ export function DocumentoVerificacaoClient({
                 </div>
               </section>
 
-              <section className={cn("mt-6 stack-medium")}>
+              <section className={cn("flex flex-col mt-6 stack-medium")}>
                 <div className={cn("flex items-center inline-tight")}>
                   <Info className="h-4 w-4 text-muted-foreground" />
                   <Heading level="section" className={cn("text-body-sm uppercase tracking-[0.14em] text-foreground/90")}>
@@ -402,7 +402,7 @@ export function DocumentoVerificacaoClient({
               {(data.hashOriginal || data.hashFinal) && (
                 <>
                   <Separator className={cn("my-6")} />
-                  <section className={cn("stack-medium")}>
+                  <section className={cn("flex flex-col stack-medium")}>
                     <div className={cn("flex items-center inline-tight")}>
                       <ShieldCheck className="h-4 w-4 text-muted-foreground" />
                       <Heading level="section" className={cn("text-body-sm uppercase tracking-[0.14em] text-foreground/90")}>
@@ -410,7 +410,7 @@ export function DocumentoVerificacaoClient({
                       </Heading>
                     </div>
 
-                    <div className={cn("rounded-lg border border-border/60 bg-muted/20 inset-card-compact stack-medium")}>
+                    <div className={cn("flex flex-col rounded-lg border border-border/60 bg-muted/20 inset-card-compact stack-medium")}>
                       <HashDisplay
                         label="Hash Original (SHA-256)"
                         hash={data.hashOriginal}
@@ -435,7 +435,7 @@ export function DocumentoVerificacaoClient({
 
               <Separator className={cn("my-6")} />
 
-              <section className={cn("stack-medium")}>
+              <section className={cn("flex flex-col stack-medium")}>
                 <div className={cn("flex items-center justify-between inline-medium")}>
                   <Heading level="section" className={cn("text-body-lg flex items-center inline-tight")}>
                     <Users className="h-5 w-5" />
@@ -443,7 +443,7 @@ export function DocumentoVerificacaoClient({
                   </Heading>
                 </div>
 
-                <div className={cn("stack-medium")}>
+                <div className={cn("flex flex-col stack-medium")}>
                   {data.signatarios.map((signatario, index) => (
                     <AssinanteCard
                       key={signatario.id}

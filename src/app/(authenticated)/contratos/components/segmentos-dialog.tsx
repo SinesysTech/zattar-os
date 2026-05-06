@@ -257,10 +257,10 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
             </DialogDescription>
           </DialogHeader>
 
-          <div className={cn("flex-1 overflow-y-auto stack-default")}>
+          <div className={cn("flex flex-col flex-1 overflow-y-auto stack-default")}>
             {/* Formulário de Criação/Edição */}
             {(isCreating || editingId) && (
-              <div className={cn("border rounded-lg inset-card-compact stack-default")}>
+              <div className={cn("flex flex-col border rounded-lg inset-card-compact stack-default")}>
                 <div className="flex items-center justify-between">
                   <small className="text-sm font-medium leading-none">
                     {editingId ? 'Editar Segmento' : 'Novo Segmento'}
@@ -382,7 +382,7 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
                 </EmptyHeader>
               </Empty>
             ) : (
-              <div className={cn("stack-micro")}>
+              <div className={cn("flex flex-col stack-micro")}>
                 {segmentos.map((segmento) => (
                   <div
                     key={segmento.id}

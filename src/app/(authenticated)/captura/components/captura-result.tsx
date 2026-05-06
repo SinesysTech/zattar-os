@@ -111,7 +111,7 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
   const hasPeriodo = data?.dataInicio && data?.dataFim;
 
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       {/* Banner de status */}
       <div className={`flex items-start gap-3 rounded-lg border p-4 ${
         isAsync
@@ -276,7 +276,7 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
           <p className={cn("text-overline text-destructive mb-2")}>
             Erros em processos ({data.erros.length})
           </p>
-          <div className={cn("stack-snug")}>
+          <div className={cn("flex flex-col stack-snug")}>
             {data.erros.slice(0, 5).map((e, i) => (
               <div key={i} className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex items-start inline-tight rounded-lg border border-destructive/30 bg-destructive/6 p-2.5 text-caption")}>
                 <XCircle className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />

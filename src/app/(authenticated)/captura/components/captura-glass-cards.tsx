@@ -196,7 +196,7 @@ function CapturaCard({
       <div className={cn("border-t border-border/10 my-2")} />
 
       {/* Details */}
-      <div className={cn("stack-snug")}>
+      <div className={cn("flex flex-col stack-snug")}>
         {/* Escopo (tribunais + graus agregados) */}
         <div className="flex items-center justify-between">
           <span className="text-[11px] text-muted-foreground/60">Escopo</span>

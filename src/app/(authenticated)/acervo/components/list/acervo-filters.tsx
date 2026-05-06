@@ -35,7 +35,7 @@ export function AcervoFilters({
   onReset,
 }: AcervoFiltersProps) {
   return (
-    <div className={cn("stack-default rounded-lg border inset-card-compact")}>
+    <div className={cn("flex flex-col stack-default rounded-lg border inset-card-compact")}>
       <div className="flex items-center justify-between">
         <Heading level="card">Filtros</Heading>
         <Button variant="ghost" size="sm" onClick={onReset}>
@@ -46,7 +46,7 @@ export function AcervoFilters({
 
       <div className={cn("grid inline-default md:grid-cols-2 lg:grid-cols-3")}>
         {/* Search */}
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label htmlFor="busca">Busca</Label>
           <Input
             id="busca"
@@ -57,7 +57,7 @@ export function AcervoFilters({
         </div>
 
         {/* Origin */}
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label htmlFor="origem">Origem</Label>
           <Select
             value={filters.origem || 'all'}
@@ -77,7 +77,7 @@ export function AcervoFilters({
         </div>
 
         {/* TRT */}
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label htmlFor="trt">TRT</Label>
           <Input
             id="trt"
@@ -88,7 +88,7 @@ export function AcervoFilters({
         </div>
 
         {/* Grade */}
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label htmlFor="grau">Grau</Label>
           <Select
             value={filters.grau || 'all'}
@@ -108,7 +108,7 @@ export function AcervoFilters({
         </div>
 
         {/* Judicial Class */}
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label htmlFor="classe_judicial">Classe Judicial</Label>
           <Input
             id="classe_judicial"
@@ -119,7 +119,7 @@ export function AcervoFilters({
         </div>
 
         {/* Has Next Hearing */}
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label htmlFor="tem_proxima_audiencia">Próxima Audiência</Label>
           <Select
             value={
@@ -148,7 +148,7 @@ export function AcervoFilters({
         </div>
 
         {/* Secrecy */}
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label htmlFor="segredo_justica">Segredo de Justiça</Label>
           <Select
             value={
@@ -177,7 +177,7 @@ export function AcervoFilters({
         </div>
 
         {/* Without Responsible */}
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label htmlFor="sem_responsavel">Responsável</Label>
           <Select
             value={

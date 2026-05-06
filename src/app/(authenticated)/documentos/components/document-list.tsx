@@ -157,7 +157,7 @@ export function DocumentList() {
               selectedFolderId={pastaAtual}
             />
           </div>
-          <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "stack-tight border-t p-2")}>
+          <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col stack-tight border-t p-2")}>
             <Button
               variant="outline"
               size="sm"
@@ -250,7 +250,7 @@ export function DocumentList() {
             <div className={cn("mt-3 flex flex-wrap inline-tight")}>
               <span className={cn("text-body-sm text-muted-foreground")}>Tags:</span>
               {tagsAtivas.map((tag) => (
-                <Badge key={tag} variant="secondary" className={cn("inline-micro")}>
+                <Badge key={tag} variant="secondary" className={cn("flex inline-micro")}>
                   {tag}
                   <button
                     type="button"
@@ -278,7 +278,7 @@ export function DocumentList() {
         {/* Lista/Grid de documentos */}
         <div className={cn("flex-1 overflow-auto inset-card-compact")}>
           {loading ? (
-            <div className={cn("stack-default")}>
+            <div className={cn("flex flex-col stack-default")}>
               <Skeleton className="h-20 w-full" />
               <Skeleton className="h-20 w-full" />
               <Skeleton className="h-20 w-full" />

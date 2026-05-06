@@ -161,7 +161,7 @@ export function TaskFormDialog({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className={cn("stack-default")}
+            className={cn("flex flex-col stack-default")}
           >
             <FormField
               control={form.control}

@@ -74,7 +74,7 @@ export function AgendaView({ currentDate, events, onEventSelect, onEventCreate }
                   </Tooltip>
                 )}
               </div>
-              <div className={cn("mt-6 stack-tight")}>
+              <div className={cn("flex flex-col mt-6 stack-tight")}>
                 {dayEvents.map((event) => (
                   <EventItem
                     key={event.id}

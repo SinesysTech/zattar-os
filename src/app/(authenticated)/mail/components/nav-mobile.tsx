@@ -50,7 +50,7 @@ export function NavMobile() {
 
         <div className={cn("px-2 py-2")}>
           <ComposeMailDialog>
-            <Button variant="default" className={cn("w-full inline-tight")}>
+            <Button variant="default" className={cn("flex w-full inline-tight")}>
               <Pencil className="h-4 w-4" />
               Novo E-mail
             </Button>

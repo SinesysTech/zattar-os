@@ -89,7 +89,7 @@ export function AgendaToolbar({
   const activeFilters = sourceFilter.size;
 
   return (
-    <div className={cn("stack-medium")}>
+    <div className={cn("flex flex-col stack-medium")}>
       {/* Row 1: Title + New Event */}
       <div className={cn("flex items-end justify-between inline-default")}>
         <div>

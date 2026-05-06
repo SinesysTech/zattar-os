@@ -202,7 +202,7 @@ export function PericiasSemanaView({
   const weekLabel = `${format(weekStart, "d 'de' MMM", { locale: ptBR })} — ${format(friday, "d 'de' MMM", { locale: ptBR })}`;
 
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       {/* Week Navigator */}
       <div className={cn("flex items-center inline-tight")}>
         <button
@@ -281,7 +281,7 @@ export function PericiasSemanaView({
                   <Text variant="caption" className="text-muted-foreground/30">—</Text>
                 </div>
               ) : (
-                <div className={cn("stack-tight")}>
+                <div className={cn("flex flex-col stack-tight")}>
                   {dayPericias.map((pericia) => (
                     <WeekDayCard
                       key={pericia.id}

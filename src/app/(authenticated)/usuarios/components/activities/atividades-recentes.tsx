@@ -146,11 +146,11 @@ export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
           <Skeleton className="h-4 w-full mt-2" />
         </CardHeader>
         <CardContent>
-          <div className={cn("stack-default")}>
+          <div className={cn("flex flex-col stack-default")}>
             {[1, 2, 3].map((i) => (
               <div key={i} className={cn("flex inline-default")}>
                 <Skeleton className="h-10 w-10 rounded-full" />
-                <div className={cn("flex-1 stack-tight")}>
+                <div className={cn("flex flex-col flex-1 stack-tight")}>
                   <Skeleton className="h-4 w-32" />
                   <Skeleton className="h-3 w-full" />
                 </div>
@@ -199,7 +199,7 @@ export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
             {/* Linha vertical da timeline */}
             <div className="absolute left-5 top-0 bottom-0 w-px bg-border" />
 
-            <div className={cn("stack-loose")}>
+            <div className={cn("flex flex-col stack-loose")}>
               {atividades.map((atividade) => {
                 const Icon = EVENT_ICONS[atividade.tipoEvento] ?? Activity;
                 const label = EVENT_LABELS[atividade.tipoEvento] ?? 'Atividade registrada';
@@ -220,7 +220,7 @@ export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
                     <div className={cn("flex-1 pb-6")}>
                       <div className={cn("rounded-lg border bg-card inset-card-compact")}>
                         <div className={cn("flex items-start justify-between inline-default")}>
-                          <div className={cn("stack-micro")}>
+                          <div className={cn("flex flex-col stack-micro")}>
                             <div className={cn("flex items-center inline-tight")}>
                               <p className={`font-medium ${colorClass}`}>{label}</p>
                               <AppBadge variant="outline" className={cn("text-caption")}>

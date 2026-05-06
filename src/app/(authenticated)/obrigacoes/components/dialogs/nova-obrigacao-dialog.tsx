@@ -105,11 +105,11 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
           <DialogDescription className="sr-only">Selecione o processo e preencha os dados da obrigação</DialogDescription>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-      <div className={cn("stack-loose px-6 py-5 md:px-8 md:py-6")}>
+      <div className={cn("flex flex-col stack-loose px-6 py-5 md:px-8 md:py-6")}>
         {!selectedProcessoId && (
-          <div className={cn(/* design-system-escape: md:p-5 sem equivalente DS */ "stack-default-plus rounded-lg border bg-muted/20 inset-card-compact md:p-5")}>
+          <div className={cn(/* design-system-escape: md:p-5 sem equivalente DS */ "flex flex-col stack-default-plus rounded-lg border bg-muted/20 inset-card-compact md:p-5")}>
             <div className={cn("grid grid-cols-1 inline-default md:grid-cols-2")}>
-              <div className={cn("stack-tight")}>
+              <div className={cn("flex flex-col stack-tight")}>
                 <Label>Tribunal</Label>
                 <Select value={trt} onValueChange={setTrt}>
                   <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
@@ -120,7 +120,7 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
                   </SelectContent>
                 </Select>
               </div>
-              <div className={cn("stack-tight")}>
+              <div className={cn("flex flex-col stack-tight")}>
                 <Label>Grau</Label>
                 <Select value={grau} onValueChange={setGrau}>
                   <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
@@ -131,7 +131,7 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
                 </Select>
               </div>
             </div>
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label>Buscar Processo</Label>
               <Input
                 variant="glass"

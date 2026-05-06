@@ -102,7 +102,7 @@ export function SearchShortcuts({ onAfterApply }: SearchShortcutsProps) {
               }}
               className="group text-left"
             >
-              <GlassPanel className={cn("h-full inline-tight inset-card-compact transition-all duration-200 group-hover:border-primary/30 group-hover:shadow-[0_4px_24px_color-mix(in_oklch,var(--primary)_8%,transparent)]")}>
+              <GlassPanel className={cn("flex h-full inline-tight inset-card-compact transition-all duration-200 group-hover:border-primary/30 group-hover:shadow-[0_4px_24px_color-mix(in_oklch,var(--primary)_8%,transparent)]")}>
                 <IconContainer
                   size="md"
                   className={`border ${tone.bg} ${tone.border} ${tone.text}`}

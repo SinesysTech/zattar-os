@@ -138,7 +138,7 @@ export function ObrigacoesTableWrapper({
   );
 
   return (
-    <div className={cn("stack-medium")}>
+    <div className={cn("flex flex-col stack-medium")}>
       {weekNavigatorProps && (
         <WeekNavigator
           weekDays={weekNavigatorProps.weekDays}

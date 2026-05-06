@@ -70,7 +70,7 @@ export function ResultadoDecisao() {
         <StackedBar segments={segments} height={10} />
       </div>
 
-      <div className={cn("mt-3 stack-tight")}>
+      <div className={cn("flex flex-col mt-3 stack-tight")}>
         {resultados.map((r) => {
           const percent = total > 0 ? Math.round((r.count / total) * 100) : 0;
           return (

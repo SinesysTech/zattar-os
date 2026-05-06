@@ -365,7 +365,7 @@ export default function OrcamentoDetalhesPage() {
   // Loading
   if (isLoading) {
     return (
-      <div className={cn("stack-loose")}>
+      <div className={cn("flex flex-col stack-loose")}>
         <div className={cn("flex items-center inline-default")}>
           <Skeleton className="h-10 w-10" />
           <Skeleton className="h-8 w-64" />
@@ -391,7 +391,7 @@ export default function OrcamentoDetalhesPage() {
   // Erro
   if (error || !orcamento) {
     return (
-      <div className={cn("stack-loose")}>
+      <div className={cn("flex flex-col stack-loose")}>
         <Button variant="ghost" onClick={handleVoltar}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
@@ -407,7 +407,7 @@ export default function OrcamentoDetalhesPage() {
   const statusConfig = STATUS_CONFIG[orcamento.status];
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className={cn("flex items-center inline-default")}>

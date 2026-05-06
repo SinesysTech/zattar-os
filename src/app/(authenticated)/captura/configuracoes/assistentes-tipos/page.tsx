@@ -50,7 +50,7 @@ export default async function ConfiguracoesAssistentesTiposPage() {
   ]);
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       <div className={cn("flex items-center justify-between inline-default")}>
         <Heading level="page">Geração Automática de Peças</Heading>
         <Button variant="outline" size="sm" asChild>

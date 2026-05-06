@@ -96,12 +96,12 @@ function CardSkeleton() {
     <GlassPanel className={cn("inset-card-compact animate-pulse")}>
       <div className={cn("flex items-start inline-medium")}>
         <div className="size-10 rounded-xl bg-muted-foreground/10 shrink-0" />
-        <div className={cn("flex-1 stack-tight")}>
+        <div className={cn("flex flex-col flex-1 stack-tight")}>
           <div className="h-3 bg-muted-foreground/10 rounded w-3/4" />
           <div className="h-2.5 bg-muted-foreground/8 rounded w-1/2" />
         </div>
       </div>
-      <div className={cn("stack-snug mt-3")}>
+      <div className={cn("flex flex-col stack-snug mt-3")}>
         <div className="h-2 bg-muted-foreground/8 rounded w-full" />
         <div className="h-2 bg-muted-foreground/8 rounded w-2/3" />
       </div>
@@ -166,7 +166,7 @@ function ListRowSkeleton() {
   return (
     <div className={cn("flex items-center inline-medium px-4 py-2.5 rounded-xl animate-pulse")}>
       <div className="size-8 rounded-lg bg-muted-foreground/10 shrink-0" />
-      <div className={cn("flex-1 stack-snug")}>
+      <div className={cn("flex flex-col flex-1 stack-snug")}>
         <div className="h-2.5 bg-muted-foreground/10 rounded w-48" />
         <div className="h-2 bg-muted-foreground/8 rounded w-28" />
       </div>
@@ -584,7 +584,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
     : 'Nova parte';
 
   return (
-    <div className={cn("stack-default-plus")}>
+    <div className={cn("flex flex-col stack-default-plus")}>
       {/* ── Header ──────────────────────────────────────────────── */}
       <div className={cn("flex items-end justify-between inline-default")}>
         <div>

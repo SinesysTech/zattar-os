@@ -147,7 +147,7 @@ export function CronogramaParcelas({ parcelas, onSelecionar }: CronogramaParcela
                     )}
                   />
                 </span>
-                <div className={cn("text-center stack-nano")}>
+                <div className={cn("flex flex-col text-center stack-nano")}>
                   <Text
                     variant="meta-label"
                     className="text-muted-foreground/60"

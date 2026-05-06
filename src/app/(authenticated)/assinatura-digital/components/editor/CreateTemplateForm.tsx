@@ -92,7 +92,7 @@ export default function CreateTemplateForm({
 
   return (
     <div className={cn("border rounded-lg inset-dialog bg-card shadow-sm")}>
-      <div className={cn("stack-default")}>
+      <div className={cn("flex flex-col stack-default")}>
         {/* Header */}
         <div className={cn("flex items-center inline-tight pb-3 border-b")}>
           <FileText className="h-4 w-4" />
@@ -100,7 +100,7 @@ export default function CreateTemplateForm({
         </div>
 
         {/* Nome */}
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label htmlFor="template-nome-create" className={cn( "text-caption font-medium")}>
             Nome do Template *
           </Label>
@@ -115,7 +115,7 @@ export default function CreateTemplateForm({
         </div>
 
         {/* Descrição */}
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label htmlFor="template-desc-create" className={cn( "text-caption font-medium")}>
             Descrição
           </Label>
@@ -131,7 +131,7 @@ export default function CreateTemplateForm({
 
         {/* Conteúdo Markdown (condicional para tipoTemplate === 'markdown') */}
         {tipoTemplate === 'markdown' && (
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label htmlFor="template-markdown-create" className={cn( "text-caption font-medium")}>
               Conteúdo Markdown *
             </Label>
@@ -144,10 +144,10 @@ export default function CreateTemplateForm({
               <Info className="h-4 w-4" />
               <AlertDescription className={cn("text-caption")}>
                 <p className={cn( "font-medium mb-2")}>Variáveis disponíveis (use entre chaves duplas):</p>
-                <div className={cn("stack-tight")}>
+                <div className={cn("flex flex-col stack-tight")}>
                   <div>
                     <p className={cn( "font-semibold text-[11px] mb-1")}>📋 Dados do Cliente (Etapa 2):</p>
-                    <ul className={cn("list-disc list-inside stack-nano ml-2 text-[11px]")}>
+                    <ul className={cn("flex flex-col list-disc list-inside stack-nano ml-2 text-[11px]")}>
                       <li><code>{'{{cliente.nome_completo}}'}</code>, <code>{'{{cliente.cpf}}'}</code>, <code>{'{{cliente.email}}'}</code>, <code>{'{{cliente.telefone}}'}</code></li>
                       <li><code>{'{{cliente.data_nascimento}}'}</code>, <code>{'{{cliente.genero}}'}</code>, <code>{'{{cliente.estado_civil}}'}</code>, <code>{'{{cliente.nacionalidade}}'}</code></li>
                       <li><code>{'{{cliente.endereco_completo}}'}</code> ou componentes individuais: <code>{'{{cliente.endereco_rua}}'}</code>, <code>{'{{cliente.endereco_numero}}'}</code>, <code>{'{{cliente.endereco_complemento}}'}</code>, <code>{'{{cliente.endereco_bairro}}'}</code>, <code>{'{{cliente.endereco_cidade}}'}</code>, <code>{'{{cliente.endereco_uf}}'}</code>, <code>{'{{cliente.endereco_cep}}'}</code></li>
@@ -158,7 +158,7 @@ export default function CreateTemplateForm({
                     <p className="text-[11px] ml-2 mb-1">
                       <strong>TODOS os campos do formulário associado</strong> estão disponíveis usando o ID do campo:
                     </p>
-                    <ul className={cn("list-disc list-inside stack-nano ml-2 text-[11px]")}>
+                    <ul className={cn("flex flex-col list-disc list-inside stack-nano ml-2 text-[11px]")}>
                       <li><strong>Exemplo (Apps):</strong> <code>{'{{aplicativo}}'}</code>, <code>{'{{modalidade}}'}</code>, <code>{'{{situacao}}'}</code>, <code>{'{{dataInicio}}'}</code>, <code>{'{{dataBloqueio}}'}</code>, <code>{'{{acidenteTrabalho}}'}</code>, <code>{'{{observacoes}}'}</code></li>
                       <li><strong>Exemplo (Trabalhista):</strong> <code>{'{{nomeEmpresaPessoa}}'}</code>, <code>{'{{cpfCnpjEmpresaPessoa}}'}</code>, <code>{'{{cepEmpresaPessoa}}'}</code>, <code>{'{{logradouroEmpresaPessoa}}'}</code>, <code>{'{{dataInicio}}'}</code>, <code>{'{{dataRescisao}}'}</code></li>
                       <li className="text-muted-foreground"><em>Os campos disponíveis dependem do schema do formulário configurado no Admin</em></li>
@@ -166,7 +166,7 @@ export default function CreateTemplateForm({
                   </div>
                   <div>
                     <p className={cn( "font-semibold text-[11px] mb-1")}>🖊️ Assinatura Digital (Etapa 4):</p>
-                    <ul className={cn("list-disc list-inside stack-nano ml-2 text-[11px]")}>
+                    <ul className={cn("flex flex-col list-disc list-inside stack-nano ml-2 text-[11px]")}>
                       <li><code>{'{{assinatura.assinatura_base64}}'}</code> - Imagem da assinatura (base64)</li>
                       <li><code>{'{{assinatura.foto_base64}}'}</code> - Foto/selfie do cliente (se habilitada)</li>
                       <li><code>{'{{assinatura.latitude}}'}</code>, <code>{'{{assinatura.longitude}}'}</code> - Coordenadas GPS (se geolocalização habilitada)</li>
@@ -174,7 +174,7 @@ export default function CreateTemplateForm({
                   </div>
                   <div>
                     <p className={cn( "font-semibold text-[11px] mb-1")}>⚙️ Metadados do Sistema:</p>
-                    <ul className={cn("list-disc list-inside stack-nano ml-2 text-[11px]")}>
+                    <ul className={cn("flex flex-col list-disc list-inside stack-nano ml-2 text-[11px]")}>
                       <li><code>{'{{sistema.data_geracao}}'}</code> - Data em formato extenso (ex: &quot;16 de outubro de 2025&quot;)</li>
                       <li><code>{'{{sistema.timestamp}}'}</code> - Carimbo de data/hora (ex: &quot;16/10/2025 às 14:30:45&quot;)</li>
                       <li><code>{'{{sistema.protocolo}}'}</code> - Número de protocolo único</li>
@@ -221,7 +221,7 @@ export default function CreateTemplateForm({
           )}
           <Button
             size="sm"
-            className={cn("flex-1 inline-tight")}
+            className={cn("flex flex-1 inline-tight")}
             onClick={handleSubmit}
             disabled={!canSubmit || isSaving}
           >

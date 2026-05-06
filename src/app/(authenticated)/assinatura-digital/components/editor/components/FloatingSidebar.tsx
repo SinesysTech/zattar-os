@@ -151,13 +151,13 @@ function SidebarContent(props: FloatingSidebarProps) {
   return (
     <div className="flex h-full min-h-0 flex-col bg-card/40 backdrop-blur-xl">
       {/* Scrollable content */}
-      <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "flex-1 min-h-0 stack-default-plus overflow-y-auto px-5 py-5")}>
+      <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "flex flex-col flex-1 min-h-0 stack-default-plus overflow-y-auto px-5 py-5")}>
         {/* ── Configurações ───────────────────────── */}
-        <section className={cn("stack-medium")}>
+        <section className={cn("flex flex-col stack-medium")}>
           <SectionHeader title="Configurações" />
 
-          <div className={cn("stack-tight-plus")}>
-            <div className={cn("stack-snug")}>
+          <div className={cn("flex flex-col stack-tight-plus")}>
+            <div className={cn("flex flex-col stack-snug")}>
               <Label htmlFor="doc-titulo" className={cn("flex items-center inline-snug text-caption")}>
                 <FileText className="size-3.5" />
                 Título
@@ -197,7 +197,7 @@ function SidebarContent(props: FloatingSidebarProps) {
         <AmbientDivider />
 
         {/* ── Signatários ─────────────────────────── */}
-        <section className={cn("stack-medium")}>
+        <section className={cn("flex flex-col stack-medium")}>
           <SectionHeader
             title="Quem vai assinar?"
             action={
@@ -209,7 +209,7 @@ function SidebarContent(props: FloatingSidebarProps) {
             }
           />
 
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             {signers.length === 0 ? (
               <div className={cn(/* design-system-escape: p-5 → usar <Inset> */ "flex flex-col items-center justify-center inline-tight p-5 border-2 border-dashed border-border/60 rounded-xl bg-card/30 text-center")}>
                 <span className="inline-flex size-9 items-center justify-center rounded-lg bg-foreground/5">
@@ -224,7 +224,7 @@ function SidebarContent(props: FloatingSidebarProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className={cn("w-full mt-1 inline-snug")}
+                  className={cn("flex w-full mt-1 inline-snug")}
                   onClick={() => setIsAddSignerOpen(true)}
                 >
                   <Plus className="size-3.5" />
@@ -247,7 +247,7 @@ function SidebarContent(props: FloatingSidebarProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className={cn("w-full border-dashed inline-snug")}
+                  className={cn("flex w-full border-dashed inline-snug")}
                   onClick={() => setIsAddSignerOpen(true)}
                 >
                   <Plus className="size-3.5" />
@@ -261,7 +261,7 @@ function SidebarContent(props: FloatingSidebarProps) {
         <AmbientDivider />
 
         {/* ── Campos ─────────────────────────────── */}
-        <section className={cn("stack-medium")}>
+        <section className={cn("flex flex-col stack-medium")}>
           <div className={cn("flex flex-col inline-micro")}>
             <SectionHeader title="Campos" />
             <p className={cn("text-[11px] text-muted-foreground leading-relaxed")}>
@@ -289,7 +289,7 @@ function SidebarContent(props: FloatingSidebarProps) {
       {/* ── Footer CTA ─────────────────────────────── */}
       <div className={cn("shrink-0 border-t border-border/30 inset-card-compact bg-background/50 backdrop-blur-md")}>
         <Button
-          className={cn( "w-full h-11 text-body-sm font-semibold shadow-sm inline-tight")}
+          className={cn( "flex w-full h-11 text-body-sm font-semibold shadow-sm inline-tight")}
           onClick={onReviewAndSend}
           disabled={!hasFieldsAndSigners}
         >

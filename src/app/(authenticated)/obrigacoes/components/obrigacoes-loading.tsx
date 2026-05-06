@@ -19,7 +19,7 @@ function TableSkeleton({ rows = 8 }: { rows?: number }) {
         {Array.from({ length: rows }).map((_, i) => (
           <div key={i} className={cn("flex items-center inline-default px-4 py-3")}>
             <Skeleton className="size-8 rounded-lg" />
-            <div className={cn("flex-1 stack-tight min-w-0")}>
+            <div className={cn("flex flex-col flex-1 stack-tight min-w-0")}>
               <Skeleton className="h-3.5 w-2/3" />
               <Skeleton className="h-2.5 w-1/3" />
             </div>
@@ -58,7 +58,7 @@ function YearGridSkeleton() {
       {Array.from({ length: 12 }).map((_, i) => (
         <div
           key={i}
-          className={cn("rounded-xl border border-border/30 bg-card/30 inset-card-compact stack-medium")}
+          className={cn("flex flex-col rounded-xl border border-border/30 bg-card/30 inset-card-compact stack-medium")}
         >
           <Skeleton className="h-4 w-24" />
           <div className={cn("grid grid-cols-7 inline-snug")}>
@@ -74,10 +74,10 @@ function YearGridSkeleton() {
 
 export function ObrigacoesLoading({ view = 'lista' }: { view?: ObrigacoesView }) {
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       {/* Header: título + botão "Nova" */}
       <div className={cn("flex items-center justify-between inline-default")}>
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Skeleton className="h-7 w-48" />
           <Skeleton className="h-3.5 w-72" />
         </div>
@@ -89,7 +89,7 @@ export function ObrigacoesLoading({ view = 'lista' }: { view?: ObrigacoesView })
         {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}
-            className={cn("rounded-xl border border-border/30 bg-card/40 inset-card-compact stack-medium")}
+            className={cn("flex flex-col rounded-xl border border-border/30 bg-card/40 inset-card-compact stack-medium")}
           >
             <Skeleton className="h-3 w-20" />
             <Skeleton className="h-8 w-16" />

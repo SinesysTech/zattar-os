@@ -85,8 +85,8 @@ export default function SignerDialog({
           </DialogDescription>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-          <form id="signer-form" onSubmit={handleSubmit(onSubmit)} className={cn("inset-dialog stack-default")}>
-            <div className={cn("stack-tight")}>
+          <form id="signer-form" onSubmit={handleSubmit(onSubmit)} className={cn("flex flex-col inset-dialog stack-default")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="nome">Nome</Label>
               <Input
                 id="nome"
@@ -100,7 +100,7 @@ export default function SignerDialog({
               )}
             </div>
 
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"

@@ -190,9 +190,9 @@ export function ProcessoHeader({
   const tituloPartes = parteRe && parteRe !== '-' ? `${parteAutora} vs ${parteRe}` : parteAutora;
 
   return (
-    <div className={cn("stack-medium")}>
+    <div className={cn("flex flex-col stack-medium")}>
       <div className={cn("flex items-start justify-between inline-default")}>
-        <div className={cn("min-w-0 stack-snug")}>
+        <div className={cn("flex flex-col min-w-0 stack-snug")}>
           <div className={cn("flex items-center inline-medium")}>
             {onVoltar && (
               <Button
@@ -206,7 +206,7 @@ export function ProcessoHeader({
               </Button>
             )}
 
-            <div className={cn("min-w-0 stack-tight")}>
+            <div className={cn("flex flex-col min-w-0 stack-tight")}>
               <div className={cn("flex items-center inline-tight flex-wrap")}>
                 <Heading level="page" className="min-w-0 sm:text-[2rem]">
                   <span className="block truncate">{tituloPartes}</span>

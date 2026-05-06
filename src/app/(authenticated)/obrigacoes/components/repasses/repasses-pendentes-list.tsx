@@ -51,9 +51,9 @@ export function RepassesPendentesList({ onAnexarDeclaracao, onRealizarRepasse, r
    };
 
    return (
-      <div className={cn("stack-section")}>
+      <div className={cn("flex flex-col stack-section")}>
          {repassesPendentesDecl.length > 0 && (
-            <div className={cn("stack-default")}>
+            <div className={cn("flex flex-col stack-default")}>
                <Heading level="subsection">Aguardando Declaração</Heading>
                <div className="rounded-md border">
                   <Table>
@@ -83,7 +83,7 @@ export function RepassesPendentesList({ onAnexarDeclaracao, onRealizarRepasse, r
                                        onGerado={() => refetch()}
                                     />
                                     {onAnexarDeclaracao && (
-                                       <Button size="sm" variant="outline" onClick={() => onAnexarDeclaracao(r.parcelaId)} className={cn("rounded-xl inline-snug")}>
+                                       <Button size="sm" variant="outline" onClick={() => onAnexarDeclaracao(r.parcelaId)} className={cn("flex rounded-xl inline-snug")}>
                                           <Upload className="size-3.5" /> Anexar manual
                                        </Button>
                                     )}
@@ -98,7 +98,7 @@ export function RepassesPendentesList({ onAnexarDeclaracao, onRealizarRepasse, r
          )}
 
          {repassesPendentesTransf.length > 0 && (
-            <div className={cn("stack-default")}>
+            <div className={cn("flex flex-col stack-default")}>
                <Heading level="subsection">Prontos para Transferência</Heading>
                <div className="rounded-md border">
                   <Table>

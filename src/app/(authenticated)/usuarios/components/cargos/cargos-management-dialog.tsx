@@ -189,10 +189,10 @@ export function CargosManagementDialog({
             <DialogTitle>Gerenciar cargos</DialogTitle>
           </DialogHeader>
           <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-        <div className={cn("inset-dialog stack-default")}>
+        <div className={cn("flex flex-col inset-dialog stack-default")}>
           <div className={cn("grid inline-loose lg:grid-cols-2")}>
             {/* Lista */}
-            <div className={cn("stack-medium")}>
+            <div className={cn("flex flex-col stack-medium")}>
               <div className={cn("flex items-center justify-between inline-medium")}>
                 <h3 className="scroll-m-20 text-sm font-semibold tracking-tight">Cargos</h3>
                 <Button
@@ -225,7 +225,7 @@ export function CargosManagementDialog({
                   </EmptyHeader>
                 </Empty>
               ) : (
-                <div className={cn("stack-micro rounded-lg border bg-card")}>
+                <div className={cn("flex flex-col stack-micro rounded-lg border bg-card")}>
                   {cargos.map((cargo) => (
                     <div
                       key={cargo.id}
@@ -291,7 +291,7 @@ export function CargosManagementDialog({
             </div>
 
             {/* Form */}
-            <div className={cn("stack-medium")}>
+            <div className={cn("flex flex-col stack-medium")}>
               <div className={cn("flex items-center justify-between inline-medium")}>
                 <h3 className="scroll-m-20 text-sm font-semibold tracking-tight">
                   {editingId ? 'Editar cargo' : isCreating ? 'Novo cargo' : 'Detalhes'}
@@ -316,7 +316,7 @@ export function CargosManagementDialog({
                   </p>
                 </div>
               ) : (
-                <div className={cn("rounded-lg border bg-card inset-card-compact stack-default")}>
+                <div className={cn("flex flex-col rounded-lg border bg-card inset-card-compact stack-default")}>
                   <div className={cn("grid inline-tight")}>
                     <Label htmlFor="nome">
                       Nome <span className="text-destructive">*</span>

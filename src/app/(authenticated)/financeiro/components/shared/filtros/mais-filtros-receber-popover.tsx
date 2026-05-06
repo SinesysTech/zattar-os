@@ -111,7 +111,7 @@ export function MaisFiltrosReceberPopover({
         </Button>
       </PopoverTrigger>
       <PopoverContent className={cn("w-80 inset-card-compact")} align="start">
-        <div className={cn("stack-default")}>
+        <div className={cn("flex flex-col stack-default")}>
           <div className="flex items-center justify-between">
             <Heading level="subsection">Filtros Avançados</Heading>
             {hasActiveFilters && (
@@ -128,7 +128,7 @@ export function MaisFiltrosReceberPopover({
           </div>
 
           {/* Tipo (Recorrente/Avulsa) */}
-          <div className={cn("stack-snug")}>
+          <div className={cn("flex flex-col stack-snug")}>
             <Label className={cn("text-caption text-muted-foreground")}>Tipo</Label>
             <Select
               value={tipoRecorrente || 'all'}
@@ -149,7 +149,7 @@ export function MaisFiltrosReceberPopover({
           </div>
 
           {/* Origem */}
-          <div className={cn("stack-snug")}>
+          <div className={cn("flex flex-col stack-snug")}>
             <Label className={cn("text-caption text-muted-foreground")}>Origem</Label>
             <Select
               value={origem || 'all'}
@@ -170,7 +170,7 @@ export function MaisFiltrosReceberPopover({
           </div>
 
           {/* Conta Contábil */}
-          <div className={cn("stack-snug")}>
+          <div className={cn("flex flex-col stack-snug")}>
             <Label className={cn("text-caption text-muted-foreground")}>Conta Contábil</Label>
             <FiltroContaContabil
               value={contaContabilId}
@@ -182,7 +182,7 @@ export function MaisFiltrosReceberPopover({
           </div>
 
           {/* Centro de Custo */}
-          <div className={cn("stack-snug")}>
+          <div className={cn("flex flex-col stack-snug")}>
             <Label className={cn("text-caption text-muted-foreground")}>Centro de Custo</Label>
             <FiltroCentroCusto
               value={centroCustoId}

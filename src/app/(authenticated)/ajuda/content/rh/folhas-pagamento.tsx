@@ -22,7 +22,7 @@ import {
 
 export default function FolhasPagamento() {
   return (
-    <div className={cn("stack-extra-loose")}>
+    <div className={cn("flex flex-col stack-extra-loose")}>
       <div>
         <Heading level="page">Folhas de Pagamento</Heading>
         <p className="text-muted-foreground mt-2">
@@ -106,7 +106,7 @@ export default function FolhasPagamento() {
         <p className="text-muted-foreground mb-4">
           Ao clicar em um colaborador dentro da folha, o sistema exibe o demonstrativo individual:
         </p>
-        <ul className={cn("stack-tight text-body-sm text-muted-foreground list-disc list-inside")}>
+        <ul className={cn("flex flex-col stack-tight text-body-sm text-muted-foreground list-disc list-inside")}>
           <li>Salário base do período</li>
           <li>Adicionais aplicados (hora extra, adicional noturno, bonificações)</li>
           <li>Descontos aplicados (INSS, IRRF, faltas)</li>
@@ -170,7 +170,7 @@ export default function FolhasPagamento() {
         <p className="text-muted-foreground mb-4">
           O relatório mensal da folha de pagamento consolida:
         </p>
-        <ul className={cn("stack-tight text-body-sm text-muted-foreground list-disc list-inside")}>
+        <ul className={cn("flex flex-col stack-tight text-body-sm text-muted-foreground list-disc list-inside")}>
           <li>Total bruto da folha</li>
           <li>Total de descontos (INSS, IRRF, outros)</li>
           <li>Total líquido a pagar</li>

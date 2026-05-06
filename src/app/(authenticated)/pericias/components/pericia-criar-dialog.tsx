@@ -132,7 +132,7 @@ function SearchableCombobox({
                       onChange(isSelected ? '' : opt.value);
                       setOpen(false);
                     }}
-                    className={cn("inline-tight rounded-lg text-caption px-2 py-1.5")}
+                    className={cn("flex inline-tight rounded-lg text-caption px-2 py-1.5")}
                   >
                     <span className="truncate flex-1">{opt.label}</span>
                     {isSelected && (

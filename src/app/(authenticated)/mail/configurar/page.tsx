@@ -190,7 +190,7 @@ export default function ConfigurarEmailPage() {
   }
 
   return (
-    <div className={cn("mx-auto max-w-xl stack-loose py-6")}>
+    <div className={cn("flex flex-col mx-auto max-w-xl stack-loose py-6")}>
       <div className={cn("flex items-center inline-medium")}>
         <Button variant="ghost" size="icon" aria-label="Voltar" onClick={() => router.push("/app/mail")}>
           <ArrowLeft className="h-4 w-4" />
@@ -212,8 +212,8 @@ export default function ConfigurarEmailPage() {
               : "Informe o e-mail e senha da sua conta Cloudron."}
           </CardDescription>
         </CardHeader>
-        <CardContent className={cn("stack-default")}>
-          <div className={cn("stack-tight")}>
+        <CardContent className={cn("flex flex-col stack-default")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label htmlFor="nome-conta">Nome da conta</Label>
             <Input
               id="nome-conta"
@@ -226,7 +226,7 @@ export default function ConfigurarEmailPage() {
             </Text>
           </div>
 
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label htmlFor="email">E-mail</Label>
             <Input
               id="email"
@@ -237,7 +237,7 @@ export default function ConfigurarEmailPage() {
             />
           </div>
 
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label htmlFor="password">Senha</Label>
             <div className="relative">
               <Input
@@ -268,9 +268,9 @@ export default function ConfigurarEmailPage() {
               <AccordionTrigger className={cn("text-body-sm")}>
                 Configurações avançadas
               </AccordionTrigger>
-              <AccordionContent className={cn("stack-default pt-2")}>
+              <AccordionContent className={cn("flex flex-col stack-default pt-2")}>
                 <div className={cn("grid grid-cols-2 inline-default")}>
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="imap-host">Servidor IMAP</Label>
                     <Input
                       id="imap-host"
@@ -278,7 +278,7 @@ export default function ConfigurarEmailPage() {
                       onChange={(e) => setImapHost(e.target.value)}
                     />
                   </div>
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="imap-port">Porta IMAP</Label>
                     <Input
                       id="imap-port"
@@ -289,7 +289,7 @@ export default function ConfigurarEmailPage() {
                   </div>
                 </div>
                 <div className={cn("grid grid-cols-2 inline-default")}>
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="smtp-host">Servidor SMTP</Label>
                     <Input
                       id="smtp-host"
@@ -297,7 +297,7 @@ export default function ConfigurarEmailPage() {
                       onChange={(e) => setSmtpHost(e.target.value)}
                     />
                   </div>
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="smtp-port">Porta SMTP</Label>
                     <Input
                       id="smtp-port"
@@ -313,7 +313,7 @@ export default function ConfigurarEmailPage() {
 
           {/* Test result */}
           {testResult && (
-            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "stack-tight rounded-md border p-3")}>
+            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col stack-tight rounded-md border p-3")}>
               <div className={cn("flex items-center inline-tight text-body-sm")}>
                 {testResult.imap.success ? (
                   <CheckCircle2 className="h-4 w-4 text-success" />

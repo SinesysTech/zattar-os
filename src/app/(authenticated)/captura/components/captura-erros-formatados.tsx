@@ -108,29 +108,29 @@ export function CapturaErrosFormatados({ erro }: CapturaErrosFormatadosProps) {
   }, {} as Record<string, number>);
 
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       {/* Cabeçalho de erros */}
       <div className={cn("flex items-start inline-medium rounded-lg border border-destructive/30 bg-destructive/[0.06] inset-card-compact")}>
         <XCircle className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
-        <div className={cn("stack-tight min-w-0 w-full")}>
+        <div className={cn("flex flex-col stack-tight min-w-0 w-full")}>
           <p className={cn( "text-body-sm font-semibold text-destructive")}>
             {errosParsed.length} erro{errosParsed.length !== 1 ? 's' : ''} na captura
           </p>
           <div className={cn("flex flex-wrap inline-snug")}>
             {contagemPorTipo.timeout && (
-              <Badge variant="outline" className={cn("text-[10px] px-1.5 py-0 inline-micro border-warning/30 bg-warning/5 text-warning-foreground")}>
+              <Badge variant="outline" className={cn("flex text-[10px] px-1.5 py-0 inline-micro border-warning/30 bg-warning/5 text-warning-foreground")}>
                 <Clock className="h-3 w-3 text-warning" />
                 {contagemPorTipo.timeout} timeout{contagemPorTipo.timeout !== 1 ? 's' : ''}
               </Badge>
             )}
             {contagemPorTipo.auth && (
-              <Badge variant="outline" className={cn("text-[10px] px-1.5 py-0 inline-micro border-destructive/30 bg-destructive/5")}>
+              <Badge variant="outline" className={cn("flex text-[10px] px-1.5 py-0 inline-micro border-destructive/30 bg-destructive/5")}>
                 <AlertTriangle className="h-3 w-3 text-destructive" />
                 {contagemPorTipo.auth} autenticação
               </Badge>
             )}
             {contagemPorTipo.network && (
-              <Badge variant="outline" className={cn("text-[10px] px-1.5 py-0 inline-micro border-warning/30 bg-warning/5")}>
+              <Badge variant="outline" className={cn("flex text-[10px] px-1.5 py-0 inline-micro border-warning/30 bg-warning/5")}>
                 <Wifi className="h-3 w-3 text-warning" />
                 {contagemPorTipo.network} conexão de rede
               </Badge>
@@ -140,7 +140,7 @@ export function CapturaErrosFormatados({ erro }: CapturaErrosFormatadosProps) {
       </div>
 
       {/* Erros agrupados por tribunal */}
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         {grupos.map((grupo) => (
           <div key={grupo.tribunal} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg border p-3")}>
             <div className={cn("mb-2.5 flex items-center inline-tight")}>
@@ -149,7 +149,7 @@ export function CapturaErrosFormatados({ erro }: CapturaErrosFormatadosProps) {
                 {grupo.erros.length} erro{grupo.erros.length !== 1 ? 's' : ''}
               </Badge>
             </div>
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               {grupo.erros.map((e, i) => (
                 <div key={i} className={cn("flex items-start inline-tight text-caption")}>
                   <IconeErro tipo={e.tipo} />

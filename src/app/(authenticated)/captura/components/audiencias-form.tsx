@@ -120,7 +120,7 @@ export const AudienciasForm = forwardRef<CapturaFormHandle, AudienciasFormProps>
     }), [handleCaptura, isLoading]);
 
     return (
-      <div className={cn("stack-loose")}>
+      <div className={cn("flex flex-col stack-loose")}>
         <CapturaFormBase
           advogadoId={advogadoId}
           credenciaisSelecionadas={credenciaisSelecionadas}
@@ -128,7 +128,7 @@ export const AudienciasForm = forwardRef<CapturaFormHandle, AudienciasFormProps>
           onCredenciaisChange={setCredenciaisSelecionadas}
         >
           <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-loose")}>
-            <div className={cn("stack-tight md:col-span-2")}>
+            <div className={cn("flex flex-col stack-tight md:col-span-2")}>
               <Label htmlFor="statusAudiencia">Status da Audiência</Label>
               <div className={cn("grid grid-cols-1 inline-tight sm:grid-cols-3")}>
                 {STATUS_AUDIENCIA_OPTIONS.map((opcao) => (
@@ -149,7 +149,7 @@ export const AudienciasForm = forwardRef<CapturaFormHandle, AudienciasFormProps>
                 Os status selecionados são executados sequencialmente na mesma sessão.
               </p>
             </div>
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="dataInicio">Data Início (opcional)</Label>
               <FormDatePicker
                 id="dataInicio"
@@ -161,7 +161,7 @@ export const AudienciasForm = forwardRef<CapturaFormHandle, AudienciasFormProps>
               </p>
             </div>
 
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="dataFim">Data Fim (opcional)</Label>
               <FormDatePicker
                 id="dataFim"

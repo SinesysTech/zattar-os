@@ -262,7 +262,7 @@ export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
 
   if (isLoading) {
     return (
-      <div className={cn("stack-default")}>
+      <div className={cn("flex flex-col stack-default")}>
         <Skeleton className="h-10 w-full" />
         <Skeleton className="h-64 w-full" />
       </div>

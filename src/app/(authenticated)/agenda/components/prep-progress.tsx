@@ -35,7 +35,7 @@ export function PrepProgress({
   const colors = progressColor(percent);
 
   return (
-    <div className={cn("stack-micro", className)}>
+    <div className={cn("flex flex-col stack-micro", className)}>
       {/* Header: label + percentage */}
       {(label || size === "md") && (
         <div className="flex items-center justify-between">

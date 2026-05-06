@@ -136,7 +136,7 @@ function StatusFilter({
         align="start"
         side="bottom"
       >
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-nano")}>
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col p-2 stack-nano")}>
           {STATUS_OPTIONS.map((opt) => (
             <button
               key={opt.value}
@@ -227,7 +227,7 @@ function TribunalFilter({
                   key={sigla}
                   value={sigla}
                   onSelect={() => handleToggle(sigla)}
-                  className={cn("inline-tight rounded-lg text-caption px-2 py-1.5")}
+                  className={cn("flex inline-tight rounded-lg text-caption px-2 py-1.5")}
                 >
                   <div
                     className={cn(
@@ -317,7 +317,7 @@ function TipoFilter({
                   key={tipo}
                   value={tipo}
                   onSelect={() => handleToggle(tipo)}
-                  className={cn("inline-tight rounded-lg text-caption px-2 py-1.5")}
+                  className={cn("flex inline-tight rounded-lg text-caption px-2 py-1.5")}
                 >
                   <div
                     className={cn(
@@ -375,7 +375,7 @@ function MeioFilter({
         align="start"
         side="bottom"
       >
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-nano")}>
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col p-2 stack-nano")}>
           {MEIO_OPTIONS.map((opt) => (
             <button
               key={opt.value}
@@ -437,8 +437,8 @@ function PeriodoFilter({
         align="start"
         side="bottom"
       >
-        <div className={cn("stack-medium")}>
-          <div className={cn("stack-snug")}>
+        <div className={cn("flex flex-col stack-medium")}>
+          <div className={cn("flex flex-col stack-snug")}>
             <Label htmlFor="cap-data-inicio">
               <Text variant="meta-label">Data início</Text>
             </Label>
@@ -454,7 +454,7 @@ function PeriodoFilter({
               }
             />
           </div>
-          <div className={cn("stack-snug")}>
+          <div className={cn("flex flex-col stack-snug")}>
             <Label htmlFor="cap-data-fim">
               <Text variant="meta-label">Data fim</Text>
             </Label>

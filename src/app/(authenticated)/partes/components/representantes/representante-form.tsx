@@ -573,7 +573,7 @@ export function RepresentanteFormDialog({
               <Badge
                 key={index}
                 variant="secondary"
-                className={cn("inline-micro pr-1")}
+                className={cn("flex inline-micro pr-1")}
               >
                 {oab.numero}/{oab.uf} ({SITUACOES_OAB.find(s => s.value === oab.situacao)?.label || oab.situacao})
                 <button
@@ -634,7 +634,7 @@ export function RepresentanteFormDialog({
               <Badge
                 key={index}
                 variant="secondary"
-                className={cn("inline-micro pr-1")}
+                className={cn("flex inline-micro pr-1")}
               >
                 {email}
                 <button

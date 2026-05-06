@@ -101,14 +101,14 @@ export const PericiasForm = forwardRef<CapturaFormHandle, PericiasFormProps>(
     }), [handleCaptura, isLoading]);
 
     return (
-      <div className={cn("stack-loose")}>
+      <div className={cn("flex flex-col stack-loose")}>
         <CapturaFormBase
           advogadoId={advogadoId}
           credenciaisSelecionadas={credenciaisSelecionadas}
           onAdvogadoChange={setAdvogadoId}
           onCredenciaisChange={setCredenciaisSelecionadas}
         >
-          <div className={cn("stack-medium")}>
+          <div className={cn("flex flex-col stack-medium")}>
             <Label>Situações das Perícias</Label>
             <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-medium")}>
               {SITUACAO_PERICIA_OPTIONS.map((option) => (

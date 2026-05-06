@@ -184,7 +184,7 @@ export function AudienciasSemanaView({
   const weekLabel = `${format(weekStart, "d 'de' MMM", { locale: ptBR })} — ${format(friday, "d 'de' MMM", { locale: ptBR })}`;
 
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       {/* Week Navigator */}
       <div className={cn("flex items-center inline-tight")}>
         <button onClick={handlePrevWeek} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/70 cursor-pointer")}>
@@ -205,7 +205,7 @@ export function AudienciasSemanaView({
         <span className={cn( "text-caption font-medium capitalize ml-1")}>{weekLabel}</span>
       </div>
 
-      <Tabs value={selectedDay} onValueChange={setSelectedDay} className={cn("stack-default")}>
+      <Tabs value={selectedDay} onValueChange={setSelectedDay} className={cn("flex flex-col stack-default")}>
         <TabsList variant="week">
           {weekDays.map((day) => {
             const key = getDayKey(day);
@@ -243,7 +243,7 @@ export function AudienciasSemanaView({
           const groupedAudiencias = getGroupedAudiencias(dayAudiencias);
 
           return (
-            <TabsContent key={key} value={key} className={cn("mt-0 stack-default")}>
+            <TabsContent key={key} value={key} className={cn("flex flex-col mt-0 stack-default")}>
               {dayAudiencias.length === 0 ? (
                 <GlassPanel className={cn(/* design-system-escape: p-10 → usar <Inset> */ "p-10 text-center")}>
                   <Text variant="label" as="p">
@@ -254,9 +254,9 @@ export function AudienciasSemanaView({
                   </Text>
                 </GlassPanel>
               ) : (
-                <div className={cn("stack-default")}>
+                <div className={cn("flex flex-col stack-default")}>
                   {groupedAudiencias.map((group) => (
-                    <section key={group.key} className={cn("stack-tight")}>
+                    <section key={group.key} className={cn("flex flex-col stack-tight")}>
                       <div className={cn("flex items-center justify-between inline-medium")}>
                         <div className={cn("flex items-center inline-tight")}>
                           <span className={cn(
@@ -273,7 +273,7 @@ export function AudienciasSemanaView({
                           {group.items.length}
                         </span>
                       </div>
-                      <div className={cn("stack-tight")}>
+                      <div className={cn("flex flex-col stack-tight")}>
                         {group.items.map((a) => (
                           <WeekDayCard
                             key={a.id}
@@ -416,7 +416,7 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
 
           {/* Identidade Processual */}
           {(audiencia.poloAtivoNome || audiencia.poloPassivoNome || audiencia.trt || audiencia.numeroProcesso) && (
-            <div className={cn("mt-3 border-t border-border/40 pt-3 stack-micro")}>
+            <div className={cn("flex flex-col mt-3 border-t border-border/40 pt-3 stack-micro")}>
               {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
                 <p className="text-caption font-semibold text-foreground leading-snug">
                   {audiencia.poloAtivoNome || '—'}

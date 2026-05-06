@@ -220,7 +220,7 @@ export function GerarPecaDialog({
 
         {/* Step 1: Selecionar Modelo */}
         {step === 'select-model' && (
-          <div className={cn("stack-default")}>
+          <div className={cn("flex flex-col stack-default")}>
             {/* Filtro por tipo */}
             <div className={cn("flex items-center inline-default")}>
               <Label>Filtrar por tipo:</Label>
@@ -245,7 +245,7 @@ export function GerarPecaDialog({
             {/* Lista de modelos */}
             <ScrollArea className="h-75 border rounded-md">
               {loadingModelos ? (
-                <div className={cn("inset-card-compact stack-medium")}>
+                <div className={cn("flex flex-col inset-card-compact stack-medium")}>
                   {[1, 2, 3].map((i) => (
                     <Skeleton key={i} className="h-16 w-full" />
                   ))}
@@ -255,7 +255,7 @@ export function GerarPecaDialog({
                   Nenhum modelo encontrado
                 </div>
               ) : (
-                <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-tight")}>
+                <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col p-2 stack-tight")}>
                   {modelosFiltrados.map((modelo) => (
                     <button
                       key={modelo.id}
@@ -287,7 +287,7 @@ export function GerarPecaDialog({
 
             {/* Título do documento */}
             {selectedModeloId && (
-              <div className={cn("stack-tight")}>
+              <div className={cn("flex flex-col stack-tight")}>
                 <Label htmlFor="titulo">Título do documento</Label>
                 <Input
                   id="titulo"
@@ -302,7 +302,7 @@ export function GerarPecaDialog({
 
         {/* Step 2: Preview */}
         {step === 'preview' && preview && (
-          <div className={cn("stack-default")}>
+          <div className={cn("flex flex-col stack-default")}>
             {/* Resumo */}
             <div className={cn("flex items-center inline-default")}>
               <div className={cn("flex items-center inline-tight text-success")}>
@@ -331,7 +331,7 @@ export function GerarPecaDialog({
 
             {/* Lista de placeholders */}
             <ScrollArea className="h-62.5 border rounded-md">
-              <div className={cn("inset-card-compact stack-tight")}>
+              <div className={cn("flex flex-col inset-card-compact stack-tight")}>
                 {preview.placeholders.map((p, i) => (
                   <div
                     key={i}
@@ -360,13 +360,13 @@ export function GerarPecaDialog({
 
         {/* Step 4: Success */}
         {step === 'success' && result && (
-          <div className={cn("py-8 stack-default")}>
+          <div className={cn("flex flex-col py-8 stack-default")}>
             <div className={cn("flex flex-col items-center inline-default")}>
               <CheckCircle2 className="h-12 w-12 text-success" />
               <p className={cn( "text-body-lg font-medium")}>Peça gerada com sucesso!</p>
             </div>
 
-            <div className={cn("bg-muted inset-card-compact rounded-lg stack-tight")}>
+            <div className={cn("flex flex-col bg-muted inset-card-compact rounded-lg stack-tight")}>
               <p>
                 <strong>Título:</strong> {result.titulo}
               </p>

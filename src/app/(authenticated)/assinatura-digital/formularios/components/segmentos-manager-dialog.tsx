@@ -94,7 +94,7 @@ export function SegmentosManagerDialog({
             <DialogDescription className="sr-only">Gerencie os segmentos de assinatura digital.</DialogDescription>
           </DialogHeader>
           <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-            <div className={cn("stack-default")}>
+            <div className={cn("flex flex-col stack-default")}>
               {state.error && (
                 <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 p-3 text-body-sm text-destructive")}>
                   {state.error}

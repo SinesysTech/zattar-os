@@ -174,14 +174,14 @@ function AudienciasTable({ audiencias }: { audiencias: Audiencia[] }) {
   }
 
   return (
-    <div className={cn("stack-tight")}>
+    <div className={cn("flex flex-col stack-tight")}>
       {sorted.map((aud) => (
         <div
           key={aud.id}
           className={cn("rounded-lg border px-3 py-2.5 transition-colors hover:bg-muted/40")}
         >
           <div className={cn("flex items-start justify-between inline-medium")}>
-            <div className={cn("min-w-0 stack-micro")}>
+            <div className={cn("flex flex-col min-w-0 stack-micro")}>
               <div className={cn("flex items-center inline-tight flex-wrap")}>
                 <p className={cn( "text-body-sm font-medium text-foreground")}>
                   {aud.tipoDescricao || 'Audiência'}
@@ -273,7 +273,7 @@ function ExpedientesTable({
   }
 
   return (
-    <div className={cn("stack-tight")}>
+    <div className={cn("flex flex-col stack-tight")}>
       {sorted.map((exp) => {
         const vencido =
           !!exp.dataPrazoLegalParte && !exp.baixadoEm && exp.prazoVencido;
@@ -289,7 +289,7 @@ function ExpedientesTable({
             className={`rounded-lg border p-3 transition-colors hover:bg-muted/50 ${vencido ? 'border-destructive/30 bg-destructive/5' : ''}`}
           >
             <div className={cn("flex items-start justify-between inline-medium")}>
-              <div className={cn("min-w-0 flex-1 stack-tight")}>
+              <div className={cn("flex flex-col min-w-0 flex-1 stack-tight")}>
                 <div className={cn("flex items-center inline-tight flex-wrap")}>
                   <p className={cn( "text-body-sm font-medium text-foreground")}>{tipoLabel}</p>
                 </div>
@@ -387,14 +387,14 @@ function PericiasTable({ pericias }: { pericias: Pericia[] }) {
   }
 
   return (
-    <div className={cn("stack-tight")}>
+    <div className={cn("flex flex-col stack-tight")}>
       {sorted.map((per) => (
         <div
           key={per.id}
           className={cn("rounded-lg border px-3 py-2.5 transition-colors hover:bg-muted/40")}
         >
           <div className={cn("flex items-start justify-between inline-medium")}>
-            <div className={cn("min-w-0 stack-micro")}>
+            <div className={cn("flex flex-col min-w-0 stack-micro")}>
               <div className={cn("flex items-center inline-tight flex-wrap")}>
                 <p className={cn( "text-body-sm font-medium text-foreground")}>
                   {per.especialidade?.descricao || 'Perícia'}
@@ -522,9 +522,9 @@ export function ProcessoDetailsTabs({
   }
 
   const loadingContent = (
-    <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-xl border bg-background/70 p-3 stack-medium")}>
+    <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col rounded-xl border bg-background/70 p-3 stack-medium")}>
       {[...Array(4)].map((_, index) => (
-        <div key={index} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg border p-3 stack-tight")}>
+        <div key={index} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col rounded-lg border p-3 stack-tight")}>
           <div className={cn("flex items-center justify-between inline-medium")}>
             <Skeleton className="h-4 w-32" />
             <Skeleton className="h-6 w-28" />
@@ -539,7 +539,7 @@ export function ProcessoDetailsTabs({
   );
 
   return (
-    <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className={cn("stack-medium")}>
+    <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className={cn("flex flex-col stack-medium")}>
       <div className={cn("flex flex-wrap items-center justify-between inline-medium rounded-xl border bg-background/70 px-3 py-2.5")}>
         <div className={cn("flex flex-wrap items-center inline-tight text-body-sm text-muted-foreground")}>
           <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; */ /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; */ "inline-flex items-center inline-snug rounded-full border bg-muted/20 px-2.5 py-1 text-caption font-medium text-foreground")}>
@@ -556,7 +556,7 @@ export function ProcessoDetailsTabs({
           </span>
         </div>
 
-        <Button type="button" variant="ghost" size="sm" className={cn("inline-tight")} onClick={() => setIsExpanded((current) => !current)}>
+        <Button type="button" variant="ghost" size="sm" className={cn("flex inline-tight")} onClick={() => setIsExpanded((current) => !current)}>
           {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           {isExpanded ? 'Recolher' : 'Expandir'}
         </Button>
@@ -565,7 +565,7 @@ export function ProcessoDetailsTabs({
       <CollapsibleContent>
         <Tabs defaultValue="expedientes">
           <TabsList variant="line" className="w-full justify-start">
-            <TabsTrigger value="expedientes" className={cn("inline-snug text-body-sm")}>
+            <TabsTrigger value="expedientes" className={cn("flex inline-snug text-body-sm")}>
               <FileText className="h-3.5 w-3.5" />
               Expedientes
               {!isLoading && totalExpedientes > 0 && (
@@ -574,7 +574,7 @@ export function ProcessoDetailsTabs({
                 </SemanticBadge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="audiencias" className={cn("inline-snug text-body-sm")}>
+            <TabsTrigger value="audiencias" className={cn("flex inline-snug text-body-sm")}>
               <Calendar className="h-3.5 w-3.5" />
               Audiências
               {!isLoading && totalAudiencias > 0 && (
@@ -583,7 +583,7 @@ export function ProcessoDetailsTabs({
                 </SemanticBadge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="pericias" className={cn("inline-snug text-body-sm")}>
+            <TabsTrigger value="pericias" className={cn("flex inline-snug text-body-sm")}>
               <Microscope className="h-3.5 w-3.5" />
               Perícias
               {!isLoading && totalPericias > 0 && (

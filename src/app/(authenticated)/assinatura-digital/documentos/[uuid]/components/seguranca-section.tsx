@@ -111,7 +111,7 @@ export function SegurancaSection({ signatario }: SegurancaSectionProps) {
   }
 
   return (
-    <div className={cn("stack-micro")}>
+    <div className={cn("flex flex-col stack-micro")}>
       {/* IP Address */}
       {signatario.ipAddress && (
         <InfoRow
@@ -137,7 +137,7 @@ export function SegurancaSection({ signatario }: SegurancaSectionProps) {
           icon={Globe}
           label="Geolocalização"
           value={
-            <div className={cn("stack-micro")}>
+            <div className={cn("flex flex-col stack-micro")}>
               <p className={cn("text-body-sm font-mono")}>
                 {signatario.geolocation!.latitude?.toFixed(6)}, {" "}
                 {signatario.geolocation!.longitude?.toFixed(6)}
@@ -166,7 +166,7 @@ export function SegurancaSection({ signatario }: SegurancaSectionProps) {
           icon={FileCheck}
           label="Termos de Aceite"
           value={
-            <div className={cn("stack-micro")}>
+            <div className={cn("flex flex-col stack-micro")}>
               <Badge variant="outline" className={cn("text-caption")}>
                 {signatario.termosAceiteVersao}
               </Badge>

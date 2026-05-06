@@ -117,7 +117,7 @@ export function ContratosContent({
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
-    <div className={cn("stack-default-plus")}>
+    <div className={cn("flex flex-col stack-default-plus")}>
       {/* ── Header ──────────────────────────────────────────────── */}
       <div className={cn("flex items-end justify-between inline-default")}>
         <div>
@@ -143,7 +143,7 @@ export function ContratosContent({
       ) : null}
 
       {/* ── Insight Banners ─────────────────────────────────────── */}
-      <div role="status" aria-live="polite" className={cn("stack-tight empty:hidden")}>
+      <div role="status" aria-live="polite" className={cn("flex flex-col stack-tight empty:hidden")}>
         {stats && stats.vencendo30d > 0 && (
           <InsightBanner type="warning">
             {stats.vencendo30d} contrato{stats.vencendo30d !== 1 ? 's' : ''} vence

@@ -44,7 +44,7 @@ function ResultadoCard({
         'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40',
       )}
     >
-      <GlassPanel className={cn("inline-medium inset-card-compact group-hover:border-primary/30 group-hover:shadow-[0_4px_24px_color-mix(in_oklch,var(--primary)_6%,transparent)]")}>
+      <GlassPanel className={cn("flex inline-medium inset-card-compact group-hover:border-primary/30 group-hover:shadow-[0_4px_24px_color-mix(in_oklch,var(--primary)_6%,transparent)]")}>
         <div className={cn("flex items-start justify-between inline-medium")}>
           <div className={cn("flex min-w-0 flex-1 flex-col inline-snug")}>
             <div className={cn("flex flex-wrap items-center inline-tight")}>
@@ -123,7 +123,7 @@ export function SearchResults() {
   if (erro) {
     return (
       <div className="mx-auto w-full max-w-3xl">
-        <GlassPanel className={cn(/* design-system-escape: p-5 → usar <Inset> */ "inline-tight border-destructive/30 bg-destructive/5 p-5 text-center")}>
+        <GlassPanel className={cn(/* design-system-escape: p-5 → usar <Inset> */ "flex inline-tight border-destructive/30 bg-destructive/5 p-5 text-center")}>
           <Heading level="widget" className="text-destructive">
             Não foi possível consultar
           </Heading>
@@ -152,7 +152,7 @@ export function SearchResults() {
   }
 
   return (
-    <div className={cn("mx-auto w-full max-w-3xl stack-medium")}>
+    <div className={cn("flex flex-col mx-auto w-full max-w-3xl stack-medium")}>
       <div className="flex items-center justify-between">
         <Text variant="overline" className="text-muted-foreground/70">
           {total.toLocaleString('pt-BR')} resultado{total === 1 ? '' : 's'}

@@ -148,7 +148,7 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
       {/* Conteúdo do item */}
       <Card className={cn("flex-1 inset-card-compact mb-4")}>
         {/* Header do item */}
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           {/* Primeira linha: Instância (se disponível) + Título */}
           <div className={cn("flex items-center inline-tight flex-wrap")}>
             {grauOrigem && (
@@ -161,7 +161,7 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <AppBadge variant="outline" className={cn("inline-micro")}>
+                    <AppBadge variant="outline" className={cn("flex inline-micro")}>
                       <Lock className="h-3 w-3" />
                       Sigiloso
                     </AppBadge>
@@ -178,7 +178,7 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
           </p>
 
           {/* Informações adicionais */}
-          <div className={cn("text-body-sm text-muted-foreground stack-micro")}>
+          <div className={cn("flex flex-col text-body-sm text-muted-foreground stack-micro")}>
             {item.nomeResponsavel && (
               <p>
                 <span className={cn( "font-medium")}>Responsável:</span>{' '}

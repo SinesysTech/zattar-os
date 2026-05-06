@@ -21,7 +21,7 @@ import {
 
 export default function AgendaDoc() {
   return (
-    <div className={cn("stack-extra-loose")}>
+    <div className={cn("flex flex-col stack-extra-loose")}>
       <div>
         <Heading level="page">Agenda</Heading>
         <p className={cn("text-muted-foreground text-body-lg")}>

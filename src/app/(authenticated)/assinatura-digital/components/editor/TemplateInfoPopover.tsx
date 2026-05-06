@@ -325,9 +325,9 @@ export default function TemplateInfoPopover({
 
           <Separator className={cn("my-3")} />
 
-          <div className={cn("stack-default")}>
+          <div className={cn("flex flex-col stack-default")}>
             {/* Nome */}
-            <div className={cn("stack-snug")}>
+            <div className={cn("flex flex-col stack-snug")}>
               <Label htmlFor="template-nome" className={cn("text-caption text-muted-foreground")}>
                 Nome do Template *
               </Label>
@@ -341,7 +341,7 @@ export default function TemplateInfoPopover({
             </div>
 
             {/* Descricao */}
-            <div className={cn("stack-snug")}>
+            <div className={cn("flex flex-col stack-snug")}>
               <Label htmlFor="template-descricao" className={cn("text-caption text-muted-foreground")}>
                 Descrição
               </Label>
@@ -358,7 +358,7 @@ export default function TemplateInfoPopover({
             <Separator />
 
             {/* Conteudo Markdown */}
-            <div className={cn("stack-snug")}>
+            <div className={cn("flex flex-col stack-snug")}>
               <Label htmlFor="template-markdown" className={cn("text-caption text-muted-foreground")}>
                 Conteúdo Markdown (Opcional)
               </Label>
@@ -367,7 +367,7 @@ export default function TemplateInfoPopover({
                   variant="outline"
                   size="sm"
                   onClick={() => setShowMarkdownEditor(true)}
-                  className={cn("flex-1 inline-tight text-caption")}
+                  className={cn("flex flex-1 inline-tight text-caption")}
                 >
                   <Edit className="h-3.5 w-3.5" />
                   {formData.conteudo_markdown.trim() === '' ? 'Adicionar Conteúdo' : 'Editar Conteúdo'}
@@ -377,7 +377,7 @@ export default function TemplateInfoPopover({
                     variant="outline"
                     size="sm"
                     onClick={handleOpenPreview}
-                    className={cn("flex-1 inline-tight text-caption")}
+                    className={cn("flex flex-1 inline-tight text-caption")}
                   >
                     <Eye className="h-3.5 w-3.5" />
                     Pré-visualizar
@@ -389,7 +389,7 @@ export default function TemplateInfoPopover({
             <Separator />
 
             {/* Status */}
-            <div className={cn("stack-snug")}>
+            <div className={cn("flex flex-col stack-snug")}>
               <Label htmlFor="template-status" className={cn("text-caption text-muted-foreground")}>
                 Status *
               </Label>
@@ -425,7 +425,7 @@ export default function TemplateInfoPopover({
               </Button>
               <Button
                 size="sm"
-                className={cn("flex-1 inline-tight text-caption")}
+                className={cn("flex flex-1 inline-tight text-caption")}
                 onClick={handleRequestSave}
                 disabled={!hasChanges || isSaving || desativacaoCheck.isChecking}
               >
@@ -479,7 +479,7 @@ export default function TemplateInfoPopover({
             </DialogDescription>
           </DialogHeader>
 
-          <div className={cn("max-h-64 overflow-y-auto stack-tight py-2")}>
+          <div className={cn("flex flex-col max-h-64 overflow-y-auto stack-tight py-2")}>
             {desativacaoCheck.formularios.map((f) => (
               <div
                 key={f.id}

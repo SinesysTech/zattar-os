@@ -109,7 +109,7 @@ export function MesView({ currentDate, events, onPrev, onNext, onToday, onEventC
                 {cell.day}
               </span>
             </div>
-            <div className={cn("stack-nano")}>
+            <div className={cn("flex flex-col stack-nano")}>
               {cell.events.slice(0, 3).map((evt) => {
                 const colors = getSourceColors(evt.source);
                 return (

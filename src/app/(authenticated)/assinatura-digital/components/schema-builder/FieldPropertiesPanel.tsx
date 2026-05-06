@@ -268,7 +268,7 @@ export default function FieldPropertiesPanel({
   if (!field) {
     return (
       <div className="h-full flex items-center justify-center border rounded-lg bg-card">
-        <div className={cn("text-center stack-tight px-6")}>
+        <div className={cn("flex flex-col text-center stack-tight px-6")}>
           <Info className="size-8 text-muted-foreground/60 mx-auto" />
           <Text variant="caption" className="font-medium">Nenhum campo selecionado</Text>
           <p className="text-[11px] text-muted-foreground/70">
@@ -310,7 +310,7 @@ export default function FieldPropertiesPanel({
                   )}
                 />
               </CollapsibleTrigger>
-              <CollapsibleContent className={cn("pt-2 stack-medium")}>
+              <CollapsibleContent className={cn("flex flex-col pt-2 stack-medium")}>
                 <FormField
                   control={form.control}
                   name="label"
@@ -488,7 +488,7 @@ export default function FieldPropertiesPanel({
                           onCheckedChange={formField.onChange}
                         />
                       </FormControl>
-                      <div className={cn("stack-micro leading-none")}>
+                      <div className={cn("flex flex-col stack-micro leading-none")}>
                         <FormLabel>Campo Oculto</FormLabel>
                         <FormDescription className={cn("text-caption")}>
                           Campo não será exibido no formulário público, mas estará no schema
@@ -516,7 +516,7 @@ export default function FieldPropertiesPanel({
                   )}
                 />
               </CollapsibleTrigger>
-              <CollapsibleContent className={cn("pt-2 stack-medium")}>
+              <CollapsibleContent className={cn("flex flex-col pt-2 stack-medium")}>
                 <FormField
                   control={form.control}
                   name="required"
@@ -528,7 +528,7 @@ export default function FieldPropertiesPanel({
                           onCheckedChange={field.onChange}
                         />
                       </FormControl>
-                      <div className={cn("stack-micro leading-none")}>
+                      <div className={cn("flex flex-col stack-micro leading-none")}>
                         <FormLabel>Campo Obrigatório</FormLabel>
                       </div>
                     </FormItem>
@@ -661,7 +661,7 @@ export default function FieldPropertiesPanel({
                       )}
                     />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className={cn("pt-2 stack-medium")}>
+                  <CollapsibleContent className={cn("flex flex-col pt-2 stack-medium")}>
                     <FormField
                       control={form.control}
                       name="conditionalField"
@@ -770,7 +770,7 @@ export default function FieldPropertiesPanel({
                       )}
                     />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className={cn("pt-2 stack-tight")}>
+                  <CollapsibleContent className={cn("flex flex-col pt-2 stack-tight")}>
                     {options.map((option, index) => (
                       <div key={index} className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-start inline-tight p-2 border rounded-lg")}>
                         <div className={cn("flex flex-col inline-micro shrink-0")}>
@@ -797,7 +797,7 @@ export default function FieldPropertiesPanel({
                             <ChevronDown className="w-3 h-3" />
                           </Button>
                         </div>
-                        <div className={cn("flex-1 stack-tight")}>
+                        <div className={cn("flex flex-col flex-1 stack-tight")}>
                           <Input
                             value={option.label}
                             onChange={e => updateOption(index, 'label', e.target.value)}
@@ -863,10 +863,10 @@ export default function FieldPropertiesPanel({
                       )}
                     />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className={cn("pt-2 stack-medium")}>
-                    <div className={cn("stack-tight")}>
+                  <CollapsibleContent className={cn("flex flex-col pt-2 stack-medium")}>
+                    <div className={cn("flex flex-col stack-tight")}>
                       <Label className={cn("text-caption text-muted-foreground")}>Buscar por</Label>
-                      <div className={cn("stack-tight")}>
+                      <div className={cn("flex flex-col stack-tight")}>
                         {(['cpf', 'cnpj', 'nome'] as const).map((searchType) => {
                           const isRelevant = 
                             (fieldType === FormFieldType.CLIENT_SEARCH && searchType === 'cpf') ||
@@ -895,7 +895,7 @@ export default function FieldPropertiesPanel({
                       </div>
                     </div>
 
-                    <div className={cn("stack-tight")}>
+                    <div className={cn("flex flex-col stack-tight")}>
                       <div className="flex items-center justify-between">
                         <Label className={cn("text-caption text-muted-foreground")}>Mapeamento Auto-fill</Label>
                         <Button
@@ -912,7 +912,7 @@ export default function FieldPropertiesPanel({
                           Adicionar
                         </Button>
                       </div>
-                      <div className={cn("stack-tight")}>
+                      <div className={cn("flex flex-col stack-tight")}>
                         {Object.entries(autoFillMappings).map(([entityField, formFieldId], index) => (
                           <div key={index} className={cn("flex inline-tight items-center")}>
                             <Input

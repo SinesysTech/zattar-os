@@ -318,7 +318,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
                   </DropdownMenu>
                 </div>
                 {/* Desktop: inline icon buttons */}
-                <div className={cn("hidden lg:flex items-center inline-nano")}>
+                <div className={cn("flex hidden lg:flex items-center inline-nano")}>
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>

@@ -152,7 +152,7 @@ export function SegmentoEditDialog({
           <DialogDescription className="sr-only">Edite as informações do segmento.</DialogDescription>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-          <form id="segmento-edit-form" onSubmit={handleSubmit(onSubmit)} className={cn("stack-default")}>
+          <form id="segmento-edit-form" onSubmit={handleSubmit(onSubmit)} className={cn("flex flex-col stack-default")}>
             {Object.keys(errors).length > 0 && (
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 p-3 text-body-sm text-destructive")}>
                 Corrija os erros no formulário antes de continuar.
@@ -160,7 +160,7 @@ export function SegmentoEditDialog({
             )}
 
             <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
-              <div className={cn("stack-tight md:col-span-2")}>
+              <div className={cn("flex flex-col stack-tight md:col-span-2")}>
                 <Label htmlFor="nome">
                   Nome <span className="text-destructive">*</span>
                 </Label>
@@ -177,7 +177,7 @@ export function SegmentoEditDialog({
                 )}
               </div>
 
-              <div className={cn("stack-tight md:col-span-2")}>
+              <div className={cn("flex flex-col stack-tight md:col-span-2")}>
                 <Label htmlFor="slug">
                   Slug <span className="text-destructive">*</span>
                 </Label>
@@ -192,7 +192,7 @@ export function SegmentoEditDialog({
                 )}
               </div>
 
-              <div className={cn("stack-tight md:col-span-2")}>
+              <div className={cn("flex flex-col stack-tight md:col-span-2")}>
                 <Label htmlFor="descricao">Descrição</Label>
                 <Textarea
                   id="descricao"

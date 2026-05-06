@@ -8,11 +8,11 @@ import { Card, CardHeader, CardContent } from '@/components/ui/card';
  */
 export function DashboardSkeleton() {
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       {/* Tier 1: KPI Strip */}
       <div className={cn("grid grid-cols-2 inline-default md:grid-cols-3 xl:grid-cols-6")}>
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className={cn(/* design-system-escape: sm:p-6 sem equivalente DS */ "rounded-xl border bg-card inset-card-compact sm:p-6 stack-medium")}>
+          <div key={i} className={cn(/* design-system-escape: sm:p-6 sem equivalente DS */ "flex flex-col rounded-xl border bg-card inset-card-compact sm:p-6 stack-medium")}>
             <Skeleton className="h-4 w-20" />
             <Skeleton className="h-8 w-28" />
             <Skeleton className="h-3 w-16" />
@@ -34,7 +34,7 @@ export function DashboardSkeleton() {
           <CardHeader className={cn("pb-2")}>
             <Skeleton className="h-5 w-40" />
           </CardHeader>
-          <CardContent className={cn("stack-default")}>
+          <CardContent className={cn("flex flex-col stack-default")}>
             <Skeleton className="h-40 w-40 rounded-full mx-auto" />
             {Array.from({ length: 4 }).map((_, i) => (
               <Skeleton key={i} className="h-6 w-full" />
@@ -57,7 +57,7 @@ export function DashboardSkeleton() {
           <CardHeader className={cn("pb-2")}>
             <Skeleton className="h-5 w-44" />
           </CardHeader>
-          <CardContent className={cn("stack-medium")}>
+          <CardContent className={cn("flex flex-col stack-medium")}>
             <Skeleton className="h-6 w-full" />
             <Skeleton className="h-2.5 w-full rounded-full" />
             <Skeleton className="h-20 w-full" />
@@ -72,11 +72,11 @@ export function DashboardSkeleton() {
             <CardHeader className={cn("pb-2")}>
               <Skeleton className="h-5 w-32" />
             </CardHeader>
-            <CardContent className={cn("stack-medium")}>
+            <CardContent className={cn("flex flex-col stack-medium")}>
               {Array.from({ length: 3 }).map((_, j) => (
                 <div key={j} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex inline-medium rounded-lg border p-3")}>
                   <Skeleton className="h-8 w-8 rounded-md" />
-                  <div className={cn("stack-snug flex-1")}>
+                  <div className={cn("flex flex-col stack-snug flex-1")}>
                     <Skeleton className="h-3 w-16" />
                     <Skeleton className="h-5 w-24" />
                   </div>

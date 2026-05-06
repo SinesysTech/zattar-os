@@ -10,10 +10,10 @@ export const revalidate = 0;
 
 function AudienciasLoading() {
   return (
-    <div className={cn("stack-default-plus")}>
+    <div className={cn("flex flex-col stack-default-plus")}>
       <Skeleton className="h-9 w-40" />
       <Skeleton className="h-14 w-full rounded-2xl" />
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         {Array.from({ length: 8 }).map((_, i) => (
           <Skeleton key={i} className="h-12 w-full rounded-xl" />
         ))}

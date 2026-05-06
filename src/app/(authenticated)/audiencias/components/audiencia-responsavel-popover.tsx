@@ -137,7 +137,7 @@ export function AudienciaResponsavelPopover({
               <CommandItem
                 value="sem-responsavel"
                 onSelect={() => handleSelect(null)}
-                className={cn("inline-tight rounded-lg text-caption px-2 py-1.5")}
+                className={cn("flex inline-tight rounded-lg text-caption px-2 py-1.5")}
               >
                 <UserX className="size-3.5 text-muted-foreground/65" />
                 <span>Sem responsável</span>
@@ -150,7 +150,7 @@ export function AudienciaResponsavelPopover({
                   key={usuario.id}
                   value={getUsuarioNome(usuario)}
                   onSelect={() => handleSelect(usuario.id)}
-                  className={cn("inline-tight rounded-lg text-caption px-2 py-1.5")}
+                  className={cn("flex inline-tight rounded-lg text-caption px-2 py-1.5")}
                 >
                   <Avatar size="xs" className="border size-5">
                     <AvatarImage src={usuario.avatarUrl || undefined} />

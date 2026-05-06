@@ -54,7 +54,7 @@ export function FinanceiroDashboard() {
   }
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       {/* ================================================================
           Tier 1 — KPI Strip (visão instantânea)
           6 métricas críticas com tendência % vs mês anterior

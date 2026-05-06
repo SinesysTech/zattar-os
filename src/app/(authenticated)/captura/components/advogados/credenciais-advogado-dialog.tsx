@@ -360,7 +360,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                   </div>
                 ) : (
                   <ScrollArea className={cn("h-75 pr-4")}>
-                    <div className={cn("stack-medium")}>
+                    <div className={cn("flex flex-col stack-medium")}>
                       {credenciais.map((credencial) => (
                         <div
                           key={credencial.id}
@@ -424,7 +424,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
 
                 {/* Resultado do lote */}
                 {loteResultado ? (
-                  <div className={cn("stack-default")}>
+                  <div className={cn("flex flex-col stack-default")}>
                     <Alert variant={loteResultado.erros > 0 ? 'destructive' : 'default'}>
                       <CheckCircle className="h-4 w-4" />
                       <AlertTitle>Operação concluída</AlertTitle>
@@ -480,7 +480,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                   </div>
                 ) : editingCredencial ? (
                   // Formulário de edição (individual)
-                  <div className={cn("stack-default")}>
+                  <div className={cn("flex flex-col stack-default")}>
                     <div className={cn("grid grid-cols-2 inline-default")}>
                       <div className={cn("grid inline-tight")}>
                         <Label htmlFor="tribunal">Tribunal *</Label>
@@ -578,7 +578,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                   </div>
                 ) : (
                   // Formulário de criação em lote
-                  <div className={cn("stack-default")}>
+                  <div className={cn("flex flex-col stack-default")}>
                     {/* Seleção de Tribunais */}
                     <div className={cn("grid inline-tight")}>
                       <div className="flex items-center justify-between">

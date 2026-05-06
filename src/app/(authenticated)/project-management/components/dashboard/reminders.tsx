@@ -68,7 +68,7 @@ function ReminderCard({ lembrete }: { lembrete: Lembrete }) {
           </button>
         </CardTitle>
       </CardHeader>
-      <CardContent className={cn("stack-default")}>
+      <CardContent className={cn("flex flex-col stack-default")}>
         <div className={cn("text-muted-foreground text-body-sm")}>{dataFormatada}</div>
         <div className={cn("text-body-sm")}>{lembrete.texto}</div>
         {lembrete.projetoNome && (

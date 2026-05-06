@@ -21,7 +21,7 @@ import {
 
 export default function CapturaHistorico() {
   return (
-    <div className={cn("stack-extra-loose")}>
+    <div className={cn("flex flex-col stack-extra-loose")}>
       <div>
         <Heading level="page">Histórico de Capturas</Heading>
         <p className="text-muted-foreground mt-2">
@@ -35,7 +35,7 @@ export default function CapturaHistorico() {
           A tela de histórico apresenta todas as capturas realizadas em ordem cronológica
           decrescente. Para cada entrada são exibidos:
         </p>
-        <ul className={cn("mt-3 stack-tight text-body-sm text-muted-foreground list-disc list-inside")}>
+        <ul className={cn("flex flex-col mt-3 stack-tight text-body-sm text-muted-foreground list-disc list-inside")}>
           <li>Data e hora de início e término da captura</li>
           <li>Advogado / credencial utilizada</li>
           <li>Tribunal capturado (TRT, TJ, etc.)</li>

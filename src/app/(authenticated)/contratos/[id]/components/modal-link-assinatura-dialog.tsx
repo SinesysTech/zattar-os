@@ -60,7 +60,7 @@ export function ModalLinkAssinaturaDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className={cn("stack-medium")}>
+        <div className={cn("flex flex-col stack-medium")}>
           <div className={cn("flex inline-tight")}>
             <Input readOnly value={urlAbsoluta} />
             <Button size="sm" onClick={handleCopy}>

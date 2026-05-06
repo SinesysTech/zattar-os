@@ -140,7 +140,7 @@ function StatusFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-44')} align="start" side="bottom">
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-nano")}>
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col p-2 stack-nano")}>
           {STATUS_OPTIONS.map((opt) => {
             const isSelected = (selected ?? 'todas') === opt.value;
             return (
@@ -222,7 +222,7 @@ function ResponsavelFilter({
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-56')} align="start" side="bottom">
         <Command className="bg-transparent">
-          <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-nano border-b border-border/10")}>
+          <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col p-2 stack-nano border-b border-border/10")}>
             <button
               type="button"
               onClick={() => {
@@ -273,7 +273,7 @@ function ResponsavelFilter({
                     onChange(selected === usuario.id ? null : usuario.id);
                     setOpen(false);
                   }}
-                  className={cn("inline-tight rounded-lg text-micro-caption px-2 py-1.5")}
+                  className={cn("flex inline-tight rounded-lg text-micro-caption px-2 py-1.5")}
                 >
                   <Avatar size="xs" className="border size-4">
                     <AvatarImage src={usuario.avatarUrl || undefined} />
@@ -353,7 +353,7 @@ function TRTFilter({
                   key={trt}
                   value={trt}
                   onSelect={() => handleToggle(trt)}
-                  className={cn("inline-tight rounded-lg text-micro-caption px-2 py-1.5")}
+                  className={cn("flex inline-tight rounded-lg text-micro-caption px-2 py-1.5")}
                 >
                   <div className={cn(
                     'size-3.5 rounded border flex items-center justify-center',
@@ -408,7 +408,7 @@ function ModalidadeFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-44')} align="start" side="bottom">
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-nano")}>
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col p-2 stack-nano")}>
           {MODALIDADE_OPTIONS.map((opt) => (
             <button
               key={opt.value}
@@ -479,7 +479,7 @@ function GrauFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-52')} align="start" side="bottom">
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-nano")}>
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col p-2 stack-nano")}>
           {GRAU_OPTIONS.map((opt) => (
             <button
               key={opt.value}
@@ -562,7 +562,7 @@ function TipoAudienciaFilter({
                   key={tipo.id}
                   value={tipo.descricao}
                   onSelect={() => handleToggle(tipo.id)}
-                  className={cn("inline-tight rounded-lg text-micro-caption px-2 py-1.5")}
+                  className={cn("flex inline-tight rounded-lg text-micro-caption px-2 py-1.5")}
                 >
                   <div className={cn(
                     'size-3.5 rounded border flex items-center justify-center',

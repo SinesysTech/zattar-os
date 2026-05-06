@@ -116,7 +116,7 @@ export function TransitoriasListClient() {
           </CardHeader>
           <CardContent>
             {loading ? (
-              <div className={cn("stack-tight")}>
+              <div className={cn("flex flex-col stack-tight")}>
                 {[1, 2, 3, 4].map((i) => (
                   <Skeleton key={i} className="h-14 rounded-xl" />
                 ))}
@@ -134,7 +134,7 @@ export function TransitoriasListClient() {
                 </Text>
               </div>
             ) : (
-              <ul className={cn("stack-snug")}>
+              <ul className={cn("flex flex-col stack-snug")}>
                 {rows.map((t) => (
                   <li
                     key={t.id}

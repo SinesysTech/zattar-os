@@ -80,7 +80,7 @@ export function LoadHeatmap({ audiencias, responsavelNomes, className }: LoadHea
   const semResponsavel = audiencias.filter((a) => !a.responsavelId).length;
 
   return (
-    <div className={cn("stack-default", className)}>
+    <div className={cn("flex flex-col stack-default", className)}>
       {/* Type Distribution */}
       <GlassPanel className={cn("inset-card-compact")}>
         <div className={cn("flex items-center inline-tight mb-3")}>
@@ -89,7 +89,7 @@ export function LoadHeatmap({ audiencias, responsavelNomes, className }: LoadHea
           <span className="text-micro-caption tabular-nums text-muted-foreground/60 ml-auto">{audiencias.length} total</span>
         </div>
 
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           {typeDistribution.map((item) => (
             <div key={item.tipo}>
               <div className="flex items-baseline justify-between mb-0.5">
@@ -117,7 +117,7 @@ export function LoadHeatmap({ audiencias, responsavelNomes, className }: LoadHea
           <Text variant="caption" as="span" className={cn( "font-medium text-muted-foreground/60")}>Carga por advogado</Text>
         </div>
 
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           {responsavelLoad.map((item) => (
             <div key={item.id}>
               <div className="flex items-baseline justify-between mb-0.5">

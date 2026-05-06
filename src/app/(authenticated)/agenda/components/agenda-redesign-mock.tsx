@@ -157,7 +157,7 @@ export function AgendaRedesignMock() {
   const eventCount = filteredEvents.length;
 
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       {/* ── Row 1: Title + View Toggle + CTA ── */}
       <div className={cn("flex items-center justify-between flex-wrap inline-default")}>
         <div>

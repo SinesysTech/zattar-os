@@ -27,7 +27,7 @@ const SECTIONS = [
 export default function DesignSystemPage() {
   return (
     <PageShell>
-      <header className={cn("stack-tight")}>
+      <header className={cn("flex flex-col stack-tight")}>
         <Text variant="meta-label">DESIGN SYSTEM · GLASS BRIEFING</Text>
         <Heading level="page">Fundação visual do ZattarOS</Heading>
         <Text variant="caption" className="max-w-3xl">
@@ -60,7 +60,7 @@ export default function DesignSystemPage() {
           key={id}
           id={id}
           aria-labelledby={`${id}-title`}
-          className={cn("scroll-mt-20 stack-default pt-4")}
+          className={cn("flex flex-col scroll-mt-20 stack-default pt-4")}
         >
           <Heading
             level="section"

@@ -250,14 +250,14 @@ export function FormularioCreateDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div className={cn("stack-default py-4")}>
+          <div className={cn("flex flex-col stack-default py-4")}>
             {Object.keys(errors).length > 0 && (
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 p-3 text-body-sm text-destructive")}>
                 Corrija os erros no formulário antes de continuar.
               </div>
             )}
 
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="nome">
                 Nome <span className="text-destructive">*</span>
               </Label>
@@ -272,7 +272,7 @@ export function FormularioCreateDialog({
               )}
             </div>
 
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="slug">
                 Slug <span className="text-destructive">*</span>
               </Label>
@@ -288,7 +288,7 @@ export function FormularioCreateDialog({
               )}
             </div>
 
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label>
                 Segmento <span className="text-destructive">*</span>
               </Label>
@@ -305,7 +305,7 @@ export function FormularioCreateDialog({
               )}
             </div>
 
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="descricao">Descrição</Label>
               <Textarea
                 id="descricao"
@@ -318,7 +318,7 @@ export function FormularioCreateDialog({
               )}
             </div>
 
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label>Templates</Label>
               <Combobox
                 options={templateOptions}
@@ -337,7 +337,7 @@ export function FormularioCreateDialog({
                       <Badge
                         key={templateUuid}
                         variant="secondary"
-                        className={cn("inline-micro pr-1")}
+                        className={cn("flex inline-micro pr-1")}
                       >
                         <span className="truncate max-w-37.5">
                           {template?.nome || templateUuid}
@@ -359,7 +359,7 @@ export function FormularioCreateDialog({
             </div>
 
             {/* Tipo de formulário */}
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="tipo_formulario">Tipo de Formulário</Label>
               <select
                 id="tipo_formulario"
@@ -383,12 +383,12 @@ export function FormularioCreateDialog({
 
             {/* Campos de configuração de contrato */}
             {tipoFormulario === 'contrato' && (
-              <div className={cn("stack-default rounded-md border inset-card-compact")}>
+              <div className={cn("flex flex-col stack-default rounded-md border inset-card-compact")}>
                 <p className={cn( "text-body-sm font-medium text-muted-foreground")}>
                   Configuração do Contrato
                 </p>
 
-                <div className={cn("stack-tight")}>
+                <div className={cn("flex flex-col stack-tight")}>
                   <Label htmlFor="tipo_contrato_id">
                     Tipo de Contrato <span className="text-destructive">*</span>
                   </Label>
@@ -414,7 +414,7 @@ export function FormularioCreateDialog({
                   )}
                 </div>
 
-                <div className={cn("stack-tight")}>
+                <div className={cn("flex flex-col stack-tight")}>
                   <Label htmlFor="tipo_cobranca_id">
                     Tipo de Cobrança <span className="text-destructive">*</span>
                   </Label>
@@ -440,7 +440,7 @@ export function FormularioCreateDialog({
                   )}
                 </div>
 
-                <div className={cn("stack-tight")}>
+                <div className={cn("flex flex-col stack-tight")}>
                   <Label htmlFor="papel_cliente">
                     Papel do Cliente <span className="text-destructive">*</span>
                   </Label>
@@ -461,7 +461,7 @@ export function FormularioCreateDialog({
                   )}
                 </div>
 
-                <div className={cn("stack-tight")}>
+                <div className={cn("flex flex-col stack-tight")}>
                   <Label htmlFor="pipeline_id">
                     Pipeline <span className="text-destructive">*</span>
                   </Label>

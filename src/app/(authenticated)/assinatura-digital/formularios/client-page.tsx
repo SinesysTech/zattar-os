@@ -251,7 +251,7 @@ export function FormulariosClient() {
   }, [refetch]);
 
   return (
-    <div className={cn("stack-default-plus")}>
+    <div className={cn("flex flex-col stack-default-plus")}>
       <AssinaturaDigitalPageNav
         action={
           canCreate ? (

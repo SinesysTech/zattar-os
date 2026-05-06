@@ -38,7 +38,7 @@ export default function RelatorioCustoPessoalPage() {
       ?.totalFuncionarios ?? 0;
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       <div className="flex items-center justify-between">
         <div>
           <Heading level="page">Custo Total com Pessoal</Heading>

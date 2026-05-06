@@ -65,7 +65,7 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
           </div>
         </CardHeader>
         <CardContent>
-          <div className={cn("stack-medium")}>
+          <div className={cn("flex flex-col stack-medium")}>
             {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="h-12 rounded-lg bg-muted animate-pulse" />
             ))}
@@ -100,7 +100,7 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
       <CardContent className="flex-1">
         {alertas.length === 0 ? (
           <div className="flex items-center justify-center h-full min-h-32">
-            <div className={cn("text-center stack-tight")}>
+            <div className={cn("flex flex-col text-center stack-tight")}>
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-full bg-success/10 p-3 mx-auto w-fit")}>
                 <CheckCircle2 className="h-5 w-5 text-success" />
               </div>
@@ -108,7 +108,7 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
             </div>
           </div>
         ) : (
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             {visibleAlertas.map((alerta, idx) => {
               const config = SEVERITY_CONFIG[alerta.tipo] || SEVERITY_CONFIG.info;
               const Icon = config.icon;

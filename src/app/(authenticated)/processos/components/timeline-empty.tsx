@@ -23,7 +23,7 @@ export function TimelineEmpty() {
           <FileSearch className="h-12 w-12 text-muted-foreground" />
         </div>
 
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Heading level="card">
             Nenhuma movimentação ou documento encontrado
           </Heading>
@@ -36,7 +36,7 @@ export function TimelineEmpty() {
         <Button
           variant="outline"
           onClick={() => router.push('/processos')}
-          className={cn("inline-tight mt-4")}
+          className={cn("flex inline-tight mt-4")}
         >
           <ArrowLeft className="h-4 w-4" />
           Voltar para Listagem

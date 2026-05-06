@@ -89,7 +89,7 @@ export function AllDetailsSheet({
         </DialogHeader>
 
         {isLoading ? (
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             {[...Array(4)].map((_, i) => (
               <Skeleton key={i} className="h-16 w-full rounded-lg" />
             ))}
@@ -97,7 +97,7 @@ export function AllDetailsSheet({
         ) : (
           <Tabs defaultValue="expedientes">
             <TabsList variant="line" className="w-full justify-start">
-              <TabsTrigger value="expedientes" className={cn("inline-snug text-body-sm")}>
+              <TabsTrigger value="expedientes" className={cn("flex inline-snug text-body-sm")}>
                 <FileText className="size-3.5" />
                 Expedientes
                 {totalExpedientes > 0 && (
@@ -112,7 +112,7 @@ export function AllDetailsSheet({
                   </SemanticBadge>
                 )}
               </TabsTrigger>
-              <TabsTrigger value="audiencias" className={cn("inline-snug text-body-sm")}>
+              <TabsTrigger value="audiencias" className={cn("flex inline-snug text-body-sm")}>
                 <Calendar className="size-3.5" />
                 Audiências
                 {totalAudiencias > 0 && (
@@ -127,7 +127,7 @@ export function AllDetailsSheet({
                   </SemanticBadge>
                 )}
               </TabsTrigger>
-              <TabsTrigger value="pericias" className={cn("inline-snug text-body-sm")}>
+              <TabsTrigger value="pericias" className={cn("flex inline-snug text-body-sm")}>
                 <Microscope className="size-3.5" />
                 Perícias
                 {totalPericias > 0 && (
@@ -150,7 +150,7 @@ export function AllDetailsSheet({
                   Nenhum expediente.
                 </p>
               ) : (
-                <div className={cn("stack-tight max-h-[60vh] overflow-y-auto pr-1")}>
+                <div className={cn("flex flex-col stack-tight max-h-[60vh] overflow-y-auto pr-1")}>
                   {expedientes.map((exp) => (
                     <GlassPanel key={exp.id} depth={1} className={cn("px-3 py-2.5")}>
                       <Text variant="caption" className="font-medium">Expediente</Text>
@@ -173,7 +173,7 @@ export function AllDetailsSheet({
                   Nenhuma audiência.
                 </p>
               ) : (
-                <div className={cn("stack-tight max-h-[60vh] overflow-y-auto pr-1")}>
+                <div className={cn("flex flex-col stack-tight max-h-[60vh] overflow-y-auto pr-1")}>
                   {audiencias.map((aud) => (
                     <GlassPanel key={aud.id} depth={1} className={cn("px-3 py-2.5")}>
                       <Text variant="caption" className="font-medium">
@@ -195,7 +195,7 @@ export function AllDetailsSheet({
                   Nenhuma perícia.
                 </p>
               ) : (
-                <div className={cn("stack-tight max-h-[60vh] overflow-y-auto pr-1")}>
+                <div className={cn("flex flex-col stack-tight max-h-[60vh] overflow-y-auto pr-1")}>
                   {pericias.map((per) => (
                     <GlassPanel key={per.id} depth={1} className={cn("px-3 py-2.5")}>
                       <Text variant="caption" className="font-medium">

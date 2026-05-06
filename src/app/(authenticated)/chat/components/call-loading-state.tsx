@@ -65,7 +65,7 @@ export function CallLoadingState({
           <LoadingSpinner className="size-16 text-info relative z-10" />
         </div>
 
-        <div className={cn("text-center stack-tight w-full")}>
+        <div className={cn("flex flex-col text-center stack-tight w-full")}>
           <Heading level="card">
             {message || defaultMessages[stage]}
           </Heading>
@@ -74,7 +74,7 @@ export function CallLoadingState({
           </p>
         </div>
 
-        <div className={cn("w-full stack-tight")}>
+        <div className={cn("flex flex-col w-full stack-tight")}>
           <Progress value={progress} className="h-2" />
           <Text variant="caption" className="text-right text-video-muted">{Math.round(progress)}%</Text>
         </div>

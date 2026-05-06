@@ -73,7 +73,7 @@ export function UploadContextPanel({
           onClick={onSelectFile}
           disabled={isUploading}
           className={cn(
-            "w-full inline-tight lg:w-auto rounded-xl",
+            "flex w-full inline-tight lg:w-auto rounded-xl",
             "bg-primary text-primary-foreground hover:bg-primary/90",
             "shadow-lg shadow-primary/20 hover:shadow-primary/40",
             "hover:-translate-y-0.5 transition-all duration-200",

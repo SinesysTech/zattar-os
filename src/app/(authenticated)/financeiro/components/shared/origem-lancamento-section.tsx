@@ -107,7 +107,7 @@ function DetalheItem({
       <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted shrink-0">
         <Icon className="h-4 w-4 text-muted-foreground" />
       </div>
-      <div className={cn("stack-nano min-w-0")}>
+      <div className={cn("flex flex-col stack-nano min-w-0")}>
         <Text variant="caption">{label}</Text>
         <div className={cn( "text-body-sm font-medium")}>{value}</div>
       </div>
@@ -228,7 +228,7 @@ export function OrigemLancamentoSection({
             Este lançamento foi gerado automaticamente a partir de um acordo/condenação
           </CardDescription>
         </CardHeader>
-        <CardContent className={cn("stack-default")}>
+        <CardContent className={cn("flex flex-col stack-default")}>
           <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
             {acordo && (
               <DetalheItem

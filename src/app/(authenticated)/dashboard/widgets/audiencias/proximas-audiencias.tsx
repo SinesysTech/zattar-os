@@ -179,7 +179,7 @@ export function ProximasAudiencias() {
       {audiencias.length === 0 ? (
         <EmptyState />
       ) : (
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           {audiencias.map((a, index) => (
             <AudienciaItem key={a.id} audiencia={a} isFirst={index === 0} />
           ))}

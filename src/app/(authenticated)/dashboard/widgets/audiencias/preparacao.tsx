@@ -88,7 +88,7 @@ export function WidgetPreparacao() {
           </p>
         </div>
       ) : (
-        <div className={cn("stack-medium")}>
+        <div className={cn("flex flex-col stack-medium")}>
           {audiencias.map((audiencia) => {
             const prepScore = calcPrepScoreFromProxima(audiencia);
             const ringColor = scoreColor(prepScore);

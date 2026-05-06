@@ -26,7 +26,7 @@ function PalettePrimary() {
           <Text variant="meta-label" className="text-white/80">
             --primary
           </Text>
-          <div className={cn("stack-micro")}>
+          <div className={cn("flex flex-col stack-micro")}>
             <div className="text-kpi-value">#5523EB</div>
             <div className="font-mono text-[10px] opacity-80">oklch(.48 .26 281)</div>
           </div>
@@ -258,7 +258,7 @@ function PaletteEvent() {
 
 export function ColorsSection() {
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       <PalettePrimary />
       <PaletteNeutrals />
       <PaletteStatus />

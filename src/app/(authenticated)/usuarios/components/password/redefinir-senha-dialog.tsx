@@ -139,7 +139,7 @@ export function RedefinirSenhaDialog({
           </DialogDescription>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-      <form ref={formRef} onSubmit={handleSubmit} className={cn("stack-default inset-dialog")}>
+      <form ref={formRef} onSubmit={handleSubmit} className={cn("flex flex-col stack-default inset-dialog")}>
         {error && (
           <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 p-3 text-body-sm text-destructive")}>
             {error}
@@ -153,7 +153,7 @@ export function RedefinirSenhaDialog({
           </Alert>
         )}
 
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label htmlFor="novaSenha">Nova Senha *</Label>
           <div className="relative">
             <Input
@@ -185,7 +185,7 @@ export function RedefinirSenhaDialog({
           </Text>
         </div>
 
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label htmlFor="confirmarSenha">Confirmar Nova Senha *</Label>
           <div className="relative">
             <Input

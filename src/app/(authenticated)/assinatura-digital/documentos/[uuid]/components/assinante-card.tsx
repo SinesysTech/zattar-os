@@ -151,7 +151,7 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
     <Card className={cn("overflow-hidden rounded-3xl border-border/60 bg-muted/15 py-0 shadow-none hover:shadow-sm")}>
       <CardHeader className={cn("border-b border-border/60 px-5 py-4")}>
         <div className={cn("flex flex-col inline-medium sm:flex-row sm:items-start sm:justify-between")}>
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <div className={cn("flex flex-wrap items-center inline-tight")}>
               <CardTitle className={cn("text-body")}>
               {signatario.nome || `Assinante ${index + 1}`}
@@ -176,7 +176,7 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
           </Badge>
         </div>
       </CardHeader>
-      <CardContent className={cn("stack-default px-5 py-4")}>
+      <CardContent className={cn("flex flex-col stack-default px-5 py-4")}>
         {/* Dados pessoais */}
         <div className={cn("grid grid-cols-1 inline-medium sm:grid-cols-2")}>
           {signatario.cpf && (

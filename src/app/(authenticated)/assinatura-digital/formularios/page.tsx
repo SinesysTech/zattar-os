@@ -9,7 +9,7 @@ export const revalidate = 0;
 
 function FormulariosLoading() {
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       <Skeleton className="h-10 w-full" />
       <Skeleton className="h-125 w-full" />
     </div>

@@ -147,7 +147,7 @@ export function PlanoContaCreateDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div className={cn("stack-default py-4")}>
+          <div className={cn("flex flex-col stack-default py-4")}>
             {Object.keys(errors).length > 0 && (
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 p-3 text-body-sm text-destructive")}>
                 Corrija os erros no formulário antes de continuar.
@@ -155,7 +155,7 @@ export function PlanoContaCreateDialog({
             )}
 
             {/* Código */}
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="codigo">
                 Código <span className="text-destructive">*</span>
               </Label>
@@ -174,7 +174,7 @@ export function PlanoContaCreateDialog({
             </div>
 
             {/* Nome */}
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="nome">
                 Nome <span className="text-destructive">*</span>
               </Label>
@@ -190,7 +190,7 @@ export function PlanoContaCreateDialog({
             </div>
 
             {/* Descrição */}
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="descricao">Descrição</Label>
               <Textarea
                 id="descricao"
@@ -206,7 +206,7 @@ export function PlanoContaCreateDialog({
             {/* Grid para Tipo, Natureza e Nível */}
             <div className={cn("grid grid-cols-1 sm:grid-cols-3 inline-default")}>
               {/* Tipo de Conta */}
-              <div className={cn("stack-tight")}>
+              <div className={cn("flex flex-col stack-tight")}>
                 <Label>
                   Tipo <span className="text-destructive">*</span>
                 </Label>
@@ -234,7 +234,7 @@ export function PlanoContaCreateDialog({
               </div>
 
               {/* Natureza */}
-              <div className={cn("stack-tight")}>
+              <div className={cn("flex flex-col stack-tight")}>
                 <Label>
                   Natureza <span className="text-destructive">*</span>
                 </Label>
@@ -260,7 +260,7 @@ export function PlanoContaCreateDialog({
               </div>
 
               {/* Nível */}
-              <div className={cn("stack-tight")}>
+              <div className={cn("flex flex-col stack-tight")}>
                 <Label>
                   Nível <span className="text-destructive">*</span>
                 </Label>
@@ -295,7 +295,7 @@ export function PlanoContaCreateDialog({
             )}
 
             {/* Conta Pai */}
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label>Conta Pai</Label>
               <PlanoContaPaiSelect
                 value={watch('contaPaiId')}
@@ -310,7 +310,7 @@ export function PlanoContaCreateDialog({
             {/* Grid para Ordem e Status */}
             <div className={cn("grid grid-cols-2 inline-default")}>
               {/* Ordem de Exibição */}
-              <div className={cn("stack-tight")}>
+              <div className={cn("flex flex-col stack-tight")}>
                 <Label htmlFor="ordemExibicao">Ordem de Exibição</Label>
                 <Input
                   id="ordemExibicao"
@@ -327,7 +327,7 @@ export function PlanoContaCreateDialog({
               </div>
 
               {/* Status Ativo */}
-              <div className={cn("stack-tight")}>
+              <div className={cn("flex flex-col stack-tight")}>
                 <Label>Status</Label>
                 <div className={cn("flex items-center space-x-2 pt-2")}>
                   <Switch

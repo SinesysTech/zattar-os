@@ -41,7 +41,7 @@ export function CreateModePanelUpload({ onFileUpload }: CreateModePanelUploadPro
   return (
     <div className="flex h-full flex-col overflow-hidden">
       <div className={cn("flex-1 flex flex-col inline-loose items-center justify-center min-h-0 overflow-auto px-6 py-8")}>
-        <div className={cn("max-w-2xl w-full stack-loose")}>
+        <div className={cn("flex flex-col max-w-2xl w-full stack-loose")}>
           {/* Dropzone compacto */}
           <div
             {...getRootProps()}
@@ -78,7 +78,7 @@ export function CreateModePanelForm({
   return (
     <div className="flex h-full flex-col overflow-hidden">
       <div className={cn("flex-1 flex flex-col inline-loose items-center justify-center min-h-0 overflow-auto px-6 py-8")}>
-        <div className={cn("max-w-2xl w-full stack-loose")}>
+        <div className={cn("flex flex-col max-w-2xl w-full stack-loose")}>
           {/* Dropzone with preview */}
           <div className={cn("border-2 border-primary/50 rounded-lg inset-dialog text-center bg-primary/5")}>
             <Upload className="mx-auto h-10 w-10 text-primary mb-2" />

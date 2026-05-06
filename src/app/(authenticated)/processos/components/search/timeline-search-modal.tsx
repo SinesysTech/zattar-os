@@ -116,7 +116,7 @@ export function TimelineSearchModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "max-w-120 p-0 inline-none overflow-hidden")}>
+      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "flex max-w-120 p-0 inline-none overflow-hidden")}>
         {/* Campo de busca */}
         <div
           className={cn("flex items-center px-4 border-b h-16")}
@@ -154,7 +154,7 @@ export function TimelineSearchModal({
         {/* Lista de resultados */}
         <div
           ref={resultsRef}
-          className={cn(/* design-system-escape: p-2 → usar <Inset> */ "max-h-[70vh] overflow-y-auto p-2 stack-micro")}
+          className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col max-h-[70vh] overflow-y-auto p-2 stack-micro")}
           role="listbox"
           aria-label="Resultados da busca"
         >

@@ -53,8 +53,8 @@ export function UsuarioViewSheet({
           </DialogDescription>
         </DialogHeader>
 
-        <div className={cn("stack-loose")}>
-          <div className={cn("stack-default")}>
+        <div className={cn("flex flex-col stack-loose")}>
+          <div className={cn("flex flex-col stack-default")}>
             <Heading level="subsection">Informações Básicas</Heading>
             <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
               <div>
@@ -112,7 +112,7 @@ export function UsuarioViewSheet({
 
           {(usuario.oab || usuario.ufOab) && (
             <>
-              <div className={cn("stack-default")}>
+              <div className={cn("flex flex-col stack-default")}>
                 <Heading level="subsection">Informações Profissionais</Heading>
                 <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
                   {usuario.oab && (
@@ -131,7 +131,7 @@ export function UsuarioViewSheet({
             </>
           )}
 
-          <div className={cn("stack-default")}>
+          <div className={cn("flex flex-col stack-default")}>
             <Heading level="subsection">Contato</Heading>
             <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
               {usuario.emailCorporativo && (
@@ -167,7 +167,7 @@ export function UsuarioViewSheet({
           {usuario.endereco && (
             <>
               <Separator />
-              <div className={cn("stack-default")}>
+              <div className={cn("flex flex-col stack-default")}>
                 <Heading level="subsection">Endereço</Heading>
                 <div>
                   <div className={cn("text-body")}>
@@ -179,7 +179,7 @@ export function UsuarioViewSheet({
           )}
 
           <Separator />
-          <div className={cn("stack-default")}>
+          <div className={cn("flex flex-col stack-default")}>
             <Heading level="subsection">Informações do Sistema</Heading>
             <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
               <div>

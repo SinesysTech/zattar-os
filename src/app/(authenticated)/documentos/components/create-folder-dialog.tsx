@@ -105,8 +105,8 @@ export function CreateFolderDialog({
         </DialogHeader>
 
         <form onSubmit={handleSubmit}>
-          <div className={cn("stack-default py-4")}>
-            <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-default py-4")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="nome">Nome *</Label>
               <Input
                 id="nome"
@@ -118,7 +118,7 @@ export function CreateFolderDialog({
               />
             </div>
 
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="tipo">Tipo</Label>
               <Select
                 value={tipo}
@@ -140,7 +140,7 @@ export function CreateFolderDialog({
               </Text>
             </div>
 
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="descricao">Descrição (opcional)</Label>
               <Textarea
                 id="descricao"

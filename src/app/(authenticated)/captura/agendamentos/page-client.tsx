@@ -215,7 +215,7 @@ export default function AgendamentosPage() {
 
   return (
     <>
-      <div className={cn("stack-default-plus")}>
+      <div className={cn("flex flex-col stack-default-plus")}>
         {/* KPI Strip */}
         <PulseStrip items={kpiItems} />
 
@@ -243,7 +243,7 @@ export default function AgendamentosPage() {
         {/* Loading */}
         {isLoading && (
           <GlassPanel depth={1} className="overflow-hidden">
-            <div className={cn("stack-none")}>
+            <div className={cn("flex flex-col stack-none")}>
               {Array.from({ length: 5 }, (_, i) => (
                 <div key={i} className={cn("px-4 py-3 border-b border-border/5")}>
                   <div className={cn("flex items-center inline-default")}>

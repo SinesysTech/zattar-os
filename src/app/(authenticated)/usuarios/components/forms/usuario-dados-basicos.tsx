@@ -39,8 +39,8 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
             </div>
         </div>
       </CardHeader>
-      <CardContent className={cn("stack-loose")}>
-        <div className={cn("stack-default")}>
+      <CardContent className={cn("flex flex-col stack-loose")}>
+        <div className={cn("flex flex-col stack-default")}>
           <small className="text-sm font-medium leading-none text-muted-foreground uppercase tracking-wide">
             Identificação
           </small>
@@ -109,7 +109,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
 
         <Separator />
 
-        <div className={cn("stack-default")}>
+        <div className={cn("flex flex-col stack-default")}>
           <small className="text-sm font-medium leading-none text-muted-foreground uppercase tracking-wide">
             Contato
           </small>
@@ -161,7 +161,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
 
         <Separator />
 
-        <div className={cn("stack-default")}>
+        <div className={cn("flex flex-col stack-default")}>
           <small className="text-sm font-medium leading-none text-muted-foreground uppercase tracking-wide">
             Informações Profissionais
           </small>
@@ -210,7 +210,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
         {usuario.endereco && Object.values(usuario.endereco).some((v) => v) && (
           <>
             <Separator />
-            <div className={cn("stack-default")}>
+            <div className={cn("flex flex-col stack-default")}>
               <small className="text-sm font-medium leading-none text-muted-foreground uppercase tracking-wide flex items-center gap-1.5">
                 <MapPin className="h-4 w-4" />
                 Endereço

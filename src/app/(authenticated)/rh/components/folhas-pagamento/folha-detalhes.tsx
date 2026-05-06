@@ -57,7 +57,7 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
 
   if (isLoading) {
     return (
-      <div className={cn("stack-default")}>
+      <div className={cn("flex flex-col stack-default")}>
         <Skeleton className="h-10 w-64" />
         <Skeleton className="h-32 w-full" />
         <Skeleton className="h-64 w-full" />
@@ -74,7 +74,7 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
   }
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       <div className={cn("flex flex-col inline-medium sm:flex-row sm:items-center sm:justify-between")}>
         <div>
           <Heading level="page">

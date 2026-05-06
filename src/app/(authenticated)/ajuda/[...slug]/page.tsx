@@ -11,7 +11,7 @@ import { Heading } from '@/components/ui/typography';
 
 function DocLoading() {
   return (
-    <div className={cn("max-w-4xl stack-default")}>
+    <div className={cn("flex flex-col max-w-4xl stack-default")}>
       <Skeleton className="h-8 w-64" />
       <Skeleton className="h-4 w-96" />
       <Skeleton className="h-64 w-full" />
@@ -21,7 +21,7 @@ function DocLoading() {
 
 function NotFound() {
   return (
-    <div className={cn("max-w-4xl stack-default")}>
+    <div className={cn("flex flex-col max-w-4xl stack-default")}>
       <Heading level="page">Página não encontrada</Heading>
       <p className="text-muted-foreground">
         O tópico de documentação que você procura não existe ou foi movido.

@@ -86,7 +86,7 @@ export function MaisFiltrosPlanoContasPopover({
         </Button>
       </PopoverTrigger>
       <PopoverContent className={cn("w-80 inset-card-compact")} align="start">
-        <div className={cn("stack-default")}>
+        <div className={cn("flex flex-col stack-default")}>
           <div className="flex items-center justify-between">
             <Heading level="subsection">Filtros Avançados</Heading>
             {hasActiveFilters && (
@@ -103,7 +103,7 @@ export function MaisFiltrosPlanoContasPopover({
           </div>
 
           {/* Natureza */}
-          <div className={cn("stack-snug")}>
+          <div className={cn("flex flex-col stack-snug")}>
             <Label className={cn("text-caption text-muted-foreground")}>Natureza</Label>
             <Select
               value={natureza || 'all'}
@@ -124,7 +124,7 @@ export function MaisFiltrosPlanoContasPopover({
           </div>
 
           {/* Conta Pai */}
-          <div className={cn("stack-snug")}>
+          <div className={cn("flex flex-col stack-snug")}>
             <Label className={cn("text-caption text-muted-foreground")}>Conta Pai</Label>
             <FiltroContaContabil
               value={contaPaiId}

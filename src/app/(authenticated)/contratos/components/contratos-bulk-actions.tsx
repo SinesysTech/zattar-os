@@ -177,7 +177,7 @@ export function AlterarStatusMassaDialog({
           <DialogDescription>{`Alterar status de ${selectedIds.length} contrato(s) selecionado(s).`}</DialogDescription>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>Novo Status</Label>
             <Select value={novoStatus} onValueChange={setNovoStatus} disabled={isPending}>
               <SelectTrigger className="w-full">
@@ -264,7 +264,7 @@ export function AtribuirResponsavelMassaDialog({
           <DialogDescription>{`Atribuir responsável a ${selectedIds.length} contrato(s) selecionado(s).`}</DialogDescription>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>Responsável</Label>
             <Select value={responsavelId} onValueChange={setResponsavelId} disabled={isPending}>
               <SelectTrigger className="w-full">
@@ -352,7 +352,7 @@ export function AlterarSegmentoMassaDialog({
           <DialogDescription>{`Alterar segmento de ${selectedIds.length} contrato(s) selecionado(s).`}</DialogDescription>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>Segmento</Label>
             <Select value={segmentoId} onValueChange={setSegmentoId} disabled={isPending}>
               <SelectTrigger className="w-full">

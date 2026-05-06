@@ -299,16 +299,16 @@ function ListSkeleton() {
         >
           <div className={cn("grid grid-cols-[32px_2.5fr_1fr_1fr_1fr_96px_40px] inline-medium items-center")}>
             <Skeleton className="w-2 h-2 rounded-full" />
-            <div className={cn("stack-snug")}>
+            <div className={cn("flex flex-col stack-snug")}>
               <Skeleton className="h-3.5 w-48" />
               <Skeleton className="h-2.5 w-36" />
             </div>
-            <div className={cn("stack-micro")}>
+            <div className={cn("flex flex-col stack-micro")}>
               <Skeleton className="h-3 w-20" />
               <Skeleton className="h-2 w-14" />
             </div>
             <Skeleton className="h-3 w-20" />
-            <div className={cn("stack-micro")}>
+            <div className={cn("flex flex-col stack-micro")}>
               <Skeleton className="h-2.5 w-16" />
               <Skeleton className="h-1 w-full rounded-full" />
             </div>

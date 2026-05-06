@@ -102,7 +102,7 @@ function StatusFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-48')} align="start" side="bottom">
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-nano")}>
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col p-2 stack-nano")}>
           {STATUS_OPTIONS.map((opt) => (
             <button
               key={opt.value}
@@ -158,7 +158,7 @@ function SimpleFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-48')} align="start" side="bottom">
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-nano max-h-56 overflow-y-auto")}>
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col p-2 stack-nano max-h-56 overflow-y-auto")}>
           {options.map((opt) => (
             <button
               key={opt.value}

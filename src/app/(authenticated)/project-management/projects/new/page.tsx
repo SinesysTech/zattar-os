@@ -47,7 +47,7 @@ export default async function NewProjectPage() {
   const { clientes, usuarios } = await fetchFormOptions();
 
   return (
-    <div className={cn("mx-auto max-w-3xl stack-default")}>
+    <div className={cn("flex flex-col mx-auto max-w-3xl stack-default")}>
       <ProjectForm
         clientes={clientes}
         usuarios={usuarios}

@@ -236,7 +236,7 @@ function PipelineDialog({ open, onOpenChange, pipeline, segmentos, onSuccess }: 
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
       <Form {...form}>
-        <form id="pipeline-form" onSubmit={form.handleSubmit(onSubmit)} className={cn("stack-default")}>
+        <form id="pipeline-form" onSubmit={form.handleSubmit(onSubmit)} className={cn("flex flex-col stack-default")}>
           {!isEditing && (
             <FormField
               control={form.control}
@@ -408,7 +408,7 @@ function EstagioDialog({ open, onOpenChange, pipelineId, estagio, onSuccess }: E
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
           <Form {...form}>
-            <form id="estagio-form" onSubmit={form.handleSubmit(onSubmit)} className={cn("stack-default")}>
+            <form id="estagio-form" onSubmit={form.handleSubmit(onSubmit)} className={cn("flex flex-col stack-default")}>
               <FormField
                 control={form.control}
                 name="nome"
@@ -654,9 +654,9 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
             <SheetTitle>Estágios — {pipeline.nome}</SheetTitle>
           </SheetHeader>
 
-          <div className={cn("flex-1 overflow-y-auto px-4 pb-4 stack-medium")}>
+          <div className={cn("flex flex-col flex-1 overflow-y-auto px-4 pb-4 stack-medium")}>
             {isLoadingEstagios ? (
-              <div className={cn("stack-tight pt-2")}>
+              <div className={cn("flex flex-col stack-tight pt-2")}>
                 {Array.from({ length: 3 }).map((_, i) => (
                   <Skeleton key={i} className="h-14 w-full" />
                 ))}
@@ -666,7 +666,7 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
                 Nenhum estágio cadastrado.
               </p>
             ) : (
-              <div className={cn("stack-tight pt-2")}>
+              <div className={cn("flex flex-col stack-tight pt-2")}>
                 {estagios.map((estagio, index) => (
                   <div
                     key={estagio.id}
@@ -724,7 +724,7 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
             )}
           </div>
 
-          <div className={cn("px-4 pb-4 pt-2 border-t stack-tight")}>
+          <div className={cn("flex flex-col px-4 pb-4 pt-2 border-t stack-tight")}>
             {hasReordered && (
               <Button
                 onClick={() => void handleSaveOrder()}
@@ -869,7 +869,7 @@ export function PipelinesPageClient() {
   const ativosCount = pipelines.filter((p) => p.ativo).length;
 
   return (
-    <div className={cn("stack-default-plus")}>
+    <div className={cn("flex flex-col stack-default-plus")}>
       {/* Header */}
       <div className={cn("flex items-end justify-between inline-default")}>
         <div>
@@ -889,7 +889,7 @@ export function PipelinesPageClient() {
       {/* Lista Glass */}
       <GlassPanel depth={1} className="overflow-hidden">
         {isLoading ? (
-          <div className={cn("inset-card-compact stack-tight")}>
+          <div className={cn("flex flex-col inset-card-compact stack-tight")}>
             {Array.from({ length: 4 }).map((_, i) => (
               <Skeleton key={i} className="h-14 w-full rounded-xl" />
             ))}
@@ -956,7 +956,7 @@ export function PipelinesPageClient() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className={cn("h-8 inline-snug cursor-pointer")}
+                      className={cn("flex h-8 inline-snug cursor-pointer")}
                       onClick={() => handleGerenciarEstagios(pipeline)}
                     >
                       <Settings className="h-3.5 w-3.5" />

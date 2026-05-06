@@ -217,7 +217,7 @@ function GlassRow({
       </div>
 
       {/* ── Desktop (lg+): grid colunas ─────────────────────── */}
-      <div className={cn('hidden lg:grid inline-medium items-center', GRID_COLS)}>
+      <div className={cn('flex hidden lg:grid inline-medium items-center', GRID_COLS)}>
         {/* 1. Ícone */}
         <IconContainer size="md" className={cn('rounded-xl size-10', ACCENT_BG[accent])}>
           <Icon className={cn('size-5', ACCENT_TEXT[accent])} />
@@ -299,13 +299,13 @@ function ListSkeleton() {
     <div className={cn("flex flex-col inline-tight")}>
       {Array.from({ length: 6 }, (_, i) => (
         <div key={i} className={cn("rounded-2xl border border-border/40 bg-card inset-card-compact")}>
-          <div className={cn('hidden lg:grid inline-medium items-center', GRID_COLS)}>
+          <div className={cn('flex hidden lg:grid inline-medium items-center', GRID_COLS)}>
             <Skeleton className="size-10 rounded-xl" />
-            <div className={cn("stack-snug")}>
+            <div className={cn("flex flex-col stack-snug")}>
               <Skeleton className="h-3.5 w-52" />
               <Skeleton className="h-2.5 w-24" />
             </div>
-            <div className={cn("stack-micro")}>
+            <div className={cn("flex flex-col stack-micro")}>
               <Skeleton className="h-3 w-20" />
               <Skeleton className="h-2.5 w-16" />
             </div>
@@ -320,7 +320,7 @@ function ListSkeleton() {
           </div>
           <div className={cn("flex items-center inline-medium lg:hidden")}>
             <Skeleton className="size-10 rounded-xl" />
-            <div className={cn("flex-1 stack-snug")}>
+            <div className={cn("flex flex-col flex-1 stack-snug")}>
               <Skeleton className="h-3.5 w-44" />
               <Skeleton className="h-2.5 w-28" />
             </div>

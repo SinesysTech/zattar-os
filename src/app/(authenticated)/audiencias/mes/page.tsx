@@ -10,7 +10,7 @@ export const revalidate = 0;
 
 function AudienciasLoading() {
   return (
-    <div className={cn("stack-default-plus")}>
+    <div className={cn("flex flex-col stack-default-plus")}>
       <Skeleton className="h-9 w-40" />
       <Skeleton className="h-14 w-full rounded-2xl" />
       <Skeleton className="h-120 w-full rounded-2xl" />

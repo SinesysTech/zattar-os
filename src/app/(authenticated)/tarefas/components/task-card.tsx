@@ -102,7 +102,7 @@ export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
         </CardTitle>
       </CardHeader>
 
-      <CardContent className={cn(/* design-system-escape: p-3 → usar <Inset>; pt-0 padding direcional sem Inset equiv. */ "p-3 pt-0 stack-tight")}>
+      <CardContent className={cn(/* design-system-escape: p-3 → usar <Inset>; pt-0 padding direcional sem Inset equiv. */ "flex flex-col p-3 pt-0 stack-tight")}>
         {/* Description */}
         {tarefa.description && (
           <Text variant="caption" className="line-clamp-2">

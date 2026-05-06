@@ -86,7 +86,7 @@ export function LinkGeradoDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className={cn("stack-default py-2")}>
+        <div className={cn("flex flex-col stack-default py-2")}>
           <div className={cn("flex inline-tight items-center")}>
             <Input readOnly value={fullUrl} className={cn("text-caption")} />
             <Button
@@ -105,7 +105,7 @@ export function LinkGeradoDialog({
               variant="outline"
               onClick={() => handleEnviar('email')}
               disabled={enviando !== null}
-              className={cn("rounded-xl inline-snug justify-start")}
+              className={cn("flex rounded-xl inline-snug justify-start")}
             >
               <Mail className="size-3.5" />
               {enviando === 'email' ? 'Enviando...' : 'Enviar por e-mail'}
@@ -115,7 +115,7 @@ export function LinkGeradoDialog({
               variant="outline"
               onClick={() => handleEnviar('whatsapp')}
               disabled={enviando !== null}
-              className={cn("rounded-xl inline-snug justify-start")}
+              className={cn("flex rounded-xl inline-snug justify-start")}
             >
               <MessageCircle className="size-3.5" />
               {enviando === 'whatsapp' ? 'Enviando...' : 'Enviar por WhatsApp'}

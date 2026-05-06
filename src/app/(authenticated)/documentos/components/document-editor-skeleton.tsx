@@ -27,7 +27,7 @@ export function DocumentEditorSkeleton() {
 
       {/* Editor skeleton */}
       <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex-1 overflow-auto p-8")}>
-        <div className={cn("mx-auto max-w-4xl stack-default")}>
+        <div className={cn("flex flex-col mx-auto max-w-4xl stack-default")}>
           <Skeleton className="h-8 w-3/4" />
           <Skeleton className="h-6 w-full" />
           <Skeleton className="h-6 w-full" />

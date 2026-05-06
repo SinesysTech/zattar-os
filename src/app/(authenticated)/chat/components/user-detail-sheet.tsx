@@ -87,27 +87,27 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
             </Text>
           </div>
 
-          <div className={cn("stack-tight divide-y divide-border/20")}>
+          <div className={cn("flex flex-col stack-tight divide-y divide-border/20")}>
             {user.about && (
-              <div className={cn("stack-medium py-4")}>
+              <div className={cn("flex flex-col stack-medium py-4")}>
                 <Text variant="overline" as="h5">Sobre</Text>
                 <div className="text-muted-foreground">{user.about}</div>
               </div>
             )}
             {user.phone && (
-              <div className={cn("stack-medium py-4")}>
+              <div className={cn("flex flex-col stack-medium py-4")}>
                 <Text variant="overline" as="h5">Telefone</Text>
                 <div className="text-muted-foreground">{user.phone}</div>
               </div>
             )}
             {user.country && (
-              <div className={cn("stack-medium py-4")}>
+              <div className={cn("flex flex-col stack-medium py-4")}>
                 <Text variant="overline" as="h5">País</Text>
                 <div className="text-muted-foreground">{user.country}</div>
               </div>
             )}
             {user.medias?.length && (
-              <div className={cn("stack-medium py-4")}>
+              <div className={cn("flex flex-col stack-medium py-4")}>
                 <Text variant="overline" as="h5">Mídia</Text>
                 <div>
                   <ScrollArea className="w-full">
@@ -135,7 +135,7 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
               </div>
             )}
             {user.website && (
-              <div className={cn("stack-medium py-4")}>
+              <div className={cn("flex flex-col stack-medium py-4")}>
                 <Text variant="overline" as="h5">Website</Text>
                 <div>
                   <a
@@ -150,7 +150,7 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
               </div>
             )}
             {user.socialLinks?.length && (
-              <div className={cn("stack-medium py-4")}>
+              <div className={cn("flex flex-col stack-medium py-4")}>
                 <Text variant="overline" as="h5">
                   Redes Sociais
                 </Text>

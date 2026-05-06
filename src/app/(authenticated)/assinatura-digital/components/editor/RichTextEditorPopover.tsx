@@ -77,7 +77,7 @@ function RichTextEditorPopoverContent(props: RichTextEditorPopoverProps) {
       variant="outline"
       size="sm"
       onClick={handleAutoAdjust}
-      className={cn("inline-snug text-caption")}
+      className={cn("flex inline-snug text-caption")}
     >
       <ArrowUpDown className="h-3.5 w-3.5" />
       Ajustar Altura (+{heightDiff}px)

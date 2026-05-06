@@ -125,7 +125,7 @@ export default function TribunaisPage() {
 
   return (
     <>
-      <div className={cn("stack-default-plus")}>
+      <div className={cn("flex flex-col stack-default-plus")}>
         {/* KPI Strip */}
         <PulseStrip items={kpiItems} />
 
@@ -191,7 +191,7 @@ export default function TribunaisPage() {
                 <div className={cn("border-t border-border/10 my-2")} />
 
                 {/* Meta rows */}
-                <div className={cn("stack-snug")}>
+                <div className={cn("flex flex-col stack-snug")}>
                   {/* Status */}
                   <div className={cn("flex items-center inline-snug text-[11px]")}>
                     <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${(credenciaisPorTribunal.get(tribunal.tribunal_codigo) ?? 0) > 0 ? 'bg-success' : 'bg-warning'}`} />

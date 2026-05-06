@@ -27,7 +27,7 @@ export default function ExpedientesError({
           </div>
           <CardTitle>Erro ao carregar expedientes</CardTitle>
         </CardHeader>
-        <CardContent className={cn("stack-default")}>
+        <CardContent className={cn("flex flex-col stack-default")}>
           <p className="text-center text-muted-foreground">
             Ocorreu um erro ao tentar carregar os expedientes.
             Por favor, tente novamente.

@@ -102,7 +102,7 @@ export function VersionHistoryDialog({
 
           <ScrollArea className={cn("h-100 pr-4")}>
             {loading ? (
-              <div className={cn("stack-default")}>
+              <div className={cn("flex flex-col stack-default")}>
                 {[1, 2, 3].map((i) => (
                   <Skeleton key={i} className="h-20 w-full" />
                 ))}
@@ -116,7 +116,7 @@ export function VersionHistoryDialog({
                 </p>
               </div>
             ) : (
-              <div className={cn("stack-medium")}>
+              <div className={cn("flex flex-col stack-medium")}>
                 {versions.map((version, index) => (
                   <div
                     key={version.id}

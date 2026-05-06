@@ -62,12 +62,12 @@ export function AssistenteCard({
           {/* Badge de tipo */}
           <div className="mt-1">
             {isDify && typeConfig ? (
-              <Badge variant="secondary" className={cn("text-[10px] px-1.5 py-0 h-4 inline-micro")}>
+              <Badge variant="secondary" className={cn("flex text-[10px] px-1.5 py-0 h-4 inline-micro")}>
                 {typeConfig.icon}
                 {typeConfig.label}
               </Badge>
             ) : (
-              <Badge variant="outline" className={cn("text-[10px] px-1.5 py-0 h-4 inline-micro")}>
+              <Badge variant="outline" className={cn("flex text-[10px] px-1.5 py-0 h-4 inline-micro")}>
                 <Globe className="h-3 w-3" />
                 Iframe
               </Badge>

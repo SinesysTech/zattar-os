@@ -49,7 +49,7 @@ export function TimelineSidebarHeader({
   onOpenSearch,
 }: TimelineSidebarHeaderProps) {
   return (
-    <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex-none p-3 border-b stack-tight")}>
+    <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col flex-none p-3 border-b stack-tight")}>
       {/* Campo de busca com indicador CMD+K */}
       <div className="relative">
         <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />

@@ -229,7 +229,7 @@ function DroppableSectionCard({
         </div>
       </div>
 
-      <div className={cn("px-3 pb-3 stack-micro")}>
+      <div className={cn("flex flex-col px-3 pb-3 stack-micro")}>
         {fields.length === 0 ? (
           <div className={cn("border border-dashed rounded-lg inset-card-compact text-center")}>
             <AlertCircle className="size-5 text-muted-foreground/50 mx-auto mb-1" />
@@ -268,11 +268,11 @@ export default function SchemaCanvas({
   onSectionDelete
 }: SchemaCanvasProps) {
   return (
-    <div className={cn("stack-medium")}>
+    <div className={cn("flex flex-col stack-medium")}>
       {schema.sections.length === 0 ? (
         <div className={cn("flex flex-col items-center justify-center rounded-xl border border-dashed py-12 inline-medium")}>
           <AlertCircle className="size-8 text-muted-foreground/60" />
-          <div className={cn("text-center stack-micro")}>
+          <div className={cn("flex flex-col text-center stack-micro")}>
             <Text variant="caption" className="font-medium">Nenhuma seção criada</Text>
             <p className="text-[11px] text-muted-foreground/70">
               Clique abaixo para começar a construir o formulário

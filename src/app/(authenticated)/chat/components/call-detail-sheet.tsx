@@ -133,16 +133,16 @@ export function CallDetailSheet({
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="geral">Geral</TabsTrigger>
               <TabsTrigger value="participantes">Participantes</TabsTrigger>
-              <TabsTrigger value="transcricao" className={cn("inline-tight")}>
+              <TabsTrigger value="transcricao" className={cn("flex inline-tight")}>
                 <FileText className="w-3 h-3" /> Transcrição
               </TabsTrigger>
             </TabsList>
 
             <TabsContent
               value="geral"
-              className={cn("stack-default mt-4 flex-1 overflow-auto")}
+              className={cn("flex flex-col stack-default mt-4 flex-1 overflow-auto")}
             >
-              <GlassPanel depth={1} className={cn("inset-card-compact stack-medium")}>
+              <GlassPanel depth={1} className={cn("flex flex-col inset-card-compact stack-medium")}>
                 <div className="flex justify-between items-center">
                   <span className={cn( "text-body-sm font-medium")}>Status</span>
                   <Badge
@@ -207,7 +207,7 @@ export function CallDetailSheet({
               </GlassPanel>
 
               {/* Integração Dyte */}
-              <GlassPanel depth={1} className={cn("inset-card-compact stack-medium bg-muted/30")}>
+              <GlassPanel depth={1} className={cn("flex flex-col inset-card-compact stack-medium bg-muted/30")}>
                 <div className="flex items-center justify-between">
                   <Heading level="widget" as="h4">Status no Dyte</Heading>
                   <Button
@@ -225,7 +225,7 @@ export function CallDetailSheet({
                 </div>
 
                 {dyteDetails ? (
-                  <div className={cn("stack-tight text-body-sm")}>
+                  <div className={cn("flex flex-col stack-tight text-body-sm")}>
                     <div className="flex justify-between">
                       <span>Status API:</span>
                       <Badge variant="outline">{dyteDetails.status}</Badge>
@@ -249,7 +249,7 @@ export function CallDetailSheet({
               className="mt-4 flex-1 overflow-hidden"
             >
               <ScrollArea className={cn("h-full pr-4")}>
-                <div className={cn("stack-tight")}>
+                <div className={cn("flex flex-col stack-tight")}>
                   {chamada.participantes.map((p) => (
                     <GlassPanel
                       key={p.id}

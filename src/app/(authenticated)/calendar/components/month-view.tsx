@@ -206,9 +206,9 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                                 "--event-height": `${EventHeight}px`
                               } as React.CSSProperties
                             }>
-                            <div className={cn("stack-tight")}>
+                            <div className={cn("flex flex-col stack-tight")}>
                               <div className={cn( "text-body-sm font-medium")}>{capitalizeFirst(format(day, "EEE d", { locale: ptBR }))}</div>
-                              <div className={cn("stack-micro")}>
+                              <div className={cn("flex flex-col stack-micro")}>
                                 {sortEvents(allEvents).map((event) => {
                                   const eventStart = new Date(event.start);
                                   const eventEnd = new Date(event.end);

@@ -77,7 +77,7 @@ export function ObrigacoesRecentesCard() {
           <Skeleton className="h-6 w-48" />
         </CardHeader>
         <CardContent>
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             {[1, 2, 3, 4, 5].map((i) => (
               <Skeleton key={i} className="h-12 w-full" />
             ))}

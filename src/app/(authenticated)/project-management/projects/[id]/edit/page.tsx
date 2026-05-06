@@ -57,7 +57,7 @@ export default async function EditProjectPage({ params }: Props) {
   if (!projetoResult.success) notFound();
 
   return (
-    <div className={cn("mx-auto max-w-3xl stack-default")}>
+    <div className={cn("flex flex-col mx-auto max-w-3xl stack-default")}>
       <ProjectForm
         projeto={projetoResult.data}
         clientes={clientes}

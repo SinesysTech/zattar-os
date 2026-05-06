@@ -64,11 +64,11 @@ export function AudienciasPorTipo() {
       icon={Gavel}
       subtitle="Distribuicao por tipo de audiencia"
     >
-      <div className={cn("stack-tight-plus")}>
+      <div className={cn("flex flex-col stack-tight-plus")}>
         {porTipo.map((item) => {
           const pct = total > 0 ? ((item.count / total) * 100).toFixed(1) : '0';
           return (
-            <div key={item.tipo} className={cn("stack-micro")}>
+            <div key={item.tipo} className={cn("flex flex-col stack-micro")}>
               <div className="flex items-center justify-between text-[11px]">
                 <span className="text-muted-foreground/70 truncate">
                   {item.tipo}

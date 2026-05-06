@@ -24,7 +24,7 @@ export default function DocumentosPage() {
 
 function FileManagerSkeleton() {
   return (
-    <div className={cn("flex-1 stack-default inset-card-compact")}>
+    <div className={cn("flex flex-col flex-1 stack-default inset-card-compact")}>
       <div className={cn("flex flex-wrap items-center justify-between inline-tight")}>
         <Skeleton className="h-10 w-full max-w-sm" />
         <div className={cn("flex items-center inline-tight")}>
@@ -32,7 +32,7 @@ function FileManagerSkeleton() {
           <Skeleton className="h-8 w-28" />
         </div>
       </div>
-      <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "stack-tight rounded-lg border p-2")}>
+      <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col stack-tight rounded-lg border p-2")}>
         {[...Array(5)].map((_, i) => (
           <Skeleton key={i} className="h-16 w-full" />
         ))}

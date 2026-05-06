@@ -75,7 +75,7 @@ export function ProcessosRelacionadosCell({
             </Button>
           </PopoverTrigger>
           <PopoverContent className={cn(/* design-system-escape: p-2 → usar <Inset> */ "w-80 p-2")} align="start">
-            <div className={cn("stack-snug max-h-60 overflow-y-auto")}>
+            <div className={cn("flex flex-col stack-snug max-h-60 overflow-y-auto")}>
               <Text variant="caption" className="font-medium mb-2">
                 Todos os processos ({processos.length})
               </Text>
@@ -136,7 +136,7 @@ function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
           </Link>
         </HoverCardTrigger>
         <HoverCardContent align="start" className={cn(/* design-system-escape: p-3 → usar <Inset> */ "w-80 p-3")}>
-          <div className={cn("stack-medium")}>
+          <div className={cn("flex flex-col stack-medium")}>
             {/* Header: Grau e Status */}
             <div className={cn("flex items-center justify-between inline-tight")}>
               <SemanticBadge category="grau" value={processo.grau} className={cn("text-caption")}>
@@ -150,7 +150,7 @@ function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
             </div>
 
             {/* Parte Contrária */}
-            <div className={cn("stack-micro")}>
+            <div className={cn("flex flex-col stack-micro")}>
               <Text variant="caption" className="flex items-center gap-1.5">
                 <User className="h-3 w-3" />
                 <span>Parte contrária</span>
@@ -162,7 +162,7 @@ function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
 
             {/* Classe Judicial */}
             {processo.classe_judicial && (
-              <div className={cn("stack-micro")}>
+              <div className={cn("flex flex-col stack-micro")}>
                 <Text variant="caption" className="flex items-center gap-1.5">
                   <Scale className="h-3 w-3" />
                   <span>Classe</span>

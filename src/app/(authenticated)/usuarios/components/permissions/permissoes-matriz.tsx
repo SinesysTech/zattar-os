@@ -88,7 +88,7 @@ export function PermissoesMatriz({
 
   if (isLoading) {
     return (
-      <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5 stack-default")}>
+      <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "flex flex-col p-5 stack-default")}>
         <Skeleton className="h-6 w-48" />
         <Skeleton className="h-4 w-full" />
         <Skeleton className="h-96 w-full" />
@@ -98,10 +98,10 @@ export function PermissoesMatriz({
 
   return (
     <>
-      <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5 stack-default-plus")}>
+      <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "flex flex-col p-5 stack-default-plus")}>
         {/* Header */}
         <div className="flex items-center justify-between">
-          <div className={cn("stack-nano")}>
+          <div className={cn("flex flex-col stack-nano")}>
             <div className={cn("flex items-center inline-tight")}>
               <Shield className="size-4 text-muted-foreground/50" />
               <Heading level="card">Permissões do Usuário</Heading>
@@ -176,7 +176,7 @@ export function PermissoesMatriz({
             )}
 
             {/* Module groups — flat layout, always expanded */}
-            <div className={cn("stack-default")}>
+            <div className={cn("flex flex-col stack-default")}>
               {gruposModulo.map((grupo) => {
                 const permissoesAtivasModulo = grupo.itens.reduce((acc, item) => {
                   return acc + Object.values(item.operacoes).filter(Boolean).length;
@@ -195,7 +195,7 @@ export function PermissoesMatriz({
                   : 'bg-info/12 text-info';
 
                 return (
-                  <GlassPanel key={grupo.chave} depth={1} className={cn("inset-card-compact stack-medium")}>
+                  <GlassPanel key={grupo.chave} depth={1} className={cn("flex flex-col inset-card-compact stack-medium")}>
                     {/* Group header */}
                     <div className="flex items-center justify-between">
                       <span className={cn( "text-body-sm font-semibold text-foreground")}>
@@ -209,7 +209,7 @@ export function PermissoesMatriz({
                     </div>
 
                     {/* Permissions grid — all resources within group, flat */}
-                    <div className={cn("stack-tight")}>
+                    <div className={cn("flex flex-col stack-tight")}>
                       {grupo.itens.map((item) => {
                         const permissoesAtivas = Object.values(item.operacoes).filter(Boolean).length;
                         const totalOperacoes = Object.keys(item.operacoes).length;
@@ -223,7 +223,7 @@ export function PermissoesMatriz({
                           : 'bg-info/12 text-info';
 
                         return (
-                          <div key={item.recurso} className={cn("stack-snug")}>
+                          <div key={item.recurso} className={cn("flex flex-col stack-snug")}>
                             <div className={cn("flex items-center inline-tight")}>
                               <Text variant="caption" className="font-medium">
                                 {formatarNomeRecurso(item.recurso)}

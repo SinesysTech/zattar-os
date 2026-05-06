@@ -109,7 +109,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className={cn("stack-snug")}>
+    <section className={cn("flex flex-col stack-snug")}>
       <header className={cn("flex items-center inline-tight")}>
         <span className="text-muted-foreground/70">{icon}</span>
         <Text

@@ -142,7 +142,7 @@ function NovoPopover({
         sideOffset={8}
         className={cn(/* design-system-escape: p-2 → usar <Inset> */ "rounded-2xl glass-dropdown overflow-hidden p-2 w-56")}
       >
-        <div className={cn("stack-nano")}>
+        <div className={cn("flex flex-col stack-nano")}>
           <button
             type="button"
             onClick={wrap(onCreateFolder)}
@@ -414,7 +414,7 @@ export function FileManager() {
   // ── Render ────────────────────────────────────────────────────────────
 
   return (
-    <div className={cn("stack-default-plus")}>
+    <div className={cn("flex flex-col stack-default-plus")}>
       {/* ── Header ─────────────────────────────────────────── */}
       <div className={cn("flex items-end justify-between inline-default")}>
         <div>

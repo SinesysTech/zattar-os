@@ -28,7 +28,7 @@ export function ModuloSubordinacaoReal({ data, onChange }: ModuloSubordinacaoRea
     data.reunioes_obrigatorias === true;
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       <div>
         <Heading level="card">CLT Disfarçada</Heading>
         <p className={cn("text-body-sm text-muted-foreground")}>
@@ -37,7 +37,7 @@ export function ModuloSubordinacaoReal({ data, onChange }: ModuloSubordinacaoRea
       </div>
 
       {/* C.2.1: Horário fixo */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>Cumpria horário fixo definido pela empresa?</Label>
         <SimNaoRadio
           id="cumpre-horario"
@@ -47,7 +47,7 @@ export function ModuloSubordinacaoReal({ data, onChange }: ModuloSubordinacaoRea
       </div>
 
       {/* C.2.2: Ordens de superior */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>Recebia ordens de um superior/gestor na empresa?</Label>
         <SimNaoRadio
           id="recebe-ordens"
@@ -57,7 +57,7 @@ export function ModuloSubordinacaoReal({ data, onChange }: ModuloSubordinacaoRea
       </div>
 
       {/* C.2.3: Reuniões obrigatórias */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>Participava de reuniões obrigatórias da empresa?</Label>
         <SimNaoRadio
           id="reunioes-obrigatorias"
@@ -73,7 +73,7 @@ export function ModuloSubordinacaoReal({ data, onChange }: ModuloSubordinacaoRea
       )}
 
       {/* C.2.4: Autorização para faltar */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>Tinha que pedir autorização para faltar ou tirar folga?</Label>
         <SimNaoRadio
           id="autorizacao-falta"
@@ -83,7 +83,7 @@ export function ModuloSubordinacaoReal({ data, onChange }: ModuloSubordinacaoRea
       </div>
 
       {/* C.2.5: Crachá/e-mail/uniforme */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>Usava crachá, e-mail corporativo ou uniforme da empresa?</Label>
         <SimNaoRadio
           id="cracha-email-uniforme"
@@ -93,7 +93,7 @@ export function ModuloSubordinacaoReal({ data, onChange }: ModuloSubordinacaoRea
       </div>
 
       {/* C.2.6: Local de trabalho */}
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Label htmlFor="local-trabalho">Onde realizava o trabalho?</Label>
         <Select
           value={data.local_trabalho ?? ''}
@@ -113,7 +113,7 @@ export function ModuloSubordinacaoReal({ data, onChange }: ModuloSubordinacaoRea
       </div>
 
       {/* C.2.7: Narrativa */}
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Label htmlFor="narrativa-rotina">Descreva como era sua rotina de trabalho na empresa</Label>
         <Textarea
           id="narrativa-rotina"

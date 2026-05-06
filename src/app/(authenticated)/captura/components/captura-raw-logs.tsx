@@ -71,7 +71,7 @@ function formatarValor(valor: unknown): string {
 
 function ValoresDiff({ valores }: { valores: ValorAlteradoLog[] }) {
   return (
-    <div className={cn("mt-2 stack-snug")}>
+    <div className={cn("flex flex-col mt-2 stack-snug")}>
       {valores.map((v, i) => (
         <div
           key={i}
@@ -155,7 +155,7 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
           <p className={cn("text-overline text-destructive mb-2")}>
             Erros ({erros.length})
           </p>
-          <div className={cn("stack-snug")}>
+          <div className={cn("flex flex-col stack-snug")}>
             {erros.map((log, i) => (
               <div
                 key={i}
@@ -177,7 +177,7 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
           <p className={cn("text-overline text-success mb-2")}>
             Processos incluídos ({inseridos.length})
           </p>
-          <div className={cn("stack-micro")}>
+          <div className={cn("flex flex-col stack-micro")}>
             {inseridos.slice(0, 30).map((log, i) => (
               <div
                 key={i}
@@ -252,7 +252,7 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
   const totalErro = rawLogs.filter((l) => l.status === 'error').length;
 
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       {/* Resumo geral */}
       <div className={cn("flex flex-wrap inline-tight items-center")}>
         <Badge variant="outline" className={cn("text-caption")}>
@@ -261,7 +261,7 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
         {totalSucesso > 0 && (
           <Badge
             variant="outline"
-            className={cn("text-caption inline-micro border-success/30 bg-success/5 text-success")}
+            className={cn("flex text-caption inline-micro border-success/30 bg-success/5 text-success")}
           >
             <CheckCircle2 className="h-3 w-3" />
             {totalSucesso} com sucesso
@@ -270,7 +270,7 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
         {totalErro > 0 && (
           <Badge
             variant="outline"
-            className={cn("text-caption inline-micro border-destructive/30 bg-destructive/5 text-destructive")}
+            className={cn("flex text-caption inline-micro border-destructive/30 bg-destructive/5 text-destructive")}
           >
             <XCircle className="h-3 w-3" />
             {totalErro} com erro{totalErro !== 1 ? 's' : ''}
@@ -279,7 +279,7 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
       </div>
 
       {/* Logs por tribunal/grau */}
-      <Accordion type="multiple" className={cn("stack-tight")}>
+      <Accordion type="multiple" className={cn("flex flex-col stack-tight")}>
         {rawLogs.map((rawLog) => {
           const logs = (rawLog.logs ?? []) as LogEntry[];
           const stats = calcularEstatisticas(logs);
@@ -327,7 +327,7 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
                 </div>
               </AccordionTrigger>
               <AccordionContent>
-                <div className={cn("stack-medium pb-3")}>
+                <div className={cn("flex flex-col stack-medium pb-3")}>
                   {/* Erro principal do raw log */}
                   {rawLog.erro && (
                     <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-start inline-tight rounded-lg border border-destructive/30 bg-destructive/6 p-3")}>

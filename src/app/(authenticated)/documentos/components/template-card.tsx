@@ -50,7 +50,7 @@ export function TemplateCard({
         <div className="flex items-start justify-between">
           <div className={cn("flex items-center inline-tight")}>
             <FileText className="h-5 w-5 text-muted-foreground" />
-            <div className={cn("stack-micro")}>
+            <div className={cn("flex flex-col stack-micro")}>
               <CardTitle className={cn("text-body line-clamp-1")}>{template.titulo}</CardTitle>
               {template.categoria && (
                 <Badge variant="secondary" className={cn("text-caption")}>

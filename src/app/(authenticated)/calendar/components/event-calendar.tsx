@@ -326,7 +326,7 @@ export function EventCalendar({
           <div className={cn("flex items-center inline-tight")}>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className={cn("inline-snug max-[479px]:h-8")}>
+                <Button variant="outline" className={cn("flex inline-snug max-[479px]:h-8")}>
                   <span>
                     <span className="xs:hidden" aria-hidden="true">
                       {{ month: "M", week: "S", day: "D", agenda: "A" }[view]}

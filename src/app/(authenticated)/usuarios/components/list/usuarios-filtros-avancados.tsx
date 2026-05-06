@@ -60,10 +60,10 @@ export function UsuariosFiltrosAvancados({
         </Button>
       </PopoverTrigger>
       <PopoverContent className={cn("w-80 inset-card-compact")} align="start">
-        <div className={cn("stack-default")}>
-          <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-default")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <small className="text-sm font-semibold leading-none">Status</small>
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <label className={cn("flex items-center inline-tight cursor-pointer")}>
                 <input
                   type="radio"
@@ -97,7 +97,7 @@ export function UsuariosFiltrosAvancados({
             </div>
           </div>
 
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <label htmlFor="oab" className="text-sm font-semibold leading-none">
               Número da OAB
             </label>
@@ -109,7 +109,7 @@ export function UsuariosFiltrosAvancados({
             />
           </div>
 
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <label htmlFor="ufOab" className="text-sm font-semibold leading-none">
               UF da OAB
             </label>

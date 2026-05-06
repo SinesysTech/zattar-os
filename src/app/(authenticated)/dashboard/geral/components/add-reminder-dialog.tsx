@@ -91,7 +91,7 @@ export function AddReminderDialog() {
             <form
               id="add-reminder-form"
               onSubmit={handleSubmit}
-              className={cn("stack-default px-6 py-4")}
+              className={cn("flex flex-col stack-default px-6 py-4")}
             >
               <div className={cn("grid inline-tight")}>
                 <Label htmlFor="reminder-text">Nota</Label>

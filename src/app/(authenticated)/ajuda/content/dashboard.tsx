@@ -75,8 +75,8 @@ const navigationActions: ActionDef[] = [
 
 export default function DashboardDoc() {
   return (
-    <div className={cn("stack-extra-loose")}>
-      <div className={cn("stack-tight")}>
+    <div className={cn("flex flex-col stack-extra-loose")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Heading level="page">Dashboard</Heading>
         <p className={cn("text-muted-foreground text-body-lg")}>
           Painel central do ZattarOS com visão consolidada das principais métricas do escritório.
@@ -122,7 +122,7 @@ export default function DashboardDoc() {
           por exemplo, clicar em &quot;Processos com prazo hoje&quot; abre a tela de Processos já filtrada
           pelos registros do dia.
         </p>
-        <ul className={cn("list-disc list-inside stack-micro text-muted-foreground text-body-sm mt-2")}>
+        <ul className={cn("flex flex-col list-disc list-inside stack-micro text-muted-foreground text-body-sm mt-2")}>
           <li>Gráficos de barras e linhas para evolução temporal</li>
           <li>Cards de contagem com indicadores de variação percentual</li>
           <li>Listas resumidas dos registros mais recentes ou urgentes</li>

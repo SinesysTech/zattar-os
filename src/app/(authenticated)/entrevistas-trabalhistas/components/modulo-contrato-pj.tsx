@@ -35,7 +35,7 @@ export function ModuloContratoPJ({ data, onChange }: ModuloContratoPJProps) {
   const empresaImpos = data.origem_pj === 'empresa_obrigou' || data.origem_pj === 'empresa_sugeriu';
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       <div>
         <Heading level="card">A Máscara do CNPJ</Heading>
         <p className={cn("text-body-sm text-muted-foreground")}>
@@ -44,7 +44,7 @@ export function ModuloContratoPJ({ data, onChange }: ModuloContratoPJProps) {
       </div>
 
       {/* C.1.1: Origem do PJ */}
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Label htmlFor="origem-pj">Quem pediu para você abrir o CNPJ/MEI?</Label>
         <Select
           value={data.origem_pj ?? ''}
@@ -69,7 +69,7 @@ export function ModuloContratoPJ({ data, onChange }: ModuloContratoPJProps) {
       </div>
 
       {/* C.1.2: Tipo de PJ */}
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Label htmlFor="tipo-pj">Qual o tipo de empresa/regime que abriu?</Label>
         <Select
           value={data.tipo_pj ?? ''}
@@ -89,7 +89,7 @@ export function ModuloContratoPJ({ data, onChange }: ModuloContratoPJProps) {
       </div>
 
       <div className={cn("grid inline-default sm:grid-cols-2")}>
-        <div className={cn("stack-tight sm:max-w-xs")}>
+        <div className={cn("flex flex-col stack-tight sm:max-w-xs")}>
           <Label htmlFor="data-inicio-pj">Data de início da relação PJ</Label>
           <Input
             id="data-inicio-pj"
@@ -98,7 +98,7 @@ export function ModuloContratoPJ({ data, onChange }: ModuloContratoPJProps) {
             onChange={(e) => onChange({ ...data, data_inicio_pj: e.target.value })}
           />
         </div>
-        <div className={cn("stack-tight sm:max-w-xs")}>
+        <div className={cn("flex flex-col stack-tight sm:max-w-xs")}>
           <Label htmlFor="data-fim-pj">Data de fim da relação PJ</Label>
           <Input
             id="data-fim-pj"
@@ -109,7 +109,7 @@ export function ModuloContratoPJ({ data, onChange }: ModuloContratoPJProps) {
         </div>
       </div>
 
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Label htmlFor="remuneracao-liquida">Remuneração líquida mensal</Label>
         <Input
           id="remuneracao-liquida"
@@ -121,7 +121,7 @@ export function ModuloContratoPJ({ data, onChange }: ModuloContratoPJProps) {
       </div>
 
       {/* C.1.3: Contrato formal */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>Existia contrato formal de prestação de serviços assinado?</Label>
         <SimNaoRadio
           id="contrato"
@@ -131,7 +131,7 @@ export function ModuloContratoPJ({ data, onChange }: ModuloContratoPJProps) {
       </div>
 
       {/* C.1.4: Empresa paga custos CNPJ */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>A empresa pagava os custos do CNPJ (contador, impostos, DAS)?</Label>
         <SimNaoRadio
           id="custos-cnpj"
@@ -146,7 +146,7 @@ export function ModuloContratoPJ({ data, onChange }: ModuloContratoPJProps) {
       </div>
 
       {/* C.1.5: Emissão de NF */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>Emitia nota fiscal mensal para a empresa?</Label>
         <SimNaoRadio
           id="nota-fiscal"
@@ -156,7 +156,7 @@ export function ModuloContratoPJ({ data, onChange }: ModuloContratoPJProps) {
       </div>
 
       {/* C.1.6: Tipo de pagamento */}
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Label htmlFor="tipo-pagamento">Como era feito o pagamento?</Label>
         <Select
           value={data.tipo_pagamento ?? ''}
@@ -176,7 +176,7 @@ export function ModuloContratoPJ({ data, onChange }: ModuloContratoPJProps) {
       </div>
 
       {/* C.1.7: Valor aproximado */}
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Label htmlFor="valor-mensal">Valor mensal aproximado recebido</Label>
         <Input
           id="valor-mensal"

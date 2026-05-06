@@ -201,8 +201,8 @@ export function SearchQuickFilters() {
           </button>
         </PopoverTrigger>
         <PopoverContent className={cn(POPOVER_CLASSES, 'w-64 inset-card-compact')} align="start">
-          <div className={cn("stack-medium")}>
-            <div className={cn("stack-snug")}>
+          <div className={cn("flex flex-col stack-medium")}>
+            <div className={cn("flex flex-col stack-snug")}>
               <Label htmlFor="pesquisa-oab-num">
                 <Text variant="meta-label">Número</Text>
               </Label>
@@ -215,7 +215,7 @@ export function SearchQuickFilters() {
                 className="tabular-nums"
               />
             </div>
-            <div className={cn("stack-snug")}>
+            <div className={cn("flex flex-col stack-snug")}>
               <Label htmlFor="pesquisa-oab-uf">
                 <Text variant="meta-label">UF</Text>
               </Label>
@@ -310,8 +310,8 @@ export function SearchQuickFilters() {
           </button>
         </PopoverTrigger>
         <PopoverContent className={cn(POPOVER_CLASSES, 'w-72 inset-card-compact')} align="start">
-          <div className={cn("stack-medium")}>
-            <div className={cn("stack-snug")}>
+          <div className={cn("flex flex-col stack-medium")}>
+            <div className={cn("flex flex-col stack-snug")}>
               <Label htmlFor="pesquisa-data-inicio">
                 <Text variant="meta-label">Data início</Text>
               </Label>
@@ -324,7 +324,7 @@ export function SearchQuickFilters() {
                 }
               />
             </div>
-            <div className={cn("stack-snug")}>
+            <div className={cn("flex flex-col stack-snug")}>
               <Label htmlFor="pesquisa-data-fim">
                 <Text variant="meta-label">Data fim</Text>
               </Label>

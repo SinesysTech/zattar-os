@@ -37,7 +37,7 @@ export function MetricasDBContent({ metricas }: MetricasDBContentProps) {
   }, [metricas.cacheHitRate]);
 
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       <div className={cn("flex items-center justify-end inline-tight")}>
         <Button
           variant="secondary"
@@ -58,7 +58,7 @@ export function MetricasDBContent({ metricas }: MetricasDBContentProps) {
             <CardTitle>Cache Hit Rate</CardTitle>
             <CardDescription>Cache de índices e tabelas</CardDescription>
           </CardHeader>
-          <CardContent className={cn("stack-default")}>
+          <CardContent className={cn("flex flex-col stack-default")}>
             <div>
               <div className="flex items-center justify-between">
                 <span className={cn("text-body-sm text-muted-foreground")}>Index hit rate</span>

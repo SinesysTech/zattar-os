@@ -73,7 +73,7 @@ export function ComunicacaoDetalhesDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className={cn("stack-loose")}>
+        <div className={cn("flex flex-col stack-loose")}>
           {/* Processo */}
           <div>
             <SectionHeading>Processo</SectionHeading>
@@ -124,7 +124,7 @@ export function ComunicacaoDetalhesDialog({
           {/* Partes */}
           <div>
             <SectionHeading>Partes</SectionHeading>
-            <div className={cn("stack-medium text-body-sm")}>
+            <div className={cn("flex flex-col stack-medium text-body-sm")}>
               {comunicacao.partesAutoras && comunicacao.partesAutoras.length > 0 && (
                 <div>
                   <Text variant="meta-label" className="text-muted-foreground">

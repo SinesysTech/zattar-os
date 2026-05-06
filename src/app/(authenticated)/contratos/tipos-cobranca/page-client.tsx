@@ -179,7 +179,7 @@ function TipoCobrancaDialog({ open, onOpenChange, tipo, onSuccess }: TipoCobranc
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
       <Form {...form}>
-        <form id="tipo-cobranca-form" onSubmit={form.handleSubmit(onSubmit)} className={cn("stack-default")}>
+        <form id="tipo-cobranca-form" onSubmit={form.handleSubmit(onSubmit)} className={cn("flex flex-col stack-default")}>
           <FormField
             control={form.control}
             name="nome"
@@ -311,7 +311,7 @@ export function TiposCobrancaPageClient() {
   const ativosCount = tipos.filter((t) => t.ativo).length;
 
   return (
-    <div className={cn("stack-default-plus")}>
+    <div className={cn("flex flex-col stack-default-plus")}>
       {/* Header */}
       <div className={cn("flex items-end justify-between inline-default")}>
         <div>
@@ -331,7 +331,7 @@ export function TiposCobrancaPageClient() {
       {/* Lista Glass */}
       <GlassPanel depth={1} className="overflow-hidden">
         {isLoading ? (
-          <div className={cn("inset-card-compact stack-tight")}>
+          <div className={cn("flex flex-col inset-card-compact stack-tight")}>
             {Array.from({ length: 5 }).map((_, i) => (
               <Skeleton key={i} className="h-14 w-full rounded-xl" />
             ))}

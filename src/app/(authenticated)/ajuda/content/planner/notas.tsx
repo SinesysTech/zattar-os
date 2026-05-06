@@ -21,7 +21,7 @@ import {
 
 export default function NotasDoc() {
   return (
-    <div className={cn("stack-extra-loose")}>
+    <div className={cn("flex flex-col stack-extra-loose")}>
       <div>
         <Heading level="page">Notas</Heading>
         <p className={cn("text-muted-foreground text-body-lg")}>

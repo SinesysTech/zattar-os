@@ -117,7 +117,7 @@ export function UrgencyList() {
       {expedientes.length === 0 ? (
         <EmptyState />
       ) : (
-        <div className={cn("stack-nano")}>
+        <div className={cn("flex flex-col stack-nano")}>
           {expedientes.map((item) => (
             <ExpedienteItem key={item.id} item={item} />
           ))}

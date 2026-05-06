@@ -57,7 +57,7 @@ export function DeadlineSidebar({ deadlines, className }: DeadlineSidebarProps) 
         <AlarmClock className="size-3.5 text-destructive" />
         <Text variant="caption" className="font-semibold text-foreground">Prazos Próximos</Text>
       </div>
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         {deadlines.map((dl) => {
           const u = urgencyClasses(dl.daysLeft, dl.fatal);
           return (

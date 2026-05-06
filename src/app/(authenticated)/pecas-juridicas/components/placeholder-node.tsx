@@ -130,7 +130,7 @@ export function PlaceholderNodeElement(
         <Tooltip>
           <TooltipTrigger asChild>{content}</TooltipTrigger>
           <TooltipContent side="top" className="max-w-xs">
-            <div className={cn("stack-micro")}>
+            <div className={cn("flex flex-col stack-micro")}>
               <p className={cn( "font-medium")}>{label}</p>
               <Text variant="caption">{description}</Text>
               <Text variant="caption" className="font-mono">

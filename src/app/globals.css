@@ -1879,39 +1879,49 @@
      Mapeamento canônico — alterar aqui afeta todo o app.
      ══════════════════════════════════════════════════════════ */
 
-  /* Inline — gap horizontal em flex-row.
-     Minimalista: NÃO aplica items-/justify- defaults para não sobrepor
-     classes do caller. Use o componente <Inline> quando precisar de
-     defaults opinativos (align="center", justify="start").
+  /* Inline / Stack — tokens semânticos de GAP apenas.
+     ⚠ Não aplicam display (flex/grid) deliberadamente: o caller
+     escolhe (grid grid-cols-3, flex flex-col, inline-flex, etc.) e
+     o token apenas fornece o valor de gap. Isso permite usar os
+     mesmos tokens em qualquer container — flex, grid, inline-flex —
+     sem conflito de display.
 
-     Escala expandida (Wave 8): 5 níveis intermediários para densidade
-     fina em UI legal/financeira (KPI strips, badges densos, toolbars). */
-  .inline-none         { @apply flex flex-row gap-0; }    /* 0px   — sem gap */
-  .inline-nano         { @apply flex flex-row gap-0.5; }  /* 2px   — micro */
-  .inline-micro        { @apply flex flex-row gap-1; }    /* 4px   — KPI baseline */
-  .inline-snug         { @apply flex flex-row gap-1.5; }  /* 6px   — sub-tight */
-  .inline-tight        { @apply flex flex-row gap-2; }    /* 8px */
-  .inline-tight-plus   { @apply flex flex-row gap-2.5; }  /* 10px  — entre tight/medium */
-  .inline-medium       { @apply flex flex-row gap-3; }    /* 12px  — entre tight/default */
-  .inline-default      { @apply flex flex-row gap-4; }    /* 16px */
-  .inline-default-plus { @apply flex flex-row gap-5; }    /* 20px  — entre default/loose */
-  .inline-loose        { @apply flex flex-row gap-6; }    /* 24px */
-  .inline-extra-loose  { @apply flex flex-row gap-8; }    /* 32px  — section */
+     Use o componente <Inline>/<Stack> quando precisar de wrapper
+     opinativo com flex-row/col + align/justify embutidos.
 
-  /* Stack — gap vertical em flex-col. Mesma escala expandida do Inline. */
-  .stack-none         { @apply flex flex-col gap-0; }    /* 0px   — sem gap */
-  .stack-nano         { @apply flex flex-col gap-0.5; }  /* 2px */
-  .stack-micro        { @apply flex flex-col gap-1; }    /* 4px */
-  .stack-snug         { @apply flex flex-col gap-1.5; }  /* 6px */
-  .stack-tight        { @apply flex flex-col gap-2; }    /* 8px */
-  .stack-tight-plus   { @apply flex flex-col gap-2.5; }  /* 10px  — entre tight/medium */
-  .stack-medium       { @apply flex flex-col gap-3; }    /* 12px */
-  .stack-default      { @apply flex flex-col gap-4; }    /* 16px */
-  .stack-default-plus { @apply flex flex-col gap-5; }    /* 20px  — entre default/loose */
-  .stack-loose        { @apply flex flex-col gap-6; }    /* 24px */
-  .stack-section      { @apply flex flex-col gap-8; }    /* 32px */
-  .stack-extra-loose  { @apply flex flex-col gap-10; }   /* 40px  — entre seções grandes */
-  .stack-field        { @apply flex flex-col gap-4; }    /* alias semântico */
+     Histórico: versão anterior aplicava `flex flex-row`/`flex flex-col`
+     causando regressão em containers grid (sobrepunha display: grid).
+     Wave 8c removeu para tornar tokens neutros em display. */
+
+  /* Gap horizontal/vertical (mesma escala — usa CSS gap, funciona em flex e grid) */
+  .inline-none         { @apply gap-0; }    /* 0px   — sem gap */
+  .inline-nano         { @apply gap-0.5; }  /* 2px   — micro */
+  .inline-micro        { @apply gap-1; }    /* 4px   — KPI baseline */
+  .inline-snug         { @apply gap-1.5; }  /* 6px   — sub-tight */
+  .inline-tight        { @apply gap-2; }    /* 8px */
+  .inline-tight-plus   { @apply gap-2.5; }  /* 10px  — entre tight/medium */
+  .inline-medium       { @apply gap-3; }    /* 12px  — entre tight/default */
+  .inline-default      { @apply gap-4; }    /* 16px */
+  .inline-default-plus { @apply gap-5; }    /* 20px  — entre default/loose */
+  .inline-loose        { @apply gap-6; }    /* 24px */
+  .inline-extra-loose  { @apply gap-8; }    /* 32px  — section */
+
+  /* Stack — alias da mesma escala (CSS gap funciona igual em flex-col).
+     Mantido como tokens nomeados separadamente para legibilidade
+     semântica no caller (stack-tight indica intenção vertical). */
+  .stack-none         { @apply gap-0; }
+  .stack-nano         { @apply gap-0.5; }
+  .stack-micro        { @apply gap-1; }
+  .stack-snug         { @apply gap-1.5; }
+  .stack-tight        { @apply gap-2; }
+  .stack-tight-plus   { @apply gap-2.5; }
+  .stack-medium       { @apply gap-3; }
+  .stack-default      { @apply gap-4; }
+  .stack-default-plus { @apply gap-5; }
+  .stack-loose        { @apply gap-6; }
+  .stack-section      { @apply gap-8; }
+  .stack-extra-loose  { @apply gap-10; }
+  .stack-field        { @apply gap-4; }
 
   /* Inset — padding semântico */
   .inset-card          { @apply p-4 sm:p-6; }

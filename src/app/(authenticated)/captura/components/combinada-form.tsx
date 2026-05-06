@@ -82,12 +82,12 @@ export const CombinadaForm = forwardRef<CapturaFormHandle, CombinadaFormProps>(
     }), [handleCaptura, isLoading]);
 
     return (
-      <div className={cn("stack-loose")}>
+      <div className={cn("flex flex-col stack-loose")}>
         <Alert>
           <Info className="h-4 w-4" />
           <AlertDescription>
             A captura unificada executa múltiplas capturas em uma única sessão autenticada:
-            <ul className={cn("list-disc list-inside mt-2 stack-micro text-body-sm")}>
+            <ul className={cn("flex flex-col list-disc list-inside mt-2 stack-micro text-body-sm")}>
               <li>Audiências Designadas (hoje até +1 ano)</li>
               <li>Audiências Realizadas (dia anterior)</li>
               <li>Audiências Canceladas (hoje até +1 ano)</li>

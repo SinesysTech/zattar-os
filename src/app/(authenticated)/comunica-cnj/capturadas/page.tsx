@@ -16,7 +16,7 @@ function CapturadasLoading() {
         ))}
       </div>
       <Skeleton className="h-10 w-full rounded-xl" />
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         {Array.from({ length: 6 }).map((_, i) => (
           <Skeleton key={i} className="h-14 rounded-2xl" />
         ))}

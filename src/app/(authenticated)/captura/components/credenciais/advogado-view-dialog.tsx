@@ -33,7 +33,7 @@ export function AdvogadoViewDialog({ credencial, open, onOpenChange }: Props) {
         {!credencial ? (
           <div className={cn("text-body-sm text-muted-foreground")}>Nenhum advogado selecionado.</div>
         ) : (
-          <div className={cn("stack-medium")}>
+          <div className={cn("flex flex-col stack-medium")}>
             <div>
               <p className={cn( "text-body-sm font-medium")}>{credencial.advogado_nome}</p>
               <Text variant="caption">

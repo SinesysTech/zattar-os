@@ -66,7 +66,7 @@ function AtaAudienciaButton({ audiencia }: { audiencia: AudienciaComResponsavel 
         <TooltipContent>Ata de Audiência</TooltipContent>
       </Tooltip>
       <PopoverContent className={cn("w-72 inset-card-compact")} align="start">
-        <div className={cn("stack-medium")}>
+        <div className={cn("flex flex-col stack-medium")}>
           <div className={cn("flex items-center inline-tight")}>
             <FileText className="h-5 w-5 text-success" />
             <Heading level="subsection" className={cn("text-body-sm")}>Ata de Audiência</Heading>
@@ -198,7 +198,7 @@ function ObservacoesCell({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn("w-80 inset-card-compact")} align="start">
-        <div className={cn("stack-medium")}>
+        <div className={cn("flex flex-col stack-medium")}>
           <div className={cn("flex items-center inline-tight")}>
             <MessageSquareText className="h-4 w-4 text-primary" />
             <Heading level="subsection" className={cn("text-body-sm")}>Observações</Heading>
@@ -333,16 +333,16 @@ function ModalidadeCell({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn("w-80 inset-card-compact")} align="start">
-        <div className={cn("stack-medium")}>
+        <div className={cn("flex flex-col stack-medium")}>
           {/* Seção Virtual */}
           {isVirtual && (
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Heading level="subsection" className={cn("text-body-sm flex items-center inline-tight")}>
                 <ExternalLink className="h-4 w-4 text-primary" />
                 Link da Audiência Virtual
               </Heading>
               {audiencia.urlAudienciaVirtual ? (
-                <div className={cn("stack-tight")}>
+                <div className={cn("flex flex-col stack-tight")}>
                   <div className={cn("flex items-center inline-tight")}>
                     <a
                       href={audiencia.urlAudienciaVirtual}
@@ -390,7 +390,7 @@ function ModalidadeCell({
 
           {/* Seção Presencial */}
           {isPresencial && (
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               {isVirtual && <div className={cn("border-t pt-3")} />}
               <Heading level="subsection" className={cn("text-body-sm flex items-center inline-tight")}>
                 <MapPin className="h-4 w-4 text-primary" />

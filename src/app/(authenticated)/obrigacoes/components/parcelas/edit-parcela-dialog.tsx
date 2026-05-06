@@ -135,8 +135,8 @@ export function EditParcelaDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className={cn("stack-default py-4")}>
-          <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-default py-4")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>Valor Bruto do Crédito Principal</Label>
             <Input
               type="text"
@@ -148,7 +148,7 @@ export function EditParcelaDialog({
             <Text variant="caption" className="text-muted-foreground">Atual: {formatCurrency(parcela.valorBrutoCreditoPrincipal)}</Text>
           </div>
 
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>Honorários Sucumbenciais</Label>
             <Input
               type="text"
@@ -160,7 +160,7 @@ export function EditParcelaDialog({
             <Text variant="caption">Atual: {formatCurrency(parcela.honorariosSucumbenciais)}</Text>
           </div>
 
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>Data de Vencimento</Label>
             <FormDatePicker
               value={valores.dataVencimento || undefined}

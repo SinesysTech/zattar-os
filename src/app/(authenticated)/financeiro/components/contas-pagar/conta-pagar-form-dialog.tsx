@@ -324,7 +324,7 @@ export function ContaPagarFormDialog({
           <DialogTitle>{isEditMode ? 'Editar Conta a Pagar' : 'Nova Conta a Pagar'}</DialogTitle>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-      <form ref={formRef} onSubmit={handleSubmit((data) => onSubmit(data as unknown as ContaPagarFormData))} className={cn("stack-default")}>
+      <form ref={formRef} onSubmit={handleSubmit((data) => onSubmit(data as unknown as ContaPagarFormData))} className={cn("flex flex-col stack-default")}>
         {Object.keys(errors).length > 0 && (
           <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 p-3 text-body-sm text-destructive")}>
             Corrija os erros no formulário antes de continuar.
@@ -332,7 +332,7 @@ export function ContaPagarFormDialog({
         )}
 
         {/* Descrição */}
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label htmlFor="descricao">
             Descrição <span className="text-destructive">*</span>
           </Label>
@@ -350,7 +350,7 @@ export function ContaPagarFormDialog({
         {/* Grid: Valor e Data de Vencimento */}
         <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
           {/* Valor */}
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label htmlFor="valor">
               Valor <span className="text-destructive">*</span>
             </Label>
@@ -371,7 +371,7 @@ export function ContaPagarFormDialog({
           </div>
 
           {/* Data de Vencimento */}
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>
               Data de Vencimento <span className="text-destructive">*</span>
             </Label>
@@ -412,7 +412,7 @@ export function ContaPagarFormDialog({
         {/* Grid: Categoria e Forma de Pagamento */}
         <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
           {/* Categoria */}
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>Categoria</Label>
             <Select
               value={watch('categoria') || ''}
@@ -433,7 +433,7 @@ export function ContaPagarFormDialog({
           </div>
 
           {/* Forma de Pagamento */}
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>Forma de Pagamento</Label>
             <Select
               value={watch('formaPagamento') || ''}
@@ -459,7 +459,7 @@ export function ContaPagarFormDialog({
         {/* Grid: Conta Bancária e Fornecedor */}
         <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
           {/* Conta Bancária */}
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>Conta Bancária</Label>
             <Select
               value={watch('contaBancariaId')?.toString() || ''}
@@ -482,7 +482,7 @@ export function ContaPagarFormDialog({
           </div>
 
           {/* Fornecedor */}
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>Fornecedor</Label>
             <Select
               value={watch('clienteId')?.toString() || ''}
@@ -508,7 +508,7 @@ export function ContaPagarFormDialog({
         {/* Grid: Plano de Contas e Centro de Custo */}
         <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
           {/* Plano de Contas */}
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>
               Conta Contábil {hasContasContabeis && <span className="text-destructive">*</span>}
             </Label>
@@ -536,7 +536,7 @@ export function ContaPagarFormDialog({
           </div>
 
           {/* Centro de Custo */}
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>Centro de Custo</Label>
             <Select
               value={watch('centroCustoId')?.toString() || ''}
@@ -560,7 +560,7 @@ export function ContaPagarFormDialog({
         </div>
 
         {/* Número do Documento */}
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label htmlFor="documento">Número do Documento</Label>
           <Input
             id="documento"
@@ -571,7 +571,7 @@ export function ContaPagarFormDialog({
         </div>
 
         {/* Recorrência */}
-        <div className={cn("stack-default rounded-lg border inset-card-compact")}>
+        <div className={cn("flex flex-col stack-default rounded-lg border inset-card-compact")}>
           <div className="flex items-center justify-between">
             <div>
               <Label htmlFor="recorrente" className={cn( "text-body font-medium")}>
@@ -595,7 +595,7 @@ export function ContaPagarFormDialog({
           </div>
 
           {recorrente && (
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label>
                 Frequência <span className="text-destructive">*</span>
               </Label>
@@ -625,7 +625,7 @@ export function ContaPagarFormDialog({
         </div>
 
         {/* Observações */}
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label htmlFor="observacoes">Observações</Label>
           <Textarea
             id="observacoes"

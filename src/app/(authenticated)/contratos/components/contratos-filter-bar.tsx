@@ -189,7 +189,7 @@ function SegmentoFilter({
                           onChange(isSelected ? '' : segId);
                           setOpen(false);
                         }}
-                        className={cn("inline-tight rounded-lg text-caption px-2 py-1.5")}
+                        className={cn("flex inline-tight rounded-lg text-caption px-2 py-1.5")}
                       >
                         <span>{segmento.nome}</span>
                         {isSelected && <Check className="size-3 ml-auto text-primary shrink-0" />}
@@ -239,7 +239,7 @@ function TipoContratoFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-48')} align="start" side="bottom">
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-nano")}>
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col p-2 stack-nano")}>
           {options.map(([value, optLabel]) => (
             <button
               key={value}
@@ -298,7 +298,7 @@ function TipoCobrancaFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-48')} align="start" side="bottom">
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-nano")}>
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col p-2 stack-nano")}>
           {options.map(([value, optLabel]) => (
             <button
               key={value}
@@ -349,7 +349,7 @@ function SortFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-56')} align="start" side="bottom">
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-nano")}>
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col p-2 stack-nano")}>
           <div className={cn("px-2 pt-1 pb-1.5 text-meta-label text-muted-foreground/70")}>
             Ordenar por
           </div>

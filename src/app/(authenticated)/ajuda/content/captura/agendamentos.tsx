@@ -22,7 +22,7 @@ import {
 
 export default function CapturaAgendamentos() {
   return (
-    <div className={cn("stack-extra-loose")}>
+    <div className={cn("flex flex-col stack-extra-loose")}>
       <div>
         <Heading level="page">Agendamentos de Captura</Heading>
         <p className="text-muted-foreground mt-2">

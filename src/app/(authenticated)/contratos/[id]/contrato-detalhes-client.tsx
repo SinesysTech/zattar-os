@@ -309,23 +309,23 @@ export function ContratoDetalhesClient({
         className={cn("flex flex-col inline-default-plus")}
       >
         <TabsList className="flex w-full max-w-full overflow-x-auto">
-          <TabsTrigger value="resumo" className={cn("inline-snug")}>
+          <TabsTrigger value="resumo" className={cn("flex inline-snug")}>
             <LayoutDashboard className="size-3.5" />
             Resumo
           </TabsTrigger>
-          <TabsTrigger value="financeiro" className={cn("inline-snug")}>
+          <TabsTrigger value="financeiro" className={cn("flex inline-snug")}>
             <Wallet className="size-3.5" />
             Financeiro
           </TabsTrigger>
-          <TabsTrigger value="documentos" className={cn("inline-snug")}>
+          <TabsTrigger value="documentos" className={cn("flex inline-snug")}>
             <FileText className="size-3.5" />
             Documentos
           </TabsTrigger>
-          <TabsTrigger value="historico" className={cn("inline-snug")}>
+          <TabsTrigger value="historico" className={cn("flex inline-snug")}>
             <History className="size-3.5" />
             Histórico
           </TabsTrigger>
-          <TabsTrigger value="entrevista" className={cn("inline-snug")}>
+          <TabsTrigger value="entrevista" className={cn("flex inline-snug")}>
             <ClipboardList className="size-3.5" />
             Entrevista
           </TabsTrigger>

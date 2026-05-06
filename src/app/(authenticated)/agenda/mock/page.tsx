@@ -128,7 +128,7 @@ function Toolbar({
   const activeFilters = sourceFilter.size;
 
   return (
-    <div className={cn("stack-medium")}>
+    <div className={cn("flex flex-col stack-medium")}>
       {/* Row 1: Title + New Event */}
       <div className={cn("flex items-end justify-between inline-default")}>
         <div>
@@ -388,7 +388,7 @@ function MonthView({ events, currentDate, onEventClick }: { events: MockCalendar
               </div>
 
               {/* Events */}
-              <div className={cn("stack-nano")}>
+              <div className={cn("flex flex-col stack-nano")}>
                 {dayEvents.slice(0, maxVisible).map((ev) => (
                   <EventChip key={ev.id} event={ev} compact onClick={() => onEventClick(ev)} />
                 ))}
@@ -442,7 +442,7 @@ function WeekView({ events, currentDate, onEventClick }: { events: MockCalendarE
           <div className={cn("grid grid-cols-8 border-b border-border/10 pb-1 mb-1")}>
             <div className={cn("text-[8px] text-muted-foreground/45 flex items-center justify-end pr-2")}>dia inteiro</div>
             {allDayByDay.map((dayEvents, i) => (
-              <div key={i} className={cn("px-0.5 stack-nano")}>
+              <div key={i} className={cn("flex flex-col px-0.5 stack-nano")}>
                 {dayEvents.map((ev) => (
                   <EventChip key={ev.id} event={ev} compact onClick={() => onEventClick(ev)} />
                 ))}
@@ -526,7 +526,7 @@ function DayView({ events, currentDate, onEventClick }: { events: MockCalendarEv
       {allDay.length > 0 && (
         <div className={cn("mb-3 pb-2 border-b border-border/10")}>
           <span className={cn(/* design-system-escape: tracking-wider sem token DS; */ "text-[9px] text-muted-foreground/50 uppercase tracking-wider font-medium")}>Dia inteiro</span>
-          <div className={cn("mt-1 stack-micro")}>
+          <div className={cn("flex flex-col mt-1 stack-micro")}>
             {allDay.map((ev) => (
               <EventChip key={ev.id} event={ev} compact onClick={() => onEventClick(ev)} />
             ))}
@@ -547,7 +547,7 @@ function DayView({ events, currentDate, onEventClick }: { events: MockCalendarEv
                 {String(hour).padStart(2, "0")}:00
               </div>
               {/* Events area */}
-              <div className={cn("flex-1 border-t border-border/6 py-0.5 stack-nano relative")}>
+              <div className={cn("flex flex-col flex-1 border-t border-border/6 py-0.5 stack-nano relative")}>
                 {isNowHour && (
                   <div
                     className="absolute left-0 right-0 z-10 flex items-center"
@@ -593,7 +593,7 @@ function AgendaListView({ events, currentDate, onEventClick }: { events: MockCal
 
   return (
     <GlassPanel className={cn(/* design-system-escape: sm:p-5 sem equivalente DS */ "inset-card-compact sm:p-5")}>
-      <div className={cn("stack-none")}>
+      <div className={cn("flex flex-col stack-none")}>
         {days.length === 0 && (
           <div className={cn("py-16 flex flex-col items-center text-center")}>
             <Calendar className="size-8 text-muted-foreground/45 mb-3" />
@@ -621,7 +621,7 @@ function AgendaListView({ events, currentDate, onEventClick }: { events: MockCal
               </div>
 
               {/* Events */}
-              <div className={cn("pl-11 pb-2 stack-micro")}>
+              <div className={cn("flex flex-col pl-11 pb-2 stack-micro")}>
                 {dayEvents.map((ev) => {
                   const c = COLOR_MAP[ev.color];
                   const srcCfg = SOURCE_CONFIG[ev.source];
@@ -687,7 +687,7 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
   const intensidade = dayEvents.length <= 2 ? "leve" : dayEvents.length <= 5 ? "moderado" : "intenso";
 
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       {/* Briefing */}
       <div className={cn("relative overflow-hidden rounded-2xl border border-primary/8 bg-primary/2 px-4 py-3.5 sm:px-5")}>
         <div className="absolute top-0 right-0 w-24 h-24 bg-primary/3 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
@@ -726,12 +726,12 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
               </div>
             </div>
 
-            <div className={cn("stack-none")}>
+            <div className={cn("flex flex-col stack-none")}>
               {/* All-day events */}
               {allDay.length > 0 && (
                 <div className={cn("mb-3 pb-2 border-b border-border/8")}>
                   <span className={cn( "text-[8px] uppercase tracking-[0.15em] text-muted-foreground/45 font-semibold")}>Dia inteiro</span>
-                  <div className={cn("mt-1 stack-micro")}>
+                  <div className={cn("flex flex-col mt-1 stack-micro")}>
                     {allDay.map((ev) => <EventChip key={ev.id} event={ev} compact onClick={() => onEventClick(ev)} />)}
                   </div>
                 </div>
@@ -768,7 +768,7 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
         </div>
 
         {/* Sidebar (2/7) */}
-        <div className={cn("lg:col-span-2 stack-default")}>
+        <div className={cn("flex flex-col lg:col-span-2 stack-default")}>
           {/* Prep Radar */}
           <GlassPanel className={cn("inset-card-compact")}>
             <div className={cn("flex items-center inline-tight mb-3")}>
@@ -778,7 +778,7 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
                 <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "text-[9px] tabular-nums px-1.5 py-0.5 rounded-full bg-warning/8 text-warning/50 font-semibold ml-auto")}>{needsPrep.length}</span>
               )}
             </div>
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               {needsPrep.length > 0 ? needsPrep.map((ev) => <PrepRadarItem key={ev.id} event={ev} />) : (
                 <div className={cn("py-4 text-center")}>
                   <CheckCircle2 className="size-5 text-success/25 mx-auto mb-1.5" />
@@ -795,7 +795,7 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
                 <AlertTriangle className="size-3 text-destructive/40" />
                 <span className={cn( "text-[11px] font-medium text-muted-foreground/50")}>Alertas</span>
               </div>
-              <div className={cn("stack-tight")}>
+              <div className={cn("flex flex-col stack-tight")}>
                 {dayEvents.filter((e) => e.prepStatus === "pendente").map((ev) => (
                   <AlertCard key={ev.id} icon={Timer} title={ev.title} desc={ev.description ?? "Preparação pendente"} variant="destructive" />
                 ))}
@@ -815,7 +815,7 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
               <Zap className="size-3 text-primary/40" />
               <span className={cn( "text-[11px] font-medium text-muted-foreground/50")}>Ações</span>
             </div>
-            <div className={cn("stack-nano")}>
+            <div className={cn("flex flex-col stack-nano")}>
               {[
                 { label: "Abrir PJe", icon: ExternalLink },
                 { label: "Preparar peça", icon: FileText },
@@ -1035,7 +1035,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
   return (
     <>
       <div className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm" onClick={onClose} />
-      <div className={cn("fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md max-h-[85vh] overflow-y-auto rounded-2xl border border-border/20 bg-background shadow-lg inset-dialog stack-default")}>
+      <div className={cn("flex flex-col fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md max-h-[85vh] overflow-y-auto rounded-2xl border border-border/20 bg-background shadow-lg inset-dialog stack-default")}>
         {/* Header */}
         <div className={cn("flex items-start justify-between inline-medium")}>
           <div className={cn("flex items-center inline-tight-plus")}>
@@ -1059,7 +1059,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
         </div>
 
         {/* Fields */}
-        <div className={cn("stack-medium")}>
+        <div className={cn("flex flex-col stack-medium")}>
           {/* Date/Time */}
           <Text variant="caption" as="div" className="flex items-center gap-3">
             <Calendar className="size-3.5 text-muted-foreground/55" />
@@ -1189,7 +1189,7 @@ export default function AgendaMockPage() {
   }
 
   return (
-    <div className={cn("stack-default pb-12")}>
+    <div className={cn("flex flex-col stack-default pb-12")}>
       <Toolbar
         view={view}
         setView={setView}

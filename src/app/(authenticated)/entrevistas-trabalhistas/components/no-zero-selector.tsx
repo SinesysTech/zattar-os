@@ -65,7 +65,7 @@ export function NoZeroSelector({ onSelect, isLoading }: NoZeroSelectorProps) {
   const perfisDisponiveis = selected ? PERFIS_POR_TRILHA[selected] : [];
 
   return (
-    <div className={cn("mx-auto max-w-2xl stack-loose")}>
+    <div className={cn("flex flex-col mx-auto max-w-2xl stack-loose")}>
       <div className="text-center">
         <Heading level="card">Qual era a natureza principal do serviço prestado?</Heading>
         <Text variant="caption" className="mt-1">
@@ -108,8 +108,8 @@ export function NoZeroSelector({ onSelect, isLoading }: NoZeroSelectorProps) {
       </div>
 
       {selected && (
-        <GlassPanel className={cn("stack-default inset-card-compact")}>
-          <div className={cn("stack-tight")}>
+        <GlassPanel className={cn("flex flex-col stack-default inset-card-compact")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label htmlFor="perfil">Perfil do reclamante (opcional)</Label>
             <Select value={perfil ?? ''} onValueChange={(v) => setPerfil(v as PerfilReclamante)}>
               <SelectTrigger id="perfil">

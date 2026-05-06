@@ -102,7 +102,7 @@ function ProgressSegment({
   const pctPending = total > 0 ? ((total - resolved) / total) * 100 : 0;
 
   return (
-    <div className={cn("stack-snug")}>
+    <div className={cn("flex flex-col stack-snug")}>
       <div className="flex h-1.5 w-full overflow-hidden rounded-full bg-border/20">
         <div
           className="rounded-full bg-success transition-all duration-500"
@@ -122,7 +122,7 @@ function ProgressSegment({
 
 function MatchCriteriaList({ criterios }: { criterios: MatchCriterio[] }) {
   return (
-    <ul className={cn("stack-tight")}>
+    <ul className={cn("flex flex-col stack-tight")}>
       {criterios.map((c, i) => (
         <li key={i} className={cn("flex items-start inline-tight")}>
           {c.match ? (
@@ -156,7 +156,7 @@ function NoMatchState({
       <div className="flex size-14 items-center justify-center rounded-full bg-muted/40">
         <AlertCircle className="size-6 text-muted-foreground" />
       </div>
-      <div className={cn("stack-micro")}>
+      <div className={cn("flex flex-col stack-micro")}>
         <Heading level="widget">Nenhum match encontrado</Heading>
         <Text variant="caption" className="text-muted-foreground">
           Não encontramos um expediente compatível
@@ -165,7 +165,7 @@ function NoMatchState({
       <div className={cn("flex w-full max-w-60 flex-col items-center inline-tight")}>
         <Button
           variant="outline"
-          className={cn("w-full inline-tight text-caption")}
+          className={cn("flex w-full inline-tight text-caption")}
           onClick={onBuscarManualmente}
         >
           <Search className="size-3.5" aria-hidden />
@@ -173,7 +173,7 @@ function NoMatchState({
         </Button>
         <Button
           variant="outline"
-          className={cn("w-full inline-tight text-caption")}
+          className={cn("flex w-full inline-tight text-caption")}
           onClick={onCriarNovo}
         >
           <Plus className="size-3.5" aria-hidden />
@@ -197,7 +197,7 @@ function AllResolvedState() {
       <div className="flex size-16 items-center justify-center rounded-full bg-success/10">
         <CheckCircle2 className="size-8 text-success" />
       </div>
-      <div className={cn("stack-micro")}>
+      <div className={cn("flex flex-col stack-micro")}>
         <Heading level="section">Tudo resolvido!</Heading>
         <Text variant="caption" className="text-muted-foreground">
           Todas as comunicações órfãs foram processadas
@@ -399,7 +399,7 @@ export function GazetteOrphanResolver() {
   return (
     <GlassPanel depth={1} className="flex h-full flex-col overflow-hidden">
       {/* ── Header ── */}
-      <div className={cn("stack-medium border-b border-border/40 inset-card-compact")}>
+      <div className={cn("flex flex-col stack-medium border-b border-border/40 inset-card-compact")}>
         {/* Title row */}
         <div className={cn("flex items-center justify-between inline-medium")}>
           <div className={cn("flex items-center inline-tight-plus")}>
@@ -416,7 +416,7 @@ export function GazetteOrphanResolver() {
               <Button
                 variant="outline"
                 size="sm"
-                className={cn("h-7 inline-snug border-success/20 bg-success/10 px-3 text-caption text-success hover:bg-success/15")}
+                className={cn("flex h-7 inline-snug border-success/20 bg-success/10 px-3 text-caption text-success hover:bg-success/15")}
                 onClick={handleAcceptHighConfidence}
               >
                 <Check className="size-3" aria-hidden />
@@ -447,7 +447,7 @@ export function GazetteOrphanResolver() {
           <Button
             variant="ghost"
             size="sm"
-            className={cn("h-7 inline-micro px-2 text-caption")}
+            className={cn("flex h-7 inline-micro px-2 text-caption")}
             disabled={currentIndex === 0}
             onClick={goPrev}
           >
@@ -457,7 +457,7 @@ export function GazetteOrphanResolver() {
           <Button
             variant="ghost"
             size="sm"
-            className={cn("h-7 inline-micro px-2 text-caption")}
+            className={cn("flex h-7 inline-micro px-2 text-caption")}
             disabled={currentIndex === orphans.length - 1}
             onClick={goNext}
           >
@@ -501,7 +501,7 @@ export function GazetteOrphanResolver() {
           </div>
 
           {/* Processo */}
-          <div className={cn("mt-4 stack-nano")}>
+          <div className={cn("flex flex-col mt-4 stack-nano")}>
             <Text variant="overline" className="text-muted-foreground/70">
               Processo
             </Text>
@@ -514,7 +514,7 @@ export function GazetteOrphanResolver() {
           </div>
 
           {/* Partes */}
-          <div className={cn("mt-3 stack-snug")}>
+          <div className={cn("flex flex-col mt-3 stack-snug")}>
             {current.partesAutor.length > 0 && (
               <div>
                 <Text variant="micro-caption">Autor: </Text>
@@ -535,7 +535,7 @@ export function GazetteOrphanResolver() {
 
           {/* Órgão */}
           {current.nomeOrgao && (
-            <div className={cn("mt-3 stack-nano")}>
+            <div className={cn("flex flex-col mt-3 stack-nano")}>
               <Text variant="overline" className="text-muted-foreground/70">
                 Órgão
               </Text>
@@ -547,7 +547,7 @@ export function GazetteOrphanResolver() {
 
           {/* Texto excerpt */}
           {current.texto && (
-            <div className={cn("mt-4 stack-micro")}>
+            <div className={cn("flex flex-col mt-4 stack-micro")}>
               <Text variant="overline" className="text-muted-foreground/70">
                 Trecho
               </Text>
@@ -591,7 +591,7 @@ export function GazetteOrphanResolver() {
               </div>
 
               {/* Match card */}
-              <div className={cn("mt-3 stack-tight-plus rounded-xl border border-success/20 bg-success/5 inset-card-compact")}>
+              <div className={cn("flex flex-col mt-3 stack-tight-plus rounded-xl border border-success/20 bg-success/5 inset-card-compact")}>
                 <div>
                   <Text variant="micro-caption">Expediente</Text>
                   <p className={cn( "text-body-sm font-semibold text-foreground")}>
@@ -625,7 +625,7 @@ export function GazetteOrphanResolver() {
               </div>
 
               {/* Criteria */}
-              <div className={cn("mt-4 stack-tight")}>
+              <div className={cn("flex flex-col mt-4 stack-tight")}>
                 <Text variant="overline" className="text-muted-foreground/70">
                   Critérios de Match
                 </Text>
@@ -633,7 +633,7 @@ export function GazetteOrphanResolver() {
               </div>
 
               {/* Action buttons */}
-              <div className={cn("mt-6 stack-tight")}>
+              <div className={cn("flex flex-col mt-6 stack-tight")}>
                 <button
                   type="button"
                   className={cn(/* design-system-escape: py-2.5 padding direcional sem Inset equiv.; */ "w-full rounded-xl border border-success/20 bg-success/10 py-2.5 text-center text-caption font-medium text-success transition-colors hover:bg-success/15")}
@@ -645,7 +645,7 @@ export function GazetteOrphanResolver() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className={cn("h-9 inline-snug text-caption")}
+                    className={cn("flex h-9 inline-snug text-caption")}
                     onClick={() => handleBuscarManualmente(current)}
                   >
                     <Search className="size-3" aria-hidden />
@@ -654,7 +654,7 @@ export function GazetteOrphanResolver() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className={cn("h-9 inline-snug text-caption")}
+                    className={cn("flex h-9 inline-snug text-caption")}
                     onClick={() => setIsExpedienteDialogOpen(true)}
                   >
                     <Plus className="size-3" aria-hidden />

@@ -22,7 +22,7 @@ export function HorasExtrasCalculator() {
   const totalBruto = totalHorasExtras + dsr;
 
   return (
-    <div className={cn("max-w-6xl mx-auto stack-section animate-in fade-in duration-700 w-full pb-20")}>
+    <div className={cn("flex flex-col max-w-6xl mx-auto stack-section animate-in fade-in duration-700 w-full pb-20")}>
       
       {/* Header */}
       <div className="mb-12">
@@ -39,10 +39,10 @@ export function HorasExtrasCalculator() {
 
       <div className={cn("grid grid-cols-1 lg:grid-cols-12 inline-extra-loose items-start")}>
         {/* Formulário / Inputs */}
-        <div className={cn("lg:col-span-7 stack-loose")}>
+        <div className={cn("flex flex-col lg:col-span-7 stack-loose")}>
           <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "bg-surface-container-high/60 backdrop-blur-xl rounded-2xl p-8 border border-foreground/5 shadow-lg")}>
             <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-extra-loose")}>
-              <div className={cn("stack-tight")}>
+              <div className={cn("flex flex-col stack-tight")}>
                 <Text variant="caption" className="uppercase tracking-widest text-on-surface-variant font-bold">Salário Bruto (R$)</Text>
                 <input 
                   type="number" 
@@ -52,7 +52,7 @@ export function HorasExtrasCalculator() {
                 />
               </div>
 
-              <div className={cn("stack-tight")}>
+              <div className={cn("flex flex-col stack-tight")}>
                 <Text variant="caption" className="uppercase tracking-widest text-on-surface-variant font-bold">Jornada Mensal</Text>
                 <input 
                   type="number" 
@@ -62,7 +62,7 @@ export function HorasExtrasCalculator() {
                 />
               </div>
 
-              <div className={cn("stack-tight")}>
+              <div className={cn("flex flex-col stack-tight")}>
                 <Text variant="caption" className="uppercase tracking-widest text-on-surface-variant font-bold">Qtd. Horas Extras</Text>
                 <input 
                   type="number" 
@@ -72,7 +72,7 @@ export function HorasExtrasCalculator() {
                 />
               </div>
 
-              <div className={cn("stack-tight")}>
+              <div className={cn("flex flex-col stack-tight")}>
                 <Text variant="caption" className="uppercase tracking-widest text-on-surface-variant font-bold">Adicional</Text>
                 <div className={cn("flex inline-tight")}>
                   <button 
@@ -121,7 +121,7 @@ export function HorasExtrasCalculator() {
               </div>
             </div>
             
-            <div className={cn("px-8 stack-default mb-8")}>
+            <div className={cn("flex flex-col px-8 stack-default mb-8")}>
               <div className={cn("flex justify-between items-center py-3 border-b border-foreground/5")}>
                 <span className={cn("text-on-surface-variant text-body-sm")}>Valor da Hora Base</span>
                 <span className={cn( "text-on-surface font-medium")}>R$ {valorHora.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>

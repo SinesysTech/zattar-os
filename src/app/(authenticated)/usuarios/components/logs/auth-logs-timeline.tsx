@@ -91,11 +91,11 @@ export function AuthLogsTimeline({ usuarioId }: AuthLogsTimelineProps) {
       <GlassPanel depth={1} className={cn("inset-dialog")}>
         <Skeleton className="h-6 w-48" />
         <Skeleton className="h-4 w-full mt-2" />
-        <div className={cn("stack-default mt-4")}>
+        <div className={cn("flex flex-col stack-default mt-4")}>
           {[1, 2, 3].map((i) => (
             <div key={i} className={cn("flex inline-default")}>
               <Skeleton className="h-10 w-10 rounded-full" />
-              <div className={cn("flex-1 stack-tight")}>
+              <div className={cn("flex flex-col flex-1 stack-tight")}>
                 <Skeleton className="h-4 w-32" />
                 <Skeleton className="h-3 w-full" />
               </div>
@@ -142,7 +142,7 @@ export function AuthLogsTimeline({ usuarioId }: AuthLogsTimelineProps) {
             {/* Linha vertical da timeline */}
             <div className="absolute left-5 top-0 bottom-0 w-px bg-border" />
 
-            <div className={cn("stack-loose")}>
+            <div className={cn("flex flex-col stack-loose")}>
               {logs.map((log, index) => {
                 const Icon = EVENT_ICONS[log.eventType];
                 const label = EVENT_LABELS[log.eventType];
@@ -161,7 +161,7 @@ export function AuthLogsTimeline({ usuarioId }: AuthLogsTimelineProps) {
                     <div className={cn("flex-1 pb-6")}>
                       <div className={cn("bg-muted/4 border-border/15 rounded-xl inset-card-compact")}>
                         <div className={cn("flex items-start justify-between inline-default")}>
-                          <div className={cn("stack-micro")}>
+                          <div className={cn("flex flex-col stack-micro")}>
                             <p className={`font-medium ${colorClass}`}>{label}</p>
                             <p className={cn("text-body-sm text-muted-foreground")}>
                               {formatDistanceToNow(new Date(log.timestamp), {
@@ -172,7 +172,7 @@ export function AuthLogsTimeline({ usuarioId }: AuthLogsTimelineProps) {
                           </div>
                         </div>
 
-                        <div className={cn("mt-3 stack-tight text-body-sm text-muted-foreground")}>
+                        <div className={cn("flex flex-col mt-3 stack-tight text-body-sm text-muted-foreground")}>
                           {log.ipAddress && (
                             <div className={cn("flex items-center inline-tight")}>
                               <MapPin className="h-3.5 w-3.5" />

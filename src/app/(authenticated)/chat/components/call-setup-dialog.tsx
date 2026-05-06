@@ -144,7 +144,7 @@ export function CallSetupDialog({
         )}
 
         {/* Device Selection Controls */}
-        <div className={cn("stack-default")}>
+        <div className={cn("flex flex-col stack-default")}>
           {/* Camera Selection */}
           {tipo === TipoChamada.Video && (
             <div className={cn("grid inline-tight")}>

@@ -71,7 +71,7 @@ export function DocumentosCommandCenter({
   } = useDocumentosPage({ initialData });
 
   return (
-    <div className={cn("stack-default-plus")}>
+    <div className={cn("flex flex-col stack-default-plus")}>
       {/* ── Header (título do módulo + abas + ação) ─────── */}
       <AssinaturaDigitalPageNav
         action={

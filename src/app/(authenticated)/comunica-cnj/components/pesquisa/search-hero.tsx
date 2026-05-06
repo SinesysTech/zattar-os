@@ -62,7 +62,7 @@ export function SearchHero({ onBuscar }: SearchHeroProps) {
           size="sm"
           onClick={onBuscar}
           disabled={isBuscando}
-          className={cn("inline-snug rounded-xl")}
+          className={cn("flex inline-snug rounded-xl")}
         >
           {isBuscando ? (
             <LoadingSpinner />

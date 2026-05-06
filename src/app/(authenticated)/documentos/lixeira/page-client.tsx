@@ -102,7 +102,7 @@ function formatDeletedAt(date: string | null): string {
 
 function LoadingState() {
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       <Skeleton className="h-24 w-full" />
       <Skeleton className="h-24 w-full" />
       <Skeleton className="h-24 w-full" />
@@ -339,7 +339,7 @@ export default function LixeiraClient() {
   return (
     <>
       <div className={cn("flex flex-col inline-default sm:flex-row sm:items-start sm:justify-between")}>
-        <div className={cn("stack-snug")}>
+        <div className={cn("flex flex-col stack-snug")}>
           <Heading level="page">Lixeira</Heading>
           <p className={cn("text-body-sm text-muted-foreground/50 mt-0.5")}>
             Documentos excluídos que serão deletados permanentemente após 30 dias
@@ -372,7 +372,7 @@ export default function LixeiraClient() {
       ) : documentosFiltrados.length === 0 ? (
         <LixeiraEmptyState onVoltar={() => router.push('/app/documentos')} />
       ) : (
-        <div className={cn("stack-default")}>
+        <div className={cn("flex flex-col stack-default")}>
           <AvisoExclusaoCard />
           {documentosFiltrados.map((documento) => (
             <DocumentoCard

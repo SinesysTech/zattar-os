@@ -206,14 +206,14 @@ export function CapturadasClient() {
       }`;
 
   return (
-    <div className={cn("stack-default-plus")}>
+    <div className={cn("flex flex-col stack-default-plus")}>
       <DiarioOficialPageNav
         active="capturadas"
         subtitle={subtitle}
         action={
           <GazetteSyncDialog
             trigger={
-              <Button variant="outline" size="sm" className={cn("inline-snug rounded-xl")}>
+              <Button variant="outline" size="sm" className={cn("flex inline-snug rounded-xl")}>
                 <RefreshCw className="size-3.5" aria-hidden />
                 Sincronizar
               </Button>
@@ -265,7 +265,7 @@ export function CapturadasClient() {
 
       {/* Content */}
       {isLoading ? (
-        <div className={cn("stack-medium")}>
+        <div className={cn("flex flex-col stack-medium")}>
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}

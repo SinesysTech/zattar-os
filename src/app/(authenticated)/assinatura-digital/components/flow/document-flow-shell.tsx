@@ -182,7 +182,7 @@ export function DocumentFlowShell({
               onClick={() =>
                 router.push("/app/assinatura-digital/documentos/lista")
               }
-              className={cn("h-10 inline-tight rounded-full border-outline-variant/40 bg-surface-container-lowest/60 px-4 text-muted-foreground backdrop-blur-sm hover:border-outline-variant/70 hover:bg-surface-container-lowest hover:text-foreground cursor-pointer transition-colors")}
+              className={cn("flex h-10 inline-tight rounded-full border-outline-variant/40 bg-surface-container-lowest/60 px-4 text-muted-foreground backdrop-blur-sm hover:border-outline-variant/70 hover:bg-surface-container-lowest hover:text-foreground cursor-pointer transition-colors")}
             >
               <ArrowLeft className="size-4" />
               <span>Voltar</span>

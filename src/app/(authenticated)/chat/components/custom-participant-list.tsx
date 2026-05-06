@@ -56,7 +56,7 @@ export const CustomParticipantList = memo(function CustomParticipantList({ isVis
             className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv.; [&_h3]:text-sm sem equivalente DS; [&_p]:text-xs sem equivalente DS */ "py-6 [&_h3]:text-sm [&_h3]:text-video-text [&_p]:text-xs [&_p]:text-video-muted [&>div:first-child]:mb-2 [&>div:first-child]:h-12 [&>div:first-child]:w-12 [&_svg]:h-6 [&_svg]:w-6 [&>div:first-child]:bg-video-surface-hover")}
           />
         ) : (
-          <div className={cn("stack-micro")}>
+          <div className={cn("flex flex-col stack-micro")}>
             {allParticipants.map((p: DyteParticipant) => (
               <div key={p.id} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center inline-medium p-3 hover:bg-video-surface-hover/50 transition-colors rounded-lg group")}>
                 {/* Avatar */}

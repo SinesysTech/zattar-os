@@ -107,7 +107,7 @@ export function WidgetObrigacoesVencer() {
       subtitle="Próximos 30 dias"
       depth={1}
     >
-      <div className={cn("stack-nano")}>
+      <div className={cn("flex flex-col stack-nano")}>
         {obrigacoesVencer.map((ob, i) => (
           <ListItem key={`${ob.descricao}-${i}`} className="items-start">
             <UrgencyDot level={mapUrgencia(ob.urgencia)} />

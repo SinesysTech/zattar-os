@@ -127,7 +127,7 @@ export function EspecialidadesPageClient() {
   }, [filtered]);
 
   return (
-    <div className={cn("stack-default-plus")}>
+    <div className={cn("flex flex-col stack-default-plus")}>
       {/* ── Header ──────────────────────────────────────────── */}
       <div className={cn("flex items-end justify-between inline-default")}>
         <div>
@@ -165,7 +165,7 @@ export function EspecialidadesPageClient() {
 
       {/* ── Lista agrupada por TRT ─────────────────────────── */}
       {isLoading ? (
-        <div className={cn("stack-medium")}>
+        <div className={cn("flex flex-col stack-medium")}>
           {Array.from({ length: 4 }).map((_, i) => (
             <Skeleton key={i} className="h-24 w-full rounded-2xl" />
           ))}
@@ -191,7 +191,7 @@ export function EspecialidadesPageClient() {
           </p>
         </GlassPanel>
       ) : (
-        <div className={cn("stack-default")}>
+        <div className={cn("flex flex-col stack-default")}>
           {grouped.map(([trt, rows]) => (
             <GlassPanel key={trt} depth={1} className="overflow-hidden">
               <div className={cn("flex items-center justify-between px-4 py-2.5 border-b border-border/30 bg-muted/20")}>

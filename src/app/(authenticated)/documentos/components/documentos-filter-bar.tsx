@@ -143,7 +143,7 @@ function TipoFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-52')} align="start" side="bottom">
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-nano")}>
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col p-2 stack-nano")}>
           {TIPO_OPTIONS.map((opt) => {
             const count = counts[opt.countKey];
             return (
@@ -231,7 +231,7 @@ function CriadorFilter({
                     onChange(selected === criador.id ? null : criador.id);
                     setOpen(false);
                   }}
-                  className={cn("inline-tight rounded-lg text-caption px-2 py-1.5")}
+                  className={cn("flex inline-tight rounded-lg text-caption px-2 py-1.5")}
                 >
                   <Avatar size="xs" className="border size-5">
                     <AvatarImage src={criador.avatarUrl || undefined} />
@@ -287,7 +287,7 @@ function PeriodoFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-48')} align="start" side="bottom">
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-nano")}>
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col p-2 stack-nano")}>
           {PERIODO_OPTIONS.map((opt) => (
             <button
               key={opt.value}

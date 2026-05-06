@@ -9,7 +9,7 @@ export const revalidate = 0;
 
 export default function FinanceiroPage() {
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       <FinanceiroNavigationSelect />
       <Suspense fallback={<Skeleton className="h-10 w-full" />}>
         <FinanceiroDashboard />

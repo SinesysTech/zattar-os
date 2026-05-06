@@ -24,7 +24,7 @@ export default function ErrorBoundary({
                 <AlertCircle className="h-12 w-12 text-destructive" />
             </div>
 
-            <div className={cn("text-center stack-tight max-w-md")}>
+            <div className={cn("flex flex-col text-center stack-tight max-w-md")}>
                 <Heading level="page">Algo deu errado!</Heading>
                 <p className="text-muted-foreground">
                     Não foi possível carregar o editor de documentos.

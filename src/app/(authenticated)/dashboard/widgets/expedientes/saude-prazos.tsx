@@ -70,7 +70,7 @@ export function SaudePrazos() {
           size={90}
         />
 
-        <div className={cn("flex-1 stack-tight")}>
+        <div className={cn("flex flex-col flex-1 stack-tight")}>
           <div className={cn("flex items-baseline inline-tight")}>
             <span className={cn("text-overline text-muted-foreground/50")}>
               Vencidos

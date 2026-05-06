@@ -170,8 +170,8 @@ const creationSteps: StepDef[] = [
 
 export default function ContratosDoc() {
   return (
-    <div className={cn("stack-extra-loose")}>
-      <div className={cn("stack-tight")}>
+    <div className={cn("flex flex-col stack-extra-loose")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Heading level="page">Contratos</Heading>
         <p className={cn("text-muted-foreground text-body-lg")}>
           Gestão de contratos de honorários e serviços firmados com os clientes do escritório.
@@ -208,7 +208,7 @@ export default function ContratosDoc() {
           Após criar o contrato, o sistema gera automaticamente as parcelas com as datas de vencimento.
           Na tela de detalhes do contrato, cada parcela é exibida com seu status:
         </p>
-        <ul className={cn("list-disc list-inside stack-micro text-muted-foreground text-body-sm mt-2")}>
+        <ul className={cn("flex flex-col list-disc list-inside stack-micro text-muted-foreground text-body-sm mt-2")}>
           <li><strong>Pendente:</strong> parcela ainda não venceu e não foi paga.</li>
           <li><strong>Paga:</strong> pagamento confirmado e registrado.</li>
           <li><strong>Vencida:</strong> data de vencimento ultrapassada sem pagamento registrado.</li>

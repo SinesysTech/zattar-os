@@ -166,7 +166,7 @@ export function AssistentesTiposConfig({
   }
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       {/* Mensagens */}
       {error && (
         <Alert variant="destructive">
@@ -193,7 +193,7 @@ export function AssistentesTiposConfig({
         </CardHeader>
         <CardContent>
           <div className={cn("grid inline-default md:grid-cols-3")}>
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <label className={cn( "text-body-sm font-medium")}>Assistente</label>
               <Select value={assistenteId} onValueChange={setAssistenteId}>
                 <SelectTrigger>
@@ -212,7 +212,7 @@ export function AssistentesTiposConfig({
               </Select>
             </div>
 
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <label className={cn( "text-body-sm font-medium")}>Tipo de Expediente</label>
               <Select value={tipoExpedienteId} onValueChange={setTipoExpedienteId}>
                 <SelectTrigger>
@@ -270,13 +270,13 @@ export function AssistentesTiposConfig({
               </p>
             </div>
           ) : (
-            <div className={cn("stack-medium")}>
+            <div className={cn("flex flex-col stack-medium")}>
               {relacoes.map((relacao) => (
                 <div
                   key={relacao.id}
                   className={cn("flex items-center justify-between inset-card-compact border rounded-lg")}
                 >
-                  <div className={cn("flex-1 stack-micro")}>
+                  <div className={cn("flex flex-col flex-1 stack-micro")}>
                     <div className={cn("flex items-center inline-tight")}>
                       <span className={cn( "font-medium")}>{relacao.assistente_nome}</span>
                       {relacao.ativo ? (

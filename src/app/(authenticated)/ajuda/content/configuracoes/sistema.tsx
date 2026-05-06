@@ -24,7 +24,7 @@ import {
 
 export default function Sistema() {
   return (
-    <div className={cn("stack-extra-loose")}>
+    <div className={cn("flex flex-col stack-extra-loose")}>
       <div>
         <Heading level="page">
           Configurações do Sistema
@@ -43,7 +43,7 @@ export default function Sistema() {
         </p>
 
         {/* 2FAuth */}
-        <div className={cn("stack-medium mb-8")}>
+        <div className={cn("flex flex-col stack-medium mb-8")}>
           <h3 className={cn( "font-semibold text-body flex items-center inline-tight")}>
             <ShieldCheck className="h-4 w-4 text-primary" />
             Autenticação em Dois Fatores (2FAuth)
@@ -77,7 +77,7 @@ export default function Sistema() {
         </div>
 
         {/* Chatwoot */}
-        <div className={cn("stack-medium mb-8")}>
+        <div className={cn("flex flex-col stack-medium mb-8")}>
           <h3 className={cn( "font-semibold text-body flex items-center inline-tight")}>
             <MessageSquare className="h-4 w-4 text-primary" />
             Chatwoot (Chat e Atendimento)
@@ -121,7 +121,7 @@ export default function Sistema() {
         </div>
 
         {/* Dyte */}
-        <div className={cn("stack-medium")}>
+        <div className={cn("flex flex-col stack-medium")}>
           <h3 className={cn( "font-semibold text-body flex items-center inline-tight")}>
             <Video className="h-4 w-4 text-primary" />
             Dyte (Videoconferências)

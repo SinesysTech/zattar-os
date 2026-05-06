@@ -222,7 +222,7 @@ export function UsuarioCreateDialog({
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
         <form ref={formRef} onSubmit={handleSubmit}>
-          <div className={cn("stack-default")}>
+          <div className={cn("flex flex-col stack-default")}>
             {/* Step Indicator */}
             <div className={cn("flex items-center inline-tight mb-6")}>
               {STEPS.map((label, i) => (
@@ -253,9 +253,9 @@ export function UsuarioCreateDialog({
 
             {/* Step 0: Dados Pessoais */}
             {step === 0 && (
-              <div className={cn("stack-default")}>
+              <div className={cn("flex flex-col stack-default")}>
                 <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="nomeCompleto">
                       Nome Completo <Text variant="caption" as="span" className="text-destructive">*</Text>
                     </Label>
@@ -268,7 +268,7 @@ export function UsuarioCreateDialog({
                     />
                   </div>
 
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="nomeExibicao">
                       Nome de Exibição <Text variant="caption" as="span" className="text-destructive">*</Text>
                     </Label>
@@ -283,7 +283,7 @@ export function UsuarioCreateDialog({
                 </div>
 
                 <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="cpf">
                       CPF <Text variant="caption" as="span" className="text-destructive">*</Text>
                     </Label>
@@ -297,7 +297,7 @@ export function UsuarioCreateDialog({
                     />
                   </div>
 
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="rg">RG</Label>
                     <Input
                       id="rg"
@@ -309,7 +309,7 @@ export function UsuarioCreateDialog({
                 </div>
 
                 <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="dataNascimento">Data de Nascimento</Label>
                     <FormDatePicker
                       id="dataNascimento"
@@ -319,7 +319,7 @@ export function UsuarioCreateDialog({
                     />
                   </div>
 
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="genero">Gênero</Label>
                     <Select
                       value={formData.genero || ''}
@@ -344,7 +344,7 @@ export function UsuarioCreateDialog({
                 </div>
 
                 <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
-                  <div className={cn("stack-tight md:col-span-2")}>
+                  <div className={cn("flex flex-col stack-tight md:col-span-2")}>
                     <Label htmlFor="senha">
                       Senha <Text variant="caption" as="span" className="text-destructive">*</Text>
                     </Label>
@@ -365,9 +365,9 @@ export function UsuarioCreateDialog({
 
             {/* Step 1: Contato */}
             {step === 1 && (
-              <div className={cn("stack-default")}>
+              <div className={cn("flex flex-col stack-default")}>
                 <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="emailCorporativo">
                       E-mail Corporativo <Text variant="caption" as="span" className="text-destructive">*</Text>
                     </Label>
@@ -383,7 +383,7 @@ export function UsuarioCreateDialog({
                     />
                   </div>
 
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="emailPessoal">E-mail Pessoal</Label>
                     <Input
                       id="emailPessoal"
@@ -396,7 +396,7 @@ export function UsuarioCreateDialog({
                 </div>
 
                 <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="telefone">Telefone</Label>
                     <Input
                       id="telefone"
@@ -407,7 +407,7 @@ export function UsuarioCreateDialog({
                     />
                   </div>
 
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="ramal">Ramal</Label>
                     <Input
                       id="ramal"
@@ -419,7 +419,7 @@ export function UsuarioCreateDialog({
                 </div>
 
                 <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="cargoId">Cargo</Label>
                     <Select
                       value={formData.cargoId?.toString() || 'none'}
@@ -442,7 +442,7 @@ export function UsuarioCreateDialog({
                     </Select>
                   </div>
 
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="oab">OAB</Label>
                     <Input
                       id="oab"
@@ -454,7 +454,7 @@ export function UsuarioCreateDialog({
                 </div>
 
                 <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="ufOab">UF OAB</Label>
                     <Input
                       id="ufOab"
@@ -473,9 +473,9 @@ export function UsuarioCreateDialog({
 
             {/* Step 2: Endereço */}
             {step === 2 && (
-              <div className={cn("stack-default")}>
+              <div className={cn("flex flex-col stack-default")}>
                 <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="cep">CEP</Label>
                     <div className={cn("flex inline-tight")}>
                       <Input
@@ -505,7 +505,7 @@ export function UsuarioCreateDialog({
                 </div>
 
                 <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
-                  <div className={cn("md:col-span-2 stack-tight")}>
+                  <div className={cn("flex flex-col md:col-span-2 stack-tight")}>
                     <Label htmlFor="logradouro">Logradouro</Label>
                     <Input
                       id="logradouro"
@@ -515,7 +515,7 @@ export function UsuarioCreateDialog({
                     />
                   </div>
 
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="numero">Número</Label>
                     <Input
                       id="numero"
@@ -525,7 +525,7 @@ export function UsuarioCreateDialog({
                     />
                   </div>
 
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="complemento">Complemento</Label>
                     <Input
                       id="complemento"
@@ -535,7 +535,7 @@ export function UsuarioCreateDialog({
                     />
                   </div>
 
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="bairro">Bairro</Label>
                     <Input
                       id="bairro"
@@ -545,7 +545,7 @@ export function UsuarioCreateDialog({
                     />
                   </div>
 
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="cidade">Cidade</Label>
                     <Input
                       id="cidade"
@@ -555,7 +555,7 @@ export function UsuarioCreateDialog({
                     />
                   </div>
 
-                  <div className={cn("stack-tight")}>
+                  <div className={cn("flex flex-col stack-tight")}>
                     <Label htmlFor="estado">UF</Label>
                     <Input
                       id="estado"

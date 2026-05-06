@@ -22,7 +22,7 @@ import {
 
 export default function ContasPagar() {
   return (
-    <div className={cn("stack-extra-loose")}>
+    <div className={cn("flex flex-col stack-extra-loose")}>
       <div>
         <Heading level="page">Contas a Pagar</Heading>
         <p className="text-muted-foreground mt-2">
@@ -206,7 +206,7 @@ export default function ContasPagar() {
         <p className="text-muted-foreground">
           A listagem de contas a pagar oferece os seguintes filtros combinados:
         </p>
-        <ul className={cn("mt-3 stack-tight text-body-sm text-muted-foreground list-disc list-inside")}>
+        <ul className={cn("flex flex-col mt-3 stack-tight text-body-sm text-muted-foreground list-disc list-inside")}>
           <li>Período de vencimento ou competência</li>
           <li>Status: Em aberto, Pago, Vencido</li>
           <li>Categoria do plano de contas</li>

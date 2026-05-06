@@ -24,7 +24,7 @@ import {
 
 export default function Notificacoes() {
   return (
-    <div className={cn("stack-extra-loose")}>
+    <div className={cn("flex flex-col stack-extra-loose")}>
       <div>
         <Heading level="page">Notificações</Heading>
         <p className="text-muted-foreground mt-2">

@@ -192,7 +192,7 @@ export function SemanaView({
   return (
     <div className={cn("flex inline-default", className)}>
       {/* Sidebar */}
-      <div className={cn("w-56 shrink-0 stack-default hidden xl:flex xl:flex-col")}>
+      <div className={cn("flex flex-col w-56 shrink-0 stack-default hidden xl:flex xl:flex-col")}>
         <MiniCalendar
           currentDate={currentDate}
           selectedDate={currentDate}

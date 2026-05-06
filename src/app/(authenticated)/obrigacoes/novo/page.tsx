@@ -8,16 +8,16 @@ export const revalidate = 0;
 
 function FormLoading() {
   return (
-    <div className={cn("py-8 stack-loose max-w-4xl mx-auto")}>
+    <div className={cn("flex flex-col py-8 stack-loose max-w-4xl mx-auto")}>
       <div className={cn("flex items-center inline-default")}>
         <Skeleton className="h-10 w-10" />
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Skeleton className="h-8 w-[300px]" />
           <Skeleton className="h-4 w-[400px]" />
         </div>
       </div>
       <div className={cn("rounded-lg border bg-card inset-dialog")}>
-        <div className={cn("stack-default")}>
+        <div className={cn("flex flex-col stack-default")}>
           <Skeleton className="h-10 w-full" />
           <Skeleton className="h-10 w-full" />
           <Skeleton className="h-10 w-full" />

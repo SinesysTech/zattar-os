@@ -167,7 +167,7 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
 
   return (
     <div className={cn("flex inline-default", className)}>
-      <div className={cn("flex-1 stack-default min-w-0")}>
+      <div className={cn("flex flex-col flex-1 stack-default min-w-0")}>
         {/* Narrative */}
         <GlassPanel className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
           <div className={cn("flex items-center inline-medium mb-3")}>
@@ -210,17 +210,17 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
       </div>
 
       {/* Right Sidebar */}
-      <div className={cn("w-64 shrink-0 stack-default hidden lg:flex lg:flex-col")}>
+      <div className={cn("flex flex-col w-64 shrink-0 stack-default hidden lg:flex lg:flex-col")}>
         {prepItems.length > 0 && (
           <GlassPanel className={cn("inset-card-compact")}>
             <div className={cn("flex items-center inline-tight mb-3")}><ShieldCheck className="size-3.5 text-primary" /><Text variant="caption" className="font-semibold text-foreground">Radar de Preparo</Text></div>
-            <div className={cn("stack-medium")}>{prepItems.map((item) => <PrepProgress key={item.id} label={item.label} percent={item.percent} size="md" />)}</div>
+            <div className={cn("flex flex-col stack-medium")}>{prepItems.map((item) => <PrepProgress key={item.id} label={item.label} percent={item.percent} size="md" />)}</div>
           </GlassPanel>
         )}
         {alerts.length > 0 && (
           <GlassPanel className={cn("inset-card-compact")}>
             <div className={cn("flex items-center inline-tight mb-3")}><Bell className="size-3.5 text-warning" /><Text variant="caption" className="font-semibold text-foreground">Alertas</Text></div>
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               {alerts.map((alert) => {
                 const Icon = alert.severity === "critical" ? AlertCircle : alert.severity === "warning" ? TriangleAlert : Clock;
                 const cls = alert.severity === "critical" ? "bg-destructive/[0.06] border-destructive/10 text-destructive" : "bg-warning/[0.04] border-warning/8 text-warning";
@@ -239,7 +239,7 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
         )}
         <GlassPanel className={cn("inset-card-compact")}>
           <div className={cn("flex items-center inline-tight mb-3")}><Zap className="size-3.5 text-primary" /><Text variant="caption" className="font-semibold text-foreground">Ações Rápidas</Text></div>
-          <div className={cn("stack-snug")}>
+          <div className={cn("flex flex-col stack-snug")}>
             {[
               { icon: ExternalLink, label: "Abrir PJe" },
               { icon: FilePen, label: "Preparar Peça" },

@@ -69,7 +69,7 @@ export function DocumentAnnotationOverlay({
         </div>
       </div>
 
-      <div className={cn("border-b px-3 py-2.5 stack-tight")}>
+      <div className={cn("flex flex-col border-b px-3 py-2.5 stack-tight")}>
         <div className={cn("rounded-xl border bg-muted/25 px-3 py-2")}>
           <Text variant="caption" className="truncate font-medium text-foreground">
             {itemTitle || 'Nenhum evento selecionado'}
@@ -77,7 +77,7 @@ export function DocumentAnnotationOverlay({
           {itemDate && <p className="mt-0.5 text-[11px] text-muted-foreground">{itemDate}</p>}
         </div>
 
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Textarea
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
@@ -89,7 +89,7 @@ export function DocumentAnnotationOverlay({
             <Button
               type="button"
               size="sm"
-              className={cn("h-8 inline-snug px-3")}
+              className={cn("flex h-8 inline-snug px-3")}
               onClick={() => {
                 const trimmedDraft = draft.trim();
                 if (!trimmedDraft) return;
@@ -106,7 +106,7 @@ export function DocumentAnnotationOverlay({
       </div>
 
       <ScrollArea className={cn("min-h-0 flex-1 px-3 py-2.5")}>
-        <div className={cn("stack-tight pr-1")}>
+        <div className={cn("flex flex-col stack-tight pr-1")}>
           {annotations.length === 0 ? (
             <div className={cn("rounded-xl border border-dashed bg-muted/25 px-4 py-5 text-center")}>
               <p className={cn( "text-body-sm font-medium text-foreground")}>Nenhuma anotação ainda</p>

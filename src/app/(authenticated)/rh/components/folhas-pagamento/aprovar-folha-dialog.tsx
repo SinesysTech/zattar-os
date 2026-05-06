@@ -94,8 +94,8 @@ export function AprovarFolhaDialog({
           <DialogDescription>Selecione as contas para gerar os lançamentos financeiros.</DialogDescription>
         </DialogHeader>
 
-        <form className={cn("stack-default")} onSubmit={handleSubmit}>
-          <div className={cn("stack-tight")}>
+        <form className={cn("flex flex-col stack-default")} onSubmit={handleSubmit}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>Conta Bancária</Label>
             <Controller
               name="contaBancariaId"
@@ -117,7 +117,7 @@ export function AprovarFolhaDialog({
             />
           </div>
 
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>Conta Contábil</Label>
             <Controller
               name="contaContabilId"
@@ -142,7 +142,7 @@ export function AprovarFolhaDialog({
             />
           </div>
 
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>Centro de Custo (opcional)</Label>
             <Controller
               name="centroCustoId"
@@ -167,7 +167,7 @@ export function AprovarFolhaDialog({
             />
           </div>
 
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label>Observações</Label>
             <Textarea rows={3} {...form.register('observacoes')} />
           </div>

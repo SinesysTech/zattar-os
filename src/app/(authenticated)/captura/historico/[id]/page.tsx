@@ -191,7 +191,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
       {/* Tabs: Logs Detalhados + Dados Brutos */}
       <Tabs defaultValue="logs" className="w-full">
         <TabsList>
-          <TabsTrigger value="logs" className={cn("inline-snug")}>
+          <TabsTrigger value="logs" className={cn("flex inline-snug")}>
             <ScrollText className="size-3.5" />
             Logs por tribunal
             {rawLogs.length > 0 && (
@@ -200,7 +200,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
               </Badge>
             )}
           </TabsTrigger>
-          <TabsTrigger value="dados-brutos" className={cn("inline-snug")}>
+          <TabsTrigger value="dados-brutos" className={cn("flex inline-snug")}>
             <FileJson className="size-3.5" />
             Payload bruto
           </TabsTrigger>

@@ -423,7 +423,7 @@ export function ExpedienteDialog({
       form="criar-expediente-form"
       type="submit"
       size="sm"
-      className={cn("rounded-xl inline-tight")}
+      className={cn("flex rounded-xl inline-tight")}
       disabled={isPending || !podeSubmeter}
     >
       {isPending ? (
@@ -461,7 +461,7 @@ export function ExpedienteDialog({
       <form
         id="criar-expediente-form"
         action={formAction}
-        className={cn("stack-default")}
+        className={cn("flex flex-col stack-default")}
       >
         {/* Hidden inputs — contratam com o schema do backend */}
         <input
@@ -529,7 +529,7 @@ export function ExpedienteDialog({
             title="Selecione o tribunal e grau"
           >
             <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
-              <div className={cn("stack-tight")}>
+              <div className={cn("flex flex-col stack-tight")}>
                 <Label htmlFor="trt" className={cn("flex items-center inline-tight")}>
                   <Building2 className="h-4 w-4 text-muted-foreground" />
                   TRT
@@ -567,7 +567,7 @@ export function ExpedienteDialog({
                 )}
               </div>
 
-              <div className={cn("stack-tight")}>
+              <div className={cn("flex flex-col stack-tight")}>
                 <Label htmlFor="grau" className={cn("flex items-center inline-tight")}>
                   <Scale className="h-4 w-4 text-muted-foreground" />
                   Grau
@@ -618,7 +618,7 @@ export function ExpedienteDialog({
             )}
             title="Selecione o processo"
           >
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label
                 htmlFor="processoIdCombobox"
                 className={cn("flex items-center inline-tight")}
@@ -699,7 +699,7 @@ export function ExpedienteDialog({
               {processoSelecionado.numeroProcesso}
             </p>
             <dl className={cn("grid grid-cols-1 inline-medium sm:grid-cols-2")}>
-              <div className={cn("stack-micro min-w-0")}>
+              <div className={cn("flex flex-col stack-micro min-w-0")}>
                 <Text
                   variant="meta-label"
                   as="dt"
@@ -711,7 +711,7 @@ export function ExpedienteDialog({
                   {processoSelecionado.nomeParteAutora || '—'}
                 </dd>
               </div>
-              <div className={cn("stack-micro min-w-0")}>
+              <div className={cn("flex flex-col stack-micro min-w-0")}>
                 <Text
                   variant="meta-label"
                   as="dt"
@@ -735,7 +735,7 @@ export function ExpedienteDialog({
             title="Dados do expediente"
           >
             <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
-              <div className={cn("stack-tight col-span-1 md:col-span-2")}>
+              <div className={cn("flex flex-col stack-tight col-span-1 md:col-span-2")}>
                 <Label
                   htmlFor="tipoExpedienteIdSelect"
                   className={cn("flex items-center inline-tight")}
@@ -784,7 +784,7 @@ export function ExpedienteDialog({
                 )}
               </div>
 
-              <div className={cn("stack-tight col-span-1 md:col-span-2")}>
+              <div className={cn("flex flex-col stack-tight col-span-1 md:col-span-2")}>
                 <Label
                   htmlFor="descricao"
                   className={cn("flex items-center inline-tight")}
@@ -817,7 +817,7 @@ export function ExpedienteDialog({
                 )}
               </div>
 
-              <div className={cn("stack-tight col-span-1")}>
+              <div className={cn("flex flex-col stack-tight col-span-1")}>
                 <Label
                   htmlFor="dataPrazo"
                   className={cn("flex items-center inline-tight")}
@@ -836,7 +836,7 @@ export function ExpedienteDialog({
                 </div>
               </div>
 
-              <div className={cn("stack-tight col-span-1")}>
+              <div className={cn("flex flex-col stack-tight col-span-1")}>
                 <Label
                   htmlFor="horaPrazo"
                   className={cn("flex items-center inline-tight")}
@@ -875,7 +875,7 @@ export function ExpedienteDialog({
                 )}
               </div>
 
-              <div className={cn("stack-tight col-span-1 md:col-span-2")}>
+              <div className={cn("flex flex-col stack-tight col-span-1 md:col-span-2")}>
                 <Label
                   htmlFor="responsavelIdCombobox"
                   className={cn("flex items-center inline-tight")}

@@ -190,7 +190,7 @@ export function AdvogadoDialog({
             </div>
 
             {/* Seção de OABs */}
-            <div className={cn("stack-medium")}>
+            <div className={cn("flex flex-col stack-medium")}>
               <div className="flex items-center justify-between">
                 <Label>OABs *</Label>
                 <Text variant="caption">

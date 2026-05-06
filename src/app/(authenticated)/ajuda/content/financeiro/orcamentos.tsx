@@ -22,7 +22,7 @@ import {
 
 export default function Orcamentos() {
   return (
-    <div className={cn("stack-extra-loose")}>
+    <div className={cn("flex flex-col stack-extra-loose")}>
       <div>
         <Heading level="page">Orçamentos</Heading>
         <p className="text-muted-foreground mt-2">
@@ -162,7 +162,7 @@ export default function Orcamentos() {
           Ao clicar em &quot;Ver Análise&quot;, o sistema exibe uma tabela e gráfico comparando o valor
           orçado com o realizado para cada categoria do plano de contas. São apresentados:
         </p>
-        <ul className={cn("stack-tight text-body-sm text-muted-foreground list-disc list-inside")}>
+        <ul className={cn("flex flex-col stack-tight text-body-sm text-muted-foreground list-disc list-inside")}>
           <li>Valor orçado por categoria e mês</li>
           <li>Valor realizado por categoria e mês (extraído dos lançamentos)</li>
           <li>Desvio absoluto (R$) e percentual (%)</li>

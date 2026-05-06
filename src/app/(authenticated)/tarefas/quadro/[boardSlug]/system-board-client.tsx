@@ -139,7 +139,7 @@ export function SystemBoardClient({ board, events, quadros }: SystemBoardClientP
   );
 
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       <div className={cn("flex flex-col inline-snug")}>
         <Heading level="page" className={cn(/* design-system-escape: sm:text-3xl sem equivalente DS */ "sm:text-3xl")}>
           Quadro - {board.titulo}

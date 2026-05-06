@@ -73,13 +73,13 @@ export default async function ProjectManagementDashboard() {
         </Heading>
       </div>
 
-      <Tabs defaultValue="overview" className={cn("stack-default")}>
+      <Tabs defaultValue="overview" className={cn("flex flex-col stack-default")}>
         <TabsList className="z-10">
           <TabsTrigger value="overview">Visão Geral</TabsTrigger>
           <TabsTrigger value="reports">Projetos</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className={cn("stack-default")}>
+        <TabsContent value="overview" className={cn("flex flex-col stack-default")}>
           <SummaryCards data={resumo} />
 
           <div className={cn("mt-4 grid inline-default lg:grid-cols-3")}>

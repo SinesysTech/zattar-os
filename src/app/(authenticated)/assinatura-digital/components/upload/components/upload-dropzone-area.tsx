@@ -107,7 +107,7 @@ function EmptyState({ isDragActive }: { isDragActive: boolean }) {
         )} />
       </div>
 
-      <div className={cn("stack-snug max-w-sm")}>
+      <div className={cn("flex flex-col stack-snug max-w-sm")}>
         <Heading level="section" as="h3">
           {isDragActive ? 'Solte o arquivo aqui' : 'Arraste o PDF aqui'}
         </Heading>
@@ -121,7 +121,7 @@ function EmptyState({ isDragActive }: { isDragActive: boolean }) {
         <Button
           type="button"
           size="sm"
-          className={cn("pointer-events-none inline-snug mt-1")}
+          className={cn("flex pointer-events-none inline-snug mt-1")}
         >
           <Upload className="size-3.5" />
           Selecionar arquivo
@@ -157,7 +157,7 @@ function ErrorState({ message }: { message?: string }) {
       <div className="inline-flex size-14 items-center justify-center rounded-2xl bg-destructive/10">
         <AlertCircle className="size-7 text-destructive" />
       </div>
-      <div className={cn("stack-snug max-w-sm")}>
+      <div className={cn("flex flex-col stack-snug max-w-sm")}>
         <p className={cn( "font-heading text-body-lg font-semibold text-destructive")}>
           Erro no upload
         </p>
@@ -222,7 +222,7 @@ function FilePreviewCard({
           </Text>
 
           {isUploading && (
-            <div className={cn("mt-3 stack-micro")}>
+            <div className={cn("flex flex-col mt-3 stack-micro")}>
               <Progress value={progress} className="h-1.5" />
               <p className={cn("text-overline text-muted-foreground tabular-nums")}>
                 Enviando · {progress}%

@@ -34,7 +34,7 @@ export function ModuloControleAlgoritmico({ data, onChange }: ModuloControleAlgo
   const mostrarPunicao = data.punido_nota_baixa === true;
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       <div>
         <Heading level="card">O Algoritmo que Manda</Heading>
         <p className={cn("text-body-sm text-muted-foreground")}>
@@ -43,7 +43,7 @@ export function ModuloControleAlgoritmico({ data, onChange }: ModuloControleAlgo
       </div>
 
       {/* B.1.1: Tipo de plataforma */}
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Label htmlFor="tipo-plataforma">Qual o tipo de serviço que prestava pela plataforma?</Label>
         <Select
           value={data.tipo_plataforma ?? ''}
@@ -63,7 +63,7 @@ export function ModuloControleAlgoritmico({ data, onChange }: ModuloControleAlgo
       </div>
 
       {/* B.1.2: Nome da plataforma */}
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Label htmlFor="nome-plataforma">Nome da plataforma principal</Label>
         <Input
           id="nome-plataforma"
@@ -75,7 +75,7 @@ export function ModuloControleAlgoritmico({ data, onChange }: ModuloControleAlgo
       </div>
 
       <div className={cn("grid inline-default sm:grid-cols-2")}>
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label htmlFor="renda-mensal-media">Renda mensal média na plataforma</Label>
           <Input
             id="renda-mensal-media"
@@ -84,7 +84,7 @@ export function ModuloControleAlgoritmico({ data, onChange }: ModuloControleAlgo
             onChange={(e) => onChange({ ...data, renda_mensal_media: e.target.value })}
           />
         </div>
-        <div className={cn("stack-tight sm:max-w-xs")}>
+        <div className={cn("flex flex-col stack-tight sm:max-w-xs")}>
           <Label htmlFor="data-inicio-plataforma">Data de início na plataforma</Label>
           <Input
             id="data-inicio-plataforma"
@@ -96,7 +96,7 @@ export function ModuloControleAlgoritmico({ data, onChange }: ModuloControleAlgo
       </div>
 
       {/* B.1.3: Definição de preço */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>A plataforma define o preço do serviço (você não pode negociar com o cliente)?</Label>
         <SimNaoRadio
           id="define-preco"
@@ -111,7 +111,7 @@ export function ModuloControleAlgoritmico({ data, onChange }: ModuloControleAlgo
       </div>
 
       {/* B.1.4: Recusa de corrida */}
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Label htmlFor="recusa">Pode recusar corridas/entregas/serviços sem punição?</Label>
         <Select
           value={data.pode_recusar_corrida ?? ''}
@@ -131,7 +131,7 @@ export function ModuloControleAlgoritmico({ data, onChange }: ModuloControleAlgo
       </div>
 
       {/* B.1.5: Sistema de avaliação */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>Existe um sistema de nota/avaliação que afeta seu trabalho?</Label>
         <SimNaoRadio
           id="sistema-avaliacao"
@@ -142,7 +142,7 @@ export function ModuloControleAlgoritmico({ data, onChange }: ModuloControleAlgo
 
       {/* B.1.6: Punição por nota baixa (condicional) */}
       {data.sistema_avaliacao === true && (
-        <div className={cn("stack-medium")}>
+        <div className={cn("flex flex-col stack-medium")}>
           <Label>Já foi punido por nota baixa?</Label>
           <SimNaoRadio
             id="punicao-nota"
@@ -151,7 +151,7 @@ export function ModuloControleAlgoritmico({ data, onChange }: ModuloControleAlgo
           />
 
           {mostrarPunicao && (
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="tipo-punicao">Que tipo de punição sofreu?</Label>
               <Input
                 id="tipo-punicao"
@@ -165,7 +165,7 @@ export function ModuloControleAlgoritmico({ data, onChange }: ModuloControleAlgo
       )}
 
       {/* B.1.7: GPS */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>A plataforma monitora sua localização por GPS em tempo real?</Label>
         <SimNaoRadio
           id="monitoramento-gps"
@@ -175,7 +175,7 @@ export function ModuloControleAlgoritmico({ data, onChange }: ModuloControleAlgo
       </div>
 
       {/* B.1.8: Meta de aceitação */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>Existe meta ou taxa mínima de aceitação de corridas/serviços?</Label>
         <SimNaoRadio
           id="meta-aceitacao"
@@ -185,7 +185,7 @@ export function ModuloControleAlgoritmico({ data, onChange }: ModuloControleAlgo
       </div>
 
       {/* B.1.9: Narrativa */}
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Label htmlFor="narrativa-controle">Descreva como a plataforma controlava seu trabalho no dia a dia</Label>
         <Textarea
           id="narrativa-controle"

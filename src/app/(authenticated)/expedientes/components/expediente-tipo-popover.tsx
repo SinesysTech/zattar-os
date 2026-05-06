@@ -114,7 +114,7 @@ export function ExpedienteTipoPopover({
               <CommandItem
                 value="sem-tipo"
                 onSelect={() => handleSelect(null)}
-                className={cn("inline-tight rounded-lg text-caption px-2 py-1.5")}
+                className={cn("flex inline-tight rounded-lg text-caption px-2 py-1.5")}
               >
                 <Tag className="size-3.5 text-muted-foreground/65" />
                 <span className="italic text-muted-foreground/60">Sem tipo</span>
@@ -127,7 +127,7 @@ export function ExpedienteTipoPopover({
                   key={tipo.id}
                   value={getTipoLabel(tipo)}
                   onSelect={() => handleSelect(tipo.id)}
-                  className={cn("inline-tight rounded-lg text-caption px-2 py-1.5")}
+                  className={cn("flex inline-tight rounded-lg text-caption px-2 py-1.5")}
                 >
                   <Tag className="size-3.5 text-muted-foreground/65" />
                   <span>{getTipoLabel(tipo)}</span>

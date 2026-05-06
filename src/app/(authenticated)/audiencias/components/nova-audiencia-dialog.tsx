@@ -457,7 +457,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
           {/* ── Seção 1: Jurisdição + Processo ───────────────────────────── */}
         <SectionCard>
           <SectionHeader icon={Landmark} label="Jurisdição e Processo" />
-          <div className={cn("stack-default")}>
+          <div className={cn("flex flex-col stack-default")}>
             <div className={cn("grid grid-cols-2 inline-medium")}>
               <div>
                 <FieldLabel htmlFor="trt">Tribunal (TRT) *</FieldLabel>
@@ -517,7 +517,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
         {/* ── Seção 2: Data e Horário ───────────────────────────────────── */}
         <SectionCard>
           <SectionHeader icon={CalendarDays} label="Data e Horário" />
-          <div className={cn("stack-medium")}>
+          <div className={cn("flex flex-col stack-medium")}>
             <div className={cn("grid grid-cols-2 inline-medium")}>
               <div>
                 <FieldLabel htmlFor="dataInicio">Data de Início *</FieldLabel>
@@ -567,7 +567,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
             icon={tipoSelecionado?.is_virtual ? Video : MapPin}
             label="Tipo e Local"
           />
-          <div className={cn("stack-medium")}>
+          <div className={cn("flex flex-col stack-medium")}>
             <div>
               <FieldLabel htmlFor="tipo">Tipo de Audiência</FieldLabel>
               {loadingTipos ? (
@@ -634,7 +634,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
                   />
                 </div>
               ) : (
-                <div className={cn("stack-medium pt-1")}>
+                <div className={cn("flex flex-col stack-medium pt-1")}>
                   <Text variant="overline" as="p" className="text-muted-foreground">
                     Endereço Presencial
                   </Text>

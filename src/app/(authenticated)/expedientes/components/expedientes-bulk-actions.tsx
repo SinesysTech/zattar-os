@@ -40,7 +40,7 @@ export function ExpedientesBulkActions({
             variant="outline"
             size="sm"
             onClick={() => setIsTransferirOpen(true)}
-            className={cn("inline-tight")}
+            className={cn("flex inline-tight")}
           >
             <Users className="h-4 w-4" />
             Transferir Responsável
@@ -49,7 +49,7 @@ export function ExpedientesBulkActions({
             variant="outline"
             size="sm"
             onClick={() => setIsBaixarOpen(true)}
-            className={cn("inline-tight")}
+            className={cn("flex inline-tight")}
           >
             <CheckCircle2 className="h-4 w-4" />
             Baixar em Massa

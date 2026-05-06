@@ -80,7 +80,7 @@ export function UsuariosGridView({
   });
 
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       {sortedKeys.map((cargoNome) => {
         const members = groups.get(cargoNome)!;
         return (

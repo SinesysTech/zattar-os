@@ -84,7 +84,7 @@ export function ProcessoVinculadoCard({ processo }: ProcessoVinculadoCardProps) 
         )}
       </div>
 
-      <div className={cn("stack-medium mb-5")}>
+      <div className={cn("flex flex-col stack-medium mb-5")}>
         {processo.descricao_orgao_julgador && (
           <div className={cn("flex items-start inline-tight")}>
             <Building2 className="size-3.5 text-muted-foreground/50 mt-0.5 shrink-0" />
@@ -98,7 +98,7 @@ export function ProcessoVinculadoCard({ processo }: ProcessoVinculadoCardProps) 
         )}
 
         {(parteAutora || parteRe) && (
-          <div className={cn("pt-3 border-t border-border/15 stack-snug")}>
+          <div className={cn("flex flex-col pt-3 border-t border-border/15 stack-snug")}>
             {parteAutora && (
               <PartesRow polo="Autor" nome={parteAutora} />
             )}

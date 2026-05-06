@@ -125,11 +125,11 @@ export function ExpedientesReverterBaixaDialog({
           <DialogTitle>Reverter Baixa de Expediente</DialogTitle>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-      <form id="reverter-baixa-form" key={formKey} action={formAction} className={cn("stack-loose")}>
+      <form id="reverter-baixa-form" key={formKey} action={formAction} className={cn("flex flex-col stack-loose")}>
         {/* Informações do expediente */}
-        <div className={cn("stack-tight rounded-lg border inset-card-compact bg-muted/50")}>
+        <div className={cn("flex flex-col stack-tight rounded-lg border inset-card-compact bg-muted/50")}>
           <div className={cn( "text-body-sm font-medium")}>Expediente</div>
-          <div className={cn("text-body-sm stack-micro")}>
+          <div className={cn("flex flex-col text-body-sm stack-micro")}>
             <div>
               <span className={cn( "font-medium")}>Processo:</span> {expediente.numeroProcesso}
             </div>
@@ -173,7 +173,7 @@ export function ExpedientesReverterBaixaDialog({
         </div>
 
         {/* Confirmação textual — previne reversão acidental */}
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Label htmlFor="reverter-confirmacao" className={cn("text-body-sm")}>
             Para confirmar, digite{' '}
             <span className={cn( "font-semibold text-foreground")}>{PALAVRA_CONFIRMACAO}</span> abaixo

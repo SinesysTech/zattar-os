@@ -679,8 +679,8 @@ export function FormSchemaBuilder({
               Configure o título e descrição da seção
             </DialogDescription>
           </DialogHeader>
-          <div className={cn("stack-default py-4")}>
-            <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-default py-4")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label>Título *</Label>
               <Input
                 value={sectionForm.title}
@@ -688,7 +688,7 @@ export function FormSchemaBuilder({
                 placeholder="Nome da seção"
               />
             </div>
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label>Descrição</Label>
               <Textarea
                 value={sectionForm.description}

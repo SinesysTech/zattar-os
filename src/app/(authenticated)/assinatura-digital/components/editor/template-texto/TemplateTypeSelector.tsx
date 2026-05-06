@@ -91,7 +91,7 @@ export function TemplateTypeSelector({
             </div>
 
             {/* Content */}
-            <div className={cn("stack-micro pr-6")}>
+            <div className={cn("flex flex-col stack-micro pr-6")}>
               <Heading level="subsection">{option.title}</Heading>
               <p className={cn("text-body-sm text-muted-foreground")}>{option.description}</p>
             </div>

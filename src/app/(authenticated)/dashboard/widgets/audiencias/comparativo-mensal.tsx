@@ -78,7 +78,7 @@ export function WidgetComparativoMensal() {
       icon={BarChart3}
       subtitle={`${previous.mes} vs ${current.mes}`}
     >
-      <div className={cn("stack-default")}>
+      <div className={cn("flex flex-col stack-default")}>
         {/* Header: month labels */}
         <div className="flex items-center justify-between">
           <div className={cn("flex items-center inline-medium")}>
@@ -128,8 +128,8 @@ export function WidgetComparativoMensal() {
         </div>
 
         {/* Visual comparison bars */}
-        <div className={cn("stack-tight")}>
-          <div className={cn("stack-micro")}>
+        <div className={cn("flex flex-col stack-tight")}>
+          <div className={cn("flex flex-col stack-micro")}>
             <p className="text-[9px] text-muted-foreground/50">Marcadas</p>
             <div className={cn("flex inline-micro")}>
               <div className="h-3 rounded-full bg-muted-foreground/20 transition-all duration-500" style={{
@@ -149,7 +149,7 @@ export function WidgetComparativoMensal() {
             </div>
           </div>
 
-          <div className={cn("stack-micro")}>
+          <div className={cn("flex flex-col stack-micro")}>
             <p className="text-[9px] text-muted-foreground/50">Realizadas</p>
             <div className={cn("flex inline-micro")}>
               <div className="h-3 rounded-full bg-muted-foreground/20 transition-all duration-500" style={{

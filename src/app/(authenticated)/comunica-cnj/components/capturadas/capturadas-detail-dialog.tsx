@@ -31,7 +31,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div className={cn("stack-tight")}>
+    <div className={cn("flex flex-col stack-tight")}>
       <Heading level="widget">{title}</Heading>
       <div className={cn("rounded-xl border border-border/40 bg-card/60 inset-card-compact")}>
         {children}
@@ -130,7 +130,7 @@ export function CapturadasDetailDialog({
 
           {(partesAutor || partesReu) && (
             <Section title="Partes">
-              <div className={cn("stack-medium")}>
+              <div className={cn("flex flex-col stack-medium")}>
                 {partesAutor && (
                   <div>
                     <Text variant="meta-label" className="text-muted-foreground">

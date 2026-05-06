@@ -117,7 +117,7 @@ export function SegmentoDuplicateDialog({
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className={cn("stack-default")}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className={cn("flex flex-col stack-default")}>
             <FormField
               control={form.control}
               name="nome"

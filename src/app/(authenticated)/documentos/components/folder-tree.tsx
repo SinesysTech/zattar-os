@@ -75,7 +75,7 @@ export function FolderTree({ onFolderSelect, selectedFolderId }: FolderTreeProps
           variant="ghost"
           size="sm"
           className={cn(
-            'w-full justify-start inline-micro px-2 py-1.5 font-normal',
+            'flex w-full justify-start inline-micro px-2 py-1.5 font-normal',
             isSelected && 'bg-accent'
           )}
           style={{ paddingLeft: `${level * 12 + 8}px` }}
@@ -114,7 +114,7 @@ export function FolderTree({ onFolderSelect, selectedFolderId }: FolderTreeProps
 
   if (loading) {
     return (
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <div className="h-8 w-full animate-pulse rounded bg-muted" />
         <div className="h-8 w-full animate-pulse rounded bg-muted" />
         <div className="h-8 w-full animate-pulse rounded bg-muted" />
@@ -123,13 +123,13 @@ export function FolderTree({ onFolderSelect, selectedFolderId }: FolderTreeProps
   }
 
   return (
-    <div className={cn("stack-micro")}>
+    <div className={cn("flex flex-col stack-micro")}>
       {/* Raiz (Todos os documentos) */}
       <Button
         variant="ghost"
         size="sm"
         className={cn(
-          'w-full justify-start inline-tight px-2 py-1.5 font-normal',
+          'flex w-full justify-start inline-tight px-2 py-1.5 font-normal',
           selectedFolderId === null && 'bg-accent'
         )}
         onClick={() => onFolderSelect(null)}

@@ -96,7 +96,7 @@ export function ResumoCards({
             <CardContent className={cn("inset-card-compact")}>
               <div className={cn("flex items-center inline-medium")}>
                 <Skeleton className="h-10 w-10 rounded-lg" />
-                <div className={cn("stack-snug")}>
+                <div className={cn("flex flex-col stack-snug")}>
                   <Skeleton className="h-4 w-20" />
                   <Skeleton className="h-6 w-8" />
                 </div>

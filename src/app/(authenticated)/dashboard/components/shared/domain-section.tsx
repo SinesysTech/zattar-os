@@ -56,7 +56,7 @@ export function DomainSection({
   };
 
   return (
-    <section className={cn('stack-default', className)}>
+    <section className={cn('flex flex-col stack-default', className)}>
       {/* Header da seção */}
       <div className={cn("flex items-center inline-medium")}>
         {Icon && (

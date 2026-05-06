@@ -130,7 +130,7 @@ export function CapturaClient() {
   };
 
   return (
-    <div className={cn("stack-default-plus relative")}>
+    <div className={cn("flex flex-col stack-default-plus relative")}>
       {/* Atmospheric glow */}
       <div className="absolute -top-8 right-8 w-64 h-48 bg-primary/[0.04] rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-4 right-32 w-32 h-32 bg-info/[0.03] rounded-full blur-3xl pointer-events-none" />

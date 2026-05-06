@@ -8,9 +8,9 @@ export const revalidate = 0;
 
 function ConciliacaoLoading() {
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       <div className="flex items-center justify-between">
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <Skeleton className="h-8 w-62.5" />
           <Skeleton className="h-4 w-87.5" />
         </div>

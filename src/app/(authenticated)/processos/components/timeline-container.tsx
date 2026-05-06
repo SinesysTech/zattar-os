@@ -32,11 +32,11 @@ export function TimelineContainer({ items, isLoading = false }: TimelineContaine
   if (isLoading) {
     return (
       <Card className={cn("inset-dialog")}>
-        <div className={cn("stack-default")}>
+        <div className={cn("flex flex-col stack-default")}>
           {[...Array(5)].map((_, i) => (
             <div key={i} className={cn("flex inline-default")}>
               <div className="w-10 h-10 rounded-full bg-muted animate-pulse" />
-              <div className={cn("flex-1 stack-tight")}>
+              <div className={cn("flex flex-col flex-1 stack-tight")}>
                 <div className="h-4 bg-muted rounded animate-pulse w-3/4" />
                 <div className="h-3 bg-muted rounded animate-pulse w-1/2" />
                 <div className="h-3 bg-muted rounded animate-pulse w-2/3" />
@@ -53,7 +53,7 @@ export function TimelineContainer({ items, isLoading = false }: TimelineContaine
   }
 
   return (
-    <div className={cn("stack-none")}>
+    <div className={cn("flex flex-col stack-none")}>
       {/* Header da timeline */}
       <div className="mb-6">
         <Heading level="section">Timeline do Processo</Heading>

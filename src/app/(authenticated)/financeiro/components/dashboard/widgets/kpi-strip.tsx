@@ -51,7 +51,7 @@ export function KpiStrip({ data, isLoading }: KpiStripProps) {
     return (
       <div className={cn("grid grid-cols-2 inline-default md:grid-cols-3 xl:grid-cols-6")}>
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className={cn(/* design-system-escape: sm:p-6 sem equivalente DS */ "rounded-xl border bg-card inset-card-compact sm:p-6 stack-medium")}>
+          <div key={i} className={cn(/* design-system-escape: sm:p-6 sem equivalente DS */ "flex flex-col rounded-xl border bg-card inset-card-compact sm:p-6 stack-medium")}>
             <Skeleton className="h-4 w-20" />
             <Skeleton className="h-8 w-28" />
             <Skeleton className="h-3 w-16" />

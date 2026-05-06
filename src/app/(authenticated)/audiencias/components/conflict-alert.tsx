@@ -123,7 +123,7 @@ export function ConflictAlert({ audiencias, dailyAverage = 2.5, className }: Con
           </Text>
         </div>
 
-        <div className={cn("stack-medium")}>
+        <div className={cn("flex flex-col stack-medium")}>
           {conflicts.map((conflict, i) => {
             const allAudiencias = conflict.audiencias;
             const times = allAudiencias.flatMap((a) => [
@@ -134,7 +134,7 @@ export function ConflictAlert({ audiencias, dailyAverage = 2.5, className }: Con
             const maxTime = Math.max(...times);
 
             return (
-              <div key={i} className={cn("stack-snug")}>
+              <div key={i} className={cn("flex flex-col stack-snug")}>
                 <div className={cn("flex items-center inline-tight")}>
                   {conflict.type === "overlap" ? (
                     <Clock className="size-2.5 text-destructive/40" />

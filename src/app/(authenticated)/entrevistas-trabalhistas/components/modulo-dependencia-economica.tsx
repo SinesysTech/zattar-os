@@ -33,7 +33,7 @@ export function ModuloDependenciaEconomica({ data, onChange }: ModuloDependencia
   const mostrarInvestimento = data.investimento_especifico === true;
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       <div>
         <Heading level="card">Preso na Plataforma</Heading>
         <p className={cn("text-body-sm text-muted-foreground")}>
@@ -42,7 +42,7 @@ export function ModuloDependenciaEconomica({ data, onChange }: ModuloDependencia
       </div>
 
       {/* B.2.1: Percentual da renda */}
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Label htmlFor="percentual">Qual porcentagem da sua renda vinha da plataforma?</Label>
         <Select
           value={data.percentual_renda ?? ''}
@@ -62,7 +62,7 @@ export function ModuloDependenciaEconomica({ data, onChange }: ModuloDependencia
       </div>
 
       {/* B.2.2: Quantidade de plataformas */}
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Label htmlFor="qtd-plataformas">Em quantas plataformas trabalhava simultaneamente?</Label>
         <Select
           value={data.qtd_plataformas ?? ''}
@@ -82,7 +82,7 @@ export function ModuloDependenciaEconomica({ data, onChange }: ModuloDependencia
       </div>
 
       {/* B.2.3: Investimento específico */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>Fez algum investimento específico para trabalhar na plataforma? (moto, bag, celular, carro)</Label>
         <SimNaoRadio
           id="investimento"
@@ -91,7 +91,7 @@ export function ModuloDependenciaEconomica({ data, onChange }: ModuloDependencia
         />
 
         {mostrarInvestimento && (
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label htmlFor="desc-investimento">Descreva o investimento feito</Label>
             <Textarea
               id="desc-investimento"
@@ -105,7 +105,7 @@ export function ModuloDependenciaEconomica({ data, onChange }: ModuloDependencia
       </div>
 
       {/* B.2.4: Única fonte de renda */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>A plataforma era sua única fonte de renda?</Label>
         <SimNaoRadio
           id="unica-fonte-renda"
@@ -115,7 +115,7 @@ export function ModuloDependenciaEconomica({ data, onChange }: ModuloDependencia
       </div>
 
       {/* B.2.5: Exclusividade */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>Havia cláusula de exclusividade (formal ou informal) com a plataforma?</Label>
         <SimNaoRadio
           id="clausula-exclusividade"

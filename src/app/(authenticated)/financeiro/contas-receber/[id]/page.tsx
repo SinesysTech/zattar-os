@@ -123,7 +123,7 @@ function DetalheItem({
       <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted">
         <Icon className="h-4 w-4 text-muted-foreground" />
       </div>
-      <div className={cn("stack-micro")}>
+      <div className={cn("flex flex-col stack-micro")}>
         <p className={cn("text-body-sm text-muted-foreground")}>{label}</p>
         <div className={cn( "font-medium")}>{value}</div>
       </div>
@@ -196,10 +196,10 @@ export default function ContaReceberDetalhesPage() {
   // Loading state
   if (isLoading) {
     return (
-      <div className={cn("stack-loose")}>
+      <div className={cn("flex flex-col stack-loose")}>
         <div className={cn("flex items-center inline-default")}>
           <Skeleton className="h-10 w-10" />
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Skeleton className="h-8 w-64" />
             <Skeleton className="h-4 w-40" />
           </div>
@@ -215,7 +215,7 @@ export default function ContaReceberDetalhesPage() {
   // Error state
   if (error) {
     return (
-      <div className={cn("stack-default")}>
+      <div className={cn("flex flex-col stack-default")}>
         <Button variant="ghost" onClick={handleVoltar}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
@@ -231,7 +231,7 @@ export default function ContaReceberDetalhesPage() {
   // Not found state
   if (!contaReceber) {
     return (
-      <div className={cn("stack-default")}>
+      <div className={cn("flex flex-col stack-default")}>
         <Button variant="ghost" onClick={handleVoltar}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
@@ -250,7 +250,7 @@ export default function ContaReceberDetalhesPage() {
   const isPendente = contaReceber.status === 'pendente';
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className={cn("flex items-center inline-default")}>
@@ -317,7 +317,7 @@ export default function ContaReceberDetalhesPage() {
               Informações Financeiras
             </CardTitle>
           </CardHeader>
-          <CardContent className={cn("stack-default")}>
+          <CardContent className={cn("flex flex-col stack-default")}>
             <DetalheItem
               icon={DollarSign}
               label="Valor Total"
@@ -402,7 +402,7 @@ export default function ContaReceberDetalhesPage() {
               Vinculações
             </CardTitle>
           </CardHeader>
-          <CardContent className={cn("stack-default")}>
+          <CardContent className={cn("flex flex-col stack-default")}>
             {contaReceber.cliente ? (
               <DetalheItem
                 icon={User}
@@ -506,7 +506,7 @@ export default function ContaReceberDetalhesPage() {
                   {/* Timeline line */}
                   <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-muted" />
 
-                  <div className={cn("stack-loose")}>
+                  <div className={cn("flex flex-col stack-loose")}>
                     {historico!.recebimentos.map((recebimento, index) => (
                       <div key={recebimento.id} className={cn("relative flex inline-default")}>
                         {/* Timeline dot */}

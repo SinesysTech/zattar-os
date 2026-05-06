@@ -21,7 +21,7 @@ import {
 
 export default function PlanoContas() {
   return (
-    <div className={cn("stack-extra-loose")}>
+    <div className={cn("flex flex-col stack-extra-loose")}>
       <div>
         <Heading level="page">Plano de Contas</Heading>
         <p className="text-muted-foreground mt-2">
@@ -35,7 +35,7 @@ export default function PlanoContas() {
         <p className="text-muted-foreground mb-4">
           O plano de contas é organizado em até quatro níveis de hierarquia:
         </p>
-        <ul className={cn("stack-tight text-body-sm text-muted-foreground list-disc list-inside")}>
+        <ul className={cn("flex flex-col stack-tight text-body-sm text-muted-foreground list-disc list-inside")}>
           <li>
             <strong>Nível 1 — Grupo Principal:</strong> ex: Receitas Operacionais, Despesas
             Administrativas

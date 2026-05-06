@@ -27,7 +27,7 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
   };
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       <div>
         <Heading level="card">O Corpo e o Ambiente</Heading>
         <p className={cn("text-body-sm text-muted-foreground")}>
@@ -36,7 +36,7 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
       </div>
 
       {/* A.3.1: Exposição a riscos */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>
           No dia a dia, lidava com situações perigosas ou prejudiciais à saúde?
           <Text variant="caption" className="ml-1">
@@ -61,7 +61,7 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
       {/* Condicional: Tipificação de riscos */}
       {data.exposicao_riscos && (
         <>
-          <div className={cn("stack-medium")}>
+          <div className={cn("flex flex-col stack-medium")}>
             <Label>Tipo de risco (selecione todos aplicáveis)</Label>
             <div className={cn("grid grid-cols-2 inline-tight sm:grid-cols-3")}>
               {TIPO_RISCO_OPTIONS.map((opt) => (
@@ -79,7 +79,7 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
             </div>
           </div>
 
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label htmlFor="desc-risco">Descreva detalhadamente a exposição ao risco</Label>
             <Textarea
               id="desc-risco"
@@ -93,7 +93,7 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
       )}
 
       {/* A.3.2: Assédio e danos morais */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>
           Sofria xingamentos, humilhações constantes do chefe/colegas ou cobranças de metas abusivas?
         </Label>
@@ -115,7 +115,7 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
       {/* Condicional: Detalhamento do assédio */}
       {data.assedio_moral && (
         <>
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label htmlFor="relato-assedio">Relato detalhado do(s) evento(s)</Label>
             <Textarea
               id="relato-assedio"
@@ -126,7 +126,7 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
             />
           </div>
 
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label htmlFor="testemunhas-assedio">
               Existem testemunhas ou gravações de áudio/vídeo?
             </Label>

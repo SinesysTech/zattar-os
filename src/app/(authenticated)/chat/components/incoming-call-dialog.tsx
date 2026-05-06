@@ -168,7 +168,7 @@ export function IncomingCallDialog({
             </div>
           </div>
 
-          <div className={cn("text-center stack-micro")}>
+          <div className={cn("flex flex-col text-center stack-micro")}>
             <Heading level="card">
               {callData.iniciadorNome}
             </Heading>

@@ -109,7 +109,7 @@ export function PerfilEditSheet({
             </DialogDescription>
           </DialogHeader>
 
-          <div className={cn("stack-loose")}>
+          <div className={cn("flex flex-col stack-loose")}>
             {error && (
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 p-3 text-body-sm text-destructive")}>
                 {error}
@@ -117,7 +117,7 @@ export function PerfilEditSheet({
             )}
 
             {/* Informações Básicas */}
-            <div className={cn("stack-default")}>
+            <div className={cn("flex flex-col stack-default")}>
               <Heading level="subsection">Informações Básicas</Heading>
               <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
                 <div>
@@ -194,7 +194,7 @@ export function PerfilEditSheet({
             </div>
 
             {/* Informações Profissionais */}
-            <div className={cn("stack-default")}>
+            <div className={cn("flex flex-col stack-default")}>
               <Heading level="subsection">Informações Profissionais</Heading>
               <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
                 <div>
@@ -224,7 +224,7 @@ export function PerfilEditSheet({
             </div>
 
             {/* Contato */}
-            <div className={cn("stack-default")}>
+            <div className={cn("flex flex-col stack-default")}>
               <Heading level="subsection">Contato</Heading>
               <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
                 <div>
@@ -275,7 +275,7 @@ export function PerfilEditSheet({
             </div>
 
             {/* Endereço */}
-            <div className={cn("stack-default")}>
+            <div className={cn("flex flex-col stack-default")}>
               <Heading level="subsection">Endereço</Heading>
               <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
                 <div className="md:col-span-2">

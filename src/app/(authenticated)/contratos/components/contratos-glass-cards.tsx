@@ -419,7 +419,7 @@ function CardSkeleton() {
       <div className={cn("flex items-start inline-tight-plus")}>
         <Skeleton className="size-3.5 rounded" />
         <Skeleton className="size-9 rounded-xl" />
-        <div className={cn("flex-1 stack-tight")}>
+        <div className={cn("flex flex-col flex-1 stack-tight")}>
           <Skeleton className="h-3 w-3/4" />
           <Skeleton className="h-2.5 w-1/2" />
           <Skeleton className="h-4 w-24 rounded" />
@@ -430,7 +430,7 @@ function CardSkeleton() {
         <Skeleton className="h-4 w-14 rounded" />
         <Skeleton className="h-4 w-20 rounded" />
       </div>
-      <div className={cn("mt-3 pt-3 border-t border-border/20 stack-tight")}>
+      <div className={cn("flex flex-col mt-3 pt-3 border-t border-border/20 stack-tight")}>
         <Skeleton className="h-2 w-32" />
         <Skeleton className="h-4 w-40 rounded" />
       </div>

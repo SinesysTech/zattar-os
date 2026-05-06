@@ -80,7 +80,7 @@ export const AcervoGeralForm = forwardRef<CapturaFormHandle, AcervoGeralFormProp
     }), [handleCaptura, isLoading]);
 
     return (
-      <div className={cn("stack-loose")}>
+      <div className={cn("flex flex-col stack-loose")}>
         <CapturaFormBase
           advogadoId={advogadoId}
           credenciaisSelecionadas={credenciaisSelecionadas}

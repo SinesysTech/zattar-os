@@ -41,11 +41,11 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
           <Skeleton className="h-5 w-44" />
         </CardHeader>
         <CardContent>
-          <div className={cn("stack-default")}>
+          <div className={cn("flex flex-col stack-default")}>
             <Skeleton className="h-6 w-full" />
             <Skeleton className="h-4 w-full" />
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className={cn("stack-snug")}>
+              <div key={i} className={cn("flex flex-col stack-snug")}>
                 <Skeleton className="h-3 w-32" />
                 <Skeleton className="h-2.5 w-full rounded-full" />
               </div>
@@ -67,7 +67,7 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
           </CardTitle>
         </CardHeader>
         <CardContent className="flex-1 flex items-center justify-center">
-          <div className={cn("text-center stack-tight")}>
+          <div className={cn("flex flex-col text-center stack-tight")}>
             <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-full bg-muted p-3 mx-auto w-fit")}>
               <Target className="h-5 w-5 text-muted-foreground" />
             </div>
@@ -95,9 +95,9 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
           Orçamento vs Realizado
         </CardTitle>
       </CardHeader>
-      <CardContent className={cn("flex-1 stack-default")}>
+      <CardContent className={cn("flex flex-col flex-1 stack-default")}>
         {/* Resumo geral */}
-        <div className={cn("stack-tight")}>
+        <div className={cn("flex flex-col stack-tight")}>
           <div className={cn("flex items-center justify-between text-body-sm")}>
             <span className="text-muted-foreground">Execução Geral</span>
             <div className={cn("flex items-center inline-tight")}>
@@ -115,15 +115,15 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
 
         {/* Status badges */}
         <div className={cn("flex inline-tight flex-wrap")}>
-          <SemanticBadge category="status" value="acima" variantOverride="outline" className={cn("text-caption inline-micro")}>
+          <SemanticBadge category="status" value="acima" variantOverride="outline" className={cn("flex text-caption inline-micro")}>
             <TrendingUp className="h-3 w-3 text-destructive" />
             {resumo.itensAcimaMeta} acima
           </SemanticBadge>
-          <SemanticBadge category="status" value="alvo" variantOverride="outline" className={cn("text-caption inline-micro")}>
+          <SemanticBadge category="status" value="alvo" variantOverride="outline" className={cn("flex text-caption inline-micro")}>
             <Minus className="h-3 w-3 text-success" />
             {resumo.itensDentroMeta} no alvo
           </SemanticBadge>
-          <SemanticBadge category="status" value="abaixo" variantOverride="outline" className={cn("text-caption inline-micro")}>
+          <SemanticBadge category="status" value="abaixo" variantOverride="outline" className={cn("flex text-caption inline-micro")}>
             <TrendingDown className="h-3 w-3 text-info" />
             {resumo.itensAbaixoMeta} abaixo
           </SemanticBadge>
@@ -131,7 +131,7 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
 
         {/* Top itens com maior desvio */}
         {topItens.length > 0 && (
-          <div className={cn("stack-tight-plus")}>
+          <div className={cn("flex flex-col stack-tight-plus")}>
             <Text variant="caption" className="font-medium">Maiores Desvios</Text>
             {topItens.map((item) => {
               const percentExec = item.valorPrevisto > 0
@@ -143,7 +143,7 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
                 : item.descricao || String(item.contaContabil);
 
               return (
-                <div key={item.id} className={cn("stack-micro")}>
+                <div key={item.id} className={cn("flex flex-col stack-micro")}>
                   <Text variant="caption" className="flex items-center justify-between">
                     <span className="truncate max-w-[60%] text-muted-foreground">{descricao}</span>
                     <span className={cn(

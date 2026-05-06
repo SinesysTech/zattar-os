@@ -115,9 +115,9 @@ export function ExpedientesBulkBaixarDialog({
           <DialogTitle>{`Baixar ${expedienteIds.length} ${expedienteIds.length === 1 ? 'Expediente' : 'Expedientes'}`}</DialogTitle>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-          <form id="bulk-baixar-form" onSubmit={handleSubmit} className={cn("stack-default")}>
+          <form id="bulk-baixar-form" onSubmit={handleSubmit} className={cn("flex flex-col stack-default")}>
             <BulkSelectionPreview expedientes={selectedExpedientes} />
-            <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Label htmlFor="justificativaBaixa">
                 Justificativa da Baixa <span className="text-destructive">*</span>
               </Label>

@@ -49,7 +49,7 @@ export default async function FinanceiroPage() {
 
   return (
     <DashboardProvider initialData={initialData}>
-      <div className={cn("stack-default")}>
+      <div className={cn("flex flex-col stack-default")}>
         <Heading level="page">Financeiro</Heading>
 
         {/* Row 1: Saúde Financeira (col-span-2) + Inadimplência */}

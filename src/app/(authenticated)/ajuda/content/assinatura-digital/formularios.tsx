@@ -26,7 +26,7 @@ import {
 
 export default function AssinaturaDigitalFormulariosDoc() {
   return (
-    <div className={cn("stack-extra-loose")}>
+    <div className={cn("flex flex-col stack-extra-loose")}>
       <div>
         <Heading level="page">
           Assinatura Digital — Formulários

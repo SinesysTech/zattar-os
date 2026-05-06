@@ -211,7 +211,7 @@ export function WidgetDashboard({ currentUserId, currentUserName, initialData }:
 
   return (
     <DashboardProvider initialData={initialData}>
-    <div className={cn(/* design-system-escape: pb-8 padding direcional sem Inset equiv. */ "stack-default-plus pb-8")}>
+    <div className={cn(/* design-system-escape: pb-8 padding direcional sem Inset equiv. */ "flex flex-col stack-default-plus pb-8")}>
       {/* ── Cabecalho ───────────────────────────────────────────── */}
       <div className={cn("flex items-end justify-between inline-default")}>
         <div>
@@ -295,7 +295,7 @@ function EmptyState({ onOpenPicker }: { onOpenPicker?: () => void }) {
             variant="outline"
             size="sm"
             onClick={onOpenPicker}
-            className={cn("inline-tight border-border/30 bg-transparent hover:bg-foreground/5")}
+            className={cn("flex inline-tight border-border/30 bg-transparent hover:bg-foreground/5")}
           >
             <LayoutGrid className="size-3.5" />
             Personalizar

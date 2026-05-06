@@ -69,7 +69,7 @@ export function TaskCard({ tarefa, isDragOverlay }: TaskCardProps) {
               <GripVertical className="size-4" />
             </button>
 
-            <div className={cn("min-w-0 flex-1 stack-tight")}>
+            <div className={cn("flex flex-col min-w-0 flex-1 stack-tight")}>
               <Text variant="label" weight="medium" as="p" className={cn(/* /* design-system-escape: leading-tight sem token DS */ "leading-tight" )}>
                 {tarefa.titulo}
               </Text>

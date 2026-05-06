@@ -523,7 +523,7 @@ export function AudienciaDetailDialog({
               <Button
                 size="sm"
                 asChild
-                className={cn("h-8 inline-snug rounded-lg px-3 text-caption")}
+                className={cn("flex h-8 inline-snug rounded-lg px-3 text-caption")}
               >
                 <a
                   href={audiencia.urlAudienciaVirtual}
@@ -538,7 +538,7 @@ export function AudienciaDetailDialog({
               <Button
                 size="sm"
                 disabled
-                className={cn("h-8 inline-snug rounded-lg px-3 text-caption")}
+                className={cn("flex h-8 inline-snug rounded-lg px-3 text-caption")}
               >
                 <Video className="size-3" />
                 Entrar na sala virtual
@@ -550,7 +550,7 @@ export function AudienciaDetailDialog({
               size="sm"
               variant="outline"
               asChild
-              className={cn("h-8 inline-snug rounded-lg px-3 text-caption")}
+              className={cn("flex h-8 inline-snug rounded-lg px-3 text-caption")}
             >
               <a href={pjeUrl} target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="size-3" />
@@ -562,7 +562,7 @@ export function AudienciaDetailDialog({
               size="sm"
               variant="outline"
               disabled
-              className={cn("h-8 inline-snug rounded-lg px-3 text-caption")}
+              className={cn("flex h-8 inline-snug rounded-lg px-3 text-caption")}
             >
               <ExternalLink className="size-3" />
               Abrir no PJe
@@ -665,7 +665,7 @@ export function AudienciaDetailDialog({
             )}
 
             {audiencia && !isLoading && !error && (
-              <div className={cn("stack-default-plus")}>
+              <div className={cn("flex flex-col stack-default-plus")}>
                 {/* ATA · só quando existe */}
                 {hasAta && (
                   <div>
@@ -823,7 +823,7 @@ export function AudienciaDetailDialog({
                           )}
                         </div>
                         {editingEndereco ? (
-                          <div className={cn("stack-tight")}>
+                          <div className={cn("flex flex-col stack-tight")}>
                             <div className={cn("grid grid-cols-[1fr_80px] inline-tight")}>
                               <Input
                                 placeholder="Logradouro"
@@ -1012,7 +1012,7 @@ export function AudienciaDetailDialog({
                   />
                   <SectionCard>
                     {editingObs ? (
-                      <div className={cn("stack-tight")}>
+                      <div className={cn("flex flex-col stack-tight")}>
                         <Textarea
                           placeholder="Anotações sobre a audiência..."
                           value={obsDraft}

@@ -37,7 +37,7 @@ export function ModuloDesligamentoPlataforma({ data, onChange }: ModuloDesligame
   const mostrarValorRetido = data.saldo_retido === true;
 
   return (
-    <div className={cn("stack-loose")}>
+    <div className={cn("flex flex-col stack-loose")}>
       <div>
         <Heading level="card">Desligado pelo Algoritmo</Heading>
         <p className={cn("text-body-sm text-muted-foreground")}>
@@ -46,7 +46,7 @@ export function ModuloDesligamentoPlataforma({ data, onChange }: ModuloDesligame
       </div>
 
       {/* B.4.1: Forma de desligamento */}
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Label htmlFor="forma-desligamento">Como foi encerrada sua relação com a plataforma?</Label>
         <Select
           value={data.forma_desligamento ?? ''}
@@ -65,7 +65,7 @@ export function ModuloDesligamentoPlataforma({ data, onChange }: ModuloDesligame
         </Select>
       </div>
 
-      <div className={cn("stack-tight sm:max-w-xs")}>
+      <div className={cn("flex flex-col stack-tight sm:max-w-xs")}>
         <Label htmlFor="data-fim-plataforma">Data de encerramento na plataforma</Label>
         <Input
           id="data-fim-plataforma"
@@ -78,7 +78,7 @@ export function ModuloDesligamentoPlataforma({ data, onChange }: ModuloDesligame
       {foiBloqueado && (
         <>
           {/* B.4.2: Aviso prévio */}
-          <div className={cn("stack-medium")}>
+          <div className={cn("flex flex-col stack-medium")}>
             <Label>Recebeu aviso prévio antes do bloqueio/desativação?</Label>
             <SimNaoRadio
               id="aviso-previo"
@@ -88,7 +88,7 @@ export function ModuloDesligamentoPlataforma({ data, onChange }: ModuloDesligame
           </div>
 
           {/* B.4.3: Direito de defesa */}
-          <div className={cn("stack-medium")}>
+          <div className={cn("flex flex-col stack-medium")}>
             <Label>Teve direito a defesa ou contestação antes do desligamento?</Label>
             <SimNaoRadio
               id="direito-defesa"
@@ -98,7 +98,7 @@ export function ModuloDesligamentoPlataforma({ data, onChange }: ModuloDesligame
           </div>
 
           {/* B.4.4: Motivo informado */}
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label htmlFor="motivo-informado">Qual motivo foi informado pela plataforma (se algum)?</Label>
             <Textarea
               id="motivo-informado"
@@ -116,7 +116,7 @@ export function ModuloDesligamentoPlataforma({ data, onChange }: ModuloDesligame
       )}
 
       {/* B.4.5: Saldo retido */}
-      <div className={cn("stack-medium")}>
+      <div className={cn("flex flex-col stack-medium")}>
         <Label>Havia saldo/ganhos retidos pela plataforma no momento do desligamento?</Label>
         <SimNaoRadio
           id="saldo-retido"
@@ -125,7 +125,7 @@ export function ModuloDesligamentoPlataforma({ data, onChange }: ModuloDesligame
         />
 
         {mostrarValorRetido && (
-          <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col stack-tight")}>
             <Label htmlFor="valor-retido">Valor aproximado retido</Label>
             <Input
               id="valor-retido"
@@ -139,7 +139,7 @@ export function ModuloDesligamentoPlataforma({ data, onChange }: ModuloDesligame
       </div>
 
       {/* B.4.6: Tempo na plataforma */}
-      <div className={cn("stack-tight")}>
+      <div className={cn("flex flex-col stack-tight")}>
         <Label htmlFor="tempo-plataforma">Quanto tempo trabalhou na plataforma?</Label>
         <Select
           value={data.tempo_plataforma ?? ''}

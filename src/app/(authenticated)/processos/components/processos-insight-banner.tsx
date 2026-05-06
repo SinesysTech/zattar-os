@@ -47,7 +47,7 @@ export function ProcessosInsightBanner({
   if (banners.length === 0) return null;
 
   return (
-    <div className={cn("stack-tight")}>
+    <div className={cn("flex flex-col stack-tight")}>
       {banners.map((banner, index) => (
         <button
           key={index}

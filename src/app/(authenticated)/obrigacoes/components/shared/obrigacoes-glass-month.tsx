@@ -464,7 +464,7 @@ export function ObrigacoesGlassMonth({
                       <X className="w-3.5 h-3.5 text-muted-foreground" />
                     </button>
                   </div>
-                  <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "max-h-96 overflow-y-auto p-2 stack-tight")}>
+                  <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col max-h-96 overflow-y-auto p-2 stack-tight")}>
                     {popoverItems.map((item) => (
                       <ParcelaItem
                         key={item.parcela.id}

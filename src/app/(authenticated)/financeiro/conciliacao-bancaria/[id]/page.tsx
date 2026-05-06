@@ -47,7 +47,7 @@ export default function TransacaoDetalhePage() {
   const score = transacao.conciliacao?.scoreSimilaridade;
 
   return (
-    <div className={cn("stack-default")}>
+    <div className={cn("flex flex-col stack-default")}>
       <div className="flex items-center justify-between">
         <div className={cn("flex items-center inline-medium")}>
           <Button variant="ghost" onClick={() => router.push('/financeiro/conciliacao-bancaria')}>
@@ -67,7 +67,7 @@ export default function TransacaoDetalhePage() {
       </div>
 
       <div className={cn("grid inline-default md:grid-cols-2")}>
-        <Card className={cn("inset-card-compact stack-tight")}>
+        <Card className={cn("flex flex-col inset-card-compact stack-tight")}>
           <p className={cn( "text-body-sm font-medium")}>Dados da transação</p>
           <Separator />
           <p className={cn( "text-body-lg font-semibold")}>{transacao.descricao}</p>
@@ -76,7 +76,7 @@ export default function TransacaoDetalhePage() {
           <p className={cn("text-body-sm text-muted-foreground")}>Documento: {transacao.documento || '-'}</p>
         </Card>
 
-        <Card className={cn("inset-card-compact stack-tight")}>
+        <Card className={cn("flex flex-col inset-card-compact stack-tight")}>
           <p className={cn( "text-body-sm font-medium")}>Conciliação</p>
           <Separator />
           <p className={cn("text-body-sm text-muted-foreground")}>Status: {status}</p>
@@ -99,13 +99,13 @@ export default function TransacaoDetalhePage() {
       </div>
 
       {status === 'pendente' && (
-        <Card className={cn("inset-card-compact stack-medium")}>
+        <Card className={cn("flex flex-col inset-card-compact stack-medium")}>
           <div className="flex items-center justify-between">
             <p className={cn( "text-body-sm font-medium")}>Sugestões de conciliação</p>
           </div>
           <div className={cn("grid inline-medium md:grid-cols-2")}>
             {sugestoes?.map((s) => (
-              <div key={s.lancamentoId} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md border p-3 stack-tight")}>
+              <div key={s.lancamentoId} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col rounded-md border p-3 stack-tight")}>
                 <div className="flex items-center justify-between">
                   <p className={cn( "text-body-sm font-medium")}>{s.lancamento.descricao}</p>
                   <Badge>{Math.round(s.score)}%</Badge>

@@ -279,8 +279,8 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
     return (
       <div className={cn("flex w-full min-h-[calc(100vh-7rem)] flex-col inline-default pb-8")}>
         <section className="rounded-2xl border bg-card shadow-sm">
-          <div className={cn("px-5 py-5 sm:px-6 stack-default")}>
-            <div className={cn("stack-tight")}>
+          <div className={cn("flex flex-col px-5 py-5 sm:px-6 stack-default")}>
+            <div className={cn("flex flex-col stack-tight")}>
               <Skeleton className="h-3 w-36" />
               <Skeleton className="h-10 w-3/4" />
               <div className={cn("flex items-center inline-tight")}>
@@ -296,15 +296,15 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
           </div>
 
           <div className={cn("border-t bg-muted/20 px-5 py-4 sm:px-6")}>
-            <div className={cn("stack-medium")}>
+            <div className={cn("flex flex-col stack-medium")}>
               <div className={cn("flex items-center inline-default")}>
                 <Skeleton className="h-7 w-28" />
                 <Skeleton className="h-7 w-24" />
                 <Skeleton className="h-7 w-20" />
               </div>
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-xl border bg-background/70 p-3 stack-medium")}>
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col rounded-xl border bg-background/70 p-3 stack-medium")}>
                 {[...Array(3)].map((_, index) => (
-                  <div key={index} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg border p-3 stack-tight")}>
+                  <div key={index} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col rounded-lg border p-3 stack-tight")}>
                     <div className={cn("flex items-center justify-between inline-medium")}>
                       <Skeleton className="h-4 w-32" />
                       <Skeleton className="h-6 w-28" />
@@ -322,7 +322,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
           <div className={cn("border-t px-5 py-5 sm:px-6")}>
             <div className={cn("rounded-xl border bg-card px-4 py-3 mb-5")}>
               <div className={cn("flex items-center justify-between inline-medium")}>
-                <div className={cn("stack-tight")}>
+                <div className={cn("flex flex-col stack-tight")}>
                   <Skeleton className="h-4 w-36" />
                   <Skeleton className="h-3 w-72" />
                 </div>
@@ -344,7 +344,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
   // Erro ao carregar
   if (error && !processo) {
     return (
-      <div className={cn("w-full stack-loose")}>
+      <div className={cn("flex flex-col w-full stack-loose")}>
         <TimelineError error={error} onRetry={refetch} />
       </div>
     );
@@ -353,7 +353,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
   // Processo não encontrado
   if (!processo) {
     return (
-      <div className={cn("w-full stack-loose")}>
+      <div className={cn("flex flex-col w-full stack-loose")}>
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Processo não encontrado</AlertTitle>

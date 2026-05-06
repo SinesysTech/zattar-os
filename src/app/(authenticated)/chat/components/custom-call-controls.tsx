@@ -186,7 +186,7 @@ export function CustomCallControls({
             </Tooltip>
             <PopoverContent className="w-72 bg-video-surface border-video-border text-video-text" side="top">
               <div className={cn("grid inline-default")}>
-                <div className={cn("stack-tight")}>
+                <div className={cn("flex flex-col stack-tight")}>
                   <Heading level="subsection" className={cn("leading-none")}>Efeitos de Vídeo</Heading>
                   <Text variant="caption">
                     Escolha um efeito para sua câmera

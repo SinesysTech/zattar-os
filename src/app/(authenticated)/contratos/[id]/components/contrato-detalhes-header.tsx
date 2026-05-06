@@ -174,7 +174,7 @@ export function ContratoDetalhesHeader({
         Voltar para contratos
       </button>
 
-      <GlassPanel depth={2} className={cn("inset-dialog inline-default-plus")}>
+      <GlassPanel depth={2} className={cn("flex inset-dialog inline-default-plus")}>
         {/* ── Linha 1: identidade + ações ────────────────────────── */}
         <div className={cn("flex items-start justify-between inline-default")}>
           <div className={cn("flex-1 min-w-0 flex flex-col inline-tight")}>

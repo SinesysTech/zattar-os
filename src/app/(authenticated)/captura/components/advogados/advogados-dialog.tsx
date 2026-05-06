@@ -163,7 +163,7 @@ export function AdvogadosDialog({ advogado, open, onOpenChangeAction, onSuccessA
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className={cn("stack-default")}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className={cn("flex flex-col stack-default")}>
             <FormField
               control={form.control}
               name="nome_completo"
