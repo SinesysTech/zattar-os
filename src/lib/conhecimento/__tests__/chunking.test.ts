@@ -1,4 +1,4 @@
-import { chunkText } from '../chunking';
+import { chunkText, chunkTextParentChild } from '../chunking';
 
 describe('chunkText', () => {
   it('retorna um único chunk se o texto cabe inteiro', () => {
@@ -65,5 +65,46 @@ describe('chunkText', () => {
     const result = chunkText(text, { targetTokens: 100, overlapTokens: 20 });
     expect(result[0].tokens).toBeGreaterThanOrEqual(90);
     expect(result[0].tokens).toBeLessThanOrEqual(110);
+  });
+});
+
+describe('chunkTextParentChild', () => {
+  it('retorna pais sem overlap e filhos com overlap', () => {
+    const text = 'parágrafo um.\n\n'.repeat(50) + 'parágrafo dois.\n\n'.repeat(50);
+    const result = chunkTextParentChild(
+      text,
+      { targetTokens: 200, overlapTokens: 0 },
+      { targetTokens: 50, overlapTokens: 10 },
+    );
+    expect(result.parents.length).toBeGreaterThan(0);
+    expect(result.children.length).toBeGreaterThan(result.parents.length);
+    result.children.forEach((c) => {
+      expect(c.parentIndex).toBeGreaterThanOrEqual(0);
+      expect(c.parentIndex).toBeLessThan(result.parents.length);
+    });
+  });
+
+  it('cada filho aponta para um pai válido', () => {
+    const text = 'a '.repeat(500) + 'b '.repeat(500);
+    const result = chunkTextParentChild(
+      text,
+      { targetTokens: 100, overlapTokens: 0 },
+      { targetTokens: 30, overlapTokens: 10 },
+    );
+    result.children.forEach((c) => {
+      const parent = result.parents[c.parentIndex];
+      expect(parent).toBeDefined();
+    });
+  });
+
+  it('texto curto: 1 pai, 1 filho', () => {
+    const result = chunkTextParentChild(
+      'Texto curto.',
+      { targetTokens: 100, overlapTokens: 0 },
+      { targetTokens: 30, overlapTokens: 5 },
+    );
+    expect(result.parents).toHaveLength(1);
+    expect(result.children).toHaveLength(1);
+    expect(result.children[0].parentIndex).toBe(0);
   });
 });

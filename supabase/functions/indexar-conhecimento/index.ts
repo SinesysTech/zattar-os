@@ -6,8 +6,9 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
-const TARGET_TOKENS = 1000;
-const OVERLAP_TOKENS = 200;
+const PARENT_TOKENS = 1024;
+const CHILD_TOKENS = 256;
+const CHILD_OVERLAP = 50;
 const SEPARATORS = ['\n\n', '\n', '. ', ' '];
 const BATCH_SIZE = 64;
 
@@ -62,44 +63,66 @@ serve(async (req) => {
     .eq('id', documentId);
 
   try {
-    const chunks = chunkText(doc.texto_extraido, TARGET_TOKENS, OVERLAP_TOKENS);
-    if (chunks.length === 0) throw new Error('Chunking produziu zero chunks');
+    // 1. Chunkar em parents + children (duas granularidades)
+    const { parents, children } = chunkTextParentChild(doc.texto_extraido);
+    if (children.length === 0) throw new Error('Chunking produziu zero chunks');
 
-    // Trim each chunk's content for clean embedding inputs.
-    // The chunking algorithm preserves trailing whitespace as a semantic boundary marker,
-    // but for embedding/storage we want the clean text.
-    const trimmedChunks = chunks.map((c) => ({ ...c, conteudo: c.conteudo.trim() }));
-
-    const embeddings: number[][] = [];
-    for (let i = 0; i < trimmedChunks.length; i += BATCH_SIZE) {
-      const batch = trimmedChunks.slice(i, i + BATCH_SIZE);
-      const batchEmbeddings = await embedBatch(batch.map((c) => c.conteudo), openaiApiKey, embeddingModel);
-      embeddings.push(...batchEmbeddings);
-    }
-
-    const rows = trimmedChunks.map((chunk, idx) => ({
+    // 2. Inserir parents primeiro (sem embedding, sem parent_id)
+    const parentRows = parents.map((p) => ({
       document_id: documentId,
       base_id: doc.base_id,
-      posicao: chunk.posicao,
-      conteudo: chunk.conteudo,
-      embedding: embeddings[idx],
-      tokens: chunk.tokens,
+      posicao: p.posicao,
+      conteudo: p.conteudo,
+      embedding: null,
+      parent_id: null,
+      tokens: p.tokens,
     }));
+    const { data: insertedParents, error: parentErr } = await supabase
+      .from('knowledge_chunks')
+      .insert(parentRows)
+      .select('id, posicao');
+    if (parentErr) throw parentErr;
 
-    const { error: insertErr } = await supabase.from('knowledge_chunks').insert(rows);
-    if (insertErr) throw insertErr;
+    // Mapeia posicao do pai (= parentIndex) → ID real do pai inserido
+    const parentIdByIndex = new Map<number, number>();
+    (insertedParents as Array<{ id: number; posicao: number }>).forEach((p) => {
+      parentIdByIndex.set(p.posicao, p.id);
+    });
 
+    // 3. Trim children e embedda em batches
+    const trimmedChildren = children.map((c) => ({ ...c, conteudo: c.conteudo.trim() }));
+    const embeddings: number[][] = [];
+    for (let i = 0; i < trimmedChildren.length; i += BATCH_SIZE) {
+      const batch = trimmedChildren.slice(i, i + BATCH_SIZE);
+      const batchEmb = await embedBatch(batch.map((c) => c.conteudo), openaiApiKey, embeddingModel);
+      embeddings.push(...batchEmb);
+    }
+
+    // 4. Inserir children com parent_id real
+    const childRows = trimmedChildren.map((c, idx) => ({
+      document_id: documentId,
+      base_id: doc.base_id,
+      posicao: c.posicao,
+      conteudo: c.conteudo,
+      embedding: embeddings[idx],
+      parent_id: parentIdByIndex.get(c.parentIndex)!,
+      tokens: c.tokens,
+    }));
+    const { error: childErr } = await supabase.from('knowledge_chunks').insert(childRows);
+    if (childErr) throw childErr;
+
+    // 5. Atualizar status — total_chunks conta só filhos (que aparecem na busca)
     await supabase
       .from('knowledge_documents')
       .update({
         status: 'indexed',
-        total_chunks: trimmedChunks.length,
+        total_chunks: children.length,
         indexed_at: new Date().toISOString(),
         ultimo_erro: null,
       })
       .eq('id', documentId);
 
-    return jsonResponse({ ok: true, chunks: trimmedChunks.length });
+    return jsonResponse({ ok: true, parents: parents.length, children: children.length });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     await markFailed(supabase, documentId, msg);
@@ -124,6 +147,11 @@ interface Chunk {
   tokens: number;
 }
 
+interface ParentChildChunks {
+  parents: Chunk[];
+  children: Array<Chunk & { parentIndex: number }>;
+}
+
 function estimateTokens(text: string): number {
   return Math.ceil(text.length / 4);
 }
@@ -134,8 +162,6 @@ function chunkText(text: string, target: number, overlap: number): Chunk[] {
     return [{ conteudo: trimmed, posicao: 0, tokens: estimateTokens(trimmed) }];
   }
 
-  // Slicing-based algorithm (matches Task 4 implementation):
-  // findChunkEnd backtracks from targetEnd to nearest separator
   const chunks: Chunk[] = [];
   let posicao = 0;
   let chunkStart = text.length - text.trimStart().length;
@@ -161,6 +187,18 @@ function chunkText(text: string, target: number, overlap: number): Chunk[] {
   }
 
   return chunks;
+}
+
+function chunkTextParentChild(text: string): ParentChildChunks {
+  const parents = chunkText(text, PARENT_TOKENS, 0);
+  const children: Array<Chunk & { parentIndex: number }> = [];
+  parents.forEach((parent, parentIdx) => {
+    const childChunks = chunkText(parent.conteudo, CHILD_TOKENS, CHILD_OVERLAP);
+    childChunks.forEach((c) => {
+      children.push({ ...c, parentIndex: parentIdx, posicao: children.length });
+    });
+  });
+  return { parents, children };
 }
 
 function findChunkEnd(text: string, startIdx: number, targetTokens: number): number {

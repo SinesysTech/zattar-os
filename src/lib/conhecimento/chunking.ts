@@ -9,6 +9,11 @@ export interface Chunk {
   tokens: number;
 }
 
+export interface ParentChildChunks {
+  parents: Chunk[];
+  children: Array<Chunk & { parentIndex: number }>;
+}
+
 // Separadores em ordem decrescente de preferência semântica
 const SEPARATORS = ['\n\n', '\n', '. ', ' '];
 
@@ -113,4 +118,30 @@ export function chunkText(text: string, options: ChunkOptions): Chunk[] {
   }
 
   return chunks;
+}
+
+/**
+ * Chunka texto em duas granularidades:
+ * - Pais: blocos grandes (sem overlap) que cobrem o doc inteiro. Sem embedding.
+ * - Filhos: sub-blocos menores (com overlap) de cada pai. Com embedding.
+ *
+ * parentOptions deve ter overlapTokens = 0 para garantir cobertura completa sem repetição.
+ * childOptions define granularidade usada na busca semântica/BM25.
+ */
+export function chunkTextParentChild(
+  text: string,
+  parentOptions: ChunkOptions,
+  childOptions: ChunkOptions,
+): ParentChildChunks {
+  const parents = chunkText(text, parentOptions);
+  const children: Array<Chunk & { parentIndex: number }> = [];
+
+  parents.forEach((parent, parentIdx) => {
+    const childChunks = chunkText(parent.conteudo, childOptions);
+    childChunks.forEach((c) => {
+      children.push({ ...c, parentIndex: parentIdx, posicao: children.length });
+    });
+  });
+
+  return { parents, children };
 }
