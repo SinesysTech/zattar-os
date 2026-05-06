@@ -33,6 +33,7 @@ export function useNavegacaoActions() {
     captura: '/captura/historico',
     financeiro: '/financeiro/plano-contas',
     rh: '/rh/salarios',
+    conhecimento: '/conhecimento',
   };
 
   // Ação: Navegar para página
@@ -41,7 +42,7 @@ export function useNavegacaoActions() {
     description:
       'Navega para uma página específica do sistema ZattarOS. Use para ir a módulos como processos, audiências, expedientes, dashboard, etc.',
     parameters: z.object({
-      pagina: z.string().describe('Módulo/página de destino: dashboard, processos, audiencias, expedientes, obrigacoes, contratos, assistentes, clientes, usuarios, captura, financeiro, rh'),
+      pagina: z.string().describe('Módulo/página de destino: dashboard, processos, audiencias, expedientes, obrigacoes, contratos, assistentes, clientes, usuarios, captura, financeiro, rh, conhecimento'),
       id: z.number().optional().describe('ID do registro específico para ver detalhes (opcional)'),
     }),
     handler: async ({ pagina, id }) => {

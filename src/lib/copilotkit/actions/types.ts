@@ -15,7 +15,8 @@ export type ModuloSistema =
   | 'usuarios'
   | 'captura'
   | 'financeiro'
-  | 'rh';
+  | 'rh'
+  | 'conhecimento';
 
 // Visualizações de período
 export type VisualizacaoPeriodo = 'semana' | 'mes' | 'ano' | 'lista';

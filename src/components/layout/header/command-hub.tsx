@@ -6,6 +6,7 @@ import Image from "next/image"
 import { useRouter, usePathname } from "next/navigation"
 import {
   Bell,
+  BookOpen,
   Bot,
   Briefcase,
   Calendar,
@@ -58,6 +59,7 @@ const navServicos: HubNavItem[] = [
   { id: "assinatura",     title: "Assinatura Digital", url: "/app/assinatura-digital/documentos/lista", icon: PenTool,        description: "Assinar docs" },
   { id: "assistentes",    title: "Assistentes IA",     url: "/app/assistentes",                         icon: Bot,            description: "Agentes inteligentes" },
   { id: "chat",           title: "Chat",               url: "/app/chat",                                icon: MessageSquare,  description: "Mensagens" },
+  { id: "conhecimento",   title: "Conhecimento",       url: "/app/conhecimento",                        icon: BookOpen,       description: "Bases para RAG" },
   { id: "diario",         title: "Diário Oficial",     url: "/app/comunica-cnj",                        icon: Bell,           description: "Publicações" },
   { id: "documentos",     title: "Documentos",         url: "/app/documentos",                          icon: FileEdit,       description: "Editor colaborativo" },
   { id: "email",          title: "E-mail",             url: "/app/mail",                                icon: Mail,           description: "Caixa de entrada" },

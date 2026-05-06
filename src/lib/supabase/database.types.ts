@@ -4590,6 +4590,176 @@ export type Database = {
           },
         ]
       }
+      knowledge_bases: {
+        Row: {
+          cor: string | null
+          created_at: string
+          created_by: number | null
+          descricao: string | null
+          icone: string | null
+          id: number
+          nome: string
+          slug: string
+          total_chunks: number
+          total_documentos: number
+          updated_at: string
+        }
+        Insert: {
+          cor?: string | null
+          created_at?: string
+          created_by?: number | null
+          descricao?: string | null
+          icone?: string | null
+          id?: never
+          nome: string
+          slug: string
+          total_chunks?: number
+          total_documentos?: number
+          updated_at?: string
+        }
+        Update: {
+          cor?: string | null
+          created_at?: string
+          created_by?: number | null
+          descricao?: string | null
+          icone?: string | null
+          id?: never
+          nome?: string
+          slug?: string
+          total_chunks?: number
+          total_documentos?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_bases_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      knowledge_chunks: {
+        Row: {
+          base_id: number
+          conteudo: string
+          created_at: string
+          document_id: number
+          embedding: string | null
+          id: number
+          metadata: Json | null
+          posicao: number
+          tokens: number | null
+        }
+        Insert: {
+          base_id: number
+          conteudo: string
+          created_at?: string
+          document_id: number
+          embedding?: string | null
+          id?: never
+          metadata?: Json | null
+          posicao: number
+          tokens?: number | null
+        }
+        Update: {
+          base_id?: number
+          conteudo?: string
+          created_at?: string
+          document_id?: number
+          embedding?: string | null
+          id?: never
+          metadata?: Json | null
+          posicao?: number
+          tokens?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_chunks_base_id_fkey"
+            columns: ["base_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_bases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "knowledge_chunks_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      knowledge_documents: {
+        Row: {
+          arquivo_path: string
+          arquivo_tamanho_bytes: number
+          arquivo_tipo: string
+          base_id: number
+          created_at: string
+          created_by: number | null
+          id: number
+          indexed_at: string | null
+          metadata: Json | null
+          nome: string
+          status: string
+          tentativas: number
+          texto_extraido: string | null
+          total_chunks: number
+          ultimo_erro: string | null
+        }
+        Insert: {
+          arquivo_path: string
+          arquivo_tamanho_bytes: number
+          arquivo_tipo: string
+          base_id: number
+          created_at?: string
+          created_by?: number | null
+          id?: never
+          indexed_at?: string | null
+          metadata?: Json | null
+          nome: string
+          status?: string
+          tentativas?: number
+          texto_extraido?: string | null
+          total_chunks?: number
+          ultimo_erro?: string | null
+        }
+        Update: {
+          arquivo_path?: string
+          arquivo_tamanho_bytes?: number
+          arquivo_tipo?: string
+          base_id?: number
+          created_at?: string
+          created_by?: number | null
+          id?: never
+          indexed_at?: string | null
+          metadata?: Json | null
+          nome?: string
+          status?: string
+          tentativas?: number
+          texto_extraido?: string | null
+          total_chunks?: number
+          ultimo_erro?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_documents_base_id_fkey"
+            columns: ["base_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_bases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "knowledge_documents_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lancamentos_financeiros: {
         Row: {
           acordo_condenacao_id: number | null
@@ -9078,6 +9248,25 @@ export type Database = {
           id: number
           metadata: Json
           parent_id: number
+          similarity: number
+        }[]
+      }
+      match_knowledge: {
+        Args: {
+          filter_base_ids?: number[]
+          match_count?: number
+          match_threshold?: number
+          query_embedding: string
+        }
+        Returns: {
+          base_id: number
+          base_nome: string
+          chunk_id: number
+          conteudo: string
+          document_id: number
+          document_nome: string
+          metadata: Json
+          posicao: number
           similarity: number
         }[]
       }
