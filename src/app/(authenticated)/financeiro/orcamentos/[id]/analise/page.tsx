@@ -133,7 +133,7 @@ function ResumoGeralCards({
       <Card>
         <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
           <CardDescription>Total Previsto</CardDescription>
-          <CardTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "text-2xl font-mono")}>
+          <CardTitle className="text-page-title font-mono">
             {formatarValor(resumo.totalPrevisto)}
           </CardTitle>
         </CardHeader>
@@ -142,7 +142,7 @@ function ResumoGeralCards({
       <Card>
         <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
           <CardDescription>Total Realizado</CardDescription>
-          <CardTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "text-2xl font-mono")}>
+          <CardTitle className="text-page-title font-mono">
             {formatarValor(resumo.totalRealizado)}
           </CardTitle>
         </CardHeader>

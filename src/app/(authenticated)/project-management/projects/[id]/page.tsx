@@ -125,7 +125,7 @@ export default async function ProjectDetailPage({ params }: Props) {
           <Card>
             <CardHeader>
               <CardDescription>Progresso</CardDescription>
-              <CardTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "text-2xl")}>
+              <CardTitle className="text-page-title">
                 {projeto.progresso}%
               </CardTitle>
             </CardHeader>
@@ -141,7 +141,7 @@ export default async function ProjectDetailPage({ params }: Props) {
           <Card>
             <CardHeader>
               <CardDescription>Tarefas</CardDescription>
-              <CardTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "text-2xl")}>
+              <CardTitle className="text-page-title">
                 {tarefasConcluidas}/{tarefas.length}
               </CardTitle>
             </CardHeader>
@@ -155,7 +155,7 @@ export default async function ProjectDetailPage({ params }: Props) {
           <Card>
             <CardHeader>
               <CardDescription>Orçamento</CardDescription>
-              <CardTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "text-2xl")}>
+              <CardTitle className="text-page-title">
                 {projeto.orcamento != null
                   ? new Intl.NumberFormat("pt-BR", {
                     style: "currency",
@@ -180,7 +180,7 @@ export default async function ProjectDetailPage({ params }: Props) {
           <Card>
             <CardHeader>
               <CardDescription>Equipe</CardDescription>
-              <CardTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "text-2xl")}>
+              <CardTitle className="text-page-title">
                 {membros.length} membros
               </CardTitle>
             </CardHeader>

@@ -71,7 +71,7 @@ export function ChartProjectEfficiency({
       <Card>
         <CardHeader>
           <CardDescription>Distribuição por Status</CardDescription>
-          <CardTitle className={cn(/* design-system-escape: text-xl → migrar para <Heading level="..."> */ "font-display text-xl")}>
+          <CardTitle className="font-display text-section-title">
             Eficiência dos Projetos
           </CardTitle>
         </CardHeader>
@@ -89,7 +89,7 @@ export function ChartProjectEfficiency({
       <ChartStyle id={id} config={chartConfig} />
       <CardHeader>
         <CardDescription>Distribuição por Status</CardDescription>
-        <CardTitle className={cn(/* design-system-escape: text-xl → migrar para <Heading level="..."> */ "font-display text-xl")}>
+        <CardTitle className="font-display text-section-title">
           Eficiência dos Projetos
         </CardTitle>
         <CardAction>

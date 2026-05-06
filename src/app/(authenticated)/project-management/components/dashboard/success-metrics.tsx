@@ -49,7 +49,7 @@ export function SuccessMetrics({ membros, resumo }: SuccessMetricsProps) {
     <Card>
       <CardHeader>
         <CardDescription>Membros Ativos</CardDescription>
-        <CardTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; lg:text-3xl sem equivalente DS */ "font-display text-2xl lg:text-3xl")}>
+        <CardTitle className="font-display text-page-title lg:text-3xl">
           {membros.length}
         </CardTitle>
       </CardHeader>

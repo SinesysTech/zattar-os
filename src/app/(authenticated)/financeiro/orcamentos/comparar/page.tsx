@@ -209,7 +209,7 @@ function ComparacaoCards({
         <Card>
           <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
             <CardDescription>Maior Orçamento</CardDescription>
-            <CardTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "text-2xl font-mono text-success")}>
+            <CardTitle className="text-page-title font-mono text-success">
               {formatarValor(maiorValor)}
             </CardTitle>
           </CardHeader>
@@ -223,7 +223,7 @@ function ComparacaoCards({
         <Card>
           <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
             <CardDescription>Menor Orçamento</CardDescription>
-            <CardTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "text-2xl font-mono text-info")}>
+            <CardTitle className="text-page-title font-mono text-info">
               {formatarValor(menorValor)}
             </CardTitle>
           </CardHeader>
@@ -237,7 +237,7 @@ function ComparacaoCards({
         <Card>
           <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
             <CardDescription>Média</CardDescription>
-            <CardTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="..."> */ "text-2xl font-mono")}>
+            <CardTitle className="text-page-title font-mono">
               {formatarValor(mediaValor)}
             </CardTitle>
           </CardHeader>

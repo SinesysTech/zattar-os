@@ -105,7 +105,7 @@ export default function RelatorioCustoPessoalPage() {
             <CardHeader>
               <CardTitle>Custo Total ({ano})</CardTitle>
             </CardHeader>
-            <CardContent className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-semibold → className de <Text>/<Heading> */ "text-xl font-semibold text-success")}>
+            <CardContent className="text-kpi-value text-success">
               {formatCurrency(custoTotal)}
             </CardContent>
           </Card>
@@ -113,7 +113,7 @@ export default function RelatorioCustoPessoalPage() {
             <CardHeader>
               <CardTitle>Custo Médio Mensal</CardTitle>
             </CardHeader>
-            <CardContent className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-semibold → className de <Text>/<Heading> */ "text-xl font-semibold")}>
+            <CardContent className="text-kpi-value">
               {formatCurrency(mediaMensal)}
             </CardContent>
           </Card>
@@ -121,7 +121,7 @@ export default function RelatorioCustoPessoalPage() {
             <CardHeader>
               <CardTitle>Projeção Anual</CardTitle>
             </CardHeader>
-            <CardContent className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-semibold → className de <Text>/<Heading> */ "text-xl font-semibold")}>
+            <CardContent className="text-kpi-value">
               {formatCurrency(custoProjetadoAnual)}
             </CardContent>
           </Card>
@@ -129,7 +129,7 @@ export default function RelatorioCustoPessoalPage() {
             <CardHeader>
               <CardTitle>Total de Funcionários</CardTitle>
             </CardHeader>
-            <CardContent className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-semibold → className de <Text>/<Heading> */ "text-xl font-semibold")}>{totalFuncionarios}</CardContent>
+            <CardContent className="text-kpi-value">{totalFuncionarios}</CardContent>
           </Card>
         </div>
       )}
