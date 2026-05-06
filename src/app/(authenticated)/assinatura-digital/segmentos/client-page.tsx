@@ -154,7 +154,7 @@ export function SegmentosClient() {
   };
 
   return (
-    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
+    <div className={cn("stack-default-plus")}>
       <AssinaturaDigitalPageNav
         action={
           canCreate ? (

@@ -220,7 +220,7 @@ function SectionHeader({
   const tile = tone === "info" ? "bg-info/10 text-info/70" : "bg-primary/8 text-primary/70";
   return (
     <div className="flex items-center justify-between">
-      <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
+      <div className={cn("flex items-center inline-tight-plus")}>
         <span className={cn("inline-flex size-8 items-center justify-center rounded-lg", tile)}>
           <Icon className="size-4" />
         </span>
@@ -556,7 +556,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
         {/* ── Header ─────────────────────────────────── */}
         <div className={cn("flex items-end justify-between inline-default")}>
           <div className="min-w-0">
-            <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5 flex-wrap")}>
+            <div className={cn("flex items-center inline-tight-plus flex-wrap")}>
               <h1 className={cn(/* design-system-escape: leading-tight sem token DS */ "font-heading text-[26px] font-bold leading-tight truncate")}>
                 {documento.titulo || "Documento sem título"}
               </h1>
@@ -591,7 +591,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
         {documento.selfie_habilitada && (
           <GlassPanel
             depth={2}
-            className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv.; gap-2.5 gap sem token DS */ "px-4 py-3 flex items-center gap-2.5 border-info/25")}
+            className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3 flex items-center inline-tight-plus border-info/25")}
           >
             <span className="inline-flex size-7 items-center justify-center rounded-lg bg-info/10 shrink-0">
               <Camera className="size-3.5 text-info/70" />

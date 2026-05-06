@@ -127,7 +127,7 @@ export function MiniCalendar({
       </div>
 
       {/* Weekday headers */}
-      <div className={cn(/* design-system-escape: gap-0 gap sem token DS */ "grid grid-cols-7 gap-0 mb-1")}>
+      <div className={cn("grid grid-cols-7 inline-none mb-1")}>
         {WEEKDAY_LABELS.map((label, i) => (
           <div
             key={`${label}-${i}`}
@@ -140,7 +140,7 @@ export function MiniCalendar({
 
       {/* Day grid */}
       {weeks.map((week, wi) => (
-        <div key={wi} className={cn(/* design-system-escape: gap-0 gap sem token DS */ "grid grid-cols-7 gap-0")}>
+        <div key={wi} className={cn("grid grid-cols-7 inline-none")}>
           {week.map((cell) => {
             const isToday = isSameDay(cell.date, today);
             const isSelected = selectedDate && isSameDay(cell.date, selectedDate);

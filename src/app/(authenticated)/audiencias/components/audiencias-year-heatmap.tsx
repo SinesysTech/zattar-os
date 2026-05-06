@@ -280,7 +280,7 @@ export function AudienciasYearHeatmap({
         </div>
 
         {/* Main Layout: Heatmap + Stats Sidebar */}
-        <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex gap-5 flex-wrap xl:flex-nowrap")}>
+        <div className={cn("flex inline-default-plus flex-wrap xl:flex-nowrap")}>
           {/* Heatmap Panel */}
           <GlassPanel depth={1} className={cn("inset-dialog flex-1 min-w-0")}>
             <div className="grid grid-cols-4 gap-x-6 gap-y-8">

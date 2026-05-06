@@ -109,7 +109,7 @@ export function AgendaEventDetail({
                   <Gavel className={cn("size-5", colors.text)} />
                 </div>
                 <div className="min-w-0">
-                  <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5 flex-wrap mb-1")}>
+                  <div className={cn("flex items-center inline-tight-plus flex-wrap mb-1")}>
                     <DialogTitle
                       className={cn( "text-[17px] font-bold text-foreground")}
                     >
@@ -141,7 +141,7 @@ export function AgendaEventDetail({
             </div>
 
             {/* Meta strip */}
-            <div className={cn(/* design-system-escape: gap-0 gap sem token DS; p-3.5 → usar <Inset> */ "flex gap-0 mb-4 rounded-xl border border-border/15 bg-muted/4 p-3.5")}>
+            <div className={cn(/* design-system-escape: p-3.5 → usar <Inset> */ "flex inline-none mb-4 rounded-xl border border-border/15 bg-muted/4 p-3.5")}>
               {/* Horário */}
               <div className="flex-1">
 <Text variant="overline" as="span" className="text-muted-foreground/40">Horário</Text>
@@ -195,7 +195,7 @@ export function AgendaEventDetail({
 
             {/* Action buttons */}
             {event.source === "audiencias" && (
-              <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5 mb-5 flex-wrap")}>
+              <div className={cn("flex items-center inline-tight-plus mb-5 flex-wrap")}>
                 <button className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; */ "inline-flex items-center inline-tight px-4 py-2 bg-primary text-primary-foreground rounded-xl text-[13px] font-medium hover:bg-primary/90 transition-colors cursor-pointer")}>
                   <Video className="size-4" /> Entrar na Sala Virtual
                 </button>

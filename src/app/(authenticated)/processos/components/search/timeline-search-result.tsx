@@ -156,7 +156,7 @@ export function TimelineSearchResult({
       )}
     >
       {/* Lado esquerdo: ícone + textos */}
-      <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5 min-w-0 flex-1")}>
+      <div className={cn("flex items-center inline-tight-plus min-w-0 flex-1")}>
         {/* Caixa do ícone */}
         <div
           className="size-8 rounded bg-card border flex items-center justify-center shrink-0"

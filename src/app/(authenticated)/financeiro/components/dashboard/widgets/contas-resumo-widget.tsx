@@ -58,7 +58,7 @@ function ContaSection({
   iconColorClass: string;
 }) {
   return (
-    <div className={cn(/* design-system-escape: space-y-2.5 sem token DS */ "space-y-2.5")}>
+    <div className={cn("stack-tight-plus")}>
       <div className="flex items-center justify-between">
         <div className={cn("flex items-center inline-tight")}>
           <div className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ 'rounded-md p-1.5', colorClass)}>

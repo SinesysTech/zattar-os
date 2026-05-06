@@ -9,7 +9,7 @@ function PesquisaLoading() {
   return (
     <div className={cn("flex flex-col inline-loose px-6 py-6")}>
       <Skeleton className="h-9 w-60 rounded-xl" />
-      <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "mx-auto flex w-full max-w-3xl flex-col items-center gap-5")}>
+      <div className={cn("mx-auto flex w-full max-w-3xl flex-col items-center inline-default-plus")}>
         <Skeleton className="size-14 rounded-2xl" />
         <Skeleton className="h-9 w-80 rounded" />
         <Skeleton className="h-4 w-96 rounded" />

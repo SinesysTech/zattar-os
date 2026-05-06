@@ -57,7 +57,7 @@ export function WidgetScorePessoal() {
         className="md:col-span-3"
         depth={2}
       >
-        <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5 flex-wrap")}>
+        <div className={cn("flex items-center inline-default-plus flex-wrap")}>
           <div className={cn("flex flex-col inline-nano")}>
             <span className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Lembretes pendentes
@@ -108,7 +108,7 @@ export function WidgetScorePessoal() {
       className="md:col-span-3"
       depth={2}
     >
-      <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex flex-col sm:flex-row items-center gap-5")}>
+      <div className={cn("flex flex-col sm:flex-row items-center inline-default-plus")}>
 
         {/* Gauge compacto */}
         <GaugeMeter
@@ -123,7 +123,7 @@ export function WidgetScorePessoal() {
         <div className="hidden sm:block w-px self-stretch bg-border/10" aria-hidden="true" />
 
         {/* Stats em linha */}
-        <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5 flex-1 min-w-0 flex-wrap")}>
+        <div className={cn("flex items-center inline-default-plus flex-1 min-w-0 flex-wrap")}>
           <div className={cn("flex flex-col inline-nano")}>
             <span className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Baixas hoje

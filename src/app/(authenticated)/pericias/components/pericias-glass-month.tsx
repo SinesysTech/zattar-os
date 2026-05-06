@@ -515,7 +515,7 @@ export function PericiasGlassMonth({
 
         {/* ── Summary Strip ─────────────────────────────────── */}
         <div className={cn("mt-5 pt-4 border-t border-border/30 flex items-center justify-between flex-wrap inline-medium")}>
-          <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5 flex-wrap")}>
+          <div className={cn("flex items-center inline-default-plus flex-wrap")}>
             <div className="text-center">
               <p className={cn( "text-body-lg font-bold")}>{summary.total}</p>
               <Text variant="caption" className="text-foreground/40 mt-0.5">Total no mês</Text>

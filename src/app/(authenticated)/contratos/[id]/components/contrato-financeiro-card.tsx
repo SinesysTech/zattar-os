@@ -153,7 +153,7 @@ export function ContratoFinanceiroCard({
   const pctRecebido = valorTotal > 0 ? Math.round((totalReceitas / valorTotal) * 100) : 0;
 
   return (
-    <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex flex-col gap-5")}>
+    <div className={cn("flex flex-col inline-default-plus")}>
       {/* Resumo */}
       <DetailSection icon={DollarSign} label="Resumo financeiro">
         <DetailSectionCard>

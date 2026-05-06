@@ -60,7 +60,7 @@ export function ExpedientesTabsCarousel({
 }: ExpedientesTabsCarouselProps) {
   return (
     <div className={cn('flex flex-col h-full', className)}>
-      <Tabs value={activeTab} onValueChange={onTabChange} className={cn(/* design-system-escape: gap-0 gap sem token DS */ "flex flex-col gap-0 h-full")}>
+      <Tabs value={activeTab} onValueChange={onTabChange} className={cn("flex flex-col inline-none h-full")}>
         {/* Tabs List - estilo lifted (tabs-13 pattern) */}
         <TabsList className={cn(/* design-system-escape: p-0 → usar <Inset> */ "bg-background justify-start rounded-none border-b border-border p-0 h-auto")}>
           {tabs.map((tab) => {

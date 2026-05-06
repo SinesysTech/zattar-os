@@ -31,7 +31,7 @@ function PalettePrimary() {
             <div className="font-mono text-[10px] opacity-80">oklch(.48 .26 281)</div>
           </div>
         </div>
-        <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "grid grid-cols-3 gap-2.5 sm:grid-cols-6")}>
+        <div className={cn("grid grid-cols-3 inline-tight-plus sm:grid-cols-6")}>
           {swatches.map((s) => (
             <div
               key={s.label}
@@ -50,7 +50,7 @@ function PalettePrimary() {
         </div>
       </div>
       <div className={cn("mt-4 grid inline-medium sm:grid-cols-2")}>
-        <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-3.5 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-2.5 rounded-xl border border-border bg-card px-3.5 py-2.5")}>
+        <div className={cn(/* design-system-escape: px-3.5 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight-plus rounded-xl border border-border bg-card px-3.5 py-2.5")}>
           <span
             className="size-6 rounded-md"
             style={{ background: "var(--highlight)" }}
@@ -62,7 +62,7 @@ function PalettePrimary() {
             </span>
           </div>
         </div>
-        <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-3.5 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-2.5 rounded-xl border border-border bg-card px-3.5 py-2.5")}>
+        <div className={cn(/* design-system-escape: px-3.5 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight-plus rounded-xl border border-border bg-card px-3.5 py-2.5")}>
           <span className="size-6 rounded-full bg-primary" />
           <span className="font-mono text-[11px]">ring focus · transparent</span>
         </div>
@@ -103,7 +103,7 @@ function PaletteNeutrals() {
           </div>
         ))}
       </div>
-      <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "mt-4 grid gap-2.5 sm:grid-cols-3")}>
+      <div className={cn("mt-4 grid inline-tight-plus sm:grid-cols-3")}>
         <div className={cn("flex flex-col inline-micro rounded-xl border border-border bg-card px-4 py-3")}>
           <span className="font-mono text-[10px] text-muted-foreground">--card</span>
           <span className={cn( "text-[13px] font-semibold")}>Card surface</span>
@@ -226,7 +226,7 @@ function PaletteEvent() {
   ];
   return (
     <SpecimenCard eyebrow="EVENT COLORS · DOMÍNIO JURÍDICO">
-      <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "grid gap-2.5 sm:grid-cols-2")}>
+      <div className={cn("grid inline-tight-plus sm:grid-cols-2")}>
         {events.map((e) => (
           <div
             key={e.token}

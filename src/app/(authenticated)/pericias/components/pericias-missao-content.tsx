@@ -225,7 +225,7 @@ function PericiaMissionCard({
         <div className={cn("inset-card-compact flex flex-col inline-medium")}>
           {/* ── 1. Header: identidade (overline + heading) + Prazo ── */}
           <div className={cn("flex items-start justify-between inline-medium")}>
-            <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5 min-w-0")}>
+            <div className={cn("flex items-center inline-tight-plus min-w-0")}>
               <IconContainer
                 size="md"
                 className={cn(
@@ -532,7 +532,7 @@ export function PericiasMissaoContent({
   }, []);
 
   return (
-    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
+    <div className={cn("stack-default-plus")}>
       {/* Grupos de urgência */}
       {isLoading ? (
         <div className={cn("stack-default")}>

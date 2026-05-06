@@ -89,7 +89,7 @@ export function PesquisaClient() {
   }, [isBuscando, jaBuscou, total]);
 
   return (
-    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
+    <div className={cn("stack-default-plus")}>
       <DiarioOficialPageNav active="pesquisa" subtitle={subtitle} />
 
       {/* Busca centralizada — hero de consulta à API pública */}

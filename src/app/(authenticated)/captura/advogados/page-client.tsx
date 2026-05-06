@@ -187,7 +187,7 @@ export default function AdvogadosPage() {
 
   return (
     <>
-      <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
+      <div className={cn("stack-default-plus")}>
         {/* Breadcrumb */}
         <nav className={cn("flex items-center inline-snug text-caption text-muted-foreground/75")}>
           <a href="/captura" className="hover:text-foreground transition-colors">Captura</a>

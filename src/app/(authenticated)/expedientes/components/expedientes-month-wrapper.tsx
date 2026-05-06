@@ -397,7 +397,7 @@ export function ExpedientesMonthWrapper({
 
         {/* Summary Strip */}
         <div className={cn("mt-5 pt-4 border-t border-border/50 flex items-center justify-between flex-wrap inline-medium")}>
-          <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5")}>
+          <div className={cn("flex items-center inline-default-plus")}>
             <div className="text-center">
               <p className={cn( "text-body-lg font-bold")}>{summary.total}</p>
               <Text variant="caption" className="text-foreground/60 mt-0.5">Pendentes</Text>

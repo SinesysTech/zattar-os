@@ -111,7 +111,7 @@ function ShadowScale() {
           </div>
         ))}
       </div>
-      <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-2.5 rounded-xl border border-destructive/30 bg-destructive/[0.08] px-3 py-2.5 text-[12px] text-destructive")}>
+      <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight-plus rounded-xl border border-destructive/30 bg-destructive/[0.08] px-3 py-2.5 text-[12px] text-destructive")}>
         <span className={cn("rounded bg-destructive/[0.12] px-1.5 py-0.5 font-mono text-[10px]")}>
           proibido
         </span>

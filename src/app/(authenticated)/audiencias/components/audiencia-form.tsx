@@ -345,19 +345,19 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
                       defaultValue={field.value ?? undefined}
                       className={cn("flex flex-row inline-default pt-1")}
                     >
-                      <FormItem className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight">; space-y-0 sem token DS */ "flex items-center space-x-2 space-y-0")}>
+                      <FormItem className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2 stack-none")}>
                         <FormControl>
                           <RadioGroupItem value={ModalidadeAudiencia.Virtual} />
                         </FormControl>
                         <FormLabel className={cn("font-normal text-body-sm")}>Virtual</FormLabel>
                       </FormItem>
-                      <FormItem className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight">; space-y-0 sem token DS */ "flex items-center space-x-2 space-y-0")}>
+                      <FormItem className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2 stack-none")}>
                         <FormControl>
                           <RadioGroupItem value={ModalidadeAudiencia.Presencial} />
                         </FormControl>
                         <FormLabel className={cn("font-normal text-body-sm")}>Presencial</FormLabel>
                       </FormItem>
-                      <FormItem className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight">; space-y-0 sem token DS */ "flex items-center space-x-2 space-y-0")}>
+                      <FormItem className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2 stack-none")}>
                         <FormControl>
                           <RadioGroupItem value={ModalidadeAudiencia.Hibrida} />
                         </FormControl>

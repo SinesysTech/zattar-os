@@ -165,7 +165,7 @@ export function MissionCard({
       <div className={cn(/* design-system-escape: sm:p-5 sem equivalente DS */ "relative inset-card-compact sm:p-5")}>
         {/* Header: Status + Countdown */}
         <div className={cn("flex items-start justify-between inline-medium mb-4")}>
-          <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
+          <div className={cn("flex items-center inline-tight-plus")}>
             <IconContainer size="md" className="bg-primary/10">
               <Gavel className="size-4 text-primary" />
             </IconContainer>

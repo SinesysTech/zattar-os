@@ -140,7 +140,7 @@ function SectionDivider({ urgencia, count }: { urgencia: Urgencia; count: number
   const Icon = config.icon;
 
   return (
-    <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; py-1.5 padding direcional sem Inset equiv. */ "flex items-center gap-2.5 py-1.5")}>
+    <div className={cn(/* design-system-escape: py-1.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight-plus py-1.5")}>
       <div className={cn('flex items-center inline-snug rounded-md px-2 py-1', config.bgColor)}>
         <Icon className={cn('size-3.5', config.color)} />
         <span className={cn('text-overline', config.color)}>
@@ -398,7 +398,7 @@ export function ExpedientesWeekMission({
   }, [selectedDate]);
 
   return (
-    <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex flex-col gap-5")}>
+    <div className={cn("flex flex-col inline-default-plus")}>
       {/* Header */}
       {/* Week Navigator */}
       <WeekNavigator

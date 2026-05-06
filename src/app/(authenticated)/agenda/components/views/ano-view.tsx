@@ -394,7 +394,7 @@ export function AnoView({
 
   return (
     <TooltipProvider delayDuration={100}>
-      <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex flex-col gap-5", className)}>
+      <div className={cn("flex flex-col inline-default-plus", className)}>
         {/* Year Navigator */}
         <div className={cn("flex items-center inline-tight")}>
           <Button
@@ -431,7 +431,7 @@ export function AnoView({
         </div>
 
         {/* Main Layout */}
-        <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex gap-5 flex-wrap xl:flex-nowrap")}>
+        <div className={cn("flex inline-default-plus flex-wrap xl:flex-nowrap")}>
           {/* Stats Sidebar */}
           <GlassPanel
             depth={2}

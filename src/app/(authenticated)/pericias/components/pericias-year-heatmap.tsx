@@ -330,7 +330,7 @@ export function PericiasYearHeatmap({
     <TooltipProvider delayDuration={100}>
       <div className="w-full">
         {/* Main Layout: Heatmap + Stats Sidebar */}
-        <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex gap-5 flex-wrap xl:flex-nowrap")}>
+        <div className={cn("flex inline-default-plus flex-wrap xl:flex-nowrap")}>
           {/* Heatmap Panel */}
           <GlassPanel depth={1} className={cn("inset-dialog flex-1 min-w-0")}>
             {/* Year Navigator (padrão audiências/expedientes — inline no painel) */}

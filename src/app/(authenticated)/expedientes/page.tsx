@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
  */
 function ExpedientesLoading() {
   return (
-    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
+    <div className={cn("stack-default-plus")}>
       {/* Header skeleton */}
       <div className={cn("flex items-end justify-between inline-default")}>
         <div>

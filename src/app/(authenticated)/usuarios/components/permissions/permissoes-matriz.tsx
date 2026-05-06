@@ -98,7 +98,7 @@ export function PermissoesMatriz({
 
   return (
     <>
-      <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset>; space-y-5 sem token DS */ "p-5 space-y-5")}>
+      <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5 stack-default-plus")}>
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className={cn("stack-nano")}>

@@ -20,7 +20,7 @@ export const ROLE_PRESETS: Record<string, { label: string; description: string }
 
 export function RolePresetSelect({ value, onValueChange, disabled }: RolePresetSelectProps) {
   return (
-    <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
+    <div className={cn("flex items-center inline-tight-plus")}>
       <Text variant="caption" as="span" className="text-muted-foreground/40 shrink-0">Template de cargo:</Text>
       <Select value={value} onValueChange={onValueChange} disabled={disabled}>
         <SelectTrigger className={cn("h-8 w-56 text-caption bg-transparent")}>

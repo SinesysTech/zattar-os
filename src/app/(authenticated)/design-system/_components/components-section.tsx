@@ -16,7 +16,7 @@ function ButtonsSpecimen() {
   return (
     <SpecimenCard eyebrow="BUTTONS">
       <div className={cn(/* design-system-escape: space-y-3.5 sem token DS */ "space-y-3.5")}>
-        <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex flex-wrap items-center gap-2.5")}>
+        <div className={cn("flex flex-wrap items-center inline-tight-plus")}>
           <span className="min-w-[110px] font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground">
             variant
           </span>
@@ -29,7 +29,7 @@ function ButtonsSpecimen() {
           <Button variant="ghost">Saiba mais</Button>
           <Button variant="destructive">Arquivar</Button>
         </div>
-        <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex flex-wrap items-center gap-2.5")}>
+        <div className={cn("flex flex-wrap items-center inline-tight-plus")}>
           <span className="min-w-[110px] font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground">
             size
           </span>
@@ -171,26 +171,26 @@ function InputsSpecimen() {
           </span>
         </div>
       </div>
-      <div className={cn(/* design-system-escape: gap-5 gap sem token DS; pt-1 padding direcional sem Inset equiv. */ "mt-5 flex flex-wrap items-center gap-5 pt-1")}>
-        <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
+      <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "mt-5 flex flex-wrap items-center inline-default-plus pt-1")}>
+        <div className={cn("flex items-center inline-tight-plus")}>
           <Switch defaultChecked id="ds-notif" />
           <Label htmlFor="ds-notif" className="text-[12px] font-normal">
             Notificações
           </Label>
         </div>
-        <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
+        <div className={cn("flex items-center inline-tight-plus")}>
           <Checkbox defaultChecked id="ds-audi" />
           <Label htmlFor="ds-audi" className="text-[12px] font-normal">
             Audiências
           </Label>
         </div>
-        <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
+        <div className={cn("flex items-center inline-tight-plus")}>
           <Checkbox defaultChecked id="ds-prazo" />
           <Label htmlFor="ds-prazo" className="text-[12px] font-normal">
             Prazos
           </Label>
         </div>
-        <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
+        <div className={cn("flex items-center inline-tight-plus")}>
           <Checkbox id="ds-exp" />
           <Label htmlFor="ds-exp" className="text-[12px] font-normal">
             Expedientes
@@ -215,8 +215,8 @@ function CardsSpecimen() {
       >
         <div className={cn(/* design-system-escape: gap-3.5 gap sem token DS */ "grid gap-3.5 lg:grid-cols-[1.4fr_1fr]")}>
           {/* Process card */}
-          <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex flex-col gap-2.5 rounded-2xl border border-border bg-card inset-card-compact shadow-sm transition-all hover:shadow-md")}>
-            <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-start justify-between gap-2.5")}>
+          <div className={cn("flex flex-col inline-tight-plus rounded-2xl border border-border bg-card inset-card-compact shadow-sm transition-all hover:shadow-md")}>
+            <div className={cn("flex items-start justify-between inline-tight-plus")}>
               <div className={cn("flex flex-col inline-micro")}>
                 <Text variant="micro-caption" className="font-mono">
                   0001234-56.2024.5.01.0001
@@ -272,7 +272,7 @@ function CardsSpecimen() {
           </div>
 
           {/* KPI cards */}
-          <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex flex-col justify-between gap-2.5")}>
+          <div className={cn("flex flex-col justify-between inline-tight-plus")}>
             <div className={cn("glass-kpi flex flex-col inline-snug rounded-2xl border border-border/30 inset-card-compact")}>
               <div className="flex items-center justify-between">
                 <Text variant="meta-label">Processos ativos</Text>

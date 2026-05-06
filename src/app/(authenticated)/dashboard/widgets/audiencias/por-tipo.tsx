@@ -64,7 +64,7 @@ export function AudienciasPorTipo() {
       icon={Gavel}
       subtitle="Distribuicao por tipo de audiencia"
     >
-      <div className={cn(/* design-system-escape: space-y-2.5 sem token DS */ "space-y-2.5")}>
+      <div className={cn("stack-tight-plus")}>
         {porTipo.map((item) => {
           const pct = total > 0 ? ((item.count / total) * 100).toFixed(1) : '0';
           return (

@@ -346,7 +346,7 @@ function HeroBlock({
           />
 
           {/* Partes editoriais */}
-          <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex flex-col gap-5 min-w-0")}>
+          <div className={cn("flex flex-col inline-default-plus min-w-0")}>
             <div className={cn("flex items-center inline-tight flex-wrap")}>
               {tipoLabel && (
                 <Text
@@ -739,7 +739,7 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
           <li key={arq.id}>
             <button
               type="button"
-              className={cn(/* design-system-escape: gap-5 gap sem token DS; py-5 padding direcional sem Inset equiv.; px-3 padding direcional sem Inset equiv.; -mx-3 sem equivalente DS */ "w-full group flex items-center gap-5 py-5 text-left transition-colors hover:bg-muted/20 rounded-xl px-3 -mx-3")}
+              className={cn(/* design-system-escape: py-5 padding direcional sem Inset equiv.; px-3 padding direcional sem Inset equiv.; -mx-3 sem equivalente DS */ "w-full group flex items-center inline-default-plus py-5 text-left transition-colors hover:bg-muted/20 rounded-xl px-3 -mx-3")}
             >
               <Text
                 variant="micro-caption"

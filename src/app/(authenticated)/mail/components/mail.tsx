@@ -170,7 +170,7 @@ export function Mail({
         <ResizablePanel id="middle-panel" hidden={isMailExpanded} defaultSize={defaultLayout[1]} minSize={28}>
           <Tabs
             defaultValue="all"
-            className={cn(/* design-system-escape: gap-0 gap sem token DS */ "flex h-full flex-col gap-0 bg-card")}
+            className={cn("flex h-full flex-col inline-none bg-card")}
             onValueChange={(value) => setTab(value)}>
             <div className={cn("flex h-13 shrink-0 items-center inline-tight px-4")}>
               {hasSelection ? (

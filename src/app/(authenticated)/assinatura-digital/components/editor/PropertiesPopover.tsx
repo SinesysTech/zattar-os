@@ -148,7 +148,7 @@ export default function PropertiesPopover({
 
         <Separator className={cn("my-3")} />
 
-        <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
+        <div className={cn("stack-default-plus")}>
           {/* Informacoes Gerais */}
           <Collapsible defaultOpen>
             <CollapsibleTrigger className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; */ /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; */ "flex w-full items-center justify-between rounded-md px-2 py-1.5 text-body-sm font-medium text-foreground hover:bg-muted/50")}>

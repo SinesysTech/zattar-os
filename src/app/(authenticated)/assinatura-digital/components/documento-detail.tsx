@@ -110,7 +110,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
             return (
               <div
                 key={i}
-                className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-2 → usar <Inset> */ "flex items-center gap-2.5 p-2 rounded-lg hover:bg-foreground/3 transition-colors")}
+                className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-center inline-tight-plus p-2 rounded-lg hover:bg-foreground/3 transition-colors")}
               >
                 <div
                   className={`size-2 rounded-full shrink-0 ${

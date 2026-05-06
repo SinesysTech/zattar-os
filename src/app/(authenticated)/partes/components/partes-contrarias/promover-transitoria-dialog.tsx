@@ -247,7 +247,7 @@ export function PromoverTransitoriaDialog({
           <LoadingSpinner />
         </div>
       ) : (
-        <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
+        <div className={cn("stack-default-plus")}>
           {transitoria && (
             <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-xl bg-surface-container-low/50 p-3 ring-1 ring-outline-variant/30")}>
               <Text variant="caption" className="text-muted-foreground">

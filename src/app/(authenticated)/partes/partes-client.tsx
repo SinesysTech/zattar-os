@@ -584,7 +584,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
     : 'Nova parte';
 
   return (
-    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
+    <div className={cn("stack-default-plus")}>
       {/* ── Header ──────────────────────────────────────────────── */}
       <div className={cn("flex items-end justify-between inline-default")}>
         <div>
@@ -615,7 +615,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
                       setCreateType(opt.type);
                       setShowTypeMenu(false);
                     }}
-                    className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-body-sm hover:bg-accent transition-colors cursor-pointer text-left")}
+                    className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight-plus w-full px-3 py-2 rounded-lg text-body-sm hover:bg-accent transition-colors cursor-pointer text-left")}
                   >
                     <opt.icon className="size-4 text-muted-foreground/60" />
                     {opt.label}

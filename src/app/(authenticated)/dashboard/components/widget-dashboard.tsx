@@ -211,7 +211,7 @@ export function WidgetDashboard({ currentUserId, currentUserName, initialData }:
 
   return (
     <DashboardProvider initialData={initialData}>
-    <div className={cn(/* design-system-escape: space-y-5 sem token DS; pb-8 padding direcional sem Inset equiv. */ "space-y-5 pb-8")}>
+    <div className={cn(/* design-system-escape: pb-8 padding direcional sem Inset equiv. */ "stack-default-plus pb-8")}>
       {/* ── Cabecalho ───────────────────────────────────────────── */}
       <div className={cn("flex items-end justify-between inline-default")}>
         <div>

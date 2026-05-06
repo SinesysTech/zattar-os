@@ -356,7 +356,7 @@ function ResumoTab({ acordo }: { acordo: AcordoComParcelas }) {
         <Heading level="section" className="mb-4">
           Dados do acordo
         </Heading>
-        <dl className={cn(/* design-system-escape: gap-5 gap sem token DS */ "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5")}>
+        <dl className={cn("grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 inline-default-plus")}>
           <Field label="Tipo" value={TIPO_LABELS[acordo.tipo]} />
           <Field label="Direção" value={DIRECAO_LABELS[acordo.direcao]} />
           <Field
@@ -531,7 +531,7 @@ function TimelineTab({ acordo }: { acordo: AcordoComParcelas }) {
 
   return (
     <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
-      <ol className={cn(/* design-system-escape: space-y-5 sem token DS */ "relative border-l border-border/20 ml-2 space-y-5")}>
+      <ol className={cn("relative border-l border-border/20 ml-2 stack-default-plus")}>
         {events.map((event, idx) => {
           const Icon = event.icon;
           const dotClass =

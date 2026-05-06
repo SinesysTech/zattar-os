@@ -89,7 +89,7 @@ export function ViewerPaginationPill({
       role="toolbar"
       aria-label="Controles de paginação e zoom"
     >
-      <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; gap-0 gap sem token DS */ "flex items-center h-10 px-2 gap-0 rounded-full bg-card border shadow-sm")}>
+      <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "flex items-center h-10 px-2 inline-none rounded-full bg-card border shadow-sm")}>
         {/* Botão página anterior */}
         <button
           type="button"

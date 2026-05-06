@@ -56,7 +56,7 @@ export function WidgetInadimplencia() {
       subtitle="Sobre carteira a receber"
       icon={AlertTriangle}
     >
-      <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5 mt-1")}>
+      <div className={cn("flex items-center inline-default-plus mt-1")}>
         <ProgressRing
           percent={Math.min(inadimplenciaPercent, 100)}
           size={72}

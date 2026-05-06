@@ -359,7 +359,7 @@ export function ObrigacaoDetalhesDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset>; gap-0 gap sem token DS */ "max-h-[92vh] flex flex-col p-0 gap-0 overflow-hidden sm:max-w-2xl [scrollbar-width:thin]")}>
+      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "max-h-[92vh] flex flex-col p-0 inline-none overflow-hidden sm:max-w-2xl [scrollbar-width:thin]")}>
         <DialogDescription className="sr-only">
           Detalhes da obrigação financeira
         </DialogDescription>
@@ -450,7 +450,7 @@ export function ObrigacaoDetalhesDialog({
             )}
           </div>
 
-          <div className={cn(/* design-system-escape: gap-5 gap sem token DS; pb-3.5 padding direcional sem Inset equiv. */ "grid grid-cols-2 gap-5 pb-3.5 mb-3.5 border-b border-border/40")}>
+          <div className={cn(/* design-system-escape: pb-3.5 padding direcional sem Inset equiv. */ "grid grid-cols-2 inline-default-plus pb-3.5 mb-3.5 border-b border-border/40")}>
             {/* ──────── Valor (editável) ──────── */}
             <div className={cn("flex flex-col inline-micro")}>
               <div className={cn("flex items-center justify-between inline-tight")}>

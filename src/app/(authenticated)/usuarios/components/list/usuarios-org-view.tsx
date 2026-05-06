@@ -184,7 +184,7 @@ export function UsuariosOrgView({ usuarios, onView }: UsuariosOrgViewProps) {
         }}
         className="transition-transform duration-200"
       >
-        <div className={cn(/* design-system-escape: gap-0 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex flex-col items-center gap-0 py-2")}>
+        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex flex-col items-center inline-none py-2")}>
           {groups.map(([cargoNome, { level, members }], groupIndex) => {
             const isRoot = level === 0;
             return (

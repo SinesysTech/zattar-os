@@ -182,7 +182,7 @@ function AtividadeRecenteSection({ historico }: { historico: ContratoStatusHisto
   return (
     <DetailSection icon={HistoryIcon} label="Últimas mudanças">
       <DetailSectionCard>
-        <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex flex-col gap-2.5")}>
+        <div className={cn("flex flex-col inline-tight-plus")}>
           {sorted.map((item) => {
             const toLabel = STATUS_CONTRATO_LABELS[item.toStatus] ?? item.toStatus;
             const fromLabel = item.fromStatus
@@ -286,7 +286,7 @@ export function ContratoDetalhesClient({
   }, [router]);
 
   return (
-    <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex flex-col gap-5")}>
+    <div className={cn("flex flex-col inline-default-plus")}>
       <ContratoDetalhesHeader
         contrato={contrato}
         clienteNome={clienteNome}
@@ -306,7 +306,7 @@ export function ContratoDetalhesClient({
       <Tabs
         value={activeTab}
         onValueChange={(v) => setActiveTab(v as TabValue)}
-        className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex flex-col gap-5")}
+        className={cn("flex flex-col inline-default-plus")}
       >
         <TabsList className="flex w-full max-w-full overflow-x-auto">
           <TabsTrigger value="resumo" className={cn("inline-snug")}>
@@ -332,20 +332,20 @@ export function ContratoDetalhesClient({
         </TabsList>
 
         {/* ───────────────── Tab Resumo ───────────────── */}
-        <TabsContent value="resumo" className={cn(/* design-system-escape: gap-5 gap sem token DS; m-0 margin sem primitiva DS */ "flex flex-col gap-5 m-0")}>
+        <TabsContent value="resumo" className={cn(/* design-system-escape: m-0 margin sem primitiva DS */ "flex flex-col inline-default-plus m-0")}>
           {contrato.observacoes ? (
             <ObservacoesSection texto={contrato.observacoes} />
           ) : null}
 
-          <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "grid gap-5 lg:grid-cols-2 items-start")}>
-            <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex flex-col gap-5")}>
+          <div className={cn("grid inline-default-plus lg:grid-cols-2 items-start")}>
+            <div className={cn("flex flex-col inline-default-plus")}>
               <ContratoPartesCard
                 contrato={contrato}
                 clienteNome={clienteNome}
               />
               <ContratoProcessosCard processos={contrato.processos} />
             </div>
-            <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex flex-col gap-5")}>
+            <div className={cn("flex flex-col inline-default-plus")}>
               <FinanceiroResumoSection lancamentos={lancamentos} />
               <AtividadeRecenteSection historico={contrato.statusHistorico} />
             </div>
@@ -358,7 +358,7 @@ export function ContratoDetalhesClient({
         </TabsContent>
 
         {/* ───────────────── Tab Documentos ───────────── */}
-        <TabsContent value="documentos" className={cn(/* design-system-escape: gap-5 gap sem token DS; m-0 margin sem primitiva DS */ "flex flex-col gap-5 m-0")}>
+        <TabsContent value="documentos" className={cn(/* design-system-escape: m-0 margin sem primitiva DS */ "flex flex-col inline-default-plus m-0")}>
           <DocumentosContratacaoCard
             contratoId={contrato.id}
             segmentoId={contrato.segmentoId ?? null}

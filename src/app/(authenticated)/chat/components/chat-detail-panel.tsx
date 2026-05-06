@@ -79,9 +79,9 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
           <Text variant="overline" as="h5" className="text-muted-foreground/55 mb-3">
             Informacoes
           </Text>
-          <div className={cn(/* design-system-escape: space-y-0 sem token DS */ "space-y-0")}>
+          <div className={cn("stack-none")}>
             {/* Email */}
-            <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2.5 py-2")}>
+            <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight-plus py-2")}>
               <div className="size-7 rounded-md flex items-center justify-center bg-primary/6 shrink-0">
                 <Mail className="size-3 text-primary/70" />
               </div>
@@ -94,7 +94,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
             </div>
             {/* Phone */}
             {user.phone && (
-              <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2.5 py-2")}>
+              <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight-plus py-2")}>
                 <div className="size-7 rounded-md flex items-center justify-center bg-primary/6 shrink-0">
                   <Phone className="size-3 text-primary/70" />
                 </div>
@@ -106,7 +106,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
             )}
             {/* Country / Membro desde */}
             {user.country && (
-              <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2.5 py-2")}>
+              <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight-plus py-2")}>
                 <div className="size-7 rounded-md flex items-center justify-center bg-primary/6 shrink-0">
                   <Calendar className="size-3 text-primary/70" />
                 </div>

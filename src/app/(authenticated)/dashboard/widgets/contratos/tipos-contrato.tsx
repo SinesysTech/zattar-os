@@ -71,7 +71,7 @@ export function WidgetTiposContrato() {
       subtitle="Distribuição por natureza"
       depth={1}
     >
-      <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex flex-col gap-2.5")}>
+      <div className={cn("flex flex-col inline-tight-plus")}>
         {porTipo.map((t) => {
           const pct = (t.count / maxCount) * 100;
           return (

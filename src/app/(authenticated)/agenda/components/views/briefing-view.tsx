@@ -131,7 +131,7 @@ export function BriefingView({ events, currentDate, onEventClick }: BriefingView
               </div>
             </div>
 
-            <div className={cn(/* design-system-escape: space-y-0 sem token DS */ "space-y-0")}>
+            <div className={cn("stack-none")}>
               {/* All-day events */}
               {allDay.length > 0 && (
                 <div className={cn("mb-3 pb-2 border-b border-border/8")}>

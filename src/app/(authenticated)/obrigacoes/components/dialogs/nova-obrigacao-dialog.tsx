@@ -107,7 +107,7 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
       <div className={cn("stack-loose px-6 py-5 md:px-8 md:py-6")}>
         {!selectedProcessoId && (
-          <div className={cn(/* design-system-escape: space-y-5 sem token DS; md:p-5 sem equivalente DS */ "space-y-5 rounded-lg border bg-muted/20 inset-card-compact md:p-5")}>
+          <div className={cn(/* design-system-escape: md:p-5 sem equivalente DS */ "stack-default-plus rounded-lg border bg-muted/20 inset-card-compact md:p-5")}>
             <div className={cn("grid grid-cols-1 inline-default md:grid-cols-2")}>
               <div className={cn("stack-tight")}>
                 <Label>Tribunal</Label>

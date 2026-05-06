@@ -153,7 +153,7 @@ export function UsuariosClient() {
   // ─── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
+    <div className={cn("stack-default-plus")}>
       {/* Header */}
       <div className={cn("flex items-start justify-between inline-default")}>
         <div className="min-w-0">

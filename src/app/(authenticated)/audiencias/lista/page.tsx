@@ -10,7 +10,7 @@ export const revalidate = 0;
 
 function AudienciasLoading() {
   return (
-    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
+    <div className={cn("stack-default-plus")}>
       <Skeleton className="h-9 w-40" />
       <Skeleton className="h-14 w-full rounded-2xl" />
       <div className={cn("stack-tight")}>

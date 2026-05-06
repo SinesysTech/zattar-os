@@ -145,7 +145,7 @@ export function ProfileSidebar({
 
       {/* 5. Contacts section */}
       {contactItems.length > 0 && (
-        <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv.; space-y-2.5 sem token DS */ "px-5 py-4 mt-4 border-t border-border/10 space-y-2.5")}>
+        <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "px-5 py-4 mt-4 border-t border-border/10 stack-tight-plus")}>
           {contactItems.map(({ icon: Icon, value, label }, idx) => (
             <div key={idx} className="flex items-center gap-2.5">
               <Icon className="size-3.5 text-muted-foreground/35 shrink-0" />

@@ -48,7 +48,7 @@ export function UsuariosListView({
           const status = getStatusFromLastLogin(lastLoginAt);
           const displayName = usuario.nomeExibicao ?? usuario.nomeCompleto;
           return (
-            <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ 'flex items-center gap-2.5 min-w-0', !isAtivo && 'opacity-50')}>
+            <div className={cn('flex items-center inline-tight-plus min-w-0', !isAtivo && 'opacity-50')}>
               <div className="relative shrink-0">
                 <Avatar style={{ width: 34, height: 34 }}>
                   <AvatarImage

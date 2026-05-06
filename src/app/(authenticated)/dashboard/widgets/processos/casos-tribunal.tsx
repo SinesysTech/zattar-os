@@ -56,7 +56,7 @@ export function WidgetCasosTribunal() {
       subtitle="Top 5 TRTs -- volume atual"
       depth={1}
     >
-      <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex flex-col gap-2.5")}>
+      <div className={cn("flex flex-col inline-tight-plus")}>
         {top5.map((trt) => {
           const pct = Math.round((trt.count / maxValue) * 100);
           return (

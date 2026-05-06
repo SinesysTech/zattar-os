@@ -25,7 +25,7 @@ interface StatCardProps {
 function StatCard({ title, value, icon, href, color }: StatCardProps) {
   const content = (
     <GlassPanel depth={2} className={cn('inset-card-compact transition-all hover:shadow-md', href && 'cursor-pointer')}>
-      <div className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
+      <div className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between stack-none pb-2")}>
         <p className={cn( "text-body-sm font-medium")}>{title}</p>
         <IconContainer size="md" className={color}>
           {icon}
@@ -80,7 +80,7 @@ export function AtividadesCards({ usuarioId }: AtividadesCardsProps) {
       <div className={cn("grid inline-default md:grid-cols-2 lg:grid-cols-4")}>
         {[1, 2, 3, 4].map((i) => (
           <GlassPanel key={i} depth={2} className={cn("inset-card-compact")}>
-            <div className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
+            <div className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between stack-none pb-2")}>
               <Skeleton className="h-4 w-24" />
               <Skeleton className="h-8 w-8 rounded-lg" />
             </div>

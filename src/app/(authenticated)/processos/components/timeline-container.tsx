@@ -53,7 +53,7 @@ export function TimelineContainer({ items, isLoading = false }: TimelineContaine
   }
 
   return (
-    <div className={cn(/* design-system-escape: space-y-0 sem token DS */ "space-y-0")}>
+    <div className={cn("stack-none")}>
       {/* Header da timeline */}
       <div className="mb-6">
         <Heading level="section">Timeline do Processo</Heading>

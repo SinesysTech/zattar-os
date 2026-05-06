@@ -416,7 +416,7 @@ function GlassCard({
 function CardSkeleton() {
   return (
     <GlassPanel className={cn("inset-card-compact")}>
-      <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-start gap-2.5")}>
+      <div className={cn("flex items-start inline-tight-plus")}>
         <Skeleton className="size-3.5 rounded" />
         <Skeleton className="size-9 rounded-xl" />
         <div className={cn("flex-1 stack-tight")}>

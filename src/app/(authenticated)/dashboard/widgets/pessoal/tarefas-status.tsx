@@ -99,7 +99,7 @@ export function WidgetTarefasStatus() {
       subtitle="Distribuição real das tarefas"
       depth={1}
     >
-      <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5")}>
+      <div className={cn("flex items-center inline-default-plus")}>
         <MiniDonut
           segments={segments.length > 0 ? segments : [{ value: 1, color: 'var(--muted)', label: 'Vazio' }]}
           size={88}

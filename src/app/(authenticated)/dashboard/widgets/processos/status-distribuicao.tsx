@@ -79,14 +79,14 @@ export function WidgetStatusDistribuicao() {
       subtitle="Total de processos ativos"
       depth={1}
     >
-      <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5")}>
+      <div className={cn("flex items-center inline-default-plus")}>
         <MiniDonut
           segments={segments}
           size={88}
           strokeWidth={11}
           centerLabel={fmtNum(total)}
         />
-        <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex flex-col justify-center gap-2.5 flex-1 min-w-0")}>
+        <div className={cn("flex flex-col justify-center inline-tight-plus flex-1 min-w-0")}>
           {segments.map((seg) => (
             <div key={seg.label} className={cn("flex items-center inline-tight")}>
               <ToneDot tone={seg.tone} color={!seg.tone ? seg.color : undefined} aria-label={seg.label} />

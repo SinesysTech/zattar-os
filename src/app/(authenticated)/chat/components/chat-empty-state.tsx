@@ -52,11 +52,11 @@ export function ChatEmptyState() {
         </div>
 
         {/* Suggestion Cards — 2x2 grid per mock */}
-        <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "w-full grid grid-cols-2 gap-2.5")}>
+        <div className={cn("w-full grid grid-cols-2 inline-tight-plus")}>
           {SUGGESTION_CARDS.map(({ icon, title, description, colorClass }) => (
             <button
               key={title}
-              className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-3.5 → usar <Inset> */ "flex items-start gap-2.5 p-3.5 rounded-[0.875rem] bg-foreground/3 border border-foreground/6 text-left hover:bg-foreground/5 hover:border-primary/12 hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(0,0,0,0.15)] transition-all duration-250 cursor-pointer group")}
+              className={cn(/* design-system-escape: p-3.5 → usar <Inset> */ "flex items-start inline-tight-plus p-3.5 rounded-[0.875rem] bg-foreground/3 border border-foreground/6 text-left hover:bg-foreground/5 hover:border-primary/12 hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(0,0,0,0.15)] transition-all duration-250 cursor-pointer group")}
               onClick={() => toast("Em breve", { description: title })}
             >
               <div

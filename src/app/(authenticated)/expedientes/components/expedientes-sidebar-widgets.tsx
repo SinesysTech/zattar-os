@@ -131,7 +131,7 @@ export function AgingFunnel({
         <TrendingDown className="size-4 text-muted-foreground/65" />
       </div>
 
-      <div className={cn(/* design-system-escape: space-y-2.5 sem token DS */ "mt-4 space-y-2.5")}>
+      <div className={cn("mt-4 stack-tight-plus")}>
         {FAIXAS.map((faixa) => {
           const valor = valores[faixa.key];
           const pct = maximo > 0 ? (valor / maximo) * 100 : 0;

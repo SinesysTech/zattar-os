@@ -187,7 +187,7 @@ function Toolbar({
                     <button
                       key={src}
                       onClick={() => toggleSource(src)}
-                      className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-caption hover:bg-foreground/4 transition-colors cursor-pointer")}
+                      className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "w-full flex items-center inline-tight-plus px-2.5 py-1.5 rounded-lg text-caption hover:bg-foreground/4 transition-colors cursor-pointer")}
                     >
                       <div className={cn("size-3.5 rounded border flex items-center justify-center", active ? "bg-primary border-primary" : "border-border/30")}>
                         {active && <Check className="size-2.5 text-primary-foreground" />}
@@ -593,7 +593,7 @@ function AgendaListView({ events, currentDate, onEventClick }: { events: MockCal
 
   return (
     <GlassPanel className={cn(/* design-system-escape: sm:p-5 sem equivalente DS */ "inset-card-compact sm:p-5")}>
-      <div className={cn(/* design-system-escape: space-y-0 sem token DS */ "space-y-0")}>
+      <div className={cn("stack-none")}>
         {days.length === 0 && (
           <div className={cn("py-16 flex flex-col items-center text-center")}>
             <Calendar className="size-8 text-muted-foreground/45 mb-3" />
@@ -726,7 +726,7 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
               </div>
             </div>
 
-            <div className={cn(/* design-system-escape: space-y-0 sem token DS */ "space-y-0")}>
+            <div className={cn("stack-none")}>
               {/* All-day events */}
               {allDay.length > 0 && (
                 <div className={cn("mb-3 pb-2 border-b border-border/8")}>
@@ -1038,7 +1038,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
       <div className={cn("fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md max-h-[85vh] overflow-y-auto rounded-2xl border border-border/20 bg-background shadow-lg inset-dialog stack-default")}>
         {/* Header */}
         <div className={cn("flex items-start justify-between inline-medium")}>
-          <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
+          <div className={cn("flex items-center inline-tight-plus")}>
             <div className={cn("size-8 rounded-xl flex items-center justify-center", c.bg)}>
               <SrcIcon className={cn("size-4", c.text)} />
             </div>

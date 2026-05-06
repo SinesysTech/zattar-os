@@ -201,7 +201,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
   if (isLoadingUsuario) {
     return (
       <div className={cn("py-8 stack-default")}>
-        <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
+        <div className={cn("flex items-center inline-tight-plus")}>
           <Button
             variant="ghost"
             size="icon"
@@ -228,7 +228,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
   if (errorUsuario || !usuario) {
     return (
       <div className={cn("py-8 stack-default")}>
-        <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
+        <div className={cn("flex items-center inline-tight-plus")}>
           <Button
             variant="ghost"
             size="icon"
@@ -279,7 +279,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
         <div className={cn("stack-default min-w-0")}>
 
           {/* Breadcrumb */}
-          <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
+          <div className={cn("flex items-center inline-tight-plus")}>
             <Button
               variant="ghost"
               size="icon"

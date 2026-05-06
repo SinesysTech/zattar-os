@@ -665,7 +665,7 @@ export function AudienciaDetailDialog({
             )}
 
             {audiencia && !isLoading && !error && (
-              <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
+              <div className={cn("stack-default-plus")}>
                 {/* ATA · só quando existe */}
                 {hasAta && (
                   <div>

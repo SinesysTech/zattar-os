@@ -40,7 +40,7 @@ export function TimelineLoading({
             </div>
           </div>
 
-          <div className={cn(/* design-system-escape: p-5 → usar <Inset>; space-y-5 sem token DS */ "rounded-2xl border bg-muted/10 p-5 space-y-5")}>
+          <div className={cn(/* design-system-escape: p-5 → usar <Inset> */ "rounded-2xl border bg-muted/10 p-5 stack-default-plus")}>
             <div className={cn("stack-tight")}>
               <Skeleton className="h-6 w-1/3" />
               <Skeleton className="h-4 w-2/3" />

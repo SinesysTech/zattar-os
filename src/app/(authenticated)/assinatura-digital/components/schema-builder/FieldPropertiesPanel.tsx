@@ -481,7 +481,7 @@ export default function FieldPropertiesPanel({
                   control={form.control}
                   name="hidden"
                   render={({ field: formField }) => (
-                    <FormItem className={cn(/* design-system-escape: space-x-3 sem token DS; space-y-0 sem token DS */ "flex flex-row items-start space-x-3 space-y-0")}>
+                    <FormItem className={cn(/* design-system-escape: space-x-3 sem token DS */ "flex flex-row items-start space-x-3 stack-none")}>
                       <FormControl>
                         <Checkbox
                           checked={formField.value}
@@ -521,7 +521,7 @@ export default function FieldPropertiesPanel({
                   control={form.control}
                   name="required"
                   render={({ field }) => (
-                    <FormItem className={cn(/* design-system-escape: space-x-3 sem token DS; space-y-0 sem token DS */ "flex flex-row items-start space-x-3 space-y-0")}>
+                    <FormItem className={cn(/* design-system-escape: space-x-3 sem token DS */ "flex flex-row items-start space-x-3 stack-none")}>
                       <FormControl>
                         <Checkbox
                           checked={field.value}

@@ -65,7 +65,7 @@ export function OrigemDistribution() {
       depth={1}
       className={cn(/* design-system-escape: p-4! → usar <Inset> */ "h-auto! self-start p-4!")}
     >
-      <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5 mt-2")}>
+      <div className={cn("flex items-center inline-default-plus mt-2")}>
         <MiniDonut
           segments={segments}
           size={80}

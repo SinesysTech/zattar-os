@@ -66,7 +66,7 @@ export function SourceLegend({
           return (
             <label
               key={source}
-              className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5 cursor-pointer group")}
+              className={cn("flex items-center inline-tight-plus cursor-pointer group")}
               role="checkbox"
               aria-checked={active}
               tabIndex={0}

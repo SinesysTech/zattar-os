@@ -116,7 +116,7 @@ export function TimelineSearchModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset>; gap-0 gap sem token DS */ "max-w-120 p-0 gap-0 overflow-hidden")}>
+      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "max-w-120 p-0 inline-none overflow-hidden")}>
         {/* Campo de busca */}
         <div
           className={cn("flex items-center px-4 border-b h-16")}

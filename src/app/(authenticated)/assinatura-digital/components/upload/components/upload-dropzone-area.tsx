@@ -92,7 +92,7 @@ export function UploadDropzoneArea({
 
 function EmptyState({ isDragActive }: { isDragActive: boolean }) {
   return (
-    <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex flex-col items-center gap-5")}>
+    <div className={cn("flex flex-col items-center inline-default-plus")}>
       {/* Icon tile grande estilo POC */}
       <div
         className={cn(

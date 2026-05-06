@@ -416,7 +416,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
   }, [router]);
 
   return (
-    <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
+    <div className={cn("stack-default-plus")}>
 
       {/* 1. Header */}
       <div className={cn("flex items-end justify-between inline-default")}>

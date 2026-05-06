@@ -100,28 +100,28 @@ function LogStats({ logs }: { logs: LogEntry[] }) {
 
   return (
     <div className={cn("grid grid-cols-2 inline-tight sm:grid-cols-4")}>
-      <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-2.5 → usar <Inset> */ "flex items-center gap-2.5 rounded-lg border bg-success/5 border-success/20 p-2.5")}>
+      <div className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex items-center inline-tight-plus rounded-lg border bg-success/5 border-success/20 p-2.5")}>
         <FilePlus className="h-4 w-4 text-success shrink-0" />
         <div>
           <p className={cn("text-overline text-muted-foreground")}>Inseridos</p>
           <p className={cn( "text-body-sm font-semibold tabular-nums")}>{stats.inseridos}</p>
         </div>
       </div>
-      <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-2.5 → usar <Inset> */ "flex items-center gap-2.5 rounded-lg border bg-info/5 border-info/20 p-2.5")}>
+      <div className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex items-center inline-tight-plus rounded-lg border bg-info/5 border-info/20 p-2.5")}>
         <ArrowRight className="h-4 w-4 text-info shrink-0" />
         <div>
           <p className={cn("text-overline text-muted-foreground")}>Atualizados</p>
           <p className={cn( "text-body-sm font-semibold tabular-nums")}>{stats.atualizados}</p>
         </div>
       </div>
-      <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-2.5 → usar <Inset> */ "flex items-center gap-2.5 rounded-lg border bg-muted/40 p-2.5")}>
+      <div className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex items-center inline-tight-plus rounded-lg border bg-muted/40 p-2.5")}>
         <FileX className="h-4 w-4 text-muted-foreground shrink-0" />
         <div>
           <p className={cn("text-overline text-muted-foreground")}>Sem Alteração</p>
           <p className={cn( "text-body-sm font-semibold tabular-nums")}>{stats.naoAtualizados}</p>
         </div>
       </div>
-      <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-2.5 → usar <Inset> */ "flex items-center gap-2.5 rounded-lg border bg-destructive/5 border-destructive/20 p-2.5")}>
+      <div className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex items-center inline-tight-plus rounded-lg border bg-destructive/5 border-destructive/20 p-2.5")}>
         <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
         <div>
           <p className={cn("text-overline text-muted-foreground")}>Erros</p>
@@ -129,7 +129,7 @@ function LogStats({ logs }: { logs: LogEntry[] }) {
         </div>
       </div>
       {stats.conflitos > 0 && (
-        <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-2.5 → usar <Inset> */ "flex items-center gap-2.5 rounded-lg border bg-warning/5 border-warning/20 p-2.5 col-span-2 sm:col-span-4")}>
+        <div className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex items-center inline-tight-plus rounded-lg border bg-warning/5 border-warning/20 p-2.5 col-span-2 sm:col-span-4")}>
           <GitMerge className="h-4 w-4 text-warning shrink-0" />
           <div>
             <p className={cn("text-overline text-muted-foreground")}>Conflitos de Concorrência</p>
@@ -298,7 +298,7 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
               className={cn("rounded-lg border px-4 cursor-pointer hover:border-border/80 transition-colors duration-150")}
             >
               <AccordionTrigger className={cn("py-3 hover:no-underline")}>
-                <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex flex-1 items-center gap-2.5 text-sm min-w-0")}>
+                <div className={cn("flex flex-1 items-center inline-tight-plus text-sm min-w-0")}>
                   {isError ? (
                     <XCircle className="h-4 w-4 text-destructive shrink-0" />
                   ) : (

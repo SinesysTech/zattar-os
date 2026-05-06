@@ -79,7 +79,7 @@ export function WidgetSegmento() {
       subtitle="Distribuicao por area juridica"
       depth={1}
     >
-      <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5")}>
+      <div className={cn("flex items-center inline-default-plus")}>
         <MiniDonut
           segments={segments}
           size={88}

@@ -151,12 +151,12 @@ function SidebarContent(props: FloatingSidebarProps) {
   return (
     <div className="flex h-full min-h-0 flex-col bg-card/40 backdrop-blur-xl">
       {/* Scrollable content */}
-      <div className={cn(/* design-system-escape: space-y-5 sem token DS; px-5 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "flex-1 min-h-0 space-y-5 overflow-y-auto px-5 py-5")}>
+      <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "flex-1 min-h-0 stack-default-plus overflow-y-auto px-5 py-5")}>
         {/* ── Configurações ───────────────────────── */}
         <section className={cn("stack-medium")}>
           <SectionHeader title="Configurações" />
 
-          <div className={cn(/* design-system-escape: space-y-2.5 sem token DS */ "space-y-2.5")}>
+          <div className={cn("stack-tight-plus")}>
             <div className={cn("stack-snug")}>
               <Label htmlFor="doc-titulo" className={cn("flex items-center inline-snug text-caption")}>
                 <FileText className="size-3.5" />
@@ -172,7 +172,7 @@ function SidebarContent(props: FloatingSidebarProps) {
             </div>
 
             <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between inline-medium rounded-xl border border-border/40 bg-card/55 backdrop-blur-md p-3 glass-kpi")}>
-              <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5 min-w-0")}>
+              <div className={cn("flex items-center inline-tight-plus min-w-0")}>
                 <span className="inline-flex size-7 items-center justify-center rounded-lg bg-info/10 shrink-0">
                   <Camera className="size-3.5 text-info/70" />
                 </span>

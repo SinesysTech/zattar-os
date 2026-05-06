@@ -131,7 +131,7 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
 
         {/* Top itens com maior desvio */}
         {topItens.length > 0 && (
-          <div className={cn(/* design-system-escape: space-y-2.5 sem token DS */ "space-y-2.5")}>
+          <div className={cn("stack-tight-plus")}>
             <Text variant="caption" className="font-medium">Maiores Desvios</Text>
             {topItens.map((item) => {
               const percentExec = item.valorPrevisto > 0

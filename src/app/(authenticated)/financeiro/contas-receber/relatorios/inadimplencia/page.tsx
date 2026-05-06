@@ -231,7 +231,7 @@ export default function RelatorioInadimplenciaPage() {
       {/* Cards de Resumo */}
       <div className={cn("grid inline-default md:grid-cols-4")}>
         <Card>
-          <CardHeader className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
+          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between stack-none pb-2")}>
             <CardTitle className={cn( "text-body-sm font-medium")}>Contas Vencidas</CardTitle>
             <AlertCircle className="h-4 w-4 text-destructive" />
           </CardHeader>
@@ -244,7 +244,7 @@ export default function RelatorioInadimplenciaPage() {
         </Card>
 
         <Card>
-          <CardHeader className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
+          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between stack-none pb-2")}>
             <CardTitle className={cn( "text-body-sm font-medium")}>Valor Total</CardTitle>
             <DollarSign className="h-4 w-4 text-destructive" />
           </CardHeader>
@@ -259,7 +259,7 @@ export default function RelatorioInadimplenciaPage() {
         </Card>
 
         <Card>
-          <CardHeader className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
+          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between stack-none pb-2")}>
             <CardTitle className={cn( "text-body-sm font-medium")}>Dias Médio de Atraso</CardTitle>
             <Clock className="h-4 w-4 text-warning" />
           </CardHeader>
@@ -274,7 +274,7 @@ export default function RelatorioInadimplenciaPage() {
         </Card>
 
         <Card>
-          <CardHeader className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
+          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between stack-none pb-2")}>
             <CardTitle className={cn( "text-body-sm font-medium")}>Clientes Inadimplentes</CardTitle>
             <Users className="h-4 w-4 text-warning" />
           </CardHeader>

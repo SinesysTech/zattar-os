@@ -402,7 +402,7 @@ export function GazetteOrphanResolver() {
       <div className={cn("stack-medium border-b border-border/40 inset-card-compact")}>
         {/* Title row */}
         <div className={cn("flex items-center justify-between inline-medium")}>
-          <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
+          <div className={cn("flex items-center inline-tight-plus")}>
             <Heading level="section">Comunicações Órfãs</Heading>
             <Text
               variant="micro-badge"
@@ -591,7 +591,7 @@ export function GazetteOrphanResolver() {
               </div>
 
               {/* Match card */}
-              <div className={cn(/* design-system-escape: space-y-2.5 sem token DS */ "mt-3 space-y-2.5 rounded-xl border border-success/20 bg-success/5 inset-card-compact")}>
+              <div className={cn("mt-3 stack-tight-plus rounded-xl border border-success/20 bg-success/5 inset-card-compact")}>
                 <div>
                   <Text variant="micro-caption">Expediente</Text>
                   <p className={cn( "text-body-sm font-semibold text-foreground")}>

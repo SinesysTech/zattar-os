@@ -73,7 +73,7 @@ export function SplitFinanceiro({ acordo }: SplitFinanceiroProps) {
         )}
       </div>
 
-      <ul className={cn(/* design-system-escape: space-y-2.5 sem token DS */ "space-y-2.5")}>
+      <ul className={cn("stack-tight-plus")}>
         <SplitRow
           dotClass="bg-primary/70"
           label="Cliente"

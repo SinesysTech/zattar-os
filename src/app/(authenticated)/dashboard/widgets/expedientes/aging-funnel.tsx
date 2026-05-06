@@ -99,7 +99,7 @@ export function AgingFunnel() {
     >
       <div className={cn("mt-1 stack-tight")}>
         {faixas.map((row) => (
-          <div key={row.label} className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
+          <div key={row.label} className={cn("flex items-center inline-tight-plus")}>
             <UrgencyDot level={row.level} />
             <div className="w-24 shrink-0">
               <span className="text-[10px] text-muted-foreground/60">

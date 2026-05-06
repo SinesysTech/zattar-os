@@ -214,7 +214,7 @@ export function ClienteDocumentosViewer({
 
       {/* Dialog de Preview de PDF */}
       <Dialog open={!!selectedDoc} onOpenChange={() => setSelectedDoc(null)}>
-        <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset>; gap-0 gap sem token DS */ "max-w-[90vw] h-[90vh] flex flex-col p-0 gap-0")}>
+        <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "max-w-[90vw] h-[90vh] flex flex-col p-0 inline-none")}>
           <DialogHeader className={cn("inset-card-compact border-b")}>
             <DialogTitle>{selectedDoc?.name}</DialogTitle>
             <DialogDescription className="sr-only">

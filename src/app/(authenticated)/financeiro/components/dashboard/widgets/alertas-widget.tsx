@@ -117,7 +117,7 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
                 <div
                   key={idx}
                   className={cn(
-                    /* design-system-escape: gap-2.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ 'flex items-start gap-2.5 rounded-lg border px-3 py-2.5 text-body-sm',
+                    /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ 'flex items-start inline-tight-plus rounded-lg border px-3 py-2.5 text-body-sm',
                     config.badgeClass
                   )}
                 >

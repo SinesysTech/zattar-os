@@ -412,7 +412,7 @@ export function ExpedientesControlView({
             accentClass={accentClass}
           />
           <div className={cn(
-            /* design-system-escape: gap-2.5 gap sem token DS */ 'grid gap-2.5',
+            'grid inline-tight-plus',
             selected
               ? 'grid-cols-1 sm:grid-cols-2'
               : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
@@ -444,7 +444,7 @@ export function ExpedientesControlView({
   }
 
   return (
-    <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "grid gap-5 lg:grid-cols-[1fr_380px]")}>
+    <div className={cn("grid inline-default-plus lg:grid-cols-[1fr_380px]")}>
       {/* Main queue */}
       <div className="min-w-0">{mainContent}</div>
 

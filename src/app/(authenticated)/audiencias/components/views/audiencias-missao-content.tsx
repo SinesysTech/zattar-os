@@ -180,7 +180,7 @@ export function AudienciasMissaoContent({
                 <Text variant="caption" as="p" className="text-muted-foreground/60">Nenhuma audiência neste dia</Text>
               </div>
             ) : (
-              <div className={cn(/* design-system-escape: space-y-0 sem token DS */ "space-y-0")}>
+              <div className={cn("stack-none")}>
                 {morning.length > 0 && (
                   <>
                     <SectionHeader label="Manhã" icon={Sun} />
