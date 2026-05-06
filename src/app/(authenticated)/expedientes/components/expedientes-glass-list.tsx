@@ -49,17 +49,22 @@ function ListSkeleton() {
         >
           <div
             className={cn(
-              /* design-system-escape: gap-4 entre coluna de prazo e bloco principal (mirror do ExpedienteCard compact) */ 'flex items-start gap-4',
+              /* design-system-escape: items-center espelha o ExpedienteCard compact que centraliza verticalmente a PrazoColumn; gap-4 entre coluna temporal e bloco principal */ 'flex items-center gap-4',
             )}
           >
             <div
               className={cn(
-                /* design-system-escape: gap-1.5 entre placeholders verticais da coluna de prazo */ 'flex w-22 shrink-0 flex-col items-center gap-1.5',
+                /* design-system-escape: w-24 + gap-3 espelham a PrazoColumn (Fatal + Ciência empilhados) */ 'flex w-24 shrink-0 flex-col items-center gap-3',
               )}
             >
-              <Skeleton className="h-4 w-16" />
-              <Skeleton className="h-3 w-10" />
-              <Skeleton className="h-5 w-12 rounded-md" />
+              <div className="flex flex-col items-center gap-0.5">
+                <Skeleton className="h-4 w-18" />
+                <Skeleton className="h-2.5 w-10" />
+              </div>
+              <div className="flex flex-col items-center gap-0.5">
+                <Skeleton className="h-3.5 w-18" />
+                <Skeleton className="h-2.5 w-12" />
+              </div>
             </div>
             <div
               className={cn(
@@ -68,7 +73,7 @@ function ListSkeleton() {
             >
               <Skeleton className="h-4 w-48" />
               <Skeleton className="h-3.5 w-64" />
-              <Skeleton className="h-3 w-56" />
+              <Skeleton className="h-3 w-72" />
               <Skeleton className="h-8 w-full" />
             </div>
           </div>

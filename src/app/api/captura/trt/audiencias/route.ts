@@ -437,6 +437,7 @@ export async function POST(request: NextRequest) {
               dataInicio,
               dataFim,
               codigoSituacao,
+              capturaLogId: logId ?? undefined,
             });
 
             console.log(

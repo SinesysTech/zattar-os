@@ -390,6 +390,7 @@ export async function POST(request: NextRequest) {
               config: tribunalConfig,
               filtroPrazo: filtro,
               capturarDocumentos: true,
+              capturaLogId: logId ?? undefined,
             });
 
             console.log(

@@ -784,13 +784,30 @@ export async function obterResumoUltimaCaptura(): Promise<Result<ResumoUltimaCap
   try {
     const db = createDbClient();
 
+    // Ancorar na própria tabela de audiências: a "última captura" relevante é a
+    // última que efetivamente estampou ultima_captura_id em alguma audiência.
+    // Filtrar capturas_log por status/tipo é frágil porque (1) capturas que
+    // falham parcialmente ainda persistem dados, e (2) capturas combinadas
+    // (tipo_captura='combinada') também alimentam audiências.
+    const { data: ultimaRow, error: ultimaError } = await db
+      .from('audiencias')
+      .select('ultima_captura_id')
+      .not('ultima_captura_id', 'is', null)
+      .order('ultima_captura_id', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (ultimaError) {
+      return err(appError('DATABASE_ERROR', ultimaError.message));
+    }
+    if (!ultimaRow?.ultima_captura_id) return ok(null);
+
+    const capturaId = ultimaRow.ultima_captura_id as number;
+
     const { data: captura, error: capturaError } = await db
       .from('capturas_log')
       .select('id, tipo_captura, iniciado_em, concluido_em')
-      .eq('status', 'completed')
-      .eq('tipo_captura', 'audiencias')
-      .order('concluido_em', { ascending: false })
-      .limit(1)
+      .eq('id', capturaId)
       .maybeSingle();
 
     if (capturaError) {
@@ -816,7 +833,7 @@ export async function obterResumoUltimaCaptura(): Promise<Result<ResumoUltimaCap
     return ok({
       capturaId: captura.id,
       tipoCaptura: captura.tipo_captura,
-      concluidoEm: captura.concluido_em,
+      concluidoEm: captura.concluido_em ?? captura.iniciado_em,
       totalCriados,
       totalAtualizados: total - totalCriados,
       total,

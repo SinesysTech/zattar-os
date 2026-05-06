@@ -316,6 +316,7 @@ export async function executarAgendamento(
               dataFim: dataResolvida ?? paramsAudiencias?.dataFim,
               codigoSituacao: paramsAudiencias?.codigoSituacao,
               horasParaRecaptura: paramsAudiencias?.horasParaRecaptura,
+              capturaLogId: logId ?? undefined,
             });
             await registrarRawLog({
               tipo_captura: agendamento.tipo_captura,

@@ -180,6 +180,7 @@ export async function POST(request: NextRequest) {
           const resultado = await capturaCombinada({
             credential: credCompleta.credenciais,
             config: tribunalConfig,
+            capturaLogId: logId ?? undefined,
           });
 
           // Registrar captura raw log

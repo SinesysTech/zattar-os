@@ -171,7 +171,7 @@ export function TipoTriggerContent({
         )}
         <span className={cn(
           'truncate',
-          size === 'sm' ? /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[11px] font-medium text-foreground' : /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ 'text-sm font-medium text-foreground',
+          size === 'sm' ? /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[11px] font-medium text-foreground' : /* design-system-escape: size="md" usa font-semibold para dominar a hierarquia visual contra partes (font-medium 13px) — corrige conflito de peso descrito no design review da lista de expedientes */ 'text-sm font-semibold text-foreground',
         )}>
           {nome}
         </span>

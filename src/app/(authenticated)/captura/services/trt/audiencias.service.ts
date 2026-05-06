@@ -626,6 +626,7 @@ export async function audienciasCapture(
         grau: params.config.grau,
         atas: atasMap,
         mapeamentoIds, // Usa mapeamento pré-calculado para evitar lookups redundantes
+        capturaLogId: params.capturaLogId,
       });
 
       console.log(`   ✅ Audiências persistidas:`, {

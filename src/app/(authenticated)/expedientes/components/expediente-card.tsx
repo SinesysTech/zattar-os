@@ -18,7 +18,6 @@
 
 import * as React from 'react';
 import { format, parseISO } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
 import {
   AlertTriangle,
   CheckCircle2,
@@ -41,7 +40,6 @@ import {
 import {
   getExpedienteDiasRestantes,
   URGENCY_BORDER,
-  URGENCY_COUNTDOWN,
 } from './urgency-helpers';
 import {
   ExpedienteResponsavelPopover,
@@ -122,61 +120,70 @@ function PrazoColumn({
   urgency: UrgencyLevel;
   onSuccess?: () => void;
 }) {
-  const dias = getExpedienteDiasRestantes(expediente);
   const temPrazo = Boolean(expediente.dataPrazoLegalParte);
-  const vencido = urgency === 'critico' && !expediente.baixadoEm;
+  const temCiencia = Boolean(expediente.dataCienciaParte);
+  const urgencyTextClass = URGENCY_TEXT[urgency];
 
   return (
     <div
       className={cn(
-        /* design-system-escape: pt-0.5 alinhamento ótico fino com o título do card, sem token DS equivalente */ 'flex w-22 shrink-0 flex-col items-center pt-0.5',
+        /* design-system-escape: w-24 largura mínima para datas dd/MM/yyyy + labels uppercase; self-center centraliza verticalmente o bloco temporal contra o body do card */ 'flex w-24 shrink-0 flex-col items-center gap-3 self-center',
       )}
     >
-      <div className="text-center">
-        {temPrazo ? (
-          <>
-            <div
-              className={cn(
-                /* design-system-escape: font-semibold do dado fatal (data do prazo), reforço visual obrigatório */ 'text-caption font-semibold leading-tight whitespace-nowrap tabular-nums',
-              )}
-            >
-              {format(parseISO(expediente.dataPrazoLegalParte!), 'dd MMM yyyy', {
-                locale: ptBR,
-              })}
-            </div>
-            <div
-              className={cn(
-                /* design-system-escape: tracking-wider do label "Fatal" segue padrão Glass Briefing de overlines */ 'mt-0.5 text-micro-caption uppercase tracking-wider text-muted-foreground/55',
-              )}
-            >
-              Fatal
-            </div>
-          </>
-        ) : (
-          <div className="text-caption italic text-muted-foreground/60">Sem prazo</div>
-        )}
-      </div>
-      {temPrazo && (vencido || dias !== null) && (
-        <div
-          className={cn(
-            /* design-system-escape: gap-1 entre badges micro de countdown, abaixo do menor token Inline */ 'mt-1.5 flex flex-wrap items-center justify-center gap-1',
-          )}
+      {temPrazo ? (
+        <ExpedientePrazoPopover
+          expedienteId={expediente.id}
+          dataPrazoLegalParte={expediente.dataPrazoLegalParte}
+          onSuccess={onSuccess}
+          align="start"
         >
-          <ExpedientePrazoPopover
-            expedienteId={expediente.id}
-            dataPrazoLegalParte={expediente.dataPrazoLegalParte}
-            onSuccess={onSuccess}
-            align="start"
+          <button
+            type="button"
+            onClick={(e) => e.stopPropagation()}
+            className={cn(
+              /* design-system-escape: bloco clicável de prazo fatal — gap-0.5 entre data e label, rounded-md/px-1/py-0.5 hover sutil para indicar editabilidade */ 'flex cursor-pointer flex-col items-center gap-0.5 rounded-md px-1 py-0.5 text-center transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
+            )}
           >
             <span
               className={cn(
-                /* design-system-escape: pílula de countdown — px-2/py-0.5 padding compacto, font-semibold do número fatal */ 'inline-flex cursor-pointer items-center rounded-md px-2 py-0.5 text-micro-caption font-semibold tabular-nums',
-                vencido ? 'bg-destructive/10 text-destructive' : URGENCY_COUNTDOWN[urgency],
+                /* design-system-escape: text-[14px] tabular-nums do dado fatal — sobe um nível de hierarquia (era 13px) por ser o KPI temporal do card */ 'text-[14px] font-semibold leading-tight whitespace-nowrap tabular-nums',
+                urgencyTextClass,
               )}
             >
-              {vencido ? `${Math.abs(dias ?? 0)}d` : `${dias}d`}
+              {format(parseISO(expediente.dataPrazoLegalParte!), 'dd/MM/yyyy')}
             </span>
-          </ExpedientePrazoPopover>
+            <span
+              className={cn(
+                /* design-system-escape: label "Fatal" — text-[10px] tracking-[0.14em] espelha text-meta-label mas em escala menor para coluna estreita */ 'text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/75',
+              )}
+            >
+              Fatal
+            </span>
+          </button>
+        </ExpedientePrazoPopover>
+      ) : (
+        <div className="text-caption italic text-muted-foreground/70">Sem prazo</div>
+      )}
+      {temCiencia && (
+        <div
+          className={cn(
+            /* design-system-escape: bloco secundário de Ciência — segue layout do Fatal mas sem peso de cor; gap-0.5 entre data e label */ 'flex flex-col items-center gap-0.5 text-center',
+          )}
+        >
+          <span
+            className={cn(
+              /* design-system-escape: data ciência — text-[13px] tabular-nums, peso normal pois é dado contextual (não-KPI) */ 'text-[13px] leading-tight whitespace-nowrap tabular-nums text-foreground/85',
+            )}
+          >
+            {format(parseISO(expediente.dataCienciaParte!), 'dd/MM/yyyy')}
+          </span>
+          <span
+            className={cn(
+              /* design-system-escape: label "Ciência" — text-[10px] tracking-[0.14em] mirror do label Fatal mas com peso visual atenuado */ 'text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60',
+            )}
+          >
+            Ciência
+          </span>
         </div>
       )}
     </div>
@@ -263,10 +270,34 @@ function ProcessFlags({ expediente }: { expediente: Expediente }) {
   );
 }
 
-function IdentidadeProcessual({ expediente }: { expediente: Expediente }) {
+function IdentidadeProcessual({
+  expediente,
+  variant = 'stack',
+}: {
+  expediente: Expediente;
+  /**
+   * `stack`  — usado no card vertical (quadro): identificação processual em linha 2,
+   *            órgão julgador + ciência em linha 3.
+   * `inline` — usado na lista compacta: tudo numa linha só (TRT · grau · classe ·
+   *            processo · vara). Ciência sai daqui (vai para a PrazoColumn) e o órgão
+   *            vira parte da linha de identificação.
+   */
+  variant?: 'stack' | 'inline';
+}) {
   const partes = getExpedientePartyNames(expediente);
   const grauLabel = GRAU_TRIBUNAL_LABELS[expediente.grau] ?? expediente.grau;
   const orgao = expediente.descricaoOrgaoJulgador || expediente.orgaoJulgadorOrigem;
+
+  const baseIdentSegments = [
+    expediente.trt,
+    grauLabel,
+    expediente.classeJudicial,
+    expediente.numeroProcesso,
+  ].filter(Boolean);
+
+  const inlineSegments = orgao
+    ? [...baseIdentSegments, orgao]
+    : baseIdentSegments;
 
   return (
     <div
@@ -282,37 +313,59 @@ function IdentidadeProcessual({ expediente }: { expediente: Expediente }) {
         >
           <p
             className={cn(
-              /* design-system-escape: text-xs/font-semibold/text-foreground — mirror exato do QueueCard original; text-caption (13px) causava regressão visual */ 'truncate text-xs font-semibold text-foreground',
+              /* design-system-escape: text-[13px] font-medium — partes do processo recebem peso medium (era semibold) para não competir com o título Tipo (semibold), e bump para 13px reforça legibilidade */ 'truncate text-[13px] font-medium text-foreground',
             )}
           >
             {partes.autora || '—'}
           </p>
           <p
             className={cn(
-              /* design-system-escape: text-xs/font-semibold/text-foreground — mirror exato do QueueCard original; text-caption (13px) causava regressão visual */ 'truncate text-xs font-semibold text-foreground',
+              /* design-system-escape: text-[13px] font-medium — espelha autora; "vs" recebe text-[10px] font-normal para virar separador discreto */ 'truncate text-[13px] font-medium text-foreground',
             )}
           >
-            <span className="mr-1 text-[9px] font-normal text-muted-foreground/70">vs</span>
+            <span className="mr-1 text-[10px] font-normal text-muted-foreground/70">vs</span>
             {partes.re || '—'}
           </p>
         </div>
       )}
-      <p className="truncate text-mono-num">
-        {[expediente.trt, grauLabel, expediente.classeJudicial, expediente.numeroProcesso]
-          .filter(Boolean)
-          .join(' · ')}
-      </p>
-      {(orgao || expediente.dataCienciaParte) && (
-        <p className="truncate text-mono-num text-muted-foreground/55">
-          {[
-            orgao,
-            expediente.dataCienciaParte
-              ? `Ciência ${format(parseISO(expediente.dataCienciaParte), 'dd/MM/yyyy')}`
-              : null,
-          ]
-            .filter(Boolean)
-            .join(' · ')}
-        </p>
+      {variant === 'inline' ? (
+        inlineSegments.length > 0 && (
+          <p
+            className={cn(
+              /* design-system-escape: text-[11.5px] font-mono tabular-nums — sobe de 10px para 11.5px (legibilidade WCAG); contraste /80 supera o /55 antigo que ficava abaixo de 4.5:1 */ 'truncate text-[11.5px] font-mono tabular-nums text-muted-foreground/80',
+            )}
+          >
+            {inlineSegments.join(' · ')}
+          </p>
+        )
+      ) : (
+        <>
+          {baseIdentSegments.length > 0 && (
+            <p
+              className={cn(
+                /* design-system-escape: text-[11.5px] font-mono tabular-nums — bump de 10px para 11.5px alinha com a versão inline e melhora legibilidade da identificação processual */ 'truncate text-[11.5px] font-mono tabular-nums text-muted-foreground/80',
+              )}
+            >
+              {baseIdentSegments.join(' · ')}
+            </p>
+          )}
+          {(orgao || expediente.dataCienciaParte) && (
+            <p
+              className={cn(
+                /* design-system-escape: text-[11.5px] font-mono tabular-nums — linha terciária com órgão + ciência, contraste /60 mais suave que a identificação principal */ 'truncate text-[11.5px] font-mono tabular-nums text-muted-foreground/60',
+              )}
+            >
+              {[
+                orgao,
+                expediente.dataCienciaParte
+                  ? `Ciência ${format(parseISO(expediente.dataCienciaParte), 'dd/MM/yyyy')}`
+                  : null,
+              ]
+                .filter(Boolean)
+                .join(' · ')}
+            </p>
+          )}
+        </>
       )}
     </div>
   );
@@ -554,7 +607,7 @@ export function ExpedienteCard({
     >
       <div
         className={cn(
-          /* design-system-escape: gap-4 entre coluna de prazo (esquerda) e bloco principal (direita) — densidade da row */ 'flex items-start gap-4',
+          /* design-system-escape: items-center centraliza verticalmente a PrazoColumn contra o body do card; gap-4 entre coluna temporal e bloco principal */ 'flex items-center gap-4',
         )}
       >
         <PrazoColumn expediente={expediente} urgency={urgency} onSuccess={onSuccess} />
@@ -566,7 +619,7 @@ export function ExpedienteCard({
             onSuccess={onSuccess}
           />
           <div className="mt-2">
-            <IdentidadeProcessual expediente={expediente} />
+            <IdentidadeProcessual expediente={expediente} variant="inline" />
           </div>
           <div
             className={cn(
