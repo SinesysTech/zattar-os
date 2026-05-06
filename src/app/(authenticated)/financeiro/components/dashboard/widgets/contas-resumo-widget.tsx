@@ -61,7 +61,7 @@ function ContaSection({
     <div className={cn("flex flex-col stack-tight-plus")}>
       <div className="flex items-center justify-between">
         <div className={cn("flex items-center inline-tight")}>
-          <div className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ 'rounded-md p-1.5', colorClass)}>
+          <div className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ 'rounded-md inset-snug', colorClass)}>
             <Icon className={cn('h-3.5 w-3.5', iconColorClass)} />
           </div>
           <Text variant="caption" className="font-medium">{title}</Text>

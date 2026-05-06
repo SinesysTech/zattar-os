@@ -80,7 +80,7 @@ export function EventDetailDrawer({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ " max-w-xl max-h-[90vh] p-0 flex flex-col")}>
+      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ " max-w-xl max-h-[90vh] inset-none flex flex-col")}>
         <DialogHeader className={cn("px-6 py-5 border-b border-border/30 shrink-0")}>
           <DialogTitle className={cn(/* design-system-escape: tracking-tight sem token DS */ "text-body-lg font-semibold tracking-tight")}>
             Detalhes do Evento

@@ -64,7 +64,7 @@ export function DeadlineSidebar({ deadlines, className }: DeadlineSidebarProps) 
             <div
               key={dl.id}
               className={cn(
-                /* design-system-escape: p-2 → usar <Inset> */ "flex items-center inline-tight p-2 rounded-lg border",
+                /* design-system-escape: p-2 → usar <Inset> */ "flex items-center inline-tight inset-tight rounded-lg border",
                 u.bg,
                 u.border,
               )}

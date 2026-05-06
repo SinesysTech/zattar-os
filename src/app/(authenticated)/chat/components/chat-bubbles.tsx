@@ -150,7 +150,7 @@ function FileChatBubble({
       {/* File bubble container */}
       <div
         className={cn(
-          /* design-system-escape: p-3 → usar <Inset>; pr-4 padding direcional sem Inset equiv. */ "flex items-center inline-medium p-3 pr-4 min-w-60",
+          /* design-system-escape: p-3 → usar <Inset>; pr-4 padding direcional sem Inset equiv. */ "flex items-center inline-medium inset-medium pr-4 min-w-60",
           bubbleCornerClass(isOwn, isFirstInGroup),
           // Received
           !isOwn && "bg-foreground/3 border border-foreground/6",
@@ -346,7 +346,7 @@ function ImageChatBubble({
     <div>
       <div
         className={cn(
-          /* design-system-escape: p-2 → usar <Inset> */ "p-2",
+          /* design-system-escape: p-2 → usar <Inset> */ "inset-tight",
           bubbleCornerClass(isOwn, isFirstInGroup),
           !isOwn && "bg-chat-bubble-received border border-border/30 dark:border-white/5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] dark:shadow-none",
           isOwn && "bg-primary shadow-lg shadow-primary/20"

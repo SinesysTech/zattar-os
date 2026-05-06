@@ -125,7 +125,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
               return (
                 <div
                   key={day.toString()}
-                  className={cn(/* design-system-escape: p-1 → usar <Inset> */ "border-border/70 relative border-r p-1 last:border-r-0")}
+                  className={cn(/* design-system-escape: p-1 → usar <Inset> */ "border-border/70 relative border-r inset-micro last:border-r-0")}
                   data-today={isToday(day) || undefined}>
                   {dayAllDayEvents.map((event) => {
                     const eventStart = new Date(event.start);

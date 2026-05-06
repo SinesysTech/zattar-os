@@ -464,7 +464,7 @@ export function AudienciaDetailDialog({
                   )}
                 </button>
               </PopoverTrigger>
-              <PopoverContent className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "w-44 rounded-xl p-1.5 glass-dropdown")} align="start">
+              <PopoverContent className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "w-44 rounded-xl inset-snug glass-dropdown")} align="start">
                 <Text
                   variant="overline"
                   as="p"
@@ -673,7 +673,7 @@ export function AudienciaDetailDialog({
                     <button
                       type="button"
                       onClick={() => setAtaOpen((v) => !v)}
-                      className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex w-full cursor-pointer items-center inline-medium rounded-xl border border-success/25 bg-success/8 p-2.5 text-left transition-colors hover:bg-success/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
+                      className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex w-full cursor-pointer items-center inline-medium rounded-xl border border-success/25 bg-success/8 inset-tight-plus text-left transition-colors hover:bg-success/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
                     >
                       <span className="inline-flex size-7 shrink-0 items-center justify-center rounded-lg bg-success/18 text-success">
                         <FileText className="size-3.5" />
@@ -942,7 +942,7 @@ export function AudienciaDetailDialog({
                         <Text variant="caption" as="span" className="mb-2 block text-muted-foreground">
                           Quem participa presencialmente?
                         </Text>
-                        <div className={cn(/* design-system-escape: p-1 → usar <Inset> */ "inline-flex inline-micro p-1 rounded-lg bg-muted/60 border border-border/40")}>
+                        <div className={cn(/* design-system-escape: p-1 → usar <Inset> */ "inline-flex inline-micro inset-micro rounded-lg bg-muted/60 border border-border/40")}>
                           {(
                             [
                               { v: PresencaHibrida.Advogado, label: 'Advogados' },

@@ -774,7 +774,7 @@ export function ParteContrariaFormDialog({
                 <button
                   type="button"
                   onClick={() => handleRemoveEmail(index)}
-                  className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-1 hover:bg-muted rounded-full p-0.5")}
+                  className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-1 hover:bg-muted rounded-full inset-nano")}
                   aria-label={`Remover e-mail ${email}`}
                   title={`Remover e-mail ${email}`}
                 >

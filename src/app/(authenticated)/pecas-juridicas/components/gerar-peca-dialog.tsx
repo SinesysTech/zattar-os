@@ -251,11 +251,11 @@ export function GerarPecaDialog({
                   ))}
                 </div>
               ) : modelosFiltrados.length === 0 ? (
-                <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "p-8 text-center text-muted-foreground")}>
+                <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "inset-extra-loose text-center text-muted-foreground")}>
                   Nenhum modelo encontrado
                 </div>
               ) : (
-                <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col p-2 stack-tight")}>
+                <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col inset-tight stack-tight")}>
                   {modelosFiltrados.map((modelo) => (
                     <button
                       key={modelo.id}

@@ -38,7 +38,7 @@ export function AudienciaCard({ audiencia, compact = false, onClick }: Audiencia
         'transition-all duration-200 ease-in-out hover:shadow-lg',
         compact ? 'h-auto' : '',
       )}>
-        <Stack gap="tight" className={cn(compact ? /* design-system-escape: p-2 → usar <Inset> */ 'p-2' : /* design-system-escape: p-3 → usar <Inset> */ 'p-3')}>
+        <Stack gap="tight" className={cn(compact ? /* design-system-escape: p-2 → usar <Inset> */ 'inset-tight' : /* design-system-escape: p-3 → usar <Inset> */ 'inset-medium')}>
         <Inline justify="between">
           <Inline gap="tight">
             {/* Indicador de Ata */}

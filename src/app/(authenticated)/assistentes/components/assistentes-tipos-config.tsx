@@ -158,7 +158,7 @@ export function AssistentesTiposConfig({
   if (loading) {
     return (
       <Card>
-        <CardContent className={cn(/* design-system-escape: p-12 → usar <Inset> */ "flex items-center justify-center p-12")}>
+        <CardContent className={cn(/* design-system-escape: p-12 → usar <Inset> */ "flex items-center justify-center inset-mega")}>
           <LoadingSpinner className="size-8 text-muted-foreground" />
         </CardContent>
       </Card>

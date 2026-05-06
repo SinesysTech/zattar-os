@@ -97,7 +97,7 @@ export function ViewerPaginationPill({
           disabled={!canPrev}
           aria-label="Página anterior"
           className={cn(
-            /* design-system-escape: p-1.5 → usar <Inset> */ 'flex items-center justify-center p-1.5 rounded-full transition-opacity',
+            /* design-system-escape: p-1.5 → usar <Inset> */ 'flex items-center justify-center inset-snug rounded-full transition-opacity',
             !canPrev ? 'opacity-50 cursor-not-allowed' : 'hover:bg-muted cursor-pointer'
           )}
         >
@@ -114,7 +114,7 @@ export function ViewerPaginationPill({
           onBlur={commitPageInput}
           onKeyDown={handlePageInputKeyDown}
           aria-label="Página atual"
-          className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-8 text-center bg-transparent border-none p-0 text-body-sm font-mono focus:outline-none focus:ring-0")}
+          className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-8 text-center bg-transparent border-none inset-none text-body-sm font-mono focus:outline-none focus:ring-0")}
         />
 
         {/* Separador e total de páginas */}
@@ -130,7 +130,7 @@ export function ViewerPaginationPill({
           disabled={!canNext}
           aria-label="Próxima página"
           className={cn(
-            /* design-system-escape: p-1.5 → usar <Inset> */ 'flex items-center justify-center p-1.5 rounded-full transition-opacity',
+            /* design-system-escape: p-1.5 → usar <Inset> */ 'flex items-center justify-center inset-snug rounded-full transition-opacity',
             !canNext ? 'opacity-50 cursor-not-allowed' : 'hover:bg-muted cursor-pointer'
           )}
         >
@@ -147,7 +147,7 @@ export function ViewerPaginationPill({
           disabled={!canZoomOut}
           aria-label={`Diminuir zoom (atual: ${zoomLevel}%)`}
           className={cn(
-            /* design-system-escape: p-1.5 → usar <Inset> */ 'flex items-center justify-center p-1.5 rounded-full transition-opacity',
+            /* design-system-escape: p-1.5 → usar <Inset> */ 'flex items-center justify-center inset-snug rounded-full transition-opacity',
             !canZoomOut ? 'opacity-50 cursor-not-allowed' : 'hover:bg-muted cursor-pointer'
           )}
         >
@@ -166,7 +166,7 @@ export function ViewerPaginationPill({
           disabled={!canZoomIn}
           aria-label={`Aumentar zoom (atual: ${zoomLevel}%)`}
           className={cn(
-            /* design-system-escape: p-1.5 → usar <Inset> */ 'flex items-center justify-center p-1.5 rounded-full transition-opacity',
+            /* design-system-escape: p-1.5 → usar <Inset> */ 'flex items-center justify-center inset-snug rounded-full transition-opacity',
             !canZoomIn ? 'opacity-50 cursor-not-allowed' : 'hover:bg-muted cursor-pointer'
           )}
         >

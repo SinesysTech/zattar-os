@@ -115,7 +115,7 @@ function DayCell({
       type="button"
       onClick={() => count > 0 && onSelect(day, audienciasDia)}
       className={cn(
-        /* design-system-escape: p-2.5 → usar <Inset> */ 'relative w-full min-h-25 sm:min-h-30 p-2.5 rounded-xl transition-all duration-150 text-left flex flex-col h-full',
+        /* design-system-escape: p-2.5 → usar <Inset> */ 'relative w-full min-h-25 sm:min-h-30 inset-tight-plus rounded-xl transition-all duration-150 text-left flex flex-col h-full',
         'border border-border/40',
         'hover:bg-accent/40 hover:border-border/60',
         'active:bg-accent/20 active:scale-[0.98]',
@@ -183,7 +183,7 @@ function HearingItem({ audiencia }: { audiencia: Audiencia }) {
   return (
     <div
       className={cn(
-        /* design-system-escape: p-2.5 → usar <Inset> */ 'rounded-lg p-2.5 border border-border/50 border-l-2 bg-muted/15',
+        /* design-system-escape: p-2.5 → usar <Inset> */ 'rounded-lg inset-tight-plus border border-border/50 border-l-2 bg-muted/15',
         'hover:bg-accent/40 transition-colors cursor-pointer',
         getStatusBorderClass(audiencia.status),
       )}

@@ -244,7 +244,7 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
                   </div>
                 ))}
             </div>
-            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "mt-4 rounded-md bg-muted/50 p-3 text-body-sm text-muted-foreground")}>
+            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "mt-4 rounded-md bg-muted/50 inset-medium text-body-sm text-muted-foreground")}>
               <strong>Nota:</strong> Os lançamentos financeiros são criados automaticamente quando
               a folha é aprovada. Para visualizar todos os detalhes e realizar o pagamento, acesse o
               módulo Financeiro.

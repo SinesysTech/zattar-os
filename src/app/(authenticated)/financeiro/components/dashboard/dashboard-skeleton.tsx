@@ -74,7 +74,7 @@ export function DashboardSkeleton() {
             </CardHeader>
             <CardContent className={cn("flex flex-col stack-medium")}>
               {Array.from({ length: 3 }).map((_, j) => (
-                <div key={j} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex inline-medium rounded-lg border p-3")}>
+                <div key={j} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex inline-medium rounded-lg border inset-medium")}>
                   <Skeleton className="h-8 w-8 rounded-md" />
                   <div className={cn("flex flex-col stack-snug flex-1")}>
                     <Skeleton className="h-3 w-16" />

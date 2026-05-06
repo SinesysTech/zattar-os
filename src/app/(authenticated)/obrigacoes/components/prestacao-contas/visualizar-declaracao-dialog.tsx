@@ -28,7 +28,7 @@ export function VisualizarDeclaracaoDialog({
 }: Props) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ " max-w-4xl max-h-[90vh] flex flex-col p-0 overflow-hidden")}>
+      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ " max-w-4xl max-h-[90vh] flex flex-col inset-none overflow-hidden")}>
         <DialogHeader className={cn("inset-dialog pb-3 shrink-0")}>
           <DialogTitle>Declaração de prestação de contas assinada</DialogTitle>
           <DialogDescription>

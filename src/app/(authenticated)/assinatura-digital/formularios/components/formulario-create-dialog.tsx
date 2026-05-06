@@ -252,7 +252,7 @@ export function FormularioCreateDialog({
 
           <div className={cn("flex flex-col stack-default py-4")}>
             {Object.keys(errors).length > 0 && (
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 p-3 text-body-sm text-destructive")}>
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 inset-medium text-body-sm text-destructive")}>
                 Corrija os erros no formulário antes de continuar.
               </div>
             )}
@@ -345,7 +345,7 @@ export function FormularioCreateDialog({
                         <button
                           type="button"
                           onClick={() => setTemplateIds(templateIds.filter(id => id !== templateUuid))}
-                          className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-0.5 rounded-full p-0.5 hover:bg-muted-foreground/20")}
+                          className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-0.5 rounded-full inset-nano hover:bg-muted-foreground/20")}
                           disabled={isSubmitting}
                         >
                           <X className="h-3 w-3" />

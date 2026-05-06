@@ -193,7 +193,7 @@ export default function RelatorioInadimplenciaPage() {
                   {formatarData(dataInicio)}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto p-0")} align="start">
+              <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto inset-none")} align="start">
                 <Calendar
                   mode="single"
                   selected={dataInicio}
@@ -210,7 +210,7 @@ export default function RelatorioInadimplenciaPage() {
                   {formatarData(dataFim)}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto p-0")} align="start">
+              <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto inset-none")} align="start">
                 <Calendar
                   mode="single"
                   selected={dataFim}

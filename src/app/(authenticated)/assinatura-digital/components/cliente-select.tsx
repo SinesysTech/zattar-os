@@ -136,7 +136,7 @@ export function ClienteSelect({
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-[400px] p-0")} align="start">
+      <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-[400px] inset-none")} align="start">
         <Command shouldFilter={false}>
           <CommandInput
             placeholder="Buscar por nome ou CPF/CNPJ..."

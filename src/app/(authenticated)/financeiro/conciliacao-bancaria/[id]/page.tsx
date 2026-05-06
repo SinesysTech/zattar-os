@@ -90,7 +90,7 @@ export default function TransacaoDetalhePage() {
             <p className={cn("text-body-sm text-muted-foreground")}>{transacao.conciliacao.observacoes}</p>
           )}
           {transacao.lancamentoVinculado && (
-            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md border p-3")}>
+            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md border inset-medium")}>
               <Text variant="caption" className="uppercase">Lançamento vinculado</Text>
               <p className={cn( "text-body-sm font-medium")}>{transacao.lancamentoVinculado.descricao}</p>
             </div>
@@ -105,7 +105,7 @@ export default function TransacaoDetalhePage() {
           </div>
           <div className={cn("grid inline-medium md:grid-cols-2")}>
             {sugestoes?.map((s) => (
-              <div key={s.lancamentoId} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col rounded-md border p-3 stack-tight")}>
+              <div key={s.lancamentoId} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col rounded-md border inset-medium stack-tight")}>
                 <div className="flex items-center justify-between">
                   <p className={cn( "text-body-sm font-medium")}>{s.lancamento.descricao}</p>
                   <Badge>{Math.round(s.score)}%</Badge>

@@ -59,7 +59,7 @@ export function RiskScoreGauge(props: RiskScoreGaugeProps) {
   const label = getScoreLabel(score);
 
   return (
-    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
+    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "inset-default-plus")}>
       <div className={cn("flex items-center justify-between inline-medium")}>
         <div>
           <p className={cn("text-overline text-muted-foreground/65")}>Saude</p>
@@ -122,7 +122,7 @@ export function AgingFunnel({
   const maximo = Math.max(...Object.values(valores), 1);
 
   return (
-    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
+    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "inset-default-plus")}>
       <div className={cn("flex items-center justify-between inline-medium")}>
         <div>
           <p className={cn("text-overline text-muted-foreground/65")}>Distribuicao</p>
@@ -207,7 +207,7 @@ export function ActivityHeatmap({ baixasPorDia }: ActivityHeatmapProps) {
   const mediaDiaria = dias.length > 0 ? (totalBaixas / dias.length).toFixed(1) : '0';
 
   return (
-    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
+    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "inset-default-plus")}>
       <div className={cn("flex items-center justify-between inline-medium")}>
         <div>
           <p className={cn("text-overline text-muted-foreground/65")}>Atividade</p>

@@ -79,7 +79,7 @@ export function WidgetPicker({
 
       <SheetContent
         side="right"
-        className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-full sm:w-96 flex flex-col inline-none p-0 bg-background/95 backdrop-blur-xl border-l border-border/20")}
+        className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-full sm:w-96 flex flex-col inline-none inset-none bg-background/95 backdrop-blur-xl border-l border-border/20")}
       >
         <SheetHeader className={cn("px-5 pt-6 pb-4 border-b border-border/10")}>
           <SheetTitle className={cn( "font-heading text-body font-semibold")}>

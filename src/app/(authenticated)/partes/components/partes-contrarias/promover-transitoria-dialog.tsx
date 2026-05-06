@@ -249,7 +249,7 @@ export function PromoverTransitoriaDialog({
       ) : (
         <div className={cn("flex flex-col stack-default-plus")}>
           {transitoria && (
-            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-xl bg-surface-container-low/50 p-3 ring-1 ring-outline-variant/30")}>
+            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-xl bg-surface-container-low/50 inset-medium ring-1 ring-outline-variant/30")}>
               <Text variant="caption" className="text-muted-foreground">
                 Cadastro pendente
               </Text>

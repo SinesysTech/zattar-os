@@ -137,19 +137,19 @@ export function IntegracaoFinanceiraSection({ acordoId, onSyncComplete }: Integr
 
       {statusSync && (
         <div className={cn("grid grid-cols-2 md:grid-cols-4 inline-default mb-4")}>
-          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg bg-muted/50 p-3")}>
+          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg bg-muted/50 inset-medium")}>
             <Text variant="caption">Total</Text>
             <Text variant="kpi-value">{statusSync.totalParcelas}</Text>
           </div>
-          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg bg-success/15 p-3")}>
+          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg bg-success/15 inset-medium")}>
             <Text variant="caption">Sincronizadas</Text>
             <Text variant="kpi-value" className="text-success">{statusSync.parcelasSincronizadas}</Text>
           </div>
-          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg bg-warning/15 p-3")}>
+          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg bg-warning/15 inset-medium")}>
             <Text variant="caption">Pendentes</Text>
             <Text variant="kpi-value" className="text-warning">{statusSync.parcelasPendentes}</Text>
           </div>
-          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg bg-destructive/15 p-3")}>
+          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg bg-destructive/15 inset-medium")}>
             <Text variant="caption">Inconsistentes</Text>
             <Text variant="kpi-value" className="text-destructive">{statusSync.parcelasInconsistentes}</Text>
           </div>

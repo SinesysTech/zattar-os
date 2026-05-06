@@ -48,7 +48,7 @@ export function GazetteTimeline({ items }: GazetteTimelineProps) {
           {/* Card */}
           <div
             className={cn(
-              /* design-system-escape: p-2 → usar <Inset> */ 'flex-1 rounded-lg p-2',
+              /* design-system-escape: p-2 → usar <Inset> */ 'flex-1 rounded-lg inset-tight',
               item.isCurrent
                 ? 'border border-primary/15 bg-primary/5'
                 : 'border border-border/30 bg-muted/20',

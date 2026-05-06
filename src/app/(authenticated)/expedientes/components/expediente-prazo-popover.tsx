@@ -98,7 +98,7 @@ export function ExpedientePrazoPopover({
         </button>
       </PopoverTrigger>
       <PopoverContent
-        className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto p-0 rounded-2xl glass-dropdown overflow-hidden")}
+        className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto inset-none rounded-2xl glass-dropdown overflow-hidden")}
         align={align}
         side="bottom"
         onClick={(e) => e.stopPropagation()}
@@ -116,7 +116,7 @@ export function ExpedientePrazoPopover({
           initialFocus
         />
         {allowClear && dataPrazoLegalParte && (
-          <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "border-t border-border/50 p-2")}>
+          <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "border-t border-border/50 inset-tight")}>
             <Button
               type="button"
               variant="ghost"

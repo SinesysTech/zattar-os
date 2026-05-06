@@ -139,7 +139,7 @@ export function TemplateLibraryDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className={cn(/* design-system-escape: p-0 gap-0 → usar <Inset>; px-6 py-4 → usar <Inset> */ "sm:max-w-4xl  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col")}
+        className={cn(/* design-system-escape: p-0 gap-0 → usar <Inset>; px-6 py-4 → usar <Inset> */ "sm:max-w-4xl  overflow-hidden inset-none gap-0 max-h-[90vh] flex flex-col")}
       >
         <DialogHeader className={cn("px-6 py-4 border-b border-border/20 shrink-0")}>
           <DialogTitle className={cn("flex items-center inline-tight")}>

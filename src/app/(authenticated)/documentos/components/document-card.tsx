@@ -40,7 +40,7 @@ export function DocumentCard({ documento, onClick }: DocumentCardProps) {
       <CardContent className={cn("inset-card-compact")}>
         <div className="flex items-start justify-between">
           <div className={cn("flex items-start inline-medium flex-1 min-w-0")}>
-            <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "rounded-lg bg-primary/10 p-2")}>
+            <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "rounded-lg bg-primary/10 inset-tight")}>
               <FileText className="h-5 w-5 text-primary" />
             </div>
             <div className="flex-1 min-w-0">

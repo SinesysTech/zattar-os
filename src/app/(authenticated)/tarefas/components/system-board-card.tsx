@@ -34,7 +34,7 @@ export function SystemBoardCard({ event }: SystemBoardCardProps) {
 
   return (
     <Card className={cn("border-l-4 transition-colors hover:bg-accent/50", colorClass)}>
-      <CardHeader className={cn(/* design-system-escape: p-3 → usar <Inset>; pb-1 padding direcional sem Inset equiv. */ "p-3 pb-1")}>
+      <CardHeader className={cn(/* design-system-escape: p-3 → usar <Inset>; pb-1 padding direcional sem Inset equiv. */ "inset-medium pb-1")}>
         <div className={cn("flex items-center inline-snug flex-wrap")}>
           {sourceLabel && (
             <AppBadge variant="outline" className={cn("text-[10px] px-1 py-0")}>
@@ -51,7 +51,7 @@ export function SystemBoardCard({ event }: SystemBoardCardProps) {
           {event.title}
         </CardTitle>
       </CardHeader>
-      <CardContent className={cn(/* design-system-escape: p-3 → usar <Inset>; pt-0 padding direcional sem Inset equiv. */ "p-3 pt-0")}>
+      <CardContent className={cn(/* design-system-escape: p-3 → usar <Inset>; pt-0 padding direcional sem Inset equiv. */ "inset-medium pt-0")}>
         <div className={cn("flex items-center justify-between text-caption text-muted-foreground")}>
           <div className={cn("flex items-center inline-tight")}>
             {dueDate && (

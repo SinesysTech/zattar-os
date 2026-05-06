@@ -22,9 +22,9 @@ export function NavDesktop({ isCollapsed }: NavDesktopProps) {
   const currentAccount = accounts.find((a) => a.id === selectedAccountId) ?? accounts[0] ?? null;
 
   const accountSwitcherPopover = (
-    <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-72 p-0")} align="start">
+    <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-72 inset-none")} align="start">
       {accounts.length > 0 && (
-        <div className={cn(/* design-system-escape: p-1 → usar <Inset> */ "border-b p-1")}>
+        <div className={cn(/* design-system-escape: p-1 → usar <Inset> */ "border-b inset-micro")}>
           {accounts.map((acc) => (
             <button
               key={acc.id}
@@ -44,7 +44,7 @@ export function NavDesktop({ isCollapsed }: NavDesktopProps) {
           ))}
         </div>
       )}
-      <div className={cn(/* design-system-escape: p-1 → usar <Inset> */ "p-1")}>
+      <div className={cn(/* design-system-escape: p-1 → usar <Inset> */ "inset-micro")}>
         <Button variant="ghost" size="sm" className={cn("flex w-full justify-start inline-tight")} asChild>
           <Link href="/app/mail/configurar">
             <Settings className="h-4 w-4" />
@@ -73,7 +73,7 @@ export function NavDesktop({ isCollapsed }: NavDesktopProps) {
             <Tooltip>
               <TooltipTrigger asChild>
                 <PopoverTrigger asChild>
-                  <button className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "flex items-center justify-center rounded-md p-1.5 transition-colors hover:bg-muted")}>
+                  <button className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "flex items-center justify-center rounded-md inset-snug transition-colors hover:bg-muted")}>
                     <MailIcon className="h-4 w-4" />
                   </button>
                 </PopoverTrigger>

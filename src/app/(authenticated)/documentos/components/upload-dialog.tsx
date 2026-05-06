@@ -130,7 +130,7 @@ export function UploadDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className={cn(/* design-system-escape: p-0 gap-0 → usar <Inset> */ "sm:max-w-lg  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col")}
+        className={cn(/* design-system-escape: p-0 gap-0 → usar <Inset> */ "sm:max-w-lg  overflow-hidden inset-none gap-0 max-h-[90vh] flex flex-col")}
       >
         <DialogHeader className={cn("px-6 py-4 border-b border-border/20 shrink-0")}>
           <DialogTitle>Upload de arquivo</DialogTitle>
@@ -163,7 +163,7 @@ export function UploadDialog({
                 />
               </div>
             ) : (
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset>; sm:p-4 sem equivalente DS */ "flex flex-col border rounded-lg p-3 sm:p-4 stack-medium")}>
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset>; sm:p-4 sem equivalente DS */ "flex flex-col border rounded-lg inset-medium sm:p-4 stack-medium")}>
                 {previewUrl && (
                   <div className="relative w-full aspect-video rounded-md overflow-hidden bg-muted">
                     { }

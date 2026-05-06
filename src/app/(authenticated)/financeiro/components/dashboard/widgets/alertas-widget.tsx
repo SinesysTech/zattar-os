@@ -101,7 +101,7 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
         {alertas.length === 0 ? (
           <div className="flex items-center justify-center h-full min-h-32">
             <div className={cn("flex flex-col text-center stack-tight")}>
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-full bg-success/10 p-3 mx-auto w-fit")}>
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-full bg-success/10 inset-medium mx-auto w-fit")}>
                 <CheckCircle2 className="h-5 w-5 text-success" />
               </div>
               <p className={cn("text-body-sm text-muted-foreground")}>Nenhum alerta ativo</p>

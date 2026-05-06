@@ -177,7 +177,7 @@ export function ContratosContent({
                 : 'Buscar cliente, parte, processo...'
             }
           />
-          <div className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "flex items-center inline-nano p-0.5 rounded-lg bg-border/6")}>
+          <div className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "flex items-center inline-nano inset-nano rounded-lg bg-border/6")}>
             {VIEW_OPTIONS.map((opt) => (
               <button
                 key={opt.id}
@@ -185,7 +185,7 @@ export function ContratosContent({
                 onClick={() => handleViewChange(opt.id)}
                 aria-label={opt.label}
                 className={cn(
-                  /* design-system-escape: p-1.5 → usar <Inset> */ 'p-1.5 rounded-md transition-all cursor-pointer',
+                  /* design-system-escape: p-1.5 → usar <Inset> */ 'inset-snug rounded-md transition-all cursor-pointer',
                   viewMode === opt.id
                     ? 'bg-primary/12 text-primary'
                     : 'text-muted-foreground/55 hover:text-muted-foreground',
@@ -200,7 +200,7 @@ export function ContratosContent({
                 <button
                   type="button"
                   aria-label="Configurações de contratos"
-                  className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-md text-muted-foreground/55 hover:text-muted-foreground transition-all cursor-pointer")}
+                  className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "inset-snug rounded-md text-muted-foreground/55 hover:text-muted-foreground transition-all cursor-pointer")}
                 >
                   <SlidersHorizontal className="size-3.5" />
                 </button>

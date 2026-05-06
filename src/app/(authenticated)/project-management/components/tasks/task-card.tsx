@@ -60,7 +60,7 @@ export function TaskCard({ tarefa, isDragOverlay }: TaskCardProps) {
           isDragOverlay && "shadow-lg ring-2 ring-primary/20"
         )}
       >
-        <CardContent className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3")}>
+        <CardContent className={cn(/* design-system-escape: p-3 → usar <Inset> */ "inset-medium")}>
           <div className={cn("flex items-start inline-tight")}>
             <button
               className="text-muted-foreground mt-0.5 shrink-0 cursor-grab hover:text-foreground"

@@ -227,11 +227,11 @@ function AnaliseItensTable({ itens }: { itens: AnaliseOrcamentariaItem[] }) {
       <table className="w-full">
         <thead>
           <tr className="border-b">
-            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; */ "text-left p-3 font-medium")}>Conta Contábil</th>
-            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; */ "text-right p-3 font-medium")}>Previsto</th>
-            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; */ "text-right p-3 font-medium")}>Realizado</th>
-            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; */ "text-right p-3 font-medium")}>Desvio</th>
-            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; */ "text-center p-3 font-medium")}>Status</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset> */ "text-left inset-medium font-medium")}>Conta Contábil</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset> */ "text-right inset-medium font-medium")}>Previsto</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset> */ "text-right inset-medium font-medium")}>Realizado</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset> */ "text-right inset-medium font-medium")}>Desvio</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset> */ "text-center inset-medium font-medium")}>Status</th>
           </tr>
         </thead>
         <tbody>
@@ -240,7 +240,7 @@ function AnaliseItensTable({ itens }: { itens: AnaliseOrcamentariaItem[] }) {
             const centroCustoLabel = getCentroCustoLabel(item.centroCusto);
             return (
               <tr key={item.id} className="border-b hover:bg-muted/50">
-                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3")}>
+                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "inset-medium")}>
                   <div className="flex flex-col">
                     <span className={cn( "font-medium")}>
                       {getContaLabel(item.contaContabil)}
@@ -252,16 +252,16 @@ function AnaliseItensTable({ itens }: { itens: AnaliseOrcamentariaItem[] }) {
                     )}
                   </div>
                 </td>
-                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3 text-right font-mono")}>
+                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "inset-medium text-right font-mono")}>
                   {formatarValor(item.valorPrevisto)}
                 </td>
-                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3 text-right font-mono")}>
+                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "inset-medium text-right font-mono")}>
                   {formatarValor(item.valorRealizado)}
                 </td>
                 <td className={`p-3 text-right font-mono ${getVariacaoColor(item.desvioPercentual)}`}>
                   {formatarPercentual(item.desvioPercentual)}
                 </td>
-                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3 text-center")}>
+                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "inset-medium text-center")}>
                   <Badge variant={statusBadge.variant}>
                     {statusBadge.label}
                   </Badge>
@@ -403,12 +403,12 @@ function ProjecaoTable({ itens }: { itens: ProjecaoItem[] }) {
       <table className="w-full">
         <thead>
           <tr className="border-b">
-            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; */ "text-left p-3 font-medium")}>Mês</th>
-            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; */ "text-right p-3 font-medium")}>Previsto</th>
-            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; */ "text-right p-3 font-medium")}>Realizado</th>
-            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; */ "text-right p-3 font-medium")}>Projetado</th>
-            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; */ "text-right p-3 font-medium")}>vs Previsto</th>
-            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; */ "text-center p-3 font-medium")}>Tendência</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset> */ "text-left inset-medium font-medium")}>Mês</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset> */ "text-right inset-medium font-medium")}>Previsto</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset> */ "text-right inset-medium font-medium")}>Realizado</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset> */ "text-right inset-medium font-medium")}>Projetado</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset> */ "text-right inset-medium font-medium")}>vs Previsto</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset> */ "text-center inset-medium font-medium")}>Tendência</th>
           </tr>
         </thead>
         <tbody>
@@ -417,20 +417,20 @@ function ProjecaoTable({ itens }: { itens: ProjecaoItem[] }) {
             const tendencia = getTendencia(item.valorPrevisto, item.valorProjetado);
             return (
               <tr key={index} className="border-b hover:bg-muted/50">
-                <td className={cn(/* design-system-escape: p-3 → usar <Inset>; */ "p-3 font-medium")}>{item.mes}</td>
-                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3 text-right font-mono")}>
+                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "inset-medium font-medium")}>{item.mes}</td>
+                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "inset-medium text-right font-mono")}>
                   {formatarValor(item.valorPrevisto)}
                 </td>
-                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3 text-right font-mono")}>
+                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "inset-medium text-right font-mono")}>
                   {formatarValor(item.valorRealizado)}
                 </td>
-                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3 text-right font-mono")}>
+                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "inset-medium text-right font-mono")}>
                   {formatarValor(item.valorProjetado)}
                 </td>
                 <td className={`p-3 text-right font-mono ${getVariacaoColor(variacao)}`}>
                   {formatarPercentual(variacao)}
                 </td>
-                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3")}>
+                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "inset-medium")}>
                   <div className={cn("flex items-center justify-center inline-micro")}>
                     {getTendenciaIcon(tendencia)}
                     <span className={cn("text-body-sm")}>{getTendenciaLabel(tendencia)}</span>

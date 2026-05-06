@@ -108,7 +108,7 @@ export function ProximaAudienciaPopover({
               <Button
                 variant="ghost"
                 size="icon" aria-label="Ver próxima audiência"
-                className={cn(/* design-system-escape: p-0 → usar <Inset> */ 'h-5 w-5 p-0', getUrgenciaColor(), className)}
+                className={cn(/* design-system-escape: p-0 → usar <Inset> */ 'h-5 w-5 inset-none', getUrgenciaColor(), className)}
                 onClick={(e) => e.stopPropagation()}
               >
                 <Calendar className="h-3.5 w-3.5" />
@@ -122,7 +122,7 @@ export function ProximaAudienciaPopover({
         </Tooltip>
       </TooltipProvider>
       <PopoverContent
-        className={cn(/* design-system-escape: p-3 → usar <Inset> */ "w-64 p-3")}
+        className={cn(/* design-system-escape: p-3 → usar <Inset> */ "w-64 inset-medium")}
         align="start"
         onClick={(e) => e.stopPropagation()}
       >

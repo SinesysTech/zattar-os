@@ -219,7 +219,7 @@ export default function ContaPagarDetalhesPage() {
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
         </Button>
-        <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "rounded-md bg-muted p-8 text-center")}>
+        <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "rounded-md bg-muted inset-extra-loose text-center")}>
           <p className={cn( "text-body-lg font-medium")}>Conta não encontrada</p>
           <p className={cn("text-body-sm text-muted-foreground")}>
             A conta solicitada não existe ou foi removida.
@@ -447,7 +447,7 @@ export default function ContaPagarDetalhesPage() {
                       href={anexo.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center inline-medium rounded-lg border p-3 transition-colors hover:bg-muted/50")}
+                      className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center inline-medium rounded-lg border inset-medium transition-colors hover:bg-muted/50")}
                     >
                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-muted">
                         <FileIcon className="h-5 w-5 text-muted-foreground" />

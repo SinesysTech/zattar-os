@@ -66,7 +66,7 @@ export function ProfileSidebar({
   return (
     <GlassPanel
       depth={1}
-      className={cn(/* design-system-escape: p-0 → usar <Inset> */ "overflow-hidden sticky top-6 self-start p-0")}
+      className={cn(/* design-system-escape: p-0 → usar <Inset> */ "overflow-hidden sticky top-6 self-start inset-none")}
     >
       {/* 1. Cover area */}
       <div className="relative">

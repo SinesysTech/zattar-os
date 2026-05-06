@@ -218,7 +218,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
                 Payload JSON da execução — dados técnicos para auditoria
               </h4>
             </div>
-            <DetailSectionCard className={cn(/* design-system-escape: p-0 → usar <Inset> */ "p-0 overflow-hidden")}>
+            <DetailSectionCard className={cn(/* design-system-escape: p-0 → usar <Inset> */ "inset-none overflow-hidden")}>
               {captura.resultado ? (
                 <pre className={cn("inset-card-compact overflow-auto max-h-125 text-caption font-mono leading-relaxed")}>
                   {JSON.stringify(captura.resultado, null, 2)}

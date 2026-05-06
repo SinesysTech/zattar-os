@@ -34,7 +34,7 @@ export function SplitFinanceiro({ acordo }: SplitFinanceiroProps) {
   const pctSucumbencia = valorTotal > 0 ? (sucumbencia / valorTotal) * 100 : 0;
 
   return (
-    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
+    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "inset-default-plus")}>
       <div className={cn("flex items-start justify-between inline-medium mb-4")}>
         <div>
           <Text variant="meta-label" className="text-muted-foreground/60">

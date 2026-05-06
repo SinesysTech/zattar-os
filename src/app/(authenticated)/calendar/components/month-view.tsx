@@ -200,7 +200,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                           </PopoverTrigger>
                           <PopoverContent
                             align="center"
-                            className={cn(/* design-system-escape: p-3 → usar <Inset> */ "max-w-52 p-3")}
+                            className={cn(/* design-system-escape: p-3 → usar <Inset> */ "max-w-52 inset-medium")}
                             style={
                               {
                                 "--event-height": `${EventHeight}px`

@@ -91,7 +91,7 @@ function AlertaCard({
     >
       <CardContent className={cn("inset-card-compact")}>
         <div className={cn("flex items-center inline-medium")}>
-          <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ 'rounded-full p-2', styles.bg)}>
+          <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ 'rounded-full inset-tight', styles.bg)}>
             <Icon className={cn('h-5 w-5', styles.icon)} />
           </div>
           <div className="flex-1 min-w-0">

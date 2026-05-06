@@ -116,7 +116,7 @@ export function TimelineSearchModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "flex max-w-120 p-0 inline-none overflow-hidden")}>
+      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "flex max-w-120 inset-none inline-none overflow-hidden")}>
         {/* Campo de busca */}
         <div
           className={cn("flex items-center px-4 border-b h-16")}
@@ -138,7 +138,7 @@ export function TimelineSearchModal({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Buscar na linha do tempo..."
-            className={cn(/* design-system-escape: p-0 → usar <Inset> */ "flex-1 bg-transparent border-none text-body-lg placeholder:text-muted-foreground p-0 outline-none focus:ring-0")}
+            className={cn(/* design-system-escape: p-0 → usar <Inset> */ "flex-1 bg-transparent border-none text-body-lg placeholder:text-muted-foreground inset-none outline-none focus:ring-0")}
           />
           <kbd className={cn("hidden sm:flex items-center ml-3 px-1.5 py-0.5 rounded border bg-muted text-caption text-muted-foreground font-mono tracking-tight")}>
             ESC
@@ -154,7 +154,7 @@ export function TimelineSearchModal({
         {/* Lista de resultados */}
         <div
           ref={resultsRef}
-          className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col max-h-[70vh] overflow-y-auto p-2 stack-micro")}
+          className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col max-h-[70vh] overflow-y-auto inset-tight stack-micro")}
           role="listbox"
           aria-label="Resultados da busca"
         >

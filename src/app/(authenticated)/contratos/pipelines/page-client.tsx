@@ -447,7 +447,7 @@ function EstagioDialog({ open, onOpenChange, pipelineId, estagio, onSuccess }: E
                       <div className={cn("flex items-center inline-medium")}>
                         <input
                           type="color"
-                          className={cn(/* design-system-escape: p-1 → usar <Inset> */ "h-9 w-12 cursor-pointer rounded-md border border-input p-1")}
+                          className={cn(/* design-system-escape: p-1 → usar <Inset> */ "h-9 w-12 cursor-pointer rounded-md border border-input inset-micro")}
                           value={field.value}
                           onChange={(e) => field.onChange(e.target.value)}
                         />
@@ -674,7 +674,7 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
                     onDragStart={(e) => handleDragStart(e, index)}
                     onDragOver={(e) => handleDragOver(e, index)}
                     onDragEnd={handleDragEnd}
-                    className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center inline-medium rounded-md border bg-card p-3 cursor-grab active:cursor-grabbing select-none")}
+                    className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center inline-medium rounded-md border bg-card inset-medium cursor-grab active:cursor-grabbing select-none")}
                   >
                     <GripVertical className="h-4 w-4 shrink-0 text-muted-foreground" />
 
@@ -895,9 +895,9 @@ export function PipelinesPageClient() {
             ))}
           </div>
         ) : error ? (
-          <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "p-8 text-center text-body-sm text-destructive")}>{error}</div>
+          <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "inset-extra-loose text-center text-body-sm text-destructive")}>{error}</div>
         ) : pipelines.length === 0 ? (
-          <div className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12 text-center text-body-sm text-muted-foreground")}>
+          <div className={cn(/* design-system-escape: p-12 → usar <Inset> */ "inset-mega text-center text-body-sm text-muted-foreground")}>
             Nenhum pipeline cadastrado.
           </div>
         ) : (

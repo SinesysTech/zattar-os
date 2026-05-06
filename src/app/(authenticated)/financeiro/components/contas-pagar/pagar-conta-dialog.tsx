@@ -361,7 +361,7 @@ export function PagarContaDialog({
                       : 'Selecione a data'}
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto p-0")} align="start">
+                <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto inset-none")} align="start">
                   <Calendar
                     mode="single"
                     selected={dataEfetivacao}
@@ -391,7 +391,7 @@ export function PagarContaDialog({
               <Label htmlFor="comprovante">Comprovante de Pagamento</Label>
 
               {comprovanteFile ? (
-                <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between rounded-md border bg-muted/50 p-3")}>
+                <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between rounded-md border bg-muted/50 inset-medium")}>
                   <div className={cn("flex items-center inline-tight overflow-hidden")}>
                     <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
                     <div className="overflow-hidden">

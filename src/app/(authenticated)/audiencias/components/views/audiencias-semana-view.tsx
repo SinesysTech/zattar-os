@@ -187,7 +187,7 @@ export function AudienciasSemanaView({
     <div className={cn("flex flex-col stack-default")}>
       {/* Week Navigator */}
       <div className={cn("flex items-center inline-tight")}>
-        <button onClick={handlePrevWeek} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/70 cursor-pointer")}>
+        <button onClick={handlePrevWeek} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "inset-snug rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/70 cursor-pointer")}>
           <ChevronLeft className="size-4" />
         </button>
         <button
@@ -199,7 +199,7 @@ export function AudienciasSemanaView({
         >
           Hoje
         </button>
-        <button onClick={handleNextWeek} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/70 cursor-pointer")}>
+        <button onClick={handleNextWeek} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "inset-snug rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/70 cursor-pointer")}>
           <ChevronRight className="size-4" />
         </button>
         <span className={cn( "text-caption font-medium capitalize ml-1")}>{weekLabel}</span>

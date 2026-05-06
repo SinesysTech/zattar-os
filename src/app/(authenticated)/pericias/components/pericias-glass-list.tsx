@@ -328,7 +328,7 @@ export function PericiasGlassList({
     return (
       <GlassPanel
         depth={1}
-        className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12 flex flex-col items-center justify-center text-center")}
+        className={cn(/* design-system-escape: p-12 → usar <Inset> */ "inset-mega flex flex-col items-center justify-center text-center")}
       >
         <Sparkles className="size-10 text-primary/30 mb-3" />
         <p className={cn("text-body-sm text-muted-foreground")}>{emptyMessage}</p>

@@ -42,7 +42,7 @@ const SignerCard = memo(function SignerCard({
   return (
     <div
       className={cn(
-        /* design-system-escape: p-3 → usar <Inset> */ 'group relative flex items-center inline-medium p-3 rounded-xl cursor-pointer transition-all duration-200',
+        /* design-system-escape: p-3 → usar <Inset> */ 'group relative flex items-center inline-medium inset-medium rounded-xl cursor-pointer transition-all duration-200',
         'border backdrop-blur-md',
         isActive
           ? 'glass-kpi border-primary/40 bg-primary/5 shadow-sm'

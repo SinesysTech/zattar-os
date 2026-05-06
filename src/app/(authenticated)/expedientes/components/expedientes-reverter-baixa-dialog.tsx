@@ -198,7 +198,7 @@ export function ExpedientesReverterBaixaDialog({
 
         {/* Mensagem de erro */}
         {generalError && (
-          <div role="alert" className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg border border-destructive bg-destructive/10 p-3 text-body-sm text-destructive")}>
+          <div role="alert" className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg border border-destructive bg-destructive/10 inset-medium text-body-sm text-destructive")}>
             {generalError}
           </div>
         )}

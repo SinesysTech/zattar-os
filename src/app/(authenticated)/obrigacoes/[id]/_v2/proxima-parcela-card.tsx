@@ -29,7 +29,7 @@ export function ProximaParcelaCard({
 }: ProximaParcelaCardProps) {
   if (!parcela) {
     return (
-      <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5 flex items-center justify-center min-h-[180px]")}>
+      <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "inset-default-plus flex items-center justify-center min-h-[180px]")}>
         <div className={cn("flex flex-col text-center stack-tight")}>
           <IconContainer size="md" className="bg-success/8 mx-auto">
             <CheckCircle2 className="size-4 text-success/70" />
@@ -66,7 +66,7 @@ export function ProximaParcelaCard({
     <GlassPanel
       depth={2}
       className={cn(
-        /* design-system-escape: p-5 → usar <Inset> */ 'p-5 relative overflow-hidden',
+        /* design-system-escape: p-5 → usar <Inset> */ 'inset-default-plus relative overflow-hidden',
         atrasada && 'border-destructive/20',
       )}
     >

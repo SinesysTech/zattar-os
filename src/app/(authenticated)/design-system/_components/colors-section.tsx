@@ -35,7 +35,7 @@ function PalettePrimary() {
           {swatches.map((s) => (
             <div
               key={s.label}
-              className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex aspect-[1.2/1] flex-col justify-between rounded-xl border p-2.5")}
+              className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex aspect-[1.2/1] flex-col justify-between rounded-xl border inset-tight-plus")}
               style={{
                 background: s.bg,
                 color: s.dark ? "oklch(0.15 0.01 281)" : "white",
@@ -92,7 +92,7 @@ function PaletteNeutrals() {
         {tiles.map((t) => (
           <div
             key={t.l}
-            className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex aspect-square items-end rounded-xl border p-2 font-mono text-[10px]")}
+            className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex aspect-square items-end rounded-xl border inset-tight font-mono text-[10px]")}
             style={{
               background: t.bg,
               color: t.dark ? "var(--foreground)" : "white",

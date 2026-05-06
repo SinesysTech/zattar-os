@@ -140,7 +140,7 @@ function NovoPopover({
       <PopoverContent
         align="end"
         sideOffset={8}
-        className={cn(/* design-system-escape: p-2 → usar <Inset> */ "rounded-2xl glass-dropdown overflow-hidden p-2 w-56")}
+        className={cn(/* design-system-escape: p-2 → usar <Inset> */ "rounded-2xl glass-dropdown overflow-hidden inset-tight w-56")}
       >
         <div className={cn("flex flex-col stack-nano")}>
           <button

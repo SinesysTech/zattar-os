@@ -46,7 +46,7 @@ export function DiarioOficialPageNav({
       <nav
         aria-label="Navegação do Diário Oficial"
         className={cn(
-          /* design-system-escape: p-1 → usar <Inset> */ 'inline-flex items-center inline-micro rounded-2xl border border-border/40 bg-card/60 p-1',
+          /* design-system-escape: p-1 → usar <Inset> */ 'inline-flex items-center inline-micro rounded-2xl border border-border/40 bg-card/60 inset-micro',
           'backdrop-blur-xl',
         )}
       >

@@ -210,7 +210,7 @@ export function DocumentViewer({
           </div>
         ) : error ? (
           // Estado de erro com retry
-          <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full inline-medium p-8 text-center")}>
+          <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full inline-medium inset-extra-loose text-center")}>
             <FileText className="h-12 w-12 text-destructive" aria-hidden="true" />
             <Text variant="caption" className="text-destructive">{error}</Text>
             <button
@@ -240,7 +240,7 @@ export function DocumentViewer({
           </div>
         ) : !item ? (
           // Estado vazio — nenhum item selecionado
-          <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full inline-medium p-8 text-center")}>
+          <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full inline-medium inset-extra-loose text-center")}>
             <FileText
               className="h-12 w-12 text-muted-foreground/55"
               aria-hidden="true"
@@ -270,7 +270,7 @@ export function DocumentViewer({
           </div>
         ) : (
           // Item selecionado mas sem presigned URL (ex: sem backblaze)
-          <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full inline-medium p-8 text-center")}>
+          <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full inline-medium inset-extra-loose text-center")}>
             <FileText
               className="h-12 w-12 text-muted-foreground/55"
               aria-hidden="true"

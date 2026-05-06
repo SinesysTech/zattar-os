@@ -259,7 +259,7 @@ export function AudienciasDiaDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "sm:max-w-xl max-h-[85vh] flex flex-col p-0 inline-none overflow-hidden")}>
+      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "sm:max-w-xl max-h-[85vh] flex flex-col inset-none inline-none overflow-hidden")}>
         <DialogDescription className="sr-only">Audiências do dia</DialogDescription>
         <DialogHeader className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; pt-5 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv. */ "shrink-0 gap-0 px-6 pt-5 pb-4 border-b border-border/40")}>
           <div className={cn("flex items-center justify-between inline-medium")}>

@@ -629,7 +629,7 @@ export function FormSchemaBuilder({
           // Preview mode
           <div className="h-full overflow-y-auto">
             <div className="max-w-3xl mx-auto">
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "mb-4 p-3 bg-muted/50 border rounded-lg")}>
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "mb-4 inset-medium bg-muted/50 border rounded-lg")}>
                 <div className={cn("flex items-center inline-tight text-body-sm text-foreground")}>
                   <Eye className="size-4 text-muted-foreground" />
                   <span className={cn( "font-medium")}>Preview do Formulário</span>

@@ -105,7 +105,7 @@ function SearchableCombobox({
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-[--radix-popover-trigger-width] p-0 rounded-2xl glass-dropdown overflow-hidden")}
+        className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-[--radix-popover-trigger-width] inset-none rounded-2xl glass-dropdown overflow-hidden")}
         align="start"
       >
         <Command className="bg-transparent">

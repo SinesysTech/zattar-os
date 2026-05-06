@@ -291,7 +291,7 @@ export function MailEditor({
       >
         <Toolbar
           className={cn(
-            /* design-system-escape: p-1 → usar <Inset> */ "scrollbar-hide flex-wrap justify-start p-1",
+            /* design-system-escape: p-1 → usar <Inset> */ "scrollbar-hide flex-wrap justify-start inset-micro",
             variant !== 'compose' && "border-b border-border bg-muted/30",
             variant === 'compose' && "shrink-0 border-b border-border"
           )}

@@ -32,7 +32,7 @@ export function TimelineLoading({
             <Skeleton className="h-5 w-28" />
             <div className={cn("flex flex-col stack-tight")}>
               {[...Array(5)].map((_, index) => (
-                <div key={index} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col rounded-xl border bg-background p-3 stack-tight")}>
+                <div key={index} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col rounded-xl border bg-background inset-medium stack-tight")}>
                   <Skeleton className="h-4 w-24" />
                   <Skeleton className="h-3 w-full" />
                 </div>
@@ -40,12 +40,12 @@ export function TimelineLoading({
             </div>
           </div>
 
-          <div className={cn(/* design-system-escape: p-5 → usar <Inset> */ "flex flex-col rounded-2xl border bg-muted/10 p-5 stack-default-plus")}>
+          <div className={cn(/* design-system-escape: p-5 → usar <Inset> */ "flex flex-col rounded-2xl border bg-muted/10 inset-default-plus stack-default-plus")}>
             <div className={cn("flex flex-col stack-tight")}>
               <Skeleton className="h-6 w-1/3" />
               <Skeleton className="h-4 w-2/3" />
             </div>
-            <div className={cn(/* design-system-escape: p-5 → usar <Inset> */ "flex flex-col rounded-2xl border bg-background p-5 stack-default min-h-120")}>
+            <div className={cn(/* design-system-escape: p-5 → usar <Inset> */ "flex flex-col rounded-2xl border bg-background inset-default-plus stack-default min-h-120")}>
               <Skeleton className="h-5 w-40" />
               <Skeleton className="h-4 w-full" />
               <Skeleton className="h-4 w-5/6" />

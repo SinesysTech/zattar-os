@@ -56,7 +56,7 @@ export function CallTranscriptViewer({ chamada }: CallTranscriptViewerProps) {
 
   if (!chamada.transcricao) {
     return (
-      <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center p-8 text-muted-foreground border border-dashed rounded-lg")}>
+      <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center inset-extra-loose text-muted-foreground border border-dashed rounded-lg")}>
         <FileText className="w-8 h-8 mb-2 opacity-50" />
         <p className={cn("text-body-sm")}>Nenhuma transcrição disponível para esta chamada.</p>
       </div>
@@ -80,7 +80,7 @@ export function CallTranscriptViewer({ chamada }: CallTranscriptViewerProps) {
         </div>
 
         <div className="flex-1 overflow-hidden relative">
-          <TabsContent value="resumo" className={cn(/* design-system-escape: m-0 margin sem primitiva DS; p-0 → usar <Inset> */ "h-full m-0 p-0")}>
+          <TabsContent value="resumo" className={cn(/* design-system-escape: m-0 margin sem primitiva DS; p-0 → usar <Inset> */ "h-full m-0 inset-none")}>
             <div className="h-full flex flex-col">
               <ScrollArea className={cn("flex-1 inset-dialog")}>
                 {resumo ? (
@@ -109,9 +109,9 @@ export function CallTranscriptViewer({ chamada }: CallTranscriptViewerProps) {
             </div>
           </TabsContent>
 
-          <TabsContent value="transcricao" className={cn(/* design-system-escape: m-0 margin sem primitiva DS; p-0 → usar <Inset> */ "h-full m-0 p-0")}>
+          <TabsContent value="transcricao" className={cn(/* design-system-escape: m-0 margin sem primitiva DS; p-0 → usar <Inset> */ "h-full m-0 inset-none")}>
              <div className="h-full flex flex-col">
-              <div className={cn(/* design-system-escape: p-2 → usar <Inset>; px-4 padding direcional sem Inset equiv. */ "flex items-center justify-between p-2 border-b text-caption text-muted-foreground bg-muted/20 px-4")}>
+              <div className={cn(/* design-system-escape: p-2 → usar <Inset>; px-4 padding direcional sem Inset equiv. */ "flex items-center justify-between inset-tight border-b text-caption text-muted-foreground bg-muted/20 px-4")}>
                  <span>{chamada.transcricao.length} caracteres</span>
                  <div className={cn("flex inline-micro")}>
                     <Button variant="ghost" size="icon" className="h-6 w-6" onClick={handleCopyTranscript} title="Copiar">

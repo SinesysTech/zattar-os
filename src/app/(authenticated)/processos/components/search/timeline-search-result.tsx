@@ -151,7 +151,7 @@ export function TimelineSearchResult({
       aria-selected={isSelected}
       onClick={onClick}
       className={cn(
-        /* design-system-escape: p-2 → usar <Inset> */ 'w-full flex items-center justify-between p-2 rounded cursor-pointer group text-left transition-colors',
+        /* design-system-escape: p-2 → usar <Inset> */ 'w-full flex items-center justify-between inset-tight rounded cursor-pointer group text-left transition-colors',
         isSelected ? 'bg-accent' : 'hover:bg-accent/50'
       )}
     >

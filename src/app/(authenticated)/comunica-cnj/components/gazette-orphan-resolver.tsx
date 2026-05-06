@@ -152,7 +152,7 @@ function NoMatchState({
   onIgnorar: () => void;
 }) {
   return (
-    <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-1 flex-col items-center justify-center inline-default p-8 text-center")}>
+    <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-1 flex-col items-center justify-center inline-default inset-extra-loose text-center")}>
       <div className="flex size-14 items-center justify-center rounded-full bg-muted/40">
         <AlertCircle className="size-6 text-muted-foreground" />
       </div>
@@ -193,7 +193,7 @@ function NoMatchState({
 
 function AllResolvedState() {
   return (
-    <div className={cn(/* design-system-escape: p-12 → usar <Inset> */ "flex flex-1 flex-col items-center justify-center inline-default p-12 text-center")}>
+    <div className={cn(/* design-system-escape: p-12 → usar <Inset> */ "flex flex-1 flex-col items-center justify-center inline-default inset-mega text-center")}>
       <div className="flex size-16 items-center justify-center rounded-full bg-success/10">
         <CheckCircle2 className="size-8 text-success" />
       </div>
@@ -551,7 +551,7 @@ export function GazetteOrphanResolver() {
               <Text variant="overline" className="text-muted-foreground/70">
                 Trecho
               </Text>
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg border border-border/40 bg-muted/20 p-3")}>
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg border border-border/40 bg-muted/20 inset-medium")}>
                 <Text variant="caption" className="line-clamp-6 text-foreground/80">
                   {highlightSegments(current.texto.slice(0, 600), matchHighlights)}
                 </Text>

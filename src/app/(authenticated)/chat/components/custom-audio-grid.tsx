@@ -43,7 +43,7 @@ export function CustomAudioGrid({ className }: CustomAudioGridProps) {
   }
 
   return (
-    <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-wrap items-center justify-center inline-extra-loose p-8 h-full relative", className)}>
+    <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-wrap items-center justify-center inline-extra-loose inset-extra-loose h-full relative", className)}>
       {/* Tiles ocultos para reprodução de áudio dos participantes remotos */}
       <div className="sr-only" aria-hidden="true">
         {participants.map((p) => (

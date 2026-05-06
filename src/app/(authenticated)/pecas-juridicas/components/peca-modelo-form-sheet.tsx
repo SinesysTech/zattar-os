@@ -249,7 +249,7 @@ export function PecaModeloFormSheet({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ " max-w-2xl max-h-[90vh] p-0 flex flex-col")}>
+      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ " max-w-2xl max-h-[90vh] inset-none flex flex-col")}>
         <DialogHeader className={cn("px-6 pt-6 pb-4 border-b border-border/30 shrink-0")}>
           <DialogTitle className={cn("flex items-center inline-tight")}>
             <FileText className="h-5 w-5" />

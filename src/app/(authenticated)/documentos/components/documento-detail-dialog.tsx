@@ -188,7 +188,7 @@ export function DocumentoDetailDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ " max-w-md max-h-[90vh] overflow-hidden flex flex-col inline-none p-0")}>
+      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ " max-w-md max-h-[90vh] overflow-hidden flex flex-col inline-none inset-none")}>
         <DialogHeader className="sr-only">
           <DialogTitle>{nome}</DialogTitle>
           <DialogDescription>

@@ -288,7 +288,7 @@ function HeroBlock({
       <GlassPanel
         depth={2}
         className={cn(
-          /* design-system-escape: p-8 → usar <Inset>; md:p-10 sem equivalente DS; lg:p-12 sem equivalente DS */ 'relative overflow-hidden p-8 md:p-10 lg:p-12 rounded-4xl',
+          /* design-system-escape: p-8 → usar <Inset>; md:p-10 sem equivalente DS; lg:p-12 sem equivalente DS */ 'relative overflow-hidden inset-extra-loose md:p-10 lg:p-12 rounded-4xl',
           'ring-1 ring-inset',
           style.ring,
         )}
@@ -687,7 +687,7 @@ function DadosTab({
 function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
   if (arquivos.length === 0) {
     return (
-      <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12 text-center rounded-2xl")}>
+      <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "inset-mega text-center rounded-2xl")}>
         <Text variant="caption" className="text-muted-foreground/60">
           Nenhum arquivo vinculado a este expediente.
         </Text>
@@ -1027,7 +1027,7 @@ function ResponsavelCard({
       .toUpperCase() ?? '??';
 
   return (
-    <GlassPanel depth={3} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5 rounded-2xl")}>
+    <GlassPanel depth={3} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "inset-default-plus rounded-2xl")}>
       <div className="flex items-center justify-between mb-4">
         <Text
           variant="overline"
@@ -1235,7 +1235,7 @@ function InlineTipoEditor({
           <Tag className="size-3 text-muted-foreground/65 group-hover:text-primary transition-colors" />
         </button>
       </PopoverTrigger>
-      <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-72 p-0 rounded-2xl glass-dropdown overflow-hidden")} align="start">
+      <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-72 inset-none rounded-2xl glass-dropdown overflow-hidden")} align="start">
         <Command className="bg-transparent">
           <div className={cn("px-3 pt-3 pb-1.5")}>
             <Text

@@ -422,7 +422,7 @@ function DetalhesAcordoCard({ acordo }: { acordo: AcordoComParcelas }) {
   });
 
   return (
-    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
+    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "inset-default-plus")}>
       <Text variant="meta-label" className="text-muted-foreground/60 mb-4">
         Detalhes do acordo
       </Text>
@@ -450,7 +450,7 @@ function DetalhesAcordoCard({ acordo }: { acordo: AcordoComParcelas }) {
 
 function ObservacoesCard({ observacoes }: { observacoes: string }) {
   return (
-    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
+    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "inset-default-plus")}>
       <div className={cn("flex items-center inline-tight mb-3")}>
         <FileText className="size-3.5 text-muted-foreground/60" />
         <Text variant="meta-label" className="text-muted-foreground/60">
@@ -586,7 +586,7 @@ function TimelineTab({ acordo }: { acordo: AcordoComParcelas }) {
   }
 
   return (
-    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
+    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "inset-default-plus")}>
       <ol className={cn("flex flex-col relative border-l border-border/20 ml-2 stack-default-plus")}>
         {events.map((event, idx) => {
           const Icon = event.icon;

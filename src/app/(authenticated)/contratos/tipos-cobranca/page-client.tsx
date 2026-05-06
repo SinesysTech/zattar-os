@@ -337,9 +337,9 @@ export function TiposCobrancaPageClient() {
             ))}
           </div>
         ) : error ? (
-          <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "p-8 text-center text-body-sm text-destructive")}>{error}</div>
+          <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "inset-extra-loose text-center text-body-sm text-destructive")}>{error}</div>
         ) : tipos.length === 0 ? (
-          <div className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12 text-center text-body-sm text-muted-foreground")}>
+          <div className={cn(/* design-system-escape: p-12 → usar <Inset> */ "inset-mega text-center text-body-sm text-muted-foreground")}>
             Nenhum tipo de cobrança cadastrado.
           </div>
         ) : (

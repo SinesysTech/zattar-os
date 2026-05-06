@@ -235,7 +235,7 @@ function ExpedientesDayDialog({
             {expedientes.map((exp) => (
               <div
                 key={exp.id}
-                className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col rounded-xl border border-border/40 bg-muted/30 p-3 stack-snug")}
+                className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col rounded-xl border border-border/40 bg-muted/30 inset-medium stack-snug")}
               >
                 <div className={cn("flex items-center inline-tight")}>
                   <IconContainer size="sm" className="bg-primary/15">
@@ -434,7 +434,7 @@ export function ExpedientesYearHeatmap({
           {/* Stats Sidebar */}
           <GlassPanel
             depth={2}
-            className={cn(/* design-system-escape: p-5 → usar <Inset> */ "flex flex-col w-full xl:w-64 shrink-0 p-5 stack-medium")}
+            className={cn(/* design-system-escape: p-5 → usar <Inset> */ "flex flex-col w-full xl:w-64 shrink-0 inset-default-plus stack-medium")}
           >
             {/* Total no Ano */}
             <StatCard

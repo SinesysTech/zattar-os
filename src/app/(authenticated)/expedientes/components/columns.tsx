@@ -211,7 +211,7 @@ export function TipoDescricaoCell({
                 )}
               </button>
             </PopoverTrigger>
-            <PopoverContent className={cn(/* design-system-escape: p-2 → usar <Inset> */ "w-64 p-2")} align="start" onInteractOutside={(e) => e.preventDefault()}>
+            <PopoverContent className={cn(/* design-system-escape: p-2 → usar <Inset> */ "w-64 inset-tight")} align="start" onInteractOutside={(e) => e.preventDefault()}>
               <div className={cn("flex flex-col stack-tight")}>
                 <Text variant="caption" className="font-medium">Tipo de Expediente</Text>
                 <Select
@@ -242,7 +242,7 @@ export function TipoDescricaoCell({
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); setIsPdfViewerOpen(true); }}
-              className={cn(/* design-system-escape: p-1 → usar <Inset> */ "p-1 hover:bg-accent rounded-md transition-colors")}
+              className={cn(/* design-system-escape: p-1 → usar <Inset> */ "inset-micro hover:bg-accent rounded-md transition-colors")}
               title="Visualizar documento"
             >
               <FileText className="h-3.5 w-3.5 text-primary" />

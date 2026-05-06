@@ -89,7 +89,7 @@ export function CreateDocumentDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className={cn(/* design-system-escape: p-0 gap-0 → usar <Inset> */ "sm:max-w-lg  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col")}
+        className={cn(/* design-system-escape: p-0 gap-0 → usar <Inset> */ "sm:max-w-lg  overflow-hidden inset-none gap-0 max-h-[90vh] flex flex-col")}
       >
         <DialogHeader className={cn("px-6 py-4 border-b border-border/20 shrink-0")}>
           <DialogTitle>Criar novo documento</DialogTitle>

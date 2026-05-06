@@ -87,7 +87,7 @@ export function DocsSidebar() {
 
   return (
     <aside className="hidden md:flex w-64 shrink-0 flex-col border-r">
-      <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3 border-b")}>
+      <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "inset-medium border-b")}>
         <div className="relative">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
@@ -108,7 +108,7 @@ export function DocsSidebar() {
           )}
         </div>
       </div>
-      <ScrollArea className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex-1 p-3")}>
+      <ScrollArea className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex-1 inset-medium")}>
         <nav className={cn("flex flex-col stack-micro")}>
           {filteredEntries.map((entry) => (
             <SidebarItem key={entry.slug} entry={entry} />

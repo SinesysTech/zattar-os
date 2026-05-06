@@ -212,7 +212,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
                         </Button>
                       </PopoverTrigger>
                     </FormControl>
-                    <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto p-0")}>
+                    <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto inset-none")}>
                       <Calendar
                         mode="single"
                         selected={field.value}
@@ -271,7 +271,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
                         </Button>
                       </PopoverTrigger>
                     </FormControl>
-                    <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto p-0")}>
+                    <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto inset-none")}>
                       <Calendar
                         mode="single"
                         selected={field.value}

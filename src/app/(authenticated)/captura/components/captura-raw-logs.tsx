@@ -100,28 +100,28 @@ function LogStats({ logs }: { logs: LogEntry[] }) {
 
   return (
     <div className={cn("grid grid-cols-2 inline-tight sm:grid-cols-4")}>
-      <div className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex items-center inline-tight-plus rounded-lg border bg-success/5 border-success/20 p-2.5")}>
+      <div className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex items-center inline-tight-plus rounded-lg border bg-success/5 border-success/20 inset-tight-plus")}>
         <FilePlus className="h-4 w-4 text-success shrink-0" />
         <div>
           <p className={cn("text-overline text-muted-foreground")}>Inseridos</p>
           <p className={cn( "text-body-sm font-semibold tabular-nums")}>{stats.inseridos}</p>
         </div>
       </div>
-      <div className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex items-center inline-tight-plus rounded-lg border bg-info/5 border-info/20 p-2.5")}>
+      <div className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex items-center inline-tight-plus rounded-lg border bg-info/5 border-info/20 inset-tight-plus")}>
         <ArrowRight className="h-4 w-4 text-info shrink-0" />
         <div>
           <p className={cn("text-overline text-muted-foreground")}>Atualizados</p>
           <p className={cn( "text-body-sm font-semibold tabular-nums")}>{stats.atualizados}</p>
         </div>
       </div>
-      <div className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex items-center inline-tight-plus rounded-lg border bg-muted/40 p-2.5")}>
+      <div className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex items-center inline-tight-plus rounded-lg border bg-muted/40 inset-tight-plus")}>
         <FileX className="h-4 w-4 text-muted-foreground shrink-0" />
         <div>
           <p className={cn("text-overline text-muted-foreground")}>Sem Alteração</p>
           <p className={cn( "text-body-sm font-semibold tabular-nums")}>{stats.naoAtualizados}</p>
         </div>
       </div>
-      <div className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex items-center inline-tight-plus rounded-lg border bg-destructive/5 border-destructive/20 p-2.5")}>
+      <div className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex items-center inline-tight-plus rounded-lg border bg-destructive/5 border-destructive/20 inset-tight-plus")}>
         <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
         <div>
           <p className={cn("text-overline text-muted-foreground")}>Erros</p>
@@ -129,7 +129,7 @@ function LogStats({ logs }: { logs: LogEntry[] }) {
         </div>
       </div>
       {stats.conflitos > 0 && (
-        <div className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex items-center inline-tight-plus rounded-lg border bg-warning/5 border-warning/20 p-2.5 col-span-2 sm:col-span-4")}>
+        <div className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex items-center inline-tight-plus rounded-lg border bg-warning/5 border-warning/20 inset-tight-plus col-span-2 sm:col-span-4")}>
           <GitMerge className="h-4 w-4 text-warning shrink-0" />
           <div>
             <p className={cn("text-overline text-muted-foreground")}>Conflitos de Concorrência</p>
@@ -159,7 +159,7 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
             {erros.map((log, i) => (
               <div
                 key={i}
-                className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex items-start inline-tight rounded-lg border border-destructive/30 bg-destructive/6 p-2.5")}
+                className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex items-start inline-tight rounded-lg border border-destructive/30 bg-destructive/6 inset-tight-plus")}
               >
                 <XCircle className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />
                 <Text variant="caption" className="min-w-0">
@@ -241,7 +241,7 @@ interface CapturaRawLogsProps {
 export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
   if (rawLogs.length === 0) {
     return (
-      <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center inline-tight rounded-lg border border-dashed p-8 text-center")}>
+      <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center inline-tight rounded-lg border border-dashed inset-extra-loose text-center")}>
         <ScrollText className="h-8 w-8 text-muted-foreground/65" />
         <p className={cn("text-body-sm text-muted-foreground")}>Nenhum log detalhado disponível para esta captura.</p>
       </div>
@@ -330,7 +330,7 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
                 <div className={cn("flex flex-col stack-medium pb-3")}>
                   {/* Erro principal do raw log */}
                   {rawLog.erro && (
-                    <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-start inline-tight rounded-lg border border-destructive/30 bg-destructive/6 p-3")}>
+                    <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-start inline-tight rounded-lg border border-destructive/30 bg-destructive/6 inset-medium")}>
                       <XCircle className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />
                       <p className={cn("text-body-sm text-foreground leading-relaxed")}>{rawLog.erro}</p>
                     </div>

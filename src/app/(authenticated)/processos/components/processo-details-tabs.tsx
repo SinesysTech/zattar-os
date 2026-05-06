@@ -522,9 +522,9 @@ export function ProcessoDetailsTabs({
   }
 
   const loadingContent = (
-    <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col rounded-xl border bg-background/70 p-3 stack-medium")}>
+    <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col rounded-xl border bg-background/70 inset-medium stack-medium")}>
       {[...Array(4)].map((_, index) => (
-        <div key={index} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col rounded-lg border p-3 stack-tight")}>
+        <div key={index} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col rounded-lg border inset-medium stack-tight")}>
           <div className={cn("flex items-center justify-between inline-medium")}>
             <Skeleton className="h-4 w-32" />
             <Skeleton className="h-6 w-28" />
@@ -598,17 +598,17 @@ export function ProcessoDetailsTabs({
             loadingContent
           ) : (
             <>
-              <TabsContent value="expedientes" className={cn(/* design-system-escape: p-3 → usar <Inset> */ "mt-0 rounded-xl border bg-background/70 p-3")}>
+              <TabsContent value="expedientes" className={cn(/* design-system-escape: p-3 → usar <Inset> */ "mt-0 rounded-xl border bg-background/70 inset-medium")}>
                 <div className={cn("max-h-96 overflow-y-auto pr-1")}>
                   <ExpedientesTable expedientes={expedientes} usuariosMap={usuariosMap} tiposMap={tiposMap} />
                 </div>
               </TabsContent>
-              <TabsContent value="audiencias" className={cn(/* design-system-escape: p-3 → usar <Inset> */ "mt-0 rounded-xl border bg-background/70 p-3")}>
+              <TabsContent value="audiencias" className={cn(/* design-system-escape: p-3 → usar <Inset> */ "mt-0 rounded-xl border bg-background/70 inset-medium")}>
                 <div className={cn("max-h-96 overflow-y-auto pr-1")}>
                   <AudienciasTable audiencias={audiencias} />
                 </div>
               </TabsContent>
-              <TabsContent value="pericias" className={cn(/* design-system-escape: p-3 → usar <Inset> */ "mt-0 rounded-xl border bg-background/70 p-3")}>
+              <TabsContent value="pericias" className={cn(/* design-system-escape: p-3 → usar <Inset> */ "mt-0 rounded-xl border bg-background/70 inset-medium")}>
                 <div className={cn("max-h-96 overflow-y-auto pr-1")}>
                   <PericiasTable pericias={pericias} />
                 </div>

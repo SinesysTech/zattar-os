@@ -1923,12 +1923,31 @@
   .stack-extra-loose  { @apply gap-10; }
   .stack-field        { @apply gap-4; }
 
-  /* Inset — padding semântico */
+  /* Inset — padding wrapper.
+
+     Variants SEMÂNTICOS (responsivos, casos específicos):
+     Usar quando o componente tem semântica clara (card, dialog, página). */
   .inset-card          { @apply p-4 sm:p-6; }
   .inset-card-compact  { @apply p-3 sm:p-4; }
   .inset-dialog        { @apply p-6; }
   .inset-page          { @apply p-4 sm:p-6 lg:p-8; }
   .inset-section       { @apply p-4 sm:p-6; }
+
+  /* Variants DIMENSIONAIS (padding único, sem responsividade) — Wave 11.
+     Mesma escala dos tokens inline-*/stack-* para consistência mental.
+     Use quando o caller quer padding específico sem matching semântico. */
+  .inset-none          { @apply p-0; }    /* 0px  — desabilitar padding */
+  .inset-nano          { @apply p-0.5; }  /* 2px */
+  .inset-micro         { @apply p-1; }    /* 4px */
+  .inset-snug          { @apply p-1.5; }  /* 6px */
+  .inset-tight         { @apply p-2; }    /* 8px */
+  .inset-tight-plus    { @apply p-2.5; }  /* 10px */
+  .inset-medium        { @apply p-3; }    /* 12px */
+  .inset-default       { @apply p-4; }    /* 16px */
+  .inset-default-plus  { @apply p-5; }    /* 20px */
+  .inset-loose         { @apply p-6; }    /* 24px */
+  .inset-extra-loose   { @apply p-8; }    /* 32px */
+  .inset-mega          { @apply p-12; }   /* 48px — empty states grandes */
 
   /* ══════════════════════════════════════════════════════════
      AUTH — CINEMATIC RUNWAY

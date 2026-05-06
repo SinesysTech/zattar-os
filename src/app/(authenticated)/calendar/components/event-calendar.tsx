@@ -304,7 +304,7 @@ export function EventCalendar({
         } as React.CSSProperties
       }>
       <CalendarDndProvider onEventUpdate={handleEventUpdate}>
-        {!hideToolbar && <div className={cn(/* design-system-escape: p-2 → usar <Inset>; sm:p-4 sem equivalente DS */ "flex items-center justify-between p-2 sm:p-4", className)}>
+        {!hideToolbar && <div className={cn(/* design-system-escape: p-2 → usar <Inset>; sm:p-4 sem equivalente DS */ "flex items-center justify-between inset-tight sm:p-4", className)}>
           <div className={cn(/* design-system-escape: sm:gap-4 sem equivalente DS */ "flex items-center inline-micro sm:gap-4")}>
             <Button
               variant="outline"

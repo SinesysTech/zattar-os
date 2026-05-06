@@ -82,7 +82,7 @@ export function MesView({ currentDate, events, onPrev, onNext, onToday, onEventC
   const cells = useMemo(() => buildMonthCells(year, month, events, today), [year, month, events, today]);
 
   return (
-    <GlassPanel className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5", className)}>
+    <GlassPanel className={cn(/* design-system-escape: p-5 → usar <Inset> */ "inset-default-plus", className)}>
       <div className="flex items-center justify-between mb-4">
         <div className={cn("flex items-center inline-medium")}>
           <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center">
@@ -91,9 +91,9 @@ export function MesView({ currentDate, events, onPrev, onNext, onToday, onEventC
           <span className={cn( "text-body-sm font-semibold text-foreground")}>{MONTH_NAMES[month]} {year}</span>
         </div>
         <div className={cn("flex items-center inline-micro")}>
-          <button onClick={onPrev} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground/50 cursor-pointer")} aria-label="Mês anterior"><ChevronLeft className="size-3.5" /></button>
+          <button onClick={onPrev} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "inset-snug rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground/50 cursor-pointer")} aria-label="Mês anterior"><ChevronLeft className="size-3.5" /></button>
           <button onClick={onToday} className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; */ "px-3 py-1.5 rounded-lg text-caption font-medium bg-primary/8 text-primary hover:bg-primary/12 transition-colors cursor-pointer")}>Hoje</button>
-          <button onClick={onNext} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground/50 cursor-pointer")} aria-label="Próximo mês"><ChevronRight className="size-3.5" /></button>
+          <button onClick={onNext} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "inset-snug rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground/50 cursor-pointer")} aria-label="Próximo mês"><ChevronRight className="size-3.5" /></button>
         </div>
       </div>
       <div className={cn("grid grid-cols-7 inline-micro mb-1")}>

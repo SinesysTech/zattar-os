@@ -302,7 +302,7 @@ function ResponsavelAssignPopover({
       <PopoverContent
         align="start"
         sideOffset={6}
-        className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-56 rounded-2xl glass-dropdown overflow-hidden p-0")}
+        className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-56 rounded-2xl glass-dropdown overflow-hidden inset-none")}
         onClick={(e) => e.stopPropagation()}
       >
         <Command>

@@ -12,7 +12,7 @@ import { Check, ChevronDown, X } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 
-const POPOVER_CLASSES = /* design-system-escape: p-0 → usar <Inset> */ 'rounded-2xl glass-dropdown overflow-hidden p-0';
+const POPOVER_CLASSES = /* design-system-escape: p-0 → usar <Inset> */ 'rounded-2xl glass-dropdown overflow-hidden inset-none';
 
 export interface FilterChipOption {
   value: string;
@@ -53,7 +53,7 @@ function FilterDropdownTrigger({
             e.stopPropagation();
             onClear();
           }}
-          className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-0.5 rounded-full p-0.5 hover:bg-primary/10 transition-colors")}
+          className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-0.5 rounded-full inset-nano hover:bg-primary/10 transition-colors")}
         >
           <X className="size-2.5" />
         </span>
@@ -114,7 +114,7 @@ export function FilterChipMulti({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, popoverWidth)} align="start" side="bottom">
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col p-2 stack-nano max-h-72 overflow-y-auto")}>
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col inset-tight stack-nano max-h-72 overflow-y-auto")}>
           {options.length === 0 ? (
             <div className={cn("text-[11px] text-muted-foreground/50 px-2.5 py-2")}>
               Nenhuma opção disponível

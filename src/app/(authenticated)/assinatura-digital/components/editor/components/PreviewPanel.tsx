@@ -61,7 +61,7 @@ export default function PreviewPanel({
           <DialogTitle>PDF de Teste Gerado com Sucesso</DialogTitle>
           <DialogDescription>Visualize o PDF gerado com dados fictícios para validar o layout do template.</DialogDescription>
         </DialogHeader>
-        <div className={/* design-system-escape: p-0 → usar <Inset>; sm:p-0 sem equivalente DS */ "flex flex-1 flex-col overflow-hidden p-0 sm:p-0"}>
+        <div className={/* design-system-escape: p-0 → usar <Inset>; sm:p-0 sem equivalente DS */ "flex flex-1 flex-col overflow-hidden inset-none sm:p-0"}>
           {/* Preview do PDF ou mensagem de erro */}
           {previewPdfUrl && !iframeLoadFailed ? (
             <iframe
@@ -72,7 +72,7 @@ export default function PreviewPanel({
               onError={onIframeError}
             />
           ) : (
-            <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex-1 min-h-0 flex items-center justify-center p-8")}>
+            <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex-1 min-h-0 flex items-center justify-center inset-extra-loose")}>
               <div className={cn("flex flex-col text-center stack-default max-w-md")}>
                 <FileX2 className="mx-auto h-12 w-12 text-muted-foreground" />
                 <div>

@@ -177,7 +177,7 @@ export function ContratoFinanceiroCard({
       {/* Lançamentos */}
       {!isEmpty && (
         <DetailSection icon={Wallet} label="Lançamentos">
-          <DetailSectionCard className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3")}>
+          <DetailSectionCard className={cn(/* design-system-escape: p-3 → usar <Inset> */ "inset-medium")}>
             {isLoading ? (
               <Text variant="caption" className={cn("text-center py-3 block")}>
                 Carregando...

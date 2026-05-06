@@ -34,7 +34,7 @@ const SUGGESTION_CARDS = [
 
 export function ChatEmptyState() {
   return (
-    <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "hidden md:flex h-full w-full items-center justify-center p-8")}>
+    <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "hidden md:flex h-full w-full items-center justify-center inset-extra-loose")}>
       <div className={cn("flex flex-col items-center inline-loose max-w-105 w-full")}>
         {/* Icon + Copy */}
         <div className={cn("flex flex-col items-center inline-medium")}>

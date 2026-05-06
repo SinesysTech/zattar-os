@@ -44,7 +44,7 @@ export default function ErrorBoundary({
                         {error.stack && (
                             <details className="mt-2">
                                 <summary className={cn( "cursor-pointer font-semibold text-destructive/90")}>Stack Trace</summary>
-                                <pre className={cn(/* design-system-escape: p-2 → usar <Inset> */ "mt-1 whitespace-pre p-2 overflow-auto text-[10px]")}>{error.stack}</pre>
+                                <pre className={cn(/* design-system-escape: p-2 → usar <Inset> */ "mt-1 whitespace-pre inset-tight overflow-auto text-[10px]")}>{error.stack}</pre>
                             </details>
                         )}
                     </Text>

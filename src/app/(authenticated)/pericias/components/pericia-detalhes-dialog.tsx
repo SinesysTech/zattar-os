@@ -142,7 +142,7 @@ function PericiaListItem({ pericia }: { pericia: Pericia }) {
   return (
     <GlassPanel depth={1} className={cn("inset-card-compact mb-3")}>
       <Tabs defaultValue="detalhes" className="w-full">
-        <TabsList className={cn(/* design-system-escape: p-1 → usar <Inset> */ "grid w-full grid-cols-2 mb-4 bg-muted/40 p-1")}>
+        <TabsList className={cn(/* design-system-escape: p-1 → usar <Inset> */ "grid w-full grid-cols-2 mb-4 bg-muted/40 inset-micro")}>
           <TabsTrigger value="detalhes" className="rounded-md">
             Detalhes
           </TabsTrigger>
@@ -207,7 +207,7 @@ function PericiaListItem({ pericia }: { pericia: Pericia }) {
           </div>
 
           {pericia.observacoes && (
-            <GlassPanel depth={1} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3 bg-muted/20")}>
+            <GlassPanel depth={1} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "inset-medium bg-muted/20")}>
               <div className={cn("text-overline text-foreground/70 mb-1")}>
                 Observações
               </div>

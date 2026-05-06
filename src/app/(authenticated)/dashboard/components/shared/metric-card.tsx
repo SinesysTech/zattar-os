@@ -72,7 +72,7 @@ function MetricCardContent({
 
   return (
     <CardContent className={cn("inset-dialog flex flex-col h-full relative")}>
-      <CardHeader className={cn(/* design-system-escape: p-0 → usar <Inset> */ "p-0 flex flex-row items-center justify-between mb-4 stack-none")}>
+      <CardHeader className={cn(/* design-system-escape: p-0 → usar <Inset> */ "inset-none flex flex-row items-center justify-between mb-4 stack-none")}>
         <Heading level="widget" className="text-muted-foreground">
           {title}
         </Heading>

@@ -91,7 +91,7 @@ export function CapturaEscopoBadge({
           )}
         </span>
       </TooltipTrigger>
-      <TooltipContent side="top" align="start" className={cn(/* design-system-escape: p-0 → usar <Inset> */ "max-w-xs p-0 overflow-hidden")}>
+      <TooltipContent side="top" align="start" className={cn(/* design-system-escape: p-0 → usar <Inset> */ "max-w-xs inset-none overflow-hidden")}>
         <div className={cn("px-3 py-2 border-b border-border/40")}>
           <p className={cn( "text-[11px] font-semibold text-foreground")}>Escopo da captura</p>
           <p className="text-[10px] text-muted-foreground/80">

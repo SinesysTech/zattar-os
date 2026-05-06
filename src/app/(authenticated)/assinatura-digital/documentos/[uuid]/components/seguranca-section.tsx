@@ -213,7 +213,7 @@ export function SegurancaSection({ signatario }: SegurancaSectionProps) {
             </Button>
           </CollapsibleTrigger>
           <CollapsibleContent>
-            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "mt-2 rounded-md bg-muted/50 p-3 max-h-64 overflow-auto")}>
+            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "mt-2 rounded-md bg-muted/50 inset-medium max-h-64 overflow-auto")}>
               <pre className={cn("text-caption font-mono whitespace-pre-wrap break-all")}>
                 {JSON.stringify(
                   signatario.dispositivoFingerprint,

@@ -88,7 +88,7 @@ export function PermissoesMatriz({
 
   if (isLoading) {
     return (
-      <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "flex flex-col p-5 stack-default")}>
+      <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "flex flex-col inset-default-plus stack-default")}>
         <Skeleton className="h-6 w-48" />
         <Skeleton className="h-4 w-full" />
         <Skeleton className="h-96 w-full" />
@@ -98,7 +98,7 @@ export function PermissoesMatriz({
 
   return (
     <>
-      <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "flex flex-col p-5 stack-default-plus")}>
+      <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "flex flex-col inset-default-plus stack-default-plus")}>
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className={cn("flex flex-col stack-nano")}>

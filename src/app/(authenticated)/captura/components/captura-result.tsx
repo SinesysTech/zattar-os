@@ -278,7 +278,7 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
           </p>
           <div className={cn("flex flex-col stack-snug")}>
             {data.erros.slice(0, 5).map((e, i) => (
-              <div key={i} className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex items-start inline-tight rounded-lg border border-destructive/30 bg-destructive/6 p-2.5 text-caption")}>
+              <div key={i} className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex items-start inline-tight rounded-lg border border-destructive/30 bg-destructive/6 inset-tight-plus text-caption")}>
                 <XCircle className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />
                 <div>
                   <span className="font-mono text-foreground/80">{e.numero_processo}</span>

@@ -346,7 +346,7 @@ export function ContaReceberFormDialog({
 
           <div className={cn("flex flex-col stack-default py-4")}>
             {Object.keys(errors).length > 0 && (
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 p-3 text-body-sm text-destructive")}>
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 inset-medium text-body-sm text-destructive")}>
                 Corrija os erros no formulário antes de continuar.
               </div>
             )}
@@ -413,7 +413,7 @@ export function ContaReceberFormDialog({
                       )}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto p-0")} align="start">
+                  <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto inset-none")} align="start">
                     <Calendar
                       mode="single"
                       selected={watch('dataVencimento')}

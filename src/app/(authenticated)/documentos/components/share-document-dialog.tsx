@@ -200,7 +200,7 @@ export function ShareDocumentDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className={cn(/* design-system-escape: p-0 gap-0 → usar <Inset> */ "sm:max-w-lg  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col")}
+        className={cn(/* design-system-escape: p-0 gap-0 → usar <Inset> */ "sm:max-w-lg  overflow-hidden inset-none gap-0 max-h-[90vh] flex flex-col")}
       >
         <DialogHeader className={cn("px-6 py-4 border-b border-border/20 shrink-0")}>
           <DialogTitle className={cn("flex items-center inline-tight")}>
@@ -277,7 +277,7 @@ export function ShareDocumentDialog({
                       <button
                         key={usuario.id}
                         type="button"
-                        className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex w-full items-center inline-medium p-2 hover:bg-accent text-left")}
+                        className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex w-full items-center inline-medium inset-tight hover:bg-accent text-left")}
                         onClick={() => {
                           setSelectedUser(usuario);
                           setSearchResults([]);
@@ -306,7 +306,7 @@ export function ShareDocumentDialog({
 
               {/* Usuário selecionado */}
               {selectedUser && (
-                <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "mt-2 flex items-center justify-between rounded-md border bg-muted/50 p-2")}>
+                <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "mt-2 flex items-center justify-between rounded-md border bg-muted/50 inset-tight")}>
                   <div className={cn("flex items-center inline-tight")}>
                     <Avatar>
                       <AvatarFallback className={cn("text-caption")}>
@@ -362,7 +362,7 @@ export function ShareDocumentDialog({
                     {compartilhamentos.map((compartilhamento) => (
                       <div
                         key={compartilhamento.id}
-                        className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-center justify-between rounded-md border p-2")}
+                        className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-center justify-between rounded-md border inset-tight")}
                       >
                         <div className={cn("flex items-center inline-medium")}>
                           <Avatar size="lg">

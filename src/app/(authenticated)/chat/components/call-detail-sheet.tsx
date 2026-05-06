@@ -254,7 +254,7 @@ export function CallDetailSheet({
                     <GlassPanel
                       key={p.id}
                       depth={1}
-                      className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between p-3")}
+                      className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between inset-medium")}
                     >
                       <div className={cn("flex items-center inline-medium")}>
                         <Avatar>

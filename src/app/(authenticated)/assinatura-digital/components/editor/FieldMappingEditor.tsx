@@ -676,7 +676,7 @@ export default function FieldMappingEditor({
         />
 
         {/* Centered PDF Canvas */}
-        <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex min-h-full items-start justify-center p-8")}>
+        <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex min-h-full items-start justify-center inset-extra-loose")}>
           <EditorCanvas
             canvasRef={canvasRef}
             canvasSize={canvasSize}

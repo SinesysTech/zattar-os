@@ -151,13 +151,13 @@ export function DocumentList() {
           <div className={cn("border-b inset-card-compact")}>
             <h2 className="text-sm font-semibold">Documentos</h2>
           </div>
-          <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex-1 overflow-auto p-2")}>
+          <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex-1 overflow-auto inset-tight")}>
             <FolderTree
               onFolderSelect={setPastaAtual}
               selectedFolderId={pastaAtual}
             />
           </div>
-          <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col stack-tight border-t p-2")}>
+          <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col stack-tight border-t inset-tight")}>
             <Button
               variant="outline"
               size="sm"

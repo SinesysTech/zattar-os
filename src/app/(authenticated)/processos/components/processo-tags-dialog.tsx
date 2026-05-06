@@ -167,7 +167,7 @@ export function ProcessoTagsDialog({
         {/* Tags selecionadas */}
         <div>
           <Label className={cn( "text-body-sm font-medium")}>Etiquetas selecionadas</Label>
-          <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "mt-2 flex flex-wrap inline-tight min-h-10 p-2 border rounded-md bg-muted/30")}>
+          <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "mt-2 flex flex-wrap inline-tight min-h-10 inset-tight border rounded-md bg-muted/30")}>
             {selectedTagIds.length === 0 ? (
               <span className={cn("text-body-sm text-muted-foreground")}>Nenhuma etiqueta selecionada</span>
             ) : (
@@ -205,7 +205,7 @@ export function ProcessoTagsDialog({
 
           {/* Formulário para criar nova tag */}
           {showNewTagForm && (
-            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col mb-3 p-3 border rounded-md bg-muted/30 stack-medium")}>
+            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col mb-3 inset-medium border rounded-md bg-muted/30 stack-medium")}>
               <div className={cn("flex inline-tight")}>
                 <Input
                   variant="glass"
@@ -225,13 +225,13 @@ export function ProcessoTagsDialog({
                     <Button
                       type="button"
                       variant="outline"
-                      className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-10 p-0")}
+                      className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-10 inset-none")}
                       style={{ backgroundColor: newTagCor }}
                     >
                       <span className="sr-only">Escolher cor</span>
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className={cn(/* design-system-escape: p-3 → usar <Inset> */ "w-auto p-3")}>
+                  <PopoverContent className={cn(/* design-system-escape: p-3 → usar <Inset> */ "w-auto inset-medium")}>
                     <div className={cn("grid grid-cols-6 inline-tight")}>
                       {TAG_COLORS.map((color) => {
                         const isSelected = newTagCor === color.hex
@@ -285,7 +285,7 @@ export function ProcessoTagsDialog({
               <LoadingSpinner className="size-6 text-muted-foreground" />
             </div>
           ) : (
-            <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-wrap inline-tight max-h-48 overflow-y-auto p-2 border rounded-md")}>
+            <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-wrap inline-tight max-h-48 overflow-y-auto inset-tight border rounded-md")}>
               {todasTags.length === 0 ? (
                 <span className={cn("text-body-sm text-muted-foreground")}>Nenhuma etiqueta cadastrada</span>
               ) : (

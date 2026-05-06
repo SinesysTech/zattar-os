@@ -300,8 +300,8 @@ export default function TemplateInfoPopover({
   return (
     <>
       <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent side="right" className={cn(/* design-system-escape: p-5 → usar <Inset> */ "w-96 overflow-y-auto p-5")}>
-          <SheetHeader className={cn(/* design-system-escape: p-0 → usar <Inset>; pb-1 padding direcional sem Inset equiv. */ "p-0 pb-1")}>
+        <SheetContent side="right" className={cn(/* design-system-escape: p-5 → usar <Inset> */ "w-96 overflow-y-auto inset-default-plus")}>
+          <SheetHeader className={cn(/* design-system-escape: p-0 → usar <Inset>; pb-1 padding direcional sem Inset equiv. */ "inset-none pb-1")}>
             <div className="flex items-center justify-between">
               <div className={cn("flex items-center inline-tight")}>
                 <FileText className="h-4 w-4 text-muted-foreground" />

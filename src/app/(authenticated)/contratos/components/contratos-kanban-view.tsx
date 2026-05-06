@@ -65,7 +65,7 @@ function ContratoCard({ contrato, stageCor }: { contrato: KanbanContrato; stageC
   return (
     <GlassPanel
       depth={2}
-      className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3 flex flex-col inline-snug text-body-sm")}
+      className={cn(/* design-system-escape: p-3 → usar <Inset> */ "inset-medium flex flex-col inline-snug text-body-sm")}
       style={{ borderLeft: `3px solid ${stageCor}` }}
     >
       <p className="text-[13px] font-semibold text-foreground line-clamp-2">

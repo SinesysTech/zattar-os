@@ -82,7 +82,7 @@ function DroppableColumn({ status, label, tasks, onCardClick }: DroppableColumnP
   return (
     <div
       ref={setNodeRef}
-      className={cn(/* design-system-escape: p-3 → usar <Inset> */ "w-85 min-w-85 rounded-xl border border-border bg-card p-3")}
+      className={cn(/* design-system-escape: p-3 → usar <Inset> */ "w-85 min-w-85 rounded-xl border border-border bg-card inset-medium")}
     >
       <div className="flex items-center justify-between mb-3">
         <div className={cn("flex items-center inline-tight")}>
@@ -93,7 +93,7 @@ function DroppableColumn({ status, label, tasks, onCardClick }: DroppableColumnP
 
       <SortableContext items={tasks.map((t) => t.id)} strategy={verticalListSortingStrategy}>
         {tasks.length > 0 ? (
-          <div className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "flex flex-col inline-tight p-0.5")}>
+          <div className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "flex flex-col inline-tight inset-nano")}>
             {tasks.map((tarefa) => (
               <DraggableTaskCard
                 key={tarefa.id}

@@ -176,7 +176,7 @@ function DayCell({
       type="button"
       onClick={() => count > 0 && onSelect(day, itens)}
       className={cn(
-        /* design-system-escape: p-2.5 → usar <Inset> */ 'relative w-full min-h-25 sm:min-h-30 p-2.5 rounded-xl transition-all duration-150 text-left flex flex-col h-full',
+        /* design-system-escape: p-2.5 → usar <Inset> */ 'relative w-full min-h-25 sm:min-h-30 inset-tight-plus rounded-xl transition-all duration-150 text-left flex flex-col h-full',
         'border border-border/40',
         'hover:bg-accent/40 hover:border-border/60',
         'active:bg-accent/20 active:scale-[0.98]',
@@ -253,7 +253,7 @@ function ParcelaItem({
       type="button"
       onClick={onClick}
       className={cn(
-        /* design-system-escape: p-2.5 → usar <Inset> */ 'w-full text-left rounded-lg p-2.5 border border-l-[3px] border-border/30 bg-muted/15',
+        /* design-system-escape: p-2.5 → usar <Inset> */ 'w-full text-left rounded-lg inset-tight-plus border border-l-[3px] border-border/30 bg-muted/15',
         'hover:bg-accent/40 transition-colors cursor-pointer',
         URGENCY_BORDER[urgency],
       )}
@@ -447,24 +447,24 @@ export function ObrigacoesGlassMonth({
               </PopoverTrigger>
               {isSelected && popoverItems.length > 0 && (
                 <PopoverContent
-                  className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-96 p-0 ")}
+                  className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-96 inset-none ")}
                   align="center"
                   sideOffset={8}
                 >
-                  <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between p-3 border-b border-border/30")}>
+                  <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between inset-medium border-b border-border/30")}>
                     <span className={cn( "text-body-sm font-semibold capitalize")}>
                       {format(day, "d 'de' MMMM", { locale: ptBR })}
                     </span>
                     <button
                       type="button"
                       onClick={() => setPopoverDay(null)}
-                      className={cn(/* design-system-escape: p-1 → usar <Inset> */ "p-1 rounded-md hover:bg-muted/50 transition-colors")}
+                      className={cn(/* design-system-escape: p-1 → usar <Inset> */ "inset-micro rounded-md hover:bg-muted/50 transition-colors")}
                       aria-label="Fechar"
                     >
                       <X className="w-3.5 h-3.5 text-muted-foreground" />
                     </button>
                   </div>
-                  <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col max-h-96 overflow-y-auto p-2 stack-tight")}>
+                  <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col max-h-96 overflow-y-auto inset-tight stack-tight")}>
                     {popoverItems.map((item) => (
                       <ParcelaItem
                         key={item.parcela.id}

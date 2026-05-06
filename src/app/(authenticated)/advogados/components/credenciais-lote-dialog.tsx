@@ -179,7 +179,7 @@ export function CredenciaisLoteDialog({
                   </Button>
                 </div>
               </div>
-              <ScrollArea className={cn(/* design-system-escape: p-3 → usar <Inset> */ "h-48 border rounded-md p-3")}>
+              <ScrollArea className={cn(/* design-system-escape: p-3 → usar <Inset> */ "h-48 border rounded-md inset-medium")}>
                 <div className={cn("grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 inline-tight")}>
                   {TRIBUNAIS_ATIVOS.map((trt) => (
                     <div key={trt} className={cn("flex items-center space-x-2")}>
@@ -365,7 +365,7 @@ function ResultadoView({
         </AlertDescription>
       </Alert>
 
-      <ScrollArea className={cn(/* design-system-escape: p-3 → usar <Inset> */ "h-48 border rounded-md p-3")}>
+      <ScrollArea className={cn(/* design-system-escape: p-3 → usar <Inset> */ "h-48 border rounded-md inset-medium")}>
         <table className={cn("w-full text-body-sm")}>
           <thead>
             <tr className="border-b">

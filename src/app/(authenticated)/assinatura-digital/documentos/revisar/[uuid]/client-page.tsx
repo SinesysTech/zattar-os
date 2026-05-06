@@ -316,7 +316,7 @@ function PdfPreviewSection({
   const anchorsOnPage = documento.ancoras.filter((a) => a.pagina === currentPage);
 
   return (
-    <GlassPanel depth={1} className={cn(/* design-system-escape: p-0 → usar <Inset> */ "overflow-hidden p-0")}>
+    <GlassPanel depth={1} className={cn(/* design-system-escape: p-0 → usar <Inset> */ "overflow-hidden inset-none")}>
       <div className="relative bg-muted/20">
         <PdfPreviewDynamic
           pdfUrl={pdfUrl ?? undefined}

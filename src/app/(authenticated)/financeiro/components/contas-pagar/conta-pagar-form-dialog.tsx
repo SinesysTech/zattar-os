@@ -326,7 +326,7 @@ export function ContaPagarFormDialog({
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
       <form ref={formRef} onSubmit={handleSubmit((data) => onSubmit(data as unknown as ContaPagarFormData))} className={cn("flex flex-col stack-default")}>
         {Object.keys(errors).length > 0 && (
-          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 p-3 text-body-sm text-destructive")}>
+          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 inset-medium text-body-sm text-destructive")}>
             Corrija os erros no formulário antes de continuar.
           </div>
         )}
@@ -393,7 +393,7 @@ export function ContaPagarFormDialog({
                   )}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto p-0")} align="start">
+              <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto inset-none")} align="start">
                 <Calendar
                   mode="single"
                   selected={watch('dataVencimento')}

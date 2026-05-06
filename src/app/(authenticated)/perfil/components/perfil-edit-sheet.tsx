@@ -111,7 +111,7 @@ export function PerfilEditSheet({
 
           <div className={cn("flex flex-col stack-loose")}>
             {error && (
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 p-3 text-body-sm text-destructive")}>
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 inset-medium text-body-sm text-destructive")}>
                 {error}
               </div>
             )}

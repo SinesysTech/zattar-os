@@ -68,7 +68,7 @@ export function FilterPopoverMulti({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-56 p-0")} align="start">
+      <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-56 inset-none")} align="start">
         <Command>
           <CommandInput placeholder={placeholder || label} className="h-9" />
           <CommandList>

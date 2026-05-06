@@ -171,7 +171,7 @@ export function EspecialidadesPageClient() {
           ))}
         </div>
       ) : error ? (
-        <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12 text-center")}>
+        <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "inset-mega text-center")}>
           <p className={cn("text-body-sm text-destructive")}>{error}</p>
           <Button
             variant="outline"
@@ -183,7 +183,7 @@ export function EspecialidadesPageClient() {
           </Button>
         </GlassPanel>
       ) : filtered.length === 0 ? (
-        <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12 text-center")}>
+        <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "inset-mega text-center")}>
           <p className={cn("text-body-sm text-muted-foreground")}>
             {search
               ? 'Nenhuma especialidade encontrada para esta busca.'

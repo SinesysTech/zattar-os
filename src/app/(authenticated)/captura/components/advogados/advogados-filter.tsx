@@ -57,10 +57,10 @@ export function AdvogadosFilter({
         </div>
       </PopoverTrigger>
       <PopoverContent
-        className={cn(/* design-system-escape: p-0 → usar <Inset> */ "rounded-2xl glass-dropdown overflow-hidden p-0 w-48")}
+        className={cn(/* design-system-escape: p-0 → usar <Inset> */ "rounded-2xl glass-dropdown overflow-hidden inset-none w-48")}
         align="start"
       >
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col p-2 stack-nano")}>
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col inset-tight stack-nano")}>
           {options.map((opt) => (
             <button
               key={opt.value}

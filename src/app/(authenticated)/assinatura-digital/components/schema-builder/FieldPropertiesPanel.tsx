@@ -652,7 +652,7 @@ export default function FieldPropertiesPanel({
                   open={expandedSections.has('condicional')}
                   onOpenChange={() => toggleSection('condicional')}
                 >
-                  <CollapsibleTrigger className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-center inline-tight w-full p-2 rounded-md hover:bg-muted/50 transition-colors")}>
+                  <CollapsibleTrigger className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-center inline-tight w-full inset-tight rounded-md hover:bg-muted/50 transition-colors")}>
                     <span className={cn( "text-body-sm font-semibold flex-1 text-left")}>Condicional</span>
                     <ChevronDown
                       className={cn(
@@ -759,7 +759,7 @@ export default function FieldPropertiesPanel({
                   open={expandedSections.has('opcoes')}
                   onOpenChange={() => toggleSection('opcoes')}
                 >
-                  <CollapsibleTrigger className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-center inline-tight w-full p-2 rounded-md hover:bg-muted/50 transition-colors")}>
+                  <CollapsibleTrigger className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-center inline-tight w-full inset-tight rounded-md hover:bg-muted/50 transition-colors")}>
                     <span className={cn( "text-body-sm font-semibold flex-1 text-left")}>
                       Opções {options.length > 0 && `(${options.length})`}
                     </span>
@@ -772,7 +772,7 @@ export default function FieldPropertiesPanel({
                   </CollapsibleTrigger>
                   <CollapsibleContent className={cn("flex flex-col pt-2 stack-tight")}>
                     {options.map((option, index) => (
-                      <div key={index} className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-start inline-tight p-2 border rounded-lg")}>
+                      <div key={index} className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-start inline-tight inset-tight border rounded-lg")}>
                         <div className={cn("flex flex-col inline-micro shrink-0")}>
                           <Button
                             type="button"
@@ -854,7 +854,7 @@ export default function FieldPropertiesPanel({
                   open={expandedSections.has('entitySearch')}
                   onOpenChange={() => toggleSection('entitySearch')}
                 >
-                  <CollapsibleTrigger className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-center inline-tight w-full p-2 rounded-md hover:bg-muted/50 transition-colors")}>
+                  <CollapsibleTrigger className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-center inline-tight w-full inset-tight rounded-md hover:bg-muted/50 transition-colors")}>
                     <span className={cn( "text-body-sm font-semibold flex-1 text-left")}>Busca de Entidade</span>
                     <ChevronDown
                       className={cn(

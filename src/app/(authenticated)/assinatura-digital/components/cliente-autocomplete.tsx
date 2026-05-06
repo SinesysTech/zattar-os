@@ -54,7 +54,7 @@ export function ClienteAutocomplete({ value, onChange }: Props) {
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-75 p-0")}>
+      <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-75 inset-none")}>
         <Command>
           <CommandInput placeholder="Buscar cliente" />
           <CommandList>

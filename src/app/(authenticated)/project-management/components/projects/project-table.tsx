@@ -34,7 +34,7 @@ function ProjectRowActions({ projeto }: { projeto: Projeto }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className={cn(/* design-system-escape: p-0 → usar <Inset> */ "h-8 w-8 p-0")}>
+        <Button variant="ghost" className={cn(/* design-system-escape: p-0 → usar <Inset> */ "h-8 w-8 inset-none")}>
           <span className="sr-only">Abrir menu</span>
           <Ellipsis className="h-4 w-4" />
         </Button>

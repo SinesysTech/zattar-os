@@ -67,7 +67,7 @@ export function WidgetModeloCobranca() {
       <div className={cn("flex flex-col inline-default")}>
         <div className={cn("grid grid-cols-2 inline-default")}>
           {/* Pro Labore */}
-          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col inline-tight p-3 rounded-xl bg-primary/[0.04] border border-primary/10")}>
+          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col inline-tight inset-medium rounded-xl bg-primary/[0.04] border border-primary/10")}>
             <p className={cn(/* design-system-escape: tracking-wider sem token DS; */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider font-medium")}>
               Pro Labore
             </p>
@@ -86,7 +86,7 @@ export function WidgetModeloCobranca() {
           </div>
 
           {/* Pro Êxito */}
-          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col inline-tight p-3 rounded-xl bg-warning/[0.04] border border-warning/10")}>
+          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col inline-tight inset-medium rounded-xl bg-warning/[0.04] border border-warning/10")}>
             <p className={cn(/* design-system-escape: tracking-wider sem token DS; */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider font-medium")}>
               Pro Êxito
             </p>

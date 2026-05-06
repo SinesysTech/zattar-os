@@ -59,7 +59,7 @@ export function UploadDropzoneArea({
       {...getRootProps()}
       className={cn(
         'group relative flex min-h-110 w-full flex-col items-center justify-center',
-        /* design-system-escape: p-8 → usar <Inset>; lg:p-12 sem equivalente DS */ 'cursor-pointer rounded-[20px] border-2 border-dashed p-8 lg:p-12 text-center',
+        /* design-system-escape: p-8 → usar <Inset>; lg:p-12 sem equivalente DS */ 'cursor-pointer rounded-[20px] border-2 border-dashed inset-extra-loose lg:p-12 text-center',
         'backdrop-blur-xl transition-all duration-200',
         !hasFile && !hasError && !isDragActive && 'border-border/80 bg-card/55 hover:border-primary/45 hover:bg-primary/5',
         isDragActive && 'border-primary/55 bg-primary/5 scale-[1.005]',

@@ -172,7 +172,7 @@ export function PericiasCalendarMonth({
           {['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'].map((dia, i) => (
             <div
               key={dia}
-              className={cn(/* design-system-escape: p-2 → usar <Inset>; */ "p-2 text-center text-body-sm font-medium text-muted-foreground")}
+              className={cn(/* design-system-escape: p-2 → usar <Inset> */ "inset-tight text-center text-body-sm font-medium text-muted-foreground")}
             >
               <span className="hidden sm:inline">{dia}</span>
               <span className="sm:hidden">{['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'][i]}</span>

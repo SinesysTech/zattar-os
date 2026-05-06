@@ -583,7 +583,7 @@ export function TabToggle({
   onChangeAction: (id: string) => void;
 }) {
   return (
-    <div className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "flex inline-nano p-0.5 rounded-lg bg-border/10")}>
+    <div className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "flex inline-nano inset-nano rounded-lg bg-border/10")}>
       {tabs.map((tab) => (
         <button
           key={tab.id}
@@ -629,7 +629,7 @@ export function Treemap({
         >
           {/* Label — only visible if segment wide enough */}
           {(seg.value / total) > 0.12 && (
-            <div className={cn(/* design-system-escape: p-1 → usar <Inset> */ "absolute inset-0 flex flex-col items-center justify-center p-1")}>
+            <div className={cn(/* design-system-escape: p-1 → usar <Inset> */ "absolute inset-0 flex flex-col items-center justify-center inset-micro")}>
               <span className={cn( "text-[9px] font-bold text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]")}>
                 {seg.value}
               </span>

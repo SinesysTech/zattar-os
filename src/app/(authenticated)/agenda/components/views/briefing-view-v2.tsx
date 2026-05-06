@@ -101,7 +101,7 @@ function BriefingEventCard({ event, onClick }: { event: AgendaEvent; onClick?: (
             {event.meta?.local && <span className={cn("flex items-center inline-micro")}><MapPin className="size-3" /> {event.meta?.local}</span>}
           </div>
           {event.meta?.processo && (
-            <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "mt-2 p-2 rounded-lg bg-muted/3 border border-border/6 flex items-center inline-medium")}>
+            <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "mt-2 inset-tight rounded-lg bg-muted/3 border border-border/6 flex items-center inline-medium")}>
               <FileText className="size-3.5 text-muted-foreground/35 shrink-0" />
               <div className="min-w-0 flex-1">
                 <div className="text-[10px] font-mono text-muted-foreground/50">{event.meta?.processo}</div>
@@ -169,7 +169,7 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
     <div className={cn("flex inline-default", className)}>
       <div className={cn("flex flex-col flex-1 stack-default min-w-0")}>
         {/* Narrative */}
-        <GlassPanel className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
+        <GlassPanel className={cn(/* design-system-escape: p-5 → usar <Inset> */ "inset-default-plus")}>
           <div className={cn("flex items-center inline-medium mb-3")}>
             <div className="size-9 rounded-xl bg-primary/10 flex items-center justify-center"><Sparkles className="size-4 text-primary" /></div>
             <div>
@@ -225,7 +225,7 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
                 const Icon = alert.severity === "critical" ? AlertCircle : alert.severity === "warning" ? TriangleAlert : Clock;
                 const cls = alert.severity === "critical" ? "bg-destructive/[0.06] border-destructive/10 text-destructive" : "bg-warning/[0.04] border-warning/8 text-warning";
                 return (
-                  <div key={alert.id} className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-start inline-tight p-2 rounded-lg border", cls)}>
+                  <div key={alert.id} className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-start inline-tight inset-tight rounded-lg border", cls)}>
                     <Icon className="size-3.5 mt-0.5 shrink-0" />
                     <div>
                       <div className={cn( "text-[10px] font-semibold")}>{alert.title}</div>

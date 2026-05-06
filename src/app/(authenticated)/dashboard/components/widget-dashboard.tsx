@@ -275,7 +275,7 @@ export function WidgetDashboard({ currentUserId, currentUserName, initialData }:
 
 function EmptyState({ onOpenPicker }: { onOpenPicker?: () => void }) {
   return (
-    <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12")}>
+    <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "inset-mega")}>
       <div className={cn("flex flex-col items-center justify-center text-center inline-default")}>
         <div className="size-14 rounded-2xl border border-border/20 bg-foreground/3 flex items-center justify-center">
           <LayoutGrid className="size-6 text-muted-foreground/55" />

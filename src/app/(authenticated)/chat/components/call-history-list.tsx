@@ -285,7 +285,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
                 chamadaId: row.original.id,
               });
             }}
-            className={cn(/* design-system-escape: p-0 → usar <Inset> */ "h-8 w-8 p-0")}
+            className={cn(/* design-system-escape: p-0 → usar <Inset> */ "h-8 w-8 inset-none")}
           >
             <Play className="h-4 w-4 text-primary" />
             <span className="sr-only">Assistir</span>

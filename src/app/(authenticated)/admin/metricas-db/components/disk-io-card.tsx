@@ -126,7 +126,7 @@ export function DiskIOCard({ diskIO, diskIOStatus, diskIOMessage }: DiskIOCardPr
 
         {/* IOPS */}
         <div className={cn("grid grid-cols-2 inline-default")}>
-          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md border p-3")}>
+          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md border inset-medium")}>
             <Text variant="caption">IOPS</Text>
             <p className={cn( "mt-1 text-body-lg font-semibold")}>
               {disk_iops_consumption.toLocaleString('pt-BR')}
@@ -135,7 +135,7 @@ export function DiskIOCard({ diskIO, diskIOStatus, diskIOMessage }: DiskIOCardPr
           </div>
 
           {/* Throughput */}
-          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md border p-3")}>
+          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md border inset-medium")}>
             <Text variant="caption">Throughput</Text>
             <p className={cn( "mt-1 text-body-lg font-semibold")}>
               {disk_io_consumption_mbps.toFixed(1)}

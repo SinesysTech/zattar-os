@@ -197,7 +197,7 @@ export function CallDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={cn(
-        /* design-system-escape: p-0 → usar <Inset> */ "p-0 overflow-hidden bg-video-surface border-none text-video-text transition-all duration-300",
+        /* design-system-escape: p-0 → usar <Inset> */ "inset-none overflow-hidden bg-video-surface border-none text-video-text transition-all duration-300",
         showLarge ? "max-w-4xl h-[80vh]" : "max-w-md h-125"
       )}>
         <VisuallyHidden>
@@ -213,7 +213,7 @@ export function CallDialog({
         )}
 
         {error && (
-          <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full inline-default p-8 text-center bg-video-surface")}>
+          <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full inline-default inset-extra-loose text-center bg-video-surface")}>
             <div className={cn("bg-destructive/10 inset-card-compact rounded-full")}>
               <RotateCcw className="w-12 h-12 text-destructive" />
             </div>

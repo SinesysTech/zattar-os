@@ -138,7 +138,7 @@ export function ActivityHeatmap({ data, weeks = 26 }: ActivityHeatmapProps) {
   }, []);
 
   return (
-    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
+    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "inset-default-plus")}>
       {/* Header */}
       <div className={cn("flex items-center inline-tight mb-4")}>
         <BarChart3 className="size-4 text-muted-foreground/50" />

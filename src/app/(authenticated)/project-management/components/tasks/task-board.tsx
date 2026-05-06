@@ -69,7 +69,7 @@ function KanbanColumn({
         items={tarefas.map((t) => t.id)}
         strategy={verticalListSortingStrategy}
       >
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col inline-tight p-2 min-h-25")}>
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col inline-tight inset-tight min-h-25")}>
           {tarefas.map((tarefa) => (
             <TaskCard key={tarefa.id} tarefa={tarefa} />
           ))}

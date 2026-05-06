@@ -359,7 +359,7 @@ export function ObrigacaoDetalhesDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "max-h-[92vh] flex flex-col p-0 inline-none overflow-hidden sm:max-w-2xl [scrollbar-width:thin]")}>
+      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "max-h-[92vh] flex flex-col inset-none inline-none overflow-hidden sm:max-w-2xl [scrollbar-width:thin]")}>
         <DialogDescription className="sr-only">
           Detalhes da obrigação financeira
         </DialogDescription>
@@ -796,7 +796,7 @@ export function ObrigacaoDetalhesDialog({
             {isParcela && (
               <div>
                 <SectionHeader icon={FileText} label="Prestação de contas" />
-                <SectionCard className={cn(/* design-system-escape: p-0 → usar <Inset> */ "p-0 overflow-hidden")}>
+                <SectionCard className={cn(/* design-system-escape: p-0 → usar <Inset> */ "inset-none overflow-hidden")}>
                   <div className="p-[14px_16px]">
                     <PrestacaoContasSection parcelaId={obrigacao.id} />
                   </div>
